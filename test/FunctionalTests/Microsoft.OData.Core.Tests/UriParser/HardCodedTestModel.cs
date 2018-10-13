@@ -461,6 +461,10 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceGetPeopleWhoHaveDogsFunction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
             model.AddElement(FullyQualifiedNamespaceGetPeopleWhoHaveDogsFunction);
 
+            var FullyQualifiedNamespaceGetPersonWhoHasSmartestDogFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPersonWhoHasSmartestDog", FullyQualifiedNamespacePersonTypeReference, true, null, true);
+            FullyQualifiedNamespaceGetPersonWhoHasSmartestDogFunction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
+            model.AddElement(FullyQualifiedNamespaceGetPersonWhoHasSmartestDogFunction);
+
             var FullyQualifiedNamespaceAdoptShibaInuAction = new EdmFunction("Fully.Qualified.Namespace", "AdoptShibaInu", EdmCoreModel.Instance.GetBoolean(true), true, null, true);
             FullyQualifiedNamespaceAdoptShibaInuAction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
             model.AddElement(FullyQualifiedNamespaceAdoptShibaInuAction);
@@ -1263,6 +1267,10 @@ namespace Microsoft.OData.Tests.UriParser
         <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
         <ReturnType Type=""Collection(Fully.Qualified.Namespace.Person)"" />
       </Function>
+      <Function Name=""GetPersonWhoHasSmartestDog"" IsBound=""true"" IsComposable=""true"">
+        <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
+        <ReturnType Type=""Fully.Qualified.Namespace.Person"" />
+      </Function>
       <Action Name=""AdoptShibaInu"" IsBound=""true"">
         <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
         <ReturnType Type=""Edm.Boolean"" />
@@ -1709,6 +1717,16 @@ namespace Microsoft.OData.Tests.UriParser
             return new EdmComplexTypeReference(GetHomeAddressType(), false);
         }
 
+        public static IEdmStructuralProperty GetPersonIdProp()
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("ID");
+        }
+
+        public static IEdmNavigationProperty GetPersonMyAddressNavProp()
+        {
+            return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("MyAddress");
+        }
+
         public static IEdmNavigationProperty GetPersonMyDogNavProp()
         {
             return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("MyDog");
@@ -1916,6 +1934,11 @@ namespace Microsoft.OData.Tests.UriParser
             return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Address")).FindProperty("MyFavoriteNeighbor");
         }
 
+        public static IEdmNavigationProperty GetDogFastestOwnerNavProp()
+        {
+            return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Dog")).FindProperty("FastestOwner");
+        }
+
         public static IEdmNavigationProperty GetDogMyPeopleNavProp()
         {
             return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Dog")).FindProperty("MyPeople");
@@ -2034,6 +2057,11 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmOperationImport GetFunctionImportForGetPeopleWhoHaveDogs()
         {
             return TestModel.EntityContainer.FindOperationImports("GetPeopleWhoHaveDogs").Single();
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetPersonWhoHasSmartestDog()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetPersonWhoHasSmartestDog").Single();
         }
 
         public static IEdmOperationImport GetAdoptShibaInuActionImport()

@@ -806,8 +806,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 return new BatchReferenceSegment(contentId, HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
             };
 
-            Action parse = () => parser.ParsePath();
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.PathParser_EntityReferenceNotSupported("$42"));
+            var path = parser.ParsePath();
+            path.LastSegment.ShouldBeReferenceSegment(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]

@@ -187,7 +187,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>Defined by the implementer.</returns>
         public override string Translate(FilterSegment segment)
         {
-            return "/" + segment.FullSegment;
+            return string.Empty;
         }
 
         /// <summary>
@@ -197,6 +197,8 @@ namespace Microsoft.OData.UriParser
         /// <returns>Defined by the implementer.</returns>
         public override string Translate(ReferenceSegment segment)
         {
+            // How a ReferenceSegment should be addressed in the context URI is still a pending decision.
+            // https://github.com/OData/odata.net/issues/1292
             return string.Empty;
         }
 

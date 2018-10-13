@@ -22,13 +22,25 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
-        public void ReferenceSegmentWithNavigationSourceConstructsSuccessfully()
+        public void ReferenceSegmentWithCollectionValueNavigationSourceConstructsSuccessfully()
         {
             ReferenceSegment referenceSegment = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
 
             referenceSegment.Identifier.Should().Be(UriQueryConstants.RefSegment);
             referenceSegment.SingleResult.Should().BeFalse();
             referenceSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPet1Set());
+            referenceSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
+            referenceSegment.EdmType.Should().BeNull();
+        }
+
+        [Fact]
+        public void ReferenceSegmentWithSingleValuedNavigationSourceConstructsSuccessfully()
+        {
+            ReferenceSegment referenceSegment = new ReferenceSegment(HardCodedTestModel.GetBossSingleton());
+
+            referenceSegment.Identifier.Should().Be(UriQueryConstants.RefSegment);
+            referenceSegment.SingleResult.Should().BeTrue();
+            referenceSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetBossSingleton());
             referenceSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
             referenceSegment.EdmType.Should().BeNull();
         }

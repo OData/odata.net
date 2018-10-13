@@ -33,7 +33,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// String representing "$filter(expression)".
         /// </summary>
-        private readonly string fullSegment;
+        private readonly string literalText;
 
         /// <summary>
         /// Build a segment representing $filter.
@@ -61,7 +61,7 @@ namespace Microsoft.OData.UriParser
 
             NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
             string expressionString = nodeToStringBuilder.TranslateNode(expression);
-            this.fullSegment = UriQueryConstants.FilterSegment + ExpressionConstants.SymbolOpenParen + expressionString
+            this.literalText = UriQueryConstants.FilterSegment + ExpressionConstants.SymbolOpenParen + expressionString
                 + ExpressionConstants.SymbolClosedParen;
         }
 
@@ -71,14 +71,6 @@ namespace Microsoft.OData.UriParser
         public SingleValueNode Expression
         {
             get { return this.expression; }
-        }
-
-        /// <summary>
-        /// Gets the string representing "$filter(expression)".
-        /// </summary>
-        public string FullSegment
-        {
-            get { return this.fullSegment; }
         }
 
         /// <summary>
@@ -103,6 +95,14 @@ namespace Microsoft.OData.UriParser
         public override IEdmType EdmType
         {
             get { return this.bindingType; }
+        }
+
+        /// <summary>
+        /// Gets the string representing "$filter(expression)".
+        /// </summary>
+        internal string LiteralText
+        {
+            get { return this.literalText; }
         }
 
         /// <summary>

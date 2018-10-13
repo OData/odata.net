@@ -115,6 +115,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void SetBasedOperations_EachSegmentOnEntityCollectionWithFilterSegmentAndFilterQuery_ReturnsSuccess()
         {
+            // Scenario of this test case:
+            // A client is sending a PATCH request to update all people with ID eq 42 and return the updated people
+            // whose SSN eq 'num'.
             ParseUriAndVerify(
                 new Uri("http://gobbledygook/People/$filter(@p1)/$each?$filter=SSN eq 'num'&@p1=ID eq 42"),
                 (oDataPath, filterClause, aliasNodes) =>
@@ -319,7 +322,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 });
         }
 
-        // NOTE: Per OData 4.01 spec, GET operation and functions may proceed $each, but we are limiting the scope of that feature
+        // NOTE: Per OData 4.01 spec, GET operation and functions may follow $each, but we are limiting the scope of that feature
         // by permitting only ONE action segment to follow $each.
         [Fact]
         public void SetBasedOperations_EachSegmentOnSetBasedActionOnCollectionResults_ThrowsException()
@@ -332,7 +335,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.SummonPuppies"));
         }
 
-        // NOTE: Per OData 4.01 spec, GET operation and functions may proceed $each, but we are limiting the scope of that feature
+        // NOTE: Per OData 4.01 spec, GET operation and functions may follow $each, but we are limiting the scope of that feature
         // by permitting only ONE action segment to follow $each.
         [Fact]
         public void SetBasedOperations_FunctionAfterEachSegment_ThrowsException()

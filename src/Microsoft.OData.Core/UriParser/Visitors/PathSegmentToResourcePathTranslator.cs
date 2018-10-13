@@ -195,7 +195,7 @@ namespace Microsoft.OData.UriParser
         public override string Translate(FilterSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
-            return "/" + segment.FullSegment;
+            return "/" + segment.LiteralText;
         }
 
         /// <summary>

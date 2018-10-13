@@ -21,7 +21,7 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmType edmType;
 
         /// <summary>
-        /// Build a segment representing each.
+        /// Build a segment representing $each.
         /// </summary>
         /// <param name="navigationSource">The entity collection that this set-based operation applies to.</param>
         /// <param name="targetEdmType">Target type for the entity being referenced.</param>

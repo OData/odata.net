@@ -25,7 +25,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(navigationSource, "navigationSource");
 
             this.Identifier = UriQueryConstants.RefSegment;
-            this.SingleResult = false;
+            this.SingleResult = navigationSource.Type.TypeKind != EdmTypeKind.Collection;
             this.TargetEdmNavigationSource = navigationSource;
             this.TargetKind = RequestTargetKind.Resource;
         }

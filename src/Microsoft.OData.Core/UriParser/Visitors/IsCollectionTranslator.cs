@@ -119,7 +119,7 @@ namespace Microsoft.OData.UriParser
         public override bool Translate(ReferenceSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
-            return false;
+            return !segment.SingleResult;
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Microsoft.OData.UriParser
         public override bool Translate(PathTemplateSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
-            return false;
+            return !segment.SingleResult;
         }
     }
 }

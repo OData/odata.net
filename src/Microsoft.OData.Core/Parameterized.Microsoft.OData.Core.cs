@@ -5405,7 +5405,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The $filter path segment must be in the form $filter(@alias)."
+        /// The $filter path segment must be in the form $filter(expression), where the expression resolves to a boolean.
         /// </summary>
         internal static string RequestUriProcessor_FilterPathSegmentSyntaxError
         {
@@ -5472,6 +5472,17 @@ namespace Microsoft.OData {
             get
             {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_EachOnRoot);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The request URI is not valid, the segment $ref cannot be applied to the root of the service."
+        /// </summary>
+        internal static string RequestUriProcessor_RefOnRoot
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_RefOnRoot);
             }
         }
 

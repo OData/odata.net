@@ -130,12 +130,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void BuildPathWithEachSegmentRelativeUri()
         {
             Uri queryUri = new Uri("People/$each/Fully.Qualified.Namespace.SummonPuppies", UriKind.Relative);
+            Uri expectedUri = new Uri("http://gobbledygook/People/$each/Fully.Qualified.Namespace.SummonPuppies");
 
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal(new Uri("http://gobbledygook/People/$each/Fully.Qualified.Namespace.SummonPuppies"), actualUri);
+            Assert.Equal(expectedUri, actualUri);
 
             actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Slash, settings);
-            Assert.Equal(new Uri("http://gobbledygook/People/$each/Fully.Qualified.Namespace.SummonPuppies"), actualUri);
+            Assert.Equal(expectedUri, actualUri);
         }
 
         [Fact]

@@ -538,6 +538,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     BinaryOperatorNode binaryOperatorNode = filterSegments[0].Expression as BinaryOperatorNode;
                     binaryOperatorNode.Should().NotBeNull();
                     binaryOperatorNode.OperatorKind.Should().Be(BinaryOperatorKind.Equal);
+                    binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonIdProp());
                     binaryOperatorNode.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
 
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
@@ -563,6 +564,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
+
+                    BinaryOperatorNode binaryOperatorNode = filterSegments[0].Expression as BinaryOperatorNode;
+                    binaryOperatorNode.Should().NotBeNull();
+                    binaryOperatorNode.OperatorKind.Should().Be(BinaryOperatorKind.Equal);
+                    binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonIdProp());
+                    binaryOperatorNode.Right.ShouldBeConstantQueryNode(1);
 
                     filterClause.Should().BeNull();
                     aliasNodes.Should().BeEmpty();

@@ -780,6 +780,7 @@ namespace Microsoft.OData {
         internal const string RequestUriProcessor_CountOnRoot = "RequestUriProcessor_CountOnRoot";
         internal const string RequestUriProcessor_FilterOnRoot = "RequestUriProcessor_FilterOnRoot";
         internal const string RequestUriProcessor_EachOnRoot = "RequestUriProcessor_EachOnRoot";
+        internal const string RequestUriProcessor_RefOnRoot = "RequestUriProcessor_RefOnRoot";
         internal const string RequestUriProcessor_MustBeLeafSegment = "RequestUriProcessor_MustBeLeafSegment";
         internal const string RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment = "RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment";
         internal const string RequestUriProcessor_MissingSegmentAfterLink = "RequestUriProcessor_MissingSegmentAfterLink";

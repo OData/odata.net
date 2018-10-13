@@ -63,10 +63,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         #region $ref cases
         [Fact]
-        public void EntityReferenceFollowingEntityCollectionShouldFail()
+        public void EntityReferenceFollowingEntityCollectionShouldWork()
         {
-            Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "$ref" });
-            parsePath.ShouldThrow<ODataException>(ErrorStrings.PathParser_EntityReferenceNotSupported("People(1)"));
+            this.testSubject.ParsePath(new[] { "People(1)", "$ref" })
+                .Last().ShouldBeReferenceSegment(HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]

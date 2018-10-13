@@ -492,9 +492,12 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="segmentText">The raw segment text.</param>
         /// <returns>Whether the segment was $filter.</returns>
-        /// <remarks>$filter path segment is different from existing path segments in that it strictly
-        /// follows the format of "$filter(@a)", where @a represents a parameter alias. Thus, this function
-        /// should validate the format of the path segment closely.</remarks>
+        /// <remarks>
+        /// $filter path segment is different from existing path segments in that it strictly
+        /// follows the format of "$filter(expression)", expression could be an alias or inline expression
+        /// that resolves to a boolean. Thus, this function should validate the format of the path
+        /// segment closely.
+        /// </remarks>
         private bool TryCreateFilterSegment(string segmentText)
         {
             Debug.Assert(segmentText != null, "segmentText != null");
@@ -525,7 +528,7 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentSyntaxError);
             }
 
-            // 3) Extract the parameter alias and perform the rest of the validations on it.
+            // 3) Extract the expression and perform the rest of the validations on it.
             if (lastNavigationSource == null)
             {
                 throw new ODataException(ODataErrorStrings.RequestUriProcessor_NoNavigationSourceFound(UriQueryConstants.FilterSegment));
@@ -617,8 +620,8 @@ namespace Microsoft.OData.UriParser
             // becomes two different code paths:
             // 1) Backwards compatibility behavior (<= ODL 7.4.x): If the NavPropSeg exists, then it is expected to either be before
             // KeySegments or before the $ref (i.e. NavPropSeg/KeySeg/KeySeg/.../$ref or NavPropSeg/$ref). Then the NavPropSeg is replaced
-            // with NavigationPropertyLinkSegment. In a previous implementation, if either a NavPropSeg didn't exist before KeySegments or
-            // $ref itself, then this function would throw. This was not correct as $ref can apply to entity sets and similar segments
+            // with NavigationPropertyLinkSegment. In a previous implementation, if a NavPropSeg didn't exist before KeySegments or
+            // $ref, then this function would throw. This was not correct as $ref can apply to entity sets and similar segments
             // (e.g. TypeSegment and FilterSegment), and therefore 2) below is implemented to support those scenarios.
             // 2) If the NavPropSeg does not exist, then this algorithm appends a ReferenceSegment to the existing list of parsed segments.
 
@@ -658,7 +661,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                if (this.parsedSegments.Last().TargetKind != RequestTargetKind.Resource || this.parsedSegments.Last().SingleResult)
+                if (this.parsedSegments.Last().TargetKind != RequestTargetKind.Resource)
                 {
                     throw ExceptionUtil.CreateBadRequestError(
                         ODataErrorStrings.PathParser_EntityReferenceNotSupported(this.parsedSegments.Last().Identifier));
@@ -870,6 +873,12 @@ namespace Microsoft.OData.UriParser
             {
                 // $each on root: throw
                 throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EachOnRoot);
+            }
+
+            if (this.IdentifierIs(UriQueryConstants.RefSegment, identifier))
+            {
+                // $ref on root: throw
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_RefOnRoot);
             }
 
             if (this.configuration.BatchReferenceCallback != null && ContentIdRegex.IsMatch(identifier))
