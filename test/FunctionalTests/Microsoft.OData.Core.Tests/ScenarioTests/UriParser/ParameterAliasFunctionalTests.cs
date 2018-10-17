@@ -561,7 +561,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
                     filterSegments.Count.Should().Be(1);
 
-                    filterSegments[0].Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 
