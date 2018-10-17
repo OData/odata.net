@@ -854,7 +854,7 @@ RequestUriProcessor_CannotApplyFilterOnSingleEntities=$filter path segment canno
 RequestUriProcessor_CannotApplyEachOnSingleEntities=$each set-based operation cannot be applied on single entities or singletons. Entity type: '{0}'.
 RequestUriProcessor_FilterPathSegmentSyntaxError=The $filter path segment must be in the form $filter(expression), where the expression resolves to a boolean.
 RequestUriProcessor_NoNavigationSourceFound=There are no navigation sources found to apply '{0}'.
-RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment=Only a single action can proceed $each.
+RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment=Only a single operation can follow $each.
 
 ; Copied from the server, will be incrementally replaced.
 RequestUriProcessor_EmptySegmentInRequestUrl=Empty segment encountered in request URL. Please make sure that a valid request URL is specified.

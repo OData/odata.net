@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntityReferenceCannotAppearAfterEachSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People/$each/$ref", ODataErrorStrings.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
+            PathFunctionalTestsUtil.RunParseErrorPath("People/$each/$ref", ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
         }
 
         [Fact]

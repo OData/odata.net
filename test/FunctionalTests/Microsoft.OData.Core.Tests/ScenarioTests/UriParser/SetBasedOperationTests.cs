@@ -66,6 +66,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
+                    eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
+                });
+        }
+
+        [Fact]
+        public void SetBasedOperations_EachSegmentOnPrimitiveTypeCollection_ReturnsSuccess()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/1/RelatedIDs/$each"),
+                (oDataPath, filterClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(4);
+
+                    EachSegment eachSegment = oDataPath.Last() as EachSegment;
+                    eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Primitive);
+                    eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
+                });
+        }
+
+        [Fact]
+        public void SetBasedOperations_EachSegmentOnComplexTypeCollection_ReturnsSuccess()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/1/PreviousAddresses/$each"),
+                (oDataPath, filterClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(4);
+
+                    EachSegment eachSegment = oDataPath.Last() as EachSegment;
+                    eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                 });
         }
@@ -83,6 +116,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                 });
         }
@@ -108,6 +142,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                 });
         }
@@ -136,6 +171,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                 });
         }
@@ -151,6 +187,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                     eachSegment.TargetEdmType.Should().Be(HardCodedTestModel.GetEmployeeType());
                 });
@@ -176,6 +213,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                     eachSegment.TargetEdmType.Should().Be(HardCodedTestModel.GetEmployeeType());
                 });
@@ -194,6 +232,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                     eachSegment.TargetEdmType.Should().Be(HardCodedTestModel.GetEmployeeType());
                 });
@@ -219,6 +258,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                     eachSegment.TargetEdmType.Should().Be(HardCodedTestModel.GetEmployeeType());
                 });
@@ -235,6 +275,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
                     eachSegment.TargetEdmType.Should().Be(HardCodedTestModel.GetDogType());
                 });
@@ -251,6 +292,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                     eachSegment.TargetEdmType.Should().Be(HardCodedTestModel.GetPersonType());
                 });
@@ -276,6 +318,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
+                    eachSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                     eachSegment.TargetEdmType.Should().Be(HardCodedTestModel.GetPersonType());
                 });
@@ -292,6 +335,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     List<EachSegment> eachSegments = oDataPath.OfType<EachSegment>().ToList();
                     eachSegments.Count.Should().Be(1);
+                    eachSegments[0].TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegments[0].TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                     eachSegments[0].TargetEdmType.Should().Be(HardCodedTestModel.GetPersonType());
                 });
@@ -317,13 +361,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     List<EachSegment> eachSegments = oDataPath.OfType<EachSegment>().ToList();
                     eachSegments.Count.Should().Be(1);
+                    eachSegments[0].TargetKind.Should().Be(RequestTargetKind.Resource);
                     eachSegments[0].TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
                     eachSegments[0].TargetEdmType.Should().Be(HardCodedTestModel.GetPersonType());
                 });
         }
 
-        // NOTE: Per OData 4.01 spec, GET actions and functions may follow $each, but we are limiting the scope of that feature
-        // by permitting only ONE action segment to follow $each.
         [Fact]
         public void SetBasedOperations_EachSegmentOnSetBasedActionOnCollectionResults_ThrowsException()
         {
@@ -335,21 +378,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.SummonPuppies"));
         }
 
-        // NOTE: Per OData 4.01 spec, GET actions and functions may follow $each, but we are limiting the scope of that feature
-        // by permitting only ONE action segment to follow $each.
         [Fact]
-        public void SetBasedOperations_FunctionAfterEachSegment_ThrowsException()
+        public void SetBasedOperations_FunctionAfterEachSegment_ReturnsSuccess()
         {
-            Action parse = () => ParseUriAndVerify(
+            ParseUriAndVerify(
                 new Uri("http://gobbledygook/People/$each/Fully.Qualified.Namespace.AllMyFriendsDogs"),
                 (oDataPath, filterClause, aliasNodes) =>
                 {
+                    oDataPath.Count.Should().Be(3);
+
+                    List<EachSegment> eachSegments = oDataPath.OfType<EachSegment>().ToList();
+                    eachSegments.Count.Should().Be(1);
+                    eachSegments[0].TargetKind.Should().Be(RequestTargetKind.Resource);
+                    eachSegments[0].TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
+                    eachSegments[0].TargetEdmType.Should().Be(HardCodedTestModel.GetPersonType());
                 });
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
         }
 
-        // NOTE: Per OData 4.01 spec, GET actions and functions may follow $each, but we are limiting the scope of that feature
-        // by permitting only ONE action segment to follow $each.
         [Fact]
         public void SetBasedOperations_NonActionPathSegmentAfterEachSegment_ThrowsException()
         {
@@ -358,7 +403,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                 });
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
         }
 
         [Fact]

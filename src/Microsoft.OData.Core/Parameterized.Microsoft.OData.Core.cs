@@ -5416,13 +5416,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Only a single action can proceed $each."
+        /// A string like "Only a single operation can follow $each."
         /// </summary>
-        internal static string RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment
+        internal static string RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
             }
         }
 

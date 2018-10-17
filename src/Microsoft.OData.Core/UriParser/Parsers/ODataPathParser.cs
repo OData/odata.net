@@ -589,10 +589,7 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.RequestUriProcessor_CannotApplyEachOnSingleEntities(lastNavigationSource.Name));
             }
 
-            IEdmType targetEdmType = (prevSegment is TypeSegment || prevSegment is FilterSegment) ?
-                prevSegment.TargetEdmType :
-                lastNavigationSource.EntityType();
-            EachSegment eachSegment = new EachSegment(lastNavigationSource, targetEdmType);
+            EachSegment eachSegment = new EachSegment(lastNavigationSource, prevSegment.TargetEdmType.AsElementType());
             this.parsedSegments.Add(eachSegment);
 
             return true;
@@ -1408,9 +1405,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Per OData 4.01 spec, GET operation and functions may follow $each, but we are limiting the scope of that spec
-        /// by permitting only ONE action segment to follow $each. As such, at most one $each segment can exist in the URI.
-        /// This function enforces those restrictions and throws if any of them are violated.
+        /// Per OData 4.01 spec, only one operation may follow $each. This function enforces that restriction.
         /// </summary>
         /// <param name="index">Index of path segment to examine in the list of parsed segments.</param>
         /// <exception cref="ODataException">Throws if there's a violation of $each restrictions.</exception>
@@ -1427,14 +1422,14 @@ namespace Microsoft.OData.UriParser
                 // Only one segment is allowed after $each...
                 if (numOfSegmentsAfterDollarEach > 1)
                 {
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
+                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
                 }
 
-                // And if there exists a single segment after $each, then it must be an action.
+                // And if there exists a single segment after $each, then it must be a function.
                 OperationSegment operationSegment = this.parsedSegments[index + 1] as OperationSegment;
-                if (operationSegment == null || !(operationSegment.Operations.All(a => a is IEdmAction)))
+                if (operationSegment == null)
                 {
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
+                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
                 }
             }
         }
