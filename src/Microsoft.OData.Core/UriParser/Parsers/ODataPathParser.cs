@@ -589,9 +589,10 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.RequestUriProcessor_CannotApplyEachOnSingleEntities(lastNavigationSource.Name));
             }
 
-            EachSegment eachSegment = new EachSegment(
-                lastNavigationSource,
-                prevSegment is TypeSegment || prevSegment is FilterSegment ? prevSegment.TargetEdmType : null);
+            IEdmType targetEdmType = (prevSegment is TypeSegment || prevSegment is FilterSegment) ?
+                prevSegment.TargetEdmType :
+                lastNavigationSource.EntityType();
+            EachSegment eachSegment = new EachSegment(lastNavigationSource, targetEdmType);
             this.parsedSegments.Add(eachSegment);
 
             return true;
@@ -1407,7 +1408,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Per OData 4.01 spec, GET operation and functions may proceed $each, but we are limiting the scope of that spec
+        /// Per OData 4.01 spec, GET operation and functions may follow $each, but we are limiting the scope of that spec
         /// by permitting only ONE action segment to follow $each. As such, at most one $each segment can exist in the URI.
         /// This function enforces those restrictions and throws if any of them are violated.
         /// </summary>

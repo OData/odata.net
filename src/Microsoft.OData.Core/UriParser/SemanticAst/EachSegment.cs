@@ -26,16 +26,17 @@ namespace Microsoft.OData.UriParser
         /// <param name="navigationSource">The entity collection that this set-based operation applies to.</param>
         /// <param name="targetEdmType">Target type for the entity being referenced.</param>
         /// <exception cref="System.ArgumentNullException">Throws if any input parameter is null.</exception>
-        /// <remarks>$filter cannot be applied on singletons.</remarks>
+        /// <remarks>$each cannot be applied on singletons.</remarks>
         public EachSegment(IEdmNavigationSource navigationSource, IEdmType targetEdmType)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationSource, "navigationSource");
+            ExceptionUtils.CheckArgumentNotNull(targetEdmType, "targetEdmType");
 
             this.Identifier = UriQueryConstants.EachSegment;
             this.SingleResult = false;
             this.TargetEdmNavigationSource = navigationSource;
-            this.TargetKind = RequestTargetKind.Resource;
-            this.TargetEdmType = targetEdmType ?? navigationSource.EntityType();
+            this.TargetEdmType = targetEdmType;
+            this.TargetKind = targetEdmType.GetTargetKindFromType();
 
             this.edmType = navigationSource.Type;
         }
