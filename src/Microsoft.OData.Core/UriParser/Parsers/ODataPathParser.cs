@@ -477,7 +477,7 @@ namespace Microsoft.OData.UriParser
             BindingState state = new BindingState(configuration, currentOdataPathInfo.Segments.ToList())
             {
                 ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(
-                currentOdataPathInfo.TargetEdmType.ToTypeReference(), currentOdataPathInfo.TargetNavigationSource)
+                    currentOdataPathInfo.TargetEdmType.ToTypeReference(), currentOdataPathInfo.TargetNavigationSource)
             };
             state.RangeVariables.Push(state.ImplicitRangeVariable);
 
@@ -1069,7 +1069,7 @@ namespace Microsoft.OData.UriParser
              * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceeded by an excape - marker segment('$').
              * For KeyAsSegment, the following precedence rules should be supported[ODATA - 799]:
              * Try to match an OData segment(starting with “$”).
-             *   - Note: $filter path segment is a special case that has the format "$filter=@a", where @a represents an alias.
+             *   - Note: $filter path segment is a special case that has the format "$filter(@a)", where @a represents an alias.
              * Try to match an alias - qualified bound action name, bound function overload, or type name.
              * Try to match a namespace-qualified bound action name, bound function overload, or type name.
              * Try to match an unqualified bound action name, bound function overload, or type name in a default namespace.
@@ -1425,9 +1425,8 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
                 }
 
-                // And if there exists a single segment after $each, then it must be a function.
-                OperationSegment operationSegment = this.parsedSegments[index + 1] as OperationSegment;
-                if (operationSegment == null)
+                // And if there exists a single segment after $each, then it must be an OperationSegment.
+                if (!(this.parsedSegments[index + 1] is OperationSegment))
                 {
                     throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
                 }

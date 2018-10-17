@@ -140,7 +140,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Handle a EachSegment
+        /// Handle an EachSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
         public virtual void Handle(EachSegment segment)

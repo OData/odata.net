@@ -122,7 +122,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Handle an OperationSegment
+        /// Handle an OperationImportSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
         public override void Handle(OperationImportSegment segment)
@@ -167,7 +167,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Handle a EachSegment
+        /// Handle an EachSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
         public override void Handle(EachSegment segment)

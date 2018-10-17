@@ -123,7 +123,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Translate a EachSegment
+        /// Translate an EachSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>UserDefinedValue</returns>

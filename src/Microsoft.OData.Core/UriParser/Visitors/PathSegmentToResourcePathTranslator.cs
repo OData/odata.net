@@ -127,7 +127,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Translate a OperationSegment
+        /// Translate an OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
@@ -147,7 +147,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Translate a OperationImportSegment
+        /// Translate an OperationImportSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
@@ -210,7 +210,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Translate a EachSegment
+        /// Translate an EachSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
