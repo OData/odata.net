@@ -122,6 +122,33 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Handle a FilterSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(FilterSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Handle a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(ReferenceSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Handle an EachSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(EachSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Handle a LinksSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>

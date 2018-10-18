@@ -85,7 +85,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Translate a OperationImportSegment
+        /// Translate an OperationImportSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
@@ -95,7 +95,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Translate a OperationSegment
+        /// Translate an OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
@@ -120,6 +120,36 @@ namespace Microsoft.OData.UriParser
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
         public virtual T Translate(CountSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Translate a FilterSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(FilterSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Translate a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(ReferenceSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Translate an EachSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(EachSegment segment)
         {
             throw new NotImplementedException();
         }

@@ -29,22 +29,34 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the full name of this type.
         /// </summary>
-        public string FullName => Namespace + "." + Name;
+        public string FullName
+        {
+            get { return Namespace + "." + Name; }
+        }
 
         /// <summary>
         /// Gets the Edm type kind of this type.
         /// </summary>
-        public override EdmTypeKind TypeKind => EdmTypeKind.Path;
+        public override EdmTypeKind TypeKind
+        {
+            get { return EdmTypeKind.Path; }
+        }
 
         /// <summary>
         /// Gets the schema element kind of this type.
         /// </summary>
-        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.TypeDefinition;
+        public EdmSchemaElementKind SchemaElementKind
+        {
+            get { return EdmSchemaElementKind.TypeDefinition; }
+        }
 
         /// <summary>
         /// Gets the namespace of this type.
         /// </summary>
-        public string Namespace => EdmConstants.EdmNamespace;
+        public string Namespace
+        {
+            get { return EdmConstants.EdmNamespace; }
+        }
 
         /// <summary>
         /// Gets the name of this type.
