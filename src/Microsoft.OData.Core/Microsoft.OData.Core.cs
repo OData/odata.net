@@ -771,9 +771,17 @@ namespace Microsoft.OData {
         internal const string CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists = "CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists";
         internal const string RequestUriProcessor_InvalidValueForEntitySegment = "RequestUriProcessor_InvalidValueForEntitySegment";
         internal const string RequestUriProcessor_InvalidValueForKeySegment = "RequestUriProcessor_InvalidValueForKeySegment";
+        internal const string RequestUriProcessor_CannotApplyFilterOnSingleEntities = "RequestUriProcessor_CannotApplyFilterOnSingleEntities";
+        internal const string RequestUriProcessor_CannotApplyEachOnSingleEntities = "RequestUriProcessor_CannotApplyEachOnSingleEntities";
+        internal const string RequestUriProcessor_NoNavigationSourceFound = "RequestUriProcessor_NoNavigationSourceFound";
+        internal const string RequestUriProcessor_FilterPathSegmentSyntaxError = "RequestUriProcessor_FilterPathSegmentSyntaxError";
+        internal const string RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment = "RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment";
         internal const string RequestUriProcessor_EmptySegmentInRequestUrl = "RequestUriProcessor_EmptySegmentInRequestUrl";
         internal const string RequestUriProcessor_SyntaxError = "RequestUriProcessor_SyntaxError";
         internal const string RequestUriProcessor_CountOnRoot = "RequestUriProcessor_CountOnRoot";
+        internal const string RequestUriProcessor_FilterOnRoot = "RequestUriProcessor_FilterOnRoot";
+        internal const string RequestUriProcessor_EachOnRoot = "RequestUriProcessor_EachOnRoot";
+        internal const string RequestUriProcessor_RefOnRoot = "RequestUriProcessor_RefOnRoot";
         internal const string RequestUriProcessor_MustBeLeafSegment = "RequestUriProcessor_MustBeLeafSegment";
         internal const string RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment = "RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment";
         internal const string RequestUriProcessor_MissingSegmentAfterLink = "RequestUriProcessor_MissingSegmentAfterLink";

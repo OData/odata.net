@@ -51,6 +51,11 @@ namespace Microsoft.OData.UriParser
         private bool nextSegmentMustReferToMetadata;
 
         /// <summary>
+        /// Last navigation source that has been parsed.
+        /// </summary>
+        private IEdmNavigationSource lastNavigationSource;
+
+        /// <summary>
         /// Initializes a new instance of <see cref="ODataPathParser"/>.
         /// </summary>
         /// <param name="configuration">The parser's current configuration.</param>
@@ -63,7 +68,8 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// Extracts the segment identifier and, if there are parenthesis in the segment, the expression in the parenthesis.
-        /// Will throw if identifier is not found or if the parenthesis expression is malformed.
+        /// Will throw if identifier is not found or if the parenthesis expression is malformed. This function does not validate
+        /// anything and simply provides the raw text of both the identifier and parenthetical expression.
         /// </summary>
         /// <remarks>Internal only so it can be called from tests. Should not be used outside <see cref="ODataPathParser"/>.</remarks>
         /// <param name="segmentText">The segment text.</param>
@@ -128,6 +134,13 @@ namespace Microsoft.OData.UriParser
                     {
                         this.CreateNextSegment(segmentText);
                     }
+
+                    // Keep track of last navigation source.
+                    IEdmNavigationSource navigationSource = parsedSegments.Last().TranslateWith(new DetermineNavigationSourceTranslator());
+                    if (navigationSource != null)
+                    {
+                        lastNavigationSource = navigationSource;
+                    }
                 }
             }
             catch (ODataUnrecognizedPathException ex)
@@ -138,16 +151,9 @@ namespace Microsoft.OData.UriParser
                 throw;
             }
 
-            List<ODataPathSegment> validatedSegments = new List<ODataPathSegment>(this.parsedSegments.Count);
-            foreach (var segment in this.parsedSegments)
-            {
-#if DEBUG
-                segment.AssertValid();
-#endif
-                validatedSegments.Add(segment);
-            }
-
+            List<ODataPathSegment> validatedSegments = CreateValidatedPathSegments();
             this.parsedSegments.Clear();
+
             return validatedSegments;
         }
 
@@ -420,14 +426,12 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Try to handle the segment as $count.
         /// </summary>
-        /// <param name="segmentText">The segment text to handle.</param>
+        /// <param name="identifier">The identifier that was parsed from this raw segment.</param>
+        /// <param name="parenthesisExpression">The query portion was parsed from this raw segment.
+        /// This value can be null if there is no query portion.</param>
         /// <returns>Whether the segment was $count.</returns>
-        private bool TryCreateCountSegment(string segmentText)
+        private bool TryCreateCountSegment(string identifier, string parenthesisExpression)
         {
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
-
             if (!IdentifierIs(UriQueryConstants.CountSegment, identifier))
             {
                 return false;
@@ -450,16 +454,156 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Creates a filter clause from a navigation source and filter expression.
+        /// </summary>
+        /// <param name="navigationSource">Navigation source to which the filter refers.</param>
+        /// <param name="targetEdmType">Target type for the entity being referenced.</param>
+        /// <param name="filter">Filter expression.</param>
+        /// <returns>Filter clause with the navigation source and filter information.</returns>
+        private FilterClause GenerateFilterClause(IEdmNavigationSource navigationSource, IEdmType targetEdmType, string filter)
+        {
+            Debug.Assert(navigationSource != null, "navigationSource != null");
+            Debug.Assert(targetEdmType != null, "targetEdmType != null");
+            Debug.Assert(filter.Length > 0, "filter.Length > 0");
+
+            ODataPathInfo currentOdataPathInfo = new ODataPathInfo(targetEdmType, navigationSource);
+
+            // Get the syntactic representation of the filter expression.
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(
+                configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+            QueryToken filterToken = expressionParser.ParseFilter(filter);
+
+            // Bind it to metadata.
+            BindingState state = new BindingState(configuration, currentOdataPathInfo.Segments.ToList())
+            {
+                ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(
+                    currentOdataPathInfo.TargetEdmType.ToTypeReference(), currentOdataPathInfo.TargetNavigationSource)
+            };
+            state.RangeVariables.Push(state.ImplicitRangeVariable);
+
+            MetadataBinder binder = new MetadataBinder(state);
+            FilterBinder filterBinder = new FilterBinder(binder.Bind, state);
+
+            return filterBinder.BindFilter(filterToken);
+        }
+
+        /// <summary>
+        /// Try to handle the segment as $filter.
+        /// </summary>
+        /// <param name="segmentText">The raw segment text.</param>
+        /// <returns>Whether the segment was $filter.</returns>
+        /// <remarks>
+        /// $filter path segment is different from existing path segments in that it strictly
+        /// follows the format of "$filter(expression)", expression could be an alias or inline expression
+        /// that resolves to a boolean. Thus, this function should validate the format of the path
+        /// segment closely.
+        /// </remarks>
+        private bool TryCreateFilterSegment(string segmentText)
+        {
+            Debug.Assert(segmentText != null, "segmentText != null");
+            Debug.Assert(parsedSegments.Count > 0, "parsedSegments.Count > 0");
+
+            /*
+             * 1) Check whether the path segment starts with $filter.
+             * 2) Ensure that the expression that follows the identifier is enclosed in parentheses.
+             * 3) Extract the expression and validate it syntactically.
+             * 4) Add the filter segment to list of parsed segments.
+             */
+
+            // 1) Check whether the path segment starts with $filter. Past this point, we will throw invalid syntax exceptions
+            // because we will assume that the user is attempting to use the $filter path segment.
+            if (!segmentText.StartsWith(
+                UriQueryConstants.FilterSegment,
+                this.configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            // 2) The expression that follows UriQueryConstants.FilterSegment should be enclosed in parentheses.
+            // Step 3) performs the expression validation (e.g. illegal characters).
+            //      - the length of this segment should be longer than "$filter()", indicating that there's a valid expression
+            int index = UriQueryConstants.FilterSegment.Length;
+            if (segmentText.Length <= index + 2 || segmentText[index] != '(' || segmentText[segmentText.Length - 1] != ')')
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentSyntaxError);
+            }
+
+            // 3) Extract the expression and perform the rest of the validations on it.
+            if (lastNavigationSource == null)
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_NoNavigationSourceFound(UriQueryConstants.FilterSegment));
+            }
+
+            if (lastNavigationSource is IEdmSingleton || this.parsedSegments.Last() is KeySegment)
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_CannotApplyFilterOnSingleEntities(lastNavigationSource.Name));
+            }
+
+            // The "index + 1" is to move past the '(' and the '-2' accounts for the two paren characters.
+            string filterExpression = segmentText.Substring(index + 1, segmentText.Length - UriQueryConstants.FilterSegment.Length - 2);
+
+            // If the previous segment is a type segment, then the entity set has been casted and the filter expression should reflect the cast.
+            TypeSegment typeSegment = this.parsedSegments.Last() as TypeSegment;
+
+            // Creating a filter clause helps validate the expression and create the expression nodes (including nested parameter aliases).
+            FilterClause filterClause = GenerateFilterClause(
+                lastNavigationSource,
+                typeSegment == null ? lastNavigationSource.EntityType() : typeSegment.TargetEdmType,
+                filterExpression);
+
+            // 4) Create filter segment with the validated expression and add it to parsed segments.
+            FilterSegment filterSegment = new FilterSegment(filterClause.Expression, filterClause.RangeVariable, lastNavigationSource);
+            this.parsedSegments.Add(filterSegment);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Try to handle the segment as $each.
+        /// </summary>
+        /// <param name="identifier">The identifier that was parsed from this raw segment.</param>
+        /// <param name="parenthesisExpression">The query portion was parsed from this raw segment.
+        /// This value can be null if there is no query portion.</param>
+        /// <returns>Whether the segment was $each.</returns>
+        private bool TryCreateEachSegment(string identifier, string parenthesisExpression)
+        {
+            if (!IdentifierIs(UriQueryConstants.EachSegment, identifier))
+            {
+                return false;
+            }
+
+            // $each is not supposed to have parenthesis expressions after it.
+            if (parenthesisExpression != null)
+            {
+                throw ExceptionUtil.CreateSyntaxError();
+            }
+
+            ODataPathSegment prevSegment = this.parsedSegments.Last();
+            if (lastNavigationSource == null)
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_NoNavigationSourceFound(UriQueryConstants.EachSegment));
+            }
+
+            if (lastNavigationSource is IEdmSingleton || prevSegment is KeySegment)
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_CannotApplyEachOnSingleEntities(lastNavigationSource.Name));
+            }
+
+            EachSegment eachSegment = new EachSegment(lastNavigationSource, prevSegment.TargetEdmType.AsElementType());
+            this.parsedSegments.Add(eachSegment);
+
+            return true;
+        }
+
+        /// <summary>
         /// Tries to handle the segment as $ref. If it is $ref, then the rest of the path will be parsed/validated in this call.
         /// </summary>
-        /// <param name="text">The text of the segment.</param>
+        /// <param name="identifier">The identifier that was parsed from this raw segment.</param>
+        /// <param name="parenthesisExpression">The query portion was parsed from this raw segment.
+        /// This value can be null if there is no query portion.</param>
         /// <returns>Whether the text was $ref.</returns>
-        private bool TryCreateEntityReferenceSegment(string text)
+        private bool TryCreateEntityReferenceSegment(string identifier, string parenthesisExpression)
         {
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
-
             if (!this.IdentifierIs(UriQueryConstants.RefSegment, identifier))
             {
                 return false;
@@ -470,60 +614,63 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.CreateSyntaxError();
             }
 
-            // Create a stack to keep track of KeySegments
-            Stack<KeySegment> keySegmentsForPreviousPathSegment = new Stack<KeySegment>();
+            // The algorithm below looks for the last NavigationPropertySegment before the $ref segment. Whether a NavPropSeg exists
+            // becomes two different code paths:
+            // 1) Backwards compatibility behavior (<= ODL 7.4.x): If the NavPropSeg exists, then it is expected to either be before
+            // KeySegments or before the $ref (i.e. NavPropSeg/KeySeg/KeySeg/.../$ref or NavPropSeg/$ref). Then the NavPropSeg is replaced
+            // with NavigationPropertyLinkSegment. In a previous implementation, if a NavPropSeg didn't exist before KeySegments or
+            // $ref, then this function would throw. This was not correct as $ref can apply to entity sets and similar segments
+            // (e.g. TypeSegment and FilterSegment), and therefore 2) below is implemented to support those scenarios.
+            // 2) If the NavPropSeg does not exist, then this algorithm appends a ReferenceSegment to the existing list of parsed segments.
 
-            while (true)
+            // Determine the index of the NavigationPropertySegment in either of the following formats:
+            // NavPropSeg/KeySeg/KeySeg/.../$ref or NavPropSeg/$ref
+            int indexOfNavPropSeg = this.parsedSegments.Count - 1;
+            while (indexOfNavPropSeg > 0 && this.parsedSegments[indexOfNavPropSeg] is KeySegment)
             {
-                KeySegment key = this.parsedSegments[this.parsedSegments.Count - 1] as KeySegment;
+                --indexOfNavPropSeg;
+            }
 
-                if (key == null)
+            NavigationPropertySegment navPropSegment = this.parsedSegments[indexOfNavPropSeg] as NavigationPropertySegment;
+            if (navPropSegment != null)
+            {
+                if (navPropSegment.TargetKind != RequestTargetKind.Resource)
                 {
-                    break;
+                    throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.PathParser_EntityReferenceNotSupported(navPropSegment.Identifier));
                 }
 
-                keySegmentsForPreviousPathSegment.Push(key);
-                this.parsedSegments.Remove(key);
+                // If this is a navigation property, find target navigation source
+                Debug.Assert(indexOfNavPropSeg - 1 >= 0, "indexOfNavPropSeg - 1 >= 0");
+                IEdmPathExpression bindingPath;
+                var targetNavigationSource = this.parsedSegments[indexOfNavPropSeg - 1].TargetEdmNavigationSource.FindNavigationTarget(
+                    navPropSegment.NavigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
+
+                // If we can't compute the target navigation source, then pretend the navigation property does not exist
+                if (targetNavigationSource == null)
+                {
+                    throw ExceptionUtil.CreateResourceNotFoundError(navPropSegment.NavigationProperty.Name);
+                }
+
+                // Create new NavigationPropertyLinkSegment
+                var navPropLinkSegment = new NavigationPropertyLinkSegment(navPropSegment.NavigationProperty, targetNavigationSource);
+
+                // Replace the NavigationPropertySegment with the $ref NavigationPropertyLinkSegment
+                this.parsedSegments[indexOfNavPropSeg] = navPropLinkSegment;
             }
-
-            // Get the previous Path segment
-            ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
-            NavigationPropertySegment navPropSegment = previous as NavigationPropertySegment;
-
-            // $ref can not be applied for entity set. It can be applied only on entity and collection of entities
-            if ((navPropSegment == null) || navPropSegment.TargetKind != RequestTargetKind.Resource)
+            else
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.PathParser_EntityReferenceNotSupported(previous.Identifier));
+                if (this.parsedSegments.Last().TargetKind != RequestTargetKind.Resource)
+                {
+                    throw ExceptionUtil.CreateBadRequestError(
+                        ODataErrorStrings.PathParser_EntityReferenceNotSupported(this.parsedSegments.Last().Identifier));
+                }
+
+                ReferenceSegment referenceSegment = new ReferenceSegment(lastNavigationSource);
+                this.parsedSegments.Add(referenceSegment);
             }
-
-            // Since this $ref segment, remove the previous segment from parsedSegments as we need to repalce that with new ref segment
-            this.parsedSegments.Remove(previous);
-
-            // If this is a navigation property, find target navigation source
-            IEdmPathExpression bindingPath;
-            var targetNavigationSource = this.parsedSegments[parsedSegments.Count - 1].TargetEdmNavigationSource.FindNavigationTarget(navPropSegment.NavigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
-
-            // If we can't compute the target navigation source, then pretend the navigation property does not exist
-            if (targetNavigationSource == null)
-            {
-                throw ExceptionUtil.CreateResourceNotFoundError(navPropSegment.NavigationProperty.Name);
-            }
-
-            // Create new NavigationPropertyLinkSegment
-            var navPropLinkSegment = new NavigationPropertyLinkSegment(navPropSegment.NavigationProperty, targetNavigationSource);
-
-            // Add this segment to parsedSegments
-            this.parsedSegments.Add(navPropLinkSegment);
-
-            // Add key segments back to the parsed segments
-            while (keySegmentsForPreviousPathSegment.Count > 0)
-            {
-                this.parsedSegments.Add(keySegmentsForPreviousPathSegment.Pop());
-            }
-
-            string nextSegmentText;
 
             // Nothing is allowed after $ref.
+            string nextSegmentText;
             if (this.TryGetNextSegmentText(out nextSegmentText))
             {
                 throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
@@ -559,14 +706,12 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Try to handle the segment as $value.
         /// </summary>
-        /// <param name="text">The segment text.</param>
+        /// <param name="identifier">The identifier that was parsed from this raw segment.</param>
+        /// <param name="parenthesisExpression">The query portion was parsed from this raw segment.
+        /// This value can be null if there is no query portion.</param>
         /// <returns>Whether the segment was $value.</returns>
-        private bool TryCreateValueSegment(string text)
+        private bool TryCreateValueSegment(string identifier, string parenthesisExpression)
         {
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
-
             if (!this.IdentifierIs(UriQueryConstants.ValueSegment, identifier))
             {
                 return false;
@@ -716,6 +861,24 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_CountOnRoot);
             }
 
+            if (this.IdentifierIs(UriQueryConstants.FilterSegment, identifier))
+            {
+                // $filter on root: throw
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_FilterOnRoot);
+            }
+
+            if (this.IdentifierIs(UriQueryConstants.EachSegment, identifier))
+            {
+                // $each on root: throw
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EachOnRoot);
+            }
+
+            if (this.IdentifierIs(UriQueryConstants.RefSegment, identifier))
+            {
+                // $ref on root: throw
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_RefOnRoot);
+            }
+
             if (this.configuration.BatchReferenceCallback != null && ContentIdRegex.IsMatch(identifier))
             {
                 if (parenthesisExpression != null)
@@ -841,7 +1004,12 @@ namespace Microsoft.OData.UriParser
         private bool TryCreateSegmentForOperation(ODataPathSegment previousSegment, string identifier, string parenthesisExpression)
         {
             // Parse Arguments syntactically
-            var bindingType = previousSegment == null ? null : previousSegment.EdmType;
+            IEdmType bindingType = null;
+            if (previousSegment != null)
+            {
+                // Use TargetEdmType for EachSegment to represent a pseudo-single entity.
+                bindingType = (previousSegment is EachSegment) ? previousSegment.TargetEdmType : previousSegment.EdmType;
+            }
 
             ICollection<OperationSegmentParameter> resolvedParameters;
             IEdmOperation singleOperation;
@@ -893,15 +1061,23 @@ namespace Microsoft.OData.UriParser
         /// <param name="text">The text for the next segment.</param>
         private void CreateNextSegment(string text)
         {
-            // For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceeded by an excape-marker segmetn ('$').
-            // For KeyAsSegment, the following precedence rules should be supported [ODATA-799]:
-            // Try to match an OData segment (starting with “$”).
-            // Try to match an alias - qualified bound action name, bound function overload, or type name.
-            // Try to match a namespace-qualified bound action name, bound function overload, or type name.
-            // Try to match an unqualified bound action name, bound function overload, or type name in a default namespace.
-            // Treat as a key.
+            string identifier;
+            string parenthesisExpression;
+            ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
+
+            /*
+             * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceeded by an excape - marker segment('$').
+             * For KeyAsSegment, the following precedence rules should be supported[ODATA - 799]:
+             * Try to match an OData segment(starting with “$”).
+             *   - Note: $filter path segment is a special case that has the format "$filter(@a)", where @a represents an alias.
+             * Try to match an alias - qualified bound action name, bound function overload, or type name.
+             * Try to match a namespace-qualified bound action name, bound function overload, or type name.
+             * Try to match an unqualified bound action name, bound function overload, or type name in a default namespace.
+             * Treat as a key.
+             */
+
             // $value
-            if (this.TryCreateValueSegment(text))
+            if (this.TryCreateValueSegment(identifier, parenthesisExpression))
             {
                 return;
             }
@@ -914,20 +1090,28 @@ namespace Microsoft.OData.UriParser
             }
 
             // $ref
-            if (this.TryCreateEntityReferenceSegment(text))
+            if (this.TryCreateEntityReferenceSegment(identifier, parenthesisExpression))
             {
                 return;
             }
 
             // $count
-            if (this.TryCreateCountSegment(text))
+            if (this.TryCreateCountSegment(identifier, parenthesisExpression))
             {
                 return;
             }
 
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
+            // $filter
+            if (this.TryCreateFilterSegment(text))
+            {
+                return;
+            }
+
+            // $each
+            if (this.TryCreateEachSegment(identifier, parenthesisExpression))
+            {
+                return;
+            }
 
             // property if previous is single
             if (previous.SingleResult)
@@ -1199,6 +1383,54 @@ namespace Microsoft.OData.UriParser
                 expected,
                 identifier,
                 this.configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Validates the existing parsed segments and returns a list of validated segments.
+        /// </summary>
+        /// <returns>List of validated path segments.</returns>
+        private List<ODataPathSegment> CreateValidatedPathSegments()
+        {
+            List<ODataPathSegment> validatedSegments = new List<ODataPathSegment>(this.parsedSegments.Count);
+            for (int index = 0, segmentCount = this.parsedSegments.Count; index < segmentCount; ++index)
+            {
+                CheckDollarEachSegmentRestrictions(index);
+#if DEBUG
+                this.parsedSegments[index].AssertValid();
+#endif
+                validatedSegments.Add(this.parsedSegments[index]);
+            }
+
+            return validatedSegments;
+        }
+
+        /// <summary>
+        /// Per OData 4.01 spec, only one operation may follow $each. This function enforces that restriction.
+        /// </summary>
+        /// <param name="index">Index of path segment to examine in the list of parsed segments.</param>
+        /// <exception cref="ODataException">Throws if there's a violation of $each restrictions.</exception>
+        /// <remarks>Should the restrictions on the $each be removed, this function can be deleted.</remarks>
+        private void CheckDollarEachSegmentRestrictions(int index)
+        {
+            Debug.Assert(index < this.parsedSegments.Count, "index < this.parsedSegments.Count");
+
+            int numOfSegmentsAfterDollarEach = this.parsedSegments.Count - index - 1;
+
+            // Perform restriction checks only if the current segment being examined is $each and there are subsequent segments.
+            if (this.parsedSegments[index] is EachSegment && numOfSegmentsAfterDollarEach > 0)
+            {
+                // Only one segment is allowed after $each...
+                if (numOfSegmentsAfterDollarEach > 1)
+                {
+                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
+                }
+
+                // And if there exists a single segment after $each, then it must be an OperationSegment.
+                if (!(this.parsedSegments[index + 1] is OperationSegment))
+                {
+                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
+                }
+            }
         }
     }
 }

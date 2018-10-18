@@ -138,7 +138,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Translate a OperationSegment
+        /// Translate an OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
@@ -149,7 +149,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Translate a OperationSegment
+        /// Translate an OperationImportSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
@@ -176,6 +176,38 @@ namespace Microsoft.OData.UriParser
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
         public override string Translate(CountSegment segment)
+        {
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Translate a FilterSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(FilterSegment segment)
+        {
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Translate a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(ReferenceSegment segment)
+        {
+            // How a ReferenceSegment should be addressed in the context URI is still a pending decision.
+            // https://github.com/OData/odata.net/issues/1292
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Translate an EachSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(EachSegment segment)
         {
             return string.Empty;
         }
@@ -228,6 +260,16 @@ namespace Microsoft.OData.UriParser
         public override string Translate(MetadataSegment segment)
         {
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Translate a PathTemplateSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(PathTemplateSegment segment)
+        {
+            return "/" + segment.Identifier;
         }
     }
 }
