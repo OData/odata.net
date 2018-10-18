@@ -93,7 +93,9 @@ namespace Microsoft.OData.Client
         public static void Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
         {
             if (!self.TryAdd(key, value))
+            {
                 throw new ArgumentException("Argument_AddingDuplicate");
+            }
         }
 
         /// <summary>

@@ -545,8 +545,8 @@ namespace Microsoft.OData.Client
             #else
                 System.Threading.Interlocked.CompareExchange(ref this.identityToDescriptor, new ConcurrentDictionary<Uri, EntityDescriptor>(EqualityComparer<Uri>.Default), null);
             #endif
-			}
-		}
+            }
+        }
 
         /// <summary>create this.bindings when necessary</summary>
         private void EnsureLinkBindings()
