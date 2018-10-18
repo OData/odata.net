@@ -228,7 +228,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string selectClauseText = "Navigation2";
             const string expandClauseText = "Navigation1";
-            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: selectClauseText, expectedExpandClauseFromOM: "Navigation1");
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: selectClauseText, expectedExpandClauseFromOM: expandClauseText);
         }
 
         [Fact]

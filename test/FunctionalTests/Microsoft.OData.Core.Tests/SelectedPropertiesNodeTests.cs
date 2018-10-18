@@ -399,12 +399,6 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
-        public void UnqualifiedUnboundActionWithParametersShouldNotBeSelected()
-        {
-            SelectedPropertiesNode.Create("Action(Edm.Int32)", this.cityType, this.edmModel).Should().NotHaveAction(this.cityType, this.action);
-        }
-
-        [Fact]
         public void NamespaceQualifiedActionNameShouldBeSelected()
         {
             SelectedPropertiesNode.Create("TestModel.Action").Should().HaveAction(this.cityType, this.action);

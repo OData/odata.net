@@ -246,7 +246,7 @@ namespace Microsoft.OData
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
         internal static SelectedPropertiesNode Create(SelectExpandClause selectExpandClause)
         {
-            if (selectExpandClause.AllSelected 
+            if (selectExpandClause.AllSelected
             && selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().All(_ => _.SelectAndExpand.AllSelected))
             {
                 // All items are selected and all expanded entities are all-selected.
@@ -589,7 +589,7 @@ namespace Microsoft.OData
             int idxLP = item.IndexOf('(');
             if (idxLP == -1
                 || !item.EndsWith(")", StringComparison.Ordinal)
-                || (this.structuredType != null && IsBoundOperationToken(item.Substring(0, idxLP))))
+                || (this.structuredType != null && !IsNavigationPropertyToken(item.Substring(0, idxLP))))
             {
                 // selected item is not properly parenthesized, or is an operation token.
                 return false;
@@ -619,35 +619,38 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Checks the specified model and structuredType and see whether the token can be resolved to a bound operation name.
+        /// Checks the specified model and structuredType and see whether the token can be resolved to a navigation property name.
         /// </summary>
         /// <param name="token">The token to check.</param>
-        /// <returns>true if token can be matched a bound operation; false otherwise.</returns>
-        private bool IsBoundOperationToken(string token)
+        /// <returns>true if token can be resolved to a navigation property; false otherwise.</returns>
+        private bool IsNavigationPropertyToken(string token)
         {
             const char nameSpaceSeparator = '.';
 
-            if (this.edmModel == null)
-            {
-                return false;
-            }
+            /* Decision tree:
+             #1. if it matches a defined navigation property => treat it as a navigation property
+             #2. otherwise, if the name contains a dot => it's not a navigation property
+             #3. otherwise, if it matches an unqualified bound operation name => it's not a navigation property
+             #4. otherwise, it's a navigation property
+             */
 
-            bool found = false;
-            int idx = token.LastIndexOf(nameSpaceSeparator);
-            if (idx == -1)
+            // For better readability, set the value in if-else branches corresponding to decision tree above.
+            bool found;
+            if (this.structuredType.NavigationProperties().Any(_ => _.Name.Equals(token, StringComparison.Ordinal)))
             {
-                // Token is in unqualified form, try matching the unqualified name of the bound operation.
-                // N.B.: Operation name should be always name space qualified per current OData spec. The older
-                // version of the library returns unqualified. We should fix the library such that it no longer
-                // returns unqualified names in context url.
-                found = this.edmModel.FindDeclaredBoundOperations(this.structuredType)
-                        .Any(op => op.Name.Equals(token, StringComparison.Ordinal));
+                // #1
+                found = true;
+            }
+            else if (token.IndexOf(nameSpaceSeparator) != -1 ||
+                     this.edmModel.FindBoundOperations(this.structuredType).Any(op => op.Name.Equals(token, StringComparison.Ordinal)))
+            {
+                // #2, #3
+                found = false;
             }
             else
             {
-                // Qualified name: try to match bound and unbound operations
-                found = this.edmModel.FindBoundOperations(token, this.structuredType).Count() != 0
-                    || this.edmModel.FindDeclaredOperations(token).Count() != 0;
+                // #4
+                found = true;
             }
 
             return found;

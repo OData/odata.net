@@ -926,10 +926,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         // V4 Protocol Spec Chapter 10.10: Projected Expanded Entities (not contain select)
         // Sample Request: http://host/service/Employees(0)?$expand=AssociatedCompany
         [Theory]
-        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"")]
-        [InlineData(ODataVersion.V401, "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"")]
-        public void ExpandedMultiSegmentEntity(ODataVersion version, string contextString)
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        public void ExpandedMultiSegmentEntity(ODataVersion version)
         {
+            string contextString = "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"";
             ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",
