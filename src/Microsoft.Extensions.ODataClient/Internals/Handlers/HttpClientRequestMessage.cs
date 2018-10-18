@@ -251,7 +251,7 @@ namespace Microsoft.Extensions.ODataClient
         {
             // Only set the message content if the stream has been written to, otherwise
             // HttpClient will complain if it's a GET request.
-            var messageContent = this.messageStream.ToArray(); //TODO: Task 2734342: FSI Core client: avoid using memorystream in HttpClientRequestMessage
+            var messageContent = this.messageStream.ToArray();
             if (messageContent.Length > 0)
             {
                 this.requestMessage.Content = new ByteArrayContent(messageContent);

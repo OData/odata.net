@@ -107,7 +107,7 @@
             constructor for default OData client activator.
             </summary>
         </member>
-        <member name="T:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1">
+        <member name="T:Microsoft.Extensions.ODataClient.DefaultODataClientFactory">
             <summary>
             Factory for Containers to an ODATA v4 service. 
             </summary>
@@ -117,12 +117,12 @@
             but it will rely on basic types from the ODATA v3 client package instead of the v4 package.
             </remarks>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.#ctor(Microsoft.Extensions.ODataClient.IODataClientActivator,Microsoft.Extensions.Logging.ILogger{Microsoft.Extensions.ODataClient.DefaultODataClientFactory{`0}},Microsoft.Extensions.Options.IOptionsMonitor{Microsoft.Extensions.ODataClient.ODataClientOptions})">
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory.#ctor(Microsoft.Extensions.ODataClient.IODataClientActivator,Microsoft.Extensions.Logging.ILogger{Microsoft.Extensions.ODataClient.DefaultODataClientFactory},Microsoft.Extensions.Options.IOptionsMonitor{Microsoft.Extensions.ODataClient.ODataClientOptions})">
             <summary>
             constructor for default client factory.
             </summary>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.CreateClient(System.Uri,System.String)">
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory.CreateClient``1(System.Uri,System.String)">
             <summary>
             create a connection to an OData service, specifying a named HTTP client
             </summary>
@@ -130,7 +130,7 @@
             <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
             <returns></returns>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.OnClientCreated(Microsoft.Extensions.ODataClient.ClientCreatedArgs)">
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory.OnClientCreated(Microsoft.Extensions.ODataClient.ClientCreatedArgs)">
             <summary>
             call OnProxyCreated for each this.handlers
             </summary>

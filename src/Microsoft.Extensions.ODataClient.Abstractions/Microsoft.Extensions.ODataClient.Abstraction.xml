@@ -37,8 +37,18 @@
             </summary>
             <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:Microsoft.Extensions.ODataClient.IODataClientFactory`1" -->
-        <member name="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.Uri,System.String)">
+        <member name="T:Microsoft.Extensions.ODataClient.IODataClientFactory">
+            <summary>
+            A factory abstraction for a component that can create <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instances with custom
+            configuration for a given logical name.
+            </summary>
+            <remarks>
+            A default <see cref="T:Microsoft.Extensions.ODataClient.IODataClientFactory"/> can be registered in an <see cref="!:IServiceCollection"/>
+            by calling <see cref="!:ODataClientFactoryExtensions.AddODataClient(IServiceCollection)"/>.
+            The default <see cref="T:Microsoft.Extensions.ODataClient.IODataClientFactory"/> will be registered in the service collection as a singleton.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.IODataClientFactory.CreateClient``1(System.Uri,System.String)">
             <summary>
             Creates and configures an <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance using the configuration that corresponds
             to the logical name specified by <paramref name="name"/> with the specified <paramref name="serviceRoot" />
@@ -50,7 +60,7 @@
             <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance.</returns>
             <remarks>
             <para>
-            Each call to <see cref="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.Uri,System.String)"/> is guaranteed to return a new <see cref="T:System.Net.Http.HttpClient"/>
+            Each call to <see cref="M:Microsoft.Extensions.ODataClient.IODataClientFactory.CreateClient``1(System.Uri,System.String)"/> is guaranteed to return a new <see cref="T:System.Net.Http.HttpClient"/>
             instance. Callers may cache the returned <see cref="T:System.Net.Http.HttpClient"/> instance indefinitely or surround
             its use in a <langword>using</langword> block to dispose it when desired.
             </para>
@@ -77,7 +87,7 @@
             Client extensions
             </summary>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.ODataClientFactoryExtensions.CreateClient``1(Microsoft.Extensions.ODataClient.IODataClientFactory{``0},System.Uri)">
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientFactoryExtensions.CreateClient``1(Microsoft.Extensions.ODataClient.IODataClientFactory,System.Uri)">
             <summary>
             Creates and configures an <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance using the configuration that corresponds
             to the logical name specified by <paramref name="name"/> with the specified <paramref name="serviceRoot" />

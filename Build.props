@@ -84,7 +84,7 @@
 
   <!-- StyleCop settings -->
   <PropertyGroup>
-    <StyleCopTargets>$(NuGetPack)\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets</StyleCopTargets>
+    <StyleCopTargets>$(NuGetPack)\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.Targets</StyleCopTargets>
   </PropertyGroup>
 
   <PropertyGroup>

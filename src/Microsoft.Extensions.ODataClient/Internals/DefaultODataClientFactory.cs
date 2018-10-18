@@ -78,7 +78,7 @@ namespace Microsoft.Extensions.ODataClient
             public static readonly Action<ILogger, ODataProtocolVersion, string, Exception> BeforeCreateClient = LoggerMessage.Define<ODataProtocolVersion, string>(
                 LogLevel.Debug,
                 new EventId(1001, nameof(BeforeCreateClient)),
-                "Before Creat OData {ODataVersion} client factory with logical name:{name}");
+                "Before Create OData {ODataVersion} client factory with logical name:{name}");
 
             public static readonly Action<ILogger, ODataProtocolVersion, string, string, Exception> OnCreatingClientHandler = LoggerMessage.Define<ODataProtocolVersion, string, string>(
                 LogLevel.Information,
