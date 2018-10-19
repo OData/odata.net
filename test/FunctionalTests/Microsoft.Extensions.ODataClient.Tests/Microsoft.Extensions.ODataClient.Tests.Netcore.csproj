@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Microsoft.Extensions.ODataClient.Abstractions\Microsoft.Extensions.ODataClient.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\src\Microsoft.Extensions.ODataClient\Microsoft.Extensions.ODataClient.csproj" />
     <ProjectReference Include="..\..\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.NetCore.csproj" />
   </ItemGroup>
