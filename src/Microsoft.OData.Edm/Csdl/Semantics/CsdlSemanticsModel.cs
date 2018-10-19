@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -24,7 +25,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly CsdlModel astModel;        // current internal CsdlModel
         private readonly List<CsdlSemanticsSchema> schemata = new List<CsdlSemanticsSchema>();
         private readonly Dictionary<string, List<CsdlSemanticsAnnotations>> outOfLineAnnotations = new Dictionary<string, List<CsdlSemanticsAnnotations>>();
-        private readonly Dictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation> wrappedAnnotations = new Dictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation>();
+        private readonly ConcurrentDictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation> wrappedAnnotations = new ConcurrentDictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation>();
         private readonly Dictionary<string, List<IEdmStructuredType>> derivedTypeMappings = new Dictionary<string, List<IEdmStructuredType>>();
 
         /// <summary>

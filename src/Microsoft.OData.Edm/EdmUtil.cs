@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -446,35 +447,14 @@ namespace Microsoft.OData.Edm
         /// <param name="computeValue">The function to compute value if key not exist in dictionary</param>
         /// <returns>The value for the key</returns>
         internal static TValue DictionaryGetOrUpdate<TKey, TValue>(
-            IDictionary<TKey, TValue> dictionary,
+            ConcurrentDictionary<TKey, TValue> dictionary,
             TKey key,
             Func<TKey, TValue> computeValue)
         {
             CheckArgumentNull(dictionary, "dictionary");
             CheckArgumentNull(computeValue, "computeValue");
-
-            TValue val;
-
-            // Dictionary may reallocate buckets while adding a new item. Then this TryGetValue() might get a very strange result if it is not locked.
-            lock (dictionary)
-            {
-                if (dictionary.TryGetValue(key, out val))
-                {
-                    return val;
-                }
-            }
-
-            TValue computedValue = computeValue(key);
-            lock (dictionary)
-            {
-                if (!dictionary.TryGetValue(key, out val))
-                {
-                    val = computedValue;
-                    dictionary.Add(key, computedValue);
-                }
-            }
-
-            return val;
+            
+            return dictionary.GetOrAdd(key, computeValue);
         }
 
         /// <summary>
@@ -486,18 +466,13 @@ namespace Microsoft.OData.Edm
         /// <param name="key">The key property</param>
         /// <returns>The value for the key, or default if the value does not exist</returns>
         internal static TValue DictionarySafeGet<TKey, TValue>(
-            IDictionary<TKey, TValue> dictionary,
+            ConcurrentDictionary<TKey, TValue> dictionary,
             TKey key)
         {
             CheckArgumentNull(dictionary, "dictionary");
 
             TValue val;
-
-            lock (dictionary)
-            {
-                dictionary.TryGetValue(key, out val);
-            }
-
+            dictionary.TryGetValue(key, out val);
             return val;
         }
 

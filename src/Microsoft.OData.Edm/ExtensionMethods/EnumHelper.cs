@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Edm
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -17,8 +18,8 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public static class EnumHelper
     {
-        private static readonly IDictionary<IEdmEnumType, HashEntry> fieldInfoHash = new Dictionary<IEdmEnumType, HashEntry>();
         private const int MaxHashElements = 100;
+        private static readonly ConcurrentDictionary<IEdmEnumType, HashEntry> fieldInfoHash = new ConcurrentDictionary<IEdmEnumType, HashEntry>(4, EnumHelper.MaxHashElements);
 
         /// <summary>
         /// Parse an enum literal value to integer. The literal value can be Enum member name (e.g. "Red"), underlying value (e.g. "2"), or combined values (e.g. "Red, Green, Blue", "1,2,4").
@@ -278,18 +279,15 @@ namespace Microsoft.OData.Edm
 
         private static HashEntry GetHashEntry(IEdmEnumType enumType)
         {
-            if (fieldInfoHash.Count > MaxHashElements)
+            try
             {
-                lock (fieldInfoHash)
-                {
-                    if (fieldInfoHash.Count > MaxHashElements)
-                    {
-                        fieldInfoHash.Clear();
-                    }
-                }
+                return EnumHelper.fieldInfoHash.GetOrAdd(enumType, type => new HashEntry(null, null));
             }
-
-            return EdmUtil.DictionaryGetOrUpdate(fieldInfoHash, enumType, type => new HashEntry(null, null));
+            catch (OverflowException)
+            {
+                EnumHelper.fieldInfoHash.Clear();
+                return EnumHelper.fieldInfoHash.GetOrAdd(enumType, type => new HashEntry(null, null));
+            }
         }
 
         private class HashEntry

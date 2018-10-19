@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -955,14 +956,9 @@ namespace Microsoft.OData
         private sealed class MatchInfoConcurrentCache
         {
             /// <summary>
-            /// Max size of the elements that the cache can contain.
-            /// </summary>
-            private readonly int maxSize;
-
-            /// <summary>
             /// The dictionary to save elements.
             /// </summary>
-            private IDictionary<MatchInfoCacheKey, MediaTypeMatchInfo> dict;
+            private readonly ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo> dict;
 
             /// <summary>
             /// Constructor.
@@ -970,8 +966,7 @@ namespace Microsoft.OData
             /// <param name="maxSize">Max size of the elements that the cache can contain.</param>
             public MatchInfoConcurrentCache(int maxSize)
             {
-                this.maxSize = maxSize;
-                this.dict = new Dictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(maxSize + 1);
+                this.dict = new ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(4, maxSize);
             }
 
             /// <summary>
@@ -982,10 +977,7 @@ namespace Microsoft.OData
             /// <returns>true if the cache contains an element with the specified key; otherwise, false.</returns>
             public bool TryGetValue(MatchInfoCacheKey key, out MediaTypeMatchInfo value)
             {
-                lock (this.dict)
-                {
-                    return dict.TryGetValue(key, out value);
-                }
+                return this.dict.TryGetValue(key, out value);
             }
 
             /// <summary>
@@ -995,17 +987,16 @@ namespace Microsoft.OData
             /// <param name="value">The value of the element to add.</param>
             public void Add(MatchInfoCacheKey key, MediaTypeMatchInfo value)
             {
-                lock (this.dict)
+                try
                 {
-                    if (!dict.ContainsKey(key))
-                    {
-                        if (dict.Count == maxSize)
-                        {
-                            dict.Clear();
-                        }
-
-                        dict.Add(key, value);
-                    }
+                    // Try to add the key to the dictionary. If we are overflowing
+                    // clear the dictionary and attempt to add the entry again.
+                    this.dict.TryAdd(key, value);
+                }
+                catch (OverflowException)
+                {
+                    this.dict.Clear();
+                    this.dict.TryAdd(key, value);
                 }
             }
         }
