@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------------
 // <copyright file="IODataClientHandler.cs" company="Microsoft Corporation">
-// Copyright © Microsoft Corporation. All rights reserved.
+//     Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //------------------------------------------------------------------
 
