@@ -7247,6 +7247,9 @@ public class Microsoft.OData.Client.DataServiceActionQuery {
 }
 
 public class Microsoft.OData.Client.DataServiceClientConfigurations {
+	public DataServiceClientConfigurations (object sender)
+
+	System.Collections.Generic.IDictionary`2[[System.String],[System.Object]] Properties  { public get; }
 	Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration RequestPipeline  { public get; }
 	Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration ResponsePipeline  { public get; }
 }
