@@ -12,8 +12,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
     public class FilterAndOrderByBuilderTests : UriBuilderTestBase
     {
         #region test $filter
-
-        [Fact]
         public void BuildFilterLongValuesWithOptionalSuffix()
         {
             // filter is a binaryOperatorNode and its right is a int value
