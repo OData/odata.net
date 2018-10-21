@@ -12,6 +12,37 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// This represents one level of expansion for a particular expansion tree with $ref operation.
     /// </summary>
+    public class ExpandedCountSelectItem : ExpandedReferenceSelectItem
+    {
+        /// <summary>
+        /// Translate using a <see cref="SelectItemTranslator{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">Type that the translator will return after visiting this item.</typeparam>
+        /// <param name="translator">An implementation of the translator interface.</param>
+        /// <returns>An object whose type is determined by the type parameter of the translator.</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input translator is null.</exception>
+        public override T TranslateWith<T>(SelectItemTranslator<T> translator)
+        {
+            return translator.Translate(this);
+        }
+
+        /// <summary>
+        /// Handle using a <see cref="SelectItemHandler"/>.
+        /// </summary>
+        /// <param name="handler">An implementation of the handler interface.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input handler is null.</exception>
+        public override void HandleWith(SelectItemHandler handler)
+        {
+            handler.Handle(this);
+        }
+
+        public ExpandedCountSelectItem(ODataExpandPath pathToNavigationProperty, IEdmNavigationSource navigationSource) : base(pathToNavigationProperty, navigationSource) { }
+        public ExpandedCountSelectItem(ODataExpandPath pathToNavigationProperty, IEdmNavigationSource navigationSource, FilterClause filterOption, OrderByClause orderByOption, long? topOption, long? skipOption, bool? countOption, SearchClause searchOption) : base(pathToNavigationProperty, navigationSource, filterOption, orderByOption, topOption, skipOption, countOption, searchOption) { }
+    }
+
+    /// <summary>
+    /// This represents one level of expansion for a particular expansion tree with $ref operation.
+    /// </summary>
     public class ExpandedReferenceSelectItem : SelectItem
     {
         /// <summary>

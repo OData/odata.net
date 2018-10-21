@@ -19,6 +19,11 @@ namespace Microsoft.OData.UriParser
     public sealed class CountNode : SingleValueNode
     {
         /// <summary>
+        /// The filter option used, if any.
+        /// </summary>
+        public FilterClause FilterOption { get; }
+        
+        /// <summary>
         /// The collection to be counted, could be any type of collection includes primitive type, enum type, complex type or entity type collection.
         /// </summary>
         private readonly CollectionNode source;
@@ -27,10 +32,13 @@ namespace Microsoft.OData.UriParser
         /// Constructs a new <see cref="CountNode"/>.
         /// </summary>
         /// <param name="source">The value containing the property.</param>
+        /// <param name="filterOption">The filter option.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source is null.</exception>
-        public CountNode(CollectionNode source)
+        public CountNode(CollectionNode source, FilterClause filterOption)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
+
+            FilterOption = filterOption;
 
             this.source = source;
         }

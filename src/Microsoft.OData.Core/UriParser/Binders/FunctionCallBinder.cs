@@ -225,6 +225,23 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
+            // Collection with any or all expression is already supported and handled separately.
+            // Add support of collection with $count segment.
+            var colNode = parent as CollectionNavigationNode;
+            if (colNode != null && functionCallToken.Name == UriQueryConstants.CountSegment)
+            {
+                FilterClause filterOption = null;
+                var filter = functionCallToken.Arguments.FirstOrDefault(a => a.ParameterName == "$filter");
+                if (filter != null)
+                {
+                    MetadataBinder binder = this.BuildNewMetadataBinder(colNode.NavigationSource);
+                    FilterBinder filterBinder = new FilterBinder(binder.Bind, binder.BindingState);
+                    filterOption = filterBinder.BindFilter(filter.ValueToken);
+                }
+                // create a collection count node for collection node property.
+                return new CountNode(colNode, filterOption);
+            }
+
             // First see if there is a custom function for this
             QueryNode boundFunction;
             if (this.TryBindIdentifier(functionCallToken.Name, functionCallToken.Arguments, parent, state, out boundFunction))
@@ -244,6 +261,24 @@ namespace Microsoft.OData.UriParser
             return BindAsUriFunction(functionCallToken, argumentNodes);
         }
 
+
+        /// <summary>
+        /// Build a new MetadataBinder to use for expand options.
+        /// </summary>
+        /// <param name="targetNavigationSource">The navigation source being expanded.</param>
+        /// <returns>A new MetadataBinder ready to bind a Filter or Orderby clause.</returns>
+        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
+        private MetadataBinder BuildNewMetadataBinder(IEdmNavigationSource targetNavigationSource)
+        {
+            BindingState newState = new BindingState(state.Configuration)
+            {
+                ImplicitRangeVariable =
+                    NodeFactory.CreateImplicitRangeVariable(targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource)
+            };
+            newState.RangeVariables.Push(state.ImplicitRangeVariable);
+            return new MetadataBinder(newState);
+        }
+        
         /// <summary>
         /// Try to bind an end path token as a function call. Used for bound functions without parameters
         /// that parse as end path tokens syntactically

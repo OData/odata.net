@@ -12,13 +12,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
     public class FilterAndOrderByBuilderTests : UriBuilderTestBase
     {
         #region test $filter
-        [Fact]
-        public void BuildFilterEnum()
-        {
-            Uri queryUri = new Uri("http://gobbledygook/Pet2Set?$filter=Shape eq 'Rectangle'");
-            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal(queryUri, actualUri,new UriComparer<Uri>());
-        }
 
         [Fact]
         public void BuildFilterLongValuesWithOptionalSuffix()

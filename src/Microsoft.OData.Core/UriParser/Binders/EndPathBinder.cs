@@ -179,7 +179,7 @@ namespace Microsoft.OData.UriParser
             if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment, System.StringComparison.Ordinal))
             {
                 // create a collection count node for collection node property.
-                return new CountNode(colNode);
+                return new CountNode(colNode, null);
             }
 
             CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;

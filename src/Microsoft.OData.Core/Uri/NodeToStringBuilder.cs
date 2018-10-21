@@ -122,7 +122,18 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(node, "node");
 
             String source = this.TranslateNode(node.Source);
-            return string.Concat(source, ExpressionConstants.SymbolForwardSlash, UriQueryConstants.CountSegment);
+            source = string.Concat(source, ExpressionConstants.SymbolForwardSlash, UriQueryConstants.CountSegment);
+            if (node.FilterOption != null)
+            {
+                source = string.Concat(
+                    source,
+                    ExpressionConstants.SymbolOpenParen,
+                    UriQueryConstants.FilterQueryOption,
+                    ExpressionConstants.SymbolEqual,
+                    this.TranslateNode(node.FilterOption.Expression),
+                    ExpressionConstants.SymbolClosedParen);
+            }
+            return source;
         }
 
         /// <summary>
