@@ -13,14 +13,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
     {
         #region test $filter
         [Fact]
-        public void BuildFilterWithCount()
-        {
-            Uri queryUri = new Uri("People?$filter=MyPaintings%2F$count($filter=OpenProperty eq 1) gt 1", UriKind.Relative);
-            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2F%24count(%24filter%3DOpenProperty%20eq%201)%20gt%201"), actualUri);
-        }
-
-        [Fact]
         public void BuildFilterLongValuesWithOptionalSuffix()
         {
             // filter is a binaryOperatorNode and its right is a int value
