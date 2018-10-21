@@ -468,14 +468,17 @@ namespace Microsoft.OData.JsonLight
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);
 
-                    // Write the odata type.
-                    this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, expectedResourceTypeName, isUndeclared);
+                    if (!resourceSet.CountOnly)
+                    {
+                        // Write the odata type.
+                        this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, expectedResourceTypeName, isUndeclared);
 
-                    // And then write the property name to start the value.
-                    this.jsonWriter.WriteName(propertyName);
+                        // And then write the property name to start the value.
+                        this.jsonWriter.WriteName(propertyName);
 
-                    // Start array which will hold the entries in the resource set.
-                    this.jsonWriter.StartArrayScope();
+                        // Start array which will hold the entries in the resource set.
+                        this.jsonWriter.StartArrayScope();
+                    }
                 }
                 else
                 {
