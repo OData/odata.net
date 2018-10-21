@@ -14,7 +14,6 @@ using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
-
 namespace Microsoft.OData.Edm.Vocabularies.V1
 {
     /// <summary>
@@ -91,7 +90,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// The Optional Parameter term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
         public static readonly IEdmTerm OptionalParameterTerm;
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace Microsoft.OData.Client
 
             public static void SetAnnotation(ODataAnnotatable annotatable, T annotation)
             {
-                Dictionary.Add(annotatable,annotation); 
+                Dictionary.Add(annotatable, annotation);
             }
 
             public static T GetAnnotation(ODataAnnotatable annotatable)

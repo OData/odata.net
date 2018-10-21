@@ -127,6 +127,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
+        public void BuildPathWithEachSegmentRelativeUri()
+        {
+            Uri queryUri = new Uri("People/$each/Fully.Qualified.Namespace.SummonPuppies", UriKind.Relative);
+            Uri expectedUri = new Uri("http://gobbledygook/People/$each/Fully.Qualified.Namespace.SummonPuppies");
+
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(expectedUri, actualUri);
+
+            actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Slash, settings);
+            Assert.Equal(expectedUri, actualUri);
+        }
+
+        [Fact]
+        public void BuildPathWithEachSegmentAbsoluteUri()
+        {
+            Uri queryUri = new Uri("http://gobbledygook/People/$each/Fully.Qualified.Namespace.SummonPuppies", UriKind.Absolute);
+
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(queryUri, actualUri);
+
+            actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Slash, settings);
+            Assert.Equal(queryUri, actualUri);
+        }
+
+        [Fact]
         public void BuildPathWithRelativeFullUri()
         {
             Uri queryUri = new Uri("Dogs", UriKind.Relative);

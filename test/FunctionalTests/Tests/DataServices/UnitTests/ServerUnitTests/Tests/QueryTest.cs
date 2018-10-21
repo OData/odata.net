@@ -1416,7 +1416,7 @@ namespace AstoriaUnitTests.Tests
                             "404 /$count",                                          // $count on root
                             "404 /Customers('ALFKI')/CompanyName/$count",           // $count on primitive type
                             "404 /Customers('ALFKI')/CompanyName/$value/$count",    // $count on primitive value
-                            "400 /Customers('ALFKI')/$ref/$count",                  // $count on link
+                            "404 /Customers('ALFKI')/$ref/$count",                  // $count on link
                             "404 /Customers('ALFKI')/$count",                       // $count on singleton
                             "404 /Orders(10643)/Customers/$count",                  // $count on singleton
                             "404 /Orders/$count/$value"                             // segments after $count
