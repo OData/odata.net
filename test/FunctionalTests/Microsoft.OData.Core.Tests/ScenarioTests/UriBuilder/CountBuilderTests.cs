@@ -35,6 +35,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2F%24count%20gt%201"), actualUri);
         }
 
+        // This is not supported, yet
+        //[Fact]
+        //public void CountWithFilterUsingNamedVariableWorks()
+        //{
+        //    Uri queryUri = new Uri("People/$filter=@foo/$count?@foo=ID eq 123", UriKind.Relative);
+        //    Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+        //    Assert.Equal(new Uri("http://gobbledygook/People/$filter=@foo/$count?@foo=ID%20eq%20123"), actualUri);
+        //}
+
         [Fact]
         public void CountWithChildCollectionFilterWorks()
         {
