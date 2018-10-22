@@ -367,7 +367,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=MyAddress&$expand=MyDog, MyFavoritePainting", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("MyAddress,MyDog,MyFavoritePainting") + "&$expand=" + Uri.EscapeDataString("MyDog,MyFavoritePainting"), actualUri.OriginalString);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("MyAddress") + "&$expand=" + Uri.EscapeDataString("MyDog,MyFavoritePainting"), actualUri.OriginalString);
         }
 
         [Fact]
@@ -375,7 +375,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=MyAddress, MyDog&$expand=MyDog, MyFavoritePainting", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("MyAddress,MyDog,MyFavoritePainting") + "&$expand=" + Uri.EscapeDataString("MyDog,MyFavoritePainting"), actualUri.OriginalString);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("MyAddress,MyDog") + "&$expand=" + Uri.EscapeDataString("MyDog,MyFavoritePainting"), actualUri.OriginalString);
         }
 
         [Fact]
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=Fully.Qualified.Namespace.Employee/MyDog&$expand=MyDog", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("Fully.Qualified.Namespace.Employee/MyDog,MyDog") + "&$expand=MyDog", actualUri.OriginalString);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("Fully.Qualified.Namespace.Employee/MyDog") + "&$expand=MyDog", actualUri.OriginalString);
         }
 
         [Fact]
@@ -415,7 +415,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=MyDog&$expand=Fully.Qualified.Namespace.Employee/MyDog", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("MyDog,Fully.Qualified.Namespace.Employee/MyDog") + "&$expand=" + Uri.EscapeDataString("Fully.Qualified.Namespace.Employee/MyDog"), actualUri.OriginalString);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("MyDog") + "&$expand=" + Uri.EscapeDataString("Fully.Qualified.Namespace.Employee/MyDog"), actualUri.OriginalString);
         }
 
         [Fact]
@@ -455,7 +455,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=Name,Birthdate,MyAddress,Fully.Qualified.Namespace.*,MyLions&$expand=MyDog", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("Name,Birthdate,MyAddress,Fully.Qualified.Namespace.*,MyLions,MyDog") + "&$expand=" + Uri.EscapeDataString("MyDog"), actualUri.OriginalString);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("Name,Birthdate,MyAddress,Fully.Qualified.Namespace.*,MyLions") + "&$expand=" + Uri.EscapeDataString("MyDog"), actualUri.OriginalString);
         }
 
         [Fact]
@@ -511,7 +511,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$expand=MyDog($select=Color;$expand=MyPeople)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($select=Color,MyPeople;$expand=MyPeople)"), actualUri.OriginalString);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($select=Color;$expand=MyPeople)"), actualUri.OriginalString);
         }
 
         [Fact]
@@ -649,7 +649,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=Name,MyOpenAddress/Test&$expand=MyDog($filter=Color eq 'Brown';$orderby=Color; $search=Color)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("Name,MyOpenAddress/Test,MyDog") + "&$expand=" + Uri.EscapeDataString("MyDog($filter=Color eq 'Brown';$orderby=Color;$search=Color)"), actualUri.OriginalString);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("Name,MyOpenAddress/Test") + "&$expand=" + Uri.EscapeDataString("MyDog($filter=Color eq 'Brown';$orderby=Color;$search=Color)"), actualUri.OriginalString);
         }
 
         [Fact]

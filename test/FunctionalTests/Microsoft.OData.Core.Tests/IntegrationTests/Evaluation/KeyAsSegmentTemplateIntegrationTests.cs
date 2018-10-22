@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             var thing = new ODataResource { Properties = new[] { new ODataProperty { Name = "Id", Value = 1 } } };
             thing.TypeAnnotation = new ODataTypeAnnotation(entityType.FullTypeName());
-            thing.MetadataBuilder = metadataContext.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = thing, SelectedProperties = new SelectedPropertiesNode("*"), NavigationSource = entitySet}, useKeyAsSegment);
+            thing.MetadataBuilder = metadataContext.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = thing, SelectedProperties = new SelectedPropertiesNode("*", null, null), NavigationSource = entitySet}, useKeyAsSegment);
             return thing;
         }
     }

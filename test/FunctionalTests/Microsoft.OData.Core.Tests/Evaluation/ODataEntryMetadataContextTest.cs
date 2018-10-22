@@ -71,21 +71,21 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry = new ODataResource {TypeName = ActualEntityType.FullName()};
             this.typeContext = new TestFeedAndEntryTypeContext();
-            this.entryMetadataContextWithoutModel = ODataResourceMetadataContext.Create(this.entry, this.typeContext, new ODataResourceSerializationInfo(), /*actualEntityType*/null, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
-            this.entryMetadataContextWithModel = ODataResourceMetadataContext.Create(this.entry, this.typeContext, /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
+            this.entryMetadataContextWithoutModel = ODataResourceMetadataContext.Create(this.entry, this.typeContext, new ODataResourceSerializationInfo(), /*actualEntityType*/null, new TestMetadataContext(), new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree));
+            this.entryMetadataContextWithModel = ODataResourceMetadataContext.Create(this.entry, this.typeContext, /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree));
         }
 
         [Fact]
         public void CreateShouldReturnMetadataContextWithoutModel()
         {
-            var entryMetadataContext = ODataResourceMetadataContext.Create(this.entry, this.typeContext, new ODataResourceSerializationInfo(), ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
+            var entryMetadataContext = ODataResourceMetadataContext.Create(this.entry, this.typeContext, new ODataResourceSerializationInfo(), ActualEntityType, new TestMetadataContext(), new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree));
             entryMetadataContext.GetType().FullName.EndsWith("WithoutModel").Should().BeTrue();
         }
 
         [Fact]
         public void CreateShouldReturnMetadataContextWithModel()
         {
-            var entryMetadataContext = ODataResourceMetadataContext.Create(this.entry, this.typeContext, /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
+            var entryMetadataContext = ODataResourceMetadataContext.Create(this.entry, this.typeContext, /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree));
             entryMetadataContext.GetType().FullName.EndsWith("WithModel").Should().BeTrue();
         }
 
