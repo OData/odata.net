@@ -30,7 +30,7 @@ As shown above, @odata.context annotation specifies the context url, and provide
 - It contains two property values "FirstName", "LastName".
 
 ## Expanded Entity Specification for OData V4.01
-In OData V4.01, notion for expanded entity and projected expanded entity [format](http://docs.oasis-open.org/odata/odata/v4.01/cs01/part1-protocol/odata-v4.01-cs01-part1-protocol.html#sec_ExpandedEntity) is introduced for $expand clause in context url.
+OData V4.0 specifies that expanded entities with nested selects are included in the context Url as the name of the navigation property suffixed with the comma separated list of selected properties, enclosed in parens. OData V4.01 [format](http://docs.oasis-open.org/odata/odata/v4.01/cs01/part1-protocol/odata-v4.01-cs01-part1-protocol.html#sec_ExpandedEntity) specifies that, in the absence of any nested selects, the expanded navigation property appears suffixed with empty parens. This is distinct, and may appear in addition to, the un-suffixed navigation property name, which indicates that the navigation property appears in the $select list (indicating that the navigationLink should be included in the response).
 ```
 10.10 Expanded Entity
 Context URL template:
@@ -58,21 +58,21 @@ As required, we are going to add to the context url the parenthesized (either em
 
 Request Url | Context Url in Response
 ----------- | -----------------------
- root/Cities('id')?$expand=TestModel.CapitolCity/Districts                       | root/$metadata#Cities(TestModel.CapitolCity/Districts())/$entity
- root/Cities('id')?$expand=TestModel.CapitolCity/Districts($select=DistrictName) | root/$metadata#Cities(TestModel.CapitolCity/Districts(DistrictName))/$entity
- root/Cities('id')?$select=Name&$expand=TestModel.CapitolCity/Districts($select=DistrictName) | root/$metadata#Cities(Name,TestModel.CapitolCity/Districts(DistrictName))/$entity
- root/Cities('id')?$select=Name,TestModel.CapitolCity/Districts&$expand=TestModel.CapitolCity/Districts($select=DistrictName) | root/$metadata#Cities(Name,TestModel.CapitolCity/Districts,TestModel.CapitolCity/Districts(DistrictName))/$entity
+ root/Cities('id')?$expand=TestModel.CapitalCity/Districts                       | root/$metadata#Cities(TestModel.CapitalCity/Districts())/$entity
+ root/Cities('id')?$expand=TestModel.CapitalCity/Districts($select=DistrictName) | root/$metadata#Cities(TestModel.CapitalCity/Districts(DistrictName))/$entity
+ root/Cities('id')?$select=Name&$expand=TestModel.CapitalCity/Districts($select=DistrictName) | root/$metadata#Cities(Name,TestModel.CapitalCity/Districts(DistrictName))/$entity
+ root/Cities('id')?$select=Name,TestModel.CapitalCity/Districts&$expand=TestModel.CapitalCity/Districts($select=DistrictName) | root/$metadata#Cities(Name,TestModel.CapitalCity/Districts,TestModel.CapitalCity/Districts(DistrictName))/$entity
 
 
 We also fix the known issue https://github.com/OData/odata.net/issues/1104 when a navigation link is both expanded and selected, the parenthesized navigation property will be present in the context-url, along with the navigation link explicitly selected:
 
 Request Url | Context Url in Response
 ----------- | -----------------------
- root/Cities('id')?$select=**TestModel.CapitolCity/Districts**&$expand=**TestModel.CapitolCity/Districts** | root/$metadata#Cities(**TestModel.CapitolCity/Districts,TestModel.CapitolCity/Districts()**)/$entity
+ root/Cities('id')?$select=**TestModel.CapitalCity/Districts**&$expand=**TestModel.CapitalCity/Districts** | root/$metadata#Cities(**TestModel.CapitalCity/Districts,TestModel.CapitalCity/Districts()**)/$entity
  root/Cities('id')?$select=Id,Name,**ExpandedNavProp**&$expand=**ExpandedNavProp**                         | root/$metadata#Cities(Id,Name,**ExpandedNavProp,ExpandedNavProp()**)/$entity
 
 ### V4.0
-We are going to tweet the behavior to align with that of the 4.01. While this change does introduce slightly different semantics for explicitly selected navigation property, it is not considered a breaking change because the updated context-url form for expanded navigation link is legal, but just was not required. It has been confirmed through code examination and ODL tests that this change doesn't cause anomalies for libraries and client.
+We are going to tweak the behavior to align with that of the 4.01. While this change does introduce slightly different semantics for explicitly selected navigation property, it is not considered a breaking change because the updated context-url form for expanded navigation link is legal, but just was not required. It has been confirmed through code examination and ODL tests that this change doesn't cause anomalies for libraries and client.
 
 ### Context Url Parsing Updates to Align with OData V4/V4.01 ABNF Spec
 Notion of expanded entity in context url has been introduced since [OData V4 ABNF](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/abnf/odata-abnf-construction-rules.txt). Here is the excerpt of context url select clause in OData V4.01 ABNF:
