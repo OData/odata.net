@@ -4,6 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections;
+using System.Runtime.InteropServices.ComTypes;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -205,6 +208,19 @@ namespace Microsoft.OData
             /// The normal case where a partial subtree has been selected.
             /// </summary>
             PartialSubtree = 2,
+        }
+
+        /// <summary>
+        /// Gets names of the expanded entity nodes at current level.
+        /// </summary>
+        internal IEnumerable<string> NamesOfSelectedExpandedEntities
+        {
+            get
+            {
+                return this.children == null
+                    ? Enumerable.Empty<string>()
+                    : this.children.Where(_ => _.Value.isExpandedNavigationProperty).Select(c => c.Key);
+            }
         }
 
         /// <summary>

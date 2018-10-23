@@ -270,15 +270,27 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(parentNavLink.GetInstanceAnnotations(), parentNavLink.Name);
-                }
 
-                // Write the property name of an expanded navigation property to start the value.
-                this.jsonWriter.WriteName(parentNavLink.Name);
+                    if (!this.ShouldOmitNullValues())
+                    {
+                        // Write the property name of an expanded navigation property to start the value of null per preference setting.
+                        this.jsonWriter.WriteName(parentNavLink.Name);
+                    }
+                }
+                else
+                {
+                    // Write the property name of an expanded navigation property to start the value.
+                    this.jsonWriter.WriteName(parentNavLink.Name);
+                }
             }
 
             if (resource == null)
             {
-                this.jsonWriter.WriteValue((string)null);
+                if (!this.ShouldOmitNullValues())
+                {
+                    this.jsonWriter.WriteValue((string) null);
+                }
+
                 return;
             }
 

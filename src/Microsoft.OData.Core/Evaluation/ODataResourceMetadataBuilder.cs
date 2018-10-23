@@ -157,6 +157,23 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
+        /// Return whether the given expanded entity of specified name has been processed.
+        /// </summary>
+        /// <param name="name">The name of the expanded entity.</param>
+        internal virtual bool IsExpandedEntityProcessed(string name)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Marks the given expanded entity as processed.
+        /// </summary>
+        /// <param name="name">The name of the expanded entity we've already processed.</param>
+        internal virtual void MarkExpandedEntityProcessed(string expandedEntityName)
+        {
+        }
+
+        /// <summary>
         /// Returns the next unprocessed nested resource info or null if there's no more navigation links to process.
         /// </summary>
         /// <returns>Returns the next unprocessed nested resource info or null if there's no more navigation links to process.</returns>

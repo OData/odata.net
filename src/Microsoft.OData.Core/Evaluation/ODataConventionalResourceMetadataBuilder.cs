@@ -33,6 +33,8 @@ namespace Microsoft.OData.Evaluation
         /// <summary>The list of nested info that have been processed. Here navigation property and complex will both be marked for convenience.</summary>
         protected readonly HashSet<string> ProcessedNestedResourceInfos;
 
+        protected readonly HashSet<string> ProcessedExpandedEntityNames;
+
         /// <summary>The enumerator for unprocessed navigation links.</summary>
         private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNavigationLinks;
 
@@ -69,6 +71,7 @@ namespace Microsoft.OData.Evaluation
             this.UriBuilder = uriBuilder;
             this.MetadataContext = metadataContext;
             this.ProcessedNestedResourceInfos = new HashSet<string>(StringComparer.Ordinal);
+            this.ProcessedExpandedEntityNames = new HashSet<string>(StringComparer.Ordinal);
             this.resource = resourceMetadataContext.Resource;
         }
 
@@ -363,6 +366,26 @@ namespace Microsoft.OData.Evaluation
             Debug.Assert(!string.IsNullOrEmpty(navigationPropertyName), "!string.IsNullOrEmpty(navigationPropertyName)");
             Debug.Assert(this.ProcessedNestedResourceInfos != null, "this.processedNestedResourceInfos != null");
             this.ProcessedNestedResourceInfos.Add(navigationPropertyName);
+        }
+
+        /// <summary>
+        /// Marks the given expanded entity as processed.
+        /// </summary>
+        /// <param name="name">The name of the expanded entity we've already processed.</param>
+        internal override void MarkExpandedEntityProcessed(string expandedEntityName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(expandedEntityName), "!string.IsNullOrEmpty(expandedEntityName)");
+            Debug.Assert(this.ProcessedExpandedEntityNames != null, "this.ProcessedExpandedEntityNames != null");
+            this.ProcessedExpandedEntityNames.Add(expandedEntityName);
+        }
+
+        /// <summary>
+        /// Return whether the given expanded entity of specified name has been processed.
+        /// </summary>
+        /// <param name="name">The name of the expanded entity.</param>
+        internal override bool IsExpandedEntityProcessed(string name)
+        {
+            return this.ProcessedExpandedEntityNames.Contains(name);
         }
 
         /// <summary>

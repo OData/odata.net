@@ -1658,6 +1658,12 @@ namespace Microsoft.OData.JsonLight
             IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.ParentScope;
             parentResourceState.NavigationPropertiesRead.Add(this.CurrentNestedResourceInfo.Name);
 
+            if (parentResourceState.SelectedProperties.NamesOfSelectedExpandedEntities.Contains(this.CurrentNestedResourceInfo.Name))
+            {
+                // Record that we read the expanded entity
+                parentResourceState.MetadataBuilder.MarkExpandedEntityProcessed(this.CurrentNestedResourceInfo.Name);
+            }
+
             // replace the 'NestedResourceInfoStart' scope with the 'NestedResourceInfoEnd' scope
             this.ReplaceScope(ODataReaderState.NestedResourceInfoEnd);
         }
@@ -2312,6 +2318,15 @@ namespace Microsoft.OData.JsonLight
                             }
 
                             RestoreNullODataProperty(currentProperty.Name, resourceState);
+                        }
+
+                        // Restore null Expanded entities, which are specified as "isExpandedNavigationProperty" the child nodes.
+                        foreach (string name in resourceState.SelectedProperties.NamesOfSelectedExpandedEntities)
+                        {
+                            if (!resource.IsExpandedEntityProcessed(name))
+                            {
+                                RestoreNullODataProperty(name, resourceState);
+                            }
                         }
                     }
                 }
