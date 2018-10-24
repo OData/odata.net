@@ -563,6 +563,7 @@ namespace Microsoft.OData.JsonLight
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);
 
+                    // If we are only printing the count, then do not start an array.
                     if (!resourceSet.CountOnly)
                     {
                         // Write the odata type.
