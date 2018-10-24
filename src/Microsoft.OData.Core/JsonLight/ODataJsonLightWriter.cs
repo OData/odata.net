@@ -557,7 +557,11 @@ namespace Microsoft.OData.JsonLight
                     // NOTE: in requests we will only write the EndArray of a resource set
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapesed into a single array value.
-                    this.jsonWriter.EndArrayScope();
+                    // Only end the array scope if we have an array based resource set in scope
+                    if (!(CurrentScope.Item is ODataResourceSetBase resourceSetBase) || !resourceSetBase.CountOnly)
+                    {
+                        this.jsonWriter.EndArrayScope();
+                    }
 
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);
