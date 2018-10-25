@@ -79,9 +79,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""OpenPropertyTypeConstraint"" Type=""Collection(Core.QualifiedTypeName)"" AppliesTo=""ComplexType EntityType"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Dynamic properties added to the annotated open structured type are restricted to the listed types"" />
   </Term>
-  <Term Name=""DerivedTypeConstraint"" Type=""Collection(Core.QualifiedTypeName)"" AppliesTo=""Property TypeDefinition"" Nullable=""false"">
-    <Annotation Term=""Core.Description"" String=""Values are restricted to types derived from the declared type and listed in this collection"" />
-    <Annotation Term=""Core.LongDescription"" String=""Types listed in this collection that are not derived form the declared type of the annotated model element are ignored"" />
+  <Term Name=""DerivedTypeConstraint"" Type=""Collection(Core.QualifiedTypeName)"" AppliesTo=""EntitySet Singleton NavigationProperty Property TypeDefinition Action Function Parameter"" Nullable=""false"">
+    <Annotation Term=""Core.Description"" String=""Values are restricted to types that are both identical to or derived from the declared type and a type listed in this collection."" />
+    <Annotation Term=""Core.LongDescription"" String=""This allows restricting values to certain sub-trees of an inheritance hierarchy. Types listed in this collection that are not derived from the declared type of the annotated model element are ignored."" />
   </Term>
 </Schema>";
 
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
             Assert.Equal("Collection(Core.QualifiedTypeName)", term.Type.Definition.FullTypeName());
 
-            Assert.Equal("Property TypeDefinition", term.AppliesTo);
+            Assert.Equal("EntitySet Singleton NavigationProperty Property TypeDefinition Action Function Parameter", term.AppliesTo);
         }
         
         [Theory]
