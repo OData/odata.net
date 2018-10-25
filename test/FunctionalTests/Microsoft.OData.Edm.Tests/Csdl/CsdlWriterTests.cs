@@ -961,6 +961,102 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(expected, csdlStr);
         }
 
+        [Fact]
+        public void CanWriteNavigationPropertyBindingWithTargetPathOnContainmentOnSingleton()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EntityType Name=\"Customer\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                    "<NavigationProperty Name=\"ContainedOrders\" Type=\"Collection(NS.Order)\" ContainsTarget=\"true\" />" +
+                    "<NavigationProperty Name=\"ContainedOrderLines\" Type=\"Collection(NS.OrderLine)\" ContainsTarget=\"true\" />" +
+                  "</EntityType>" +
+                  "<EntityType Name=\"Order\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                    "<NavigationProperty Name=\"OrderLines\" Type=\"Collection(NS.OrderLine)\" />" +
+                  "</EntityType>" +
+                  "<EntityType Name=\"OrderLine\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                  "</EntityType>" +
+                  "<EntityContainer Name=\"Default\">" +
+                     "<Singleton Name=\"Me\" Type=\"NS.Customer\" />" +
+                     "<EntitySet Name=\"Customers\" EntityType=\"NS.Customer\">" +
+                       "<NavigationPropertyBinding Path=\"ContainedOrders/OrderLines\" Target=\"Me/ContainedOrderLines\" />" +
+                     "</EntitySet>" +
+                  "</EntityContainer>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmEntityType customer = new EdmEntityType("NS", "Customer");
+            customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            EdmEntityType order = new EdmEntityType("NS", "Order");
+            order.AddKeys(order.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            EdmEntityType orderLine = new EdmEntityType("NS", "OrderLine");
+            orderLine.AddKeys(orderLine.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+
+            // Customer
+            //        -> ContainedOrders (Contained)
+            //        -> ContainedOrderLines (Contained)
+            customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "ContainedOrders",
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Target = order,
+                ContainsTarget = true
+            });
+
+            var orderLinesContainedNav = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "ContainedOrderLines",
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Target = orderLine,
+                ContainsTarget = true
+            });
+
+            // Order
+            //    -> OrderLines
+            var orderLinesNav = order.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "OrderLines",
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Target = orderLine
+            });
+
+            model.AddElement(customer);
+            model.AddElement(order);
+            model.AddElement(orderLine);
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmSingleton me = new EdmSingleton(container, "Me", customer);
+            container.AddElement(me);
+            EdmEntitySet customers = new EdmEntitySet(container, "Customers", customer);
+            container.AddElement(customers);
+            model.AddElement(container);
+
+            // Navigation property binding to the containment of the singleton
+            EdmContainedEntitySet containedEntitySet = new EdmContainedEntitySet(me, orderLinesContainedNav);
+            customers.AddNavigationTarget(orderLinesNav, containedEntitySet, new EdmPathExpression("ContainedOrders/OrderLines"));
+
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
         private string GetCsdl(IEdmModel model, CsdlTarget target)
         {
             string edmx = string.Empty;
