@@ -730,7 +730,15 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, binding.Path.Path, EdmValueWriter.StringAsXml);
 
             // TODO: handle container names, etc.
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
+            IEdmContainedEntitySet containedEntitySet = binding.Target as IEdmContainedEntitySet;
+            if (containedEntitySet != null)
+            {
+                this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, containedEntitySet.Path.Path, EdmValueWriter.StringAsXml);
+            }
+            else
+            {
+                this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
+            }
 
             this.xmlWriter.WriteEndElement();
         }
