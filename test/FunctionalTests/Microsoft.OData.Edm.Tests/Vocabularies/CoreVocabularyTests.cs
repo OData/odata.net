@@ -54,6 +54,10 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <TypeDefinition Name=""QualifiedTypeName"" UnderlyingType=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""The qualified name of a type in scope."" />
   </TypeDefinition>
+  <TypeDefinition Name=""LocalDateTime"" UnderlyingType=""Edm.String"">
+    <Annotation Term=""Core.Description"" String=""A string representing a Local Date-Time value with no offset."" />
+    <Annotation Term=""Validation.Pattern"" String=""^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]+)?)?$"" />
+  </TypeDefinition>
   <ComplexType Name=""RevisionType"">
     <Property Name=""Version"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""The schema version with which this revision was first published"" />
@@ -389,6 +393,23 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             {
                 Assert.Null(termType.AppliesTo);
             }
+        }
+
+        [Theory]
+        [InlineData("MessageSeverity", "Edm.String")]
+        [InlineData("Tag", "Edm.Boolean")]
+        [InlineData("QualifiedTermName", "Edm.String")]
+        [InlineData("QualifiedTypeName", "Edm.String")]
+        [InlineData("LocalDateTime", "Edm.String")]
+        public void TestCoreVocabularyTypeDefinition(string typeName, string underlyingTypeName)
+        {
+            var declaredType = this.coreVocModel.FindDeclaredType("Org.OData.Core.V1." + typeName);
+            Assert.NotNull(declaredType);
+
+            Assert.Equal(EdmTypeKind.TypeDefinition, declaredType.TypeKind);
+
+            IEdmTypeDefinition typeDefinition = (IEdmTypeDefinition)declaredType;
+            Assert.Equal(underlyingTypeName, typeDefinition.UnderlyingType.FullName());
         }
     }
 }
