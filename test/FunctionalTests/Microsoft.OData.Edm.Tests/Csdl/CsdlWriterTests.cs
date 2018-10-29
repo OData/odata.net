@@ -962,6 +962,41 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void CanWritePropertyWithCoreTypeDefinitionButValidationFailed()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<ComplexType Name=\"Complex\">" +
+                    "<Property Name=\"ModifiedDate\" Type=\"Org.OData.Core.V1.LocalDateTime\" />" +
+                    "<Property Name=\"QualifiedName\" Type=\"Org.OData.Core.V1.QualifiedTypeName\" />" +
+                  "</ComplexType>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            var localDateTime = model.FindType("Org.OData.Core.V1.LocalDateTime") as IEdmTypeDefinition;
+            Assert.NotNull(localDateTime);
+
+            var qualifiedTypeName = model.FindType("Org.OData.Core.V1.QualifiedTypeName") as IEdmTypeDefinition;
+            Assert.NotNull(qualifiedTypeName);
+
+            EdmComplexType type = new EdmComplexType("NS", "Complex");
+            type.AddStructuralProperty("ModifiedDate", new EdmTypeDefinitionReference(localDateTime, true));
+            type.AddStructuralProperty("QualifiedName", new EdmTypeDefinitionReference(qualifiedTypeName, true));
+
+            model.AddElement(type);
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
+            Assert.Equal(2, errors.Count());
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
         public void CanWriteNavigationPropertyBindingWithTargetPathOnContainmentOnSingleton()
         {
             string expected =
