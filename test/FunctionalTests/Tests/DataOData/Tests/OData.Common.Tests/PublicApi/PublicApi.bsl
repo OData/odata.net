@@ -3927,6 +3927,14 @@ public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysV
 	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
 }
 
+public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.CommunityVocabularyConstants {
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.CommunityVocabularyModel {
+	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm UrlEscapeFunctionTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+}
+
 public enum Microsoft.OData.BatchPayloadUriOption : int {
 	AbsoluteUri = 0
 	AbsoluteUriUsingHostHeader = 1
