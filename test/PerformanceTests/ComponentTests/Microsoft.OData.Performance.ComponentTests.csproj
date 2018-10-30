@@ -69,7 +69,6 @@
     <Compile Include="Common\InMemoryMessage.cs" />
     <Compile Include="Common\ODataMessageHelper.cs" />
     <Compile Include="Common\ODataMessageKind.cs" />
-    <Compile Include="Common\SpatialFactory.cs" />
     <Compile Include="Common\StreamBasedRequestMessage.cs" />
     <Compile Include="Common\StreamBasedResponseMessage.cs" />
     <Compile Include="Common\TestContainerBuilder.cs" />

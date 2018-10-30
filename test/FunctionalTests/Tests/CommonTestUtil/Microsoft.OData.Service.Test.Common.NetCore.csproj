@@ -15,7 +15,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Microsoft.OData.TestCommon\SpatialFactory.cs" Link="SpatialFactory.cs" />
     <Compile Include="..\..\Microsoft.Spatial.Tests\PositionData.cs" Link="PositionData.cs" />
   </ItemGroup>
 

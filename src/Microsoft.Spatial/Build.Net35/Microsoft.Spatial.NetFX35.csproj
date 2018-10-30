@@ -81,6 +81,12 @@
     <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyPipeline.cs">
       <Link>Microsoft\Spatial\GeographyPipeline.cs</Link>
     </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyFactory.cs">
+      <Link>Microsoft\Spatial\GeographyFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyFactoryOfT.cs">
+      <Link>Microsoft\Spatial\GeographyFactoryOfT.cs</Link>
+    </Compile>
     <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyFullGlobe.cs">
       <Link>Microsoft\Spatial\GeographyFullGlobe.cs</Link>
     </Compile>
@@ -128,6 +134,12 @@
     </Compile>
     <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryCurve.cs">
       <Link>Microsoft\Spatial\GeometryCurve.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryFactory.cs">
+      <Link>Microsoft\Spatial\GeometryFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryFactoryOfT.cs">
+      <Link>Microsoft\Spatial\GeometryFactoryOfT.cs</Link>
     </Compile>
     <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryLineString.cs">
       <Link>Microsoft\Spatial\GeometryLineString.cs</Link>
@@ -179,6 +191,9 @@
     </Compile>
     <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialBuilder.cs">
       <Link>Microsoft\Spatial\SpatialBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialFactory.cs">
+      <Link>Microsoft\Spatial\SpatialFactory.cs</Link>
     </Compile>
     <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialFormatter.cs">
       <Link>Microsoft\Spatial\SpatialFormatter.cs</Link>
