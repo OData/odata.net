@@ -47,6 +47,8 @@
     <Compile Include="..\FormatterExtensions.cs" />
     <Compile Include="..\GeographyPipeline.cs" />
     <Compile Include="..\GeographyFullGlobe.cs" />
+    <Compile Include="..\GeographyFactory.cs" />
+    <Compile Include="..\GeographyFactoryOfT.cs" />
     <Compile Include="..\GeographyCurve.cs" />
     <Compile Include="..\GeographyLineString.cs" />
     <Compile Include="..\GeographyMultiCurve.cs" />
@@ -62,6 +64,8 @@
     <Compile Include="..\GeometryPipeline.cs" />
     <Compile Include="..\GeometryCollection.cs" />
     <Compile Include="..\GeometryCurve.cs" />
+    <Compile Include="..\GeometryFactory.cs" />
+    <Compile Include="..\GeometryFactoryOfT.cs" />
     <Compile Include="..\GeometryLineString.cs" />
     <Compile Include="..\GeometryMultiCurve.cs" />
     <Compile Include="..\GeometryMultiLineString.cs" />
@@ -79,6 +83,7 @@
     <Compile Include="..\GeoJsonObjectFormatter.cs" />
     <Compile Include="..\ParseErrorException.cs" />
     <Compile Include="..\SpatialBuilder.cs" />
+    <Compile Include="..\SpatialFactory.cs" />
     <Compile Include="..\SpatialFormatter.cs" />
     <Compile Include="..\SpatialReader.cs" />
     <Compile Include="..\SpatialType.cs" />
