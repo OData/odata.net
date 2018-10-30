@@ -4507,7 +4507,6 @@ public abstract class Microsoft.OData.ODataWriter {
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataProperty primitiveProperty, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet, System.Action nestedAction)
-	public virtual System.Threading.Tasks.Task WriteAsync (Microsoft.OData.ODataProperty primitiveProperty)
 	public virtual void WriteDeltaDeletedLink (Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink)
 	public virtual System.Threading.Tasks.Task WriteDeltaDeletedLinkAsync (Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink)
 	public virtual void WriteDeltaLink (Microsoft.OData.ODataDeltaLink deltaLink)
@@ -4527,6 +4526,7 @@ public abstract class Microsoft.OData.ODataWriter {
 	public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeletedResource deletedResource)
 	public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
+	public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataProperty primitiveProperty)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResource resource)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResourceSet resourceSet)
 	public Microsoft.OData.ODataWriter WriteStream (Microsoft.OData.ODataBinaryStreamValue stream)
@@ -5253,6 +5253,7 @@ public sealed class Microsoft.OData.ODataNestedResourceInfoSerializationInfo {
 	public ODataNestedResourceInfoSerializationInfo ()
 
 	bool IsComplex  { public get; public set; }
+	bool IsPrimitive  { public get; public set; }
 	bool IsUndeclared  { public get; public set; }
 }
 

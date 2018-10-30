@@ -620,9 +620,9 @@ namespace Microsoft.OData
         /// <summary> Asynchronously write a primitive property within a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="primitiveProperty">The primitive property to write.</param>
-        public sealed override Task WriteAsync(ODataProperty primitiveProperty)
+        public sealed override Task WriteStartAsync(ODataProperty primitiveProperty)
         {
-            this.VerifyCanWriteProperty(true, primitiveProperty);
+            this.VerifyCanWriteProperty(false, primitiveProperty);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartPropertyImplementation(primitiveProperty));
         }
 #endif
@@ -1953,9 +1953,9 @@ namespace Microsoft.OData
                     {
                         this.InterceptException(() =>
                         {
-                            // todo (mikep): check this logic for primitive itemType
-                            if (!(currentNestedResourceInfo.SerializationInfo != null && currentNestedResourceInfo.SerializationInfo.IsComplex)
-                                && (this.CurrentScope.ResourceType == null || this.CurrentScope.ResourceType.IsEntityOrEntityCollectionType()))
+                            // mikep todo: also check to see if contentPayload.TypeName is specified as a primitive or complex type or collection of primitive or complex types
+                            if (!(currentNestedResourceInfo.SerializationInfo != null && (currentNestedResourceInfo.SerializationInfo.IsComplex || currentNestedResourceInfo.SerializationInfo.IsComplex))
+                                && (this.CurrentScope.ItemType == null || this.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
                             {
                                 this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfo);
                                 this.StartNestedResourceInfoWithContent(currentNestedResourceInfo);
@@ -2156,9 +2156,9 @@ namespace Microsoft.OData
                                 itemType = TypeNameOracle.ResolveAndValidateTypeName(
                                     model,
                                     typeNameFromResource,
-                                    EdmTypeKind.Entity,
+                                    EdmTypeKind.None,
                                     /* expectStructuredType */ true,
-                                    this.outputContext.WriterValidator) as IEdmEntityType;
+                                    this.outputContext.WriterValidator);
                             }
 
                             // Try resolving navigation source from serialization info.
@@ -2181,9 +2181,9 @@ namespace Microsoft.OData
                                         itemType = TypeNameOracle.ResolveAndValidateTypeName(
                                             model,
                                             serializationInfo.ExpectedTypeName,
-                                            EdmTypeKind.Entity,
+                                            EdmTypeKind.None,
                                             /* expectStructuredType */ true,
-                                            this.outputContext.WriterValidator) as IEdmEntityType;
+                                            this.outputContext.WriterValidator);
                                     }
                                     else if (!string.IsNullOrEmpty(serializationInfo.NavigationSourceEntityTypeName))
                                     {
@@ -2192,7 +2192,7 @@ namespace Microsoft.OData
                                             serializationInfo.NavigationSourceEntityTypeName,
                                             EdmTypeKind.Entity,
                                             /* expectStructuredType */ true,
-                                            this.outputContext.WriterValidator) as IEdmEntityType;
+                                            this.outputContext.WriterValidator);
                                     }
                                 }
                             }

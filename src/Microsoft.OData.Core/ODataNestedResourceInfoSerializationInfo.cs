@@ -20,5 +20,10 @@ namespace Microsoft.OData
         /// Gets or sets the value that indicates the nested resource is undeclared or not.
         /// </summary>
         public bool IsUndeclared { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value that indicates the nested resource is a primitive or collection of primitive property.
+        /// </summary>
+        public bool IsPrimitive { get; set; }
     }
 }
