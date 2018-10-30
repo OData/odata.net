@@ -289,6 +289,17 @@ public abstract class Microsoft.Spatial.GmlFormatter : Microsoft.Spatial.Spatial
 	public static Microsoft.Spatial.GmlFormatter Create ()
 }
 
+public abstract class Microsoft.Spatial.SpatialFactory {
+	protected virtual void AddLine (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void AddPos (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginFigure (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginGeo (Microsoft.Spatial.SpatialType type)
+	protected virtual void EndFigure ()
+	protected virtual void EndGeo ()
+	protected virtual void Finish ()
+	protected virtual void StartRing (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+}
+
 public abstract class Microsoft.Spatial.SpatialFormatter`2 {
 	protected SpatialFormatter`2 (Microsoft.Spatial.SpatialImplementation creator)
 
@@ -348,6 +359,31 @@ public sealed class Microsoft.Spatial.FormatterExtensions {
 	public static string Write (Microsoft.Spatial.SpatialFormatter`2[[System.Xml.XmlReader],[System.Xml.XmlWriter]] formatter, Microsoft.Spatial.ISpatial spatial)
 }
 
+public sealed class Microsoft.Spatial.GeographyFactory {
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyCollection]] Collection ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyCollection]] Collection (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (double latitude, double longitude)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiLineString]] MultiLineString ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiLineString]] MultiLineString (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiPoint]] MultiPoint ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiPoint]] MultiPoint (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiPolygon]] MultiPolygon ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiPolygon]] MultiPolygon (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (double latitude, double longitude)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPolygon]] Polygon ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPolygon]] Polygon (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+}
+
 [
 ExtensionAttribute(),
 ]
@@ -366,6 +402,31 @@ public sealed class Microsoft.Spatial.GeographyOperationsExtensions {
 	ExtensionAttribute(),
 	]
 	public static System.Nullable`1[[System.Double]] Length (Microsoft.Spatial.Geography operand)
+}
+
+public sealed class Microsoft.Spatial.GeometryFactory {
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryCollection]] Collection ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryCollection]] Collection (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (double x, double y)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiLineString]] MultiLineString ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiLineString]] MultiLineString (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiPoint]] MultiPoint ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiPoint]] MultiPoint (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiPolygon]] MultiPolygon ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiPolygon]] MultiPolygon (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (double x, double y)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPolygon]] Polygon ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPolygon]] Polygon (Microsoft.Spatial.CoordinateSystem coordinateSystem)
 }
 
 [
@@ -419,6 +480,30 @@ public class Microsoft.Spatial.CoordinateSystem {
 	public string ToWktId ()
 }
 
+public class Microsoft.Spatial.GeographyFactory`1 : Microsoft.Spatial.SpatialFactory {
+	protected virtual void AddLine (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginFigure (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginGeo (Microsoft.Spatial.SpatialType type)
+	public T Build ()
+	public Microsoft.Spatial.GeographyFactory`1 Collection ()
+	protected virtual void EndFigure ()
+	protected virtual void EndGeo ()
+	public Microsoft.Spatial.GeographyFactory`1 LineString ()
+	public Microsoft.Spatial.GeographyFactory`1 LineString (double latitude, double longitude)
+	public Microsoft.Spatial.GeographyFactory`1 LineString (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeographyFactory`1 LineTo (double latitude, double longitude)
+	public Microsoft.Spatial.GeographyFactory`1 LineTo (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeographyFactory`1 MultiLineString ()
+	public Microsoft.Spatial.GeographyFactory`1 MultiPoint ()
+	public Microsoft.Spatial.GeographyFactory`1 MultiPolygon ()
+	public Microsoft.Spatial.GeographyFactory`1 Point ()
+	public Microsoft.Spatial.GeographyFactory`1 Point (double latitude, double longitude)
+	public Microsoft.Spatial.GeographyFactory`1 Point (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeographyFactory`1 Polygon ()
+	public Microsoft.Spatial.GeographyFactory`1 Ring (double latitude, double longitude)
+	public Microsoft.Spatial.GeographyFactory`1 Ring (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+}
+
 public class Microsoft.Spatial.GeographyPosition : IEquatable`1 {
 	public GeographyPosition (double latitude, double longitude)
 	public GeographyPosition (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
@@ -432,6 +517,30 @@ public class Microsoft.Spatial.GeographyPosition : IEquatable`1 {
 	public virtual bool Equals (object obj)
 	public virtual int GetHashCode ()
 	public virtual string ToString ()
+}
+
+public class Microsoft.Spatial.GeometryFactory`1 : Microsoft.Spatial.SpatialFactory {
+	protected virtual void AddLine (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginFigure (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginGeo (Microsoft.Spatial.SpatialType type)
+	public T Build ()
+	public Microsoft.Spatial.GeometryFactory`1 Collection ()
+	protected virtual void EndFigure ()
+	protected virtual void EndGeo ()
+	public Microsoft.Spatial.GeometryFactory`1 LineString ()
+	public Microsoft.Spatial.GeometryFactory`1 LineString (double x, double y)
+	public Microsoft.Spatial.GeometryFactory`1 LineString (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeometryFactory`1 LineTo (double x, double y)
+	public Microsoft.Spatial.GeometryFactory`1 LineTo (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeometryFactory`1 MultiLineString ()
+	public Microsoft.Spatial.GeometryFactory`1 MultiPoint ()
+	public Microsoft.Spatial.GeometryFactory`1 MultiPolygon ()
+	public Microsoft.Spatial.GeometryFactory`1 Point ()
+	public Microsoft.Spatial.GeometryFactory`1 Point (double x, double y)
+	public Microsoft.Spatial.GeometryFactory`1 Point (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeometryFactory`1 Polygon ()
+	public Microsoft.Spatial.GeometryFactory`1 Ring (double x, double y)
+	public Microsoft.Spatial.GeometryFactory`1 Ring (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
 }
 
 public class Microsoft.Spatial.GeometryPosition : IEquatable`1 {
