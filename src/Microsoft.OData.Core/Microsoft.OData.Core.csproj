@@ -93,13 +93,16 @@
     <Compile Include="UriParser\Aggregation\AggregateExpression.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
     <Compile Include="UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs" />
+    <Compile Include="UriParser\SemanticAst\AnnotationSegment.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionConstantNode.cs" />
     <Compile Include="UriParser\SemanticAst\ComputeClause.cs" />
     <Compile Include="UriParser\SemanticAst\ComputeExpression.cs" />
     <Compile Include="UriParser\SemanticAst\CountVirtualPropertyNode.cs" />
-    <Compile Include="UriParser\SemanticAst\AnnotationSegment.cs" />
+    <Compile Include="UriParser\SemanticAst\EachSegment.cs" />
+    <Compile Include="UriParser\SemanticAst\FilterSegment.cs" />
     <Compile Include="UriParser\SemanticAst\InNode.cs" />
+    <Compile Include="UriParser\SemanticAst\ReferenceSegment.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
@@ -224,6 +227,7 @@
     <Compile Include="Json\NonIndentedTextWriter.cs" />
     <Compile Include="Json\ODataJsonReaderCoreUtils.cs" />
     <Compile Include="Json\ODataJsonWriterUtils.cs" />
+    <Compile Include="Json\ODataStringEscapeOption.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
     <Compile Include="ODataErrorDetail.cs" />
     <Compile Include="ODataUntypedValue.cs" />

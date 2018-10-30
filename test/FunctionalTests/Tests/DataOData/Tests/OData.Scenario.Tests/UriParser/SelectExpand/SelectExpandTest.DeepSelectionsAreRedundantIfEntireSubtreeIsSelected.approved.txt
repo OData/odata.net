@@ -22,5 +22,4 @@ SelectExpandQueryOption
 										SelectedItems
 											Path]
 								Path[(Property: City)]
-								Path[(NavigationProperty: Orders)]
 					(Wildcard)

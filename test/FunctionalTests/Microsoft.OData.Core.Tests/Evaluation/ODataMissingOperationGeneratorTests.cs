@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void NoOperationsShouldBeGeneratedIfModelHasNone()
         {
-            AddMissingOperations(this.entry, this.entityType, SelectedPropertiesNode.EntireSubtree, this.model, type => new IEdmOperation[0], null, e => false);
+            AddMissingOperations(this.entry, this.entityType, new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree), this.model, type => new IEdmOperation[0], null, e => false);
             entry.Actions.Should().BeEmpty();
             entry.Functions.Should().BeEmpty();
         }
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.AddAction(this.odataAction);
             this.entry.AddFunction(this.odataFunction);
-            AddMissingOperations(this.entry, this.entityType, SelectedPropertiesNode.EntireSubtree, this.model, type => this.allOperations, null, e => false);
+            AddMissingOperations(this.entry, this.entityType, new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree), this.model, type => this.allOperations, null, e => false);
             this.entry.Actions.ToList().Count.Should().Be(1);
 #if !NETCOREAPP1_0
             this.entry.Actions.Single().ShouldHave().AllProperties().EqualTo(this.odataAction);

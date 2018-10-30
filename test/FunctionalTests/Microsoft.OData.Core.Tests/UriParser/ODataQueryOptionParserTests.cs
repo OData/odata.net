@@ -41,6 +41,7 @@ namespace Microsoft.OData.Tests.UriParser
             uriParser.ParseOrderBy().Should().BeNull();
             uriParser.ParseTop().Should().Be(null);
             uriParser.ParseSkip().Should().Be(null);
+            uriParser.ParseIndex().Should().Be(null);
             uriParser.ParseCount().Should().Be(null);
             uriParser.ParseSearch().Should().BeNull();
             uriParser.ParseCompute().Should().BeNull();
@@ -57,6 +58,7 @@ namespace Microsoft.OData.Tests.UriParser
                 {"$orderby" , ""},
                 {"$top"     , ""},
                 {"$skip"    , ""},
+                {"$index"   , ""},
                 {"$count"   , ""},
                 {"$search"  , ""},
                 {"$compute" , ""},
@@ -73,6 +75,8 @@ namespace Microsoft.OData.Tests.UriParser
             action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
             action = () => uriParser.ParseSkip();
             action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidSkipQueryOptionValue(""));
+            action = () => uriParser.ParseIndex();
+            action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidIndexQueryOptionValue(""));
             action = () => uriParser.ParseCount();
             action.ShouldThrow<ODataException>().WithMessage(Strings.ODataUriParser_InvalidCount(""));
             action = () => uriParser.ParseSearch();
@@ -90,6 +94,7 @@ namespace Microsoft.OData.Tests.UriParser
                 {"$orderby" , null},
                 {"$top"     , null},
                 {"$skip"    , null},
+                {"index"    , null},
                 {"$count"   , null},
                 {"$search"  , null},
                 {"$compute" , null},
@@ -101,6 +106,7 @@ namespace Microsoft.OData.Tests.UriParser
             uriParser.ParseOrderBy().Should().BeNull();
             uriParser.ParseTop().Should().Be(null);
             uriParser.ParseSkip().Should().Be(null);
+            uriParser.ParseIndex().Should().Be(null);
             uriParser.ParseCount().Should().Be(null);
             uriParser.ParseSearch().Should().BeNull();
             uriParser.ParseCompute().Should().BeNull();

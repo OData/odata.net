@@ -8,18 +8,19 @@ using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
-    internal class UnresolvedVocabularyTerm : EdmElement, IEdmTerm, IUnresolvedElement
+    internal class UnresolvedVocabularyTerm : EdmElement, IEdmTerm, IUnresolvedElement, IEdmFullNamedElement
     {
         private readonly UnresolvedTermTypeReference type = new UnresolvedTermTypeReference();
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string fullName;
         private readonly string appliesTo = null;
         private readonly string defaultValue = null;
 
         public UnresolvedVocabularyTerm(string qualifiedName)
         {
             qualifiedName = qualifiedName ?? string.Empty;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
         }
 
         public string Namespace
@@ -30,6 +31,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Name
         {
             get { return this.name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public EdmSchemaElementKind SchemaElementKind

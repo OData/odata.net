@@ -668,6 +668,7 @@ SyntacticTree_MaxDepthInvalid=The maximum depth setting must be a number greater
 SyntacticTree_InvalidSkipQueryOptionValue=Invalid value '{0}' for $skip query option found. The $skip query option requires a non-negative integer value.
 SyntacticTree_InvalidTopQueryOptionValue=Invalid value '{0}' for $top query option found. The $top query option requires a non-negative integer value.
 SyntacticTree_InvalidCountQueryOptionValue=Invalid value '{0}' for $count query option found. Valid values are '{1}'.
+SyntacticTree_InvalidIndexQueryOptionValue=Invalid value '{0}' for $index query option found. The $index query option requires an integer value.
 
 QueryOptionUtils_QueryParameterMustBeSpecifiedOnce=Query option '{0}' was specified more than once, but it must be specified at most once.
 
@@ -719,6 +720,8 @@ MetadataBinder_NoApplicableFunctionFound=No function signature for the function 
 MetadataBinder_BoundNodeCannotBeNull=A token of kind '{0}' was bound to the value null; this is invalid. A query token must always be bound to a non-null query node.
 MetadataBinder_TopRequiresNonNegativeInteger=The value '{0}' is not a non-negative integer value. In OData, the $top query option must specify a non-negative integer value.
 MetadataBinder_SkipRequiresNonNegativeInteger=The value '{0}' is not a non-negative integer value. In OData, the $skip query option must specify a non-negative integer value.
+MetadataBinder_QueryOptionsBindStateCannotBeNull=The bind state cannot be null. In OData, the bind state for query options should not be null and there should be query options in the object.
+MetadataBinder_QueryOptionsBindMethodCannotBeNull=The bind method cannot be null. In OData, the processing of query options should have a corresponding bind method.
 MetadataBinder_HierarchyNotFollowed=Encountered invalid type cast. '{0}' is not assignable from '{1}'.
 MetadataBinder_LambdaParentMustBeCollection=Any/All may only be used following a collection.
 MetadataBinder_ParameterNotInScope=The parameter '{0}' is not in scope.
@@ -848,10 +851,19 @@ CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists=The given f
 RequestUriProcessor_InvalidValueForEntitySegment=The ODataPathSegment provided (Id = {0}) is not an EntitySetSegment.
 RequestUriProcessor_InvalidValueForKeySegment=The KeySegment provided (Id = {0}) is either null, having no keys, or does not target a single resource.
 
+RequestUriProcessor_CannotApplyFilterOnSingleEntities=$filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'.
+RequestUriProcessor_CannotApplyEachOnSingleEntities=$each set-based operation cannot be applied on single entities or singletons. Entity type: '{0}'.
+RequestUriProcessor_FilterPathSegmentSyntaxError=The $filter path segment must be in the form $filter(expression), where the expression resolves to a boolean.
+RequestUriProcessor_NoNavigationSourceFound=There are no navigation sources found to apply '{0}'.
+RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment=Only a single operation can follow $each.
+
 ; Copied from the server, will be incrementally replaced.
 RequestUriProcessor_EmptySegmentInRequestUrl=Empty segment encountered in request URL. Please make sure that a valid request URL is specified.
 RequestUriProcessor_SyntaxError=Bad Request - Error in query syntax.
 RequestUriProcessor_CountOnRoot=The request URI is not valid, the segment $count cannot be applied to the root of the service.
+RequestUriProcessor_FilterOnRoot=The request URI is not valid, the segment $filter cannot be applied to the root of the service.
+RequestUriProcessor_EachOnRoot=The request URI is not valid, the segment $each cannot be applied to the root of the service.
+RequestUriProcessor_RefOnRoot=The request URI is not valid, the segment $ref cannot be applied to the root of the service.
 RequestUriProcessor_MustBeLeafSegment=The request URI is not valid. The segment '{0}' must be the last segment in the URI because it is one of the following: $ref, $batch, $count, $value, $metadata, a named media resource, an action, a noncomposable function, an action import, a noncomposable function import, an operation with void return type, or an operation import with void return type.
 RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment=The request URI is not valid. The segment '{0}' must refer to a navigation property since the previous segment identifier is '{1}'.
 RequestUriProcessor_MissingSegmentAfterLink=The request URI is not valid. There must a segment specified after the '{0}' segment and the segment must refer to a entity resource.

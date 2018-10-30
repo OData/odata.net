@@ -928,8 +928,8 @@
     <Compile Include="..\Schema\CoreModel\EdmCoreModelPrimitiveType.cs">
       <Link>Schema\CoreModel\EdmCoreModelPrimitiveType.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypeType.cs">
-      <Link>Schema\CoreModel\EdmCoreModelUntypeType.cs</Link>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypedType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelUntypedType.cs</Link>
     </Compile>
     <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
       <Link>Schema\CoreModel\IEdmCoreModelElement.cs</Link>
@@ -1014,6 +1014,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmExpression.cs">
       <Link>Schema\Interfaces\IEdmExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmFullNamedElement.cs">
+      <Link>Schema\Interfaces\IEdmFullNamedElement.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmFunction.cs">
       <Link>Schema\Interfaces\IEdmFunction.cs</Link>
@@ -1245,6 +1248,9 @@
     </Compile>
     <Compile Include="..\Vocabularies\CoreVocabularyModel.cs">
       <Link>Vocabularies\CoreVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\ValidationVocabularyModel.cs">
+      <Link>Vocabularies\ValidationVocabularyModel.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\EdmExpressionEvaluator.cs">
       <Link>Vocabularies\EdmExpressionEvaluator.cs</Link>
@@ -1530,6 +1536,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\Vocabularies\CoreVocabularies.xml">
       <Link>Vocabularies\CoreVocabularies.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Vocabularies\ValidationVocabularies.xml">
+      <Link>Vocabularies\ValidationVocabularies.xml</Link>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\Portable.targets" />

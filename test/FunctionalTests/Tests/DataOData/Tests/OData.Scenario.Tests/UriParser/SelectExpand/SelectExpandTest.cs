@@ -87,6 +87,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         public void DeepSelectionsAreRedundantIfEntireSubtreeIsSelected()
         {
             // note that the selection of 'AssociatedOrder' in the middle of the $select makes the rest of it redundant.
+            // And parenthesized expand clause is not added to select list.
             this.ApprovalVerifySelectAndExpandParser(
                 orderDetailBase,
                 "",

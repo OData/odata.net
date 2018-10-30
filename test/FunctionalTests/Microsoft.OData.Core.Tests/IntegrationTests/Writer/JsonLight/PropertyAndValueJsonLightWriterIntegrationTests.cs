@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
@@ -435,6 +436,95 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         }
 
         [Fact]
+        public void WriteEntryWithStringEscapeOptionShouldWork()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("Ns", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            ODataResource entry = new ODataResource()
+            {
+                TypeName = "NS.Person",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = 1 },
+                    new ODataProperty { Name = "Name", Value = "и\nя" }
+                }
+            };
+
+            // 1. without string escape option
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, stringEscapeOption: null);
+
+            const string expectedEscapedNonAsciiPayload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"\\u0438\\n\\u044f\"" +
+                "}";
+            outputPayload.Should().Be(expectedEscapedNonAsciiPayload);
+
+            // 2. With EscapeNonAscii escape option
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, ODataStringEscapeOption.EscapeNonAscii);
+
+            outputPayload.Should().Be(expectedEscapedNonAsciiPayload);
+
+            // 3. With EscapeOnlyControls escape option
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
+                false, null, ODataStringEscapeOption.EscapeOnlyControls);
+
+            const string expectedEscapedOnlyControlPayload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"и\\nя\"" +
+                "}";
+            outputPayload.Should().Be(expectedEscapedOnlyControlPayload);
+        }
+
+        [Fact]
+        public void WriteEntryWithEscapeOnlyControlsOptionShouldWork()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("Ns", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            ODataResource entry = new ODataResource()
+            {
+                TypeName = "NS.Person",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = 1 },
+                    new ODataProperty { Name = "Name", Value = "и\nя" }
+                }
+            };
+
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
+                false, null, ODataStringEscapeOption.EscapeOnlyControls);
+
+            const string expectedMinimalPayload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"и\\nя\"" +
+                "}";
+            outputPayload.Should().Be(expectedMinimalPayload);
+        }
+
+        [Fact]
         public void WriteDynamicPropertyOfUIntIsNotSupported()
         {
             EdmModel model = new EdmModel();
@@ -462,11 +552,20 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             write.ShouldThrow<ODataException>().WithMessage("The value of type 'System.UInt64' is not supported and cannot be converted to a JSON representation.");
         }
 
-        private string WriterEntry(IEdmModel userModel, ODataResource entry, EdmEntitySet entitySet, IEdmEntityType entityType, bool fullMetadata = false, Action<ODataWriter> writeAction = null)
+        private string WriterEntry(IEdmModel userModel, ODataResource entry, EdmEntitySet entitySet, IEdmEntityType entityType,
+            bool fullMetadata = false, Action<ODataWriter> writeAction = null, ODataStringEscapeOption? stringEscapeOption = null)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
+            if (stringEscapeOption != null)
+            {
+                var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+                containerBuilder.AddDefaultODataServices();
+                containerBuilder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
+                message.Container = containerBuilder.BuildContainer();
+            }
 
             var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
+
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com"));
             writerSettings.SetContentType(fullMetadata ?

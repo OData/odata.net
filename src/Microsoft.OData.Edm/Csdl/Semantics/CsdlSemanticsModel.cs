@@ -151,6 +151,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.schemata.Select(s => s.Namespace); }
         }
 
+        public IDictionary<string, List<CsdlSemanticsAnnotations>> OutOfLineAnnotations
+        {
+            get
+            {
+                return outOfLineAnnotations;
+            }
+        }
+
         public override IEnumerable<IEdmVocabularyAnnotation> VocabularyAnnotations
         {
             get
@@ -281,7 +289,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 {
                     foreach (CsdlAnnotation annotation in annotations.Annotations.Annotations)
                     {
-                        result.Add(this.WrapVocabularyAnnotation(annotation, annotations.Context, null, annotations, annotations.Annotations.Qualifier));
+                        IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(annotation, annotations.Context, null, annotations, annotations.Annotations.Qualifier);
+                        vocabAnnotation.SetSerializationLocation(this, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+                        result.Add(vocabAnnotation);
                     }
                 }
 

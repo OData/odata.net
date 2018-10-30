@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
@@ -109,6 +110,113 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             selectTerms.Should().HaveCount(2);
             selectTerms.ElementAt(0).ShouldBeNonSystemToken("four");
             selectTerms.ElementAt(1).ShouldBeNonSystemToken("five");
+        }
+
+        [Fact]
+        public void NestedComputeIsAllowed()
+        {
+            var result = this.ParseExpandOptions("($compute=Price mul Qty as TotalPrice)");
+            result.Should().NotBeNull();
+
+            ComputeToken compute = result.ComputeOption;
+            compute.Should().NotBeNull();
+            compute.Expressions.Should().NotBeNull();
+            compute.Expressions.Should().HaveCount(1);
+
+            ComputeExpressionToken computeExpressionToken = result.ComputeOption.Expressions.Single();
+            computeExpressionToken.Alias.Should().Equals("TotalPrice");
+
+            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply).And;
+            binaryOperatorToken.Left.ShouldBeEndPathToken("Price");
+            binaryOperatorToken.Right.ShouldBeEndPathToken("Qty");
+        }
+
+        [Fact]
+        public void NestedComputeAndSelectIsAllowed()
+        {
+            var result = this.ParseExpandOptions("($compute=Price mul Qty as TotalPrice;$select=Name,Qty,TotalPrice)");
+            result.Should().NotBeNull();
+
+            ComputeToken compute = result.ComputeOption;
+            compute.Should().NotBeNull();
+            compute.Expressions.Should().NotBeNull();
+            compute.Expressions.Should().HaveCount(1);
+
+            ComputeExpressionToken computeExpressionToken = result.ComputeOption.Expressions.Single();
+            computeExpressionToken.Alias.Should().Equals("TotalPrice");
+
+            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply).And;
+            binaryOperatorToken.Left.ShouldBeEndPathToken("Price");
+            binaryOperatorToken.Right.ShouldBeEndPathToken("Qty");
+
+            IEnumerable<PathSegmentToken> selectTerms = result.SelectOption.Properties;
+            selectTerms.Should().HaveCount(3);
+            selectTerms.ElementAt(0).ShouldBeNonSystemToken("Name");
+            selectTerms.ElementAt(1).ShouldBeNonSystemToken("Qty");
+            selectTerms.ElementAt(2).ShouldBeNonSystemToken("TotalPrice");
+        }
+
+        // for example: $expand=Orders($apply=aggregate(Amount with sum as Total))
+        [Fact]
+        public void NestedAggregateTransformationIsAllowed()
+        {
+            var result = this.ParseExpandOptions("($apply=aggregate(Amount with sum as Total))");
+            result.Should().NotBeNull();
+
+            QueryToken token = result.ApplyOptions.Single();
+            token.Should().BeOfType<AggregateToken>();
+            AggregateToken aggregate = token as AggregateToken;
+            AggregateExpressionToken aggregateExpressionToken = aggregate.Expressions.Single();
+            aggregateExpressionToken.Alias.Should().Equals("Total");
+            aggregateExpressionToken.Method.Should().Equals(AggregationMethod.Sum);
+            aggregateExpressionToken.Expression.ShouldBeEndPathToken("Amount");
+        }
+
+        // for example: $expand=Orders($apply=compute(Amount mul Product/TaxRate as Tax))
+        [Fact]
+        public void NestedComputeTransformationIsAllowed()
+        {
+            var result = this.ParseExpandOptions("($apply=compute(Amount mul Product/TaxRate as Tax))");
+            result.Should().NotBeNull();
+
+            QueryToken token = result.ApplyOptions.Single();
+            token.Should().BeOfType<ComputeToken>();
+            ComputeToken compute = token as ComputeToken;
+            ComputeExpressionToken computeExpressionToken = compute.Expressions.Single();
+            computeExpressionToken.Alias.Should().Equals("Tax");
+            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply).And;
+            binaryOperatorToken.Left.ShouldBeEndPathToken("Amount");
+            EndPathToken right = binaryOperatorToken.Right.ShouldBeEndPathToken("TaxRate").And;
+            right.NextToken.Should().NotBeNull();
+            right.NextToken.ShouldBeInnerPathToken("Product");
+        }
+
+        // for example: $expand=Orders($apply=groupby((Customer/Country,Product/Name),aggregate(Amount with sum as Total)))
+        [Fact]
+        public void NestedGroupbyTransformationsIsAllowed()
+        {
+            var result = this.ParseExpandOptions("($apply=groupby((Customer/CountryRegion,Product/Name),aggregate(Amount with sum as Total)))");
+            result.Should().NotBeNull();
+
+            QueryToken token = result.ApplyOptions.Single();
+            token.Should().BeOfType<GroupByToken>();
+            GroupByToken groupBy = token as GroupByToken;
+            groupBy.Properties.Should().HaveCount(2);
+            QueryToken queryToken = groupBy.Properties.ElementAt(0);
+            EndPathToken pathToken = queryToken.ShouldBeEndPathToken("CountryRegion").And;
+            pathToken.NextToken.ShouldBeInnerPathToken("Customer");
+
+            queryToken = groupBy.Properties.ElementAt(1);
+            pathToken = queryToken.ShouldBeEndPathToken("Name").And;
+            pathToken.NextToken.ShouldBeInnerPathToken("Product");
+
+            groupBy.Child.Should().NotBeNull();
+            groupBy.Child.Should().BeOfType<AggregateToken>();
+            AggregateToken aggregate = groupBy.Child as AggregateToken;
+            AggregateExpressionToken aggregateExpressionToken = aggregate.Expressions.Single();
+            aggregateExpressionToken.Alias.Should().Equals("Total");
+            aggregateExpressionToken.Method.Should().Equals(AggregationMethod.Sum);
+            aggregateExpressionToken.Expression.ShouldBeEndPathToken("Amount");
         }
 
         [Fact]

@@ -139,6 +139,42 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Determine the NavigationSource of a FilterSegment
+        /// </summary>
+        /// <param name="segment">The FilterSegment to look in.</param>
+        /// <returns>null, since $filter doesn't have an navigation source</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(FilterSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return segment.TargetEdmNavigationSource;
+        }
+
+        /// <summary>
+        /// Determine the NavigationSource of a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">The ReferenceSegment to look in.</param>
+        /// <returns>null, since $filter doesn't have an navigation source</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(ReferenceSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return segment.TargetEdmNavigationSource;
+        }
+
+        /// <summary>
+        /// Determine the NavigationSource of a EachSegment
+        /// </summary>
+        /// <param name="segment">The FilterSegment to look in.</param>
+        /// <returns>null, since $filter doesn't have an navigation source</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(EachSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return segment.TargetEdmNavigationSource;
+        }
+
+        /// <summary>
         /// Determine the NavigationSource of a OpenPropertySegment
         /// </summary>
         /// <param name="segment">The OpenPropertySegment to look in.</param>
@@ -193,6 +229,18 @@ namespace Microsoft.OData.UriParser
         /// <returns>null, since $batch doesn't have an navigation source</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
         public override IEdmNavigationSource Translate(MetadataSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return null;
+        }
+
+        /// <summary>
+        /// Determine the NavigationSource of a PathTemplateSegment
+        /// </summary>
+        /// <param name="segment">The PathTemplateSegment to look in.</param>
+        /// <returns>null, since $batch doesn't have an navigation source</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(PathTemplateSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return null;

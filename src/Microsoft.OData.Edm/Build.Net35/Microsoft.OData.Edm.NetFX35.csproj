@@ -346,6 +346,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CoreVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\CoreVocabularyModel.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\ValidationVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\ValidationVocabularyModel.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\AlternateKeysVocabularyModel.cs</Link>
     </Compile>
@@ -1004,8 +1007,8 @@
     <Compile Include="..\Schema\CoreModel\EdmCoreModelPrimitiveType.cs">
       <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelPrimitiveType.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypeType.cs">
-      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelUntypeType.cs</Link>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypedType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelUntypedType.cs</Link>
     </Compile>
     <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
       <Link>Microsoft\OData\Edm\Schema\CoreModel\IEdmCoreModelElement.cs</Link>
@@ -1090,6 +1093,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmExpression.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmExpression.cs</Link>
+    </Compile> 
+    <Compile Include="..\Schema\Interfaces\IEdmFullNamedElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmFullNamedElement.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmFunction.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmFunction.cs</Link>
@@ -1496,6 +1502,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularies.xml">
       <LogicalName>AuthorizationVocabularies.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\ValidationVocabularies.xml">
+      <LogicalName>ValidationVocabularies.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -864,7 +864,7 @@ namespace Microsoft.OData.JsonLight
                 ? null
                 : this.jsonLightResourceDeserializer.ContextUriParseResult.SelectQueryOption;
 
-            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption);
+            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, this.CurrentResourceType, this.jsonLightInputContext.Model);
 
             if (this.ReadingResourceSet)
             {
@@ -1997,7 +1997,7 @@ namespace Microsoft.OData.JsonLight
                     if (!TryReadPrimitiveAsStream(resourceType))
                     {
                         // we are at the start of a nested resource set
-                        this.ReadResourceSetStart(new ODataResourceSet(), SelectedPropertiesNode.EntireSubtree);
+                        this.ReadResourceSetStart(new ODataResourceSet(), new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree));
                     }
 
                     break;
@@ -2096,7 +2096,7 @@ namespace Microsoft.OData.JsonLight
                 if (nestedResourceInfo.NestedResourceInfo.IsCollection == true)
                 {
                     // because this is a request, there is no $select query option.
-                    SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.EntireSubtree;
+                    SelectedPropertiesNode selectedProperties = new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree);
                     ODataDeltaResourceSet deltaResourceSet = nestedResourceInfo.NestedResourceSet as ODataDeltaResourceSet;
                     if (deltaResourceSet != null)
                     {

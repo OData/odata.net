@@ -59,6 +59,51 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public void ParameterReaderShouldNotThrowIfMissingNullableNonOptionalParameter()
+        {
+            this.action.AddParameter("days", EdmCoreModel.Instance.GetInt32(true));
+            const string payload = "{ }";
+
+            var result = this.RunParameterReaderTest(payload);
+            result.Values.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ParameterReaderShouldThrowIfMissingNonNullableNonOptionalParameter()
+        {
+            this.action.AddParameter("days", EdmCoreModel.Instance.GetInt32(false));
+            const string payload = "{ }";
+
+            Action test = () => this.RunParameterReaderTest(payload);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataParameterReaderCore_ParametersMissingInPayload("ActionImport", "days"));
+        }
+
+        [Fact]
+        public void ParameterReaderShouldReadOptionalParameter()
+        {
+            this.action.AddParameter("days", EdmCoreModel.Instance.GetInt32(false));
+            this.action.AddOptionalParameter("optionalDays", EdmCoreModel.Instance.GetInt32(false));
+            const string payload = "{\"days\":4, \"optionalDays\":8 }";
+
+            var result = this.RunParameterReaderTest(payload);
+
+            result.Values.Should().HaveCount(2);
+            result.Values.Should().Contain(keyValuePair => keyValuePair.Key.Equals("days") && keyValuePair.Value.Equals(4));
+            result.Values.Should().Contain(keyValuePair => keyValuePair.Key.Equals("optionalDays") && keyValuePair.Value.Equals(8));
+        }
+
+        [Fact]
+        public void ParameterReaderShouldNotThrowIfMissingOptionalParameter()
+        {
+            this.action.AddParameter("days", EdmCoreModel.Instance.GetInt32(false));
+            this.action.AddOptionalParameter("optionalDays", EdmCoreModel.Instance.GetInt32(false));
+            const string payload = "{\"days\":4 }";
+
+            var result = this.RunParameterReaderTest(payload);
+            result.Values.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("days") && keyValuePair.Value.Equals(4));
+        }
+
+        [Fact]
         public void ParameterReaderShouldReadTwoPrimitiveValue()
         {
             this.action.AddParameter("days", EdmCoreModel.Instance.GetInt32(false));

@@ -437,6 +437,9 @@
     <Compile Include="..\Json\ODataJsonWriterUtils.cs">
       <Link>Json\ODataJsonWriterUtils.cs</Link>
     </Compile>
+    <Compile Include="..\Json\ODataStringEscapeOption.cs">
+      <Link>Json\ODataStringEscapeOption.cs</Link>
+    </Compile>
     <Compile Include="..\Json\TextWriterWrapper.cs">
       <Link>Json\TextWriterWrapper.cs</Link>
     </Compile>
@@ -1391,6 +1394,12 @@
     <Compile Include="..\UriParser\SemanticAst\CountVirtualPropertyNode.cs">
       <Link>UriParser\SemanticAst\CountVirtualPropertyNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\EachSegment.cs">
+      <Link>UriParser\SemanticAst\EachSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\FilterSegment.cs">
+      <Link>UriParser\SemanticAst\FilterSegment.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\DetermineNavigationSourceTranslator.cs">
       <Link>UriParser\SemanticAst\DetermineNavigationSourceTranslator.cs</Link>
     </Compile>
@@ -1504,6 +1513,9 @@
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\RangeVariableKind.cs">
       <Link>UriParser\SemanticAst\RangeVariableKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ReferenceSegment.cs">
+      <Link>UriParser\SemanticAst\ReferenceSegment.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariable.cs">
       <Link>UriParser\SemanticAst\ResourceRangeVariable.cs</Link>

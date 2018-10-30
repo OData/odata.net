@@ -244,6 +244,7 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceDog.AddStructuralProperty("Nicknames", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
             FullyQualifiedNamespaceDog.AddStructuralProperty("Breed", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespaceDog.AddStructuralProperty("NamedStream", EdmCoreModel.Instance.GetStream(true));
+            FullyQualifiedNamespaceDog.AddStructuralProperty("Weight", EdmCoreModel.Instance.GetDouble(true));
             FullyQualifiedNamespaceDog.AddKeys(new IEdmStructuralProperty[] { FullyQualifiedNamespaceDog_ID, });
             var FullyQualifiedNamespaceDog_MyPeople = FullyQualifiedNamespaceDog.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyPeople", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespacePerson });
             var FullyQualifiedNamespaceDog_FastestOwner = FullyQualifiedNamespaceDog.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "FastestOwner", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = FullyQualifiedNamespacePerson });
@@ -456,6 +457,22 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceAllHaveDogFunction2.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
             FullyQualifiedNamespaceAllHaveDogFunction2.AddParameter("inOffice", EdmCoreModel.Instance.GetBoolean(true));
             model.AddElement(FullyQualifiedNamespaceAllHaveDogFunction2);
+
+            var FullyQualifiedNamespaceGetPeopleWhoHaveDogsFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPeopleWhoHaveDogs", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)), true, null, true);
+            FullyQualifiedNamespaceGetPeopleWhoHaveDogsFunction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
+            model.AddElement(FullyQualifiedNamespaceGetPeopleWhoHaveDogsFunction);
+
+            var FullyQualifiedNamespaceGetPersonWhoHasSmartestDogFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPersonWhoHasSmartestDog", FullyQualifiedNamespacePersonTypeReference, true, null, true);
+            FullyQualifiedNamespaceGetPersonWhoHasSmartestDogFunction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
+            model.AddElement(FullyQualifiedNamespaceGetPersonWhoHasSmartestDogFunction);
+
+            var FullyQualifiedNamespaceAdoptShibaInuAction = new EdmFunction("Fully.Qualified.Namespace", "AdoptShibaInu", EdmCoreModel.Instance.GetBoolean(true), true, null, true);
+            FullyQualifiedNamespaceAdoptShibaInuAction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
+            model.AddElement(FullyQualifiedNamespaceAdoptShibaInuAction);
+
+            var FullyQualifiedNamespaceSummonPuppiesAction = new EdmFunction("Fully.Qualified.Namespace", "SummonPuppies", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespaceDogTypeReference)), true, null, true);
+            FullyQualifiedNamespaceSummonPuppiesAction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            model.AddElement(FullyQualifiedNamespaceSummonPuppiesAction);
 
             var FullyQualifiedNamespaceFireAllAction = new EdmAction("Fully.Qualified.Namespace", "FireAll", EdmCoreModel.Instance.GetBoolean(true), true, null);
             FullyQualifiedNamespaceFireAllAction.AddParameter("employees", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
@@ -1035,6 +1052,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""Nicknames"" Type=""Collection(Edm.String)"" />
         <Property Name=""Breed"" Type=""Edm.String"" />
         <Property Name=""NamedStream"" Type=""Edm.Stream"" />
+        <Property Name=""Weight"" Type=""Edm.Double"" />
         <NavigationProperty Name=""EmployeeOwner"" Type=""Fully.Qualified.Namespace.Employee"" Nullable=""false"" Partner=""OfficeDog"" />
         <NavigationProperty Name=""MyPeople"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
         <NavigationProperty Name=""FastestOwner"" Type=""Fully.Qualified.Namespace.Person"" />
@@ -1247,6 +1265,22 @@ namespace Microsoft.OData.Tests.UriParser
         <Parameter Name=""inOffice"" Type=""Edm.Boolean"" />
         <ReturnType Type=""Edm.Boolean"" />
       </Function>
+      <Function Name=""GetPeopleWhoHaveDogs"" IsBound=""true"" IsComposable=""true"">
+        <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
+        <ReturnType Type=""Collection(Fully.Qualified.Namespace.Person)"" />
+      </Function>
+      <Function Name=""GetPersonWhoHasSmartestDog"" IsBound=""true"" IsComposable=""true"">
+        <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
+        <ReturnType Type=""Fully.Qualified.Namespace.Person"" />
+      </Function>
+      <Action Name=""AdoptShibaInu"" IsBound=""true"">
+        <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
+        <ReturnType Type=""Edm.Boolean"" />
+      </Action>
+      <Action Name=""SummonPuppies"" IsBound=""true"">
+        <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
+        <ReturnType Type=""Collection(Fully.Qualified.Namespace.Dog)"" />
+      </Action>
       <Action Name=""FireAll"" IsBound=""true"">
         <Parameter Name=""employees"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
         <ReturnType Type=""Edm.Boolean"" />
@@ -1685,6 +1719,16 @@ namespace Microsoft.OData.Tests.UriParser
             return new EdmComplexTypeReference(GetHomeAddressType(), false);
         }
 
+        public static IEdmStructuralProperty GetPersonIdProp()
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("ID");
+        }
+
+        public static IEdmNavigationProperty GetPersonMyAddressNavProp()
+        {
+            return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("MyAddress");
+        }
+
         public static IEdmNavigationProperty GetPersonMyDogNavProp()
         {
             return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("MyDog");
@@ -1892,6 +1936,11 @@ namespace Microsoft.OData.Tests.UriParser
             return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Address")).FindProperty("MyFavoriteNeighbor");
         }
 
+        public static IEdmNavigationProperty GetDogFastestOwnerNavProp()
+        {
+            return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Dog")).FindProperty("FastestOwner");
+        }
+
         public static IEdmNavigationProperty GetDogMyPeopleNavProp()
         {
             return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Dog")).FindProperty("MyPeople");
@@ -2005,6 +2054,26 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmFunction GetFunctionForAllHaveDogWithTwoParameters()
         {
             return TestModel.FindOperations("Fully.Qualified.Namespace.AllHaveDog").Single(f => f.Parameters.Count() == 2).As<IEdmFunction>();
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetPeopleWhoHaveDogs()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetPeopleWhoHaveDogs").Single();
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetPersonWhoHasSmartestDog()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetPersonWhoHasSmartestDog").Single();
+        }
+
+        public static IEdmOperationImport GetAdoptShibaInuActionImport()
+        {
+            return TestModel.EntityContainer.FindOperationImports("AdoptShibaInu").Single();
+        }
+
+        public static IEdmOperationImport GetSummonPuppiesActionImport()
+        {
+            return TestModel.EntityContainer.FindOperationImports("SummonPuppies").Single();
         }
 
         public static IEdmOperationImport GetFunctionImportForGetCoolestPerson()

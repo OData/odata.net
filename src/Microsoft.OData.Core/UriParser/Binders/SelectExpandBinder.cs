@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser.Aggregation;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.UriParser
@@ -278,9 +279,17 @@ namespace Microsoft.OData.UriParser
                 computeOption = computeBinder.BindCompute(tokenIn.ComputeOption);
             }
 
+            ApplyClause applyOption = null;
+            if (tokenIn.ApplyOptions != null)
+            {
+                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
+                ApplyBinder applyBinder = new ApplyBinder(binder.Bind, binder.BindingState);
+                applyOption = applyBinder.BindApply(tokenIn.ApplyOptions);
+            }
+
             if (isRef)
             {
-                return new ExpandedReferenceSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, computeOption);
+                return new ExpandedReferenceSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, computeOption, applyOption);
             }
 
             SelectExpandClause subSelectExpand;
@@ -296,7 +305,7 @@ namespace Microsoft.OData.UriParser
             subSelectExpand = this.DecorateExpandWithSelect(subSelectExpand, currentNavProp, tokenIn.SelectOption);
 
             LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
-            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption, computeOption);
+            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption, computeOption, applyOption);
         }
 
         private IEdmNavigationProperty ParseComplexTypesBeforeNavigation(IEdmStructuralProperty edmProperty, ref PathSegmentToken currentToken, List<ODataPathSegment> pathSoFar)

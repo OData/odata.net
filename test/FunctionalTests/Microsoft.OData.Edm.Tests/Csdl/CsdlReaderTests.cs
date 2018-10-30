@@ -665,6 +665,68 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty}, errors.Select(e => e.ErrorCode));
         }
 
+        [Fact]
+        public void ParsingEnumMemberWithAnnotationsWorks()
+        {
+            string types =
+@"<EnumType Name=""Color"" >
+  <Member Name=""Red"" Value=""1"" >
+    <Annotation String=""Inline Description"" Term=""Org.OData.Core.V1.LongDescription""/>
+    <Annotation String=""Inline MyTerm Value"" Term=""NS.MyTerm""/>
+  </Member>
+  <Member Name=""Blue"" Value=""2"" />
+</EnumType>
+<Term Name=""MyTerm"" Type=""Edm.String""/>
+<Annotations Target=""NS.Color/Blue"" >
+  <Annotation String=""OutOfLine Description"" Term=""Org.OData.Core.V1.LongDescription""/>
+  <Annotation String=""OutOfLine MyTerm Value"" Term=""NS.MyTerm""/>
+</Annotations>";
+
+            IEdmModel model = GetEdmModel(types: types);
+            Assert.NotNull(model);
+
+            var color = model.SchemaElements.OfType<IEdmEnumType>().FirstOrDefault(c => c.Name == "Color");
+            Assert.NotNull(color);
+
+            IEdmTerm fooBarTerm = model.FindDeclaredTerm("NS.MyTerm");
+            Assert.NotNull(fooBarTerm);
+
+            // Red
+            var red = color.Members.FirstOrDefault(c => c.Name == "Red");
+            Assert.NotNull(red);
+            string redAnnotation = GetStringAnnotation(model, red, CoreVocabularyModel.LongDescriptionTerm, EdmVocabularyAnnotationSerializationLocation.Inline);
+            Assert.Equal("Inline Description", redAnnotation);
+
+            redAnnotation = GetStringAnnotation(model, red, fooBarTerm, EdmVocabularyAnnotationSerializationLocation.Inline);
+            Assert.Equal("Inline MyTerm Value", redAnnotation);
+
+            // Blue
+            var blue = color.Members.FirstOrDefault(c => c.Name == "Blue");
+            Assert.NotNull(blue);
+            string blueAnnotation = GetStringAnnotation(model, blue, CoreVocabularyModel.LongDescriptionTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            Assert.Equal("OutOfLine Description", blueAnnotation);
+
+            blueAnnotation = GetStringAnnotation(model, blue, fooBarTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            Assert.Equal("OutOfLine MyTerm Value", blueAnnotation);
+        }
+
+        private string GetStringAnnotation(IEdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, EdmVocabularyAnnotationSerializationLocation location)
+        {
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(target, term).FirstOrDefault();
+            if (annotation != null)
+            {
+                Assert.True(annotation.GetSerializationLocation(model) == location);
+
+                IEdmStringConstantExpression stringConstant = annotation.Value as IEdmStringConstantExpression;
+                if (stringConstant != null)
+                {
+                    return stringConstant.Value;
+                }
+            }
+
+            return null;
+        }
+
         private void RunValidTest(Func<XmlReader, IEdmModel> parse)
         {
             var result = parse(this.validReader);
@@ -709,6 +771,107 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
             Assert.True(result);
             return model;
+        }
+
+        [Fact]
+        public void ParsingInLineOptionalParameterWorks()
+        {
+            string expected =
+           "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+           "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+             "<edmx:DataServices>" +
+               "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                 "<Function Name=\"TestFunction\">" +
+                   "<Parameter Name=\"requiredParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                   "<Parameter Name=\"optionalParam\" Type=\"Edm.String\" Nullable=\"false\">" +
+                       "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\" />" +
+                   "</Parameter>" +
+                   "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\">" +
+                       "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
+                         "<Record>" +
+                           "<PropertyValue Property=\"DefaultValue\" String=\"Smith\" />" +
+                         "</Record>" +
+                       "</Annotation>" +
+                   "</Parameter>" +
+                   "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                 "</Function>" +
+               "</Schema>" +
+             "</edmx:DataServices>" +
+           "</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            bool result = CsdlReader.TryParse(XElement.Parse(expected).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            var function = model.SchemaElements.OfType<IEdmFunction>().First();
+            VerifyOptionalParameter(function);
+        }
+
+        [Theory]
+        [InlineData("NS.TestFunction")] // non-overloads
+        [InlineData("NS.TestFunction(Edm.String, Edm.String, Edm.String)")] // overloads
+        public void ParsingOutOfLineOptionalParameterWorks(string fullName)
+        {
+            string expected = String.Format(
+           "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+           "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+             "<edmx:DataServices>" +
+               "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                 "<Function Name=\"TestFunction\">" +
+                   "<Parameter Name=\"requiredParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                   "<Parameter Name=\"optionalParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                   "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                   "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                 "</Function>" +
+                 "<EntityContainer Name=\"Default\">" +
+                   "<FunctionImport Name=\"TestFunction\" Function=\"test.TestFunction\" />" +
+                 "</EntityContainer>" +
+                 "<Annotations Target=\"{0}/optionalParam\" >" +
+                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\" >" +
+                     "<Record />" +
+                  "</Annotation> " +
+                 "</Annotations>" +
+                 "<Annotations Target=\"{0}/optionalParamWithDefault\" >" +
+                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\" >" +
+                     "<Record Type=\"Org.OData.Core.V1.OptionalParameterType\">" +
+                       "<PropertyValue Property=\"DefaultValue\" String=\"Smith\" />" +
+                     "</Record>" +
+                  "</Annotation> " +
+                 "</Annotations>" +
+               "</Schema>" +
+             "</edmx:DataServices>" +
+           "</edmx:Edmx>", fullName);
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            bool result = CsdlReader.TryParse(XElement.Parse(expected).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            var function = model.SchemaElements.OfType<IEdmFunction>().First();
+            VerifyOptionalParameter(function);
+        }
+
+        private static void VerifyOptionalParameter(IEdmFunction function)
+        {
+            Assert.NotNull(function);
+            Assert.Equal("TestFunction", function.Name);
+
+            var requiredParam = function.Parameters.First(c => c.Name == "requiredParam");
+            Assert.True(requiredParam is IEdmOperationParameter);
+            Assert.False(requiredParam is IEdmOptionalParameter);
+
+            var optionalParam = function.Parameters.First(c => c.Name == "optionalParam");
+            Assert.True(optionalParam is IEdmOptionalParameter);
+
+            var optionalParamWithDefault = function.Parameters.First(c => c.Name == "optionalParamWithDefault");
+            Assert.True(optionalParamWithDefault is IEdmOptionalParameter);
+            var parameter = optionalParamWithDefault as IEdmOptionalParameter;
+            Assert.Equal("Smith", parameter.DefaultValueString);
         }
 
         [Fact]

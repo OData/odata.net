@@ -1757,6 +1757,160 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
+        public void TestValidationAnnotationOpenPropertyTypeConstraintInlineOnEntityType()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType openEntityType = new EdmEntityType("NS", "Entity", null, false, true);
+            EdmStructuralProperty deptId = openEntityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            openEntityType.AddKeys(deptId);
+            model.AddElement(openEntityType);
+
+            IEdmSchemaType qualifiedType = model.FindType("Org.OData.Core.V1.QualifiedTypeName");
+            Assert.IsNotNull(qualifiedType);
+
+            IEdmTerm term = model.FindTerm("Org.OData.Validation.V1.OpenPropertyTypeConstraint");
+            Assert.IsNotNull(term);
+
+            EdmCollectionExpression collection = new EdmCollectionExpression(new EdmStringConstant("NS.MyType1"),
+                new EdmStringConstant("NS.MyType2"));
+
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(openEntityType, term, collection);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteSchema(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Entity"" OpenType=""true"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Annotation Term=""Org.OData.Validation.V1.OpenPropertyTypeConstraint"">
+      <Collection>
+        <String>NS.MyType1</String>
+        <String>NS.MyType2</String>
+      </Collection>
+    </Annotation>
+  </EntityType>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ParsingValidationAnnotationOpenPropertyTypeConstraintInlineOnEntityType()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Entity"" OpenType=""true"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Annotation Term=""Org.OData.Validation.V1.OpenPropertyTypeConstraint"">
+      <Collection>
+        <String>NS.MyType1</String>
+        <String>NS.MyType2</String>
+      </Collection>
+    </Annotation>
+  </EntityType>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            IEdmTerm term = parsedModel.FindTerm("Org.OData.Validation.V1.OpenPropertyTypeConstraint");
+            Assert.IsNotNull(term);
+
+            var entityType = parsedModel.SchemaElements.OfType<IEdmEntityType>().First();
+            Assert.IsNotNull(entityType);
+
+            // entity type
+            IEdmVocabularyAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(entityType, term).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+
+            IEdmCollectionExpression collection = annotation.Value as IEdmCollectionExpression;
+            Assert.IsNotNull(collection);
+            Assert.AreEqual(2, collection.Elements.Count());
+
+            // First value
+            IEdmStringConstantExpression first = collection.Elements.First() as IEdmStringConstantExpression;
+            Assert.IsNotNull(first);
+            Assert.AreEqual("NS.MyType1", first.Value);
+
+            // second value
+            IEdmStringConstantExpression second = collection.Elements.Last() as IEdmStringConstantExpression;
+            Assert.IsNotNull(second);
+            Assert.AreEqual("NS.MyType2", second.Value);
+        }
+
+        [TestMethod]
+        public void ParsingValidationAnnotationDerivedTypeConstraintOutOfLineOnProperty()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Entity"" OpenType=""true"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Address"" Type=""NS.Address"" />
+  </EntityType>
+  <ComplexType Name=""Address"" />
+  <ComplexType Name=""UsAddress"" BaseType=""NS.Address"" />
+  <ComplexType Name=""CnAddress"" BaseType=""NS.Address"" />
+  <Annotations Target=""NS.Entity/Address"">
+    <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+      <Collection>
+        <String>NS.UsAddress</String>
+      </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            IEdmTerm term = parsedModel.FindTerm("Org.OData.Validation.V1.DerivedTypeConstraint");
+            Assert.IsNotNull(term);
+
+            var entityType = parsedModel.SchemaElements.OfType<IEdmEntityType>().First();
+            Assert.IsNotNull(entityType);
+
+            var property = entityType.Properties().FirstOrDefault(p => p.Name == "Address");
+            Assert.IsNotNull(property);
+
+            IEdmVocabularyAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(property, term).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+
+            IEdmCollectionExpression collection = annotation.Value as IEdmCollectionExpression;
+            Assert.IsNotNull(collection);
+            Assert.AreEqual(1, collection.Elements.Count());
+
+            IEdmStringConstantExpression value = collection.Elements.Single() as IEdmStringConstantExpression;
+            Assert.IsNotNull(value);
+            Assert.AreEqual("NS.UsAddress", value.Value);
+        }
+
+        [TestMethod]
         public void TestCommunityAlternateKeysInlineAnnotationOnEntityType()
         {
             EdmModel model = new EdmModel();
