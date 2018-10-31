@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AllowCrossTargeting>true</AllowCrossTargeting>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <AssemblyName>Microsoft.Spatial.NetFX35.V7</AssemblyName>
+    <OutputType>Library</OutputType>
+    <DefineConstants>$(DefineConstants);SPATIAL</DefineConstants>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <RootNamespace>Microsoft.Spatial</RootNamespace>
+    <ProjectGuid>{1104C2E4-076F-47AA-8121-03015AE70630}</ProjectGuid>
+    <AllowPartialTrustedCalls>false</AllowPartialTrustedCalls>
+    <SpatialCrossTargettingSourcePath>..\</SpatialCrossTargettingSourcePath>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <XTargetOutputFile Include="$(MSBuildThisFile)">
+      <SourceProject>$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj</SourceProject>
+      <TargetPathPrefixName>SpatialCrossTargettingSourcePath</TargetPathPrefixName>
+    </XTargetOutputFile>
+  </ItemGroup>
+  <!-- References -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <!-- Generated files -->
+  <ItemGroup>
+    <TextStringResource Include="..\Microsoft.Spatial.txt">
+      <Link>Microsoft.Spatial.txt</Link>
+      <ResFile>Microsoft.Spatial</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.Spatial.TextRes</FullClassName>
+    </TextStringResource>
+  </ItemGroup>
+  <!-- Source files that will be consumed by all platforms -->
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\..\PlatformHelper.cs">
+      <Link>Microsoft\Spatial\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\WrappedGeoJsonWriter.cs">
+      <Link>Microsoft\Spatial\WrappedGeoJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeoJsonObjectFormatterImplementation.cs">
+      <Link>Microsoft\Spatial\GeoJsonObjectFormatterImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeoJsonObjectWriter.cs">
+      <Link>Microsoft\Spatial\GeoJsonObjectWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeoJsonWriterBase.cs">
+      <Link>Microsoft\Spatial\GeoJsonWriterBase.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\IGeoJsonWriter.cs">
+      <Link>Microsoft\Spatial\IGeoJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\TypeWashedToGeographyLatLongPipeline.cs">
+      <Link>Microsoft\Spatial\TypeWashedToGeographyLatLongPipeline.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\TypeWashedToGeographyLongLatPipeline.cs">
+      <Link>Microsoft\Spatial\TypeWashedToGeographyLongLatPipeline.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeoJsonObjectReader.cs">
+      <Link>Microsoft\Spatial\GeoJsonObjectReader.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\CompositeKey.cs">
+      <Link>Microsoft\Spatial\CompositeKey.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\FormatterExtensions.cs">
+      <Link>Microsoft\Spatial\FormatterExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyPipeline.cs">
+      <Link>Microsoft\Spatial\GeographyPipeline.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyFullGlobe.cs">
+      <Link>Microsoft\Spatial\GeographyFullGlobe.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyCurve.cs">
+      <Link>Microsoft\Spatial\GeographyCurve.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyLineString.cs">
+      <Link>Microsoft\Spatial\GeographyLineString.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyMultiCurve.cs">
+      <Link>Microsoft\Spatial\GeographyMultiCurve.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyMultiLineString.cs">
+      <Link>Microsoft\Spatial\GeographyMultiLineString.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyMultiPoint.cs">
+      <Link>Microsoft\Spatial\GeographyMultiPoint.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyMultiPolygon.cs">
+      <Link>Microsoft\Spatial\GeographyMultiPolygon.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyMultiSurface.cs">
+      <Link>Microsoft\Spatial\GeographyMultiSurface.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyPoint.cs">
+      <Link>Microsoft\Spatial\GeographyPoint.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyPolygon.cs">
+      <Link>Microsoft\Spatial\GeographyPolygon.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\Geography.cs">
+      <Link>Microsoft\Spatial\Geography.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyCollection.cs">
+      <Link>Microsoft\Spatial\GeographyCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographySurface.cs">
+      <Link>Microsoft\Spatial\GeographySurface.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryPipeline.cs">
+      <Link>Microsoft\Spatial\GeometryPipeline.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryCollection.cs">
+      <Link>Microsoft\Spatial\GeometryCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryCurve.cs">
+      <Link>Microsoft\Spatial\GeometryCurve.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryLineString.cs">
+      <Link>Microsoft\Spatial\GeometryLineString.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryMultiCurve.cs">
+      <Link>Microsoft\Spatial\GeometryMultiCurve.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryMultiLineString.cs">
+      <Link>Microsoft\Spatial\GeometryMultiLineString.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryMultiPoint.cs">
+      <Link>Microsoft\Spatial\GeometryMultiPoint.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryMultiPolygon.cs">
+      <Link>Microsoft\Spatial\GeometryMultiPolygon.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryMultiSurface.cs">
+      <Link>Microsoft\Spatial\GeometryMultiSurface.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryPoint.cs">
+      <Link>Microsoft\Spatial\GeometryPoint.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryPolygon.cs">
+      <Link>Microsoft\Spatial\GeometryPolygon.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometrySurface.cs">
+      <Link>Microsoft\Spatial\GeometrySurface.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\Geometry.cs">
+      <Link>Microsoft\Spatial\Geometry.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\IGeographyProvider.cs">
+      <Link>Microsoft\Spatial\IGeographyProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\IGeometryProvider.cs">
+      <Link>Microsoft\Spatial\IGeometryProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\IShapeProvider.cs">
+      <Link>Microsoft\Spatial\IShapeProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\ISpatial.cs">
+      <Link>Microsoft\Spatial\ISpatial.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeoJsonObjectFormatter.cs">
+      <Link>Microsoft\Spatial\GeoJsonObjectFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\ParseErrorException.cs">
+      <Link>Microsoft\Spatial\ParseErrorException.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialBuilder.cs">
+      <Link>Microsoft\Spatial\SpatialBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialFormatter.cs">
+      <Link>Microsoft\Spatial\SpatialFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialReader.cs">
+      <Link>Microsoft\Spatial\SpatialReader.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialType.cs">
+      <Link>Microsoft\Spatial\SpatialType.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialTypeExtensions.cs">
+      <Link>Microsoft\Spatial\SpatialTypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GlobalSuppressions.cs">
+      <Link>GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\CoordinateSystem.cs">
+      <Link>Microsoft\Spatial\CoordinateSystem.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\ActionOnDispose.cs">
+      <Link>Microsoft\Spatial\ActionOnDispose.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GmlFormatter.cs">
+      <Link>Microsoft\Spatial\GmlFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\WellKnownTextSqlFormatter.cs">
+      <Link>Microsoft\Spatial\WellKnownTextSqlFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyPosition.cs">
+      <Link>Microsoft\Spatial\GeographyPosition.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryPosition.cs">
+      <Link>Microsoft\Spatial\GeometryPosition.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialValidator.cs">
+      <Link>Microsoft\Spatial\SpatialValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialPipeline.cs">
+      <Link>Microsoft\Spatial\SpatialPipeline.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyOperationsExtensions.cs">
+      <Link>Microsoft\Spatial\GeographyOperationsExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryOperationsExtensions.cs">
+      <Link>Microsoft\Spatial\GeometryOperationsExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialImplementation.cs">
+      <Link>Microsoft\Spatial\SpatialImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialOperations.cs">
+      <Link>Microsoft\Spatial\SpatialOperations.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\OrcasExtensions.cs">
+      <Link>Microsoft\Spatial\OrcasExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\DrawBoth.cs">
+      <Link>Microsoft\Spatial\DrawBoth.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\WellKnownTextSqlFormatterImplementation.cs">
+      <Link>Microsoft\Spatial\WellKnownTextSqlFormatterImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GmlWriter.cs">
+      <Link>Microsoft\Spatial\GmlWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GmlFormatterImplementation.cs">
+      <Link>Microsoft\Spatial\GmlFormatterImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\WellKnownTextLexer.cs">
+      <Link>Microsoft\Spatial\WellKnownTextLexer.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\WellKnownTextTokenType.cs">
+      <Link>Microsoft\Spatial\WellKnownTextTokenType.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\DataServicesSpatialImplementation.cs">
+      <Link>Microsoft\Spatial\DataServicesSpatialImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyBuilderImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyBuilderImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryBuilderImplementation.cs">
+      <Link>Microsoft\Spatial\GeometryBuilderImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyLineStringImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyLineStringImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyMultiLineStringImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyMultiLineStringImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyMultiPointImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyMultiPointImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyMultiPolygonImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyMultiPolygonImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyPointImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyPointImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyPolygonImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyPolygonImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyCollectionImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyCollectionImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyHelperMethods.cs">
+      <Link>Microsoft\Spatial\GeographyHelperMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeographyFullGlobeImplementation.cs">
+      <Link>Microsoft\Spatial\GeographyFullGlobeImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryLineStringImplementation.cs">
+      <Link>Microsoft\Spatial\GeometryLineStringImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryMultiLineStringImplementation.cs">
+      <Link>Microsoft\Spatial\GeometryMultiLineStringImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryMultiPointImplementation.cs">
+      <Link>Microsoft\Spatial\GeometryMultiPointImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryMultiPolygonImplementation.cs">
+      <Link>Microsoft\Spatial\GeometryMultiPolygonImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryPointImplementation.cs">
+      <Link>Microsoft\Spatial\GeometryPointImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryPolygonImplementation.cs">
+      <Link>Microsoft\Spatial\GeometryPolygonImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryCollectionImplementation.cs">
+      <Link>Microsoft\Spatial\GeometryCollectionImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\DebugUtils.cs">
+      <Link>Microsoft\Spatial\DebugUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeometryHelperMethods.cs">
+      <Link>Microsoft\Spatial\GeometryHelperMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GmlReader.cs">
+      <Link>Microsoft\Spatial\GmlReader.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GmlConstants.cs">
+      <Link>Microsoft\Spatial\GmlConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\WellKnownTextConstants.cs">
+      <Link>Microsoft\Spatial\WellKnownTextConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialTreeBuilder.cs">
+      <Link>Microsoft\Spatial\SpatialTreeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\TypeWashedPipeline.cs">
+      <Link>Microsoft\Spatial\TypeWashedPipeline.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\TypeWashedToGeometryPipeline.cs">
+      <Link>Microsoft\Spatial\TypeWashedToGeometryPipeline.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\SpatialValidatorImplementation.cs">
+      <Link>Microsoft\Spatial\SpatialValidatorImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\ExtensionMethods.cs">
+      <Link>Microsoft\Spatial\ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\LexerToken.cs">
+      <Link>Microsoft\Spatial\LexerToken.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\TextLexerBase.cs">
+      <Link>Microsoft\Spatial\TextLexerBase.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\WellKnownTextSqlReader.cs">
+      <Link>Microsoft\Spatial\WellKnownTextSqlReader.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\WellKnownTextSqlWriter.cs">
+      <Link>Microsoft\Spatial\WellKnownTextSqlWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeoJsonMember.cs">
+      <Link>Microsoft\Spatial\GeoJsonMember.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\GeoJsonConstants.cs">
+      <Link>Microsoft\Spatial\GeoJsonConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\ForwardingSegment.cs">
+      <Link>Microsoft\Spatial\ForwardingSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\Util.cs">
+      <Link>Microsoft\Spatial\Util.cs</Link>
+    </Compile>
+    <Compile Include="$(SpatialCrossTargettingSourcePath)\XmlConstants.cs">
+      <Link>Microsoft\Spatial\XmlConstants.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <!-- Source files that are specific to this project -->
+  <ItemGroup>
+    <None Include="$(IntermediateOutputDirectory)\AssemblyAttributes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Microsoft.Spatial.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="..\Parameterized.Microsoft.Spatial.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

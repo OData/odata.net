@@ -535,6 +535,7 @@ Function BuildProcess
     {
         # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
         RunBuild ('OData.Tests.E2E.sln')
+        RunBuild ('OData.Net35.sln')
         # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
         if($VS15MSBUILD)
         {
