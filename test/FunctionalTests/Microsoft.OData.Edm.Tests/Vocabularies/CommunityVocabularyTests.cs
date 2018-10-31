@@ -22,7 +22,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         private readonly IEdmModel model = CommunityVocabularyModel.Instance;
 
         [Fact]
-        public void TestCommunitySchemaModel()
+        public void TestCommunityVocabularyModel()
         {
             const string expectedUrlEscape = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Community.V1"" Alias=""Community"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">

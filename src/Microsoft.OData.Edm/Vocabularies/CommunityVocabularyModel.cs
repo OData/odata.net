@@ -17,7 +17,7 @@ using Microsoft.OData.Edm.Validation;
 namespace Microsoft.OData.Edm.Vocabularies.Community.V1
 {
     /// <summary>
-    /// Representing Url Escape Vocabulary Model.
+    /// Representing Community Vocabulary Model.
     /// </summary>
     public static class CommunityVocabularyModel
     {
