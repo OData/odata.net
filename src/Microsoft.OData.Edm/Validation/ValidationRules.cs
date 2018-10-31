@@ -1111,6 +1111,7 @@ namespace Microsoft.OData.Edm.Validation
                     if (validatedType.TypeKind != EdmTypeKind.Primitive && validatedType.TypeKind != EdmTypeKind.Enum
                         && validatedType.TypeKind != EdmTypeKind.Untyped && validatedType.TypeKind != EdmTypeKind.Complex
                         && validatedType.TypeKind != EdmTypeKind.Path
+                        && validatedType.TypeKind != EdmTypeKind.TypeDefinition
                         && !context.IsBad(validatedType))
                     {
                         context.AddError(property.Location(), EdmErrorCode.InvalidPropertyType, Strings.EdmModel_Validator_Semantic_InvalidPropertyType(property.Type.TypeKind().ToString()));

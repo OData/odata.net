@@ -962,7 +962,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
-        public void CanWritePropertyWithCoreTypeDefinitionButValidationFailed()
+        public void CanWritePropertyWithCoreTypeDefinitionAndValidationPassed()
         {
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
@@ -990,8 +990,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             model.AddElement(type);
             IEnumerable<EdmError> errors;
-            Assert.False(model.Validate(out errors));
-            Assert.Equal(2, errors.Count());
+            Assert.True(model.Validate(out errors));
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
         }
