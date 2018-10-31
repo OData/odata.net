@@ -83,6 +83,17 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""Values are restricted to types that are both identical to or derived from the declared type and a type listed in this collection."" />
     <Annotation Term=""Core.LongDescription"" String=""This allows restricting values to certain sub-trees of an inheritance hierarchy. Types listed in this collection that are not derived from the declared type of the annotated model element are ignored."" />
   </Term>
+  <Term Name=""AllowedTerms"" Type=""Collection(Core.QualifiedTermName)"" AppliesTo=""Term Property"">
+    <Annotation Term=""Core.Description"" String=""Annotate a term of type Edm.AnnotationPath, or a property of type Edm.AnnotationPath that is used within a structured term, to restrict the terms that can be targeted by the path."" />
+    <Annotation Term=""Core.LongDescription"" String=""The annotation path expression is intended to end in a path segment with one of the listed terms. For forward compatibility, clients should be prepared for the annotation to reference terms besides those listed."" />
+    <Annotation Term=""Core.RequiresType"" String=""Edm.AnnotationPath"" />
+  </Term>
+  <Term Name=""MaxItems"" Type=""Edm.Int64"" AppliesTo=""Collection"" Nullable=""false"">
+    <Annotation Term=""Core.Description"" String=""The annotated collection must have at most the specified number of items."" />
+  </Term>
+  <Term Name=""MinItems"" Type=""Edm.Int64"" AppliesTo=""Collection"" Nullable=""false"">
+    <Annotation Term=""Core.Description"" String=""The annotated collection must have at least the specified number of items."" />
+  </Term>
 </Schema>";
 
             StringWriter sw = new StringWriter();
@@ -105,32 +116,38 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.Equal(expectedText, output);
         }
 
-        [Fact]
-        public void TestValidationVocabularyOpenPropertyTypeConstraintTerm()
+        [Theory]
+        [InlineData("Pattern", "Edm.String", "Property Parameter Term")]
+        [InlineData("Minimum", "Edm.Decimal", "Property Parameter Term")]
+        [InlineData("Maximum", "Edm.Decimal", "Property Parameter Term")]
+        [InlineData("Exclusive", "Core.Tag", "Annotation")]
+        [InlineData("AllowedValues", "Collection(Org.OData.Validation.V1.AllowedValue)", "Property Parameter TypeDefinition")]
+        [InlineData("MultipleOf", "Edm.Decimal", "Property Parameter Term")]
+        [InlineData("Constraint", "Org.OData.Validation.V1.ConstraintType", "Property EntityType ComplexType")]
+        [InlineData("ItemsOf", "Collection(Org.OData.Validation.V1.ItemsOfType)", "EntityType ComplexType")]
+        [InlineData("OpenPropertyTypeConstraint", "Collection(Core.QualifiedTypeName)", "ComplexType EntityType")]
+        [InlineData("DerivedTypeConstraint", "Collection(Core.QualifiedTypeName)",
+            "EntitySet Singleton NavigationProperty Property TypeDefinition Action Function Parameter")]
+        [InlineData("AllowedTerms", "Collection(Core.QualifiedTermName)", "Term Property")]
+        [InlineData("MaxItems", "Edm.Int64", "Collection")]
+        [InlineData("MinItems", "Edm.Int64", "Collection")]
+        public void TestValidationVocabularyTermType(string termName, string typeName, string appliesTo)
         {
-            var term = this._validationModel.FindDeclaredTerm("Org.OData.Validation.V1.OpenPropertyTypeConstraint");
-            Assert.NotNull(term);
+            var termType = this._validationModel.FindDeclaredTerm("Org.OData.Validation.V1." + termName);
+            Assert.NotNull(termType);
 
-            Assert.NotNull(term.Type);
-            Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
-            Assert.Equal("Collection(Core.QualifiedTypeName)", term.Type.Definition.FullTypeName());
+            Assert.Equal(typeName, termType.Type.FullName());
 
-            Assert.Equal("ComplexType EntityType", term.AppliesTo);
+            if (appliesTo != null)
+            {
+                Assert.Equal(appliesTo, termType.AppliesTo);
+            }
+            else
+            {
+                Assert.Null(termType.AppliesTo);
+            }
         }
 
-        [Fact]
-        public void TestValidationVocabularyDerivedTypeConstraintTerm()
-        {
-            var term = this._validationModel.FindDeclaredTerm("Org.OData.Validation.V1.DerivedTypeConstraint");
-            Assert.NotNull(term);
-
-            Assert.NotNull(term.Type);
-            Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
-            Assert.Equal("Collection(Core.QualifiedTypeName)", term.Type.Definition.FullTypeName());
-
-            Assert.Equal("EntitySet Singleton NavigationProperty Property TypeDefinition Action Function Parameter", term.AppliesTo);
-        }
-        
         [Theory]
         [InlineData("AllowedValue", "Value")]
         [InlineData("ConstraintType", "FailureMessage|Condition")]
