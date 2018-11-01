@@ -203,15 +203,16 @@ namespace Microsoft.OData.Edm
         private IEdmNavigationPropertyBinding AddNavigationPropertyBinding(IEdmNavigationProperty navigationProperty, IEdmNavigationSource target, IEdmPathExpression bindingPath)
         {
 #if PORTABLELIB
-            ConcurrentDictionary<string, IEdmNavigationPropertyBinding> mapping;
-#else
-            IDictionary<string, IEdmNavigationPropertyBinding> mapping;
-#endif
-
-            mapping = EdmUtil.DictionaryGetOrUpdate(
+            ConcurrentDictionary<string, IEdmNavigationPropertyBinding> mapping = EdmUtil.DictionaryGetOrUpdate(
                 this.navigationPropertyMappings,
                 navigationProperty,
                 navProperty => new ConcurrentDictionary<string, IEdmNavigationPropertyBinding>());
+#else
+            IDictionary<string, IEdmNavigationPropertyBinding> mapping= EdmUtil.DictionaryGetOrUpdate(
+                this.navigationPropertyMappings,
+                navigationProperty,
+                navProperty => new Dictionary<string, IEdmNavigationPropertyBinding>());
+#endif
 
             IEdmNavigationPropertyBinding containedBinding = EdmUtil.DictionaryGetOrUpdate<string, IEdmNavigationPropertyBinding>(
                 mapping,
@@ -244,7 +245,7 @@ namespace Microsoft.OData.Edm
             List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
             lock (this.navigationPropertyMappings)
             {
-                foreach (KeyValuePair<IEdmNavigationProperty, ConcurrentDictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationPropertyMappings)
+                foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationPropertyMappings)
                 {
                     if (!mapping.Key.ContainsTarget)
                     {
