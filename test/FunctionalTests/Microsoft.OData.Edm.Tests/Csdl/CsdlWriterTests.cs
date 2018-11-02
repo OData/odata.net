@@ -9,10 +9,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
+
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
+
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
@@ -137,8 +139,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "/ComplexType>" +
                 "<EntityContainer Name=\"Container\">" +
                 "<EntitySet Name=\"People\" EntityType=\"DefaultNs.Person\">" +
-                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
                     "<NavigationPropertyBinding Path=\"Addresses/City\" Target=\"City\" />" +
+                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
                     "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/CountryOrRegion\" Target=\"CountryOrRegion\" />" +
                 "</EntitySet>" +
                 "<EntitySet Name=\"City\" EntityType=\"DefaultNs.City\" />" +

@@ -236,8 +236,7 @@ namespace Microsoft.OData.Edm
                     }
                 }
             }
-
-            return result;
+            return result.OrderBy(x=>x?.Path?.Path);
         }
 #else
         private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
