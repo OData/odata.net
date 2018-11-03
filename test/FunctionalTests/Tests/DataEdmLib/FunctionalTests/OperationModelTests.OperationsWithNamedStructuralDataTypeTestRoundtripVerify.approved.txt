@@ -481,8 +481,8 @@
     </EntitySet>
     <EntitySet Name="Supplier" EntityType="NS1.Supplier">
       <NavigationPropertyBinding Path="BackOrderLines" Target="OrderLine" />
-      <NavigationPropertyBinding Path="Products" Target="Product" />
       <NavigationPropertyBinding Path="Logo" Target="SupplierLogo" />
+      <NavigationPropertyBinding Path="Products" Target="Product" />
     </EntitySet>
     <EntitySet Name="SupplierLogo" EntityType="NS1.SupplierLogo" />
     <EntitySet Name="SupplierInfo" EntityType="NS1.SupplierInfo">
