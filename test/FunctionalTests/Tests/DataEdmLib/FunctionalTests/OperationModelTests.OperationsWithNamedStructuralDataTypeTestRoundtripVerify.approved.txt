@@ -411,51 +411,51 @@
   <EntityContainer Name="DefaultContainer_sub">
     <EntitySet Name="SuspiciousActivity" EntityType="NS1.SuspiciousActivity" />
     <EntitySet Name="Message" EntityType="NS1.Message">
-      <NavigationPropertyBinding Path="Sender" Target="Login" />
       <NavigationPropertyBinding Path="Recipient" Target="Login" />
+      <NavigationPropertyBinding Path="Sender" Target="Login" />
     </EntitySet>
     <EntitySet Name="Login" EntityType="NS1.Login">
-      <NavigationPropertyBinding Path="SentMessages" Target="Message" />
-      <NavigationPropertyBinding Path="ReceivedMessages" Target="Message" />
-      <NavigationPropertyBinding Path="SuspiciousActivity" Target="SuspiciousActivity" />
+      <NavigationPropertyBinding Path="Customer" Target="Customer" />
       <NavigationPropertyBinding Path="LastLogin" Target="LastLogin" />
       <NavigationPropertyBinding Path="Orders" Target="Order" />
-      <NavigationPropertyBinding Path="Customer" Target="Customer" />
+      <NavigationPropertyBinding Path="ReceivedMessages" Target="Message" />
+      <NavigationPropertyBinding Path="SentMessages" Target="Message" />
+      <NavigationPropertyBinding Path="SuspiciousActivity" Target="SuspiciousActivity" />
     </EntitySet>
     <EntitySet Name="LastLogin" EntityType="NS1.LastLogin">
       <NavigationPropertyBinding Path="Login" Target="Login" />
     </EntitySet>
     <EntitySet Name="Order" EntityType="NS1.Order">
-      <NavigationPropertyBinding Path="Login" Target="Login" />
       <NavigationPropertyBinding Path="Customer" Target="Customer" />
+      <NavigationPropertyBinding Path="Login" Target="Login" />
       <NavigationPropertyBinding Path="Notes" Target="OrderNote" />
       <NavigationPropertyBinding Path="OrderLines" Target="OrderLine" />
     </EntitySet>
     <EntitySet Name="CustomerInfo" EntityType="NS1.CustomerInfo" />
     <EntitySet Name="Customer" EntityType="NS1.Customer">
-      <NavigationPropertyBinding Path="Orders" Target="Order" />
-      <NavigationPropertyBinding Path="Logins" Target="Login" />
-      <NavigationPropertyBinding Path="Husband" Target="Customer" />
-      <NavigationPropertyBinding Path="Wife" Target="Customer" />
       <NavigationPropertyBinding Path="CustomerInfo" Target="CustomerInfo" />
+      <NavigationPropertyBinding Path="Husband" Target="Customer" />
+      <NavigationPropertyBinding Path="Logins" Target="Login" />
+      <NavigationPropertyBinding Path="Orders" Target="Order" />
+      <NavigationPropertyBinding Path="Wife" Target="Customer" />
     </EntitySet>
     <EntitySet Name="Product" EntityType="NS1.Product">
       <NavigationPropertyBinding Path="Barcodes" Target="Barcode" />
-      <NavigationPropertyBinding Path="Suppliers" Target="Supplier" />
-      <NavigationPropertyBinding Path="Replaces" Target="Product" />
       <NavigationPropertyBinding Path="Detail" Target="ProductDetail" />
-      <NavigationPropertyBinding Path="Reviews" Target="ProductReview" />
-      <NavigationPropertyBinding Path="Photos" Target="ProductPhoto" />
       <NavigationPropertyBinding Path="NS1.DiscontinuedProduct/ReplacedBy" Target="Product" />
+      <NavigationPropertyBinding Path="Photos" Target="ProductPhoto" />
+      <NavigationPropertyBinding Path="Replaces" Target="Product" />
+      <NavigationPropertyBinding Path="Reviews" Target="ProductReview" />
+      <NavigationPropertyBinding Path="Suppliers" Target="Supplier" />
     </EntitySet>
     <EntitySet Name="Barcode" EntityType="NS1.Barcode">
-      <NavigationPropertyBinding Path="Product" Target="Product" />
       <NavigationPropertyBinding Path="BadScans" Target="IncorrectScan" />
       <NavigationPropertyBinding Path="Detail" Target="BarcodeDetail" />
+      <NavigationPropertyBinding Path="Product" Target="Product" />
     </EntitySet>
     <EntitySet Name="IncorrectScan" EntityType="NS1.IncorrectScan">
-      <NavigationPropertyBinding Path="ExpectedBarcode" Target="Barcode" />
       <NavigationPropertyBinding Path="ActualBarcode" Target="Barcode" />
+      <NavigationPropertyBinding Path="ExpectedBarcode" Target="Barcode" />
     </EntitySet>
     <EntitySet Name="BarcodeDetail" EntityType="NS1.BarcodeDetail" />
     <EntitySet Name="Resolution" EntityType="NS1.Resolution">
@@ -466,8 +466,8 @@
       <NavigationPropertyBinding Path="Resolution" Target="Resolution" />
     </EntitySet>
     <EntitySet Name="SmartCard" EntityType="NS1.SmartCard">
-      <NavigationPropertyBinding Path="Login" Target="Login" />
       <NavigationPropertyBinding Path="LastLogin" Target="LastLogin" />
+      <NavigationPropertyBinding Path="Login" Target="Login" />
     </EntitySet>
     <EntitySet Name="RSAToken" EntityType="NS1.RSAToken">
       <NavigationPropertyBinding Path="Login" Target="Login" />
@@ -480,9 +480,9 @@
       <NavigationPropertyBinding Path="NS1.ProductPageView/Product" Target="Product" />
     </EntitySet>
     <EntitySet Name="Supplier" EntityType="NS1.Supplier">
+      <NavigationPropertyBinding Path="BackOrderLines" Target="OrderLine" />
       <NavigationPropertyBinding Path="Products" Target="Product" />
       <NavigationPropertyBinding Path="Logo" Target="SupplierLogo" />
-      <NavigationPropertyBinding Path="BackOrderLines" Target="OrderLine" />
     </EntitySet>
     <EntitySet Name="SupplierLogo" EntityType="NS1.SupplierLogo" />
     <EntitySet Name="SupplierInfo" EntityType="NS1.SupplierInfo">
@@ -495,24 +495,24 @@
       <NavigationPropertyBinding Path="Order" Target="Order" />
     </EntitySet>
     <EntitySet Name="OrderLine" EntityType="NS1.OrderLine">
+      <NavigationPropertyBinding Path="NS1.BackOrderLine/Supplier" Target="Supplier" />
       <NavigationPropertyBinding Path="Order" Target="Order" />
       <NavigationPropertyBinding Path="Product" Target="Product" />
-      <NavigationPropertyBinding Path="NS1.BackOrderLine/Supplier" Target="Supplier" />
     </EntitySet>
     <EntitySet Name="ProductDetail" EntityType="NS1.ProductDetail">
       <NavigationPropertyBinding Path="Product" Target="Product" />
     </EntitySet>
     <EntitySet Name="ProductReview" EntityType="NS1.ProductReview">
-      <NavigationPropertyBinding Path="Product" Target="Product" />
       <NavigationPropertyBinding Path="Features" Target="ProductWebFeature" />
+      <NavigationPropertyBinding Path="Product" Target="Product" />
     </EntitySet>
     <EntitySet Name="ProductPhoto" EntityType="NS1.ProductPhoto">
-      <NavigationPropertyBinding Path="Product" Target="Product" />
       <NavigationPropertyBinding Path="Features" Target="ProductWebFeature" />
+      <NavigationPropertyBinding Path="Product" Target="Product" />
     </EntitySet>
     <EntitySet Name="ProductWebFeature" EntityType="NS1.ProductWebFeature">
-      <NavigationPropertyBinding Path="Review" Target="ProductReview" />
       <NavigationPropertyBinding Path="Photo" Target="ProductPhoto" />
+      <NavigationPropertyBinding Path="Review" Target="ProductReview" />
     </EntitySet>
     <EntitySet Name="Computer" EntityType="NS1.Computer">
       <NavigationPropertyBinding Path="ComputerDetail" Target="ComputerDetail" />
