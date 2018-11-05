@@ -79,7 +79,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""OpenPropertyTypeConstraint"" Type=""Collection(Core.QualifiedTypeName)"" AppliesTo=""ComplexType EntityType"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Dynamic properties added to the annotated open structured type are restricted to the listed types"" />
   </Term>
-  <Term Name=""DerivedTypeConstraint"" Type=""Collection(Core.QualifiedTypeName)"" AppliesTo=""EntitySet Singleton NavigationProperty Property TypeDefinition Action Function Parameter"" Nullable=""false"">
+  <Term Name=""DerivedTypeConstraint"" Type=""Collection(Core.QualifiedTypeName)"" AppliesTo=""EntitySet Singleton NavigationProperty Property TypeDefinition Parameter ReturnType"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Values are restricted to types that are both identical to or derived from the declared type and a type listed in this collection."" />
     <Annotation Term=""Core.LongDescription"" String=""This allows restricting values to certain sub-trees of an inheritance hierarchy. Types listed in this collection that are not derived from the declared type of the annotated model element are ignored."" />
   </Term>
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         [InlineData("ItemsOf", "Collection(Org.OData.Validation.V1.ItemsOfType)", "EntityType ComplexType")]
         [InlineData("OpenPropertyTypeConstraint", "Collection(Core.QualifiedTypeName)", "ComplexType EntityType")]
         [InlineData("DerivedTypeConstraint", "Collection(Core.QualifiedTypeName)",
-            "EntitySet Singleton NavigationProperty Property TypeDefinition Action Function Parameter")]
+            "EntitySet Singleton NavigationProperty Property TypeDefinition Parameter ReturnType")]
         [InlineData("AllowedTerms", "Collection(Core.QualifiedTermName)", "Term Property")]
         [InlineData("MaxItems", "Edm.Int64", "Collection")]
         [InlineData("MinItems", "Edm.Int64", "Collection")]
