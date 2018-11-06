@@ -8,6 +8,7 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -70,7 +71,15 @@ namespace Microsoft.OData.Client
         /// <returns>A task represents the result of the operation. </returns>
         public Task<T> GetValueAsync()
         {
-            return Task<T>.Factory.FromAsync(this.BeginGetValue, this.EndGetValue, null);
+            return this.GetValueAsync(CancellationToken.None);
+        }
+
+        /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task represents the result of the operation. </returns>
+        public Task<T> GetValueAsync(CancellationToken cancellationToken)
+        {
+            return this.context.FromAsync(this.BeginGetValue, this.EndGetValue, cancellationToken);
         }
 
         /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.ActionSingleReturnOfT.BeginExecute``1(System.AsyncCallback,System.Object)" />.</summary>
