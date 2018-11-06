@@ -213,13 +213,13 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets names of the expanded entity nodes at current level.
         /// </summary>
-        internal IEnumerable<string> NamesOfSelectedExpandedEntities
+        internal IEnumerable<string> SelectedExpandedEntities
         {
             get
             {
                 return this.children == null
                     ? Enumerable.Empty<string>()
-                    : this.children.Where(_ => _.Value.isExpandedNavigationProperty).Select(c => c.Key);
+                    : this.children.Where(node => node.Value.isExpandedNavigationProperty).Select(c => c.Key);
             }
         }
 

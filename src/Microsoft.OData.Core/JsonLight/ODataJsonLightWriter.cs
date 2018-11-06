@@ -275,6 +275,10 @@ namespace Microsoft.OData.JsonLight
                     {
                         // Write the property name of an expanded navigation property to start the value of null per preference setting.
                         this.jsonWriter.WriteName(parentNavLink.Name);
+
+                        // Optimization: write null and return directly.
+                        this.jsonWriter.WriteValue((string) null);
+                        return;
                     }
                 }
                 else

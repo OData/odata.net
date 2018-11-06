@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Linq;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -78,6 +80,21 @@ namespace Microsoft.OData
             Debug.Assert(this.sourceList != null, "this.sourceList != null");
 
             this.sourceList.Add(itemToAdd);
+        }
+
+        /// <summary>
+        /// This internal method adds <paramref name="itemsToAdd"/> to the wrapped source list. From the public's perspective, this enumerable is still readonly.
+        /// </summary>
+        /// <param name="itemToAdd">Items to be added to the source list.</param>
+        internal void AddToSourceList(IList<T> itemsToAdd)
+        {
+            Debug.Assert(this.sourceList != null, "this.sourceList != null");
+            Debug.Assert(itemsToAdd != null, nameof(itemsToAdd) + " != null");
+
+            foreach (var item in itemsToAdd)
+            {
+                AddToSourceList(item);
+            }
         }
     }
 }

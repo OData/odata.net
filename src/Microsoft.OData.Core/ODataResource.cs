@@ -186,11 +186,6 @@ namespace Microsoft.OData
             set { this.properties = value; }
         }
 
-        internal bool IsExpandedEntityProcessed(string name)
-        {
-            return this.MetadataBuilder.IsExpandedEntityProcessed(name);
-        }
-
         /// <summary>Gets or sets the type name of the resource.</summary>
         /// <returns>The type name of the resource.</returns>
         public string TypeName
