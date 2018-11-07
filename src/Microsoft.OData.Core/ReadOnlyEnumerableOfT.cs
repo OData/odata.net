@@ -85,7 +85,7 @@ namespace Microsoft.OData
         /// <summary>
         /// This internal method adds <paramref name="itemsToAdd"/> to the wrapped source list. From the public's perspective, this enumerable is still readonly.
         /// </summary>
-        /// <param name="itemToAdd">Items to be added to the source list.</param>
+        /// <param name="itemsToAdd">Items to be added to the source list.</param>
         internal void AddToSourceList(IList<T> itemsToAdd)
         {
             Debug.Assert(this.sourceList != null, "this.sourceList != null");

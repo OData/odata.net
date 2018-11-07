@@ -10,10 +10,10 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Text;
     using System.Text.RegularExpressions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser;
-    using System.Text;
 
     /// <summary>
     /// Build QueryNode to String Representation

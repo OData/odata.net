@@ -277,7 +277,7 @@ namespace Microsoft.OData.JsonLight
                         this.jsonWriter.WriteName(parentNavLink.Name);
 
                         // Optimization: write null and return directly.
-                        this.jsonWriter.WriteValue((string) null);
+                        this.jsonWriter.WriteValue((string)null);
                         return;
                     }
                 }
@@ -292,7 +292,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (!this.ShouldOmitNullValues())
                 {
-                    this.jsonWriter.WriteValue((string) null);
+                    this.jsonWriter.WriteValue((string)null);
                 }
 
                 return;

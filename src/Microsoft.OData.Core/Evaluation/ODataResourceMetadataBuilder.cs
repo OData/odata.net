@@ -166,6 +166,7 @@ namespace Microsoft.OData.Evaluation
         /// Return whether the given expanded entity of specified name has been processed.
         /// </summary>
         /// <param name="name">The name of the expanded entity.</param>
+        /// <returns>True if the expanded entity has been processed; False otherwise.</returns>
         internal virtual bool IsExpandedEntityProcessed(string name)
         {
             return this.ProcessedExpandedEntityNames.Contains(name);
@@ -174,7 +175,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Marks the given expanded entity as processed.
         /// </summary>
-        /// <param name="name">The name of the expanded entity we've already processed.</param>
+        /// <param name="expandedEntityName">The name of the expanded entity we've already processed.</param>
         internal virtual void MarkExpandedEntityProcessed(string expandedEntityName)
         {
             Debug.Assert(!string.IsNullOrEmpty(expandedEntityName), "!string.IsNullOrEmpty(expandedEntityName)");
