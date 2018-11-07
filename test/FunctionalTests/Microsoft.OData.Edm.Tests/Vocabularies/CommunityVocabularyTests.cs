@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             const string expectedUrlEscape = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Community.V1"" Alias=""Community"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <Term Name=""UrlEscapeFunction"" Type=""Core.Tag"" AppliesTo=""Function"">
-    <Annotation Term=""Core.Description"" String=""Annotates a function for converting a colon-escaped segment in Url path"" />
+    <Annotation Term=""Core.Description"" String=""Annotates a function to be substituted for a colon-escaped segment in a Url path"" />
   </Term>
 </Schema>";
 

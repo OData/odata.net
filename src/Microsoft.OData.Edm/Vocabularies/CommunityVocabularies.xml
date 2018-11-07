@@ -6,7 +6,7 @@
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Community.V1" Alias="Community">
       <Term AppliesTo="Function" Type="Core.Tag" Name="UrlEscapeFunction">
-        <Annotation Term="Core.Description" String="Annotates a function for converting a colon-escaped segment in Url path"/>
+        <Annotation Term="Core.Description" String="Annotates a function to be substituted for a colon-escaped segment in a Url path"/>
       </Term>
     </Schema>
   </edmx:DataServices>

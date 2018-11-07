@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
     /// <summary>
     /// Constant values for Community Vocabularies
     /// </summary>
-    public static class CommunityVocabularyConstants
+    internal static class CommunityVocabularyConstants
     {
         /// <summary>OData.Community.V1.UrlEscapeFunction </summary>
         internal const string UrlEscapeFunction = "Org.OData.Community.V1.UrlEscapeFunction";
