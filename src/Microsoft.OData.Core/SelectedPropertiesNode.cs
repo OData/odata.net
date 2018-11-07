@@ -6,6 +6,7 @@
 
 using System.Collections;
 using System.Runtime.InteropServices.ComTypes;
+using Microsoft.OData.JsonLight;
 
 namespace Microsoft.OData
 {
@@ -509,6 +510,75 @@ namespace Microsoft.OData
             }
 
             return dynamicProperties;
+        }
+
+        /// <summary>
+        /// Gets the list of names for selected declared or dynamic properties having values of null.
+        /// </summary>
+        /// <param name="structuredType">The current structured type.</param>
+        /// <param name="resourceState">The current resource state.</param>
+        /// <returns>The list of property names with null values.</returns>
+        internal IList<string> GetSelectedNullValueProperties(IEdmStructuredType structuredType,
+            IODataJsonLightReaderResourceState resourceState)
+        {
+            IList<string> result = new List<string>();
+
+            // Nothing is selected.
+            // Or we cannot determine the selected properties without the user model. This means we won't be computing the missing properties.
+            if (this.selectionType == SelectionType.Empty || structuredType == null)
+            {
+                return result;
+            }
+
+            if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
+            {
+                // Combine the list of declared properties with selected properties w/o wildcard,
+                IEnumerable<string> properties = structuredType.Properties()
+                    .Where(p => p.Type.IsNullable &&
+                                p.PropertyKind != EdmPropertyKind.Navigation)
+                    .Select(p => p.Name);
+
+                if (this.selectedProperties != null)
+                {
+                    properties = properties.Concat(
+                        this.selectedProperties.Where(name => !name.Equals(StarSegment)));
+                }
+
+                // Get distinct items that haven't been read.
+                result = properties.Where(name =>
+                    !resourceState.Resource.Properties.Any(pRead => pRead.Name.Equals(name, StringComparison.Ordinal)) &&
+                    !resourceState.NavigationPropertiesRead.Contains(name))
+                    .Distinct().ToList();
+            }
+            else
+            {
+                foreach (string selected in this.selectedProperties)
+                {
+                    // Skip properties that have been read (primitive or structural).
+                    bool alreadyRead = resourceState.Resource.Properties.Any(p => p.Name.Equals(selected, StringComparison.Ordinal))
+                                       || resourceState.NavigationPropertiesRead.Contains(selected);
+
+                    if (alreadyRead)
+                    {
+                        continue;
+                    }
+
+                    IEdmProperty property = structuredType.FindProperty(selected);
+                    if (property != null
+                        && (!property.Type.IsNullable
+                            || property.PropertyKind == EdmPropertyKind.Navigation))
+                    {
+                        // When resolved to declared property successfully,
+                        // Skip declared properties that are not null-able types.
+                        // Skip navigation properties (no navigation links need to be restored as null.)
+                        continue;
+                    }
+
+                    result.Add(selected);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>

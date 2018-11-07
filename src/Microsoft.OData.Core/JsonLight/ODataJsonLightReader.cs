@@ -2277,85 +2277,46 @@ namespace Microsoft.OData.JsonLight
             {
                 IODataJsonLightReaderResourceState resourceState = this.CurrentResourceState;
                 IEdmStructuredType edmStructuredType = resourceState.ResourceType;
+                SelectedPropertiesNode selectedProperties = resourceState.SelectedProperties;
 
-                if (resourceState.SelectedProperties == SelectedPropertiesNode.Empty)
+                if (selectedProperties == SelectedPropertiesNode.Empty)
                 {
                     return;
                 }
-                else
+                else if (resourceState.Resource != null)
                 {
-                    if (resourceState.Resource != null)
+                    Debug.Assert(edmStructuredType != null, "edmStructuredType != null");
+                    ODataResourceBase resource = resourceState.Resource;
+
+
+                    IList<string> nullPropertyNames =
+                        selectedProperties.GetSelectedNullValueProperties(edmStructuredType, resourceState);
+
+                    // Restore null Expanded entities, which are specified as "isExpandedNavigationProperty" the child nodes.
+                    foreach (string name in selectedProperties.SelectedExpandedEntities)
                     {
-                        Debug.Assert(edmStructuredType != null, "edmStructuredType != null");
-                        ODataResourceBase resource = resourceState.Resource;
-                        List<string> nullPropertyNames = new List<string>();
-
-                        IEnumerable<IEdmProperty> selectedProperties = resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType);
-
-                        // All dynamic properties: null value restoration for properties that are not present.
-                        foreach (string name in resourceState.SelectedProperties.GetSelectedDynamicProperties(edmStructuredType))
+                        if (!resource.MetadataBuilder.IsExpandedEntityProcessed(name))
                         {
-                            if (resource.Properties.Any(p => p.Name.Equals(name, StringComparison.Ordinal))
-                                || resourceState.NavigationPropertiesRead.Contains(name))
-                            {
-                                continue;
-                            }
-
-                            AddNullPropertyName(name, nullPropertyNames);
+                            nullPropertyNames.Add(name);
                         }
-
-                        foreach (IEdmProperty currentProperty in selectedProperties)
-                        {
-                            Debug.Assert(currentProperty.Type != null, "currentProperty.Type != null");
-
-                            // Skip declared properties that are not null-able types.
-                            // Skip navigation properties (no navigation links need to be restored as null.)
-                            // Skip properties that have been read (primitive or structural).
-                            if (!currentProperty.Type.IsNullable
-                                || currentProperty.PropertyKind == EdmPropertyKind.Navigation
-                                || resource.Properties.Any(p => p.Name.Equals(currentProperty.Name, StringComparison.Ordinal))
-                                || resourceState.NavigationPropertiesRead.Contains(currentProperty.Name))
-                            {
-                                continue;
-                            }
-
-                            AddNullPropertyName(currentProperty.Name, nullPropertyNames);
-                        }
-
-                        // Restore null Expanded entities, which are specified as "isExpandedNavigationProperty" the child nodes.
-                        foreach (string name in resourceState.SelectedProperties.SelectedExpandedEntities)
-                        {
-                            if (!resource.MetadataBuilder.IsExpandedEntityProcessed(name))
-                            {
-                                AddNullPropertyName(name, nullPropertyNames);
-                            }
-                        }
-
-                        RestoreNullODataProperties(nullPropertyNames);
                     }
+
+                    // Mark as processed, will throw if duplicate is detected.
+                    foreach (string name in nullPropertyNames)
+                    {
+                        this.CurrentResourceState.PropertyAndAnnotationCollector.MarkPropertyAsProcessed(name);
+                    }
+
+                    RestoreNullODataProperties(nullPropertyNames);
                 }
             }
-        }
-
-        /// <summary>
-        /// Adds the item to the list of names for null properties.
-        /// Also updates the current resource state for processed items.
-        /// </summary>
-        /// <param name="name">The item to be added to be list.</param>
-        /// <param name="nullPropertyNames">The list keeping track of names of null properties.</param>
-        private void AddNullPropertyName(string name, List<string> nullPropertyNames)
-        {
-            nullPropertyNames.Add(name);
-
-            // Mark as processed, will throw if duplicate is detected.
-            this.CurrentResourceState.PropertyAndAnnotationCollector.MarkPropertyAsProcessed(name);
         }
 
         /// <summary>
         /// Restore the null property values in the resource.
         /// </summary>
         /// <param name="nullPropertyNames">The list of names of the properties to be restored with null values.</param>
-        private void RestoreNullODataProperties(List<string> nullPropertyNames)
+        private void RestoreNullODataProperties(IList<string> nullPropertyNames)
         {
             IList<ODataProperty> properties = nullPropertyNames.Select(name => new ODataProperty()
                 {
