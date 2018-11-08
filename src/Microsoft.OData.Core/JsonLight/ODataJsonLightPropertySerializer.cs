@@ -211,22 +211,18 @@ namespace Microsoft.OData.JsonLight
 
             WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
 
-            // Optimization for null values:
-            // If no validation is required, we don't need property serialization info and could try to skip writing null property right away
-            // If this property is top-level, we cannot optimize here due to backward-compatibility requirement for OData-6.x.
-            // For very wide and sparse outputs it allows to avoid a lot of dictionary lookups
+            WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
+
+            duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
+
             bool isNullValue = (value == null || value is ODataNullValue);
             if (isNullValue && omitNullValues)
             {
-                if (!this.currentPropertyInfo.IsTopLevel && !this.MessageWriterSettings.ThrowIfTypeConflictsWithMetadata)
+                if (!this.currentPropertyInfo.IsTopLevel)
                 {
                     return;
                 }
             }
-
-            WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
-
-            duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
 
             // handle ODataUntypedValue
             ODataUntypedValue untypedValue = value as ODataUntypedValue;
@@ -253,7 +249,7 @@ namespace Microsoft.OData.JsonLight
 
             if (isNullValue)
             {
-                this.WriteNullProperty(property, omitNullValues);
+                this.WriteNullProperty(property);
                 return;
             }
 
@@ -380,10 +376,8 @@ namespace Microsoft.OData.JsonLight
         /// Writes a Null property.
         /// </summary>
         /// <param name="property">The property to write out.</param>
-        /// <param name="omitNullValues">Whether to omit the writing of this null property value.</param>
         private void WriteNullProperty(
-            ODataProperty property,
-            bool omitNullValues)
+            ODataProperty property)
         {
             this.WriterValidator.ValidateNullPropertyValue(
                 this.currentPropertyInfo.MetadataType.TypeReference, property.Name,
@@ -408,7 +402,7 @@ namespace Microsoft.OData.JsonLight
                     throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
                 }
             }
-            else if (!omitNullValues)
+            else
             {
                 this.JsonWriter.WriteName(property.Name);
                 this.JsonLightValueSerializer.WriteNullValue();
