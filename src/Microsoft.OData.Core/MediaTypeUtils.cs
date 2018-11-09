@@ -8,6 +8,9 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+#if PORTABLELIB
+    using System.Collections.Concurrent;
+#endif
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -949,12 +952,64 @@ namespace Microsoft.OData
             }
         }
 
+#if PORTABLELIB
         /// <summary>
         /// Class representing the concurrent cache for match info.
         /// </summary>
         private sealed class MatchInfoConcurrentCache
         {
             /// <summary>
+            /// The dictionary to save elements.
+            /// </summary>
+            private readonly ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo> dict;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="maxSize">Max size of the elements that the cache can contain.</param>
+            public MatchInfoConcurrentCache(int maxSize)
+            {
+                this.dict = new ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(4, maxSize);
+            }
+
+            /// <summary>
+            /// Gets the value associated with the specified key.
+            /// </summary>
+            /// <param name="key">The key whose value to get.</param>
+            /// <param name="value">The value associated with the specified key, if the key is found; otherwise, null.</param>
+            /// <returns>true if the cache contains an element with the specified key; otherwise, false.</returns>
+            public bool TryGetValue(MatchInfoCacheKey key, out MediaTypeMatchInfo value)
+            {
+                return this.dict.TryGetValue(key, out value);
+            }
+
+            /// <summary>
+            /// Adds an element with the provided key and value to the cache.
+            /// </summary>
+            /// <param name="key">The key of the element to add.</param>
+            /// <param name="value">The value of the element to add.</param>
+            public void Add(MatchInfoCacheKey key, MediaTypeMatchInfo value)
+            {
+                try
+                {
+                    // Try to add the key to the dictionary. If we are overflowing
+                    // clear the dictionary and attempt to add the entry again.
+                    this.dict.TryAdd(key, value);
+                }
+                catch (OverflowException)
+                {
+                    this.dict.Clear();
+                    this.dict.TryAdd(key, value);
+                }
+            }
+        }
+#else
+        /// <summary>
+        /// Class representing the concurrent cache for match info.
+        /// </summary>
+        private sealed class MatchInfoConcurrentCache
+        {
+           /// <summary>
             /// Max size of the elements that the cache can contain.
             /// </summary>
             private readonly int maxSize;
@@ -1009,5 +1064,6 @@ namespace Microsoft.OData
                 }
             }
         }
+#endif
     }
 }
