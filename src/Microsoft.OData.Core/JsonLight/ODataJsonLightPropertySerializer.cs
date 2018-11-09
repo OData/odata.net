@@ -124,7 +124,8 @@ namespace Microsoft.OData.JsonLight
                     owningType,
                     false /* isTopLevel */,
                     !isComplexValue,
-                    omitNullValues,
+                    // Annotated properties won't be omitted even if it is null.
+                    omitNullValues && property.InstanceAnnotations.Count == 0,
                     duplicatePropertyNameChecker);
             }
         }

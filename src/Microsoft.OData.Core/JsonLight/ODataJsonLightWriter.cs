@@ -271,7 +271,8 @@ namespace Microsoft.OData.JsonLight
 
                     this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(parentNavLink.GetInstanceAnnotations(), parentNavLink.Name);
 
-                    if (!this.ShouldOmitNullValues())
+                    // Annotated resource won't be omitted even if it is null.
+                    if (!this.ShouldOmitNullValues() || parentNavLink.GetInstanceAnnotations().Count > 0)
                     {
                         // Write the property name of an expanded navigation property to start the value of null per preference setting.
                         this.jsonWriter.WriteName(parentNavLink.Name);

@@ -65,14 +65,15 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             Uri serviceUri = new Uri("http://test/");
 
             string expectedNulls = @"{
-            ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager(),Friend())/$entity"",
-            ""Name"":""Fred"",
-            ""Title@test.annotation"":""annotationValue"",""Title"":null,
-            ""Dynamic"":null,
-            ""DynamicAnnotated@test.annotation"":""annotationValue"",""DynamicAnnotated"":null,
-            ""Address"":null,""Manager"":null,
-            ""Friend"": {""Name"":""FriendOfFred""}
-        }";
+                ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager(),Friend())/$entity"",
+                ""Name"":""Fred"",
+                ""Title@test.annotation"":""annotationValue"",""Title"":null,
+                ""Dynamic"":null,
+                ""DynamicAnnotated@test.annotation"":""annotationValue"",""DynamicAnnotated"":null,
+                ""Address@test.annotation"":""InsufficientPrivileges"",""Address"":null,
+                ""Manager"":null,
+                ""Friend"": {""Name"":""FriendOfFred""}
+            }";
             expectedNulls = Regex.Replace(expectedNulls, @"\s*", string.Empty, RegexOptions.Multiline);
             Assert.IsTrue(expectedNulls.Contains(serviceUri.ToString()));
 
@@ -180,12 +181,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             // Requirement: Omit null value for nested resource if omit-values=nulls is specified.
             string expectedNoNulls = @"{
-            ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager,Friend())/$entity"",
-            ""Name"":""Fred"",
-            ""Title@test.annotation"":""annotationValue"",
-            ""DynamicAnnotated@test.annotation"":""annotationValue"",
-            ""Friend"": {""Name"":""FriendOfFred""}
-        }";
+                ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager,Friend())/$entity"",
+                ""Name"":""Fred"",
+                ""Title@test.annotation"":""annotationValue"",""Title"":null,
+                ""DynamicAnnotated@test.annotation"":""annotationValue"",""DynamicAnnotated"":null,
+                ""Address@test.annotation"":""InsufficientPrivileges"",""Address"":null,
+                ""Friend"": {""Name"":""FriendOfFred""}
+            }";
 
             expectedNoNulls = Regex.Replace(expectedNoNulls, @"\s*", string.Empty, RegexOptions.Multiline);
             Assert.IsTrue(expectedNoNulls.Contains(serviceUri.ToString()));
@@ -263,13 +265,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             }
 
             Assert.IsTrue(employeeEntityCount == 2, $"employeeEntityCount: Expected: 2, Actual: {employeeEntityCount}");
-            Assert.IsFalse(addressReturned, "Address is returned but it should not be.");
+            Assert.IsTrue(addressReturned, "Address is returned but it should not be.");
             Assert.IsFalse(managerReturned, "Manager is returned but it should not be, because it is navigation link and its value is omitted in payload.");
             Assert.IsNotNull(friendResource, "Friend resource is null but it should not be.");
             VerifyAdditionalProperties(employeeResource);
             Assert.IsTrue(employeeResource.Properties != null);
-            Assert.AreEqual(employeeResource.Properties.Count(), 5);
-            Assert.IsTrue(employeeResource.Properties.Any(p => p.Name.Equals("Address") && (p.Value == null)));
+            Assert.AreEqual(4, employeeResource.Properties.Count());
+            Assert.IsFalse(employeeResource.Properties.Any(p => p.Name.Equals("Address")));
             Assert.IsFalse(employeeResource.Properties.Any(p => p.Name.Equals("Manager")));
         }
 
@@ -287,18 +289,20 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             // Requirement: Omit null value for nested resource if omit-values=nulls is specified.
             string expectedNoNulls = nestedSelect
                 ? @"{
-            ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager(),Friend(Name,Title))/$entity"",
-            ""Name"":""Fred"",
-            ""Title@test.annotation"":""annotationValue"",
-            ""DynamicAnnotated@test.annotation"":""annotationValue"",
-            ""Friend"": {""Name"":""FriendOfFred""}
+                ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager(),Friend(Name,Title))/$entity"",
+                ""Name"":""Fred"",
+                ""Title@test.annotation"":""annotationValue"",""Title"":null,
+                ""DynamicAnnotated@test.annotation"":""annotationValue"",""DynamicAnnotated"":null,
+                ""Address@test.annotation"":""InsufficientPrivileges"",""Address"":null,
+                ""Friend"": {""Name"":""FriendOfFred""}
             }"
                 : @"{
-            ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager(),Friend())/$entity"",
-            ""Name"":""Fred"",
-            ""Title@test.annotation"":""annotationValue"",
-            ""DynamicAnnotated@test.annotation"":""annotationValue"",
-            ""Friend"": {""Name"":""FriendOfFred""}
+                ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager(),Friend())/$entity"",
+                ""Name"":""Fred"",
+                ""Title@test.annotation"":""annotationValue"",""Title"":null,
+                ""DynamicAnnotated@test.annotation"":""annotationValue"",""DynamicAnnotated"":null,
+                ""Address@test.annotation"":""InsufficientPrivileges"",""Address"":null,
+                ""Friend"": {""Name"":""FriendOfFred""}
             }";
 
             expectedNoNulls = Regex.Replace(expectedNoNulls, @"\s*", string.Empty, RegexOptions.Multiline);
@@ -382,7 +386,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             }
 
             Assert.IsTrue(employeeEntityCount == 2, $"employeeEntityCount: Expected: 2, Actual: {employeeEntityCount}");
-            Assert.IsFalse(addressReturned, "Address is returned but it should not be.");
+            Assert.IsTrue(addressReturned, "Address is annotated, should be returned but isn't.");
             Assert.IsFalse(managerReturned, "Manager is returned but it should not be, because value is omitted in payload.");
 
             Assert.IsNotNull(friendResource, "Friend resource is null but it should not be.");
@@ -457,11 +461,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             });
 
             // write address
-            writer.WriteStart(new ODataNestedResourceInfo
+            ODataNestedResourceInfo addrNestedResourceInfo = new ODataNestedResourceInfo
             {
                 Name = "Address",
                 IsCollection = false
-            });
+            };
+            addrNestedResourceInfo.SetInstanceAnnotations(new ODataInstanceAnnotation[]
+                { new ODataInstanceAnnotation("test.annotation", new ODataPrimitiveValue("InsufficientPrivileges")) }
+            );
+
+            writer.WriteStart(addrNestedResourceInfo);
             writer.WriteStart((ODataResource)null);
             writer.WriteEnd(); //address
             writer.WriteEnd(); //address nestedInfo
