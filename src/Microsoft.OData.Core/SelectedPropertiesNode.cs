@@ -492,32 +492,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Return names of dynamic properties.
-        /// </summary>
-        /// <param name="structuredType">The current structured type.</param>
-        /// <returns>The names of dynamic properties.</returns>
-        internal IEnumerable<string> GetSelectedDynamicProperties(IEdmStructuredType structuredType)
-        {
-            IEnumerable<string> dynamicProperties = Enumerable.Empty<string>();
-
-            if (this.selectedProperties != null && this.selectedProperties.Count > 0)
-            {
-                dynamicProperties = this.selectedProperties.Select(
-                    prop => structuredType.FindProperty(prop) == null
-                    ? prop
-                    : null)
-                    .OfType<string>();
-            }
-
-            return dynamicProperties;
-        }
-
-        /// <summary>
-        /// Gets the list of names for selected declared or dynamic properties having values of null.
+        /// Gets the list of names for selected nullable declared or dynamic properties missing from payload.
         /// </summary>
         /// <param name="structuredType">The current structured type.</param>
         /// <param name="resourceState">The current resource state.</param>
-        /// <returns>The list of property names with null values.</returns>
+        /// <returns>The list of property names missing from payload.</returns>
         internal IList<string> GetSelectedNullValueProperties(IEdmStructuredType structuredType,
             IODataJsonLightReaderResourceState resourceState)
         {

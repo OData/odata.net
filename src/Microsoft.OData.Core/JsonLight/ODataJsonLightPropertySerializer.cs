@@ -186,8 +186,6 @@ namespace Microsoft.OData.JsonLight
         {
             WriterValidationUtils.ValidatePropertyNotNull(property);
 
-            ODataValue value = property.ODataValue;
-
             string propertyName = property.Name;
 
             if (this.JsonLightOutputContext.MessageWriterSettings.Validations != ValidationKinds.None)
@@ -204,6 +202,9 @@ namespace Microsoft.OData.JsonLight
                 this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(propertyName, owningType);
             }
 
+            WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
+
+            duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
 
             if (currentPropertyInfo.MetadataType.IsUndeclaredProperty)
             {
@@ -212,9 +213,7 @@ namespace Microsoft.OData.JsonLight
 
             WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
 
-            WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
-
-            duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
+            ODataValue value = property.ODataValue;
 
             bool isNullValue = (value == null || value is ODataNullValue);
             if (isNullValue && omitNullValues)
