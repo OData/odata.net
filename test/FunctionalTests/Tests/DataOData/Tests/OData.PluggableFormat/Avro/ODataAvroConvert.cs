@@ -102,6 +102,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         public static ODataValue ToODataValue(object obj)
         {
+            if (obj == null)
+            {
+                return new ODataNullValue();
+            }
+
             var array = obj as Array;
             if (array != null && !(array is byte[]))
             {

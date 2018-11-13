@@ -81,7 +81,7 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Json\JsonSharedUtils.cs">
       <Link>Microsoft\OData\Service\Serializers\JsonSharedUtils.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\ODataValueUtils.cs">
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Value\ODataValueUtils.cs">
       <Link>Microsoft\OData\Service\ODataValueUtils.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\SimpleLazy.cs">

@@ -5399,6 +5399,14 @@ public sealed class Microsoft.OData.ODataResourceSet : Microsoft.OData.ODataReso
 	public void AddFunction (Microsoft.OData.ODataFunction function)
 }
 
+public sealed class Microsoft.OData.ODataResourceValue : Microsoft.OData.ODataValue {
+	public ODataResourceValue ()
+
+	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataProperty]] Properties  { public get; public set; }
+	string TypeName  { public get; public set; }
+}
+
 public sealed class Microsoft.OData.ODataServiceDocument : Microsoft.OData.ODataAnnotatable {
 	public ODataServiceDocument ()
 
