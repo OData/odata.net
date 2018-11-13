@@ -556,9 +556,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionStartSerializationInfo.cs">
       <Link>Microsoft\OData\Core\ODataCollectionStartSerializationInfo.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionValue.cs">
-      <Link>Microsoft\OData\Core\ODataCollectionValue.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionWriter.cs">
       <Link>Microsoft\OData\Core\ODataCollectionWriter.cs</Link>
     </Compile>
@@ -627,9 +624,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataResource.cs">
       <Link>Microsoft\OData\Core\ODataResource.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataEnumValue.cs">
-      <Link>Microsoft\OData\Core\ODataEnumValue.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataError.cs">
       <Link>Microsoft\OData\Core\ODataError.cs</Link>
@@ -712,9 +706,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataNestedResourceInfo.cs">
       <Link>Microsoft\OData\Core\ODataNestedResourceInfo.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataNullValue.cs">
-      <Link>Microsoft\OData\Core\ODataNullValue.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataObjectModelExtensions.cs">
       <Link>Microsoft\OData\Core\ODataObjectModelExtensions.cs</Link>
     </Compile>
@@ -756,9 +747,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataPreferenceHeader.cs">
       <Link>Microsoft\OData\Core\ODataPreferenceHeader.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataPrimitiveValue.cs">
-      <Link>Microsoft\OData\Core\ODataPrimitiveValue.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataProperty.cs">
       <Link>Microsoft\OData\Core\ODataProperty.cs</Link>
@@ -814,26 +802,14 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataSingletonInfo.cs">
       <Link>Microsoft\OData\Core\ODataSingletonInfo.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataStreamReferenceValue.cs">
-      <Link>Microsoft\OData\Core\ODataStreamReferenceValue.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataTypeAnnotation.cs">
       <Link>Microsoft\OData\Core\ODataTypeAnnotation.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUntypedValue.cs">
-      <Link>Microsoft\OData\Core\ODataUntypedValue.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUtils.cs">
       <Link>Microsoft\OData\Core\ODataUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUtilsInternal.cs">
       <Link>Microsoft\OData\Core\ODataUtilsInternal.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataValue.cs">
-      <Link>Microsoft\OData\Core\ODataValue.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataValueUtils.cs">
-      <Link>Microsoft\OData\Core\ODataValueUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataVersion.cs">
       <Link>Microsoft\OData\Core\ODataVersion.cs</Link>
@@ -1538,6 +1514,33 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataCollectionValue.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataCollectionValue.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataEnumValue.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataEnumValue.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataNullValue.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataNullValue.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataPrimitiveValue.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataPrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataResourceValue.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataResourceValue.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataStreamReferenceValue.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataStreamReferenceValue.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataUntypedValue.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataUntypedValue.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataValue.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataValue.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataValueUtils.cs" >
+      <Link>Microsoft\OData\Core\Value\ODataValueUtils.cs</Link>
     </Compile>
     <Compile Include="..\BindingPathHelper.cs">
       <Link>Microsoft\OData\Core\BindingPathHelper.cs</Link>

@@ -4061,6 +4061,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The value of a property '{0}' in ODataResource cannot be of type ODataResourceValue or collection of ODataResourceValue."
+        /// </summary>
+        internal static string ODataResource_PropertyValueCannotBeODataResourceValue(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataResource_PropertyValueCannotBeODataResourceValue, p0);
+        }
+
+        /// <summary>
         /// A string like "The primitive property '{0}' on type '{1}' has a value which is not a primitive value."
         /// </summary>
         internal static string EdmValueUtils_NonPrimitiveValue(object p0, object p1) {

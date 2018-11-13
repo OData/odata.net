@@ -12,6 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Evaluation;
+    using System.Linq;
     #endregion Namespaces
 
     /// <summary>
@@ -183,7 +184,11 @@ namespace Microsoft.OData
         public IEnumerable<ODataProperty> Properties
         {
             get { return this.MetadataBuilder.GetProperties(this.properties); }
-            set { this.properties = value; }
+            set
+            {
+                VerifyProperties(value);
+                this.properties = value;
+            }
         }
 
         /// <summary>Gets or sets the type name of the resource.</summary>
@@ -389,6 +394,28 @@ namespace Microsoft.OData
             if (!this.functions.Contains(function))
             {
                 this.functions.Add(function);
+            }
+        }
+
+        private static void VerifyProperties(IEnumerable<ODataProperty> properties)
+        {
+            if (properties != null)
+            {
+                ODataCollectionValue collection = null;
+                foreach (var property in properties)
+                {
+                    if (property.Value is ODataResourceValue)
+                    {
+                        throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+                    }
+                    else if ((collection = property.Value as ODataCollectionValue) != null)
+                    {
+                        if (collection.Items != null && collection.Items.Any(t => t is ODataResourceValue))
+                        {
+                            throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+                        }
+                    }
+                }
             }
         }
     }

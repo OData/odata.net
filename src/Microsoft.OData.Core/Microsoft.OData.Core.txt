@@ -636,6 +636,7 @@ ODataConventionalUriBuilder_NullKeyValue=The key property '{0}' on type '{1}' ha
 ODataResourceMetadataContext_EntityTypeWithNoKeyProperties=An ODataResource of type '{0}' is found without key properties. When writing without a user model, each resource must contain at least one property whose 'ODataProperty.SerializationInfo.PropertyKind' set to 'ODataPropertyKind.Key'. When writing with a user model, the entity type '{0}' defined in the model must define at least one key property.
 ODataResourceMetadataContext_NullKeyValue=The key property '{0}' on type '{1}' has a null value. Key properties must not have null values.
 ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues=The property '{0}' on type '{1}' is a non-primitive value. All key and etag properties must be of primitive types.
+ODataResource_PropertyValueCannotBeODataResourceValue=The value of a property '{0}' in ODataResource cannot be of type ODataResourceValue or collection of ODataResourceValue.
 
 EdmValueUtils_NonPrimitiveValue=The primitive property '{0}' on type '{1}' has a value which is not a primitive value.
 EdmValueUtils_PropertyDoesntExist=The entity instance value of type '{0}' doesn't have a value for property '{1}'. To compute an entity's metadata, its key and concurrency-token property values must be provided.

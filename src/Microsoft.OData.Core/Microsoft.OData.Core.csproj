@@ -228,7 +228,6 @@
     <Compile Include="Json\ODataStringEscapeOption.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
     <Compile Include="ODataErrorDetail.cs" />
-    <Compile Include="ODataUntypedValue.cs" />
     <Compile Include="ODataMediaType.cs" />
     <Compile Include="ODataMediaTypeResolver.cs" />
     <Compile Include="MediaTypeUtils.cs" />
@@ -270,7 +269,6 @@
     <Compile Include="ODataCollectionReaderState.cs" />
     <Compile Include="ODataCollectionStart.cs" />
     <Compile Include="ODataCollectionStartSerializationInfo.cs" />
-    <Compile Include="ODataCollectionValue.cs" />
     <Compile Include="ODataCollectionWriter.cs" />
     <Compile Include="ODataCollectionWriterCore.cs" />
     <Compile Include="ODataConstants.cs" />
@@ -294,7 +292,6 @@
     <Compile Include="ODataEntityReferenceLinks.cs" />
     <Compile Include="ODataEntitySetInfo.cs" />
     <Compile Include="ODataResource.cs" />
-    <Compile Include="ODataEnumValue.cs" />
     <Compile Include="ODataError.cs" />
     <Compile Include="ODataErrorException.cs" />
     <Compile Include="ODataException.cs" />
@@ -322,7 +319,6 @@
     <Compile Include="ODataMetadataInputContext.cs" />
     <Compile Include="ODataMetadataOutputContext.cs" />
     <Compile Include="ODataNestedResourceInfo.cs" />
-    <Compile Include="ODataNullValue.cs" />
     <Compile Include="ODataObjectModelExtensions.cs" />
     <Compile Include="ODataOperation.cs" />
     <Compile Include="ODataOutputContext.cs" />
@@ -337,7 +333,6 @@
     <Compile Include="ODataPayloadKindDetectionResult.cs" />
     <Compile Include="ODataPayloadValueConverter.cs" />
     <Compile Include="ODataPreferenceHeader.cs" />
-    <Compile Include="ODataPrimitiveValue.cs" />
     <Compile Include="ODataProperty.cs" />
     <Compile Include="ODataPropertyKind.cs" />
     <Compile Include="ODataPropertySerializationInfo.cs" />
@@ -354,12 +349,9 @@
     <Compile Include="ODataServiceDocument.cs" />
     <Compile Include="ODataServiceDocumentElement.cs" />
     <Compile Include="ODataSingletonInfo.cs" />
-    <Compile Include="ODataStreamReferenceValue.cs" />
     <Compile Include="ODataTypeAnnotation.cs" />
     <Compile Include="ODataUtils.cs" />
     <Compile Include="ODataUtilsInternal.cs" />
-    <Compile Include="ODataValue.cs" />
-    <Compile Include="ODataValueUtils.cs" />
     <Compile Include="ODataVersion.cs" />
     <Compile Include="ODataVersionCache.cs" />
     <Compile Include="ODataWriter.cs" />
@@ -618,6 +610,15 @@
     <Compile Include="UriParser\Aggregation\GroupByToken.cs" />
     <Compile Include="UriParser\Aggregation\AggregationMethod.cs" />
     <Compile Include="UriParser\Aggregation\TransformationNodeKind.cs" />
+    <Compile Include="Value\ODataCollectionValue.cs" />
+    <Compile Include="Value\ODataEnumValue.cs" />
+    <Compile Include="Value\ODataNullValue.cs" />
+    <Compile Include="Value\ODataPrimitiveValue.cs" />
+    <Compile Include="Value\ODataResourceValue.cs" />
+    <Compile Include="Value\ODataStreamReferenceValue.cs" />
+    <Compile Include="Value\ODataUntypedValue.cs" />
+    <Compile Include="Value\ODataValue.cs" />
+    <Compile Include="Value\ODataValueUtils.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs">
       <Link>EdmValueParser.cs</Link>
     </Compile>
