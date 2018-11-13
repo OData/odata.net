@@ -49,6 +49,14 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void IfValueIsResourceThenODataValueShouldBeReferenceEqual()
+        {
+            ODataResourceValue resourceValue = new ODataResourceValue();
+            this.property.Value = resourceValue;
+            this.property.ODataValue.Should().BeSameAs(resourceValue);
+        }
+
+        [Fact]
         public void IfValueIsODataPrimitiveValueThenODataValueShouldBeReferenceEqual()
         {
             ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue(42);

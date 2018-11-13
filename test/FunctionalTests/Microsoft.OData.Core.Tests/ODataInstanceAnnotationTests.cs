@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TheValuePropertyShouldReturnTheAnnotationValue()
         {
-            foreach (ODataValue value in new ODataValue[] { new ODataNullValue(), new ODataPrimitiveValue(1), new ODataCollectionValue() })
+            foreach (ODataValue value in new ODataValue[] { new ODataNullValue(), new ODataPrimitiveValue(1), new ODataResourceValue(), new ODataCollectionValue() })
             {
                 var annotation = new ODataInstanceAnnotation("namespace.name", value);
                 annotation.Value.Should().BeSameAs(value);

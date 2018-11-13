@@ -263,5 +263,46 @@ namespace Microsoft.OData.Tests
             this.odataEntry.Functions.Count().Should().Be(1);
             this.odataEntry.Functions.First().Should().Be(function);
         }
+
+        [Fact]
+        public void ODataResourcePropertyWithODataResourceValueThrows()
+        {
+            ODataResource resource = new ODataResource
+            {
+                TypeName = "NS.Resource",
+            };
+
+            Action test = () => resource.Properties = new[]
+            {
+                new ODataProperty { Name = "ResourceProperty", Value = new ODataResourceValue() }
+            };
+
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.ODataResource_PropertyValueCannotBeODataResourceValue("ResourceProperty"), exception.Message);
+        }
+
+        [Fact]
+        public void ODataResourcePropertyWithCollectionODataResourceValueThrows()
+        {
+            ODataResource resource = new ODataResource
+            {
+                TypeName = "NS.Resource",
+            };
+
+            Action test = () => resource.Properties = new[]
+            {
+                new ODataProperty
+                {
+                    Name = "CollectionProperty",
+                    Value = new ODataCollectionValue
+                    {
+                        Items = new [] { new ODataResourceValue() }
+                    }
+                }
+            };
+
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.ODataResource_PropertyValueCannotBeODataResourceValue("CollectionProperty"), exception.Message);
+        }
     }
 }

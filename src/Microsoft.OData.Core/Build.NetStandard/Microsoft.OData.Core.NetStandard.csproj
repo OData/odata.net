@@ -602,9 +602,6 @@
     <Compile Include="..\ODataCollectionStartSerializationInfo.cs">
       <Link>ODataCollectionStartSerializationInfo.cs</Link>
     </Compile>
-    <Compile Include="..\ODataCollectionValue.cs">
-      <Link>ODataCollectionValue.cs</Link>
-    </Compile>
     <Compile Include="..\ODataCollectionWriter.cs">
       <Link>ODataCollectionWriter.cs</Link>
     </Compile>
@@ -673,9 +670,6 @@
     </Compile>
     <Compile Include="..\ODataEntitySetInfo.cs">
       <Link>ODataEntitySetInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataEnumValue.cs">
-      <Link>ODataEnumValue.cs</Link>
     </Compile>
     <Compile Include="..\ODataError.cs">
       <Link>ODataError.cs</Link>
@@ -764,9 +758,6 @@
     <Compile Include="..\ODataNestedResourceInfoSerializationInfo.cs">
       <Link>ODataNestedResourceInfoSerializationInfo.cs</Link>
     </Compile>
-    <Compile Include="..\ODataNullValue.cs">
-      <Link>ODataNullValue.cs</Link>
-    </Compile>
     <Compile Include="..\ODataNullValueBehaviorKind.cs">
       <Link>ODataNullValueBehaviorKind.cs</Link>
     </Compile>
@@ -811,9 +802,6 @@
     </Compile>
     <Compile Include="..\ODataPreferenceHeader.cs">
       <Link>ODataPreferenceHeader.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataPrimitiveValue.cs">
-      <Link>ODataPrimitiveValue.cs</Link>
     </Compile>
     <Compile Include="..\ODataProperty.cs">
       <Link>ODataProperty.cs</Link>
@@ -887,26 +875,14 @@
     <Compile Include="..\ODataSingletonInfo.cs">
       <Link>ODataSingletonInfo.cs</Link>
     </Compile>
-    <Compile Include="..\ODataStreamReferenceValue.cs">
-      <Link>ODataStreamReferenceValue.cs</Link>
-    </Compile>
     <Compile Include="..\ODataTypeAnnotation.cs">
       <Link>ODataTypeAnnotation.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataUntypedValue.cs">
-      <Link>ODataUntypedValue.cs</Link>
     </Compile>
     <Compile Include="..\ODataUtils.cs">
       <Link>ODataUtils.cs</Link>
     </Compile>
     <Compile Include="..\ODataUtilsInternal.cs">
       <Link>ODataUtilsInternal.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataValue.cs">
-      <Link>ODataValue.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataValueUtils.cs">
-      <Link>ODataValueUtils.cs</Link>
     </Compile>
     <Compile Include="..\ODataVersion.cs">
       <Link>ODataVersion.cs</Link>
@@ -1750,6 +1726,33 @@
     </Compile>
     <Compile Include="..\UriParser\Visitors\SyntacticTreeVisitor.cs">
       <Link>UriParser\Visitors\SyntacticTreeVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataCollectionValue.cs">
+      <Link>Value\ODataCollectionValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataEnumValue.cs">
+      <Link>Value\ODataEnumValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataNullValue.cs">
+      <Link>Value\ODataNullValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataPrimitiveValue.cs">
+      <Link>Value\ODataPrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataResourceValue.cs">
+      <Link>Value\ODataResourceValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataStreamReferenceValue.cs">
+      <Link>Value\ODataStreamReferenceValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataUntypedValue.cs">
+      <Link>Value\ODataUntypedValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataValue.cs">
+      <Link>Value\ODataValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataValueUtils.cs">
+      <Link>Value\ODataValueUtils.cs</Link>
     </Compile>
     <Compile Include="..\UriUtils.cs">
       <Link>UriUtils.cs</Link>
