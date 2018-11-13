@@ -597,6 +597,7 @@ namespace Microsoft.OData {
         internal const string ODataResourceMetadataContext_EntityTypeWithNoKeyProperties = "ODataResourceMetadataContext_EntityTypeWithNoKeyProperties";
         internal const string ODataResourceMetadataContext_NullKeyValue = "ODataResourceMetadataContext_NullKeyValue";
         internal const string ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues = "ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues";
+        internal const string ODataResource_PropertyValueCannotBeODataResourceValue = "ODataResource_PropertyValueCannotBeODataResourceValue";
         internal const string EdmValueUtils_NonPrimitiveValue = "EdmValueUtils_NonPrimitiveValue";
         internal const string EdmValueUtils_PropertyDoesntExist = "EdmValueUtils_PropertyDoesntExist";
         internal const string ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromNull = "ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromNull";
