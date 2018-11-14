@@ -1191,6 +1191,12 @@
     </Compile>
     <Compile Include="..\Vocabularies\AlternateKeysVocabularyModel.cs">
       <Link>Vocabularies\AlternateKeysVocabularyModel.cs</Link>
+    </Compile>    
+    <Compile Include="..\Vocabularies\CommunityVocabularyConstants.cs">
+      <Link>Vocabularies\CommunityVocabularyConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\CommunityVocabularyModel.cs">
+      <Link>Vocabularies\CommunityVocabularyModel.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\AuthorizationVocabularyModel.cs">
       <Link>Vocabularies\AuthorizationVocabularyModel.cs</Link>
@@ -1527,6 +1533,9 @@
   <ItemGroup>
     <EmbeddedResource Include="..\Vocabularies\AlternateKeysVocabularies.xml">
       <Link>Vocabularies\AlternateKeysVocabularies.xml</Link>
+    </EmbeddedResource>  
+    <EmbeddedResource Include="..\Vocabularies\CommunityVocabularies.xml">
+      <Link>Vocabularies\CommunityVocabularies.xml</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\Vocabularies\AuthorizationVocabularies.xml">
       <Link>Vocabularies\AuthorizationVocabularies.xml</Link>

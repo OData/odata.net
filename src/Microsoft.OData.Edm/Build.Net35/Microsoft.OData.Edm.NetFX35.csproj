@@ -340,6 +340,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularyConstants.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\AlternateKeysVocabularyConstants.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CommunityVocabularyConstants.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\CommunityVocabularyConstants.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CoreVocabularyConstants.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\CoreVocabularyConstants.cs</Link>
     </Compile>
@@ -351,6 +354,9 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\AlternateKeysVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CommunityVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\CommunityVocabularyModel.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\AuthorizationVocabularyModel.cs</Link>
@@ -1499,6 +1505,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularies.xml">
       <LogicalName>AlternateKeysVocabularies.xml</LogicalName>
+    </EmbeddedResource>    
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CommunityVocabularies.xml">
+      <LogicalName>CommunityVocabularies.xml</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularies.xml">
       <LogicalName>AuthorizationVocabularies.xml</LogicalName>
