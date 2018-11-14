@@ -71,7 +71,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
             List<ODataResource> entries = new List<ODataResource>();
-            ODataNestedResourceInfo navigationLink;
+            ODataNestedResourceInfo nestedResourceInfo;
             this.ReadEntryPayload(mainModel, payload, entitySet, entityType,
                 reader =>
                 {
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             entries.Add(reader.Item as ODataResource);
                             break;
                         case ODataReaderState.NestedResourceInfoStart:
-                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
                             break;
                         default:
                             break;
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             List<ODataResource> entries = new List<ODataResource>();
-            ODataNestedResourceInfo navigationLink = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
             this.ReadEntryPayload(model, payload, entitySet, entityType,
                 reader =>
                 {
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             entries.Add(reader.Item as ODataResource);
                             break;
                         case ODataReaderState.NestedResourceInfoStart:
-                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
                             break;
                         default:
                             break;
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             propertyList[1].Name.Should().Be("Weight");
             propertyList[1].Value.Should().Be(60.5);
 
-            navigationLink.Name.Should().Be("Address");
+            nestedResourceInfo.Name.Should().Be("Address");
             var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
@@ -491,7 +491,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             List<ODataResource> entries = new List<ODataResource>();
-            ODataNestedResourceInfo navigationLink = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
             this.ReadEntryPayload(model, payload, entitySet, entityType,
                 reader =>
                 {
@@ -501,7 +501,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             entries.Add(reader.Item as ODataResource);
                             break;
                         case ODataReaderState.NestedResourceInfoStart:
-                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
                             break;
                         default:
                             break;
@@ -516,7 +516,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             propertyList[2].Name.Should().Be("Height");
             propertyList[2].Value.Should().Be(180);
 
-            navigationLink.Name.Should().Be("Address");
+            nestedResourceInfo.Name.Should().Be("Address");
             var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
@@ -568,7 +568,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             List<ODataResource> entries = new List<ODataResource>();
-            ODataNestedResourceInfo navigationLink = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
             this.ReadEntryPayload(model, payload, entitySet, entityType,
                 reader =>
                 {
@@ -578,7 +578,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             entries.Add(reader.Item as ODataResource);
                             break;
                         case ODataReaderState.NestedResourceInfoStart:
-                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
                             break;
                         default:
                             break;
@@ -591,7 +591,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             propertyList[1].Name.Should().Be("Weight");
             propertyList[1].Value.Should().Be(60.5);
 
-            navigationLink.Name.Should().Be("Address");
+            nestedResourceInfo.Name.Should().Be("Address");
             var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
@@ -640,7 +640,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             List<ODataResource> entries = new List<ODataResource>();
-            ODataNestedResourceInfo navigationLink = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
             this.ReadEntryPayload(model, payload, entitySet, entityType,
                 reader =>
                 {
@@ -650,7 +650,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             entries.Add(reader.Item as ODataResource);
                             break;
                         case ODataReaderState.NestedResourceInfoStart:
-                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
                             break;
                         default:
                             break;
@@ -663,7 +663,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             propertyList[1].Name.Should().Be("Weight");
             propertyList[1].Value.Should().Be(60.5);
 
-            navigationLink.Name.Should().Be("Address");
+            nestedResourceInfo.Name.Should().Be("Address");
             var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
