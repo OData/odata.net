@@ -32,7 +32,8 @@
     <None Remove="Microsoft.OData.Edm.tt" />
     <None Remove="Microsoft.OData.Edm.txt" />
     <None Remove="Parameterized.Microsoft.OData.Edm.tt" />
-    <None Remove="Vocabularies\AlternateKeysVocabularies.xml" />
+    <None Remove="Vocabularies\AlternateKeysVocabularies.xml" />    
+    <None Remove="Vocabularies\CommunityVocabularies.xml" />
     <None Remove="Vocabularies\AuthorizationVocabularies.xml" />
     <None Remove="Vocabularies\CapabilitiesVocabularies.xml" />
     <None Remove="Vocabularies\CoreVocabularies.xml" />
@@ -105,6 +106,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Vocabularies\AlternateKeysVocabularies.xml">
       <LogicalName>AlternateKeysVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>    
+    <EmbeddedResource Include="Vocabularies\CommunityVocabularies.xml">
+      <LogicalName>CommunityVocabularies.xml</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Vocabularies\AuthorizationVocabularies.xml">
