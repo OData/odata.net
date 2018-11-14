@@ -4,12 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Globalization;
-
 namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Text;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
