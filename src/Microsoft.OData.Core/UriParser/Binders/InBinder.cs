@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Globalization;
+
 namespace Microsoft.OData.UriParser
 {
     using System;
@@ -92,6 +94,39 @@ namespace Microsoft.OData.UriParser
                     replacedText[0] = '[';
                     replacedText[replacedText.Length - 1] = ']';
                     bracketLiteralText = replacedText.ToString();
+
+                    Debug.Assert(expectedType.IsCollection());
+                    if (expectedType.Definition.AsElementType().FullTypeName().Equals("Edm.String"))
+                    {
+                        // For collection of strings, need to convert single-quoted string to double-quoted string,
+                        // and also, per ABNF, two consecutive single quotes  to one single quote.
+                        // Sample: ['a''bc','''def','xyz'''] ==> ["a'bc","'def","xyz'"], which is legitimate Json format.
+                        string[] items = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Split(',');
+
+                        // Skip conversion if the items are already in double-quote format (for backward compatibility).
+                        // Note that per ABNF, query option strings should use single quotes.
+                        if (items.Length > 0 && items[0][0] == '\'')
+                        {
+                            StringBuilder builder = new StringBuilder();
+                            for (int i = 0; i < items.Length; i++)
+                            {
+                                string convertedItem = UriParserHelper.RemoveQuotes(items[i]);
+                                if (i != items.Length - 1)
+                                {
+                                    builder.AppendFormat(CultureInfo.InvariantCulture, "\"{0}\",", convertedItem);
+                                }
+                                else
+                                {
+                                    // No trailing comma separator for last item of the collection.
+                                    builder.AppendFormat(CultureInfo.InvariantCulture, "\"{0}\"", convertedItem);
+                                }
+                            }
+
+                            bracketLiteralText =
+                                String.Format(CultureInfo.InvariantCulture, "[{0}]", builder.ToString());
+                        }
+                    }
+
                 }
 
                 object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);

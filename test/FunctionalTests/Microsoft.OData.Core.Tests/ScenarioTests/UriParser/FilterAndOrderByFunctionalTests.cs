@@ -164,7 +164,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             ((ConstantNode)((BinaryOperatorNode)filterQueryNode.Expression).Right).ShouldBeConstantQueryNode(3258.678765765489753678965390m);
 
-            // double already overflows decimal 
+            // double already overflows decimal
             Action parse = () => ParseFilter("1.79769313486232E+307 eq " + decimalPrecisionStr, HardCodedTestModel.TestModel, HardCodedTestModel.GetPet3Type(), HardCodedTestModel.GetPet3Set());
             parse.ShouldThrow<OverflowException>();
 
@@ -811,7 +811,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void EmptyFunctionCallParametersAreProperlyValidated()
         {
             // regression test for: [UriParser] day() allowed. What does that mean?
-            // make sure that, if we do find a cannonical function, we match its parameters. 
+            // make sure that, if we do find a cannonical function, we match its parameters.
             Action parseWithInvalidParameters = () => ParseFilter("day() eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
@@ -824,7 +824,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionCallParametersAreValidated()
         {
             // regression test for: [UriParser] day() allowed. What does that mean?
-            // make sure that, if we do find a cannonical function, we match its parameters. 
+            // make sure that, if we do find a cannonical function, we match its parameters.
             Action parseWithInvalidParameters = () => ParseFilter("day(1) eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
@@ -1770,6 +1770,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FilterClause filter = ParseFilter("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
             filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("(1,2,3)");
+        }
+
+       [Theory]
+       [InlineData("('abc','xyz')")]
+       [InlineData("(\"abc\",\"xyz\")")]  // for backward compatibility
+        public void FilterWithInOperationWithParensStringCollection(string collection)
+        {
+            string filterClause = $"SSN in {collection}";
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("SSN");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be(collection);
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithParensStringCollection_EscapedSingleQuote()
+        {
+            FilterClause filter = ParseFilter("SSN in ('a''bc','''def','xyz''')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("SSN");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("('a''bc','''def','xyz''')");
+        }
+
+        [Fact]
+        public void FilterWithEqOperation_EscapedSingleQuote()
+        {
+            FilterClause filter = ParseFilter("SSN eq 'a''bc'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("SSN");
+            filter.Expression.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode("a'bc");
         }
 
         [Fact]
