@@ -22,10 +22,21 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
     public static class ValidationVocabularyModel
     {
         /// <summary>
+        /// The namespace of the validation vocabulary model.
+        /// </summary>
+        public static readonly string Namespace = "Org.OData.Validation.V1";
+
+        /// <summary>
         /// The EDM model with validation vocabularies.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmModel is immutable")]
         public static readonly IEdmModel Instance;
+
+        /// <summary>
+        /// The DerivedTypeConstraint term.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm DerivedTypeConstraintTerm;
 
         /// <summary>
         /// Parse Validation Vocabulary Model from ValidationVocabularies.xml
@@ -45,6 +56,8 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
                 Debug.Assert(stream != null, "ValidationVocabularies.xml: stream!=null");
                 SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
+
+            DerivedTypeConstraintTerm = Instance.FindDeclaredTerm(Namespace + ".DerivedTypeConstraint");
         }
     }
 }

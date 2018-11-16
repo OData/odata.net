@@ -1935,6 +1935,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static System.Collections.Generic.IList`1[[System.String]] GetDerivedTypeConstraints (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static string GetDescriptionAnnotation (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target)
 
 	[
@@ -4024,7 +4029,9 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel {
+	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm DerivedTypeConstraintTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+	public static readonly string Namespace = "Org.OData.Validation.V1"
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyConstants {
