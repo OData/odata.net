@@ -1774,6 +1774,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
        [Theory]
        [InlineData("('abc','xyz')")]
+       [InlineData("('abc', 'xyz')")]
        [InlineData("(\"abc\",\"xyz\")")]  // for backward compatibility
         public void FilterWithInOperationWithParensStringCollection(string collection)
         {
@@ -1828,6 +1829,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             OrderByClause orderby = ParseOrderBy("'777-42-9001' in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             orderby.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be("777-42-9001");
             orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedSSNs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGuidCollection()
+        {
+            FilterClause filter = ParseFilter("MyGuid in (D01663CF-EB21-4A0E-88E0-361C10ACE7FD, 492CF54A-84C9-490C-A7A4-B5010FAD8104)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("MyGuid");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should()
+                .Be("(D01663CF-EB21-4A0E-88E0-361C10ACE7FD, 492CF54A-84C9-490C-A7A4-B5010FAD8104)");
+        }
+
+        [Theory]
+        [InlineData("('D01663CF-EB21-4A0E-88E0-361C10ACE7FD','492CF54A-84C9-490C-A7A4-B5010FAD8104')")]
+        [InlineData("(\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\", \"492CF54A-84C9-490C-A7A4-B5010FAD8104\")")]
+        [InlineData("(\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\",\"492CF54A-84C9-490C-A7A4-B5010FAD8104\")")]
+        public void FilterWithInOperationWithQuotedGuidCollection(string guidsCollection)
+        {
+            FilterClause filter = ParseFilter($"MyGuid in {guidsCollection}",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("MyGuid");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should()
+                .Be(guidsCollection);
+        }
+
+        [Fact]
+        public void FilterWithBinaryOperationWithGuid()
+        {
+            FilterClause filter = ParseFilter("MyGuid eq D01663CF-EB21-4A0E-88E0-361C10ACE7FD",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("MyGuid");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConvertNode>().Source.As<ConstantNode>().Value
+                .Should().Be(Guid.Parse("D01663CF-EB21-4A0E-88E0-361C10ACE7FD"));
         }
 
         [Fact]
