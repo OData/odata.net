@@ -758,6 +758,30 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets the collection of qualified type name for term Org.OData.Validation.V1.DerivedTypeConstraint from a target annotatable.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target annotatable to find annotation.</param>
+        /// <returns>Null or a collection string of qualifed type name.</returns>
+        public static IList<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmVocabularyAnnotatable target)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(target, ValidationVocabularyModel.DerivedTypeConstraintTerm).FirstOrDefault();
+            if (annotation != null)
+            {
+                IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
+                if (collectionExpression != null && collectionExpression.Elements != null)
+                {
+                    return collectionExpression.Elements.OfType<IEdmStringConstantExpression>().Select(e => e.Value).ToList();
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets all schema elements from the model, and models referenced by it.
         /// </summary>
         /// <param name="model">Model to search for elements</param>

@@ -346,6 +346,7 @@
     <Compile Include="..\UriParser\Parsers\LIteralParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\NodeFactoryTests.cs" />
     <Compile Include="..\UriParser\Parsers\ODataPathParserTests.cs" />
+    <Compile Include="..\UriParser\Parsers\ODataPathParserTypeCastTests.cs" />
     <Compile Include="..\UriParser\Parsers\PathReverserTests.cs" />
     <Compile Include="..\UriParser\Parsers\SearchParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\SegmentKeyHandlerTests.cs" />
