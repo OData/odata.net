@@ -5220,6 +5220,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Type cast segment '{0}' on '{1}' '{2}' is not allowed from the Org.OData.Validation.V1.DerivedTypeConstraint annotation."
+        /// </summary>
+        internal static string PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(object p0, object p1, object p2) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "A resource set may contain a next page link, a delta link or neither, but must not contain both."
         /// </summary>
         internal static string ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink {
@@ -5397,45 +5404,38 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "$filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'."
         /// </summary>
-        internal static string RequestUriProcessor_CannotApplyFilterOnSingleEntities(object p0)
-        {
+        internal static string RequestUriProcessor_CannotApplyFilterOnSingleEntities(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CannotApplyFilterOnSingleEntities, p0);
         }
 
         /// <summary>
         /// A string like "$each set-based operation cannot be applied on single entities or singletons. Entity type: '{0}'."
         /// </summary>
-        internal static string RequestUriProcessor_CannotApplyEachOnSingleEntities(object p0)
-        {
+        internal static string RequestUriProcessor_CannotApplyEachOnSingleEntities(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CannotApplyEachOnSingleEntities, p0);
         }
 
         /// <summary>
-        /// A string like "There are no navigation sources found to apply '{0}'."
+        /// A string like "The $filter path segment must be in the form $filter(expression), where the expression resolves to a boolean."
         /// </summary>
-        internal static string RequestUriProcessor_NoNavigationSourceFound(object p0)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoNavigationSourceFound, p0);
-        }
-
-        /// <summary>
-        /// The $filter path segment must be in the form $filter(expression), where the expression resolves to a boolean.
-        /// </summary>
-        internal static string RequestUriProcessor_FilterPathSegmentSyntaxError
-        {
-            get
-            {
+        internal static string RequestUriProcessor_FilterPathSegmentSyntaxError {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterPathSegmentSyntaxError);
             }
         }
 
         /// <summary>
+        /// A string like "There are no navigation sources found to apply '{0}'."
+        /// </summary>
+        internal static string RequestUriProcessor_NoNavigationSourceFound(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoNavigationSourceFound, p0);
+        }
+
+        /// <summary>
         /// A string like "Only a single operation can follow $each."
         /// </summary>
-        internal static string RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment
-        {
-            get
-            {
+        internal static string RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
             }
         }
@@ -5462,8 +5462,7 @@ namespace Microsoft.OData {
         /// A string like "The request URI is not valid, the segment $count cannot be applied to the root of the service."
         /// </summary>
         internal static string RequestUriProcessor_CountOnRoot {
-            get
-            {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CountOnRoot);
             }
         }
@@ -5472,8 +5471,7 @@ namespace Microsoft.OData {
         /// A string like "The request URI is not valid, the segment $filter cannot be applied to the root of the service."
         /// </summary>
         internal static string RequestUriProcessor_FilterOnRoot {
-            get
-            {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterOnRoot);
             }
         }
@@ -5481,10 +5479,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The request URI is not valid, the segment $each cannot be applied to the root of the service."
         /// </summary>
-        internal static string RequestUriProcessor_EachOnRoot
-        {
-            get
-            {
+        internal static string RequestUriProcessor_EachOnRoot {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_EachOnRoot);
             }
         }
@@ -5492,10 +5488,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The request URI is not valid, the segment $ref cannot be applied to the root of the service."
         /// </summary>
-        internal static string RequestUriProcessor_RefOnRoot
-        {
-            get
-            {
+        internal static string RequestUriProcessor_RefOnRoot {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_RefOnRoot);
             }
         }

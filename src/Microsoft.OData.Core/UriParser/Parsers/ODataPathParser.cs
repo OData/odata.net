@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.UriParser
 {
@@ -1043,6 +1044,8 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset(identifier));
             }
 
+            CheckOperationTypeCastSegmentRestriction(singleOperation);
+
             ODataPathSegment segment = new OperationSegment(singleOperation, resolvedParameters, targetset)
             {
                 Identifier = identifier
@@ -1236,6 +1239,8 @@ namespace Microsoft.OData.UriParser
             {
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(targetEdmType.FullTypeName(), previousEdmType.FullTypeName()));
             }
+
+            CheckTypeCastSegmentRestriction(previous, targetEdmType);
 
             // We want the type of the type segment to be a collection if the previous segment was a collection
             IEdmType actualTypeOfTheTypeSegment = targetEdmType;
@@ -1431,6 +1436,151 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
                 }
             }
+        }
+
+        private void CheckTypeCastSegmentRestriction(ODataPathSegment previous, IEdmType targetEdmType)
+        {
+            Debug.Assert(previous != null);
+            Debug.Assert(targetEdmType != null);
+
+            //  Make sure: cast to itself can pass the validation.
+            IEdmType previousTargetEdmType = previous.TargetEdmType.AsElementType();
+            if (previousTargetEdmType == targetEdmType)
+            {
+                return;
+            }
+
+            string fullTypeName = targetEdmType.FullTypeName();
+
+            // Singleton, for example: ~/Me/NS.Cast
+            SingletonSegment singletonSegment = previous as SingletonSegment;
+            if (singletonSegment != null)
+            {
+                VerifyDerivedTypeConstraints(this.configuration.Model, singletonSegment.Singleton, fullTypeName, "singleton", singletonSegment.Singleton.Name);
+                return;
+            }
+
+            // EntitySet, for example: ~/Users/NS.Cast
+            EntitySetSegment entitySetSegment = previous as EntitySetSegment;
+            if (entitySetSegment != null)
+            {
+                VerifyDerivedTypeConstraints(this.configuration.Model, entitySetSegment.EntitySet, fullTypeName, "entity set", entitySetSegment.EntitySet.Name);
+                return;
+            }
+
+            // EntitySet with key, for example: ~/Users(1)/NS.Cast
+            // Or Navigation Property with key ~/Users(1)/Orders(2)/NS.Cast
+            NavigationPropertySegment navigationPropertySegment;
+            KeySegment keySegment = previous as KeySegment;
+            if (keySegment != null)
+            {
+                ODataPathSegment previousPrevious = this.parsedSegments[this.parsedSegments.Count - 2]; // -2 means skip the "KeySegment"
+                entitySetSegment = previousPrevious as EntitySetSegment;
+                navigationPropertySegment = previousPrevious as NavigationPropertySegment;
+                if (entitySetSegment != null || navigationPropertySegment != null) // entitySet or  Navigation property
+                {
+                    IEdmVocabularyAnnotatable target;
+                    string kind, name;
+                    if (entitySetSegment != null)
+                    {
+                        target = entitySetSegment.EntitySet;
+                        kind = "entity set";
+                        name = entitySetSegment.EntitySet.Name;
+                    }
+                    else
+                    {
+                        target = navigationPropertySegment.NavigationProperty;
+                        kind = "navigation property";
+                        name = navigationPropertySegment.NavigationProperty.Name;
+                    }
+
+                    VerifyDerivedTypeConstraints(this.configuration.Model, target, fullTypeName, kind, name);
+                }
+                return;
+            }
+
+            // Navigation property: ~/Users(1)/Orders/NS.Cast
+            navigationPropertySegment = previous as NavigationPropertySegment;
+            if (navigationPropertySegment != null)
+            {
+                VerifyDerivedTypeConstraints(this.configuration.Model, navigationPropertySegment.NavigationProperty, fullTypeName, "navigation property", navigationPropertySegment.NavigationProperty.Name);
+                return;
+            }
+
+            // Structural property:  ~/Users(1)/Addresses/NS.Cast
+            PropertySegment propertySegment = previous as PropertySegment;
+            if (propertySegment != null)
+            {
+                IEdmProperty edmProperty = propertySegment.Property;
+                // Verify the DerivedTypeConstrictions on property.
+                VerifyDerivedTypeConstraints(this.configuration.Model, edmProperty, fullTypeName, "property", edmProperty.Name);
+
+                // Verify the Type Definition, the following codes should work if fix: https://github.com/OData/odata.net/issues/1326
+                /*
+                IEdmTypeReference propertyTypeReference = edmProperty.Type;
+                if (edmProperty.Type.IsCollection())
+                {
+                    propertyTypeReference = edmProperty.Type.AsCollection().ElementType();
+                }
+
+                if (propertyTypeReference.IsTypeDefinition())
+                {
+                    IEdmTypeDefinition edmTypeDefinition = propertyTypeReference.AsTypeDefinition().TypeDefinition();
+                    VerifyDerivedTypeConstraints(this.configuration.Model, edmTypeDefinition, fullTypeName, "type definition", edmTypeDefinition.FullName());
+                }
+                */
+
+                return;
+            }
+        }
+
+        private void CheckOperationTypeCastSegmentRestriction(IEdmOperation operation)
+        {
+            Debug.Assert(operation != null);
+
+            if (this.parsedSegments == null || !this.parsedSegments.Any())
+            {
+                return;
+            }
+
+            TypeSegment lastTypeSegment = this.parsedSegments.LastOrDefault(s => s is TypeSegment) as TypeSegment;
+            if (lastTypeSegment == null)
+            {
+                return;
+            }
+
+            ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
+            ODataPathSegment previousPrevious = this.parsedSegments.Count >= 2 ? this.parsedSegments[this.parsedSegments.Count - 2] : null;
+
+            if ((lastTypeSegment == previous) || (lastTypeSegment == previousPrevious && previous is KeySegment))
+            {
+                if (!operation.IsBound)
+                {
+                    return;
+                }
+
+                string fullTypeName = lastTypeSegment.TargetEdmType.FullTypeName();
+                IEdmOperationParameter bindingParaemter = operation.Parameters.First();
+                IEdmType bindingType = bindingParaemter.Type.Definition;
+                bindingType = bindingType.AsElementType();
+                if (fullTypeName == bindingType.FullTypeName())
+                {
+                    return;
+                }
+
+                VerifyDerivedTypeConstraints(this.configuration.Model, bindingParaemter, fullTypeName, "operation", operation.Name);
+            }
+        }
+
+        private static void VerifyDerivedTypeConstraints(IEdmModel model, IEdmVocabularyAnnotatable target, string fullTypeName, string kind, string name)
+        {
+            IList<string> derivedTypes = model.GetDerivedTypeConstraints(target);
+            if (derivedTypes == null || derivedTypes.Any(d => d == fullTypeName))
+            {
+                return;
+            }
+
+            throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(fullTypeName, kind, name));
         }
     }
 }
