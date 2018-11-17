@@ -126,6 +126,14 @@
           <Private>True</Private>
         </Reference>
       </ItemGroup>
+      <ItemGroup>
+        <!-- Should remove these references if we update the official version to > 7.5.1 -->
+        <Compile Include="..\..\..\src\Microsoft.Spatial\GeographyFactory.cs" />
+        <Compile Include="..\..\..\src\Microsoft.Spatial\GeographyFactoryOfT.cs" />
+        <Compile Include="..\..\..\src\Microsoft.Spatial\GeometryFactory.cs" />
+        <Compile Include="..\..\..\src\Microsoft.Spatial\GeometryFactoryOfT.cs" />
+        <Compile Include="..\..\..\src\Microsoft.Spatial\SpatialFactory.cs" />
+      </ItemGroup>
     </When>
   </Choose>
   <ItemGroup>
