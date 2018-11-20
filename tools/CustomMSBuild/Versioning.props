@@ -8,7 +8,7 @@
   <PropertyGroup>
     <VersionMajor Condition="'$(VersionMajor)' == ''">7</VersionMajor>
     <VersionMinor Condition="'$(VersionMinor)' == ''">5</VersionMinor>
-    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">1</VersionBuildNumber>
+    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">2</VersionBuildNumber>
     <VersionRelease Condition="'$(VersionRelease)' == ''"></VersionRelease>
   </PropertyGroup>
 
