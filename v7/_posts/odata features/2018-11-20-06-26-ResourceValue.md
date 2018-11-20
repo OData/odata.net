@@ -34,7 +34,11 @@ Because most of OData customers:
 
 Below is the main inheritance of the ODataValue vs ODataItem in ODL v6.x.
 
+![]({{site.baseurl}}/assets/2018-11-20-ODLv6xInheritance .png)
+
 Below is the main inheritance of the ODataValue vs ODataItem in ODL v7.x.
+
+![]({{site.baseurl}}/assets/2018-11-20-ODLv7xInheritance1Class.png)
 
 The main changes from 6.x to 7.x is:
 
