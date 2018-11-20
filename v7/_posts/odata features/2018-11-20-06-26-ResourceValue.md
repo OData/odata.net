@@ -246,6 +246,129 @@ public static string ConvertToUriLiteral(object value, ODataVersion version, IEd
 {% endhighlight %}
 
 ## Read `ODataResourceValue`
+### Read ODataResourceValue in value reader
+
+We should update *[ODataJsonLightPropertyAndValueDeserialier.cs](https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Core/JsonLight/ODataJsonLightPropertyAndValueDeserializer.cs)* to read the resource value.
+{% highlight csharp %}
+private ODataResourceValue ReadResourceValue(
+            bool insideJsonObjectValue,
+            bool insideComplexValue,
+            string propertyName,
+            IEdmStructuredTypeReference structuredTypeReference,
+            string payloadTypeName,
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector)
+{…}
+{% endhighlight %}
+This method is the key method in reading scenario, it should support to:
+* Read its own instance annotation
+* Read all properties value, include nested resource value.
+
+The above method is called from:
+
+{% highlight csharp %}
+private object ReadNonEntityValueImplementation(…)
+{
+    ......
+
+    case EdmTypeKind.Complex: // nested complex
+    case EdmTypeKind.Entity: // nested entity
+         ......
+	 result = ReadResourceValue(......);
+	 break;
+}
+{% endhighlight %}
+
+For the collection of resource, owing that `ReadCollectionValue()` will call `ReadNonEntityValueImplemenation(…)` to read its elements, so, if the item is `entity or complex`, it will return `DataResourceValue`. We don’t need to change any codes.
+
+### Read ODataResourceValue in instance annotation reader
+
+*[ODataJsonLightPropertyAndValueDeserialier.cs](https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Core/JsonLight/ODataJsonLightPropertyAndValueDeserializer.cs)* has the following method to read instance annotation value:
+{% highlight csharp %}
+internal object ReadCustomInstanceAnnotationValue (PropertyAndAnnotationCollector propertyAndAnnotationCollector, string name)
+{
+object customInstanceAnnotationValue = this.ReadNonEntityValueImplementation(…);
+}
+{% endhighlight %}
+So, we don’t need to change any codes for it.
+
+### Read ODataResourceValue in collection reader
+*[ODataJsonLightCollectionDeserializer.cs](https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Core/JsonLight/ODataJsonLightCollectionDeserializer.cs)* will call `ReadNonEntityValueImplementation`. We don’t need change any code.
+
+However, there’s some validation codes that need to change.
+
+### Read ODataResourceValue as OData error value
+
+*[ODataJsonLightErrorDeserializer.cs](https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Core/JsonLight/ODataJsonLightErrorDeserializer.cs)* will call `ReadNonEntityValueImplementation`. We don’t need change any code.
+
+### Read in Resource deserializer
+
+*[ODataJsonLightResourceDeserializer.cs](https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Core/JsonLight/ODataJsonLightResourceDeserializer.cs)* will call `ReadNonEntityValueImplementation` to read the value of its property.
+However, 
+* It is not used to read the “complex and collection of complex”
+* It is not used to read the “navigation property”
+* It’s ONLY used it to read the primitive, enum and collection of them.
+And, for the “complex and collection of complex”, we still create nested resource info. So, we don’t need to change anything.
+
+### Read resource in parameter
+
+*[ODataJsonLightParameterDeserialzer.cs](https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Core/JsonLight/ODataJsonLightParameterDeserializer.cs)* is used to read parameter value. So far, for the entity, complex, it only returns a parameter state as “Resource”, for the collection of them, return a parameter state of “ResourceSet” as below:
+
+* Primitive type, read as primitive value.
+* Enum type, read as “ODataEnumValue”
+* TypeDefintion, read as “TypeDefinition” value
+* Complex, Entity, read nothing, just return “ReaderState.Resource”
+* Collection, 
+  * If element is primitive, read as primitive value.
+  * If element is enum, read nothing, just return “ReaderState.Collection”
+  * If element is complex, entity, read nothing, just return “ReaderState.ResourceSet”.
+So, we should have a configuration enable customer to change the logic.
+For example: On ODataMessageReader, we can enable customer to create a parameter reader which can read all parameter as value.
+{% highlight csharp %}
+public ODataParameterReader CreateODataParameterReader(IEdmOperation operation, bool readAllAsValue)
+{
+  ......
+}
+{% endhighlight %}
+So, if customer call the above method using *true* for `readAllAsValue`, he can get:
+* Complex, Entity, read as “ODataResourceValue”
+* Collection, read as “ODataCollectionValue”.
+
+### Read Top-Level Property
+
+*[ODataJsonLightPropertyAndValueDeserializer.cs](https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Core/JsonLight/ODataJsonLightPropertyAndValueDeserializer.cs)* can read the top-level property into a ODataProperty. So, we can read a top-level complex, entity, or collection or complex, entity property.
+
+### Convert ODatResourceValue from Url literal 
+We should convert the `ODataResourceValue` from JSON Uri literal in `ConvertFromUriLiteral(...)` in *[ODataUriUtils.cs](https://github.com/OData/odata.net/blob/master/src/Microsoft.OData.Core/Uri/ODataUriUtils.cs#L44)*.
 
 
 ## 4. Open Questions
+
+### What’s the string output if convert a null “ODataCollectionValue”?
+So far, if you create:
+{% highlight csharp %}
+ODataCollectionValue value = null;
+String str = ConvertToUriLiteral(value, ODataVersion.V4, model);
+Assert.Equal("null", str); // true?
+{% endhighlight %}
+However, it should be "[]" ? 
+
+### Do we write the instance annotation if call `ConvertToUriLiteral`?
+In the 6.x version, if a complex value has instance annotations, those instance annotations will not write out when we call like:
+{% highlight csharp %}
+ODataComplexValue  value = new ODataComplexValue()
+{
+       TypeName = "TestModel.Address",
+       Properties = new ODataProperty[] { new ODataProperty() { Name = "Street", Value = "street" }} ,
+       InstanceAnnotations = new[]
+           {
+                   new ODataInstanceAnnotation("Custom.Ok", new ODataComplexValue
+                     {
+                          TypeName = "TestModel.Address",
+                          Properties = new ODataProperty[] { new ODataProperty() { Name = "Street", Value = "street" }})
+                        }
+           }
+
+string str = ODataUriUtils.ConvertToUriLiteral(value, ODataVersion.40, model);
+{% endhighlight %}
+
+Where, `str` doesn’t include the instance annotation? But, we should include the instance annotation.
