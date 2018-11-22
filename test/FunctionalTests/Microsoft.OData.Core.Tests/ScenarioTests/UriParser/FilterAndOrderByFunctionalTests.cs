@@ -1784,6 +1784,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be(collection);
         }
 
+        [Theory]
+        [InlineData("('abc'd, 'xy,z')", "'abc'd")]
+        [InlineData("('xy,z', 'abc'd)", "'xy")]
+        public void FilterWithInOperationWithMalformCollection(string collection, string errorItem)
+        {
+            string filterClause = $"SSN in {collection}";
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.StringItemShouldBeQuoted(errorItem));
+        }
+
         [Fact]
         public void FilterWithInOperationWithParensStringCollection_EscapedSingleQuote()
         {

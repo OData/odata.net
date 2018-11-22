@@ -170,10 +170,16 @@ namespace Microsoft.OData.UriParser
         /// <returns>The double-quoted string with single quotes properly escaped.</returns>
         private static string NormalizeStringItem(string str)
         {
+            // Validate the string item is quoted properly.
+            if ( !(    str[0] == '\'' && str[str.Length-1] == '\''
+                    || str[0] == '"'  && str[str.Length-1] == '"')
+                )
+            {
+                throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(str));
+            }
+
             // Skip conversion if the items are already in double-quote format (for backward compatibility).
             // Note that per ABNF, query option strings should use single quotes.
-            Debug.Assert(str[0] == '\'' || str[0] == '"', "string needs to be single/double quoted.");
-
             string convertedString = str;
             if (str[0] == '\'')
             {
