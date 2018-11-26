@@ -559,7 +559,8 @@ namespace Microsoft.OData.JsonLight
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapesed into a single array value.
                     // Only end the array scope if we have an array based resource set in scope
-                    if (!(CurrentScope.Item is ODataResourceSetBase resourceSetBase) || !resourceSetBase.CountOnly)
+                    ODataResourceSetBase resourceSetBase = CurrentScope.Item as ODataResourceSetBase;
+                    if (resourceSetBase == null || !resourceSetBase.CountOnly)
                     {
                         this.jsonWriter.EndArrayScope();
                     }
