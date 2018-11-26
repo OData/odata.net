@@ -59,9 +59,9 @@ namespace Microsoft.OData
             }
         }
 
-    /// <summary>Gets or sets the number of items in the resource set.</summary>
-    /// <returns>The number of items in the resource set.</returns>
-    public long? Count
+        /// <summary>Gets or sets the number of items in the resource set.</summary>
+        /// <returns>The number of items in the resource set.</returns>
+        public long? Count
         {
             get;
             set;
@@ -70,6 +70,15 @@ namespace Microsoft.OData
         /// <summary>Gets or sets the URI that identifies the entity set represented by the resource set.</summary>
         /// <returns>The URI that identifies the entity set represented by the resource set.</returns>
         public Uri Id
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Whether this is count only
+        /// </summary>
+        public bool CountOnly
         {
             get;
             set;

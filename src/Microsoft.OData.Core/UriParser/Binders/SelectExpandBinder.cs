@@ -217,12 +217,17 @@ namespace Microsoft.OData.UriParser
             }
 
             bool isRef = false;
+            bool isCount = false;
             if (firstNonTypeToken.NextToken != null)
             {
                 // lastly... make sure that, since we're on a NavProp, that the next token isn't null.
                 if (firstNonTypeToken.NextToken.Identifier == UriQueryConstants.RefSegment)
                 {
                     isRef = true;
+                }
+                else if (firstNonTypeToken.NextToken.Identifier == UriQueryConstants.CountSegment)
+                {
+                    isCount = true;
                 }
                 else
                 {
@@ -290,6 +295,10 @@ namespace Microsoft.OData.UriParser
             if (isRef)
             {
                 return new ExpandedReferenceSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, computeOption, applyOption);
+            }
+            if (isCount)
+            {
+                return new ExpandedCountSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption);
             }
 
             SelectExpandClause subSelectExpand;

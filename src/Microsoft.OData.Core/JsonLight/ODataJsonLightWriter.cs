@@ -468,14 +468,18 @@ namespace Microsoft.OData.JsonLight
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);
 
-                    // Write the odata type.
-                    this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, expectedResourceTypeName, isUndeclared);
+                    // If we are only printing the count, then do not start an array.
+                    if (!resourceSet.CountOnly)
+                    {
+                        // Write the odata type.
+                        this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, expectedResourceTypeName, isUndeclared);
 
-                    // And then write the property name to start the value.
-                    this.jsonWriter.WriteName(propertyName);
+                        // And then write the property name to start the value.
+                        this.jsonWriter.WriteName(propertyName);
 
-                    // Start array which will hold the entries in the resource set.
-                    this.jsonWriter.StartArrayScope();
+                        // Start array which will hold the entries in the resource set.
+                        this.jsonWriter.StartArrayScope();
+                    }
                 }
                 else
                 {
@@ -554,7 +558,11 @@ namespace Microsoft.OData.JsonLight
                     // NOTE: in requests we will only write the EndArray of a resource set
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapesed into a single array value.
-                    this.jsonWriter.EndArrayScope();
+                    // Only end the array scope if we have an array based resource set in scope
+                    if (!(CurrentScope.Item is ODataResourceSetBase resourceSetBase) || !resourceSetBase.CountOnly)
+                    {
+                        this.jsonWriter.EndArrayScope();
+                    }
 
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);

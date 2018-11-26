@@ -57,5 +57,14 @@ namespace Microsoft.OData.UriParser
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Handle an ExpandedCountSelectItem
+        /// </summary>
+        /// <param name="item">the item to Handle</param>
+        public virtual void Handle(ExpandedCountSelectItem item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
