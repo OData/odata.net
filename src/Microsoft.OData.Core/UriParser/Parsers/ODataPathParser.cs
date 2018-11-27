@@ -1532,13 +1532,24 @@ namespace Microsoft.OData.UriParser
 
                 return;
             }
+
+            // operation: ~/Users(1)/NS.Operation(...)/NS.Cast
+            // TODO: we should support to verify the casting for the operation return type.
+            // however, ODL doesn't support to annotation on the return type, see https://github.com/OData/odata.net/issues/52
+            // Once ODL supports to annotation on the return type, we should support to verify it.
+            /*
+            OperationSegment operationSegment = previous as OperationSegment;
+            if (operationSegment != null)
+            {
+            }
+            */
         }
 
         private void CheckOperationTypeCastSegmentRestriction(IEdmOperation operation)
         {
             Debug.Assert(operation != null);
 
-            if (this.parsedSegments == null || !this.parsedSegments.Any())
+            if (this.parsedSegments == null)
             {
                 return;
             }
@@ -1574,7 +1585,7 @@ namespace Microsoft.OData.UriParser
 
         private static void VerifyDerivedTypeConstraints(IEdmModel model, IEdmVocabularyAnnotatable target, string fullTypeName, string kind, string name)
         {
-            IList<string> derivedTypes = model.GetDerivedTypeConstraints(target);
+            IEnumerable<string> derivedTypes = model.GetDerivedTypeConstraints(target);
             if (derivedTypes == null || derivedTypes.Any(d => d == fullTypeName))
             {
                 return;

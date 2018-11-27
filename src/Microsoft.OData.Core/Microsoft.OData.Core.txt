@@ -819,7 +819,7 @@ PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.
 PathParser_TypeMustBeRelatedToSet=The type '{0}' does not inherit from and is not a base type of '{1}'. The type of '{2}' must be related to the Type of the EntitySet.
 PathParser_TypeCastOnlyAllowedAfterStructuralCollection=Type cast segment '{0}' after a collection which is not of entity or complex type is not allowed.
-PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint=Type cast segment '{0}' on {1} '{2}' is not allowed from the Org.OData.Validation.V1.DerivedTypeConstraint annotation.
+PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint=Type cast segment '{0}' on {1} '{2}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation.
 
 ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink=A resource set may contain a next page link, a delta link or neither, but must not contain both.
 
