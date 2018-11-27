@@ -1935,7 +1935,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IList`1[[System.String]] GetDerivedTypeConstraints (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target)
+	public static System.Collections.Generic.IEnumerable`1[[System.String]] GetDerivedTypeConstraints (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target)
 
 	[
 	ExtensionAttribute(),

@@ -5213,7 +5213,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Type cast segment '{0}' on '{1}' '{2}' is not allowed from the Org.OData.Validation.V1.DerivedTypeConstraint annotation."
+        /// A string like "Type cast segment '{0}' on {1} '{2}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation."
         /// </summary>
         internal static string PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(object p0, object p1, object p2) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint, p0, p1, p2);
