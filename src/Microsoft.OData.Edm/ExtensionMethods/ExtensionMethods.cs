@@ -763,7 +763,7 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model referenced to.</param>
         /// <param name="target">The target annotatable to find annotation.</param>
         /// <returns>Null or a collection string of qualifed type name.</returns>
-        public static IList<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmVocabularyAnnotatable target)
+        public static IEnumerable<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmVocabularyAnnotatable target)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(target, "target");
@@ -774,7 +774,7 @@ namespace Microsoft.OData.Edm
                 IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
                 if (collectionExpression != null && collectionExpression.Elements != null)
                 {
-                    return collectionExpression.Elements.OfType<IEdmStringConstantExpression>().Select(e => e.Value).ToList();
+                    return collectionExpression.Elements.OfType<IEdmStringConstantExpression>().Select(e => e.Value);
                 }
             }
 
