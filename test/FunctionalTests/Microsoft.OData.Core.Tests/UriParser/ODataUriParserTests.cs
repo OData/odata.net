@@ -1008,5 +1008,32 @@ namespace Microsoft.OData.Tests.UriParser
             subComputes[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
         }
         #endregion
+
+        private sealed class RefModelUriResolver : ODataUriResolver
+        {
+            public override IEdmNavigationSource ResolveNavigationSource(IEdmModel model, string identifier)
+            {
+                return model.ReferencedModels.Single(m => m.EntityContainer != null).FindDeclaredEntitySet(identifier);
+            }
+            public override IEdmSchemaType ResolveType(IEdmModel model, string typeName)
+            {
+                return model.ReferencedModels.Single(m => m.EntityContainer != null).FindType(typeName);
+            }
+        }
+
+        [Fact]
+        public void ParseFullyQualifiedEnumWithResolver()
+        {
+            var rootModel = new EdmModel();
+            rootModel.AddReferencedModel(HardCodedTestModel.TestModel);
+
+            string fullUriString = "http://host/Pet2Set?$filter=PetColorPattern eq Fully.Qualified.Namespace.ColorPattern'Red'";
+            ODataUriParser parser = new ODataUriParser(rootModel, ServiceRoot, new Uri(fullUriString));
+            parser.Resolver = new RefModelUriResolver();
+            var uri = parser.ParseUri();
+
+            Uri resultUri = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(fullUriString, Uri.UnescapeDataString(resultUri.OriginalString));
+        }
     }
 }
