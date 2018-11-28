@@ -236,5 +236,8 @@ namespace Microsoft.OData
 
         /// <summary>the compute query option.</summary>
         internal const string QueryOptionCompute = "$compute";
+
+        /// <summary>"expand" keyword for $apply.</summary>
+        internal const string KeywordExpand = "expand";
     }
 }

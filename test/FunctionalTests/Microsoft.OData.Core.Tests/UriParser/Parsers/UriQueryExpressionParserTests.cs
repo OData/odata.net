@@ -676,5 +676,78 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action accept2 = () => token.Accept<ComputeExpression>(null);
             accept2.ShouldThrow<NotImplementedException>();
         }
+
+        [Fact]
+        public void ParseApplyWithExpand()
+        {
+            string apply = "expand(Sales)";
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            ExpandToken expand = (ExpandToken)actual.First();
+            expand.ExpandTerms.Should().HaveCount(1);
+
+            ExpandTermToken expandTerm = expand.ExpandTerms.First();
+            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
+        }
+
+        [Fact]
+        public void ParseApplyWithExpandFollowedByAggregate()
+        {
+            string apply = "expand(Sales)/aggregate($count as Count)";
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(2);
+
+            ExpandToken expand = (ExpandToken)actual.First();
+            expand.ExpandTerms.Should().HaveCount(1);
+
+            ExpandTermToken expandTerm = expand.ExpandTerms.First();
+            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
+
+            AggregateToken aggregate = (AggregateToken)actual.Last();
+            aggregate.AggregateExpressions.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void ParseApplyWithFilteredExpand()
+        {
+            string apply = "expand(Sales, filter(Amount gt 3))";
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            ExpandToken expand = (ExpandToken)actual.First();
+            expand.ExpandTerms.Should().HaveCount(1);
+
+            ExpandTermToken expandTerm = expand.ExpandTerms.First();
+            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
+            expandTerm.FilterOption.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ParseApplyWithNestedExpand()
+        {
+            string apply = "expand(Sales, expand(Customer))";
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            ExpandToken expand = (ExpandToken)actual.First();
+            expand.ExpandTerms.Should().HaveCount(1);
+
+            ExpandTermToken expandTerm = expand.ExpandTerms.First();
+            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
+            expandTerm.ExpandOption.Should().NotBeNull();
+            expandTerm.ExpandOption.ExpandTerms.Should().HaveCount(1);
+            expandTerm = expandTerm.ExpandOption.ExpandTerms.First();
+            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customer");
+        }
     }
 }
