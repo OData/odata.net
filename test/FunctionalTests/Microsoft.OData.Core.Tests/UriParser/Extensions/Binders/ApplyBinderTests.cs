@@ -314,6 +314,34 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             entitySetAggregate.Should().NotBeNull();
         }
 
+        [Fact]
+        public void BindApplyWithNestedExpandReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens =
+                _parser.ParseApply(
+                    "expand(MyPaintings, filter(FrameColor eq 'Red'), expand(Owner))");
+
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState, V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            ExpandTransformationNode expand = actual.Transformations.First() as ExpandTransformationNode;
+            expand.Should().NotBeNull();
+            expand.ExpandClause.Should().NotBeNull();
+            expand.ExpandClause.SelectedItems.Should().HaveCount(1);
+            ExpandedNavigationSelectItem expandItem = expand.ExpandClause.SelectedItems.First() as ExpandedNavigationSelectItem;
+            expandItem.Should().NotBeNull();
+            expandItem.NavigationSource.Name.ShouldBeEquivalentTo("Paintings");
+            expandItem.SelectAndExpand.Should().NotBeNull();
+            expandItem.SelectAndExpand.SelectedItems.Should().HaveCount(1);
+            expandItem.FilterOption.Should().NotBeNull();
+        }
+
         private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
 
         private static SingleValueNode BindMethodReturnsBooleanPrimitive(QueryToken token)
