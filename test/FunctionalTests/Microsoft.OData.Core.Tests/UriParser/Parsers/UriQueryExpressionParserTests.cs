@@ -732,7 +732,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ParseApplyWithNestedExpand()
         {
-            string apply = "expand(Sales, expand(Customer))";
+            string apply = "expand(Sales, expand(Customers))";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
             actual.Should().NotBeNull();
             actual.Should().HaveCount(1);
@@ -747,7 +747,65 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             expandTerm.ExpandOption.ExpandTerms.Should().HaveCount(1);
             expandTerm = expandTerm.ExpandOption.ExpandTerms.First();
             expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customer");
+            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customers");
+        }
+
+        [Fact]
+        public void ParseApplyWithMultipleNestedExpands()
+        {
+            string apply = "expand(Sales, expand(Customers), expand(Cashiers))";
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            ExpandToken expand = (ExpandToken)actual.First();
+            expand.ExpandTerms.Should().HaveCount(1);
+
+            ExpandTermToken expandTerm = expand.ExpandTerms.First();
+            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
+            expandTerm.ExpandOption.Should().NotBeNull();
+            expandTerm.ExpandOption.ExpandTerms.Should().HaveCount(2);
+            ExpandTermToken expandTerm1 = expandTerm.ExpandOption.ExpandTerms.First();
+            expandTerm1.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm1.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customers");
+
+            ExpandTermToken expandTerm2 = expandTerm.ExpandOption.ExpandTerms.Last();
+            expandTerm2.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm2.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Cashiers");
+        }
+
+        [Fact]
+        public void ParseApplyWithMultipleNestedExpandFiltersAndLevels()
+        {
+            string apply = "expand(Sales, expand(Customers, filter(City eq 'Redmond')), expand(Cashiers, expand(Stores, filter(City eq 'Seattle'))))";
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            ExpandToken expand = (ExpandToken)actual.First();
+            expand.ExpandTerms.Should().HaveCount(1);
+
+            ExpandTermToken expandTerm = expand.ExpandTerms.First();
+            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
+            expandTerm.ExpandOption.Should().NotBeNull();
+            expandTerm.ExpandOption.ExpandTerms.Should().HaveCount(2);
+            ExpandTermToken expandTerm1 = expandTerm.ExpandOption.ExpandTerms.First();
+            expandTerm1.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm1.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customers");
+            expandTerm1.FilterOption.Should().NotBeNull();
+
+            ExpandTermToken expandTerm2 = expandTerm.ExpandOption.ExpandTerms.Last();
+            expandTerm2.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
+            expandTerm2.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Cashiers");
+            expandTerm2.ExpandOption.Should().NotBeNull();
+
+            expandTerm2.ExpandOption.ExpandTerms.Should().HaveCount(1);
+            ExpandTermToken expandTerm3 = expandTerm2.ExpandOption.ExpandTerms.First();
+            expandTerm3.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Stores");
+            expandTerm3.FilterOption.Should().NotBeNull();
+
         }
     }
 }

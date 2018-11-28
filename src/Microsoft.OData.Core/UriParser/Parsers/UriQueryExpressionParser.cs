@@ -331,7 +331,10 @@ namespace Microsoft.OData.UriParser
                             filterToken= this.ParseApplyFilter();
                             break;
                         case ExpressionConstants.KeywordExpand:
-                            nestedExpand = ParseExpand();
+                            ExpandToken tempNestedExpand = ParseExpand();
+                            nestedExpand = nestedExpand == null 
+                                ? tempNestedExpand 
+                                : new ExpandToken(nestedExpand.ExpandTerms.Concat(tempNestedExpand.ExpandTerms));
                             break;
                         default:
                             throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
