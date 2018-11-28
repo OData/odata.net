@@ -32,6 +32,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             this.webType = new EdmEntityType("NS", "Web");
             this.webType.AddStructuralProperty("WebId", EdmPrimitiveTypeKind.Int32);
             this.webType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            this.webType.AddStructuralProperty("Data", EdmPrimitiveTypeKind.PrimitiveType);
             referencedModel.AddElement(this.webType);
 
             this.defaultContainer = new EdmEntityContainer("NS", "DefaultContainer_sub");
@@ -50,6 +51,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             {
                 new ODataProperty {Name = "WebId", Value = 10},
                 new ODataProperty {Name = "Name", Value = "SingletonWeb" },
+                new ODataProperty {Name = "Data", Value = true },
             };
             const string expectedPayload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
@@ -57,7 +59,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 "\"@odata.id\":\"MySingleton\"," +
                 "\"@odata.editLink\":\"MySingleton\"," +
                 "\"WebId\":10," +
-                "\"Name\":\"SingletonWeb\"}";
+                "\"Name\":\"SingletonWeb\"," +
+                "\"Data\":true}";
             this.WriteEntryAndValidatePayloadWithoutModel(entry, expectedPayload);
             this.WriteEntryAndValidatePayloadWithModel(entry, expectedPayload);
         }
