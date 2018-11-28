@@ -1199,6 +1199,13 @@ namespace Microsoft.OData.Metadata
                 return true;
             }
 
+            // If the base type is "Edm.ComplexType" or "Edm.EntityType", any other structure type can assign to it.
+            if (baseType == EdmCoreModel.Instance.GetComplexType() ||
+                baseType == EdmCoreModel.Instance.GetEntityType())
+            {
+                return true;
+            }
+
             if (!baseType.IsODataEntityTypeKind() && !baseType.IsODataComplexTypeKind())
             {
                 // we only support complex and entity type inheritance.
@@ -1233,6 +1240,12 @@ namespace Microsoft.OData.Metadata
             Debug.Assert(subtype != null, "subtype != null");
 
             if (baseType.IsEquivalentTo(subtype))
+            {
+                return true;
+            }
+
+            // If the base type is "Edm.Primitive", any other primitive type can assign to it.
+            if (baseType.PrimitiveKind == EdmPrimitiveTypeKind.PrimitiveType)
             {
                 return true;
             }

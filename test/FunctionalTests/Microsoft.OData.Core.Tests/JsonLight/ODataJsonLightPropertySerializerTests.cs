@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
@@ -57,6 +58,7 @@ namespace Microsoft.OData.Tests.JsonLight
             edmEntityType.AddStructuralProperty("MyStringProperty", myStringReference);
             edmEntityType.AddStructuralProperty("TimeOfDayProperty", EdmPrimitiveTypeKind.TimeOfDay);
             edmEntityType.AddStructuralProperty("DateProperty", EdmPrimitiveTypeKind.Date);
+            edmEntityType.AddStructuralProperty("PrimitiveProperty", EdmPrimitiveTypeKind.PrimitiveType);
 
             edmModel.AddElement(edmEntityType);
 
@@ -266,6 +268,23 @@ namespace Microsoft.OData.Tests.JsonLight
             this.SerializeProperty(this.entityType, this.declaredPropertyDate).Should().Contain("\"DateProperty\":\"2014-09-17\"");
         }
         #endregion
+
+        public static IEnumerable<object[]> PrimitiveData => new List<object[]>
+        {
+            new object[] { 42,                     "{\"PrimitiveProperty@odata.type\":\"#Int32\",\"PrimitiveProperty\":42}" },
+            new object[] { new Date(2018, 11, 28), "{\"PrimitiveProperty@odata.type\":\"#Date\",\"PrimitiveProperty\":\"2018-11-28\"}" },
+            new object[] { 8.9,                    "{\"PrimitiveProperty@odata.type\":\"#Double\",\"PrimitiveProperty\":8.9}" },
+            new object[] { true,                   "{\"PrimitiveProperty@odata.type\":\"#Boolean\",\"PrimitiveProperty\":true}" }
+        };
+
+        [Theory]
+        [MemberData("PrimitiveData")]
+        public void WritingEdmPrimitiveTypePropertyShouldWork(object value, string expect)
+        {
+            var primitiveTypeProperty = new ODataProperty { Name = "PrimitiveProperty", Value = value };
+            string actual = this.SerializeProperty(this.entityType, primitiveTypeProperty);
+            Assert.Equal(expect, actual);
+        }
 
         #region Serializing regular properties
 
