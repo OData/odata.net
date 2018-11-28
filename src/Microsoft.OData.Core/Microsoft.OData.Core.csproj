@@ -82,6 +82,7 @@
     <Compile Include="DuplicatePropertyNameChecker.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="BindingPathHelper.cs" />
+    <Compile Include="UriParser\Aggregation\ExpandTransformationNode.cs" />
     <Compile Include="UriParser\Binders\ComputeBinder.cs" />
     <Compile Include="UriParser\Binders\InBinder.cs" />
     <Compile Include="UriParser\Aggregation\AggregateTokenBase.cs" />
