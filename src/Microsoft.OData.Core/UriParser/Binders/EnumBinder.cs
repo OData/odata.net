@@ -23,11 +23,12 @@ namespace Microsoft.OData.UriParser
         /// <param name="dottedIdentifierToken">a dotted identifier token</param>
         /// <param name="parent">the parent node</param>
         /// <param name="state">the current state of the binding algorithm</param>
+        /// <param name="resolver">ODataUriResolver</param>
         /// <param name="boundEnum">the output bound enum node</param>
         /// <returns>true if we bound an enum node, false otherwise.</returns>
-        internal static bool TryBindDottedIdentifierAsEnum(DottedIdentifierToken dottedIdentifierToken, SingleValueNode parent, BindingState state, out QueryNode boundEnum)
+        internal static bool TryBindDottedIdentifierAsEnum(DottedIdentifierToken dottedIdentifierToken, SingleValueNode parent, BindingState state, ODataUriResolver resolver, out QueryNode boundEnum)
         {
-            return TryBindIdentifier(dottedIdentifierToken.Identifier, null, state.Model, out boundEnum);
+            return TryBindIdentifier(dottedIdentifierToken.Identifier, null, state.Model, resolver, out boundEnum);
         }
 
         /// <summary>
@@ -39,6 +40,19 @@ namespace Microsoft.OData.UriParser
         /// <param name="boundEnum">an enum node .</param>
         /// <returns>true if we bound an enum for this token.</returns>
         internal static bool TryBindIdentifier(string identifier, IEdmEnumTypeReference typeReference, IEdmModel modelWhenNoTypeReference, out QueryNode boundEnum)
+        {
+            return TryBindIdentifier(identifier, typeReference, modelWhenNoTypeReference, null, out boundEnum);
+        }
+        /// <summary>
+        /// Try to bind an identifier to a EnumNode
+        /// </summary>
+        /// <param name="identifier">the identifier to bind</param>
+        /// <param name="typeReference">the enum typeReference</param>
+        /// <param name="modelWhenNoTypeReference">the current model when no enum typeReference.</param>
+        /// <param name="resolver">ODataUriResolver .</param>
+        /// <param name="boundEnum">an enum node .</param>
+        /// <returns>true if we bound an enum for this token.</returns>
+        internal static bool TryBindIdentifier(string identifier, IEdmEnumTypeReference typeReference, IEdmModel modelWhenNoTypeReference, ODataUriResolver resolver, out QueryNode boundEnum)
         {
             boundEnum = null;
             string text = identifier;
@@ -67,7 +81,7 @@ namespace Microsoft.OData.UriParser
                 ?
                (IEdmEnumType)typeReference.Definition
                 :
-                UriEdmHelpers.FindEnumTypeFromModel(modelWhenNoTypeReference, namespaceAndType);
+                UriEdmHelpers.FindEnumTypeFromModel(modelWhenNoTypeReference, namespaceAndType, resolver);
             if (enumType == null)
             {
                 return false;

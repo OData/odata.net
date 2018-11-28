@@ -69,7 +69,7 @@ namespace Microsoft.OData.UriParser
                 {
                     // check if it is enum or not
                     QueryNode enumNode;
-                    if (EnumBinder.TryBindDottedIdentifierAsEnum(dottedIdentifierToken, parentAsSingleResource, state, out enumNode))
+                    if (EnumBinder.TryBindDottedIdentifierAsEnum(dottedIdentifierToken, parentAsSingleResource, state, this.Resolver, out enumNode))
                     {
                         return enumNode;
                     }
