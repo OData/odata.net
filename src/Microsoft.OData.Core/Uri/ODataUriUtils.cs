@@ -61,6 +61,11 @@ namespace Microsoft.OData
 
             lexer.TryPeekNextToken(out token, out error);
 
+            if (token.Kind == ExpressionTokenKind.BracedExpression && typeReference != null && typeReference.IsStructured())
+            {
+                return ODataUriConversionUtils.ConvertFromResourceValue(value, model, typeReference);
+            }
+
             if (token.Kind == ExpressionTokenKind.BracketedExpression)
             {
                 return ODataUriConversionUtils.ConvertFromCollectionValue(value, model, typeReference);

@@ -757,7 +757,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*collectionValidator*/ null,
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ true,
-                /*insideComplexValue*/ false,
+                /*insideResourceValue*/ false,
                 /*propertyName*/ null);
             action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
         }
@@ -776,7 +776,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*collectionValidator*/ null,
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ true,
-                /*insideComplexValue*/ false,
+                /*insideResourceValue*/ false,
                 /*propertyName*/ null);
             action.ShouldThrow<ODataException>().WithMessage("Value '123456789' was either too large or too small for a 'NS.UInt16'.");
         }

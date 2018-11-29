@@ -194,7 +194,7 @@ namespace Microsoft.OData.JsonLight
                 collectionValidator,
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
+                /*insideResourceValue*/ false,
                 /*propertyName*/ null);
 
             this.JsonReader.AssertNotBuffering();

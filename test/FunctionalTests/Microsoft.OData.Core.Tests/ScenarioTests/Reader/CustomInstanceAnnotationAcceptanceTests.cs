@@ -20,7 +20,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
     {
         private static readonly ODataPrimitiveValue PrimitiveValue1 = new ODataPrimitiveValue(123);
         private static readonly ODataPrimitiveValue PrimitiveValue2 = new ODataPrimitiveValue(Guid.Empty);
+        private static readonly ODataResourceValue ResourceValue1 = new ODataResourceValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" };
+        private static readonly ODataResourceValue ResourceValue2 = new ODataResourceValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" } }, TypeName = "TestNamespace.TestComplexType" };
         private static readonly ODataCollectionValue PrimitiveCollectionValue = new ODataCollectionValue { Items = new[] { "StringValue1", "StringValue2" }, TypeName = "Collection(String)" };
+        private static readonly ODataCollectionValue ComplexCollectionValue = new ODataCollectionValue { Items = new[] { ResourceValue1, ResourceValue2 }, TypeName = "Collection(TestNamespace.TestComplexType)" };
 
         private static readonly EdmModel Model;
         private static readonly EdmEntitySet EntitySet;
@@ -232,11 +235,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                 "\"@Custom.GuidAnnotation\":\"00000000-0000-0000-0000-000000000000\"," +
                 "\"value\":[" +
                     "{" +
+                        "\"@Custom.ComplexAnnotation\":{\"@odata.type\":\"#TestNamespace.TestComplexType\",\"StringProperty\":\"StringValue1\"}," +
                         "\"ID\":1," +
                         "\"Custom.PrimitiveCollectionAnnotation@odata.type\":\"#Collection(String)\"," +
                         "\"@Custom.PrimitiveCollectionAnnotation\":[\"StringValue1\",\"StringValue2\"]" +
                     "}" +
-                "]" +
+                "]," +
+                "\"Custom.ComplexCollectionAnnotation@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"," +
+                "\"@Custom.ComplexCollectionAnnotation\":[{\"StringProperty\":\"StringValue1\"},{\"StringProperty\":\"StringValue2\"}]" +
             "}";
 
             WriteCustomInstanceAnnotationToFeedAndEntry(FeedWithCustomInstanceAnnotationInJsonLight, ODataFormat.Json);
@@ -269,6 +275,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
                 // Add instance annotations to the entry.
                 var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.ComplexAnnotation", ResourceValue1));
+                entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("ShouldSkip.ComplexAnnotation", ResourceValue2));
 
                 // Writes instance annotations at the beginning of the entry
                 odataWriter.WriteStart(entryToWrite);
@@ -280,6 +288,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                 // The writer remembers which instance annotations in the collection has been written
                 // and only write out the unwritten ones since WriteStart() to the end of the entry.
                 odataWriter.WriteEnd();
+
+                // Add more instance annotations to the feed.
+                feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.ComplexCollectionAnnotation", ComplexCollectionValue));
+                feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("ShouldSkip.ComplexCollectionAnnotation", ComplexCollectionValue));
 
                 // The writer remembers which instance annotations in the collection has been written
                 // and only write out the unwritten ones since WriteStart() to the end of the feed.
