@@ -67,6 +67,13 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return;
             }
 
+            ODataResourceValue resourceValue = objectModelItem as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                this.VisitResourceValue(resourceValue);
+                return;
+            }
+
             ODataCollectionValue collectionValue = objectModelItem as ODataCollectionValue;
             if (collectionValue != null)
             {
@@ -282,6 +289,22 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="operation">The operation to visit.</param>
         protected virtual void VisitODataOperation(ODataOperation operation)
         {
+        }
+
+        /// <summary>
+        /// Visits a resource value item.
+        /// </summary>
+        /// <param name="resourceValue">The resource value to visit.</param>
+        protected virtual void VisitResourceValue(ODataResourceValue resourceValue)
+        {
+            var properties = resourceValue.Properties;
+            if (properties != null)
+            {
+                foreach (var property in properties)
+                {
+                    this.Visit(property);
+                }
+            }
         }
 
         /// <summary>

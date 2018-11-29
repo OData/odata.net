@@ -1283,7 +1283,7 @@ namespace Microsoft.OData.JsonLight
                 /*collectionValidator*/ null,
                 nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                 /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
+                /*insideResourceValue*/ false,
                 edmProperty.Name);
 
             if (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
@@ -1324,9 +1324,9 @@ namespace Microsoft.OData.JsonLight
             }
 
             object propertyValue = null;
-            bool insideComplexValue = false;
+            bool insideResourceValue = false;
             string outerPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, propertyName);
-            string payloadTypeName = TryReadOrPeekPayloadType(resourceState.PropertyAndAnnotationCollector, propertyName, insideComplexValue);
+            string payloadTypeName = TryReadOrPeekPayloadType(resourceState.PropertyAndAnnotationCollector, propertyName, insideResourceValue);
             EdmTypeKind payloadTypeKind;
             IEdmType payloadType = ReaderValidationUtils.ResolvePayloadTypeName(
                 this.Model,
@@ -1391,7 +1391,7 @@ namespace Microsoft.OData.JsonLight
                     /*collectionValidator*/ null,
                     /*validateNullValue*/ true,
                     /*isTopLevelPropertyValue*/ false,
-                    /*insideComplexValue*/ false,
+                    /*insideResourceValue*/ false,
                     propertyName,
                     /*isDynamicProperty*/true);
             }

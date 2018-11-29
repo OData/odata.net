@@ -14,16 +14,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
-    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
-    using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Common.Annotations;
-    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
@@ -969,8 +964,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithNumberProperty").ToTypeReference();
             var text = "{\"@odata.type\":\"#TestModel.ComplexTypeWithNumberProperty\",\"numberProperty\":42}";
 
-            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            parse.ShouldThrow<ODataException>();
+            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            result.Should().BeAssignableTo<ODataResourceValue>();
+            result.As<ODataResourceValue>().TypeName.Should().Be("TestModel.ComplexTypeWithNumberProperty");
+            result.As<ODataResourceValue>().Properties.Should().OnlyContain(p => p.Name == "numberProperty" && p.Value.Equals(42));
         }
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]
@@ -1031,6 +1028,35 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             result.As<ODataCollectionValue>().Items.Should().HaveCount(2);
             result.As<ODataCollectionValue>().Items.Should().HaveElementAt(0, true);
             result.As<ODataCollectionValue>().Items.Should().HaveElementAt(1, false);
+        }
+
+        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
+        public void ConvertFromUriShouldParseCollectionOfResource()
+        {
+            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
+
+            var complexType = new EdmComplexType(DefaultNamespaceName, "Complex");
+            complexType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            edmModel.AddElement(complexType);
+
+            IEdmTypeReference complexRef = edmModel.FindType("TestModel.Complex").ToTypeReference();
+            IEdmCollectionTypeReference expectedType = new EdmCollectionTypeReference(new EdmCollectionType(complexRef));
+            var text = "[{\"City\":\"Shanghai\"},{\"City\":\"Redmond\"}]";
+
+            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            result.Should().BeAssignableTo<ODataCollectionValue>();
+            result.As<ODataCollectionValue>().TypeName.Should().Be("Collection(TestModel.Complex)");
+            result.As<ODataCollectionValue>().Items.Should().HaveCount(2);
+
+            var item = result.As<ODataCollectionValue>().Items.First();
+            item.Should().BeAssignableTo<ODataResourceValue>();
+            item.As<ODataResourceValue>().TypeName.Should().Be("TestModel.Complex");
+            item.As<ODataResourceValue>().Properties.Should().OnlyContain(p => p.Name == "City" && p.Value.Equals("Shanghai"));
+
+            item = result.As<ODataCollectionValue>().Items.Last();
+            item.Should().BeAssignableTo<ODataResourceValue>();
+            item.As<ODataResourceValue>().TypeName.Should().Be("TestModel.Complex");
+            item.As<ODataResourceValue>().Properties.Should().OnlyContain(p => p.Name == "City" && p.Value.Equals("Redmond"));
         }
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]

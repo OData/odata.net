@@ -62,6 +62,21 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Converts the given string <paramref name="value"/> to an ODataResourceValue and returns it.
+        /// </summary>
+        /// <remarks>Does not handle primitive values.</remarks>
+        /// <param name="value">Value to be deserialized.</param>
+        /// <param name="model">Model to use for verification.</param>
+        /// <param name="typeReference">Expected type reference from deserialization. If null, verification will be skipped.</param>
+        /// <returns>An ODataResourceValue that results from the deserialization of <paramref name="value"/>.</returns>
+        internal static object ConvertFromResourceValue(string value, IEdmModel model, IEdmTypeReference typeReference)
+        {
+            object result = ConvertFromResourceOrCollectionValue(value, model, typeReference);
+            Debug.Assert(result is ODataResourceValue, "result is ODataResourceValue");
+            return result;
+        }
+
+        /// <summary>
         /// Converts the given string <paramref name="value"/> to an ODataCollectionValue and returns it.
         /// Tries in both JSON light and Verbose JSON.
         /// </summary>
@@ -71,6 +86,13 @@ namespace Microsoft.OData
         /// <param name="typeReference">Expected type reference from deserialization. If null, verification will be skipped.</param>
         /// <returns>An ODataCollectionValue that results from the deserialization of <paramref name="value"/>.</returns>
         internal static object ConvertFromCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
+        {
+            object result = ConvertFromResourceOrCollectionValue(value, model, typeReference);
+            Debug.Assert(result is ODataCollectionValue, "result is ODataCollectionValue");
+            return result;
+        }
+
+        private static object ConvertFromResourceOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
             settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
@@ -101,11 +123,10 @@ namespace Microsoft.OData
                         null /*CollectionWithoutExpectedTypeValidator*/,
                         true /*validateNullValue*/,
                         false /*isTopLevelPropertyValue*/,
-                        false /*insideComplexValue*/,
+                        false /*insideResourceValue*/,
                         null /*propertyName*/);
                     deserializer.ReadPayloadEnd(false);
 
-                    Debug.Assert(rawResult is ODataCollectionValue, "rawResult is ODataCollectionValue");
                     return rawResult;
                 }
             }
