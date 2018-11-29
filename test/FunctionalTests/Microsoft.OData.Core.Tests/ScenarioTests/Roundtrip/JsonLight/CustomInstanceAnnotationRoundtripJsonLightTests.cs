@@ -57,16 +57,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var originalGeography = new KeyValuePair<string, ODataValue>("Geography.error", new ODataPrimitiveValue(geographyPoint));
             var originalNull = new KeyValuePair<string, ODataValue>("null.error", new ODataNullValue());
 
-            /*
-            var complexValue = new ODataComplexValue
+            var resourceValue = new ODataResourceValue
             {
                 TypeName = "ns.ErrorDetails",
                 Properties = new[] { new ODataProperty { Name = "ErrorDetailName", Value = "inner property value" } }
             };
-            var originalComplex = new KeyValuePair<string, ODataValue>("sample.error", complexValue);
-            */
+            var originalResource = new KeyValuePair<string, ODataValue>("sample.error", resourceValue);
 
-            var error = this.WriteThenReadErrorWithInstanceAnnotation(originalInt, originalDouble, originalDate, originalDateTimeOffset, originaltime, originalTimeSpan, originalGeography, originalNull);
+            var error = this.WriteThenReadErrorWithInstanceAnnotation(originalInt, originalDouble, originalDate, originalDateTimeOffset, originaltime, originalTimeSpan, originalGeography, originalNull, originalResource);
 
             var annotation = RunBasicVerificationAndGetAnnotationValue("int.error", error);
             annotation.Should().BeOfType<ODataPrimitiveValue>();
@@ -99,29 +97,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             annotation = RunBasicVerificationAndGetAnnotationValue("null.error", error);
             annotation.Should().BeOfType<ODataNullValue>();
 
-            /*
             annotation = RunBasicVerificationAndGetAnnotationValue("sample.error", error);
-            annotation.Should().BeOfType<ODataComplexValue>();
-            annotation.As<ODataComplexValue>().Properties.First().Value.Should().Be("inner property value");
-             */
+            annotation.Should().BeOfType<ODataResourceValue>();
+            annotation.As<ODataResourceValue>().Properties.First().Value.Should().Be("inner property value");
         }
 
-        /*
         [Fact]
-        public void ComplexCustomInstanceAnnotationOnErrorShouldRoundtrip()
+        public void ResourceCustomInstanceAnnotationOnErrorShouldRoundtrip()
         {
-            var originalComplexValue = new ODataComplexValue
+            var originalResourceValue = new ODataResourceValue
             {
                 TypeName = "ns.ErrorDetails",
                 Properties = new[] { new ODataProperty { Name = "ErrorDetailName", Value = "inner property value" } }
             };
-            var original = new KeyValuePair<string, ODataValue>("sample.error", originalComplexValue);
+            var original = new KeyValuePair<string, ODataValue>("sample.error", originalResourceValue);
             var error = this.WriteThenReadErrorWithInstanceAnnotation(original);
             var annotation = RunBasicVerificationAndGetAnnotationValue("sample.error", error);
-            annotation.Should().BeOfType<ODataComplexValue>();
-            annotation.As<ODataComplexValue>().Properties.First().Value.Should().Be("inner property value");
+            annotation.Should().BeOfType<ODataResourceValue>();
+            annotation.As<ODataResourceValue>().Properties.First().Value.Should().Be("inner property value");
         }
-        */
 
         [Fact]
         public void CollectionOfPrimitiveCustomInstanceAnnotationOnErrorShouldRoundtrip()
