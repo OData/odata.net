@@ -717,7 +717,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     /*collectionValidator*/ null,
                     /*validateNullValue*/ true,
                     /*isTopLevel*/ true,
-                    /*insideComplexValue*/ false,
+                    /*insideResourceValue*/ false,
                     /*propertyName*/ null);
 
             }

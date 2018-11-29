@@ -321,10 +321,10 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceSerializer.WriteResourceStartMetadataProperties(resourceScope);
             this.jsonLightResourceSerializer.WriteResourceMetadataProperties(resourceScope);
 
+            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
+
             // Write custom instance annotations
             this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(resource.InstanceAnnotations, resourceScope.InstanceAnnotationWriteTracker);
-
-            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
 
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
             this.jsonLightResourceSerializer.WriteProperties(
@@ -1184,10 +1184,10 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceSerializer.WriteResourceStartMetadataProperties(resourceScope);
             this.jsonLightResourceSerializer.WriteResourceMetadataProperties(resourceScope);
 
+            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
+
             // Write custom instance annotations
             this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(resource.InstanceAnnotations, resourceScope.InstanceAnnotationWriteTracker);
-
-            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
 
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
             this.WriteDeltaResourceProperties(resource.Properties);

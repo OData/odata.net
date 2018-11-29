@@ -387,7 +387,7 @@ namespace Microsoft.OData.JsonLight
                             null /*collectionValidator*/,
                             false /*validateNullValue*/,
                             false /*isTopLevelPropertyValue*/,
-                            false /*insideComplexValue*/,
+                            false /*insideResourceValue*/,
                             propertyName);
 
                         error.GetInstanceAnnotations().Add(new ODataInstanceAnnotation(propertyName, value.ToODataValue()));

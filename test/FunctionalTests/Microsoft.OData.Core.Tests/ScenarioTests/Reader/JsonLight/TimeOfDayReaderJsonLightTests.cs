@@ -87,7 +87,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                     /*collectionValidator*/ null,
                     /*validateNullValue*/ true,
                     /*isTopLevelPropertyValue*/ true,
-                    /*insideComplexValue*/ false,
+                    /*insideResourceValue*/ false,
                     /*propertyName*/ null);
             }
             actualValue.Should().Be(expectedResult, "payload ->{0}<- for type '{1}'", payload, edmTypeName);

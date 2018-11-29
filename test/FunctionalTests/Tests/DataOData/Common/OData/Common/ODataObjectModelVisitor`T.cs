@@ -48,6 +48,12 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return this.VisitNavigationLink(navigationLink);
             }
 
+            ODataResourceValue resourceValue = objectModelItem as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                return this.VisitResourceValue(resourceValue);
+            }
+
             ODataCollectionValue collection = objectModelItem as ODataCollectionValue;
             if (collection != null)
             {
@@ -165,6 +171,12 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// </summary>
         /// <param name="navigationLink">The navigation link to visit.</param>
         protected abstract T VisitNavigationLink(ODataNestedResourceInfo navigationLink);
+
+        /// <summary>
+        /// Visits a resource value item.
+        /// </summary>
+        /// <param name="resourceValue">The resource value to visit.</param>
+        protected abstract T VisitResourceValue(ODataResourceValue resourceValue);
 
         /// <summary>
         /// Visits a collection item.
