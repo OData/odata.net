@@ -49,7 +49,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             TargetLanguage = this.TargetLanguage,
             EnableNamingAlias = this.EnableNamingAlias,
             TempFilePath = this.TempFilePath,
-            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes
+            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes            
         };
     }
     else
@@ -60,7 +60,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             this.ApplyParametersFromConfigurationClass();
         }
 
-        context = new CodeGenerationContext(new Uri(this.MetadataDocumentUri, UriKind.Absolute), this.NamespacePrefix)
+        context = new CodeGenerationContext(new Uri(this.MetadataDocumentUri, UriKind.Absolute), this.NamespacePrefix, this.CustomHttpHeaders)
         {
             UseDataServiceCollection = this.UseDataServiceCollection,
             TargetLanguage = this.TargetLanguage,
@@ -327,12 +327,41 @@ public void ValidateAndSetIgnoreUnexpectedElementsAndAttributesFromString(string
 }
 
 public void ValidateAndSetCustomHttpHeadersFromString(string stringValue){
-    if(!String.IsNullOrWhiteSpace(stringValue)){
-        //TODO: what a good string format for dictionary
-        throw new NotImplementedException("The CustomHttpHeaders are currently not implemented for console usage.");
-    }else{
-        this.CustomHttpHeaders = new Dictionary<string, string>();
+    var defaultReturn = new Dictionary<string, string>();
+    if(String.IsNullOrWhiteSpace(stringValue)){
+        this.CustomHttpHeaders = defaultReturn;
+        return;
     }
+        
+    stringValue = stringValue
+        // remove surrounding "[]"
+        .Replace("[", "").Replace("]", "");
+
+    if(String.IsNullOrWhiteSpace(stringValue)){
+        this.CustomHttpHeaders = defaultReturn;
+        return;
+    }
+    if(
+        // Check if we have any valid object in the string
+        !stringValue.Contains("{") || !stringValue.Contains("}") || 
+        // Check if the count of the keys are the same as the count of values
+        (stringValue.Count(d => d == ':') != stringValue.Count(d => d == '{')) ||
+        // Check all objects of a '{' and a '}'
+        (stringValue.Count(d => d == '{') != stringValue.Count(d => d == '}')) ||
+        // Check all values and keys are strings
+        (stringValue.Count(d => d == ':')*4 != stringValue.Count(d => d == '\''))
+        ){
+        throw new ArgumentException("Please check your custom http headers string format!");
+    }
+    this.CustomHttpHeaders = stringValue     
+        // Replace the comma with a better spliting symbol
+        .Replace("},{", "}||{")
+        // Remove surrounding "{}" on each object
+        .Replace("{", "").Replace("}", "")
+        // now we have all header name and header values in one string each pair
+        .Split(new[] { "||" }, StringSplitOptions.None)
+        // Create a dictionary
+        .ToDictionary(d => d.Split(':')[0].Replace("'", "").Trim(), d => d.Split(':')[1].Replace("'", "").Trim());    
     
 }
 
@@ -348,7 +377,7 @@ private void ApplyParametersFromConfigurationClass()
     this.EnableNamingAlias = Configuration.EnableNamingAlias;
     this.TempFilePath = Configuration.TempFilePath;
     this.IgnoreUnexpectedElementsAndAttributes = Configuration.IgnoreUnexpectedElementsAndAttributes;
-    this.CustomHttpHeaders = Configuration.CustomHttpHeaders;
+    ValidateAndSetCustomHttpHeadersFromString(Configuration.CustomHttpHeaders);
 }
 
 /// <summary>
@@ -475,8 +504,8 @@ public class CodeGenerationContext
     /// Constructs an instance of <see cref="CodeGenerationContext"/>.
     /// </summary>
     /// <param name="metadataUri">The Uri to the metadata document. The supported scheme are File, http and https.</param>
-    public CodeGenerationContext(Uri metadataUri, string namespacePrefix)
-        : this(GetEdmxStringFromMetadataPath(metadataUri), namespacePrefix)
+    public CodeGenerationContext(Uri metadataUri, string namespacePrefix, Dictionary<string, string> CustomHttpHeaders = null)
+        : this(GetEdmxStringFromMetadataPath(metadataUri, CustomHttpHeaders), namespacePrefix)
     {
     }
 
@@ -870,10 +899,10 @@ public class CodeGenerationContext
     /// Reads the edmx string from a file path or a http/https path.
     /// </summary>
     /// <param name="metadataUri">The Uri to the metadata document. The supported scheme are File, http and https.</param>
-    private static string GetEdmxStringFromMetadataPath(Uri metadataUri)
+    private static string GetEdmxStringFromMetadataPath(Uri metadataUri, Dictionary<string, string> CustomHttpHeaders = null)
     {
         string content = null;
-        using (StreamReader streamReader = new StreamReader(GetEdmxStreamFromUri(metadataUri)))
+        using (StreamReader streamReader = new StreamReader(GetEdmxStreamFromUri(metadataUri, CustomHttpHeaders)))
         {
             content = streamReader.ReadToEnd();
         }
@@ -885,7 +914,7 @@ public class CodeGenerationContext
     /// Get the metadata stream from a file path or a http/https path.
     /// </summary>
     /// <param name="metadataUri">The Uri to the stream. The supported scheme are File, http and https.</param>
-    private static Stream GetEdmxStreamFromUri(Uri metadataUri, Dictionary<string, string> CustomHttpHeaders = new Dictionary<string, string>())
+    private static Stream GetEdmxStreamFromUri(Uri metadataUri, Dictionary<string, string> CustomHttpHeaders = null)
     {
         Debug.Assert(metadataUri != null, "metadataUri != null");
         Stream metadataStream = null;
@@ -898,9 +927,11 @@ public class CodeGenerationContext
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(metadataUri);
-                foreach (var customHeader in CustomHttpHeaders)
-                {
-                    webRequest.Headers.Add(customHeader.Key, customHeader.Value);
+                if(CustomHttpHeaders != null){
+                    foreach (var customHeader in CustomHttpHeaders)
+                    {
+                        webRequest.Headers.Add(customHeader.Key, customHeader.Value);
+                    }
                 }
                 WebResponse webResponse = webRequest.GetResponse();
                 metadataStream = webResponse.GetResponseStream();
