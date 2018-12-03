@@ -226,6 +226,15 @@ public bool IgnoreUnexpectedElementsAndAttributes
 }
 
 /// <summary>
+/// TODO: Describe
+/// </summary>
+/// <value></value>
+public Dictionary<string, string> CustomHttpHeaders{
+    get;
+    set;
+}
+
+/// <summary>
 /// Generate code targeting a specific .Net Framework language.
 /// </summary>
 public enum LanguageOption
@@ -317,6 +326,16 @@ public void ValidateAndSetIgnoreUnexpectedElementsAndAttributesFromString(string
     this.IgnoreUnexpectedElementsAndAttributes = boolValue;
 }
 
+public void ValidateAndSetCustomHttpHeadersFromString(string stringValue){
+    if(!String.IsNullOrWhiteSpace(stringValue)){
+        //TODO: what a good string format for dictionary
+        throw new NotImplementedException("The CustomHttpHeaders are currently not implemented for console usage.");
+    }else{
+        this.CustomHttpHeaders = new Dictionary<string, string>();
+    }
+    
+}
+
 /// <summary>
 /// Reads the parameter values from the Configuration class and applies them.
 /// </summary>
@@ -329,6 +348,7 @@ private void ApplyParametersFromConfigurationClass()
     this.EnableNamingAlias = Configuration.EnableNamingAlias;
     this.TempFilePath = Configuration.TempFilePath;
     this.IgnoreUnexpectedElementsAndAttributes = Configuration.IgnoreUnexpectedElementsAndAttributes;
+    this.CustomHttpHeaders = Configuration.CustomHttpHeaders;
 }
 
 /// <summary>
@@ -375,6 +395,11 @@ private void ApplyParametersFromCommandLine()
     if (!string.IsNullOrEmpty(ignoreUnexpectedElementsAndAttributes))
     {
         this.ValidateAndSetIgnoreUnexpectedElementsAndAttributesFromString(ignoreUnexpectedElementsAndAttributes);
+    }
+    string customHttpHeaders = this.Host.ResolveParameterValue("notempty", "notempty", "CustomHttpHeaders");
+    if (!String.IsNullOrEmpty(customHttpHeaders))
+    {
+        this.ValidateAndSetCustomHttpHeadersFromString(customHttpHeaders);
     }
 }
 
@@ -860,7 +885,7 @@ public class CodeGenerationContext
     /// Get the metadata stream from a file path or a http/https path.
     /// </summary>
     /// <param name="metadataUri">The Uri to the stream. The supported scheme are File, http and https.</param>
-    private static Stream GetEdmxStreamFromUri(Uri metadataUri)
+    private static Stream GetEdmxStreamFromUri(Uri metadataUri, Dictionary<string, string> CustomHttpHeaders = new Dictionary<string, string>())
     {
         Debug.Assert(metadataUri != null, "metadataUri != null");
         Stream metadataStream = null;
@@ -873,6 +898,10 @@ public class CodeGenerationContext
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(metadataUri);
+                foreach (var customHeader in CustomHttpHeaders)
+                {
+                    webRequest.Headers.Add(customHeader.Key, customHeader.Value);
+                }
                 WebResponse webResponse = webRequest.GetResponse();
                 metadataStream = webResponse.GetResponseStream();
             }
