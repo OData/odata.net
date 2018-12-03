@@ -28,6 +28,10 @@ public static class Configuration
 	// This flag indicates whether to ignore unexpected elements and attributes in the metadata document and generate
 	// the client code if any. The value must be set to true or false.
 	public const bool IgnoreUnexpectedElementsAndAttributes = true;
+	// TODO: Describe
+	public const Dictionary<string,string> CustomHttpHeaders = new Dictionary<string, string>(){
+		// Here you can set custom headers like this: "headername", "headervalue"
+	};
 }
 
 public static class Customization
