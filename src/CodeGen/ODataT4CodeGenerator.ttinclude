@@ -912,7 +912,8 @@ public class CodeGenerationContext
                 tmp.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency) != null ||
                 tmp.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
                 tmp.FindDeclaredTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null ||
-                tmp.FindDeclaredTerm("Org.OData.Authorization.V1.Authorizations") != null)
+                tmp.FindDeclaredTerm("Org.OData.Authorization.V1.Authorizations") != null ||
+                tmp.FindDeclaredTerm("Org.OData.Validation.V1.DerivedTypeConstraint") != null)
             {
                 continue;
             }

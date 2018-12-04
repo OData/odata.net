@@ -951,5 +951,36 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(result);
             return model;
         }
+
+        [Fact]
+        public void ParsingPropertyWithCoreTypeDefinitionAsPropertyTypeWorks()
+        {
+            string csdl =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<ComplexType Name=\"Complex\">" +
+                    "<Property Name=\"ModifiedDate\" Type=\"Org.OData.Core.V1.LocalDateTime\" />" +
+                  "</ComplexType>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            bool result = CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            var edmType = model.SchemaElements.OfType<IEdmComplexType>().First();
+            Assert.NotNull(edmType);
+            var property = edmType.Properties().FirstOrDefault(c => c.Name == "ModifiedDate");
+            Assert.NotNull(property);
+
+            Assert.Equal(EdmTypeKind.TypeDefinition, property.Type.TypeKind());
+            Assert.Equal("Org.OData.Core.V1.LocalDateTime", property.Type.FullName());
+        }
     }
 }

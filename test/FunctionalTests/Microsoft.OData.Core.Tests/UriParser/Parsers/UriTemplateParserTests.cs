@@ -248,6 +248,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void EntityReferenceCannotAppearAfterAPathTemplateSegment()
+        {
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People({1})/{some}/$ref", UriKind.Relative))
+            {
+                EnableUriTemplateParsing = true
+            };
+
+            Action action = () => uriParser.ParsePath();
+            action.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_MustBeLeafSegment("{some}"));
+        }
+
+        [Fact]
         public void PathTemplateSegmentShouldBeLastSegment()
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People({1})/{some}/what", UriKind.Relative))

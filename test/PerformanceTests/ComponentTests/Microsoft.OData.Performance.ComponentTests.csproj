@@ -69,7 +69,6 @@
     <Compile Include="Common\InMemoryMessage.cs" />
     <Compile Include="Common\ODataMessageHelper.cs" />
     <Compile Include="Common\ODataMessageKind.cs" />
-    <Compile Include="Common\SpatialFactory.cs" />
     <Compile Include="Common\StreamBasedRequestMessage.cs" />
     <Compile Include="Common\StreamBasedResponseMessage.cs" />
     <Compile Include="Common\TestContainerBuilder.cs" />
@@ -126,6 +125,14 @@
           <HintPath>$(NugetPack)\Microsoft.Spatial.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
           <Private>True</Private>
         </Reference>
+      </ItemGroup>
+      <ItemGroup>
+        <!-- Should remove these references if we update the official version to > 7.5.1 -->
+        <Compile Include="..\..\..\src\Microsoft.Spatial\GeographyFactory.cs" />
+        <Compile Include="..\..\..\src\Microsoft.Spatial\GeographyFactoryOfT.cs" />
+        <Compile Include="..\..\..\src\Microsoft.Spatial\GeometryFactory.cs" />
+        <Compile Include="..\..\..\src\Microsoft.Spatial\GeometryFactoryOfT.cs" />
+        <Compile Include="..\..\..\src\Microsoft.Spatial\SpatialFactory.cs" />
       </ItemGroup>
     </When>
   </Choose>

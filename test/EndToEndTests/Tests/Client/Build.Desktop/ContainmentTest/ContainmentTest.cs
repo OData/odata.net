@@ -697,9 +697,17 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         {
             Dictionary<string, int[]> testCases = new Dictionary<string, int[]>()
             {
+                { "Accounts(101)?$select=AccountInfo/FirstName, AccountInfo/LastName", new int[] {1, 0} },
+                { "Accounts(101)?$select=AccountID&$expand=MyPaymentInstruments($select=PaymentInstrumentID;$expand=TheStoredPI)", new int[]{7,4} },
+                { "Accounts(101)?$expand=MyPaymentInstruments($select=PaymentInstrumentID,FriendlyName)", new int[]{4, 4} },
+
+                { "Accounts(101)?$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 4} },
+
                 { "Accounts(101)?$expand=MyGiftCard", new int[] {2, 4} },
                 { "Accounts(101)?$expand=MyPaymentInstruments", new int[] {4, 15} },
-                { "Accounts(101)?$select=AccountID&$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 1}  }
+                { "Accounts(101)?$select=AccountID&$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 1} },
+                { "Accounts(101)?$select=AccountID,MyGiftCard&$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 1}  },
+                {"Accounts(101)?$select=AccountID&$expand=MyPaymentInstruments($select=PaymentInstrumentID;$expand=TheStoredPI($select=StoredPIID))", new int[] {7, 4}},
             };
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -782,6 +790,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
                             Assert.AreEqual(ODataReaderState.Completed, reader.State);
                             Assert.AreEqual(testCase.Value[0], entries.Count);
+
                             Assert.AreEqual(testCase.Value[1], navigationLinks.Count);
                         }
                     }
@@ -1197,9 +1206,9 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         [TestMethod]
         public void CreateContainedEntityFromODataClientUsingAddRelatedObject()
         {
-           
+
                     TestClientContext.Format.UseJson(Model);
-             
+
                 // create an an account entity and a contained PI entity
                 Account newAccount = new Account()
                 {

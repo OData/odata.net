@@ -9,10 +9,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
+
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
+
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
@@ -137,8 +139,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "/ComplexType>" +
                 "<EntityContainer Name=\"Container\">" +
                 "<EntitySet Name=\"People\" EntityType=\"DefaultNs.Person\">" +
-                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
                     "<NavigationPropertyBinding Path=\"Addresses/City\" Target=\"City\" />" +
+                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
                     "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/CountryOrRegion\" Target=\"CountryOrRegion\" />" +
                 "</EntitySet>" +
                 "<EntitySet Name=\"City\" EntityType=\"DefaultNs.City\" />" +
@@ -957,6 +959,136 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
 
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
+        public void CanWritePropertyWithCoreTypeDefinitionAndValidationPassed()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<ComplexType Name=\"Complex\">" +
+                    "<Property Name=\"ModifiedDate\" Type=\"Org.OData.Core.V1.LocalDateTime\" />" +
+                    "<Property Name=\"QualifiedName\" Type=\"Org.OData.Core.V1.QualifiedTypeName\" />" +
+                  "</ComplexType>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            var localDateTime = model.FindType("Org.OData.Core.V1.LocalDateTime") as IEdmTypeDefinition;
+            Assert.NotNull(localDateTime);
+
+            var qualifiedTypeName = model.FindType("Org.OData.Core.V1.QualifiedTypeName") as IEdmTypeDefinition;
+            Assert.NotNull(qualifiedTypeName);
+
+            EdmComplexType type = new EdmComplexType("NS", "Complex");
+            type.AddStructuralProperty("ModifiedDate", new EdmTypeDefinitionReference(localDateTime, true));
+            type.AddStructuralProperty("QualifiedName", new EdmTypeDefinitionReference(qualifiedTypeName, true));
+
+            model.AddElement(type);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
+        public void CanWriteNavigationPropertyBindingWithTargetPathOnContainmentOnSingleton()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EntityType Name=\"Customer\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                    "<NavigationProperty Name=\"ContainedOrders\" Type=\"Collection(NS.Order)\" ContainsTarget=\"true\" />" +
+                    "<NavigationProperty Name=\"ContainedOrderLines\" Type=\"Collection(NS.OrderLine)\" ContainsTarget=\"true\" />" +
+                  "</EntityType>" +
+                  "<EntityType Name=\"Order\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                    "<NavigationProperty Name=\"OrderLines\" Type=\"Collection(NS.OrderLine)\" />" +
+                  "</EntityType>" +
+                  "<EntityType Name=\"OrderLine\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                  "</EntityType>" +
+                  "<EntityContainer Name=\"Default\">" +
+                     "<Singleton Name=\"Me\" Type=\"NS.Customer\" />" +
+                     "<EntitySet Name=\"Customers\" EntityType=\"NS.Customer\">" +
+                       "<NavigationPropertyBinding Path=\"ContainedOrders/OrderLines\" Target=\"Me/ContainedOrderLines\" />" +
+                     "</EntitySet>" +
+                  "</EntityContainer>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmEntityType customer = new EdmEntityType("NS", "Customer");
+            customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            EdmEntityType order = new EdmEntityType("NS", "Order");
+            order.AddKeys(order.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            EdmEntityType orderLine = new EdmEntityType("NS", "OrderLine");
+            orderLine.AddKeys(orderLine.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+
+            // Customer
+            //        -> ContainedOrders (Contained)
+            //        -> ContainedOrderLines (Contained)
+            customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "ContainedOrders",
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Target = order,
+                ContainsTarget = true
+            });
+
+            var orderLinesContainedNav = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "ContainedOrderLines",
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Target = orderLine,
+                ContainsTarget = true
+            });
+
+            // Order
+            //    -> OrderLines
+            var orderLinesNav = order.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "OrderLines",
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Target = orderLine
+            });
+
+            model.AddElement(customer);
+            model.AddElement(order);
+            model.AddElement(orderLine);
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmSingleton me = new EdmSingleton(container, "Me", customer);
+            container.AddElement(me);
+            EdmEntitySet customers = new EdmEntitySet(container, "Customers", customer);
+            container.AddElement(customers);
+            model.AddElement(container);
+
+            // Navigation property binding to the containment of the singleton
+            EdmContainedEntitySet containedEntitySet = new EdmContainedEntitySet(me, orderLinesContainedNav);
+            customers.AddNavigationTarget(orderLinesNav, containedEntitySet, new EdmPathExpression("ContainedOrders/OrderLines"));
+
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
         }

@@ -104,6 +104,7 @@
     <Compile Include="..\ODataValueUtilsTests.cs" />
     <Compile Include="..\PropertyCacheHandlerTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonReaderWriterInjectionTests.cs" />
+    <Compile Include="..\ScenarioTests\UriParser\SetBasedOperationTests.cs" />
     <Compile Include="..\ServiceProviderExtensionsTests.cs" />
     <Compile Include="..\ContainerBuilderExtensionsTests.cs" />
     <Compile Include="..\DummyRequestMessage.cs" />
@@ -370,7 +371,9 @@
     <Compile Include="..\UriParser\SemanticAst\CountSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceCastNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceFunctionCallNodeTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\FilterSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\InNodeTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\ReferenceSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\EntitySetNodeTests.cs" />

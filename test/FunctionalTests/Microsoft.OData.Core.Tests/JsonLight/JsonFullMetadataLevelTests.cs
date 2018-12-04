@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 new TestFeedAndEntryTypeContext(),
                 new ODataResourceSerializationInfo(),
                 /*actualEntityType*/null,
-                SelectedPropertiesNode.EntireSubtree,
+                new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree),
                 /*isResponse*/ true,
                 /*keyAsSegment*/ false,
                 /*requestUri*/ null);
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 new TestFeedAndEntryTypeContext(),
                 new ODataResourceSerializationInfo(),
                 /*actualEntityType*/null,
-                SelectedPropertiesNode.EntireSubtree,
+                new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree),
                 /*isResponse*/ true,
                 /*keyAsSegment*/ false,
                 /*requestUri*/ null).Should().BeAssignableTo<ODataConventionalResourceMetadataBuilder>();

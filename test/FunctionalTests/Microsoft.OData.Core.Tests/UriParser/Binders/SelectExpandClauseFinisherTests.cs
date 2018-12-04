@@ -18,15 +18,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void ExpandedNavigationPropertiesAreImplicitlyAddedAsPathSelectionItemsIfSelectIsPopulated()
         {
             IEdmNavigationProperty navigationProperty = ModelBuildingHelpers.BuildValidNavigationProperty();
+            IEdmStructuralProperty structuralProperty = ModelBuildingHelpers.BuildValidPrimitiveProperty();
             SelectExpandClause clause = new SelectExpandClause(new SelectItem[]
             {
-                new PathSelectItem(new ODataSelectPath(new PropertySegment(ModelBuildingHelpers.BuildValidPrimitiveProperty()))),
-                new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(navigationProperty, ModelBuildingHelpers.BuildValidEntitySet())), ModelBuildingHelpers.BuildValidEntitySet(), new SelectExpandClause(new List<SelectItem>(), false)), 
+                new PathSelectItem(new ODataSelectPath(new PropertySegment(structuralProperty))),
+                new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(navigationProperty, ModelBuildingHelpers.BuildValidEntitySet())), ModelBuildingHelpers.BuildValidEntitySet(), new SelectExpandClause(new List<SelectItem>(), false)),
             },
             false /*allSelected*/);
             SelectExpandClauseFinisher.AddExplicitNavPropLinksWhereNecessary(clause);
-            clause.SelectedItems.Should().HaveCount(3)
-                .And.Contain(x => x is PathSelectItem && x.As<PathSelectItem>().SelectedPath.LastSegment is NavigationPropertySegment && x.As<PathSelectItem>().SelectedPath.LastSegment.As<NavigationPropertySegment>().NavigationProperty.Name == navigationProperty.Name);
+            clause.SelectedItems.Should().HaveCount(2)
+                .And.Contain(x => x is PathSelectItem && x.As<PathSelectItem>().SelectedPath.LastSegment is PropertySegment && x.As<PathSelectItem>().SelectedPath.LastSegment.As<PropertySegment>().Property.Name == structuralProperty.Name);
         }
 
         [Fact]
@@ -34,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             SelectExpandClause clause = new SelectExpandClause(new SelectItem[]
             {
-                new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), ModelBuildingHelpers.BuildValidEntitySet())), ModelBuildingHelpers.BuildValidEntitySet(), new SelectExpandClause(new List<SelectItem>(), false)), 
+                new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), ModelBuildingHelpers.BuildValidEntitySet())), ModelBuildingHelpers.BuildValidEntitySet(), new SelectExpandClause(new List<SelectItem>(), false)),
             },
             false /*allSelected*/);
             SelectExpandClauseFinisher.AddExplicitNavPropLinksWhereNecessary(clause);

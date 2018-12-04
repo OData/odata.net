@@ -122,7 +122,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Handle an OperationSegment
+        /// Handle an OperationImportSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
         public override void Handle(OperationImportSegment segment)
@@ -153,6 +153,42 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
         public override void Handle(CountSegment segment)
+        {
+            CommonHandler(segment);
+        }
+
+        /// <summary>
+        /// Handle a FilterSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public override void Handle(FilterSegment segment)
+        {
+            CommonHandler(segment);
+        }
+
+        /// <summary>
+        /// Handle an EachSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public override void Handle(EachSegment segment)
+        {
+            CommonHandler(segment);
+        }
+
+        /// <summary>
+        /// Handle a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public override void Handle(ReferenceSegment segment)
+        {
+            CommonHandler(segment);
+        }
+
+        /// <summary>
+        /// Handle a PathTemplateSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public override void Handle(PathTemplateSegment segment)
         {
             CommonHandler(segment);
         }

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Xunit;
@@ -27,6 +28,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void EntityReferenceCannotAppearAfterMetadata()
+        {
+            PathFunctionalTestsUtil.RunParseErrorPath("$metadata/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$metadata"));
+        }
+
+        [Fact]
+        public void EntityReferenceCanAppearAfterSingleton()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("Boss/$ref");
+
+            ReferenceSegment referenceSegment = path.LastSegment as ReferenceSegment;
+            referenceSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetBossSingleton());
+            referenceSegment.SingleResult.Should().BeTrue();
+        }
+
+        [Fact]
+        public void EntityReferenceCannotAppearAfterBatch()
+        {
+            // Note: Case where $ref is after batch reference is in PathFunctionaltests.cs (EntityReferenceCannotAppearAfterBatchReference)
+            PathFunctionalTestsUtil.RunParseErrorPath("$batch/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.BatchSegment));
+        }
+
+        [Fact]
         public void KeyLookupCannotAppearAfterCountAfterEntityReference()
         {
             PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/MyPeople/$ref/$count(1)", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
@@ -39,22 +63,95 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void EntityReferenceCannotAppearAfterProperty()
+        {
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/SSN/$ref", ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("SSN", "$ref"));
+        }
+
+        [Fact]
         public void CountCannotAppearAfterEntityReferenceCollectionProperties()
         {
             PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/MyPeople/$ref/$count", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
-        public void EntityReferenceCannotAppearAfterAnEntitySet()
+        public void EntityReferenceCanAppearAfterAnEntitySet()
         {
-            // TODO: We can improve error message drastically when we refactor path parsing
-            PathFunctionalTestsUtil.RunParseErrorPath("People/$ref", ODataErrorStrings.PathParser_EntityReferenceNotSupported("People"));
+            var path = PathFunctionalTestsUtil.RunParsePath("People/$ref");
+            path.LastSegment.ShouldBeReferenceSegment(HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]
-        public void EntityReferenceCannotAppearAfterAComplexProperty()
+        public void EntityReferenceCanAppearAfterACollectionValuedNavigationProperty()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyAddress/$ref", ODataErrorStrings.PathParser_EntityReferenceNotSupported("MyAddress"));
+            var path = PathFunctionalTestsUtil.RunParsePath("Dogs(1)/MyPeople/$ref");
+            path.LastSegment.ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetDogMyPeopleNavProp());
+        }
+
+        [Fact]
+        public void EntityReferenceCanAppearAfterASingleValuedNavigationProperty()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("Dogs(1)/FastestOwner/$ref");
+            path.LastSegment.ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetDogFastestOwnerNavProp());
+        }
+
+        [Fact]
+        public void EntityReferenceCanAppearAfterAFilteredEntitySet()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("People/$filter(@p1)/$ref?@p1=true");
+            path.LastSegment.ShouldBeReferenceSegment(HardCodedTestModel.GetPeopleSet());
+        }
+
+        [Fact]
+        public void EntityReferenceCannotAppearAfterAValueSegment()
+        {
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/$value/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
+        }
+
+        [Fact]
+        public void EntityReferenceCanAppearAfterAComplexProperty()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("People(1)/MyAddress/$ref");
+            path.LastSegment.ShouldBeReferenceSegment(HardCodedTestModel.GetPeopleSet());
+        }
+
+        [Fact]
+        public void EntityReferenceCannotAppearAfterReferenceSegment()
+        {
+            PathFunctionalTestsUtil.RunParseErrorPath("People/$ref/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$ref"));
+        }
+
+        [Fact]
+        public void EntityReferenceCannotAppearAfterEachSegment()
+        {
+            PathFunctionalTestsUtil.RunParseErrorPath("People/$each/$ref", ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
+        }
+
+        [Fact]
+        public void EntityReferenceCanAppearAfterCastedType()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("People/Fully.Qualified.Namespace.Employee/$ref");
+            path.LastSegment.ShouldBeReferenceSegment(HardCodedTestModel.GetPeopleSet());
+        }
+
+        [Fact]
+        public void EntityReferenceCanAppearAfterBoundFunctionReturningCollection()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("People/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$ref");
+            path.LastSegment.ShouldBeReferenceSegment(HardCodedTestModel.GetPeopleSet());
+        }
+
+        [Fact]
+        public void EntityReferenceCanAppearAfterBoundFunctionReturningSingleEntity()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("People/Fully.Qualified.Namespace.GetPersonWhoHasSmartestDog/$ref");
+            path.LastSegment.ShouldBeReferenceSegment(HardCodedTestModel.GetPeopleSet());
+        }
+
+        [Fact]
+        public void EntityReferenceCannotAppearAfterBoundAction()
+        {
+            PathFunctionalTestsUtil.RunParseErrorPath("People/Fully.Qualified.Namespace.AdoptShibaInu/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.AdoptShibaInu"));
         }
 
         [Fact]
@@ -68,7 +165,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 s => s.ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetPersonMyDogNavProp()),
             });
         }
-
 
         [Fact]
         public void KeyOnCollectionEntityReferencesShouldWork()

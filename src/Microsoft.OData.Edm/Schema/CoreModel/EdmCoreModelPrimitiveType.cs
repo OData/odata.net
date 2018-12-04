@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmCoreModelPrimitiveType"/> class.
         /// </summary>
-        /// <param name="pathKind">The path kind.</param>
+        /// <param name="primitiveKind">The primitive type kind.</param>
         public EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind primitiveKind)
         {
             Name = primitiveKind.ToString();
@@ -30,12 +30,18 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Getst the namespace of this type.
         /// </summary>
-        public string Namespace => EdmConstants.EdmNamespace;
+        public string Namespace
+        {
+            get { return EdmConstants.EdmNamespace; }
+        }
 
         /// <summary>
         /// Gets the kind of this type.
         /// </summary>
-        public override EdmTypeKind TypeKind => EdmTypeKind.Primitive;
+        public override EdmTypeKind TypeKind
+        {
+            get { return EdmTypeKind.Primitive; }
+        }
 
         /// <summary>
         /// Gets the primitive kind of this type.
@@ -45,7 +51,10 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the schema element kind of this type.
         /// </summary>
-        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.TypeDefinition;
+        public EdmSchemaElementKind SchemaElementKind
+        {
+            get { return EdmSchemaElementKind.TypeDefinition; }
+        }
 
         /// <summary>
         /// Gets the full name of this type.

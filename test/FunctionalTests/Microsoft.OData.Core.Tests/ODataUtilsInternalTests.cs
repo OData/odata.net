@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests
         public void SelectedPropertiesShouldReturnEntireSubtreeWhenMetadataDocumentUriIsNull()
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
-            settings.SelectedProperties.Should().BeSameAs(SelectedPropertiesNode.EntireSubtree);
+            settings.SelectedProperties.IsEntireSubtree().Should().BeTrue();
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             settings.SetServiceDocumentUri(new Uri("http://service/$metadata"));
-            settings.SelectedProperties.Should().BeSameAs(SelectedPropertiesNode.EntireSubtree);
+            settings.SelectedProperties.IsEntireSubtree().Should().BeTrue();
         }
     }
 }

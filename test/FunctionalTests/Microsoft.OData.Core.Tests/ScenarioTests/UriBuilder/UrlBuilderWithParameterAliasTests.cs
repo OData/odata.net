@@ -326,6 +326,68 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
+
+        [Fact]
+        public void BuildFullUri_FilterSegmentWithAliasInFilterOption_AliasAsBoolean()
+        {
+            Uri fullUri = new Uri("http://gobbledygook/People/$filter(ID%20eq%201)?$filter=%40p1&@p1=true");
+            ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
+            SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
+            ODataUri odataUri = odataUriParser.ParseUri();
+
+            List<FilterSegment> filterSegments = odataUri.Path.OfType<FilterSegment>().ToList();
+            filterSegments.Count.Should().Be(1);
+            filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+            filterSegments[0].SingleResult.Should().BeFalse();
+
+            BinaryOperatorNode binaryOperatorNode = filterSegments[0].Expression as BinaryOperatorNode;
+            binaryOperatorNode.Should().NotBeNull();
+            binaryOperatorNode.OperatorKind.Should().Be(BinaryOperatorKind.Equal);
+            binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonIdProp());
+            binaryOperatorNode.Right.ShouldBeConstantQueryNode(1);
+
+            odataUri.Filter.Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+            odataUri.ParameterAliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(fullUri, actualUri);
+
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
+            Assert.Equal(fullUri, actualUri);
+        }
+
+        [Fact]
+        public void BuildRelativeUri_FilterSegmentWithAliasInFilterOption_AliasAsBoolean()
+        {
+            Uri relativeUri = new Uri("People/$filter(ID%20eq%201)?$filter=%40p1&@p1=true", UriKind.Relative);
+            ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, relativeUri);
+            SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
+            ODataUri odataUri = odataUriParser.ParseUri();
+
+            List<FilterSegment> filterSegments = odataUri.Path.OfType<FilterSegment>().ToList();
+            filterSegments.Count.Should().Be(1);
+            filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+            filterSegments[0].SingleResult.Should().BeFalse();
+
+            BinaryOperatorNode binaryOperatorNode = filterSegments[0].Expression as BinaryOperatorNode;
+            binaryOperatorNode.Should().NotBeNull();
+            binaryOperatorNode.OperatorKind.Should().Be(BinaryOperatorKind.Equal);
+            binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonIdProp());
+            binaryOperatorNode.Right.ShouldBeConstantQueryNode(1);
+
+            odataUri.Filter.Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+            odataUri.ParameterAliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+
+            Uri expectedUri = new Uri("http://gobbledygook/People/$filter(ID%20eq%201)?$filter=%40p1&@p1=true");
+
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(expectedUri, actualUri);
+
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
+            Assert.Equal(expectedUri, actualUri);
+        }
         #endregion
 
         #region alias in orderby
@@ -391,6 +453,58 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
+        }
+        #endregion
+
+        #region alias in path segment
+        [Fact]
+        public void BuildFullUri_AliasInFilterPathSegment_AliasAsBoolean()
+        {
+            Uri fullUri = new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true");
+            ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
+            SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
+            ODataUri odataUri = odataUriParser.ParseUri();
+
+            List<FilterSegment> filterSegments = odataUri.Path.OfType<FilterSegment>().ToList();
+            filterSegments.Count.Should().Be(1);
+            filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+            filterSegments[0].SingleResult.Should().BeFalse();
+            filterSegments[0].Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+
+            odataUri.Filter.Should().BeNull();
+            odataUri.ParameterAliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(fullUri, actualUri);
+
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
+            Assert.Equal(fullUri, actualUri);
+        }
+
+        [Fact]
+        public void BuildRelativeUri_AliasInFilterPathSegment_AliasAsBoolean()
+        {
+            Uri relativeUri = new Uri("People/$filter(@p1)?@p1=true", UriKind.Relative);
+            ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, relativeUri);
+            SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
+            ODataUri odataUri = odataUriParser.ParseUri();
+
+            List<FilterSegment> filterSegments = odataUri.Path.OfType<FilterSegment>().ToList();
+            filterSegments.Count.Should().Be(1);
+            filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+            filterSegments[0].SingleResult.Should().BeFalse();
+            filterSegments[0].Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+
+            odataUri.Filter.Should().BeNull();
+            odataUri.ParameterAliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"), actualUri);
+
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
+            Assert.Equal(new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"), actualUri);
         }
         #endregion
 

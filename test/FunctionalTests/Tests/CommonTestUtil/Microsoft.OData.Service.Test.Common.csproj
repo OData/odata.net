@@ -41,9 +41,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.OData.TestCommon\SpatialFactory.cs">
-      <Link>SpatialFactory.cs</Link>
-    </Compile>
     <Compile Include="SpatialTestUtils.cs" />
     <Compile Include="TestConstants.cs" />
     <Compile Include="ODataValueAssertions.cs" />
