@@ -1065,6 +1065,7 @@ namespace Microsoft.OData.Metadata
                         case EdmPrimitiveTypeKind.Single:
                         case EdmPrimitiveTypeKind.Stream:
                         case EdmPrimitiveTypeKind.Date:
+                        case EdmPrimitiveTypeKind.PrimitiveType:
                             return new EdmPrimitiveTypeReference(primitiveType, nullable);
                         case EdmPrimitiveTypeKind.Binary:
                             IEdmBinaryTypeReference binaryTypeReference = (IEdmBinaryTypeReference)typeReference;
@@ -1905,6 +1906,7 @@ namespace Microsoft.OData.Metadata
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
                 case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                     return new EdmPrimitiveTypeReference(primitiveType, nullable);
                 case EdmPrimitiveTypeKind.Binary:
                     return new EdmBinaryTypeReference(primitiveType, nullable);

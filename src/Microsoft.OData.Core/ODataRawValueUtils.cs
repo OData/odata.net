@@ -177,6 +177,7 @@ namespace Microsoft.OData
                     case EdmPrimitiveTypeKind.Single:
                         return XmlConvert.ToSingle(text);
                     case EdmPrimitiveTypeKind.String:
+                    case EdmPrimitiveTypeKind.PrimitiveType:
                         return text;
                     case EdmPrimitiveTypeKind.Duration:
                         return EdmValueParser.ParseDuration(text);

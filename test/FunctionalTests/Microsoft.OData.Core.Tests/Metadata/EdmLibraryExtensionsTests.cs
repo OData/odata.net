@@ -481,7 +481,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void ValidateEntityTypeAssignableToEdmEntityType()
         {
             IEdmEntityType baseType = EdmCoreModel.Instance.GetEntityType();
-            EdmEntityType entityType = new EdmEntityType("NS", "Complex");
+            EdmEntityType entityType = new EdmEntityType("NS", "Entity");
             Assert.True(baseType.IsAssignableFrom(entityType));
         }
 
