@@ -115,7 +115,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmTypeReference ComputeReturnType()
         {
-            return CsdlSemanticsModel.WrapTypeReference(this.Context, this.operation.ReturnType);
+            return this.operation.ReturnType == null ? null : new CsdlSemanticsOperationReturnType(this, this.operation.ReturnType);
         }
 
         private IEnumerable<IEdmOperationParameter> ComputeParameters()

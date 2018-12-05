@@ -88,9 +88,9 @@ namespace Microsoft.OData.Edm.Tests
         internal static CsdlFunction Function(
             string name, 
             CsdlOperationParameter[] parameters = default(CsdlOperationParameter[]), 
-            CsdlTypeReference typeReference = null, 
-            bool isBound = false, 
-            string entitySetPath = null, 
+            CsdlOperationReturnType typeReference = null,
+            bool isBound = false,
+            string entitySetPath = null,
             bool isComposable = false,
             CsdlLocation location = null)
         {
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Edm.Tests
         internal static CsdlAction Action(
             string name,
             CsdlOperationParameter[] parameters = default(CsdlOperationParameter[]),
-            CsdlTypeReference typeReference = null,
+            CsdlOperationReturnType typeReference = null,
             bool isBound = false,
             string entitySetPath = null,
             CsdlLocation location = null)

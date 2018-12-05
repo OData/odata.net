@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal class CsdlOperation : CsdlFunctionBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CsdlAction"/> class.
+        /// Initializes a new instance of the <see cref="CsdlOperation"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="parameters">The parameters.</param>
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public CsdlOperation(
             string name,
             IEnumerable<CsdlOperationParameter> parameters,
-            CsdlTypeReference returnType,
+            CsdlOperationReturnType returnType,
             bool isBound,
             string entitySetPath,
             CsdlLocation location)

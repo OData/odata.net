@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm
         private readonly List<IEdmOperationParameter> parameters = new List<IEdmOperationParameter>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmAction"/> class.
+        /// Initializes a new instance of the <see cref="EdmOperation"/> class.
         /// </summary>
         /// <param name="namespaceName">Name of the namespace.</param>
         /// <param name="name">The name.</param>
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
 
-            this.ReturnType = returnType;
+            this.ReturnType = returnType == null ? null : new EdmOperationReturnType(this, returnType);
             this.Namespace = namespaceName;
             this.IsBound = isBound;
             this.EntitySetPath = entitySetPathExpression;
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmAction"/> class.
+        /// Initializes a new instance of the <see cref="EdmOperation"/> class.
         /// </summary>
         /// <param name="namespaceName">Name of the namespace.</param>
         /// <param name="name">The name.</param>
@@ -84,6 +84,9 @@ namespace Microsoft.OData.Edm
 
         /// <summary>
         /// Gets the return type of this function.
+        /// Be noted, it should be different with the input object in the constructor.
+        /// If you want to get the origin input object, cast to "IEdmOperationReturnType" and
+        /// call the "ReturnType" property on that interface.
         /// </summary>
         public IEdmTypeReference ReturnType { get; private set; }
 

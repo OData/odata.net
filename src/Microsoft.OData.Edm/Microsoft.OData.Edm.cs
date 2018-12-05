@@ -71,7 +71,6 @@ namespace Microsoft.OData.Edm {
     internal sealed class EntityRes {
         internal const string EdmPrimitive_UnexpectedKind = "EdmPrimitive_UnexpectedKind";
         internal const string EdmPath_UnexpectedKind = "EdmPath_UnexpectedKind";
-        internal const string Annotations_DocumentationPun = "Annotations_DocumentationPun";
         internal const string Annotations_TypeMismatch = "Annotations_TypeMismatch";
         internal const string Constructable_VocabularyAnnotationMustHaveTarget = "Constructable_VocabularyAnnotationMustHaveTarget";
         internal const string Constructable_EntityTypeOrCollectionOfEntityTypeExpected = "Constructable_EntityTypeOrCollectionOfEntityTypeExpected";
@@ -330,6 +329,7 @@ namespace Microsoft.OData.Edm {
         internal const string Bad_UnresolvedEnumMember = "Bad_UnresolvedEnumMember";
         internal const string Bad_UnresolvedProperty = "Bad_UnresolvedProperty";
         internal const string Bad_UnresolvedParameter = "Bad_UnresolvedParameter";
+        internal const string Bad_UnresolvedReturnType = "Bad_UnresolvedReturnType";
         internal const string Bad_UnresolvedLabeledElement = "Bad_UnresolvedLabeledElement";
         internal const string Bad_CyclicEntity = "Bad_CyclicEntity";
         internal const string Bad_CyclicComplex = "Bad_CyclicComplex";

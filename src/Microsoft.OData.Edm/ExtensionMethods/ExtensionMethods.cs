@@ -2296,6 +2296,16 @@ namespace Microsoft.OData.Edm
         #region IEdmOperation
 
         /// <summary>
+        /// Gets the <see cref="IEdmOperationReturnType"/> from the given <see cref="IEdmOperation"/>.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <returns>null or the <see cref="IEdmOperationReturnType"/> object. </returns>
+        public static IEdmOperationReturnType GetOperationReturnType(this IEdmOperation operation)
+        {
+            return operation.ReturnType as IEdmOperationReturnType;
+        }
+
+        /// <summary>
         /// Determines whether the specified operation is action.
         /// </summary>
         /// <param name="operation">The operation.</param>

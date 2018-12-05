@@ -964,6 +964,11 @@ public interface Microsoft.OData.Edm.IEdmOperationParameter : IEdmElement, IEdmN
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
 }
 
+public interface Microsoft.OData.Edm.IEdmOperationReturnType : IEdmElement, IEdmTypeReference, IEdmVocabularyAnnotatable {
+	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public abstract get; }
+	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.IEdmOptionalParameter : IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmVocabularyAnnotatable {
 	string DefaultValueString  { public abstract get; }
 }
@@ -1955,6 +1960,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.IEdmOperationReturnType GetOperationReturnType (Microsoft.OData.Edm.IEdmOperation operation)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmPathExpression GetPartnerPath (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
 
 	[
@@ -2647,6 +2657,13 @@ public class Microsoft.OData.Edm.EdmOperationParameter : Microsoft.OData.Edm.Edm
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
 }
 
+public class Microsoft.OData.Edm.EdmOperationReturnType : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmOperationReturnType, IEdmTypeReference, IEdmVocabularyAnnotatable {
+	public EdmOperationReturnType (Microsoft.OData.Edm.IEdmOperation declaringOperation, Microsoft.OData.Edm.IEdmTypeReference returnType)
+
+	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public virtual get; }
+}
+
 public class Microsoft.OData.Edm.EdmOptionalParameter : Microsoft.OData.Edm.EdmOperationParameter, IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmOptionalParameter, IEdmVocabularyAnnotatable {
 	public EdmOptionalParameter (Microsoft.OData.Edm.IEdmOperation declaringOperation, string name, Microsoft.OData.Edm.IEdmTypeReference type)
 	public EdmOptionalParameter (Microsoft.OData.Edm.IEdmOperation declaringOperation, string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue)
@@ -2982,6 +2999,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	BadUnresolvedParameter = 304
 	BadUnresolvedPrimitiveType = 226
 	BadUnresolvedProperty = 234
+	BadUnresolvedReturnType = 388
 	BadUnresolvedTarget = 361
 	BadUnresolvedTerm = 352
 	BadUnresolvedType = 225

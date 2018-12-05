@@ -371,6 +371,7 @@
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntityTypeDefinition.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsOperation.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsOperationParameter.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsOperationReturnType.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsOptionalParameter.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsModel.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsNavigationProperty.cs" />
@@ -380,6 +381,7 @@
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedLabeledElement.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedEnumMember.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedParameter.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedReturnType.cs" />
     <Compile Include="Schema\EdmEnumTypeReference.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs" />
     <Compile Include="Schema\EdmCollectionType.cs" />
@@ -422,6 +424,7 @@
     <Compile Include="Schema\Interfaces\IEdmEntityTypeReference.cs" />
     <Compile Include="Schema\Interfaces\IEdmOperationImport.cs" />
     <Compile Include="Schema\Interfaces\IEdmOperationParameter.cs" />
+    <Compile Include="Schema\Interfaces\IEdmOperationReturnType.cs" />
     <Compile Include="Schema\Interfaces\IEdmOptionalParameter.cs" />
     <Compile Include="Schema\Interfaces\IEdmModel.cs" />
     <Compile Include="Schema\Interfaces\IEdmNamedElement.cs" />
@@ -447,6 +450,7 @@
     <Compile Include="Schema\EdmOperation.cs" />
     <Compile Include="Schema\EdmOperationImport.cs" />
     <Compile Include="Schema\EdmOperationParameter.cs" />
+    <Compile Include="Schema\EdmOperationReturnType.cs" />
     <Compile Include="Schema\EdmOptionalParameter.cs" />
     <Compile Include="Schema\EdmModel.cs" />
     <Compile Include="Schema\EdmModelBase.cs" />

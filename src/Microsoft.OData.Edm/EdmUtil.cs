@@ -336,6 +336,8 @@ namespace Microsoft.OData.Edm
                     }
                     else
                     {
+                        IEdmOperationReturnType returnType;
+                        IEdmEnumMember enumMember;
                         IEdmOperationParameter parameter = element as IEdmOperationParameter;
                         if (parameter != null)
                         {
@@ -345,16 +347,20 @@ namespace Microsoft.OData.Edm
                                 return parameterOwnerName + "/" + parameter.Name;
                             }
                         }
-                        else
+                        else if ((enumMember = element as IEdmEnumMember) != null)
                         {
-                            IEdmEnumMember enumMember = element as IEdmEnumMember;
-                            if (enumMember != null)
+                            string enumMemberOwnerName = FullyQualifiedName(enumMember.DeclaringType);
+                            if (enumMemberOwnerName != null)
                             {
-                                string enumMemberOwnerName = FullyQualifiedName(enumMember.DeclaringType);
-                                if (enumMemberOwnerName != null)
-                                {
-                                    return enumMemberOwnerName + "/" + enumMember.Name;
-                                }
+                                return enumMemberOwnerName + "/" + enumMember.Name;
+                            }
+                        }
+                        else if ((returnType = element as IEdmOperationReturnType) != null)
+                        {
+                            string operationName = FullyQualifiedName(returnType.DeclaringOperation);
+                            if (operationName != null)
+                            {
+                                return operationName + "/" + CsdlConstants.ReturnTypeExternTarget;
                             }
                         }
                     }

@@ -530,6 +530,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOperationReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOperationReturnType.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs</Link>
     </Compile>
@@ -550,6 +553,9 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedParameter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedReturnType.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs</Link>
@@ -938,6 +944,9 @@
     <Compile Include="..\Schema\EdmOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmOperationReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmOperationReturnType.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmOptionalParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmOptionalParameter.cs</Link>
     </Compile>
@@ -1141,6 +1150,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperationReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationReturnType.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOptionalParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOptionalParameter.cs</Link>

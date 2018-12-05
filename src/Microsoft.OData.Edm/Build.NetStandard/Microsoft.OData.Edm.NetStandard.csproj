@@ -338,6 +338,9 @@
     <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedParameter.cs">
       <Link>Csdl\Semantics\BadElements\UnresolvedParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedReturnType.cs">
+      <Link>Csdl\Semantics\BadElements\UnresolvedReturnType.cs</Link>
+    </Compile>
     <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs">
       <Link>Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs</Link>
     </Compile>
@@ -490,6 +493,9 @@
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsOperationParameter.cs">
       <Link>Csdl\Semantics\CsdlSemanticsOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\CsdlSemanticsOperationReturnType.cs">
+      <Link>Csdl\Semantics\CsdlSemanticsOperationReturnType.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs">
       <Link>Csdl\Semantics\CsdlSemanticsOptionalParameter.cs</Link>
@@ -852,6 +858,9 @@
     <Compile Include="..\Schema\EdmOperationParameter.cs">
       <Link>Schema\EdmOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmOperationReturnType.cs">
+      <Link>Schema\EdmOperationReturnType.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmOptionalParameter.cs">
       <Link>Schema\EdmOptionalParameter.cs</Link>
     </Compile>
@@ -1056,6 +1065,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
       <Link>Schema\Interfaces\IEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperationReturnType.cs">
+      <Link>Schema\Interfaces\IEdmOperationReturnType.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOptionalParameter.cs">
       <Link>Schema\Interfaces\IEdmOptionalParameter.cs</Link>

@@ -483,7 +483,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                           "</Record>" +
                         "</Annotation>" +
                     "</Parameter>" +
-                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" Unicode=\"false\" />" +
                   "</Function>" +
                   "<EntityContainer Name=\"Default\">" +
                     "<FunctionImport Name=\"TestFunction\" Function=\"test.TestFunction\" />" +
@@ -519,7 +519,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<Parameter Name=\"requiredParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
                     "<Parameter Name=\"optionalParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
                     "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" Unicode=\"false\" />" +
                   "</Function>" +
                   "<Annotations Target=\"NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParam\">" +
                    "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
@@ -578,7 +578,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                   "<Function Name=\"TestFunction\">" +
                     "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" Unicode=\"false\" />" +
                   "</Function>" +
                   "<Annotations Target=\"NS.TestFunction(Edm.String)/optionalParamWithDefault\">" +
                    "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
@@ -614,6 +614,76 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         #endregion
+
+        [Fact]
+        public void ShouldWriteInLineReturnTypeAnnotation()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<Function Name=\"TestFunction\">" +
+                    "<ReturnType Type=\"Edm.PrimitiveType\" Nullable=\"false\">" +
+                        "<Annotation Term=\"Org.OData.Validation.V1.DerivedTypeConstraint\">" +
+                          "<Collection>" +
+                            "<String>Edm.Int32</String>" +
+                            "<String>Edm.Boolean</String>" +
+                          "</Collection>" +
+                        "</Annotation>" +
+                    "</ReturnType>" +
+                  "</Function>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            Assert.Equal(expected, WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.Inline));
+        }
+
+        [Fact]
+        public void ShouldWriteOutofLineReturnTypeAnnotation()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<Function Name=\"TestFunction\">" +
+                    "<ReturnType Type=\"Edm.PrimitiveType\" Nullable=\"false\" />" +
+                  "</Function>" +
+                  "<Annotations Target=\"NS.TestFunction()/$ReturnType\">" +
+                    "<Annotation Term=\"Org.OData.Validation.V1.DerivedTypeConstraint\">" +
+                      "<Collection>" +
+                        "<String>Edm.Int32</String>" +
+                        "<String>Edm.Boolean</String>" +
+                      "</Collection>" +
+                    "</Annotation>" +
+                  "</Annotations>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            Assert.Equal(expected, WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.OutOfLine));
+        }
+
+        private string WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation location)
+        {
+            var primitiveTypeRef = EdmCoreModel.Instance.GetPrimitiveType(false);
+            var model = new EdmModel();
+            var termType = model.FindTerm("Org.OData.Validation.V1.DerivedTypeConstraint");
+            Assert.NotNull(termType);
+
+            var function = new EdmFunction("NS", "TestFunction", primitiveTypeRef);
+            model.AddElement(function);
+
+            IEdmCollectionExpression collectionExpression = new EdmCollectionExpression(new EdmStringConstant("Edm.Int32"), new EdmStringConstant("Edm.Boolean"));
+            IEdmOperationReturnType returnType = function.GetOperationReturnType();
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(returnType, termType, collectionExpression);
+            annotation.SetSerializationLocation(model, location);
+            model.SetVocabularyAnnotation(annotation);
+
+            return GetCsdl(model, CsdlTarget.OData);
+        }
 
         [Fact]
         public void ShouldWriteEdmComplexTypeProperty()

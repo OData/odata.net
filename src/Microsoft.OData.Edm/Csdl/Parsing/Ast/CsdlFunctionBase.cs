@@ -14,9 +14,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal abstract class CsdlFunctionBase : CsdlNamedElement
     {
         private readonly List<CsdlOperationParameter> parameters;
-        private readonly CsdlTypeReference returnType;
+        private readonly CsdlOperationReturnType returnType;
 
-        protected CsdlFunctionBase(string name, IEnumerable<CsdlOperationParameter> parameters, CsdlTypeReference returnType, CsdlLocation location)
+        protected CsdlFunctionBase(string name, IEnumerable<CsdlOperationParameter> parameters, CsdlOperationReturnType returnType, CsdlLocation location)
             : base(name, location)
         {
             this.parameters = new List<CsdlOperationParameter>(parameters);
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             get { return this.parameters; }
         }
 
-        public CsdlTypeReference ReturnType
+        public CsdlOperationReturnType ReturnType
         {
             get { return this.returnType; }
         }
