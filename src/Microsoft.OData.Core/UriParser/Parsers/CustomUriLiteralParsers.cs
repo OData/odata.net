@@ -199,8 +199,8 @@ namespace Microsoft.OData.UriParser
                     .ToArray();
 
                 // Returns 'True' if at least one parser has been removed from the general parser of those registered to EdmType
-                bool removed = newCustomUriLiteralParserPerEdmType.Length < CustomUriLiteralParsers.customUriLiteralParserPerEdmType.Count ||
-                    newCustomUriLiteralParsers.Length < CustomUriLiteralParsers.customUriLiteralParsers.Count;
+                bool removed = newCustomUriLiteralParserPerEdmType.Length < CustomUriLiteralParsers.customUriLiteralParserPerEdmType.Length ||
+                    newCustomUriLiteralParsers.Length < CustomUriLiteralParsers.customUriLiteralParsers.Length;
 
                 CustomUriLiteralParsers.customUriLiteralParserPerEdmType = newCustomUriLiteralParserPerEdmType;
                 CustomUriLiteralParsers.customUriLiteralParsers = newCustomUriLiteralParsers;
