@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.OData.Edm;
@@ -33,13 +32,13 @@ namespace Microsoft.OData.UriParser
         /// Used for General uri literal parsers. These parsers will be called for every text that has to parsed.
         /// The parses could parse multiple EdmTypes.
         /// </summary>
-        private static IReadOnlyCollection<IUriLiteralParser> customUriLiteralParsers = new IUriLiteralParser[0];
+        private static IUriLiteralParser[] customUriLiteralParsers = new IUriLiteralParser[0];
 
         /// <summary>
         /// "Registered" uri literal parser to an EdmType. These parsers will be called when the text has to be parsed to the
         /// specific EdmType they had registered to. Each of these parsers could parse only one EdmType. Better performace.
         /// </summary>
-        private static IReadOnlyCollection<UriLiteralParserPerEdmType> customUriLiteralParserPerEdmType = new UriLiteralParserPerEdmType[0];
+        private static UriLiteralParserPerEdmType[] customUriLiteralParserPerEdmType = new UriLiteralParserPerEdmType[0];
 
         //// TODO: Consider use Dictionary<EmdTypeReference,IUriLiteralParser> which is a better solution.
         //// The problem with dictionary is to generate an HashCode for an EdmTypeReference.
@@ -94,7 +93,7 @@ namespace Microsoft.OData.UriParser
 
             // Parse with all the general parsers
             // Stop when a parser succeeded parsing the text.
-            IReadOnlyCollection<IUriLiteralParser> localCustomUriLiteralParsers = CustomUriLiteralParsers.customUriLiteralParsers;
+            IUriLiteralParser[] localCustomUriLiteralParsers = CustomUriLiteralParsers.customUriLiteralParsers;
             foreach (IUriLiteralParser customUriLiteralParser in localCustomUriLiteralParsers)
             {
                 // Try to parse
