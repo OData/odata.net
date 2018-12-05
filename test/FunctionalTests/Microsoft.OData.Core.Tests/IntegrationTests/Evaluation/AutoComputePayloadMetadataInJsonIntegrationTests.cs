@@ -779,21 +779,22 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             var resourceWriter = writer.CreateODataResourceWriter(entitySet);
             resourceWriter.WriteStart(resource);
-            resourceWriter.WriteStart(new ODataNestedResourceInfo { Name = "ComplexData", IsCollection = false });
+            resourceWriter.WriteStart(new ODataNestedResourceInfo { Name = "ComplexProperty", IsCollection = false });
             ODataResource complexValue = new ODataResource
             {
                 TypeName = "NS.Address",
                 Properties = new[]
                 {
                     new ODataProperty { Name = "City", Value = "Redmond" },
-                    new ODataProperty { Name = "ZipCode", Value = 98052 }
+                    new ODataProperty { Name = "ZipCode", Value = 98052 },
+                    new ODataProperty { Name = "Data", Value = new Date(2018, 12, 4) }
                 }
             };
             resourceWriter.WriteStart(complexValue);
             resourceWriter.WriteEnd();
-            resourceWriter.WriteEnd(); // end of "ComplexData" nested property
+            resourceWriter.WriteEnd(); // end of "ComplexProperty" nested property
 
-            resourceWriter.WriteStart(new ODataNestedResourceInfo { Name = "EntityData", IsCollection = false });
+            resourceWriter.WriteStart(new ODataNestedResourceInfo { Name = "EntityProperty", IsCollection = false });
             ODataResource entityValue = new ODataResource
             {
                 TypeName = "NS.Customer",
@@ -801,18 +802,20 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             };
             resourceWriter.WriteStart(entityValue);
             resourceWriter.WriteEnd();
-            resourceWriter.WriteEnd();// end of "EntityData" nested property
+            resourceWriter.WriteEnd();// end of "EntityProperty" nested property
             resourceWriter.WriteEnd();
 
             var str = Encoding.UTF8.GetString(stream.ToArray());
             Assert.Equal(str, "{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
                 "\"Id\":9," +
-                "\"ComplexData\":{" +
+                "\"ComplexProperty\":{" +
                     "\"@odata.type\":\"#NS.Address\"," +
                     "\"City\":\"Redmond\"," +
-                    "\"ZipCode\":98052" +
+                    "\"ZipCode\":98052," +
+                    "\"Data@odata.type\":\"#Date\"," +
+                    "\"Data\":\"2018-12-04\"" +
                 "}," +
-                "\"EntityData\":{" +
+                "\"EntityProperty\":{" +
                     "\"@odata.type\":\"#NS.Customer\"," +
                     "\"Id\":42" +
                 "}}");
@@ -824,12 +827,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             const string payload =
                 "{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
                 "\"Id\":9," +
-                "\"ComplexData\":{" +
+                "\"ComplexProperty\":{" +
                     "\"@odata.type\":\"#NS.Address\"," +
                     "\"City\":\"Redmond\"," +
-                    "\"ZipCode\":98052" +
+                    "\"ZipCode\":98052," +
+                    "\"Data@odata.type\":\"#Boolean\"," +
+                    "\"Data\":true" +
                 "}," +
-                "\"EntityData\":{" +
+                "\"EntityProperty\":{" +
                     "\"@odata.type\":\"#NS.Customer\"," +
                     "\"Id\":42" +
                 "}}";
@@ -878,8 +883,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             // #1
             ODataResource nestedResource = nestedResources.First(c => c.TypeName == "NS.Address");
-            Assert.Equal(2, nestedResource.Properties.Count());
+            Assert.Equal(3, nestedResource.Properties.Count());
             Assert.Equal("Redmond", nestedResource.Properties.First(p => p.Name == "City").Value);
+            Assert.Equal(98052, nestedResource.Properties.First(p => p.Name == "ZipCode").Value);
+            Assert.Equal(true, nestedResource.Properties.First(p => p.Name == "Data").Value);
 
             // #2
             nestedResource = nestedResources.First(c => c.TypeName == "NS.Customer");
@@ -893,22 +900,23 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             var complexType = new EdmComplexType("NS", "Address");
             complexType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
             complexType.AddStructuralProperty("ZipCode", EdmPrimitiveTypeKind.Int32);
+            complexType.AddStructuralProperty("Data", EdmPrimitiveTypeKind.PrimitiveType);
             var customer = new EdmEntityType("NS", "Customer");
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            // <Property Name="ComplexData" Type="Edm.ComplexType" />
-            customer.AddStructuralProperty("ComplexData", EdmCoreModel.Instance.GetComplexType(true));
+            // <Property Name="ComplexProperty" Type="Edm.ComplexType" />
+            customer.AddStructuralProperty("ComplexProperty", EdmCoreModel.Instance.GetComplexType(true));
             var container = new EdmEntityContainer("NS", "Container");
             entitySet = container.AddEntitySet("Customers", customer);
             model.AddElements(new IEdmSchemaElement[] { complexType, customer, container });
 
-            IEdmEntityType entityType = model.FindType("Edm.EntityType") as IEdmEntityType;
-            // <NavigationProperty Name="EntityData" Type="Edm.EntityType" />
+            IEdmEntityType entityType = EdmCoreModel.Instance.GetEntityType();
+            // <NavigationProperty Name="EntityProperty" Type="Edm.EntityType" />
             var navProperty = customer.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo()
                 {
                     Target = entityType,
                     TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
-                    Name = "EntityData"
+                    Name = "EntityProperty"
                 });
             entitySet.AddNavigationTarget(navProperty, entitySet);
             return model;
