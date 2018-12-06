@@ -27,12 +27,18 @@ namespace Microsoft.OData.Tests.JsonLight
         private ODataProperty declaredProperty;
         private ODataProperty undeclaredProperty;
         private ODataProperty declaredGeometryProperty;
+        private EdmComplexType addressType;
+        private EdmComplexType derivedAddressType;
         private EdmComplexType openAddressType;
         private EdmTypeDefinition myInt32;
         private EdmTypeDefinition myString;
         private ODataProperty declaredPropertyCountryRegion;
         private ODataProperty declaredPropertyCountryRegionWithInstanceAnnotation;
         private ODataProperty undeclaredPropertyCity;
+        private ODataProperty declaredPropertyHomeAddress;
+        private ODataProperty declaredPropertyAddress;
+        private ODataProperty declaredPropertyAddressWithInstanceAnnotation;
+        private ODataProperty declaredPropertyHomeAddressWithInstanceAnnotations;
         private ODataProperty declaredPropertyMyInt32;
         private ODataProperty declaredPropertyMyInt32WithInstanceAnnotations;
         private ODataProperty declaredPropertyMyString;
@@ -75,9 +81,17 @@ namespace Microsoft.OData.Tests.JsonLight
 
             edmModel.AddElement(edmEntityType);
 
-            // Initialize open ComplexType: OpenAddress.
+            // Initialize ComplexType: Address, HomeAddress, and OpenAddress
+            this.addressType = new EdmComplexType("TestNamespace", "Address", baseType: null, isAbstract: false, isOpen: false);
+            this.addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            this.derivedAddressType = new EdmComplexType("TestNamespace", "HomeAddress", baseType: this.addressType, isAbstract: false, isOpen: false);
+            this.derivedAddressType.AddStructuralProperty("FamilyName", EdmPrimitiveTypeKind.String);
+
             this.openAddressType = new EdmComplexType("TestNamespace", "OpenAddress", baseType: null, isAbstract: false, isOpen: true);
             this.openAddressType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
+
+            edmModel.AddElement(this.addressType);
+            edmModel.AddElement(this.derivedAddressType);
             edmModel.AddElement(this.openAddressType);
 
             this.model = TestUtils.WrapReferencedModelsToMainModel(edmModel);
@@ -87,6 +101,80 @@ namespace Microsoft.OData.Tests.JsonLight
             this.declaredGeometryProperty = new ODataProperty { Name = "DeclaredGeometryProperty", Value = GeometryPoint.Create(0.0, 0.0) };
             this.declaredPropertyTimeOfDay = new ODataProperty { Name = "TimeOfDayProperty", Value = new TimeOfDay(1, 30, 5, 123) };
             this.declaredPropertyDate = new ODataProperty { Name = "DateProperty", Value = new Date(2014, 9, 17) };
+
+            this.declaredPropertyAddress = new ODataProperty()
+            {
+                Name = "AddressProperty",
+                Value = new ODataResourceValue
+                {
+                    TypeName = "TestNamespace.Address",
+                    Properties = new ODataProperty[] { new ODataProperty { Name = "City", Value = "Shanghai" } }
+                }
+            };
+            this.declaredPropertyHomeAddress = new ODataProperty()
+            {
+                Name = "HomeAddressProperty",
+                Value = new ODataResourceValue
+                {
+                    TypeName = "TestNamespace.HomeAddress",
+                    Properties = new ODataProperty[]
+                    {
+                        new ODataProperty { Name = "FamilyName", Value = "Green" },
+                        new ODataProperty { Name = "City", Value = "Shanghai" }
+                    }
+                }
+            };
+            this.declaredPropertyAddressWithInstanceAnnotation = new ODataProperty()
+            {
+                Name = "AddressProperty",
+                Value = new ODataResourceValue
+                {
+                    TypeName = "TestNamespace.Address",
+                    Properties = new ODataProperty[]
+                    {
+                        new ODataProperty { Name = "City", Value = "Shanghai" }
+                    },
+                    InstanceAnnotations = new Collection<ODataInstanceAnnotation>
+                    {
+                        new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true))
+                    }
+                }
+            };
+            this.declaredPropertyHomeAddressWithInstanceAnnotations = new ODataProperty()
+            {
+                Name = "HomeAddressProperty",
+                Value = new ODataResourceValue
+                {
+                    TypeName = "TestNamespace.HomeAddress",
+                    Properties = new ODataProperty[]
+                    {
+                        new ODataProperty
+                        {
+                            Name = "FamilyName",
+                            Value = "Green",
+                            InstanceAnnotations = new Collection<ODataInstanceAnnotation>
+                            {
+                                new ODataInstanceAnnotation("FamilyName.annotation", new ODataPrimitiveValue(true))
+                            }
+                        },
+                        new ODataProperty
+                        {
+                            Name = "City",
+                            Value = "Shanghai",
+                            InstanceAnnotations = new Collection<ODataInstanceAnnotation>
+                            {
+                                new ODataInstanceAnnotation("City.annotation1", new ODataPrimitiveValue(true)),
+                                new ODataInstanceAnnotation("City.annotation2", new ODataPrimitiveValue(123))
+                            }
+                        }
+                    },
+                    InstanceAnnotations = new Collection<ODataInstanceAnnotation>
+                    {
+                        new ODataInstanceAnnotation("Is.AutoComputable", new ODataPrimitiveValue(true)),
+                        new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(false))
+                    }
+                }
+            };
 
             this.declaredPropertyCountryRegion = new ODataProperty() { Name = "CountryRegion", Value = "China" };
             this.declaredPropertyCountryRegionWithInstanceAnnotation = new ODataProperty()
@@ -113,6 +201,80 @@ namespace Microsoft.OData.Tests.JsonLight
             };
             this.declaredPropertyMyString = new ODataProperty() { Name = "MyStringProperty", Value = "abcde" };
         }
+
+        #region Serializing top level resource type properties
+
+        [Fact]
+        public void WritingTopLevelUnderivedResourceTypePropertyWithJsonMiniShouldNotWriteTypeName()
+        {
+            var result = this.SerializeProperty(null, this.declaredPropertyAddress);
+
+            Assert.Equal("{\"AddressProperty\":{\"City\":\"Shanghai\"}}", result);
+            Assert.DoesNotContain("@odata.type", result);
+        }
+
+        [Fact]
+        public void WritingTopLevelDerivedResourceTypePropertyWithJsonMiniShouldWriteTypeName()
+        {
+            var result = this.SerializeProperty(null, this.declaredPropertyHomeAddress);
+
+            Assert.Equal("{\"HomeAddressProperty\":{\"@odata.type\":\"#TestNamespace.HomeAddress\",\"FamilyName\":\"Green\",\"City\":\"Shanghai\"}}", result);
+            Assert.Contains("\"@odata.type\":\"#TestNamespace.HomeAddress\"", result);
+        }
+
+        [Fact]
+        public void WritingTopLevelResourceTypePropertyShouldWriteInstanceAnnotation()
+        {
+            var result = this.SerializeProperty(null, this.declaredPropertyAddressWithInstanceAnnotation);
+
+            Assert.Equal("{\"AddressProperty\":{\"@Is.ReadOnly\":true,\"City\":\"Shanghai\"}}", result);
+            Assert.Contains("\"@Is.ReadOnly\":true", result);
+        }
+
+        [Fact]
+        public void WritingTopLevelResourceTypePropertyShouldWriteInstanceAnnotations()
+        {
+            var result = this.SerializeProperty(null, this.declaredPropertyHomeAddressWithInstanceAnnotations);
+
+            Assert.Equal("{\"HomeAddressProperty\":{\"@odata.type\":\"#TestNamespace.HomeAddress\",\"@Is.AutoComputable\":true,\"@Is.ReadOnly\":false,\"FamilyName@FamilyName.annotation\":true,\"FamilyName\":\"Green\",\"City@City.annotation1\":true,\"City@City.annotation2\":123,\"City\":\"Shanghai\"}}", result);
+            Assert.Contains("\"@Is.AutoComputable\":true,\"@Is.ReadOnly\":false", result);
+        }
+
+        [Fact]
+        public void WritingTopLevelCollectionResourceTypePropertyWorks()
+        {
+            var addresses = new ODataProperty()
+            {
+                Name = "Addresses",
+                Value = new ODataCollectionValue
+                {
+                    TypeName = "Collection(TestNamespace.Address)",
+                    Items = new[]
+                    {
+                        new ODataResourceValue // underived type
+                        {
+                            TypeName = "TestNamespace.Address", Properties = new ODataProperty[] { new ODataProperty { Name = "City", Value = "Shanghai" } }
+                        },
+                        new ODataResourceValue
+                        {
+                            TypeName = "TestNamespace.HomeAddress", // derived type
+                            Properties = new ODataProperty[]
+                            {
+                                new ODataProperty { Name = "FamilyName", Value = "Green" },
+                                new ODataProperty { Name = "City", Value = "Shanghai" }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = this.SerializeProperty(null, addresses);
+
+            Assert.Equal("{\"Addresses\":[{\"City\":\"Shanghai\"},{\"@odata.type\":\"#TestNamespace.HomeAddress\",\"FamilyName\":\"Green\",\"City\":\"Shanghai\"}]}", result);
+            Assert.Contains("\"},{\"@odata.type\":\"#TestNamespace.HomeAddress\"", result);
+        }
+
+        #endregion Serializing top level resource type properties
 
         #region Default type name serialization behavior for primitive values
         [Fact]
@@ -349,6 +511,68 @@ namespace Microsoft.OData.Tests.JsonLight
             this.SerializeProperty(this.openAddressType, this.undeclaredPropertyCity).Should().Contain("\"City\":\"Shanghai\"");
         }
         #endregion Serializing declared and dynamic properties in open ComplexType
+
+        [Fact]
+        public void WritingPropertyShouldWriteResourceInstanceAnnotation()
+        {
+            var resourceValue = new ODataResourceValue
+            {
+                TypeName = "TestNamespace.Address",
+                Properties = new[] { new ODataProperty { Name = "City", Value = "Redmond" } }
+            };
+            var property = new ODataProperty()
+            {
+                Name = "IntProp",
+                Value = 12345,
+            };
+            property.InstanceAnnotations.Add(new ODataInstanceAnnotation("Resource.Annotation", resourceValue));
+
+            var result = SerializeProperty(null, property);
+            Assert.Equal("{\"IntProp@Resource.Annotation\":{\"@odata.type\":\"#TestNamespace.Address\",\"City\":\"Redmond\"},\"IntProp\":12345}", result);
+        }
+
+        [Fact]
+        public void WritingPropertyShouldWriteCollectionResourceInstanceAnnotation()
+        {
+            var property = new ODataProperty()
+            {
+                Name = "IntProp",
+                Value = 12345,
+            };
+            property.InstanceAnnotations.Add(new ODataInstanceAnnotation("Collection.Resource", new ODataCollectionValue
+            {
+                TypeName = "Collection(TestNamespace.Address)",
+                Items = new[]
+                {
+                    new ODataResourceValue
+                    {
+                        TypeName = "TestNamespace.Address",
+                        Properties = new[] { new ODataProperty { Name = "City", Value = "Redmond" } }
+                    },
+                    new ODataResourceValue
+                    {
+                        TypeName = "TestNamespace.HomeAddress", // derived type
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty { Name = "FamilyName", Value = "Green" },
+                            new ODataProperty { Name = "City", Value = "Shanghai" }
+                        }
+                    }
+                }
+            }));
+
+            var result = SerializeProperty(null, property);
+            Assert.Equal(
+                "{" +
+                   "\"Collection.Resource@odata.type\":\"#Collection(TestNamespace.Address)\"," +
+                   "\"IntProp@Collection.Resource\":[" +
+                     "{\"City\":\"Redmond\"}," +
+                     "{\"@odata.type\":\"#TestNamespace.HomeAddress\",\"FamilyName\":\"Green\",\"City\":\"Shanghai\"}" +
+                   "]," +
+                   "\"IntProp\":12345" +
+                "}",
+                result);
+        }
 
         /// <summary>
         /// Serialize the given property as a non-top-level property in JSON Light.

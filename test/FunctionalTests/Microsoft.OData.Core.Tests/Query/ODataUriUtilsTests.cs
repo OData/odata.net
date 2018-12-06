@@ -264,5 +264,138 @@ namespace Microsoft.OData.Tests.Query
             parse.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Strings.ExpressionLexer_UnbalancedBracketExpression);
         }
         #endregion
+
+        #region resource testings
+
+        [Fact]
+        public void TestResourceValueConvertToUriLiteral()
+        {
+            ODataResourceValue value = new ODataResourceValue
+            {
+                TypeName = "Fully.Qualified.Namespace.Person",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "ID", Value = 42 },
+                    new ODataProperty { Name = "SSN", Value = "777-42-9001" }
+                }
+            };
+
+            string actual = ODataUriUtils.ConvertToUriLiteral(value, ODataVersion.V4, HardCodedTestModel.TestModel);
+            Assert.Equal(@"{""@odata.type"":""#Fully.Qualified.Namespace.Person"",""ID"":42,""SSN"":""777-42-9001""}", actual);
+        }
+
+        [Fact]
+        public void TestResourceValueWithInstanceAnnotationConvertToUriLiteral()
+        {
+            ODataResourceValue value = new ODataResourceValue
+            {
+                TypeName = "Fully.Qualified.Namespace.Person",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "ID", Value = 42 }
+                },
+                InstanceAnnotations = new []
+                {
+                    new ODataInstanceAnnotation("Custom.Annotation", new ODataResourceValue
+                    {
+                        TypeName = "Fully.Qualified.Namespace.Dog",
+                        Properties = new []
+                        {
+                            new ODataProperty { Name = "Color", Value = "Red" }
+                        }
+                    })
+                }
+            };
+
+            string actual = ODataUriUtils.ConvertToUriLiteral(value, ODataVersion.V4, HardCodedTestModel.TestModel);
+            Assert.Equal(
+                "{" +
+                  "\"@odata.type\":\"#Fully.Qualified.Namespace.Person\"," +
+                  "\"@Custom.Annotation\":{\"@odata.type\":\"#Fully.Qualified.Namespace.Dog\",\"Color\":\"Red\"}," +
+                  "\"ID\":42" +
+                "}", actual);
+        }
+
+        [Fact]
+        public void TestResourceValueWithNestedResourceValueConvertToUriLiteral()
+        {
+            ODataResourceValue value = new ODataResourceValue
+            {
+                TypeName = "Fully.Qualified.Namespace.Person",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "ID", Value = 42 },
+                    new ODataProperty { Name = "SSN", Value = "777-42-9001" },
+                    new ODataProperty
+                    {
+                        Name = "MyDog",
+                        Value = new ODataResourceValue
+                        {
+                            TypeName = "Fully.Qualified.Namespace.Dog",
+                            Properties = new []
+                            {
+                                new ODataProperty { Name = "Color", Value = "Red" }
+                            }
+                        }
+                    }
+                }
+            };
+
+            string actual = ODataUriUtils.ConvertToUriLiteral(value, ODataVersion.V4, HardCodedTestModel.TestModel);
+            Assert.Equal(@"{""@odata.type"":""#Fully.Qualified.Namespace.Person"",""ID"":42,""SSN"":""777-42-9001"",""MyDog"":{""Color"":""Red""}}", actual);
+        }
+        #endregion resource testings
+
+        #region Collection of Resource Value
+
+        [Fact]
+        public void TestCollectionResourceValueWithInstanceAnnotationConvertToUriLiteral()
+        {
+            ODataResourceValue person = new ODataResourceValue
+            {
+                TypeName = "Fully.Qualified.Namespace.Person",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "ID", Value = 42 }
+                },
+                InstanceAnnotations = new[]
+                {
+                    new ODataInstanceAnnotation("Custom.Annotation", new ODataResourceValue
+                    {
+                        TypeName = "Fully.Qualified.Namespace.Dog",
+                        Properties = new []
+                        {
+                            new ODataProperty { Name = "Color", Value = "Red" }
+                        }
+                    })
+                }
+            };
+            ODataResourceValue employee = new ODataResourceValue
+            {
+                TypeName = "Fully.Qualified.Namespace.Employee",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "ID", Value = 42 },
+                    new ODataProperty { Name = "WorkEmail", Value = "WorkEmail@work.com" }
+                }
+            };
+            ODataCollectionValue collection = new ODataCollectionValue
+            {
+                TypeName = "Collection(Fully.Qualified.Namespace.Person)",
+                Items = new[]
+                {
+                    person,
+                    employee
+                }
+            };
+
+            string actual = ODataUriUtils.ConvertToUriLiteral(collection, ODataVersion.V4, HardCodedTestModel.TestModel);
+            Assert.Equal(
+                "[" +
+                  "{\"@Custom.Annotation\":{\"@odata.type\":\"#Fully.Qualified.Namespace.Dog\",\"Color\":\"Red\"},\"ID\":42}," +
+                  "{\"@odata.type\":\"#Fully.Qualified.Namespace.Employee\",\"ID\":42,\"WorkEmail\":\"WorkEmail@work.com\"}" +
+                "]", actual);
+        }
+        #endregion Collection of Resource Value
     }
 }

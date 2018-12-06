@@ -3149,11 +3149,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Neither an expected type nor a type name in the OData object model was provided for a complex value. When writing a request payload, either an expected type or a type name has to be specified."
+        /// A string like "Neither an expected type nor a type name in the OData object model was provided for a resource value. When writing a request payload, either an expected type or a type name has to be specified."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest {
+        internal static string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
             }
         }
 
@@ -4140,6 +4140,15 @@ namespace Microsoft.OData {
         internal static string ODataJsonLightValueSerializer_MissingTypeNameOnCollection {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightValueSerializer_MissingTypeNameOnCollection);
+            }
+        }
+
+        /// <summary>
+        /// A string like "A type name was not provided for an instance of ODataResourceValue."
+        /// </summary>
+        internal static string ODataJsonLightValueSerializer_MissingTypeNameOnResource {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightValueSerializer_MissingTypeNameOnResource);
             }
         }
 

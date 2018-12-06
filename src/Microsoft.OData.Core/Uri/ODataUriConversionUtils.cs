@@ -253,6 +253,45 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Converts a <see cref="ODataResourceValue"/> to a string.
+        /// </summary>
+        /// <param name="resourceValue">Instance to convert.</param>
+        /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
+        /// <param name="version">Version to be compliant with.</param>
+        /// <returns>A string representation of <paramref name="resourceValue"/> to be added.</returns>
+        internal static string ConvertToResourceLiteral(ODataResourceValue resourceValue, IEdmModel model, ODataVersion version)
+        {
+            ExceptionUtils.CheckArgumentNotNull(resourceValue, "resourceValue");
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+
+            StringBuilder builder = new StringBuilder();
+            using (TextWriter textWriter = new StringWriter(builder, CultureInfo.InvariantCulture))
+            {
+                ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
+                {
+                    Version = version,
+                    Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
+
+                    // Should write instance annotations for the literal
+                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
+                };
+
+                WriteJsonLightLiteral(
+                    model,
+                    messageWriterSettings,
+                    textWriter,
+                    (serializer) => serializer.WriteResourceValue(
+                        resourceValue, /* resourceValue */
+                        null, /* metadataTypeReference */
+                        false, /* isTopLevel */
+                        true, /* isOpenPropertyType */
+                        serializer.CreateDuplicatePropertyNameChecker()));
+            }
+
+            return builder.ToString();
+        }
+
+        /// <summary>
         /// Converts a <see cref="ODataCollectionValue"/> to a string for use in a Url.
         /// </summary>
         /// <param name="collectionValue">Instance to convert.</param>
@@ -271,6 +310,9 @@ namespace Microsoft.OData
                 {
                     Version = version,
                     Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
+
+                    // TBD: Should write instance annotations for the literal???
+                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
                 };
 
                 WriteJsonLightLiteral(

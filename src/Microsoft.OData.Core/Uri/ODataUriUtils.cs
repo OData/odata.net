@@ -124,6 +124,12 @@ namespace Microsoft.OData
                 return ExpressionConstants.KeywordNull;
             }
 
+            ODataResourceValue resourceValue = value as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                return ODataUriConversionUtils.ConvertToResourceLiteral(resourceValue, model, version);
+            }
+
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
