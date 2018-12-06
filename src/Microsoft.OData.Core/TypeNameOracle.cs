@@ -137,6 +137,38 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="model">The model to use.</param>
         /// <param name="typeReferenceFromMetadata">The type inferred from the model or null if the model is not a user model.</param>
+        /// <param name="resourceValue">The value in question to resolve the type for.</param>
+        /// <param name="isOpenPropertyType">True if the type name belongs to an open (dynamic) property.</param>
+        /// <param name="writerValidator">The writer validator to use for validation.</param>
+        /// <returns>A type for the <paramref name="resourceValue"/> or null if no type name is specified and no metadata is available.</returns>
+        internal static IEdmTypeReference ResolveAndValidateTypeForResourceValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata,
+            ODataResourceValue resourceValue, bool isOpenPropertyType, IWriterValidator writerValidator)
+        {
+            Debug.Assert(model != null, "model != null");
+            Debug.Assert(resourceValue != null, "resourceValue != null");
+
+            var typeName = resourceValue.TypeName;
+
+            ValidateIfTypeNameMissing(typeName, model, isOpenPropertyType);
+
+            // It's ok to use "EdmTypeKind.Complex" because the validation will check "IsStructured()".
+            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Complex, true, writerValidator);
+            if (typeReferenceFromMetadata != null)
+            {
+                // It's ok to use "EdmTypeKind.Complex" because the parameter "expectStructuredType" is set to "true".
+                writerValidator.ValidateTypeKind(EdmTypeKind.Complex, typeReferenceFromMetadata.TypeKind(), true, typeFromValue);
+            }
+
+            return ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata,
+                typeFromValue == null ? null : typeFromValue.ToTypeReference(), writerValidator);
+        }
+
+        /// <summary>
+        /// Resolve a type name against the provided <paramref name="model"/>. If not payload type name is specified,
+        /// derive the type from the model type (if available).
+        /// </summary>
+        /// <param name="model">The model to use.</param>
+        /// <param name="typeReferenceFromMetadata">The type inferred from the model or null if the model is not a user model.</param>
         /// <param name="collectionValue">The value in question to resolve the type for.</param>
         /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
         /// <param name="writerValidator">The writer validator to use for validation.</param>
@@ -217,6 +249,12 @@ namespace Microsoft.OData
                 return enumValue.TypeName;
             }
 
+            ODataResourceValue resourceValue = value as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                return resourceValue.TypeName;
+            }
+
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
@@ -240,7 +278,7 @@ namespace Microsoft.OData
         /// <param name="isOpenPropertyType">If the property is open.</param>
         private static void ValidateIfTypeNameMissing(string typeName, IEdmModel model, bool isOpenPropertyType)
         {
-            // if we have metadata, the type name of an open property value must not be null
+            // if we have metadata, the type name of an open (dynamic) property value must not be null
             if (typeName == null && model.IsUserModel() && isOpenPropertyType)
             {
                 throw new ODataException(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);

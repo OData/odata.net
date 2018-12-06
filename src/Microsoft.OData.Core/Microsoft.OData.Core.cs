@@ -472,7 +472,7 @@ namespace Microsoft.OData {
         internal const string ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue = "ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue";
         internal const string ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest = "ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest";
         internal const string ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet = "ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet";
-        internal const string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest = "ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest";
+        internal const string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest = "ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest";
         internal const string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest = "ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest";
         internal const string ODataResourceTypeContext_MetadataOrSerializationInfoMissing = "ODataResourceTypeContext_MetadataOrSerializationInfoMissing";
         internal const string ODataResourceTypeContext_ODataResourceTypeNameMissing = "ODataResourceTypeContext_ODataResourceTypeNameMissing";
@@ -607,6 +607,7 @@ namespace Microsoft.OData {
         internal const string ODataInstanceAnnotation_BadTermName = "ODataInstanceAnnotation_BadTermName";
         internal const string ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue = "ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue";
         internal const string ODataJsonLightValueSerializer_MissingTypeNameOnCollection = "ODataJsonLightValueSerializer_MissingTypeNameOnCollection";
+        internal const string ODataJsonLightValueSerializer_MissingTypeNameOnResource = "ODataJsonLightValueSerializer_MissingTypeNameOnResource";
         internal const string ODataJsonLightValueSerializer_MissingRawValueOnUntyped = "ODataJsonLightValueSerializer_MissingRawValueOnUntyped";
         internal const string AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement = "AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement";
         internal const string AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType = "AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType";

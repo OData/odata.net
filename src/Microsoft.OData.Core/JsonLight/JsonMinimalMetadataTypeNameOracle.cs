@@ -109,11 +109,11 @@ namespace Microsoft.OData.JsonLight
                     return null;
                 }
 
-                // Note: When writing derived complexType value in a payload, we don't have the expected type.
-                // So always write @odata.type for top-level derived complex type.
-                if (typeReferenceFromMetadata == null && typeReferenceFromValue.IsComplex())
+                // Note: When writing derived structured value in a payload, we don't have the expected type.
+                // So always write @odata.type for top-level derived structured type.
+                if (typeReferenceFromMetadata == null && typeReferenceFromValue.IsStructured())
                 {
-                    if ((typeReferenceFromValue as IEdmComplexTypeReference).ComplexDefinition().BaseType != null)
+                    if ((typeReferenceFromValue as IEdmStructuredTypeReference).StructuredDefinition().BaseType != null)
                     {
                         return fullTypeNameFromValue;
                     }
