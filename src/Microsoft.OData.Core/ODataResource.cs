@@ -410,7 +410,7 @@ namespace Microsoft.OData
                     }
                     else if ((collection = property.Value as ODataCollectionValue) != null)
                     {
-                        if (collection.Items != null && collection.Items.Any(t => t is ODataResourceValue))
+                        if (collection != null && collection.Items != null && collection.Items.Any(t => t is ODataResourceValue))
                         {
                             throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
                         }
