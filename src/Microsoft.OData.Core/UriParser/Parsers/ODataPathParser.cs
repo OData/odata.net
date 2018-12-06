@@ -179,7 +179,7 @@ namespace Microsoft.OData.UriParser
                     // Look for an overload that returns an entity collection by the specified name. If so parthensis is just key parameters.
                     if (FunctionOverloadResolver.ResolveOperationImportFromList(identifier, EmptyList, configuration.Model, out possibleMatchingOperationImport, configuration.Resolver))
                     {
-                        IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperationImport.Operation.ReturnType as IEdmCollectionTypeReference;
+                        IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperationImport.Operation.GetReturnTypeReference() as IEdmCollectionTypeReference;
                         if (collectionReturnType != null && collectionReturnType.ElementType().IsEntity())
                         {
                             matchingFunctionImport = possibleMatchingOperationImport;
@@ -246,7 +246,7 @@ namespace Microsoft.OData.UriParser
                     // Look for an overload that returns an entity collection by the specified name. If so parthensis is just key parameters.
                     if (FunctionOverloadResolver.ResolveOperationFromList(identifier, new List<string>(), bindingType, configuration.Model, out possibleMatchingOperation, configuration.Resolver))
                     {
-                        IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperation.ReturnType as IEdmCollectionTypeReference;
+                        IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperation.GetReturnTypeReference() as IEdmCollectionTypeReference;
                         if (collectionReturnType != null && collectionReturnType.ElementType().IsEntity())
                         {
                             matchingOperation = possibleMatchingOperation;
@@ -956,7 +956,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            IEdmTypeReference returnType = singleImport.Operation.ReturnType;
+            IEdmTypeReference returnType = singleImport.Operation.GetReturnTypeReference();
             IEdmEntitySetBase targetset = null;
 
             if (returnType != null)
@@ -1028,7 +1028,7 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty(identifier));
             }
 
-            IEdmTypeReference returnType = singleOperation.ReturnType;
+            IEdmTypeReference returnType = singleOperation.GetReturnTypeReference();
             IEdmEntitySetBase targetset = null;
 
             if (returnType != null)

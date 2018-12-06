@@ -966,7 +966,7 @@ public interface Microsoft.OData.Edm.IEdmOperationParameter : IEdmElement, IEdmN
 
 public interface Microsoft.OData.Edm.IEdmOperationReturnType : IEdmElement, IEdmTypeReference, IEdmVocabularyAnnotatable {
 	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public abstract get; }
-	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public abstract get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.IEdmOptionalParameter : IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmVocabularyAnnotatable {
@@ -1975,6 +1975,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.IEdmTypeReference GetReturnTypeReference (Microsoft.OData.Edm.IEdmOperation operation)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.Vocabularies.IEdmTerm term, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
@@ -2658,10 +2663,10 @@ public class Microsoft.OData.Edm.EdmOperationParameter : Microsoft.OData.Edm.Edm
 }
 
 public class Microsoft.OData.Edm.EdmOperationReturnType : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmOperationReturnType, IEdmTypeReference, IEdmVocabularyAnnotatable {
-	public EdmOperationReturnType (Microsoft.OData.Edm.IEdmOperation declaringOperation, Microsoft.OData.Edm.IEdmTypeReference returnType)
+	public EdmOperationReturnType (Microsoft.OData.Edm.IEdmOperation declaringOperation, Microsoft.OData.Edm.IEdmTypeReference type)
 
 	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.EdmOptionalParameter : Microsoft.OData.Edm.EdmOperationParameter, IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmOptionalParameter, IEdmVocabularyAnnotatable {

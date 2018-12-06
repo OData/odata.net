@@ -1633,7 +1633,7 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (operationImport.EntitySet != null && operationImport.Operation.ReturnType != null)
                     {
-                        IEdmTypeReference elementType = operationImport.Operation.ReturnType.IsCollection() ? operationImport.Operation.ReturnType.AsCollection().ElementType() : operationImport.Operation.ReturnType;
+                        IEdmTypeReference elementType = operationImport.Operation.ReturnType.IsCollection() ? operationImport.Operation.GetReturnTypeReference().AsCollection().ElementType() : operationImport.Operation.GetReturnTypeReference();
                         if (elementType.IsEntity())
                         {
                             IEdmEntityType returnedEntityType = elementType.AsEntity().EntityDefinition();
@@ -1738,7 +1738,7 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (operation.ReturnType != null)
                     {
-                        IEdmTypeReference elementType = operation.ReturnType.IsCollection() ? operation.ReturnType.AsCollection().ElementType() : operation.ReturnType;
+                        IEdmTypeReference elementType = operation.ReturnType.IsCollection() ? operation.GetReturnTypeReference().AsCollection().ElementType() : operation.GetReturnTypeReference();
                         var isUnresolvedElement = elementType.Definition is IUnresolvedElement;
                         if (!isUnresolvedElement && context.IsBad(elementType.Definition))
                         {
@@ -1907,7 +1907,7 @@ namespace Microsoft.OData.Edm.Validation
             {
                 if (operation.ReturnType != null && operation.ReturnType.IsCollection())
                 {
-                    IEdmTypeReference elementType = operation.ReturnType.AsCollection().ElementType();
+                    IEdmTypeReference elementType = operation.GetReturnTypeReference().AsCollection().ElementType();
                     if (elementType.Definition == EdmCoreModelComplexType.Instance ||
                         elementType.Definition == EdmCoreModel.Instance.GetPrimitiveType())
                     {
@@ -2175,12 +2175,12 @@ namespace Microsoft.OData.Edm.Validation
                             var bindingParameter = function.Parameters.First();
                             if (!bindingTypeReturnTypeLookup.ContainsKey(bindingParameter.Type))
                             {
-                                bindingTypeReturnTypeLookup.Add(bindingParameter.Type, function.ReturnType);
+                                bindingTypeReturnTypeLookup.Add(bindingParameter.Type, function.GetReturnTypeReference());
                             }
                             else
                             {
                                 IEdmTypeReference expectedReturnType = bindingTypeReturnTypeLookup[bindingParameter.Type];
-                                if (!function.ReturnType.IsEquivalentTo(expectedReturnType))
+                                if (!function.GetReturnTypeReference().IsEquivalentTo(expectedReturnType))
                                 {
                                     context.AddError(
                                         function.Location(),
@@ -2203,11 +2203,11 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (!functionNameToReturnTypeLookup.ContainsKey(function.Name))
                     {
-                        functionNameToReturnTypeLookup.Add(function.Name, function.ReturnType);
+                        functionNameToReturnTypeLookup.Add(function.Name, function.GetReturnTypeReference());
                     }
                     else
                     {
-                        if (!function.ReturnType.IsEquivalentTo(functionNameToReturnTypeLookup[function.Name]))
+                        if (!function.GetReturnTypeReference().IsEquivalentTo(functionNameToReturnTypeLookup[function.Name]))
                         {
                             context.AddError(
                                        function.Location(),

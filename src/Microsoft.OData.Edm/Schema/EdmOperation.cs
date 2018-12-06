@@ -86,7 +86,7 @@ namespace Microsoft.OData.Edm
         /// Gets the return type of this function.
         /// Be noted, it should be different with the input object in the constructor.
         /// If you want to get the origin input object, cast to "IEdmOperationReturnType" and
-        /// call the "ReturnType" property on that interface.
+        /// call the "Type" property on that interface.
         /// </summary>
         public IEdmTypeReference ReturnType { get; private set; }
 

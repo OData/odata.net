@@ -21,7 +21,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.DeclaringOperation = declaringOperation;
         }
 
-        public IEdmTypeReference ReturnType
+        public IEdmTypeReference Type
         {
             get { return this.type.GetValue(this, ComputeTypeFunc, null); }
         }
@@ -30,12 +30,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public bool IsNullable
         {
-            get { return ReturnType.IsNullable; }
+            get { return Type.IsNullable; }
         }
 
         public IEdmType Definition
         {
-            get { return ReturnType.Definition; }
+            get { return Type.Definition; }
         }
 
         private IEdmTypeReference ComputeType()

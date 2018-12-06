@@ -15,15 +15,15 @@ namespace Microsoft.OData.Edm
         /// Initializes a new instance of the <see cref="EdmOperationReturnType"/> class.
         /// </summary>
         /// <param name="declaringOperation">Declaring operation of the return type.</param>
-        /// <param name="returnType">The return type of the operation.</param>
-        public EdmOperationReturnType(IEdmOperation declaringOperation, IEdmTypeReference returnType)
-            : base(returnType.Definition, returnType.IsNullable)
+        /// <param name="type">The return type of the operation.</param>
+        public EdmOperationReturnType(IEdmOperation declaringOperation, IEdmTypeReference type)
+            : base(type.Definition, type.IsNullable)
         {
             EdmUtil.CheckArgumentNull(declaringOperation, "declaringOperation");
-            EdmUtil.CheckArgumentNull(returnType, "returnType");
+            EdmUtil.CheckArgumentNull(type, "type");
 
             this.DeclaringOperation = declaringOperation;
-            this.ReturnType = returnType;
+            this.Type = type;
         }
 
         /// <summary>
@@ -34,6 +34,6 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the type reference of this return type.
         /// </summary>
-        public IEdmTypeReference ReturnType { get; }
+        public IEdmTypeReference Type { get; }
     }
 }

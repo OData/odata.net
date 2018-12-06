@@ -90,7 +90,7 @@ namespace Microsoft.OData.Edm.Validation
                         IEdmOperation operation = applyExpression.AppliedFunction as IEdmOperation;
                         if (operation != null)
                         {
-                            return TestTypeReferenceMatch(operation.ReturnType, type, expression.Location(), matchExactly, out discoveredErrors);
+                            return TestTypeReferenceMatch(operation.GetReturnTypeReference(), type, expression.Location(), matchExactly, out discoveredErrors);
                         }
                     }
 

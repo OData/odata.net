@@ -48,7 +48,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         <ReturnType Type=""Test.Person"" />
       </Function>
       <Function Name=""Get2"" IsComposable=""true"">
-        <ReturnType Type=""Edm.String"" />
+        <ReturnType Type=""Edm.String"" Unicode=""false"" />
       </Function>
       <Function Name=""Get3"">
         <Parameter Name=""Foo"" Type=""Collection(Edm.String)"" />
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         <ReturnType Type=""Test.Person"" />
       </Action>
       <Action Name=""Other"">
-        <ReturnType Type=""Edm.String"" />
+        <ReturnType Type=""Edm.String"" Unicode=""false"" />
       </Action>
       <Action Name=""RemoveBadCar"" IsBound=""true"" EntitySetPath=""People/Cars"">
         <Parameter Name=""People"" Type=""Collection(Test.Person)"" />
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         public void ReturnTypePathReturnsCorrectly()
         {
             this.TestModel.RemoveBadCarAction.ReturnType.Should().NotBeNull();
-            var personType = this.TestModel.RemoveBadCarAction.ReturnType.AsCollection().ElementType().Definition;
+            var personType = this.TestModel.RemoveBadCarAction.GetReturnTypeReference().AsCollection().ElementType().Definition;
             personType.Should().Be(this.TestModel.CarType);
         }
 

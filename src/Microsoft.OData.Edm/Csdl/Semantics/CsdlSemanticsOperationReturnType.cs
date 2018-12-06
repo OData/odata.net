@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.returnType; }
         }
 
-        public IEdmTypeReference ReturnType
+        public IEdmTypeReference Type
         {
             get { return this.typeCache.GetValue(this, ComputeTypeFunc, null); }
         }
@@ -51,12 +51,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public bool IsNullable
         {
-            get { return ReturnType.IsNullable; }
+            get { return Type.IsNullable; }
         }
 
         public IEdmType Definition
         {
-            get { return ReturnType.Definition; }
+            get { return Type.Definition; }
         }
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()

@@ -23,6 +23,6 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the type reference of this return type.
         /// </summary>
-        IEdmTypeReference ReturnType { get; }
+        IEdmTypeReference Type { get; }
     }
 }

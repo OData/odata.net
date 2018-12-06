@@ -2306,6 +2306,27 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets the <see cref="IEdmTypeReference"/> from the given <see cref="IEdmOperation"/>.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <returns>null or the <see cref="IEdmTypeReference"/> object. </returns>
+        public static IEdmTypeReference GetReturnTypeReference(this IEdmOperation operation)
+        {
+            if (operation == null || operation.ReturnType == null)
+            {
+                return null;
+            }
+
+            IEdmOperationReturnType operationReturnType = operation.ReturnType as IEdmOperationReturnType;
+            if (operationReturnType != null)
+            {
+                return operationReturnType.Type;
+            }
+
+            return operationReturnType;
+        }
+
+        /// <summary>
         /// Determines whether the specified operation is action.
         /// </summary>
         /// <param name="operation">The operation.</param>

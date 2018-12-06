@@ -688,6 +688,13 @@ namespace Microsoft.OData.Edm
         public static IEdmPrimitiveTypeReference AsPrimitive(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsPrimitive();
+            }
+
             IEdmPrimitiveTypeReference primitiveReference = type as IEdmPrimitiveTypeReference;
             if (primitiveReference != null)
             {
@@ -814,6 +821,13 @@ namespace Microsoft.OData.Edm
         public static IEdmCollectionTypeReference AsCollection(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsCollection();
+            }
+
             IEdmCollectionTypeReference reference = type as IEdmCollectionTypeReference;
             if (reference != null)
             {
@@ -843,6 +857,13 @@ namespace Microsoft.OData.Edm
         public static IEdmStructuredTypeReference AsStructured(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsStructured();
+            }
+
             IEdmStructuredTypeReference reference = type as IEdmStructuredTypeReference;
             if (reference != null)
             {
@@ -875,6 +896,13 @@ namespace Microsoft.OData.Edm
         public static IEdmEnumTypeReference AsEnum(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsEnum();
+            }
+
             IEdmEnumTypeReference reference = type as IEdmEnumTypeReference;
             if (reference != null)
             {
@@ -902,6 +930,13 @@ namespace Microsoft.OData.Edm
         public static IEdmTypeDefinitionReference AsTypeDefinition(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsTypeDefinition();
+            }
+
             IEdmTypeDefinitionReference reference = type as IEdmTypeDefinitionReference;
             if (reference != null)
             {
@@ -928,6 +963,13 @@ namespace Microsoft.OData.Edm
         public static IEdmEntityTypeReference AsEntity(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsEntity();
+            }
+
             IEdmEntityTypeReference reference = type as IEdmEntityTypeReference;
             if (reference != null)
             {
@@ -958,6 +1000,13 @@ namespace Microsoft.OData.Edm
         public static IEdmEntityReferenceTypeReference AsEntityReference(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsEntityReference();
+            }
+
             IEdmEntityReferenceTypeReference reference = type as IEdmEntityReferenceTypeReference;
             if (reference != null)
             {
@@ -987,6 +1036,13 @@ namespace Microsoft.OData.Edm
         public static IEdmComplexTypeReference AsComplex(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsComplex();
+            }
+
             IEdmComplexTypeReference reference = type as IEdmComplexTypeReference;
             if (reference != null)
             {
@@ -1019,6 +1075,13 @@ namespace Microsoft.OData.Edm
         public static IEdmPathTypeReference AsPath(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsPath();
+            }
+
             IEdmPathTypeReference reference = type as IEdmPathTypeReference;
             if (reference != null)
             {
@@ -1049,6 +1112,13 @@ namespace Microsoft.OData.Edm
         public static IEdmSpatialTypeReference AsSpatial(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsSpatial();
+            }
+
             IEdmSpatialTypeReference spatial = type as IEdmSpatialTypeReference;
             if (spatial != null)
             {
@@ -1073,6 +1143,13 @@ namespace Microsoft.OData.Edm
         public static IEdmTemporalTypeReference AsTemporal(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsTemporal();
+            }
+
             IEdmTemporalTypeReference temporal = type as IEdmTemporalTypeReference;
             if (temporal != null)
             {
@@ -1097,6 +1174,13 @@ namespace Microsoft.OData.Edm
         public static IEdmDecimalTypeReference AsDecimal(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsDecimal();
+            }
+
             IEdmDecimalTypeReference decimalType = type as IEdmDecimalTypeReference;
             if (decimalType != null)
             {
@@ -1121,6 +1205,13 @@ namespace Microsoft.OData.Edm
         public static IEdmStringTypeReference AsString(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsString();
+            }
+
             IEdmStringTypeReference stringType = type as IEdmStringTypeReference;
             if (stringType != null)
             {
@@ -1145,6 +1236,13 @@ namespace Microsoft.OData.Edm
         public static IEdmBinaryTypeReference AsBinary(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmOperationReturnType returnType = type as IEdmOperationReturnType;
+            if (returnType != null)
+            {
+                return returnType.Type.AsBinary();
+            }
+
             IEdmBinaryTypeReference binaryType = type as IEdmBinaryTypeReference;
             if (binaryType != null)
             {

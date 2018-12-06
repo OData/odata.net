@@ -244,7 +244,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             IEdmOperationReturnType returnType = function.GetOperationReturnType();
             Assert.NotNull(returnType);
             Assert.Same(returnType, function.ReturnType);
-            Assert.Same(returnType.ReturnType, typeReference);
+            Assert.Same(returnType.Type, typeReference);
             Assert.Same(returnType.DeclaringOperation, function);
         }
 
