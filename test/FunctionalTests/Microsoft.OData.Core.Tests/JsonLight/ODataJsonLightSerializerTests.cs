@@ -193,17 +193,16 @@ namespace Microsoft.OData.Tests.JsonLight
             result.Should().Contain("\"sample.primitive@odata.type\":\"#Custom.Type\",\"@sample.primitive\":\"stringValue\"");
         }
 
-        /*
         [Fact]
-        public void WriteTopLevelErrorWithComplexInstanceAnnotation()
+        public void WriteTopLevelErrorWithResourceInstanceAnnotation()
         {
             var result = SetupSerializerAndRunTest(null, serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
-                var complexValue = new ODataComplexValue();
-                complexValue.TypeName = "ns.ErrorDetails";
-                ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.complex", complexValue);
+                var resourceValue = new ODataResourceValue();
+                resourceValue.TypeName = "ns.ErrorDetails";
+                ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.complex", resourceValue);
                 instanceAnnotations.Add(annotation);
                 error.InstanceAnnotations = instanceAnnotations;
 
@@ -214,14 +213,14 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void WriteTopLevelErrorWithComplexInstanceAnnotationNoTypeNameShouldThrow()
+        public void WriteTopLevelErrorWithResourceInstanceAnnotationNoTypeNameShouldThrow()
         {
             SetupSerializerAndRunTest(null, serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
-                var complexValue = new ODataComplexValue();
-                ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.complex", complexValue);
+                var resourceValue = new ODataResourceValue();
+                ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.complex", resourceValue);
                 instanceAnnotations.Add(annotation);
                 error.InstanceAnnotations = instanceAnnotations;
 
@@ -231,7 +230,7 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void WriteTopLevelErrorWithCollectionOfComplexInstanceAnnotation()
+        public void WriteTopLevelErrorWithCollectionOfResourceInstanceAnnotation()
         {
             var result = SetupSerializerAndRunTest(null, serializer =>
             {
@@ -240,7 +239,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 var collection = new ODataCollectionValue
                 {
                     TypeName = "Collection(ns.ErrorDetails)",
-                    Items = new[] { new ODataComplexValue(), new ODataComplexValue { TypeName = "ns.ErrorDetails" } }
+                    Items = new[] { new ODataResourceValue(), new ODataResourceValue { TypeName = "ns.ErrorDetails" } }
                 };
                 ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.collection", collection);
                 instanceAnnotations.Add(annotation);
@@ -253,7 +252,7 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void WriteTopLevelErrorWithCollectionOfComplexInstanceAnnotationWithNoTypeNameShouldThrow()
+        public void WriteTopLevelErrorWithCollectionOfResourceInstanceAnnotationWithNoTypeNameShouldThrow()
         {
             SetupSerializerAndRunTest(null, serializer =>
             {
@@ -261,7 +260,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
                 var collection = new ODataCollectionValue
                 {
-                    Items = new[] { new ODataComplexValue(), new ODataComplexValue { TypeName = "ns.ErrorDetails" } }
+                    Items = new[] { new ODataResourceValue(), new ODataResourceValue { TypeName = "ns.ErrorDetails" } }
                 };
                 ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.collection", collection);
                 instanceAnnotations.Add(annotation);
@@ -271,7 +270,6 @@ namespace Microsoft.OData.Tests.JsonLight
                 writeError.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
             });
         }
-        */
 
         [Fact]
         public void UrlToStringShouldThrowWithNoMetadataAndMetadataDocumentUriIsNotProvided()

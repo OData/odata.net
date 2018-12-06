@@ -122,7 +122,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Writes a collection item (either primitive or enum)
+        /// Writes a collection item (either primitive, enum or resource)
         /// </summary>
         /// <param name="item">The collection item to write.</param>
         /// <param name="expectedItemType">The expected type of the collection item or null if no expected item type exists.</param>
@@ -135,8 +135,21 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                ODataEnumValue enumVal = item as ODataEnumValue;
-                if (enumVal != null)
+                ODataResourceValue resourceValue = item as ODataResourceValue;
+                ODataEnumValue enumVal = null;
+                if (resourceValue != null)
+                {
+                    this.jsonLightCollectionSerializer.AssertRecursionDepthIsZero();
+                    this.jsonLightCollectionSerializer.WriteResourceValue(
+                        resourceValue,
+                        expectedItemType,
+                        false /*isTopLevel*/,
+                        false /*isOpenPropertyType*/,
+                        this.DuplicatePropertyNameChecker);
+                    this.jsonLightCollectionSerializer.AssertRecursionDepthIsZero();
+                    this.DuplicatePropertyNameChecker.Reset();
+                }
+                else if ((enumVal = item as ODataEnumValue) != null)
                 {
                     if (enumVal.Value == null)
                     {

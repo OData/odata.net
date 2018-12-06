@@ -11,13 +11,14 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightCollectionWriterTests
     {
+        private IEdmModel model = EdmCoreModel.Instance;
+
         [Fact]
         public void ShouldWriteDynamicNullableCollectionValuedProperty()
         {
@@ -100,16 +101,66 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(collectionStart, new object[] { 123 }, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(NS.Test)\",\"value\":[123]}", true, new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "Test", EdmPrimitiveTypeKind.Int32), false));
         }
 
-        private static void WriteAndValidate(ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
+        [Fact]
+        public void ShouldWriteCollectionOfResourceValueItem()
+        {
+            EdmModel currentModel = new EdmModel();
+            EdmComplexType addressType = new EdmComplexType("ns", "Address");
+            addressType.AddProperty(new EdmStructuralProperty(addressType, "Street", EdmCoreModel.Instance.GetString(isNullable: true)));
+            currentModel.AddElement(addressType);
+            this.model = currentModel;
+            var address = new ODataResourceValue
+            {
+                TypeName = "ns.Address",
+                Properties = new[] { new ODataProperty { Name = "Street", Value = "1 Microsoft Way" } }
+            };
+
+            WriteAndValidate(new ODataCollectionStart(),
+                new object[] { address },
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\"}]}",
+                true,
+                new EdmComplexTypeReference(addressType, false));
+        }
+
+        [Fact]
+        public void ShouldWriteCollectionOfDerivedResourceValueItem()
+        {
+            EdmModel currentModel = new EdmModel();
+            EdmComplexType addressType = new EdmComplexType("ns", "Address");
+            addressType.AddProperty(new EdmStructuralProperty(addressType, "Street", EdmCoreModel.Instance.GetString(isNullable: true)));
+            currentModel.AddElement(addressType);
+            EdmComplexType homeAddressType = new EdmComplexType("ns", "HomeAddress", addressType);
+            homeAddressType.AddProperty(new EdmStructuralProperty(homeAddressType, "City", EdmCoreModel.Instance.GetString(isNullable: true)));
+            currentModel.AddElement(homeAddressType);
+            this.model = currentModel;
+
+            var address = new ODataResourceValue
+            {
+                TypeName = "ns.HomeAddress",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Street", Value = "1 Microsoft Way" },
+                    new ODataProperty { Name = "City", Value = "Redmond" },
+                }
+            };
+
+            WriteAndValidate(new ODataCollectionStart(),
+                new object[] { address },
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"@odata.type\":\"#ns.HomeAddress\",\"Street\":\"1 Microsoft Way\",\"City\":\"Redmond\"}]}",
+                true,
+                new EdmComplexTypeReference(addressType, false));
+        }
+
+        private void WriteAndValidate(ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
         {
             WriteAndValidateSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
             WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
         }
 
-        private static void WriteAndValidateSync(IEdmTypeReference itemTypeReference, ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse)
+        private void WriteAndValidateSync(IEdmTypeReference itemTypeReference, ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse)
         {
             MemoryStream stream = new MemoryStream();
-            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: true);
+            var outputContext = CreateJsonLightOutputContext(stream, this.model, writingResponse, synchronous: true);
             var collectionWriter = new ODataJsonLightCollectionWriter(outputContext, itemTypeReference);
             collectionWriter.WriteStart(collectionStart);
             foreach (object item in items)
@@ -121,10 +172,10 @@ namespace Microsoft.OData.Tests.JsonLight
             ValidateWrittenPayload(stream, expectedPayload);
         }
 
-        private static void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse)
+        private void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse)
         {
             MemoryStream stream = new MemoryStream();
-            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: false);
+            var outputContext = CreateJsonLightOutputContext(stream, this.model, writingResponse, synchronous: false);
             var collectionWriter = new ODataJsonLightCollectionWriter(outputContext, itemTypeReference);
             collectionWriter.WriteStartAsync(collectionStart).Wait();
             foreach (object item in items)
@@ -143,7 +194,7 @@ namespace Microsoft.OData.Tests.JsonLight
             payload.Should().Be(expectedPayload);
         }
 
-        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)
+        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel model, bool writingResponse = true, bool synchronous = true)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -152,7 +203,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 Encoding = Encoding.UTF8,
                 IsResponse = writingResponse,
                 IsAsync = !synchronous,
-                Model = EdmCoreModel.Instance
+                Model = model
             };
 
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
