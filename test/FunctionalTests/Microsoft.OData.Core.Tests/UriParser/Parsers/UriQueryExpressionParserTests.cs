@@ -678,25 +678,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyWithExpand()
+        public void ParseApplyWithOnlyExpandThrows()
         {
             string apply = "expand(Sales)";
-            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
-
-            ExpandToken expand = (ExpandToken)actual.First();
-            expand.ExpandTerms.Should().HaveCount(1);
-
-            ExpandTermToken expandTerm = expand.ExpandTerms.First();
-            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.Length - 1, apply));
         }
 
         [Fact]
-        public void ParseApplyWithExpandFollowedByAggregate()
+        public void ParseApplyWithExpandFollowedByAggregateShouldParseSuccessfully()
         {
-            string apply = "expand(Sales)/aggregate($count as Count)";
+            string apply = "expand(Sales, filter(Amount gt 3))/aggregate($count as Count)";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
             actual.Should().NotBeNull();
             actual.Should().HaveCount(2);
@@ -707,13 +699,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ExpandTermToken expandTerm = expand.ExpandTerms.First();
             expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
             expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
+            expandTerm.FilterOption.Should().NotBeNull();
 
             AggregateToken aggregate = (AggregateToken)actual.Last();
             aggregate.AggregateExpressions.Should().HaveCount(1);
         }
 
         [Fact]
-        public void ParseApplyWithFilteredExpand()
+        public void ParseApplyWithFilteredExpandShouldParseSuccessfully()
         {
             string apply = "expand(Sales, filter(Amount gt 3))";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
@@ -730,9 +723,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyWithNestedExpand()
+        public void ParseApplyWithNestedExpandShouldParseSuccessfully()
         {
-            string apply = "expand(Sales, expand(Customers))";
+            string apply = "expand(Sales, expand(Customers, filter(City eq 'Seattle')))";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
             actual.Should().NotBeNull();
             actual.Should().HaveCount(1);
@@ -748,35 +741,29 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             expandTerm = expandTerm.ExpandOption.ExpandTerms.First();
             expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
             expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customers");
+            expandTerm.FilterOption.Should().NotBeNull();
         }
 
         [Fact]
-        public void ParseApplyWithMultipleNestedExpands()
+        public void ParseApplyWithNestedExpandOnlyShowThrowOnInnerMost()
+        {
+            string apply = "expand(Sales, expand(Customers))";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.Length - 2, apply));
+        }
+
+
+        [Fact]
+        public void ParseApplyWithMultipleNestedExpandsOnlyShouldThrowOnFirstLeaf()
         {
             string apply = "expand(Sales, expand(Customers), expand(Cashiers))";
-            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.IndexOf(")"), apply));
 
-            ExpandToken expand = (ExpandToken)actual.First();
-            expand.ExpandTerms.Should().HaveCount(1);
-
-            ExpandTermToken expandTerm = expand.ExpandTerms.First();
-            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
-            expandTerm.ExpandOption.Should().NotBeNull();
-            expandTerm.ExpandOption.ExpandTerms.Should().HaveCount(2);
-            ExpandTermToken expandTerm1 = expandTerm.ExpandOption.ExpandTerms.First();
-            expandTerm1.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm1.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customers");
-
-            ExpandTermToken expandTerm2 = expandTerm.ExpandOption.ExpandTerms.Last();
-            expandTerm2.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm2.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Cashiers");
         }
 
         [Fact]
-        public void ParseApplyWithMultipleNestedExpandFiltersAndLevels()
+        public void ParseApplyWithMultipleNestedExpandFiltersAndLevelsShouldParseSuccessfully()
         {
             string apply = "expand(Sales, expand(Customers, filter(City eq 'Redmond')), expand(Cashiers, expand(Stores, filter(City eq 'Seattle'))))";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);

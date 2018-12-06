@@ -635,6 +635,7 @@ namespace Microsoft.OData {
         internal const string UriQueryExpressionParser_UnrecognizedWithMethod = "UriQueryExpressionParser_UnrecognizedWithMethod";
         internal const string UriQueryExpressionParser_PropertyPathExpected = "UriQueryExpressionParser_PropertyPathExpected";
         internal const string UriQueryExpressionParser_KeywordOrIdentifierExpected = "UriQueryExpressionParser_KeywordOrIdentifierExpected";
+        internal const string UriQueryExpressionParser_InnerMostExpandRequireFilter = "UriQueryExpressionParser_InnerMostExpandRequireFilter";
         internal const string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri = "UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri";
         internal const string UriQueryPathParser_SyntaxError = "UriQueryPathParser_SyntaxError";
         internal const string UriQueryPathParser_TooManySegments = "UriQueryPathParser_TooManySegments";
@@ -773,8 +774,8 @@ namespace Microsoft.OData {
         internal const string RequestUriProcessor_InvalidValueForKeySegment = "RequestUriProcessor_InvalidValueForKeySegment";
         internal const string RequestUriProcessor_CannotApplyFilterOnSingleEntities = "RequestUriProcessor_CannotApplyFilterOnSingleEntities";
         internal const string RequestUriProcessor_CannotApplyEachOnSingleEntities = "RequestUriProcessor_CannotApplyEachOnSingleEntities";
-        internal const string RequestUriProcessor_NoNavigationSourceFound = "RequestUriProcessor_NoNavigationSourceFound";
         internal const string RequestUriProcessor_FilterPathSegmentSyntaxError = "RequestUriProcessor_FilterPathSegmentSyntaxError";
+        internal const string RequestUriProcessor_NoNavigationSourceFound = "RequestUriProcessor_NoNavigationSourceFound";
         internal const string RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment = "RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment";
         internal const string RequestUriProcessor_EmptySegmentInRequestUrl = "RequestUriProcessor_EmptySegmentInRequestUrl";
         internal const string RequestUriProcessor_SyntaxError = "RequestUriProcessor_SyntaxError";

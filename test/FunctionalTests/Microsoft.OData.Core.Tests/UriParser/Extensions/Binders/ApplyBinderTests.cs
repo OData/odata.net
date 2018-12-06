@@ -319,7 +319,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens =
                 _parser.ParseApply(
-                    "expand(MyPaintings, filter(FrameColor eq 'Red'), expand(Owner))");
+                    "expand(MyPaintings, filter(FrameColor eq 'Red'), expand(Owner, filter(Name eq 'Me')))");
 
             BindingState state = new BindingState(_configuration);
             MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
@@ -340,6 +340,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             expandItem.SelectAndExpand.Should().NotBeNull();
             expandItem.SelectAndExpand.SelectedItems.Should().HaveCount(1);
             expandItem.FilterOption.Should().NotBeNull();
+
+            ExpandedNavigationSelectItem expandItem1 = expandItem.SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem;
+            expandItem1.FilterOption.Should().NotBeNull();
         }
 
         private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);

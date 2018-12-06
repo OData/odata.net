@@ -343,6 +343,12 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
+            // Leaf level expands require filter
+            if (filterToken == null && nestedExpand == null)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
             ExpandTermToken expandTermToken = new ExpandTermToken(pathToken, filterToken, null, null, null, null, null, null, null, nestedExpand); 
             termTokens.Add(expandTermToken);
 
