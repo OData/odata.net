@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.Json
         public const string ComplexOutput = "FAKE_COMPLEX_VALUE";
         public const string CollectionOutput = "FAKE_COLLECTION_VALUE_";
 
-        public Action<ODataResource, IEdmTypeReference, bool, bool, IDuplicatePropertyNameChecker> WriteComplexVerifier { get; set; }
+        public Action<ODataResourceValue, IEdmTypeReference, bool, bool, IDuplicatePropertyNameChecker> WriteResourceValueVerifier { get; set; }
         public Action<ODataCollectionValue, IEdmTypeReference, IEdmTypeReference, bool, bool, bool> WriteCollectionVerifier { get; set; }
         public Action<object, IEdmTypeReference> WritePrimitiveVerifier { get; set; }
         public Action<object, IEdmTypeReference> WriteEnumVerifier { get; set; }
@@ -34,6 +34,12 @@ namespace Microsoft.OData.Tests.Json
         {
             this.WriteNullVerifier.Should().NotBeNull("WriteNullValue was called.");
             this.WriteNullVerifier();
+        }
+
+        public override void WriteResourceValue(ODataResourceValue resourceValue, IEdmTypeReference metadataTypeReference, bool isTopLevel, bool isOpenPropertyType, IDuplicatePropertyNameChecker duplicatePropertyNamesChecker)
+        {
+            this.WriteResourceValueVerifier.Should().NotBeNull("WriteResourceValue was called.");
+            this.WriteResourceValueVerifier(resourceValue, metadataTypeReference, isTopLevel, isOpenPropertyType, duplicatePropertyNamesChecker);
         }
 
         /// <summary>
