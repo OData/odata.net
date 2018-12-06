@@ -11,6 +11,7 @@ namespace Microsoft.OData
 {
     /// <summary>
     /// Represents the value of a resource (complex or entity).
+    /// It can be used as instance annotation value.
     /// </summary>
     public sealed class ODataResourceValue : ODataValue
     {
