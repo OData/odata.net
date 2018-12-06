@@ -249,6 +249,13 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
+            ODataResourceValue resourceValue = value as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                this.WriteResourceProperty(property, resourceValue, isOpenPropertyType);
+                return;
+            }
+
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
@@ -387,6 +394,30 @@ namespace Microsoft.OData.JsonLight
                 this.JsonWriter.WriteName(property.Name);
                 this.JsonLightValueSerializer.WriteNullValue();
             }
+        }
+
+        /// <summary>
+        /// Writes a resource property.
+        /// </summary>
+        /// <param name="property">The property to write out.</param>
+        /// <param name="resourceValue">The resource value to be written</param>
+        /// <param name="isOpenPropertyType">If the property is open.</param>
+        private void WriteResourceProperty(
+            ODataProperty property,
+            ODataResourceValue resourceValue,
+            bool isOpenPropertyType)
+        {
+            if (!this.currentPropertyInfo.IsTopLevel)
+            {
+                this.JsonWriter.WriteName(property.Name);
+            }
+
+            this.JsonLightValueSerializer.WriteResourceValue(
+                resourceValue,
+                this.currentPropertyInfo.MetadataType.TypeReference,
+                this.currentPropertyInfo.IsTopLevel,
+                isOpenPropertyType,
+                this.CreateDuplicatePropertyNameChecker());
         }
 
         /// <summary>
