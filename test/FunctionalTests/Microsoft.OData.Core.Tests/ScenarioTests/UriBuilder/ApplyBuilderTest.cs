@@ -21,6 +21,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
         [InlineData("http://gobbledygook/People?$apply=groupby((MyDog/Color,MyDog/Breed))")]
         [InlineData("http://gobbledygook/People?$apply=groupby((FirstName),aggregate(MyPaintings($count as cnt)))")]
         [InlineData("http://gobbledygook/People?$apply=expand(MyPaintings, filter(FrameColor eq 'Red'))/groupby((LifeTime),aggregate(MyPaintings($count as Count)))")]
+        [InlineData("http://gobbledygook/People?$apply=expand(MyPaintings, filter(FrameColor eq 'Red'), expand(Owner, filter(FirstName eq 'Me')))/groupby((LifeTime),aggregate(MyPaintings($count as Count)))")]
         public void BuildUrlWithApply(string query)
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(query));

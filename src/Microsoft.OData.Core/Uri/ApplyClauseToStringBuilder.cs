@@ -157,8 +157,15 @@ namespace Microsoft.OData
         private void Translate(ExpandTransformationNode transformation)
         {
             ExpandedNavigationSelectItem expandedNavigation = transformation.ExpandClause.SelectedItems.Single() as ExpandedNavigationSelectItem;
+            AppendExpandExpression(expandedNavigation);
+        }
+
+        private void AppendExpandExpression(ExpandedNavigationSelectItem expandedNavigation)
+        {
             AppendExpression(expandedNavigation.PathToNavigationProperty);
-            if (expandedNavigation.FilterOption != null || expandedNavigation.SelectAndExpand != null)
+
+            // Append filter
+            if (expandedNavigation.FilterOption != null)
             {
                 AppendComma(true);
                 if (expandedNavigation.FilterOption != null)
@@ -167,6 +174,20 @@ namespace Microsoft.OData
                     query.Append(ExpressionConstants.KeywordFilter);
                     query.Append(ExpressionConstants.SymbolOpenParen);
                     AppendExpression(expandedNavigation.FilterOption.Expression);
+                    query.Append(ExpressionConstants.SymbolClosedParen);
+                }
+            }
+
+            // Append nested expands
+            if (expandedNavigation.SelectAndExpand != null)
+            {
+                foreach(var navigation in expandedNavigation.SelectAndExpand.SelectedItems.OfType<ExpandedNavigationSelectItem>())
+                {
+                    AppendComma(true);
+                    query.Append(ExpressionConstants.SymbolEscapedSpace);
+                    query.Append(ExpressionConstants.KeywordExpand);
+                    query.Append(ExpressionConstants.SymbolOpenParen);
+                    AppendExpandExpression(navigation);
                     query.Append(ExpressionConstants.SymbolClosedParen);
                 }
             }
