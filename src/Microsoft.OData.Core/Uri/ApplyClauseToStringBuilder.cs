@@ -168,20 +168,17 @@ namespace Microsoft.OData
             if (expandedNavigation.FilterOption != null)
             {
                 AppendComma(true);
-                if (expandedNavigation.FilterOption != null)
-                {
-                    query.Append(ExpressionConstants.SymbolEscapedSpace);
-                    query.Append(ExpressionConstants.KeywordFilter);
-                    query.Append(ExpressionConstants.SymbolOpenParen);
-                    AppendExpression(expandedNavigation.FilterOption.Expression);
-                    query.Append(ExpressionConstants.SymbolClosedParen);
-                }
+                query.Append(ExpressionConstants.SymbolEscapedSpace);
+                query.Append(ExpressionConstants.KeywordFilter);
+                query.Append(ExpressionConstants.SymbolOpenParen);
+                AppendExpression(expandedNavigation.FilterOption.Expression);
+                query.Append(ExpressionConstants.SymbolClosedParen);
             }
 
             // Append nested expands
             if (expandedNavigation.SelectAndExpand != null)
             {
-                foreach(var navigation in expandedNavigation.SelectAndExpand.SelectedItems.OfType<ExpandedNavigationSelectItem>())
+                foreach (var navigation in expandedNavigation.SelectAndExpand.SelectedItems.OfType<ExpandedNavigationSelectItem>())
                 {
                     AppendComma(true);
                     query.Append(ExpressionConstants.SymbolEscapedSpace);
