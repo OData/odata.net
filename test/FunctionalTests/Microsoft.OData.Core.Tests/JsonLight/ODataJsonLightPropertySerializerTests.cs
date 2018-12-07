@@ -10,8 +10,11 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
+using Microsoft.OData.JsonLight;
 using Microsoft.Spatial;
 using Xunit;
 
@@ -59,6 +62,16 @@ namespace Microsoft.OData.Tests.JsonLight
             edmEntityType.AddStructuralProperty("TimeOfDayProperty", EdmPrimitiveTypeKind.TimeOfDay);
             edmEntityType.AddStructuralProperty("DateProperty", EdmPrimitiveTypeKind.Date);
             edmEntityType.AddStructuralProperty("PrimitiveProperty", EdmPrimitiveTypeKind.PrimitiveType);
+
+            // add derived type constraint property.
+            var derivedTypeConstrictionProperty = edmEntityType.AddStructuralProperty("PrimitiveConstraintProperty", EdmPrimitiveTypeKind.PrimitiveType);
+            var term = ValidationVocabularyModel.DerivedTypeConstraintTerm;
+            IEdmStringConstantExpression stringConstant1 = new EdmStringConstant("Edm.Int32");
+            IEdmStringConstantExpression stringConstant2 = new EdmStringConstant("Edm.Boolean");
+            var collectionExpression = new EdmCollectionExpression(new[] { stringConstant1, stringConstant2 });
+            EdmVocabularyAnnotation valueAnnotationOnProperty = new EdmVocabularyAnnotation(derivedTypeConstrictionProperty, term, collectionExpression);
+            valueAnnotationOnProperty.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+            edmModel.AddVocabularyAnnotation(valueAnnotationOnProperty);
 
             edmModel.AddElement(edmEntityType);
 
@@ -284,6 +297,27 @@ namespace Microsoft.OData.Tests.JsonLight
             var primitiveTypeProperty = new ODataProperty { Name = "PrimitiveProperty", Value = value };
             string actual = this.SerializeProperty(this.entityType, primitiveTypeProperty);
             Assert.Equal(expect, actual);
+        }
+
+        [Theory]
+        [InlineData(42, "{\"PrimitiveConstraintProperty@odata.type\":\"#Int32\",\"PrimitiveConstraintProperty\":42}")]
+        [InlineData(true, "{\"PrimitiveConstraintProperty@odata.type\":\"#Boolean\",\"PrimitiveConstraintProperty\":true}")]
+        public void WritingEdmPrimitiveConstraintPropertyShouldWorkWithCorrectInputValue(object value, string expect)
+        {
+            var primitiveTypeProperty = new ODataProperty { Name = "PrimitiveConstraintProperty", Value = value };
+            string actual = this.SerializeProperty(this.entityType, primitiveTypeProperty);
+            Assert.Equal(expect, actual);
+        }
+
+        [Theory]
+        [InlineData(8.9, "Edm.Double")]
+        [InlineData("abc", "Edm.String")]
+        public void WritingEdmPrimitiveConstraintPropertyShouldThrowWithNotAllowedValue(object value, string fullTypeName)
+        {
+            var primitiveTypeProperty = new ODataProperty { Name = "PrimitiveConstraintProperty", Value = value };
+            Action action = () => this.SerializeProperty(this.entityType, primitiveTypeProperty);
+            var exception = Assert.Throws<ODataException>(action);
+            Assert.Equal(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "PrimitiveConstraintProperty"), exception.Message);
         }
 
         #region Serializing regular properties

@@ -16,11 +16,11 @@ namespace Microsoft.OData
     {
         private bool isTopLevel;
 
-        public PropertySerializationInfo(string name, IEdmStructuredType owningType)
+        public PropertySerializationInfo(IEdmModel model, string name, IEdmStructuredType owningType)
         {
             this.PropertyName = name;
             this.IsTopLevel = false;
-            this.MetadataType = new PropertyMetadataTypeInfo(name, owningType);
+            this.MetadataType = new PropertyMetadataTypeInfo(model, name, owningType);
         }
 
         /// <summary>Name of current property.</summary>

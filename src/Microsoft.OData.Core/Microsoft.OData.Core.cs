@@ -428,6 +428,7 @@ namespace Microsoft.OData {
         internal const string WriterValidationUtils_NavigationLinkMustSpecifyUrl = "WriterValidationUtils_NavigationLinkMustSpecifyUrl";
         internal const string WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection = "WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection";
         internal const string WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage = "WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage";
+        internal const string WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint = "WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint";
         internal const string XmlReaderExtension_InvalidNodeInStringValue = "XmlReaderExtension_InvalidNodeInStringValue";
         internal const string XmlReaderExtension_InvalidRootNode = "XmlReaderExtension_InvalidRootNode";
         internal const string ODataMetadataInputContext_ErrorReadingMetadata = "ODataMetadataInputContext_ErrorReadingMetadata";
@@ -654,7 +655,6 @@ namespace Microsoft.OData {
         internal const string MetadataBinder_BinaryOperatorOperandNotSingleValue = "MetadataBinder_BinaryOperatorOperandNotSingleValue";
         internal const string MetadataBinder_UnaryOperatorOperandNotSingleValue = "MetadataBinder_UnaryOperatorOperandNotSingleValue";
         internal const string MetadataBinder_LeftOperandNotSingleValue = "MetadataBinder_LeftOperandNotSingleValue";
-        internal const string StringItemShouldBeQuoted = "StringItemShouldBeQuoted";
         internal const string MetadataBinder_RightOperandNotCollectionValue = "MetadataBinder_RightOperandNotCollectionValue";
         internal const string MetadataBinder_PropertyAccessSourceNotSingleValue = "MetadataBinder_PropertyAccessSourceNotSingleValue";
         internal const string MetadataBinder_IncompatibleOperandsError = "MetadataBinder_IncompatibleOperandsError";
@@ -678,6 +678,7 @@ namespace Microsoft.OData {
         internal const string MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease = "MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease";
         internal const string MetadataBinder_IllegalSegmentType = "MetadataBinder_IllegalSegmentType";
         internal const string MetadataBinder_QueryOptionNotApplicable = "MetadataBinder_QueryOptionNotApplicable";
+        internal const string StringItemShouldBeQuoted = "StringItemShouldBeQuoted";
         internal const string ApplyBinder_AggregateExpressionIncompatibleTypeForMethod = "ApplyBinder_AggregateExpressionIncompatibleTypeForMethod";
         internal const string ApplyBinder_UnsupportedAggregateMethod = "ApplyBinder_UnsupportedAggregateMethod";
         internal const string ApplyBinder_UnsupportedAggregateKind = "ApplyBinder_UnsupportedAggregateKind";

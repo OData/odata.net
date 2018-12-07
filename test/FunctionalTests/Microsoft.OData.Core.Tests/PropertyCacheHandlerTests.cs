@@ -46,11 +46,11 @@ namespace Microsoft.OData.Tests
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp.IntProp
-            var info1 = handler.GetProperty("IntProp", complexType);
+            var info1 = handler.GetProperty(model, "IntProp", complexType);
             info1.Should().NotBeNull();
 
             // Get a second PropertySerializationInfo for ComplexProp.IntProp; it should be the same.
-            PropertySerializationInfo info2 = handler.GetProperty("IntProp", complexType);
+            PropertySerializationInfo info2 = handler.GetProperty(model, "IntProp", complexType);
             info2.Should().NotBeNull();
             info2.Should().BeSameAs(info1);
         }
@@ -74,11 +74,11 @@ namespace Microsoft.OData.Tests
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp.IntProp
-            var info1 = handler.GetProperty("IntProp", null);
+            var info1 = handler.GetProperty(model, "IntProp", null);
             info1.Should().NotBeNull();
 
             // Get a second PropertySerializationInfo for ComplexProp.IntProp; it should be the same.
-            PropertySerializationInfo info2 = handler.GetProperty("IntProp", null);
+            PropertySerializationInfo info2 = handler.GetProperty(model, "IntProp", null);
             info2.Should().NotBeNull();
             info2.Should().BeSameAs(info1);
         }
@@ -113,11 +113,11 @@ namespace Microsoft.OData.Tests
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp1.Prop1
-            var info1 = handler.GetProperty("Prop1", complexType1);
+            var info1 = handler.GetProperty(model, "Prop1", complexType1);
             info1.Should().NotBeNull();
 
             // Create a PropertySerializationInfo for ComplexProp2.Prop1; they shoudl be different.
-            var info2 = handler.GetProperty("Prop1", complexType2);
+            var info2 = handler.GetProperty(model, "Prop1", complexType2);
             info2.Should().NotBeNull();
             info2.Should().NotBeSameAs(info1);
         }
