@@ -161,6 +161,7 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespacePerson.AddStructuralProperty("RelatedSSNs", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
             FullyQualifiedNamespacePerson.AddStructuralProperty("StockQuantity", FullyQualifiedNamespaceUInt32Reference);
             FullyQualifiedNamespacePerson.AddStructuralProperty("LifeTime", FullyQualifiedNamespaceUInt64Reference);
+            FullyQualifiedNamespacePerson.AddStructuralProperty("MyGuid", EdmPrimitiveTypeKind.Guid);
             FullyQualifiedNamespacePerson.AddKeys(FullyQualifiedNamespacePerson_ID);
             var FullyQualifiedNamespacePerson_MyDog = FullyQualifiedNamespacePerson.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDog", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = FullyQualifiedNamespaceDog });
             var FullyQualifiedNamespacePerson_MyRelatedDogs = FullyQualifiedNamespacePerson.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyFriendsDogs", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespaceDog });
@@ -383,7 +384,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             var fullyQualifiedStructuredAnnotationTerm = new EdmTerm("Fully.Qualified.Namespace", "ComplexTerm", new EdmComplexTypeReference(FullyQualifiedNamespaceAddress, false));
             model.AddElement(fullyQualifiedStructuredAnnotationTerm);
-            
+
             #endregion
 
             #region Operations
@@ -993,6 +994,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""RelatedSSNs"" Type=""Collection(Edm.String)"" Nullable=""true"" />
         <Property Name=""StockQuantity"" Type=""Fully.Qualified.Namespace.UInt32"" />
         <Property Name=""LifeTime"" Type=""Fully.Qualified.Namespace.UInt64"" />
+        <Property Name=""MyGuid"" Type=""Edm.Guid"" />
         <NavigationProperty Name=""MyDog"" Type=""Fully.Qualified.Namespace.Dog"" />
         <NavigationProperty Name=""MyFriendsDogs"" Type=""Collection(Fully.Qualified.Namespace.Dog)"" />
         <NavigationProperty Name=""MyPaintings"" Type=""Collection(Fully.Qualified.Namespace.Painting)"" />
@@ -1222,7 +1224,7 @@ namespace Microsoft.OData.Tests.UriParser
 <edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
     <Schema Namespace=""Fully.Qualified.Namespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Alias=""SubAlias3"">
-            
+
       <Function Name=""GetPetCountNullable"" IsComposable=""true"">
         <Parameter Name=""colorPattern"" Type=""Fully.Qualified.Namespace.ColorPattern"" Nullable=""true"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Pet5"" />
@@ -1393,7 +1395,7 @@ namespace Microsoft.OData.Tests.UriParser
 <edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
     <Schema Namespace=""Fully.Qualified.Namespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Alias=""SubAlias4"">
-      
+
       <Action Name=""Restore"" IsBound=""true"">
         <Parameter Name=""painting"" Type=""Fully.Qualified.Namespace.Painting"" />
         <ReturnType Type=""Edm.Boolean"" />
