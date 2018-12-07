@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -312,6 +313,83 @@ namespace Microsoft.OData
                 // Stream properties are only valid in responses; writers fail if they encounter them in requests.
                 throw new ODataException(Strings.WriterValidationUtils_StreamPropertyInRequest(streamProperty.Name));
             }
+        }
+
+        /// <summary>
+        /// Validates the value type of a property meets the derived type constraints.
+        /// </summary>
+        /// <param name="propertySerializationInfo">The property serialization info.</param>
+        /// <remarks>This does NOT validate the value of the property, just the type of property.</remarks>
+        internal static void ValidatePropertyDerivedTypeConstraint(PropertySerializationInfo propertySerializationInfo)
+        {
+            Debug.Assert(propertySerializationInfo != null, "propertySerializationInfo != null");
+
+            // Skip the undeclared property
+            if (propertySerializationInfo.MetadataType.IsUndeclaredProperty)
+            {
+                return;
+            }
+
+            PropertyValueTypeInfo valueType = propertySerializationInfo.ValueType;
+            if (valueType == null || valueType.TypeReference == null)
+            {
+                return;
+            }
+
+            // make sure the same type can pass the validation.
+            if (propertySerializationInfo.MetadataType.TypeReference.Definition == valueType.TypeReference.Definition)
+            {
+                return;
+            }
+
+            string fullTypeName = valueType.TypeReference.FullName();
+            if (propertySerializationInfo.MetadataType.DerivedTypeConstraints == null ||
+                propertySerializationInfo.MetadataType.DerivedTypeConstraints.Any(d => d == fullTypeName))
+            {
+                return;
+            }
+
+            throw new ODataException(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, propertySerializationInfo.PropertyName));
+        }
+
+        /// <summary>
+        /// Validates the value type of a property meets the derived type constraints.
+        /// </summary>
+        /// <param name="propertySerializationInfo">The property serialization info.</param>
+        /// <remarks>This does NOT validate the value of the property, just the type of property.</remarks>
+        internal static void ValidateCollectionPropertyDerivedTypeConstraint(ODataCollectionValue collectionValue,
+            PropertySerializationInfo propertySerializationInfo)
+        {
+            Debug.Assert(collectionValue != null, "collectionValue != null");
+            Debug.Assert(propertySerializationInfo != null, "propertySerializationInfo != null");
+
+            // Skip the undeclared property
+            if (propertySerializationInfo.MetadataType.IsUndeclaredProperty)
+            {
+                return;
+            }
+
+            PropertyValueTypeInfo valueType = propertySerializationInfo.ValueType;
+            if (valueType == null || valueType.TypeReference == null)
+            {
+                return;
+            }
+
+
+            // make sure the same type can pass the validation.
+            if (propertySerializationInfo.MetadataType.TypeReference.Definition == valueType.TypeReference.Definition)
+            {
+                return;
+            }
+
+            string fullTypeName = valueType.FullName;
+            if (propertySerializationInfo.MetadataType.DerivedTypeConstraints == null ||
+                propertySerializationInfo.MetadataType.DerivedTypeConstraints.Any(d => d == fullTypeName))
+            {
+                return;
+            }
+
+            throw new ODataException(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, propertySerializationInfo.PropertyName));
         }
 
         /// <summary>

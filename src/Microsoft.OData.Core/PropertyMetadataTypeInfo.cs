@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
@@ -13,7 +14,11 @@ namespace Microsoft.OData
     /// </summary>
     internal class PropertyMetadataTypeInfo
     {
-        public PropertyMetadataTypeInfo(string name, IEdmStructuredType owningType)
+        private bool loadDerivedTypeConstraints;
+        private IEnumerable<string> derivedTypeConstraints;
+        private IEdmModel model;
+
+        public PropertyMetadataTypeInfo(IEdmModel model, string name, IEdmStructuredType owningType)
         {
             this.PropertyName = name;
             this.OwningType = owningType;
@@ -22,6 +27,9 @@ namespace Microsoft.OData
             this.IsOpenProperty = (owningType != null && owningType.IsOpen && this.IsUndeclaredProperty);
             this.TypeReference = this.IsUndeclaredProperty ? null : this.EdmProperty.Type;
             this.FullName = this.TypeReference == null ? null : this.TypeReference.Definition.AsActualType().FullTypeName();
+
+            this.model = model;
+            loadDerivedTypeConstraints = false;
         }
 
         public string PropertyName { get; private set; }
@@ -37,5 +45,19 @@ namespace Microsoft.OData
         public IEdmTypeReference TypeReference { get; private set; }
 
         public string FullName { get; private set; }
+
+        public IEnumerable<string> DerivedTypeConstraints
+        {
+            get
+            {
+                if (!loadDerivedTypeConstraints)
+                {
+                    this.derivedTypeConstraints = EdmProperty == null ? null : this.model.GetDerivedTypeConstraints(EdmProperty);
+                    loadDerivedTypeConstraints = true;
+                }
+
+                return this.derivedTypeConstraints;
+            }
+        }
     }
 }
