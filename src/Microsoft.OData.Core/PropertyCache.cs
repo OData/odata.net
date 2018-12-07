@@ -16,12 +16,12 @@ namespace Microsoft.OData
     {
         private readonly Dictionary<string, PropertySerializationInfo> propertyInfoDictionary = new Dictionary<string, PropertySerializationInfo>();
 
-        public PropertySerializationInfo GetProperty(string name, string uniqueName, IEdmStructuredType owningType)
+        public PropertySerializationInfo GetProperty(IEdmModel model, string name, string uniqueName, IEdmStructuredType owningType)
         {
             PropertySerializationInfo propertyInfo;
             if (!propertyInfoDictionary.TryGetValue(uniqueName, out propertyInfo))
             {
-                propertyInfo = new PropertySerializationInfo(name, owningType);
+                propertyInfo = new PropertySerializationInfo(model, name, owningType);
                 propertyInfoDictionary[uniqueName] = propertyInfo;
             }
 
