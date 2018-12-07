@@ -184,11 +184,11 @@ namespace Microsoft.OData.JsonLight
 
             if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
             {
-                this.currentPropertyInfo = new PropertySerializationInfo(propertyName, owningType) { IsTopLevel = isTopLevel };
+                this.currentPropertyInfo = new PropertySerializationInfo(this.JsonLightOutputContext.Model, propertyName, owningType) { IsTopLevel = isTopLevel };
             }
             else
             {
-                this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(propertyName, owningType);
+                this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(this.JsonLightOutputContext.Model, propertyName, owningType);
             }
 
             WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
@@ -495,6 +495,8 @@ namespace Microsoft.OData.JsonLight
             bool isOpenPropertyType)
         {
             ResolvePrimitiveValueTypeName(primitiveValue, isOpenPropertyType);
+
+            WriterValidationUtils.ValidatePropertyDerivedTypeConstraint(this.currentPropertyInfo);
 
             this.WritePropertyTypeName();
             this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);

@@ -2825,6 +2825,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The value type '{0}' of property '{1}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation."
+        /// </summary>
+        internal static string WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "An XML node of type '{0}' was found in a string value. An element with a string value can only contain Text, CDATA, SignificantWhitespace, Whitespace or Comment nodes."
         /// </summary>
         internal static string XmlReaderExtension_InvalidNodeInStringValue(object p0) {
@@ -4504,13 +4511,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "String item should be single/double quoted: '{0}'."
-        /// </summary>
-        internal static string StringItemShouldBeQuoted(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.StringItemShouldBeQuoted, p0);
-        }
-
-        /// <summary>
         /// A string like "The right operand for the IN operation is not a collection value. IN operations require the left operand to be a single value and the right operand to be a collection value."
         /// </summary>
         internal static string MetadataBinder_RightOperandNotCollectionValue {
@@ -4687,6 +4687,13 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string MetadataBinder_QueryOptionNotApplicable(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_QueryOptionNotApplicable, p0);
+        }
+
+        /// <summary>
+        /// A string like "String item should be single/double quoted: '{0}'."
+        /// </summary>
+        internal static string StringItemShouldBeQuoted(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.StringItemShouldBeQuoted, p0);
         }
 
         /// <summary>
