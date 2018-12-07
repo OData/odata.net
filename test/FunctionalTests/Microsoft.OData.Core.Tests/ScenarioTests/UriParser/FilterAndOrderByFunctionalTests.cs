@@ -164,7 +164,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             ((ConstantNode)((BinaryOperatorNode)filterQueryNode.Expression).Right).ShouldBeConstantQueryNode(3258.678765765489753678965390m);
 
-            // double already overflows decimal 
+            // double already overflows decimal
             Action parse = () => ParseFilter("1.79769313486232E+307 eq " + decimalPrecisionStr, HardCodedTestModel.TestModel, HardCodedTestModel.GetPet3Type(), HardCodedTestModel.GetPet3Set());
             parse.ShouldThrow<OverflowException>();
 
@@ -811,7 +811,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void EmptyFunctionCallParametersAreProperlyValidated()
         {
             // regression test for: [UriParser] day() allowed. What does that mean?
-            // make sure that, if we do find a cannonical function, we match its parameters. 
+            // make sure that, if we do find a cannonical function, we match its parameters.
             Action parseWithInvalidParameters = () => ParseFilter("day() eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
@@ -824,7 +824,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionCallParametersAreValidated()
         {
             // regression test for: [UriParser] day() allowed. What does that mean?
-            // make sure that, if we do find a cannonical function, we match its parameters. 
+            // make sure that, if we do find a cannonical function, we match its parameters.
             Action parseWithInvalidParameters = () => ParseFilter("day(1) eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
@@ -1772,6 +1772,44 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("(1,2,3)");
         }
 
+       [Theory]
+       [InlineData("('abc','xyz')")]
+       [InlineData("('abc', 'xyz')")]
+       [InlineData("(\"abc\",\"xyz\")")]  // for backward compatibility
+        public void FilterWithInOperationWithParensStringCollection(string collection)
+        {
+            string filterClause = $"SSN in {collection}";
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("SSN");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be(collection);
+        }
+
+        [Theory]
+        [InlineData("('abc'd, 'xy,z')", "'abc'd")]
+        [InlineData("('xy,z', 'abc'd)", "'xy")]
+        public void FilterWithInOperationWithMalformCollection(string collection, string errorItem)
+        {
+            string filterClause = $"SSN in {collection}";
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.StringItemShouldBeQuoted(errorItem));
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithParensStringCollection_EscapedSingleQuote()
+        {
+            FilterClause filter = ParseFilter("SSN in ('a''bc','''def','xyz''')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("SSN");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("('a''bc','''def','xyz''')");
+        }
+
+        [Fact]
+        public void FilterWithEqOperation_EscapedSingleQuote()
+        {
+            FilterClause filter = ParseFilter("SSN eq 'a''bc'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("SSN");
+            filter.Expression.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode("a'bc");
+        }
+
         [Fact]
         public void FilterWithInOperationWithMismatchedClosureCollection()
         {
@@ -1801,6 +1839,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             OrderByClause orderby = ParseOrderBy("'777-42-9001' in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             orderby.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be("777-42-9001");
             orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedSSNs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGuidCollection()
+        {
+            FilterClause filter = ParseFilter("MyGuid in (D01663CF-EB21-4A0E-88E0-361C10ACE7FD, 492CF54A-84C9-490C-A7A4-B5010FAD8104)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("MyGuid");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should()
+                .Be("(D01663CF-EB21-4A0E-88E0-361C10ACE7FD, 492CF54A-84C9-490C-A7A4-B5010FAD8104)");
+        }
+
+        [Theory]
+        [InlineData("('D01663CF-EB21-4A0E-88E0-361C10ACE7FD','492CF54A-84C9-490C-A7A4-B5010FAD8104')")]
+        [InlineData("(\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\", \"492CF54A-84C9-490C-A7A4-B5010FAD8104\")")]
+        [InlineData("(\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\",\"492CF54A-84C9-490C-A7A4-B5010FAD8104\")")]
+        public void FilterWithInOperationWithQuotedGuidCollection(string guidsCollection)
+        {
+            FilterClause filter = ParseFilter($"MyGuid in {guidsCollection}",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("MyGuid");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should()
+                .Be(guidsCollection);
+        }
+
+        [Fact]
+        public void FilterWithBinaryOperationWithGuid()
+        {
+            FilterClause filter = ParseFilter("MyGuid eq D01663CF-EB21-4A0E-88E0-361C10ACE7FD",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("MyGuid");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConvertNode>().Source.As<ConstantNode>().Value
+                .Should().Be(Guid.Parse("D01663CF-EB21-4A0E-88E0-361C10ACE7FD"));
         }
 
         [Fact]
