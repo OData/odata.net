@@ -4497,6 +4497,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "String item should be single/double quoted: '{0}'."
+        /// </summary>
+        internal static string StringItemShouldBeQuoted(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.StringItemShouldBeQuoted, p0);
+        }
+
+        /// <summary>
         /// A string like "The right operand for the IN operation is not a collection value. IN operations require the left operand to be a single value and the right operand to be a collection value."
         /// </summary>
         internal static string MetadataBinder_RightOperandNotCollectionValue {
