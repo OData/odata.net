@@ -318,8 +318,8 @@ namespace Microsoft.OData.UriParser
             QueryToken filterToken = null;
             ExpandToken nestedExpand = null;
 
-            // Followed (optionaly) by filter and expand
-            // Syntax for expand inside $apply is different (and muc simplier)  from $expand clause => had to use different parsing approach
+            // Followed (optionally) by filter and expand
+            // Syntax for expand inside $apply is different (and much simplier)  from $expand clause => had to use different parsing approach
             while (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Comma)
             {
                 this.lexer.NextToken();
