@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="FilterTransformationNode.cs" company="Microsoft">
+// <copyright file="ExpandTransformationNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser.Aggregation
     using Microsoft.OData.UriParser;
 
     /// <summary>
-    /// Node representing a filter transformation.
+    /// Node representing a expand transformation.
     /// </summary>
     public sealed class ExpandTransformationNode : TransformationNode
     {
@@ -18,7 +18,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// <summary>
         /// Create a ExpandTransformationNode.
         /// </summary>
-        /// <param name="filterClause">A <see cref="SelectExpandClause"/> representing the metadata bound expand expression.</param>
+        /// <param name="expandClause">A <see cref="SelectExpandClause"/> representing the metadata bound expand expression.</param>
         public ExpandTransformationNode(SelectExpandClause expandClause)
         {
             ExceptionUtils.CheckArgumentNotNull(expandClause, "expandClause");
