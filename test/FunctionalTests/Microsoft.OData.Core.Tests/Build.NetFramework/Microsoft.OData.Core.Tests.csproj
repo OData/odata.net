@@ -209,6 +209,7 @@
     <Compile Include="..\ODataUtilsInternalTests.cs" />
     <Compile Include="..\ODataUtilsTests.cs" />
     <Compile Include="..\ODataWriterCoreTests.cs" />
+    <Compile Include="..\ODataWriterDerivedTypeConstraintTests.cs" />
     <Compile Include="..\Query\ODataUriConversionUtilsTests.cs" />
     <Compile Include="..\Query\ODataUriUtilsTests.cs" />
     <Compile Include="..\RawValueWriterTests.cs" />

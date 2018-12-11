@@ -2832,6 +2832,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The value type '{0}' of a resource is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on navigation source '{1}'."
+        /// </summary>
+        internal static string WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "An XML node of type '{0}' was found in a string value. An element with a string value can only contain Text, CDATA, SignificantWhitespace, Whitespace or Comment nodes."
         /// </summary>
         internal static string XmlReaderExtension_InvalidNodeInStringValue(object p0) {
