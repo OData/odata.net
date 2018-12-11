@@ -4,10 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
+
 using System;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.OData.Edm;
 
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
@@ -321,16 +322,15 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseDate(string value, out Date? result)
         {
-            try
+            result = null;
+            Date targetDate;
+            if (PlatformHelper.TryConvertStringToDate(value, out targetDate))
             {
-                result = PlatformHelper.ConvertStringToDate(value);
+                result = targetDate;
                 return true;
             }
-            catch (FormatException)
-            {
-                result = null;
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>

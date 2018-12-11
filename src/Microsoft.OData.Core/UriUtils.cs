@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
+
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
 {
@@ -215,17 +214,7 @@ namespace Microsoft.OData
         /// <returns>true if the value was converted; false otherwise.</returns>
         internal static bool TryUriStringToDate(string text, out Date targetValue)
         {
-            targetValue = default(Date);
-
-            try
-            {
-                targetValue = PlatformHelper.ConvertStringToDate(text);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
+            return PlatformHelper.TryConvertStringToDate(text, out targetValue);
         }
 
         /// <summary>
@@ -236,17 +225,7 @@ namespace Microsoft.OData
         /// <returns>true if the value was converted; false otherwise.</returns>
         internal static bool TryUriStringToTimeOfDay(string text, out TimeOfDay targetValue)
         {
-            targetValue = default(TimeOfDay);
-
-            try
-            {
-                targetValue = PlatformHelper.ConvertStringToTimeOfDay(text);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
+            return PlatformHelper.TryConvertStringToTimeOfDay(text, out targetValue);
         }
 
         /// <summary>

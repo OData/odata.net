@@ -269,15 +269,38 @@ namespace Microsoft.OData.Edm
         /// Converts a string to a Date.
         /// </summary>
         /// <param name="text">String to be converted.</param>
+        /// <param name="date">The converted date value</param>
+        /// <returns>if parsing was successfull</returns>
+        internal static bool TryConvertStringToDate(string text, out Date date)
+        {
+            return Date.TryParse(text, DateTimeFormatInfo.InvariantInfo, out date);
+        }
+
+        /// <summary>
+        /// Converts a string to a Date.
+        /// </summary>
+        /// <param name="text">String to be converted.</param>
         /// <returns>Date value</returns>
         internal static Date ConvertStringToDate(string text)
         {
-            if (text == null || !DateValidator.IsMatch(text))
+            Date date;
+            if (!PlatformHelper.TryConvertStringToDate(text, out date))
             {
                 throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.Date.", text));
             }
 
-            return Date.Parse(text, CultureInfo.InvariantCulture);
+            return date;
+        }
+
+        /// <summary>
+        /// Converts a string to a TimeOfDay.
+        /// </summary>
+        /// <param name="text">String to be converted.</param>
+        /// <param name="timeOfDay">Time of the day</param>
+        /// <returns>Whether the value is a valid time of day</returns>
+        internal static bool TryConvertStringToTimeOfDay(string text, out TimeOfDay timeOfDay)
+        {
+            return TimeOfDay.TryParse(text, DateTimeFormatInfo.InvariantInfo, out timeOfDay);
         }
 
         /// <summary>
@@ -287,12 +310,13 @@ namespace Microsoft.OData.Edm
         /// <returns>TimeOfDay value</returns>
         internal static TimeOfDay ConvertStringToTimeOfDay(string text)
         {
-            if (text == null || !TimeOfDayValidator.IsMatch(text))
+            TimeOfDay timeOfDay;
+            if (!PlatformHelper.TryConvertStringToTimeOfDay(text, out timeOfDay))
             {
                 throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
             }
 
-            return TimeOfDay.Parse(text, CultureInfo.InvariantCulture);
+            return timeOfDay;
         }
 #endif
 
