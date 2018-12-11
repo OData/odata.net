@@ -306,6 +306,7 @@ namespace Microsoft.OData.Edm
         /// <returns>Whether the value is a valid time of day</returns>
         internal static bool TryConvertStringToTimeOfDay(string text, out TimeOfDay timeOfDay)
         {
+            timeOfDay = default(TimeOfDay);
             if (text == null || !PlatformHelper.TimeOfDayValidator.IsMatch(text))
             {
                 return false;
