@@ -86,6 +86,7 @@ namespace Microsoft.OData
             this.listener = listener;
 
             this.scopeStack.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, resourceType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, odataUri));
+            this.CurrentScope.DerivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationSource);
         }
 
         /// <summary>
@@ -1726,6 +1727,9 @@ namespace Microsoft.OData
                 // Validate the consistency of resource types in the nested resourceSet/resource
                 this.WriterValidator.ValidateResourceInNestedResourceInfo(resourceType, parentNestedResourceInfoScope.ResourceType);
                 resourceScope.ResourceTypeFromMetadata = parentNestedResourceInfoScope.ResourceType;
+
+                this.WriterValidator.ValidateDerivedTypeConstraintOnNestedResourceInfo(resourceType, resourceScope.ResourceTypeFromMetadata,
+                    (ODataNestedResourceInfo)parentNestedResourceInfoScope.Item, parentNestedResourceInfoScope.DerivedTypeConstraints);
             }
             else
             {
@@ -1750,6 +1754,9 @@ namespace Microsoft.OData
                         this.CurrentResourceSetValidator.ValidateResource(resourceType);
                     }
                 }
+
+                this.WriterValidator.ValidateDerivedTypeConstraintOnNavigationSource(resourceType, resourceScope.ResourceTypeFromMetadata,
+                    this.ParentScope.NavigationSource, this.ParentScope.DerivedTypeConstraints);
             }
 
             resourceScope.ResourceType = resourceType;
@@ -1875,6 +1882,8 @@ namespace Microsoft.OData
                 odataUri.Path = new ODataPath();
             }
 
+            IEnumerable<string> derivedTypeConstraints = null;
+
             WriterState currentState = currentScope.State;
 
             if (newState == WriterState.Resource || newState == WriterState.ResourceSet || newState == WriterState.Primitive || newState == WriterState.DeltaResourceSet || newState == WriterState.DeletedResource)
@@ -1944,6 +1953,15 @@ namespace Microsoft.OData
                     }
                 }
 
+                if (navigationSource == null)
+                {
+                    derivedTypeConstraints = currentScope.DerivedTypeConstraints;
+                }
+                else
+                {
+                    derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationSource);
+                }
+
                 navigationSource = navigationSource ?? currentScope.NavigationSource;
                 resourceType = resourceType ?? currentScope.ResourceType;
 
@@ -2011,12 +2029,16 @@ namespace Microsoft.OData
                             }
 
                             odataPath = odataPath.AppendPropertySegment(structuredProperty);
+
+                            derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(structuredProperty);
                         }
                         else
                         {
                             IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentResourceType, /*payloadKind*/null);
                             if (navigationProperty != null)
                             {
+                                derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationProperty);
+
                                 resourceType = navigationProperty.ToEntityType();
                                 if (!nestedResourceInfo.IsCollection.HasValue)
                                 {
@@ -2095,7 +2117,7 @@ namespace Microsoft.OData
                 navigationSource = this.CurrentScope.NavigationSource ?? odataUri.Path.TargetNavigationSource();
             }
 
-            this.PushScope(newState, item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+            this.PushScope(newState, item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri, derivedTypeConstraints);
 
             this.NotifyListener(newState);
         }
@@ -2150,7 +2172,7 @@ namespace Microsoft.OData
             {
                 Scope startScope = this.scopeStack.Pop();
                 Debug.Assert(startScope.State == WriterState.Start, "startScope.State == WriterState.Start");
-                this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.ResourceType, /*skipWriting*/false, startScope.SelectedProperties, startScope.ODataUri);
+                this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.ResourceType, /*skipWriting*/false, startScope.SelectedProperties, startScope.ODataUri, null);
                 this.InterceptException(this.EndPayload);
                 this.NotifyListener(WriterState.Completed);
             }
@@ -2297,8 +2319,10 @@ namespace Microsoft.OData
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The OdataUri info of this scope.</param>
+        /// <param name="derivedTypeConstraints">The derived type constraints.</param>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
-        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri,
+            IEnumerable<string> derivedTypeConstraints)
         {
             Debug.Assert(
                 state == WriterState.Error ||
@@ -2369,6 +2393,7 @@ namespace Microsoft.OData
                     throw new ODataException(errorMessage);
             }
 
+            scope.DerivedTypeConstraints = derivedTypeConstraints;
             this.scopeStack.Push(scope);
         }
 
@@ -2628,6 +2653,9 @@ namespace Microsoft.OData
                     return this.skipWriting;
                 }
             }
+
+            /// <summary>Gets or sets the derived type constraints for the current scope.</summary>
+            internal IEnumerable<string> DerivedTypeConstraints { get; set; }
         }
 
         /// <summary>
@@ -3038,7 +3066,10 @@ namespace Microsoft.OData
             /// <returns>The cloned nested resource info scope with the specified writer state.</returns>
             internal virtual NestedResourceInfoScope Clone(WriterState newWriterState)
             {
-                return new NestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ResourceType, this.SkipWriting, this.SelectedProperties, this.ODataUri);
+                return new NestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ResourceType, this.SkipWriting, this.SelectedProperties, this.ODataUri)
+                {
+                    DerivedTypeConstraints = this.DerivedTypeConstraints
+                };
             }
         }
     }
