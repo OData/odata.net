@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -509,6 +510,52 @@ namespace Microsoft.OData
             }
 
             return navigationProperty;
+        }
+
+        /// <summary>
+        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the <see cref="ODataNestedResourceInfo"/>.
+        /// </summary>
+        /// <param name="resourceType">The input resource type.</param>
+        /// <param name="metadataType">The type from metadata.</param>
+        /// <param name="nestedResourceInfo">The nested resource info.</param>
+        /// <param name="derivedTypeConstraints">The derived type constraints on the nested resource.</param>
+        internal static void ValidateDerivedTypeConstraintOnNestedResourceInfo(IEdmStructuredType resourceType, IEdmStructuredType metadataType, ODataNestedResourceInfo nestedResourceInfo, IEnumerable<string> derivedTypeConstraints)
+        {
+            if (resourceType == null || metadataType == null || derivedTypeConstraints == null || resourceType == metadataType)
+            {
+                return;
+            }
+
+            string fullTypeName = resourceType.FullTypeName();
+            if (derivedTypeConstraints.Any(c => c == fullTypeName))
+            {
+                return;
+            }
+
+            throw new ODataException(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, nestedResourceInfo.Name));
+        }
+
+        /// <summary>
+        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the <see cref="IEdmNavigationSource"/>.
+        /// </summary>
+        /// <param name="resourceType">The input resource type.</param>
+        /// <param name="metadataType">The type from metadata.</param>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="derivedTypeConstraints">The derived type constraints on the nested resource.</param>
+        internal static void ValidateDerivedTypeConstraintOnNavigationSource(IEdmStructuredType resourceType, IEdmStructuredType metadataType, IEdmNavigationSource navigationSource, IEnumerable<string> derivedTypeConstraints)
+        {
+            if (resourceType == null || metadataType == null || navigationSource == null || derivedTypeConstraints == null || resourceType == metadataType)
+            {
+                return;
+            }
+
+            string fullTypeName = resourceType.FullTypeName();
+            if (derivedTypeConstraints.Any(c => c == fullTypeName))
+            {
+                return;
+            }
+
+            throw new ODataException(Strings.WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, navigationSource.Name));
         }
 
         /// <summary>

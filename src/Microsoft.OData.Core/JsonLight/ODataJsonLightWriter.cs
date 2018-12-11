@@ -1951,6 +1951,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     EntityReferenceLinkWritten = this.entityReferenceLinkWritten,
                     ResourceSetWritten = this.resourceSetWritten,
+                    DerivedTypeConstraints = this.DerivedTypeConstraints
                 };
             }
         }

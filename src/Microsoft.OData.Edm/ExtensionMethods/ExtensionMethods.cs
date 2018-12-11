@@ -758,6 +758,33 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets the collection of qualified type name for term Org.OData.Validation.V1.DerivedTypeConstraint from a navigation source.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <returns>Null or a collection string of qualifed type name.</returns>
+        public static IEnumerable<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmNavigationSource navigationSource)
+        {
+            if (model == null || navigationSource == null)
+            {
+                return null;
+            }
+
+            IEnumerable<string> derivedTypeConstraints = null;
+            switch (navigationSource.NavigationSourceKind())
+            {
+                case EdmNavigationSourceKind.EntitySet:
+                    derivedTypeConstraints = model.GetDerivedTypeConstraints((IEdmVocabularyAnnotatable)(IEdmEntitySet)navigationSource);
+                    break;
+                case EdmNavigationSourceKind.Singleton:
+                    derivedTypeConstraints = model.GetDerivedTypeConstraints((IEdmVocabularyAnnotatable)(IEdmSingleton)navigationSource);
+                    break;
+            }
+
+            return derivedTypeConstraints;
+        }
+
+        /// <summary>
         /// Gets the collection of qualified type name for term Org.OData.Validation.V1.DerivedTypeConstraint from a target annotatable.
         /// </summary>
         /// <param name="model">The model referenced to.</param>
