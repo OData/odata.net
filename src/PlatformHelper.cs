@@ -270,10 +270,16 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="text">String to be converted.</param>
         /// <param name="date">The converted date value</param>
-        /// <returns>if parsing was successfull</returns>
+        /// <returns>if parsing was successful</returns>
         internal static bool TryConvertStringToDate(string text, out Date date)
         {
-            return Date.TryParse(text, DateTimeFormatInfo.InvariantInfo, out date);
+            date = default(Date);
+            if (text == null || !PlatformHelper.DateValidator.IsMatch(text))
+            {
+                return false;
+            }
+
+            return Date.TryParse(text, CultureInfo.InvariantCulture, out date);
         }
 
         /// <summary>
@@ -300,7 +306,12 @@ namespace Microsoft.OData.Edm
         /// <returns>Whether the value is a valid time of day</returns>
         internal static bool TryConvertStringToTimeOfDay(string text, out TimeOfDay timeOfDay)
         {
-            return TimeOfDay.TryParse(text, DateTimeFormatInfo.InvariantInfo, out timeOfDay);
+            if (text == null || !PlatformHelper.TimeOfDayValidator.IsMatch(text))
+            {
+                return false;
+            }
+
+            return TimeOfDay.TryParse(text, CultureInfo.InvariantCulture, out timeOfDay);
         }
 
         /// <summary>
