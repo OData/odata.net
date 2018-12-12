@@ -67,18 +67,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void DeepExpand()
         {
             const string expandClauseText = "Navigation1($expand=Navigation2($expand=Navigation1))";
-            const string expectedExpandClauseText = "Navigation1($expand=Navigation2($expand=Navigation1))";
             const string expectedSelectClause = "";
-            this.ParseAndExtract(expandClauseText, null, expectedExpandClauseText, expectedSelectClause);
+            this.ParseAndExtract(expandClauseText, null, expandClauseText, expectedSelectClause);
         }
 
         [Fact]
         public void MultiLevelExpand()
         {
             const string expandClauseText = "Navigation1,Navigation2($expand=Navigation1)";
-            const string expectedExpandClause = "Navigation1,Navigation2($expand=Navigation1)";
             const string expectedSelectClause = "";
-            this.ParseAndExtract(expandClauseText, expectedExpandClauseFromOM: expectedExpandClause, expectedSelectClauseFromOM: expectedSelectClause);
+            this.ParseAndExtract(expandClauseText, expectedExpandClauseFromOM: expandClauseText, expectedSelectClauseFromOM: expectedSelectClause);
         }
 
         [Fact]
@@ -112,8 +110,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string expandClauseText = "Navigation1($expand=FQ.NS.Derived/Navigation2)";
             const string expectedSelectClause = "";
-            const string expectedExpandClause = "Navigation1($expand=FQ.NS.Derived/Navigation2)";
-            this.ParseAndExtract(expandClauseText, null, expectedExpandClause, expectedSelectClause);
+            this.ParseAndExtract(expandClauseText, null, expandClauseText, expectedSelectClause);
         }
 
         [Fact]
@@ -161,17 +158,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectNavigationPropertiesThatAreAlsoExpanded()
         {
             const string expandClauseText = "Navigation1($expand=Navigation1($select=Navigation2))";
-            const string expectedExpandClauseText = "Navigation1($expand=Navigation1($select=Navigation2))";
             const string expectedSelectClauseText = "";
-            this.ParseAndExtract(expandClauseText: expandClauseText, expectedExpandClauseFromOM: expectedExpandClauseText, expectedSelectClauseFromOM: expectedSelectClauseText);
+            this.ParseAndExtract(expandClauseText: expandClauseText, expectedExpandClauseFromOM: expandClauseText, expectedSelectClauseFromOM: expectedSelectClauseText);
         }
 
         [Fact]
         public void SelectPrimitiveAndNavigationPropertyThatIsAlsoExpanded()
         {
             const string selectClauseText = "Id,Navigation1";
-            const string expectedSelectText = "Id,Navigation1";
-            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: "Navigation1", expectedSelectClauseFromOM: expectedSelectText);
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: "Navigation1", expectedSelectClauseFromOM: selectClauseText);
         }
 
         [Fact]
@@ -194,24 +189,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string expandClauseText = "Navigation1($select=*)";
             const string expectedSelectText = "";
-            const string expectedExpandText = "Navigation1($select=*)";
-            this.ParseAndExtract(expandClauseText: expandClauseText, expectedExpandClauseFromOM: expectedExpandText, expectedSelectClauseFromOM: expectedSelectText);
+            this.ParseAndExtract(expandClauseText: expandClauseText, expectedExpandClauseFromOM: expandClauseText, expectedSelectClauseFromOM: expectedSelectText);
         }
 
         [Fact]
         public void SelectAndExpandWithTypeSegments()
         {
-            const string selectClauseText = "FQ.NS.Derived/Navigation1";
-            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: selectClauseText);
+            const string navClauseText = "FQ.NS.Derived/Navigation1";
+            this.ParseAndExtract(selectClauseText: navClauseText, expandClauseText: navClauseText, expectedSelectClauseFromOM: navClauseText,  expectedExpandClauseFromOM: navClauseText);
+            this.ParseAndExtract(selectClauseText: navClauseText, expandClauseText: "", expectedSelectClauseFromOM: navClauseText);
+            this.ParseAndExtract(selectClauseText: "", expandClauseText: navClauseText, expectedExpandClauseFromOM: navClauseText);
         }
 
         [Fact]
         public void SelectAndExpandWithTypeSegments2()
         {
             const string expandClauseText = "FQ.NS.Derived/Navigation1($select=FQ.NS.Derived/Derived,FQ.NS.Derived/Navigation2)";
-            const string expectedExpandText = "FQ.NS.Derived/Navigation1($select=FQ.NS.Derived/Derived,FQ.NS.Derived/Navigation2)";
             const string expectedSelectText = "";
-            this.ParseAndExtract(expandClauseText, expectedExpandClauseFromOM: expectedExpandText, expectedSelectClauseFromOM: expectedSelectText);
+            this.ParseAndExtract(expandClauseText, expectedExpandClauseFromOM: expandClauseText, expectedSelectClauseFromOM: expectedSelectText);
         }
 
         [Fact]
@@ -242,9 +237,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectPropertiesDefinedOnDerivedTypesWithoutRepeatingTypeSegments()
         {
             const string expandClauseText = "FQ.NS.Derived/DerivedNavigation($expand=DerivedNavigation($select=Derived))";
-            const string expectedExpandClause = "FQ.NS.Derived/DerivedNavigation($expand=DerivedNavigation($select=Derived))";
             const string expectedSelect = "";
-            this.ParseAndExtract(expandClauseText: expandClauseText, expectedExpandClauseFromOM: expectedExpandClause, expectedSelectClauseFromOM: expectedSelect);
+            this.ParseAndExtract(expandClauseText: expandClauseText, expectedExpandClauseFromOM: expandClauseText, expectedSelectClauseFromOM: expectedSelect);
         }
 
         [Fact]
@@ -261,8 +255,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             const string selectClauseText = "FQ.NS.Derived/Navigation2";
             const string expandClauseText = "FQ.NS.Derived/Navigation1/$ref";
             const string expectedSelectClause = "FQ.NS.Derived/Navigation2,FQ.NS.Derived/Navigation1";
-            const string expectedExpandClause = "FQ.NS.Derived/Navigation1/$ref";
-            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: expectedSelectClause, expectedExpandClauseFromOM: expectedExpandClause);
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: expectedSelectClause, expectedExpandClauseFromOM: expandClauseText);
         }
 
         [Fact]
@@ -270,9 +263,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string selectClauseText = "FQ.NS.Derived/Navigation1,FQ.NS.Derived/Navigation2";
             const string expandClauseText = "FQ.NS.Derived/Navigation1/$ref";
-            const string expectedSelectClause = "FQ.NS.Derived/Navigation1,FQ.NS.Derived/Navigation2";
-            const string expectedExpandClause = "FQ.NS.Derived/Navigation1/$ref";
-            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: expectedSelectClause, expectedExpandClauseFromOM: expectedExpandClause);
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: selectClauseText, expectedExpandClauseFromOM: expandClauseText);
         }
 
         private void ParseAndExtract(string expandClauseText = null, string selectClauseText = null, string expectedExpandClauseFromOM = null, string expectedSelectClauseFromOM = null)
