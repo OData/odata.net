@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.OData.Edm;
 
-
 namespace Microsoft.OData
 {
     /// <summary>
