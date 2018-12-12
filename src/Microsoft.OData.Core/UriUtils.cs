@@ -215,17 +215,7 @@ namespace Microsoft.OData
         /// <returns>true if the value was converted; false otherwise.</returns>
         internal static bool TryUriStringToDate(string text, out Date targetValue)
         {
-            targetValue = default(Date);
-
-            try
-            {
-                targetValue = PlatformHelper.ConvertStringToDate(text);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
+            return PlatformHelper.TryConvertStringToDate(text, out targetValue);
         }
 
         /// <summary>
@@ -236,17 +226,7 @@ namespace Microsoft.OData
         /// <returns>true if the value was converted; false otherwise.</returns>
         internal static bool TryUriStringToTimeOfDay(string text, out TimeOfDay targetValue)
         {
-            targetValue = default(TimeOfDay);
-
-            try
-            {
-                targetValue = PlatformHelper.ConvertStringToTimeOfDay(text);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
+            return PlatformHelper.TryConvertStringToTimeOfDay(text, out targetValue);
         }
 
         /// <summary>
