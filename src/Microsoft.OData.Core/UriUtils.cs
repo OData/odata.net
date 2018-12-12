@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm;
-
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.OData.Edm;
+
 
 namespace Microsoft.OData
 {

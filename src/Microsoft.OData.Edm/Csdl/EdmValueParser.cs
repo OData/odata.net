@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm;
 
 using System;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.OData.Edm;
 
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
