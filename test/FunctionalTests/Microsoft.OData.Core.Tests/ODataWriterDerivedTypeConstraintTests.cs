@@ -173,7 +173,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeNormalCustomerAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "Me"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation source", "Me"), exception.Message);
         }
         #endregion
 
@@ -255,7 +255,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeCustomersAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "Customers"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation source", "Customers"), exception.Message);
         }
         #endregion
 
@@ -321,7 +321,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeCustomersAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "Customers"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation source", "Customers"), exception.Message);
         }
         #endregion
 
@@ -447,7 +447,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeNavigationPropertyAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "FriendCustomer"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "property", "FriendCustomer"), exception.Message);
         }
 
         [Fact]
@@ -491,7 +491,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeNavigationPropertyAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint("NS.VipCustomer", "FriendCustomers"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.VipCustomer", "property", "FriendCustomers"), exception.Message);
         }
         #endregion
 
@@ -597,7 +597,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writePropertyAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint("NS.CnAddress", "Location"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.CnAddress", "property", "Location"), exception.Message);
         }
 
         [Fact]
@@ -636,7 +636,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writePropertyAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint("NS.UsAddress", "Locations"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.UsAddress", "property", "Locations"), exception.Message);
         }
         #endregion
 
@@ -700,7 +700,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint("Edm.Double", "Data"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("Edm.Double", "property", "Data"), exception.Message);
         }
         #endregion
 

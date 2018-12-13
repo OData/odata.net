@@ -1728,8 +1728,8 @@ namespace Microsoft.OData
                 this.WriterValidator.ValidateResourceInNestedResourceInfo(resourceType, parentNestedResourceInfoScope.ResourceType);
                 resourceScope.ResourceTypeFromMetadata = parentNestedResourceInfoScope.ResourceType;
 
-                this.WriterValidator.ValidateDerivedTypeConstraintOnNestedResourceInfo(resourceType, resourceScope.ResourceTypeFromMetadata,
-                    (ODataNestedResourceInfo)parentNestedResourceInfoScope.Item, parentNestedResourceInfoScope.DerivedTypeConstraints);
+                this.WriterValidator.ValidateDerivedTypeConstraint(resourceType, resourceScope.ResourceTypeFromMetadata,
+                    parentNestedResourceInfoScope.DerivedTypeConstraints, "property", ((ODataNestedResourceInfo)parentNestedResourceInfoScope.Item).Name);
             }
             else
             {
@@ -1755,8 +1755,11 @@ namespace Microsoft.OData
                     }
                 }
 
-                this.WriterValidator.ValidateDerivedTypeConstraintOnNavigationSource(resourceType, resourceScope.ResourceTypeFromMetadata,
-                    this.ParentScope.NavigationSource, this.ParentScope.DerivedTypeConstraints);
+                if (this.ParentScope.NavigationSource != null)
+                {
+                    this.WriterValidator.ValidateDerivedTypeConstraint(resourceType, resourceScope.ResourceTypeFromMetadata,
+                        this.ParentScope.DerivedTypeConstraints, "navigation source", this.ParentScope.NavigationSource.Name);
+                }
             }
 
             resourceScope.ResourceType = resourceType;
