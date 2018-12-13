@@ -317,7 +317,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var primitiveTypeProperty = new ODataProperty { Name = "PrimitiveConstraintProperty", Value = value };
             Action action = () => this.SerializeProperty(this.entityType, primitiveTypeProperty);
             var exception = Assert.Throws<ODataException>(action);
-            Assert.Equal(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "PrimitiveConstraintProperty"), exception.Message);
+            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", "PrimitiveConstraintProperty"), exception.Message);
         }
 
         #region Serializing regular properties
