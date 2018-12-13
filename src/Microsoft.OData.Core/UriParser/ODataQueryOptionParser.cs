@@ -425,7 +425,7 @@ namespace Microsoft.OData.UriParser
             state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(odataPathInfo.TargetEdmType.ToTypeReference(), odataPathInfo.TargetNavigationSource);
             state.RangeVariables.Push(state.ImplicitRangeVariable);
             MetadataBinder binder = new MetadataBinder(state);
-            ApplyBinder applyBinder = new ApplyBinder(binder.Bind, state);
+            ApplyBinder applyBinder = new ApplyBinder(binder.Bind, state, configuration, odataPathInfo);
             ApplyClause boundNode = applyBinder.BindApply(applyTokens);
 
             return boundNode;

@@ -4350,6 +4350,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The inner most expand transformation requires a filter transformation at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_InnerMostExpandRequireFilter(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_InnerMostExpandRequireFilter, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The URI '{0}' is not valid because it is not based on '{1}'."
         /// </summary>
         internal static string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(object p0, object p1) {

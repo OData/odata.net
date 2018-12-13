@@ -297,6 +297,73 @@ namespace Microsoft.OData.UriParser
             return new ComputeToken(transformationTokens);
         }
 
+        internal ExpandToken ParseExpand()
+        {
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordExpand), "token identifier is expand");
+            lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+            this.lexer.NextToken();
+
+            List<ExpandTermToken> termTokens = new List<ExpandTermToken>();
+
+            // First token must be Path
+            var termParser = new SelectExpandTermParser(this.lexer, this.maxDepth - 1, false);
+            PathSegmentToken pathToken = termParser.ParseTerm(allowRef: true);
+            
+            QueryToken filterToken = null;
+            ExpandToken nestedExpand = null;
+
+            // Followed (optionally) by filter and expand
+            // Syntax for expand inside $apply is different (and much simplier)  from $expand clause => had to use different parsing approach
+            while (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Comma)
+            {
+                this.lexer.NextToken();
+                if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Identifier)
+                {
+                    switch (this.lexer.CurrentToken.GetIdentifier())
+                    {
+                        case ExpressionConstants.KeywordFilter:
+                            filterToken= this.ParseApplyFilter();
+                            break;
+                        case ExpressionConstants.KeywordExpand:
+                            ExpandToken tempNestedExpand = ParseExpand();
+                            nestedExpand = nestedExpand == null 
+                                ? tempNestedExpand 
+                                : new ExpandToken(nestedExpand.ExpandTerms.Concat(tempNestedExpand.ExpandTerms));
+                            break;
+                        default:
+                            throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+
+                    }
+                }
+            }
+
+            // Leaf level expands require filter
+            if (filterToken == null && nestedExpand == null)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            ExpandTermToken expandTermToken = new ExpandTermToken(pathToken, filterToken, null, null, null, null, null, null, null, nestedExpand); 
+            termTokens.Add(expandTermToken);
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+
+            return new ExpandToken(termTokens);
+        }
+
         internal IEnumerable<QueryToken> ParseApply(string apply)
         {
             Debug.Assert(apply != null, "apply != null");
@@ -326,6 +393,9 @@ namespace Microsoft.OData.UriParser
                         break;
                     case ExpressionConstants.KeywordCompute:
                         transformationTokens.Add(ParseCompute());
+                        break;
+                    case ExpressionConstants.KeywordExpand:
+                        transformationTokens.Add(ParseExpand());
                         break;
                     default:
                         throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
