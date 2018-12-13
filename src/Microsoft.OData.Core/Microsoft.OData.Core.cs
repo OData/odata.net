@@ -428,8 +428,7 @@ namespace Microsoft.OData {
         internal const string WriterValidationUtils_NavigationLinkMustSpecifyUrl = "WriterValidationUtils_NavigationLinkMustSpecifyUrl";
         internal const string WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection = "WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection";
         internal const string WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage = "WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage";
-        internal const string WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint = "WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint";
-        internal const string WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint = "WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint";
+        internal const string WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint = "WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint";
         internal const string XmlReaderExtension_InvalidNodeInStringValue = "XmlReaderExtension_InvalidNodeInStringValue";
         internal const string XmlReaderExtension_InvalidRootNode = "XmlReaderExtension_InvalidRootNode";
         internal const string ODataMetadataInputContext_ErrorReadingMetadata = "ODataMetadataInputContext_ErrorReadingMetadata";

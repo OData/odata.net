@@ -350,7 +350,7 @@ namespace Microsoft.OData
                 return;
             }
 
-            throw new ODataException(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, propertySerializationInfo.PropertyName));
+            throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace Microsoft.OData
                 return;
             }
 
-            throw new ODataException(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, propertySerializationInfo.PropertyName));
+            throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
         }
 
         /// <summary>
@@ -513,13 +513,15 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the <see cref="ODataNestedResourceInfo"/>.
+        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the odata item.
         /// </summary>
         /// <param name="resourceType">The input resource type.</param>
         /// <param name="metadataType">The type from metadata.</param>
-        /// <param name="nestedResourceInfo">The nested resource info.</param>
         /// <param name="derivedTypeConstraints">The derived type constraints on the nested resource.</param>
-        internal static void ValidateDerivedTypeConstraintOnNestedResourceInfo(IEdmStructuredType resourceType, IEdmStructuredType metadataType, ODataNestedResourceInfo nestedResourceInfo, IEnumerable<string> derivedTypeConstraints)
+        /// <param name="itemKind">The item kind.</param>
+        /// <param name="itemName">The item name.</param>
+        internal static void ValidateDerivedTypeConstraint(IEdmStructuredType resourceType,
+            IEdmStructuredType metadataType, IEnumerable<string> derivedTypeConstraints, string itemKind, string itemName)
         {
             if (resourceType == null || metadataType == null || derivedTypeConstraints == null || resourceType == metadataType)
             {
@@ -532,30 +534,7 @@ namespace Microsoft.OData
                 return;
             }
 
-            throw new ODataException(Strings.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, nestedResourceInfo.Name));
-        }
-
-        /// <summary>
-        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the <see cref="IEdmNavigationSource"/>.
-        /// </summary>
-        /// <param name="resourceType">The input resource type.</param>
-        /// <param name="metadataType">The type from metadata.</param>
-        /// <param name="navigationSource">The navigation source.</param>
-        /// <param name="derivedTypeConstraints">The derived type constraints on the nested resource.</param>
-        internal static void ValidateDerivedTypeConstraintOnNavigationSource(IEdmStructuredType resourceType, IEdmStructuredType metadataType, IEdmNavigationSource navigationSource, IEnumerable<string> derivedTypeConstraints)
-        {
-            if (resourceType == null || metadataType == null || navigationSource == null || derivedTypeConstraints == null || resourceType == metadataType)
-            {
-                return;
-            }
-
-            string fullTypeName = resourceType.FullTypeName();
-            if (derivedTypeConstraints.Any(c => c == fullTypeName))
-            {
-                return;
-            }
-
-            throw new ODataException(Strings.WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, navigationSource.Name));
+            throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
         }
 
         /// <summary>

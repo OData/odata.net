@@ -14,7 +14,7 @@ namespace Microsoft.OData
     /// </summary>
     internal class PropertyMetadataTypeInfo
     {
-        private bool loadDerivedTypeConstraints;
+        private bool derivedTypeConstraintsLoaded;
         private IEnumerable<string> derivedTypeConstraints;
         private IEdmModel model;
 
@@ -29,7 +29,7 @@ namespace Microsoft.OData
             this.FullName = this.TypeReference == null ? null : this.TypeReference.Definition.AsActualType().FullTypeName();
 
             this.model = model;
-            loadDerivedTypeConstraints = false;
+            derivedTypeConstraintsLoaded = false;
         }
 
         public string PropertyName { get; private set; }
@@ -50,10 +50,10 @@ namespace Microsoft.OData
         {
             get
             {
-                if (!loadDerivedTypeConstraints)
+                if (!derivedTypeConstraintsLoaded)
                 {
                     this.derivedTypeConstraints = EdmProperty == null ? null : this.model.GetDerivedTypeConstraints(EdmProperty);
-                    loadDerivedTypeConstraints = true;
+                    derivedTypeConstraintsLoaded = true;
                 }
 
                 return this.derivedTypeConstraints;

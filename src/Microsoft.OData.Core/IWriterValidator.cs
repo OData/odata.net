@@ -133,21 +133,14 @@ namespace Microsoft.OData
             ODataPayloadKind? expandedPayloadKind);
 
         /// <summary>
-        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the <see cref="ODataNestedResourceInfo"/>.
-        /// </summary>
-        /// <param name="resourceType">The input resource type.</param>
-        /// <param name="metadataType">The type from metadata.</param>
-        /// <param name="nestedResourceInfo">The nested resource info.</param>
-        /// <param name="derivedTypeConstraints">The derived type constraints on the nested resource.</param>
-        void ValidateDerivedTypeConstraintOnNestedResourceInfo(IEdmStructuredType resourceType, IEdmStructuredType metadataType, ODataNestedResourceInfo nestedResourceInfo, IEnumerable<string> derivedTypeConstraints);
-
-        /// <summary>
         /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the <see cref="IEdmNavigationSource"/>.
         /// </summary>
         /// <param name="resourceType">The input resource type.</param>
         /// <param name="metadataType">The type from metadata.</param>
-        /// <param name="navigationSource">The navigation source.</param>
         /// <param name="derivedTypeConstraints">The derived type constraints on the nested resource.</param>
-        void ValidateDerivedTypeConstraintOnNavigationSource(IEdmStructuredType resourceType, IEdmStructuredType metadataType, IEdmNavigationSource navigationSource, IEnumerable<string> derivedTypeConstraints);
+        /// <param name="itemKind">The item kind.</param>
+        /// <param name="itemName">The item name.</param>
+        void ValidateDerivedTypeConstraint(IEdmStructuredType resourceType,
+            IEdmStructuredType metadataType, IEnumerable<string> derivedTypeConstraints, string itemKind, string itemName);
     }
 }

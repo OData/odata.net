@@ -2825,17 +2825,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The value type '{0}' of property '{1}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation."
+        /// A string like "The value type '{0}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on {1} '{2}'."
         /// </summary>
-        internal static string WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_PropertyValueTypeNotAllowedInDerivedTypeConstraint, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The value type '{0}' of a resource is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on navigation source '{1}'."
-        /// </summary>
-        internal static string WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ResourceValueTypeNotAllowedInDerivedTypeConstraint, p0, p1);
+        internal static string WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(object p0, object p1, object p2) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, p0, p1, p2);
         }
 
         /// <summary>
