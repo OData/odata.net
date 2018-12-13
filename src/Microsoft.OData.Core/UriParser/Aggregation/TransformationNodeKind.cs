@@ -30,5 +30,10 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// A Compute expressions
         /// </summary>
         Compute = 3,
+
+        /// <summary>
+        /// A Expand expressions
+        /// </summary>
+        Expand = 4,
     }
 }

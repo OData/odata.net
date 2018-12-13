@@ -7090,6 +7090,7 @@ public enum Microsoft.OData.UriParser.Aggregation.AggregationMethod : int {
 public enum Microsoft.OData.UriParser.Aggregation.TransformationNodeKind : int {
 	Aggregate = 0
 	Compute = 3
+	Expand = 4
 	Filter = 2
 	GroupBy = 1
 }
@@ -7208,6 +7209,13 @@ public sealed class Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToke
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 	public static Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken Merge (Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token1, Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token2)
 	public string Path ()
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.ExpandTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {
+	public ExpandTransformationNode (Microsoft.OData.UriParser.SelectExpandClause expandClause)
+
+	Microsoft.OData.UriParser.SelectExpandClause ExpandClause  { public get; }
+	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
 }
 
 public sealed class Microsoft.OData.UriParser.Aggregation.FilterTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {

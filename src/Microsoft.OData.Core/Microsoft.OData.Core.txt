@@ -687,6 +687,7 @@ UriQueryExpressionParser_WithExpected='with' expected at position {0} in '{1}'.
 UriQueryExpressionParser_UnrecognizedWithMethod=Unrecognized with '{0}' at '{1}' in '{2}'.
 UriQueryExpressionParser_PropertyPathExpected=Expression expected at position {0} in '{1}'.
 UriQueryExpressionParser_KeywordOrIdentifierExpected='{0}' expected at position {1} in '{2}'.
+UriQueryExpressionParser_InnerMostExpandRequireFilter=The inner most expand transformation requires a filter transformation at position {0} in '{1}'.
 
 UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri=The URI '{0}' is not valid because it is not based on '{1}'.
 UriQueryPathParser_SyntaxError=Bad Request: there was an error in the query syntax.

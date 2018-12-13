@@ -635,6 +635,7 @@ namespace Microsoft.OData {
         internal const string UriQueryExpressionParser_UnrecognizedWithMethod = "UriQueryExpressionParser_UnrecognizedWithMethod";
         internal const string UriQueryExpressionParser_PropertyPathExpected = "UriQueryExpressionParser_PropertyPathExpected";
         internal const string UriQueryExpressionParser_KeywordOrIdentifierExpected = "UriQueryExpressionParser_KeywordOrIdentifierExpected";
+        internal const string UriQueryExpressionParser_InnerMostExpandRequireFilter = "UriQueryExpressionParser_InnerMostExpandRequireFilter";
         internal const string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri = "UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri";
         internal const string UriQueryPathParser_SyntaxError = "UriQueryPathParser_SyntaxError";
         internal const string UriQueryPathParser_TooManySegments = "UriQueryPathParser_TooManySegments";
