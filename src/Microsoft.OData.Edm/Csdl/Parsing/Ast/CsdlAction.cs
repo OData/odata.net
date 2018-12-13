@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public CsdlAction(
             string name,
             IEnumerable<CsdlOperationParameter> parameters,
-            CsdlTypeReference returnType,
+            CsdlOperationReturnType returnType,
             bool isBound,
             string entitySetPath,
             CsdlLocation location)

@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm
         private readonly List<IEdmOperationParameter> parameters = new List<IEdmOperationParameter>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmAction"/> class.
+        /// Initializes a new instance of the <see cref="EdmOperation"/> class.
         /// </summary>
         /// <param name="namespaceName">Name of the namespace.</param>
         /// <param name="name">The name.</param>
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
 
-            this.ReturnType = returnType;
+            this.ReturnType = BuildOperationReturnType(returnType);
             this.Namespace = namespaceName;
             this.IsBound = isBound;
             this.EntitySetPath = entitySetPathExpression;
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmAction"/> class.
+        /// Initializes a new instance of the <see cref="EdmOperation"/> class.
         /// </summary>
         /// <param name="namespaceName">Name of the namespace.</param>
         /// <param name="name">The name.</param>
@@ -84,6 +84,7 @@ namespace Microsoft.OData.Edm
 
         /// <summary>
         /// Gets the return type of this function.
+        /// Be noted, it should be different with the input object in the constructor.
         /// </summary>
         public IEdmTypeReference ReturnType { get; private set; }
 
@@ -160,6 +161,111 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(parameter, "parameter");
 
             this.parameters.Add(parameter);
+        }
+
+        // Build the real return type based on the input type reference.
+        private IEdmTypeReference BuildOperationReturnType(IEdmTypeReference typeReference)
+        {
+            // Basically, the input type reference should never be an "IEdmOperationReturnType"
+            // Because the end user can't create an "Operation Return Type".
+            // But for safety, we return the input if that's an "IEdmOperationReturnType".
+            if (typeReference == null || typeReference is IEdmOperationReturnType)
+            {
+                return typeReference;
+            }
+
+            EdmTypeKind kind = typeReference.TypeKind();
+            switch (kind)
+            {
+                case EdmTypeKind.Primitive:
+                    return BuildOperationPrimitiveReturnType(typeReference.AsPrimitive());
+
+                case EdmTypeKind.Entity:
+                    return new EdmOperationEntityReturnType(this, typeReference.AsEntity());
+
+                case EdmTypeKind.Complex:
+                    return new EdmOperationComplexReturnType(this, typeReference.AsComplex());
+
+                case EdmTypeKind.Collection:
+                    return new EdmOperationCollectionReturnType(this, typeReference.AsCollection());
+
+                case EdmTypeKind.EntityReference:
+                    return new EdmOperationEntityReferenceReturnType(this, typeReference.AsEntityReference());
+
+                case EdmTypeKind.Enum:
+                    return new EdmOperationEnumReturnType(this, typeReference.AsEnum());
+
+                case EdmTypeKind.TypeDefinition:
+                    return new EdmOperationTypeDefinitionReturnType(this, typeReference.AsTypeDefinition());
+
+                case EdmTypeKind.Untyped:
+                    return new EdmOperationUntypedReturnType(this, (IEdmUntypedTypeReference)typeReference);
+
+                case EdmTypeKind.Path:
+                    return new EdmOperationPathReturnType(this, (IEdmPathTypeReference)typeReference);
+
+                case EdmTypeKind.None:
+                default:
+                    // Just return the type reference if we don't know the type kind.
+                    return typeReference;
+            }
+        }
+
+        private IEdmTypeReference BuildOperationPrimitiveReturnType(IEdmPrimitiveTypeReference primitiveReference)
+        {
+            if (primitiveReference == null)
+            {
+                return null;
+            }
+
+            switch (primitiveReference.PrimitiveKind())
+            {
+                case EdmPrimitiveTypeKind.Boolean:
+                case EdmPrimitiveTypeKind.Byte:
+                case EdmPrimitiveTypeKind.Double:
+                case EdmPrimitiveTypeKind.Guid:
+                case EdmPrimitiveTypeKind.Int16:
+                case EdmPrimitiveTypeKind.Int32:
+                case EdmPrimitiveTypeKind.Int64:
+                case EdmPrimitiveTypeKind.SByte:
+                case EdmPrimitiveTypeKind.Single:
+                case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
+                    return new EdmOperationPrimitiveReturnType(this, primitiveReference);
+                case EdmPrimitiveTypeKind.Binary:
+                    return new EdmOperationBinaryReturnType(this, primitiveReference.AsBinary());
+                case EdmPrimitiveTypeKind.String:
+                    return new EdmOperationStringReturnType(this, primitiveReference.AsString());
+                case EdmPrimitiveTypeKind.Decimal:
+                    return new EdmOperationDecimalReturnType(this, primitiveReference.AsDecimal());
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    return new EdmOperationTemporalReturnType(this, primitiveReference.AsTemporal());
+                case EdmPrimitiveTypeKind.Geography:
+                case EdmPrimitiveTypeKind.GeographyPoint:
+                case EdmPrimitiveTypeKind.GeographyLineString:
+                case EdmPrimitiveTypeKind.GeographyPolygon:
+                case EdmPrimitiveTypeKind.GeographyCollection:
+                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                case EdmPrimitiveTypeKind.Geometry:
+                case EdmPrimitiveTypeKind.GeometryPoint:
+                case EdmPrimitiveTypeKind.GeometryLineString:
+                case EdmPrimitiveTypeKind.GeometryPolygon:
+                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+                case EdmPrimitiveTypeKind.GeometryMultiLineString:
+                case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                case EdmPrimitiveTypeKind.GeometryCollection:
+                    return new EdmOperationSpatialReturnType(this, primitiveReference.AsSpatial());
+
+                case EdmPrimitiveTypeKind.None:
+                default:
+                    // Just return the primitive type reference if we don't know the primitive type kind.
+                    return primitiveReference;
+            }
         }
     }
 }

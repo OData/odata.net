@@ -1097,6 +1097,35 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
+        private sealed class VisitorOfIEdmOperationReturnType : VisitorOfT<IEdmOperationReturnType>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmOperationReturnType returnType, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
+
+                if (returnType.Type != null)
+                {
+                    // ReturnType owns its type reference, so it goes as a followup.
+                    followup.Add(returnType.Type);
+                }
+                else
+                {
+                    CollectErrors(CreatePropertyMustNotBeNullError(returnType, "Type"), ref errors);
+                }
+
+                if (returnType.DeclaringOperation != null)
+                {
+                    references.Add(returnType.DeclaringOperation);
+                }
+                else
+                {
+                    CollectErrors(CreatePropertyMustNotBeNullError(returnType, "DeclaringOperation"), ref errors);
+                }
+
+                return errors;
+            }
+        }
+
         private sealed class VisitorOfIEdmCollectionTypeReference : VisitorOfT<IEdmCollectionTypeReference>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmCollectionTypeReference typeRef, List<object> followup, List<object> references)

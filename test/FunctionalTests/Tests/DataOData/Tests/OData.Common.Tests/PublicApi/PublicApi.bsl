@@ -964,6 +964,11 @@ public interface Microsoft.OData.Edm.IEdmOperationParameter : IEdmElement, IEdmN
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
 }
 
+public interface Microsoft.OData.Edm.IEdmOperationReturnType : IEdmElement, IEdmVocabularyAnnotatable {
+	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public abstract get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.IEdmOptionalParameter : IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmVocabularyAnnotatable {
 	string DefaultValueString  { public abstract get; }
 }
@@ -1965,6 +1970,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.IEdmOperationReturnType GetOperationReturnType (Microsoft.OData.Edm.IEdmOperation operation)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmPathExpression GetPartnerPath (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
 
 	[
@@ -2151,6 +2161,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	ExtensionAttribute(),
 	]
 	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] OperationImports (Microsoft.OData.Edm.IEdmEntityContainer container)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.IEdmPathType PathDefinition (Microsoft.OData.Edm.IEdmPathTypeReference type)
 
 	[
 	ExtensionAttribute(),
@@ -2992,6 +3007,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	BadUnresolvedParameter = 304
 	BadUnresolvedPrimitiveType = 226
 	BadUnresolvedProperty = 234
+	BadUnresolvedReturnType = 388
 	BadUnresolvedTarget = 361
 	BadUnresolvedTerm = 352
 	BadUnresolvedType = 225

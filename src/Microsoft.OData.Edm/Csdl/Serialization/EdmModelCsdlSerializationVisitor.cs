@@ -543,7 +543,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(operation);
         }
 
-        private void ProcessOperationReturnType(IEdmTypeReference operationReturnType)
+        protected override void ProcessOperationReturnType(IEdmTypeReference operationReturnType)
         {
             if (operationReturnType == null)
             {

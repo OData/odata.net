@@ -157,6 +157,39 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationBinaryReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationBinaryReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationCollectionExpressionReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationCollectionExpressionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationDecimalReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationDecimalReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationEntityReferenceExpressionReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationEntityReferenceExpressionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationNamedTypeReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationNamedTypeReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationPrimitiveReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationPrimitiveReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationSpatialReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationSpatialReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationStringReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationStringReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationTemporalReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationTemporalReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationTypeDefinitionReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationTypeDefinitionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\Internals\CsdlSemanticsOperationUntypedReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\Internals\CsdlSemanticsOperationUntypedReturnType.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsNavigationPropertyPathExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsNavigationPropertyPathExpression.cs</Link>
     </Compile>
@@ -550,6 +583,9 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedParameter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedReturnType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedReturnType.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs</Link>
@@ -1142,6 +1178,9 @@
     <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperationReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationReturnType.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOptionalParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOptionalParameter.cs</Link>
     </Compile>
@@ -1216,6 +1255,48 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmUnknownEntitySet.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmUnknownEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationBinaryReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationBinaryReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationCollectionReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationCollectionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationComplexReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationComplexReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationDecimalReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationDecimalReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationEntityReferenceReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationEntityReferenceReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationEntityReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationEntityReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationEnumReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationEnumReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationPathReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationPathReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationPrimitiveReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationPrimitiveReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationSpatialReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationSpatialReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationStringReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationStringReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationTemporalReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationTemporalReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationTypeDefinitionReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationTypeDefinitionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationUntypedReturnType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Internals\EdmOperationUntypedReturnType.cs</Link>
     </Compile>
     <Compile Include="..\Schema\TimeOfDay.cs">
       <Link>Microsoft\OData\Edm\Schema\TimeOfDay.cs</Link>

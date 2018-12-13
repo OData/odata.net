@@ -419,7 +419,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return null;
         }
 
-        internal static IEdmTypeReference WrapTypeReference(CsdlSemanticsSchema schema, CsdlTypeReference type)
+        internal static IEdmTypeReference WrapTypeReference(CsdlSemanticsSchema schema, CsdlTypeReference type, CsdlSemanticsOperation operation = null)
         {
             var typeReference = type as CsdlNamedTypeReference;
             if (typeReference != null)
@@ -440,21 +440,36 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         case EdmPrimitiveTypeKind.SByte:
                         case EdmPrimitiveTypeKind.Single:
                         case EdmPrimitiveTypeKind.Stream:
-                            return new CsdlSemanticsPrimitiveTypeReference(schema, primitiveReference);
+                        case EdmPrimitiveTypeKind.PrimitiveType:
+                            return operation == null ?
+                                new CsdlSemanticsPrimitiveTypeReference(schema, primitiveReference) :
+                                new CsdlSemanticsOperationPrimitiveReturnType(schema, operation, primitiveReference);
 
                         case EdmPrimitiveTypeKind.Binary:
-                            return new CsdlSemanticsBinaryTypeReference(schema, (CsdlBinaryTypeReference)primitiveReference);
+                            var binaryTypeReference = (CsdlBinaryTypeReference)primitiveReference;
+                            return operation == null ?
+                                new CsdlSemanticsBinaryTypeReference(schema, binaryTypeReference) :
+                                new CsdlSemanticsOperationBinaryReturnType(schema, operation, binaryTypeReference);
 
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                         case EdmPrimitiveTypeKind.Duration:
                         case EdmPrimitiveTypeKind.TimeOfDay:
-                            return new CsdlSemanticsTemporalTypeReference(schema, (CsdlTemporalTypeReference)primitiveReference);
+                            var temporalTypeReference = (CsdlTemporalTypeReference)primitiveReference;
+                            return operation == null ?
+                                new CsdlSemanticsTemporalTypeReference(schema, temporalTypeReference) :
+                                new CsdlSemanticsOperationTemporalReturnType(schema, operation, temporalTypeReference);
 
                         case EdmPrimitiveTypeKind.Decimal:
-                            return new CsdlSemanticsDecimalTypeReference(schema, (CsdlDecimalTypeReference)primitiveReference);
+                            var decimalTypeReference = (CsdlDecimalTypeReference)primitiveReference;
+                            return operation == null ?
+                                new CsdlSemanticsDecimalTypeReference(schema, decimalTypeReference) :
+                                new CsdlSemanticsOperationDecimalReturnType(schema, operation, decimalTypeReference);
 
                         case EdmPrimitiveTypeKind.String:
-                            return new CsdlSemanticsStringTypeReference(schema, (CsdlStringTypeReference)primitiveReference);
+                            var stringTypeReference = (CsdlStringTypeReference)primitiveReference;
+                            return operation == null ?
+                                new CsdlSemanticsStringTypeReference(schema, stringTypeReference) :
+                                new CsdlSemanticsOperationStringReturnType(schema, operation, stringTypeReference);
 
                         case EdmPrimitiveTypeKind.Geography:
                         case EdmPrimitiveTypeKind.GeographyPoint:
@@ -472,7 +487,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         case EdmPrimitiveTypeKind.GeometryMultiPolygon:
                         case EdmPrimitiveTypeKind.GeometryMultiLineString:
                         case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                            return new CsdlSemanticsSpatialTypeReference(schema, (CsdlSpatialTypeReference)primitiveReference);
+                            var spatialTypeReference = (CsdlSpatialTypeReference)primitiveReference;
+                            return operation == null ?
+                                new CsdlSemanticsSpatialTypeReference(schema, spatialTypeReference) :
+                                new CsdlSemanticsOperationSpatialReturnType(schema, operation, spatialTypeReference);
                     }
                 }
                 else
@@ -480,16 +498,22 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     CsdlUntypedTypeReference csdlUntypedTypeReference = typeReference as CsdlUntypedTypeReference;
                     if (csdlUntypedTypeReference != null)
                     {
-                        return new CsdlSemanticsUntypedTypeReference(schema, csdlUntypedTypeReference);
+                        return operation == null ?
+                            new CsdlSemanticsUntypedTypeReference(schema, csdlUntypedTypeReference) :
+                            new CsdlSemanticsOperationUntypedReturnType(schema, operation, csdlUntypedTypeReference);
                     }
 
                     if (schema.FindType(typeReference.FullName) is IEdmTypeDefinition)
                     {
-                        return new CsdlSemanticsTypeDefinitionReference(schema, typeReference);
+                        return operation == null ?
+                            new CsdlSemanticsTypeDefinitionReference(schema, typeReference) :
+                            new CsdlSemanticsOperationTypeDefinitionReturnType(schema, operation, typeReference);
                     }
                 }
 
-                return new CsdlSemanticsNamedTypeReference(schema, typeReference);
+                return operation == null ?
+                    new CsdlSemanticsNamedTypeReference(schema, typeReference) :
+                    new CsdlSemanticsOperationNamedTypeReturnType(schema, operation, typeReference);
             }
 
             var typeExpression = type as CsdlExpressionTypeReference;
@@ -498,13 +522,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 var collectionType = typeExpression.TypeExpression as CsdlCollectionType;
                 if (collectionType != null)
                 {
-                    return new CsdlSemanticsCollectionTypeExpression(typeExpression, new CsdlSemanticsCollectionTypeDefinition(schema, collectionType));
+                    var collectionTypeDefinition = new CsdlSemanticsCollectionTypeDefinition(schema, collectionType);
+                    return operation == null ?
+                        new CsdlSemanticsCollectionTypeExpression(typeExpression, collectionTypeDefinition) :
+                        new CsdlSemanticsOperationCollectionTypeExpression(typeExpression, collectionTypeDefinition, operation);
                 }
 
                 var entityReferenceType = typeExpression.TypeExpression as CsdlEntityReferenceType;
                 if (entityReferenceType != null)
                 {
-                    return new CsdlSemanticsEntityReferenceTypeExpression(typeExpression, new CsdlSemanticsEntityReferenceTypeDefinition(schema, entityReferenceType));
+                    var entityReferenceDefinition = new CsdlSemanticsEntityReferenceTypeDefinition(schema, entityReferenceType);
+                    return operation == null ?
+                        new CsdlSemanticsEntityReferenceTypeExpression(typeExpression, entityReferenceDefinition) :
+                        new CsdlSemanticsOperationEntityReferenceExpressionReturnType(typeExpression, entityReferenceDefinition, operation);
                 }
             }
 

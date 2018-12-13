@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             string schemaOperationQualifiedTypeName,
             string entitySet,
             IEnumerable<CsdlOperationParameter> parameters,
-            CsdlTypeReference returnType,
+            CsdlOperationReturnType returnType,
             CsdlLocation location)
             : base(name, parameters, returnType, location)
         {

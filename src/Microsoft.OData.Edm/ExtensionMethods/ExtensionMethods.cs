@@ -2108,6 +2108,17 @@ namespace Microsoft.OData.Edm
 
         #endregion
 
+        /// <summary>
+        /// Gets the definition of this path reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The definition of this path reference.</returns>
+        public static IEdmPathType PathDefinition(this IEdmPathTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return (IEdmPathType)type.Definition;
+        }
+
         #region IEdmTypeDefinitionReference
 
         /// <summary>
@@ -2345,6 +2356,17 @@ namespace Microsoft.OData.Edm
         #endregion
 
         #region IEdmOperation
+
+        /// <summary>
+        /// Gets the <see cref="IEdmOperationReturnType"/> from the given <see cref="IEdmOperation"/>.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <returns>null or the <see cref="IEdmOperationReturnType"/> object. </returns>
+        public static IEdmOperationReturnType GetOperationReturnType(this IEdmOperation operation)
+        {
+            EdmUtil.CheckArgumentNull(operation, "operation");
+            return operation.ReturnType as IEdmOperationReturnType;
+        }
 
         /// <summary>
         /// Determines whether the specified operation is action.

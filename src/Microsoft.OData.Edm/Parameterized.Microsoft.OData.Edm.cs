@@ -403,7 +403,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive, an enum or an untyped type, or a collection of complex, primitive, or enum types."
+        /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive, an enum, a type definition or an untyped type, or a collection of complex, primitive, enum types, or type definition."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_InvalidPropertyType(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidPropertyType, p0);
@@ -1949,6 +1949,13 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string Bad_UnresolvedParameter(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Bad_UnresolvedParameter, p0);
+        }
+
+        /// <summary>
+        /// A string like "The return type '{0}' could not be found."
+        /// </summary>
+        internal static string Bad_UnresolvedReturnType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Bad_UnresolvedReturnType, p0);
         }
 
         /// <summary>

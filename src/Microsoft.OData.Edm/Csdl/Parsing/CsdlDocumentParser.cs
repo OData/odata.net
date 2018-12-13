@@ -891,6 +891,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
                 case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                     return new CsdlPrimitiveTypeReference(kind, typeName, isNullable, parentLocation);
 
                 case EdmPrimitiveTypeKind.Binary:
@@ -1069,11 +1070,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlOperationParameter> parameters = childValues.ValuesOfType<CsdlOperationParameter>();
 
             CsdlOperationReturnType returnTypeElement = childValues.ValuesOfType<CsdlOperationReturnType>().FirstOrDefault();
-            CsdlTypeReference returnType = returnTypeElement == null ? null : returnTypeElement.ReturnType;
 
             this.ReportOperationReadErrorsIfExist(entitySetPath, isBound, name);
 
-            return new CsdlAction(name, parameters, returnType, isBound, entitySetPath, element.Location);
+            return new CsdlAction(name, parameters, returnTypeElement, isBound, entitySetPath, element.Location);
         }
 
         internal CsdlFunction OnFunctionElement(XmlElementInfo element, XmlElementValueCollection childValues)
@@ -1086,11 +1086,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlOperationParameter> parameters = childValues.ValuesOfType<CsdlOperationParameter>();
 
             CsdlOperationReturnType returnTypeElement = childValues.ValuesOfType<CsdlOperationReturnType>().FirstOrDefault();
-            CsdlTypeReference returnType = returnTypeElement == null ? null : returnTypeElement.ReturnType;
 
             this.ReportOperationReadErrorsIfExist(entitySetPath, isBound, name);
 
-            return new CsdlFunction(name, parameters, returnType, isBound, entitySetPath, isComposable, element.Location);
+            return new CsdlFunction(name, parameters, returnTypeElement, isBound, entitySetPath, isComposable, element.Location);
         }
 
         private void ReportOperationReadErrorsIfExist(string entitySetPath, bool isBound, string name)

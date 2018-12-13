@@ -338,6 +338,9 @@
     <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedParameter.cs">
       <Link>Csdl\Semantics\BadElements\UnresolvedParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedReturnType.cs">
+      <Link>Csdl\Semantics\BadElements\UnresolvedReturnType.cs</Link>
+    </Compile>
     <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs">
       <Link>Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs</Link>
     </Compile>
@@ -349,6 +352,39 @@
     </Compile>
     <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs">
       <Link>Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationBinaryReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationBinaryReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationCollectionExpressionReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationCollectionExpressionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationDecimalReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationDecimalReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationEntityReferenceExpressionReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationEntityReferenceExpressionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationNamedTypeReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationNamedTypeReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationPrimitiveReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationPrimitiveReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationSpatialReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationSpatialReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationStringReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationStringReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationTemporalReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationTemporalReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationTypeDefinitionReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationTypeDefinitionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\Internals\CsdlSemanticsOperationUntypedReturnType.cs">
+      <Link>Csdl\Semantics\Internals\CsdlSemanticsOperationUntypedReturnType.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsAction.cs">
       <Link>Csdl\Semantics\CsdlSemanticsAction.cs</Link>
@@ -1057,6 +1093,9 @@
     <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
       <Link>Schema\Interfaces\IEdmOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperationReturnType.cs">
+      <Link>Schema\Interfaces\IEdmOperationReturnType.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOptionalParameter.cs">
       <Link>Schema\Interfaces\IEdmOptionalParameter.cs</Link>
     </Compile>
@@ -1131,6 +1170,48 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmUntypedTypeReference.cs">
       <Link>Schema\Interfaces\IEdmUntypedTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationBinaryReturnType.cs">
+      <Link>Schema\Internals\EdmOperationBinaryReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationCollectionReturnType.cs">
+      <Link>Schema\Internals\EdmOperationCollectionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationComplexReturnType.cs">
+      <Link>Schema\Internals\EdmOperationComplexReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationDecimalReturnType.cs">
+      <Link>Schema\Internals\EdmOperationDecimalReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationEntityReferenceReturnType.cs">
+      <Link>Schema\Internals\EdmOperationEntityReferenceReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationEntityReturnType.cs">
+      <Link>Schema\Internals\EdmOperationEntityReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationEnumReturnType.cs">
+      <Link>Schema\Internals\EdmOperationEnumReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationPathReturnType.cs">
+      <Link>Schema\Internals\EdmOperationPathReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationPrimitiveReturnType.cs">
+      <Link>Schema\Internals\EdmOperationPrimitiveReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationSpatialReturnType.cs">
+      <Link>Schema\Internals\EdmOperationSpatialReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationStringReturnType.cs">
+      <Link>Schema\Internals\EdmOperationStringReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationTemporalReturnType.cs">
+      <Link>Schema\Internals\EdmOperationTemporalReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationTypeDefinitionReturnType.cs">
+      <Link>Schema\Internals\EdmOperationTypeDefinitionReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Internals\EdmOperationUntypedReturnType.cs">
+      <Link>Schema\Internals\EdmOperationUntypedReturnType.cs</Link>
     </Compile>
     <Compile Include="..\Schema\TimeOfDay.cs">
       <Link>Schema\TimeOfDay.cs</Link>

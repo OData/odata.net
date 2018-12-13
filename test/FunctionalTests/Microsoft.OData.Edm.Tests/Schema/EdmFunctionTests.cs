@@ -38,7 +38,13 @@ namespace Microsoft.OData.Edm.Tests.Library
             var edmFunction = new EdmFunction(defaultNamespaceName, checkout, this.boolType);
             edmFunction.Namespace.Should().Be(defaultNamespaceName);
             edmFunction.Name.Should().Be(checkout);
-            edmFunction.ReturnType.Should().Be(this.boolType);
+            edmFunction.ReturnType.Should().NotBe(this.boolType);
+            var returnType = edmFunction.ReturnType as IEdmOperationReturnType;
+            Assert.NotNull(returnType);
+            Assert.Same(edmFunction, returnType.DeclaringOperation);
+
+            edmFunction.ReturnType.Definition.Should().Be(this.boolType.Definition);
+            edmFunction.ReturnType.IsNullable.Should().Be(this.boolType.IsNullable);
             edmFunction.IsComposable.Should().BeFalse();
         }
 
@@ -48,7 +54,13 @@ namespace Microsoft.OData.Edm.Tests.Library
             var edmFunction = new EdmFunction(defaultNamespaceName, checkout, this.boolType);
             edmFunction.Namespace.Should().Be(defaultNamespaceName);
             edmFunction.Name.Should().Be(checkout);
-            edmFunction.ReturnType.Should().Be(this.boolType);
+            edmFunction.ReturnType.Should().NotBe(this.boolType);
+            var returnType = edmFunction.ReturnType as IEdmOperationReturnType;
+            Assert.NotNull(returnType);
+            Assert.Same(edmFunction, returnType.DeclaringOperation);
+
+            edmFunction.ReturnType.Definition.Should().Be(this.boolType.Definition);
+            edmFunction.ReturnType.IsNullable.Should().Be(this.boolType.IsNullable);
             edmFunction.EntitySetPath.Should().BeNull();
             edmFunction.IsBound.Should().BeFalse();
             edmFunction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Function);
@@ -63,7 +75,14 @@ namespace Microsoft.OData.Edm.Tests.Library
             edmFunction.AddParameter(new EdmOperationParameter(edmFunction, "Param1", new EdmEntityTypeReference(personType, false)));
             edmFunction.Namespace.Should().Be(defaultNamespaceName);
             edmFunction.Name.Should().Be(checkout);
-            edmFunction.ReturnType.Should().Be(this.boolType);
+
+            edmFunction.ReturnType.Should().NotBe(this.boolType);
+            var returnType = edmFunction.ReturnType as IEdmOperationReturnType;
+            Assert.NotNull(returnType);
+            Assert.Same(edmFunction, returnType.DeclaringOperation);
+            edmFunction.ReturnType.Definition.Should().Be(this.boolType.Definition);
+            edmFunction.ReturnType.IsNullable.Should().Be(this.boolType.IsNullable);
+
             edmFunction.EntitySetPath.Should().Be(entitySetPath);
             edmFunction.IsBound.Should().BeTrue();
             edmFunction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Function);

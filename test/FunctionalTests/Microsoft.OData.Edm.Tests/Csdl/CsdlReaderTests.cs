@@ -448,6 +448,59 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(optionalParamWithDefault.DefaultValueString, "Smith");
         }
 
+        [Theory]
+        [InlineData(EdmVocabularyAnnotationSerializationLocation.Inline)]
+        [InlineData(EdmVocabularyAnnotationSerializationLocation.OutOfLine)]
+        public void ParsingReturnTypeAnnotationShouldSucceed(EdmVocabularyAnnotationSerializationLocation location)
+        {
+                const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+    <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <Function Name=""TestFunction"">
+        <ReturnType Type=""Edm.PrimitiveType"" Nullable=""false"" >
+          {0}
+        </ReturnType>
+      </Function>
+      <Annotations Target=""NS.TestFunction()/$ReturnType"">
+         {1}
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+
+            string annotationString =
+                "<Annotation Term =\"Org.OData.Validation.V1.DerivedTypeConstraint\">" +
+                  "<Collection>" +
+                     "<String>Edm.Int32</String>" +
+                     "<String>Edm.Boolean</String>" +
+                   "</Collection>" +
+                 "</Annotation>";
+            string inline = location == EdmVocabularyAnnotationSerializationLocation.Inline ? annotationString : "";
+            string outLine = location == EdmVocabularyAnnotationSerializationLocation.Inline ? "" : annotationString;
+            string csdl = String.Format(template, inline, outLine);
+
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var function = model.FindDeclaredOperations("NS.TestFunction").FirstOrDefault();
+            Assert.NotNull(function);
+            Assert.NotNull(function.ReturnType);
+            IEdmOperationReturnType returnType = function.GetOperationReturnType();
+            Assert.NotNull(returnType);
+            Assert.Same(returnType.DeclaringOperation, function);
+            Assert.Equal("Edm.PrimitiveType", returnType.Type.FullName());
+
+            var termType = model.FindTerm("Org.OData.Validation.V1.DerivedTypeConstraint");
+            Assert.NotNull(termType);
+
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(returnType, termType).FirstOrDefault();
+            Assert.NotNull(annotation);
+
+            Assert.True(annotation.GetSerializationLocation(model) == location);
+            IEdmCollectionExpression collectConstant = annotation.Value as IEdmCollectionExpression;
+            Assert.NotNull(collectConstant);
+
+            Assert.Equal(new[] { "Edm.Int32", "Edm.Boolean" }, collectConstant.Elements.Select(e => ((IEdmStringConstantExpression)e).Value));
+        }
+
         [Fact]
         public void ParsingValidXmlWithOneReferencesShouldSucceed()
         {
@@ -854,6 +907,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             var function = model.SchemaElements.OfType<IEdmFunction>().First();
             VerifyOptionalParameter(function);
+            Assert.NotNull(function.ReturnType);
         }
 
         private static void VerifyOptionalParameter(IEdmFunction function)

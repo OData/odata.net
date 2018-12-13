@@ -843,7 +843,7 @@ namespace Microsoft.OData.Edm
         {
             if (operation.ReturnType != null)
             {
-                this.VisitTypeReference(operation.ReturnType);
+                this.ProcessOperationReturnType(operation.ReturnType);
             }
 
             // Do not visit vocabularyAnnotatable because functions and operation imports are always going to be either a schema element or a container element and will be visited through those paths.
@@ -855,6 +855,25 @@ namespace Microsoft.OData.Edm
             this.ProcessVocabularyAnnotatable(parameter);
             this.ProcessNamedElement(parameter);
             this.VisitTypeReference(parameter.Type);
+        }
+
+        protected virtual void ProcessOperationReturnType(IEdmTypeReference returnType)
+        {
+            if (returnType == null)
+            {
+                return;
+            }
+
+            IEdmOperationReturnType operationReturnType = returnType as IEdmOperationReturnType;
+            if (operationReturnType != null)
+            {
+                this.ProcessVocabularyAnnotatable(operationReturnType);
+                this.VisitTypeReference(operationReturnType.Type);
+            }
+            else
+            {
+                this.VisitTypeReference(returnType);
+            }
         }
 
         #endregion

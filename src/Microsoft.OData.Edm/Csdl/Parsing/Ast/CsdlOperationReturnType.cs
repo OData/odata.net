@@ -4,26 +4,31 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Vocabularies;
-
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
     /// <summary>
-    /// Represents a CSDL function return type.
+    /// Represents a CSDL operation return type.
     /// </summary>
-    internal class CsdlOperationReturnType : CsdlElement, IEdmVocabularyAnnotatable
+    internal class CsdlOperationReturnType : CsdlElement
     {
-        private readonly CsdlTypeReference returnType;
-
         public CsdlOperationReturnType(CsdlTypeReference returnType, CsdlLocation location)
             : base(location)
         {
-            this.returnType = returnType;
+            this.ReturnType = returnType;
         }
 
-        public CsdlTypeReference ReturnType
+        public CsdlTypeReference ReturnType { get; }
+
+        public override void AddAnnotation(CsdlDirectValueAnnotation annotation)
         {
-            get { return this.returnType; }
+            base.AddAnnotation(annotation);
+            ReturnType.AddAnnotation(annotation);
+        }
+
+        public override void AddAnnotation(CsdlAnnotation annotation)
+        {
+            base.AddAnnotation(annotation);
+            ReturnType.AddAnnotation(annotation);
         }
     }
 }
