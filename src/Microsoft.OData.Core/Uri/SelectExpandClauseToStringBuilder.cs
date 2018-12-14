@@ -70,6 +70,21 @@ namespace Microsoft.OData
                 expandClause += this.Translate(expandSelectItem) + "/$ref";
             }
 
+            // $count
+            foreach (ExpandedCountSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedCountSelectItem)))
+            {
+                if (string.IsNullOrEmpty(expandClause))
+                {
+                    expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
+                }
+                else
+                {
+                    expandClause += ExpressionConstants.SymbolComma;
+                }
+
+                expandClause += this.Translate(expandSelectItem) + "/$count";
+            }
+
             if (string.IsNullOrEmpty(expandClause))
             {
                 return selectClause;
@@ -148,6 +163,16 @@ namespace Microsoft.OData
             {
                 return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
             }
+        }
+
+        /// <summary>
+        /// Translate an ExpandedCountSelectItem
+        /// </summary>
+        /// <param name="item">the item to Translate</param>
+        /// <returns>Defined by the implementer</returns>
+        public override string Translate(ExpandedCountSelectItem item)
+        {
+            return Translate((ExpandedReferenceSelectItem)item);
         }
 
         /// <summary>

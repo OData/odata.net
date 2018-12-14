@@ -4570,6 +4570,7 @@ public abstract class Microsoft.OData.ODataResourceSetBase : Microsoft.OData.ODa
 	protected ODataResourceSetBase ()
 
 	System.Nullable`1[[System.Int64]] Count  { public get; public set; }
+	bool CountOnly  { public get; public set; }
 	System.Uri DeltaLink  { public get; public set; }
 	System.Uri Id  { public get; public set; }
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
@@ -5868,6 +5869,7 @@ public abstract class Microsoft.OData.UriParser.SelectItem {
 public abstract class Microsoft.OData.UriParser.SelectItemHandler {
 	protected SelectItemHandler ()
 
+	public virtual void Handle (Microsoft.OData.UriParser.ExpandedCountSelectItem item)
 	public virtual void Handle (Microsoft.OData.UriParser.ExpandedNavigationSelectItem item)
 	public virtual void Handle (Microsoft.OData.UriParser.ExpandedReferenceSelectItem item)
 	public virtual void Handle (Microsoft.OData.UriParser.NamespaceQualifiedWildcardSelectItem item)
@@ -5878,6 +5880,7 @@ public abstract class Microsoft.OData.UriParser.SelectItemHandler {
 public abstract class Microsoft.OData.UriParser.SelectItemTranslator`1 {
 	protected SelectItemTranslator`1 ()
 
+	public virtual T Translate (Microsoft.OData.UriParser.ExpandedCountSelectItem item)
 	public virtual T Translate (Microsoft.OData.UriParser.ExpandedNavigationSelectItem item)
 	public virtual T Translate (Microsoft.OData.UriParser.ExpandedReferenceSelectItem item)
 	public virtual T Translate (Microsoft.OData.UriParser.NamespaceQualifiedWildcardSelectItem item)
@@ -5932,6 +5935,14 @@ public class Microsoft.OData.UriParser.CollectionComplexNode : Microsoft.OData.U
 	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public class Microsoft.OData.UriParser.ExpandedCountSelectItem : Microsoft.OData.UriParser.ExpandedReferenceSelectItem {
+	public ExpandedCountSelectItem (Microsoft.OData.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public ExpandedCountSelectItem (Microsoft.OData.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.FilterClause filterOption, Microsoft.OData.UriParser.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.UriParser.SearchClause searchOption)
+
+	public virtual void HandleWith (Microsoft.OData.UriParser.SelectItemHandler handler)
+	public virtual T TranslateWith (SelectItemTranslator`1 translator)
 }
 
 public class Microsoft.OData.UriParser.ExpandedReferenceSelectItem : Microsoft.OData.UriParser.SelectItem {
@@ -6329,8 +6340,9 @@ public sealed class Microsoft.OData.UriParser.ConvertNode : Microsoft.OData.UriP
 }
 
 public sealed class Microsoft.OData.UriParser.CountNode : Microsoft.OData.UriParser.SingleValueNode {
-	public CountNode (Microsoft.OData.UriParser.CollectionNode source)
+	public CountNode (Microsoft.OData.UriParser.CollectionNode source, Microsoft.OData.UriParser.FilterClause filterOption)
 
+	Microsoft.OData.UriParser.FilterClause FilterOption  { public get; }
 	Microsoft.OData.UriParser.CollectionNode Source  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 
