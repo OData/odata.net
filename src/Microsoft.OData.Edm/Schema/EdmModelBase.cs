@@ -65,6 +65,11 @@ namespace Microsoft.OData.Edm
                 this.referencedEdmModels.Add(ValidationVocabularyModel.Instance);
             }
 
+            if (CommunityVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(CommunityVocabularyModel.Instance);
+            }
+
             this.annotationsManager = annotationsManager;
         }
 

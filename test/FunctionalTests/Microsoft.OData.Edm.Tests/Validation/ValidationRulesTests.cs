@@ -49,9 +49,39 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 EdmErrorCode.UnboundFunctionOverloadHasIncorrectReturnType,
                 Strings.EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType("GetStuff"));
         }
-        
+
+        [Fact]
+        public void UrlEscapeOnUnboundFunctionAreInvalid()
+        {
+            var edmFunction = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true));
+            EdmModel model = new EdmModel();
+            model.AddElement(edmFunction);
+            model.SetUrlEscapeFunction(edmFunction);
+            ValidateError(
+                ValidationRules.FunctionWithUrlEscapeFunctionMustBeBound,
+                model,
+                edmFunction,
+                EdmErrorCode.UrlEscapeFunctionMustBeBoundFunction,
+                Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction("GetStuff"));
+        }
+
+        [Fact]
+        public void UrlEscapeOnFunctionWithNonStringParameterAreInvalid()
+        {
+            var edmFunction = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true), true, null, false);
+            EdmModel model = new EdmModel();
+            model.AddElement(edmFunction);
+            model.SetUrlEscapeFunction(edmFunction);
+            ValidateError(
+                ValidationRules.FunctionWithUrlEscapeFunctionMustHaveOneStringParameter,
+                model,
+                edmFunction,
+                EdmErrorCode.UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter,
+                Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter("GetStuff"));
+        }
+
         #region EntityContainerDuplicateEntityContainerMemberName Tests
-        
+
         [Fact]
         public void EntitySetAndOperationImportWithSameNameShouldError()
         {
