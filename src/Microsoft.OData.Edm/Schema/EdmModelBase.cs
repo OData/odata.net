@@ -23,6 +23,7 @@ namespace Microsoft.OData.Edm
         private readonly Dictionary<string, IEdmSchemaType> schemaTypeDictionary = new Dictionary<string, IEdmSchemaType>();
         private readonly Dictionary<string, IEdmTerm> termDictionary = new Dictionary<string, IEdmTerm>();
         private readonly Dictionary<string, IList<IEdmOperation>> functionDictionary = new Dictionary<string, IList<IEdmOperation>>();
+        private bool builtInVocabularyReferencedModelLoaded;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmModelBase"/> class.
@@ -38,37 +39,6 @@ namespace Microsoft.OData.Edm
             this.referencedEdmModels = new List<IEdmModel>(referencedModels);
 
             this.referencedEdmModels.Add(EdmCoreModel.Instance);
-
-            if (CoreVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(CoreVocabularyModel.Instance);
-            }
-
-            // Make sure the core vocabulary model is initialized.
-            if (!CoreVocabularyModel.IsInitializing && CapabilitiesVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(CapabilitiesVocabularyModel.Instance);
-            }
-
-            if (AlternateKeysVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(AlternateKeysVocabularyModel.Instance);
-            }
-
-            if (AuthorizationVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(AuthorizationVocabularyModel.Instance);
-            }
-
-            if (ValidationVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(ValidationVocabularyModel.Instance);
-            }
-
-            if (CommunityVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(CommunityVocabularyModel.Instance);
-            }
 
             this.annotationsManager = annotationsManager;
         }
@@ -102,7 +72,14 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public IEnumerable<IEdmModel> ReferencedModels
         {
-            get { return this.referencedEdmModels; }
+            get
+            {
+                if (!builtInVocabularyReferencedModelLoaded)
+                {
+                    LoadVocabularyModels();
+                }
+                return this.referencedEdmModels;
+            }
         }
 
         /// <summary>
@@ -225,6 +202,42 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             this.referencedEdmModels.Add(model);
+        }
+
+        private void LoadVocabularyModels()
+        {
+            if (CoreVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(CoreVocabularyModel.Instance);
+            }
+
+            // Make sure the core vocabulary model is initialized.
+            if (!CoreVocabularyModel.IsInitializing && CapabilitiesVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(CapabilitiesVocabularyModel.Instance);
+            }
+
+            if (AlternateKeysVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(AlternateKeysVocabularyModel.Instance);
+            }
+
+            if (AuthorizationVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(AuthorizationVocabularyModel.Instance);
+            }
+
+            if (ValidationVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(ValidationVocabularyModel.Instance);
+            }
+
+            if (CommunityVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(CommunityVocabularyModel.Instance);
+            }
+
+            builtInVocabularyReferencedModelLoaded = true;
         }
     }
 }
