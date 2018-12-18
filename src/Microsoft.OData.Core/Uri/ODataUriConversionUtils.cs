@@ -304,7 +304,6 @@ namespace Microsoft.OData
                     (serializer) => serializer.WriteResourceValue(
                         resourceValue, /* resourceValue */
                         null, /* metadataTypeReference */
-                        false, /* isTopLevel */
                         true, /* isOpenPropertyType */
                         serializer.CreateDuplicatePropertyNameChecker()));
             }

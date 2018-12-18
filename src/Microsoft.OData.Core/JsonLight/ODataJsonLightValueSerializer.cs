@@ -102,7 +102,6 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resourceValue">The resource (complex or entity) value to write.</param>
         /// <param name="metadataTypeReference">The metadata type for the resource value.</param>
-        /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="isOpenPropertyType">true if the type name belongs to an open (dynamic) property.</param>
         /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
         /// <remarks>The current recursion depth should be a value, measured by the number of resource and collection values between
@@ -111,7 +110,6 @@ namespace Microsoft.OData.JsonLight
         public virtual void WriteResourceValue(
             ODataResourceValue resourceValue,
             IEdmTypeReference metadataTypeReference,
-            bool isTopLevel,
             bool isOpenPropertyType,
             IDuplicatePropertyNameChecker duplicatePropertyNamesChecker)
         {
@@ -120,29 +118,14 @@ namespace Microsoft.OData.JsonLight
             this.IncreaseRecursionDepth();
 
             // Start the object scope which will represent the entire resource instance;
-            // for top-level resource properties we already wrote the object scope (and the context URI when needed).
-            if (!isTopLevel)
-            {
-                this.JsonWriter.StartObjectScope();
-            }
+            this.JsonWriter.StartObjectScope();
 
             string typeName = resourceValue.TypeName;
 
-            if (isTopLevel)
+            // In requests, we allow the property type reference to be null if the type name is specified in the OM
+            if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
             {
-                Debug.Assert(metadataTypeReference == null, "Never expect a metadata type for top-level properties.");
-                if (typeName == null)
-                {
-                     throw new ODataException(ODataErrorStrings.ODataJsonLightValueSerializer_MissingTypeNameOnResource);
-                }
-            }
-            else
-            {
-                // In requests, we allow the property type reference to be null if the type name is specified in the OM
-                if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
-                }
+                throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
             }
 
             // Resolve the type name to the type; if no type name is specified we will use the type inferred from metadata.
@@ -169,11 +152,7 @@ namespace Microsoft.OData.JsonLight
                 duplicatePropertyNamesChecker);
 
             // End the object scope which represents the resource instance;
-            // for top-level resource properties we already wrote the end object scope.
-            if (!isTopLevel)
-            {
-                this.JsonWriter.EndObjectScope();
-            }
+            this.JsonWriter.EndObjectScope();
 
             this.DecreaseRecursionDepth();
         }
@@ -265,7 +244,6 @@ namespace Microsoft.OData.JsonLight
                         this.WriteResourceValue(
                             itemAsResourceValue,
                             expectedItemTypeReference,
-                            false /*isTopLevel*/,
                             false /*isOpenPropertyType*/,
                             duplicatePropertyNamesChecker);
 

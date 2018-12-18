@@ -134,25 +134,13 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void WritingResourceValueWithoutTypeNameInTopLevelShouldFail()
-        {
-            var serializer = CreateODataJsonLightValueSerializer(true);
-
-            var resourceValue = new ODataResourceValue();
-
-            Action test = () => serializer.WriteResourceValue(resourceValue, null, true /*isTopLevel*/, false, null);
-
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightValueSerializer_MissingTypeNameOnResource);
-        }
-
-        [Fact]
         public void WritingResourceValueWithoutMetadataTypeAndWithoutTypeNameInRequestShouldFail()
         {
             var serializer = CreateODataJsonLightValueSerializer(false);
 
             var resourceValue = new ODataResourceValue();
 
-            Action test = () => serializer.WriteResourceValue(resourceValue, null, false /*isTopLevel*/, false, null);
+            Action test = () => serializer.WriteResourceValue(resourceValue, null, false, null);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
         }
@@ -188,7 +176,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var entityTypeRef = new EdmEntityTypeReference(entityType, false);
-                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(@"{""Name"":""MyName"",""Location"":{""City"":""MyCity""}}", result);
@@ -247,7 +235,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(@"{""@Is.ReadOnly"":true}", result);
@@ -279,7 +267,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(expect, result);

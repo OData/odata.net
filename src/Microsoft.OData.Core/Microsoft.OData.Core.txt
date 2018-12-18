@@ -652,7 +652,6 @@ ODataInstanceAnnotation_BadTermName='{0}' is an invalid instance annotation name
 ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue=The value of an instance annotation cannot be of type ODataStreamReferenceValue.
 
 ODataJsonLightValueSerializer_MissingTypeNameOnCollection=A type name was not provided for an instance of ODataCollectionValue.
-ODataJsonLightValueSerializer_MissingTypeNameOnResource=A type name was not provided for an instance of ODataResourceValue.
 ODataJsonLightValueSerializer_MissingRawValueOnUntyped=A raw value was not provided for an instance of ODataUntypedValue.
 
 AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement=Encountered an 'annotation' element without a 'term' attribute. All 'annotation' elements must have a 'term' attribute.
