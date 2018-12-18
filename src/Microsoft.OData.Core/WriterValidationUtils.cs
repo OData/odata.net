@@ -354,46 +354,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates the value type of a property meets the derived type constraints.
-        /// </summary>
-        /// <param name="propertySerializationInfo">The property serialization info.</param>
-        /// <remarks>This does NOT validate the value of the property, just the type of property.</remarks>
-        internal static void ValidateCollectionPropertyDerivedTypeConstraint(ODataCollectionValue collectionValue,
-            PropertySerializationInfo propertySerializationInfo)
-        {
-            Debug.Assert(collectionValue != null, "collectionValue != null");
-            Debug.Assert(propertySerializationInfo != null, "propertySerializationInfo != null");
-
-            // Skip the undeclared property
-            if (propertySerializationInfo.MetadataType.IsUndeclaredProperty)
-            {
-                return;
-            }
-
-            PropertyValueTypeInfo valueType = propertySerializationInfo.ValueType;
-            if (valueType == null || valueType.TypeReference == null)
-            {
-                return;
-            }
-
-
-            // make sure the same type can pass the validation.
-            if (propertySerializationInfo.MetadataType.TypeReference.Definition == valueType.TypeReference.Definition)
-            {
-                return;
-            }
-
-            string fullTypeName = valueType.FullName;
-            if (propertySerializationInfo.MetadataType.DerivedTypeConstraints == null ||
-                propertySerializationInfo.MetadataType.DerivedTypeConstraints.Any(d => d == fullTypeName))
-            {
-                return;
-            }
-
-            throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
-        }
-
-        /// <summary>
         /// Validates that the specified <paramref name="entityReferenceLink"/> is not null.
         /// </summary>
         /// <param name="entityReferenceLink">The entity reference link to validate.</param>
