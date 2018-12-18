@@ -117,23 +117,23 @@ namespace Microsoft.OData
                 this.ParsePathSegment(segments, 0);
             }
 
-            DetermineSelectionType(this);
+            DetermineSelectionType();
         }
 
-        private static void DetermineSelectionType(SelectedPropertiesNode node)
+        private void DetermineSelectionType()
         {
-            if (node.children != null)
+            if (this.children != null)
             {
-                foreach (SelectedPropertiesNode childNode in node.children.Values)
+                foreach (SelectedPropertiesNode childNode in this.children.Values)
                 {
-                    DetermineSelectionType(childNode);
+                    childNode.DetermineSelectionType();
                 }
             }
 
-            if ((node.selectedProperties == null || node.selectedProperties.Count == 0)
-                && (node.children == null || node.children.Values.All(n => n.selectionType == SelectionType.EntireSubtree)))
+            if ((this.selectedProperties == null || this.selectedProperties.Count == 0)
+                && (this.children == null || this.children.Values.All(n => n.selectionType == SelectionType.EntireSubtree)))
             {
-                node.selectionType = SelectionType.EntireSubtree;
+                this.selectionType = SelectionType.EntireSubtree;
             }
         }
 
@@ -799,7 +799,6 @@ namespace Microsoft.OData
             {
                 return false;
             }
-
 
             return GetPossibleMatchesForSelectedOperation(operation, mustBeNamespaceQualified).Any(possibleMatch => this.selectedProperties.Contains(possibleMatch));
         }
