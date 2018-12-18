@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.Json
         public const string ComplexOutput = "FAKE_COMPLEX_VALUE";
         public const string CollectionOutput = "FAKE_COLLECTION_VALUE_";
 
-        public Action<ODataResourceValue, IEdmTypeReference, bool, bool, IDuplicatePropertyNameChecker> WriteResourceValueVerifier { get; set; }
+        public Action<ODataResourceValue, IEdmTypeReference, bool, IDuplicatePropertyNameChecker> WriteResourceValueVerifier { get; set; }
         public Action<ODataCollectionValue, IEdmTypeReference, IEdmTypeReference, bool, bool, bool> WriteCollectionVerifier { get; set; }
         public Action<object, IEdmTypeReference> WritePrimitiveVerifier { get; set; }
         public Action<object, IEdmTypeReference> WriteEnumVerifier { get; set; }
@@ -36,10 +36,10 @@ namespace Microsoft.OData.Tests.Json
             this.WriteNullVerifier();
         }
 
-        public override void WriteResourceValue(ODataResourceValue resourceValue, IEdmTypeReference metadataTypeReference, bool isTopLevel, bool isOpenPropertyType, IDuplicatePropertyNameChecker duplicatePropertyNamesChecker)
+        public override void WriteResourceValue(ODataResourceValue resourceValue, IEdmTypeReference metadataTypeReference, bool isOpenPropertyType, IDuplicatePropertyNameChecker duplicatePropertyNamesChecker)
         {
             this.WriteResourceValueVerifier.Should().NotBeNull("WriteResourceValue was called.");
-            this.WriteResourceValueVerifier(resourceValue, metadataTypeReference, isTopLevel, isOpenPropertyType, duplicatePropertyNamesChecker);
+            this.WriteResourceValueVerifier(resourceValue, metadataTypeReference, isOpenPropertyType, duplicatePropertyNamesChecker);
         }
 
         /// <summary>

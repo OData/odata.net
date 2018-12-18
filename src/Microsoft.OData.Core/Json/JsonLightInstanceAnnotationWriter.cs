@@ -175,7 +175,6 @@ namespace Microsoft.OData
                 this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteResourceValue(resourceValue,
                     expectedType,
-                    false, /*isTopLevel*/
                     treatLikeOpenProperty,
                     this.valueSerializer.CreateDuplicatePropertyNameChecker());
                 return;

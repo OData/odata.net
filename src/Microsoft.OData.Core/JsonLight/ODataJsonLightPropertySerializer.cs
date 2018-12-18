@@ -420,15 +420,12 @@ namespace Microsoft.OData.JsonLight
             ODataResourceValue resourceValue,
             bool isOpenPropertyType)
         {
-            if (!this.currentPropertyInfo.IsTopLevel)
-            {
-                this.JsonWriter.WriteName(property.Name);
-            }
+            Debug.Assert(!this.currentPropertyInfo.IsTopLevel, "Resource property should not be top level");
+            this.JsonWriter.WriteName(property.Name);
 
             this.JsonLightValueSerializer.WriteResourceValue(
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
-                this.currentPropertyInfo.IsTopLevel,
                 isOpenPropertyType,
                 this.CreateDuplicatePropertyNameChecker());
         }

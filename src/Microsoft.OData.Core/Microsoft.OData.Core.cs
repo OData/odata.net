@@ -608,7 +608,6 @@ namespace Microsoft.OData {
         internal const string ODataInstanceAnnotation_BadTermName = "ODataInstanceAnnotation_BadTermName";
         internal const string ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue = "ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue";
         internal const string ODataJsonLightValueSerializer_MissingTypeNameOnCollection = "ODataJsonLightValueSerializer_MissingTypeNameOnCollection";
-        internal const string ODataJsonLightValueSerializer_MissingTypeNameOnResource = "ODataJsonLightValueSerializer_MissingTypeNameOnResource";
         internal const string ODataJsonLightValueSerializer_MissingRawValueOnUntyped = "ODataJsonLightValueSerializer_MissingRawValueOnUntyped";
         internal const string AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement = "AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement";
         internal const string AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType = "AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType";

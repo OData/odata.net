@@ -143,7 +143,6 @@ namespace Microsoft.OData.JsonLight
                     this.jsonLightCollectionSerializer.WriteResourceValue(
                         resourceValue,
                         expectedItemType,
-                        false /*isTopLevel*/,
                         false /*isOpenPropertyType*/,
                         this.DuplicatePropertyNameChecker);
                     this.jsonLightCollectionSerializer.AssertRecursionDepthIsZero();

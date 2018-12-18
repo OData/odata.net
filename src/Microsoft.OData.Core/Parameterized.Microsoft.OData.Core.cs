@@ -4151,15 +4151,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A type name was not provided for an instance of ODataResourceValue."
-        /// </summary>
-        internal static string ODataJsonLightValueSerializer_MissingTypeNameOnResource {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightValueSerializer_MissingTypeNameOnResource);
-            }
-        }
-
-        /// <summary>
         /// A string like "A raw value was not provided for an instance of ODataUntypedValue."
         /// </summary>
         internal static string ODataJsonLightValueSerializer_MissingRawValueOnUntyped {
