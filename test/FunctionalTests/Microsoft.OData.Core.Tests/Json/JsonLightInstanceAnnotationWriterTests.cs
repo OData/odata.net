@@ -243,11 +243,10 @@ namespace Microsoft.OData.Tests.Json
                 name.Should().Be("@" + term);
                 verifierCalls++;
             };
-            this.valueWriter.WriteResourceValueVerifier = (value, reference, isTopLevel, isOpenProperty, dupChecker) =>
+            this.valueWriter.WriteResourceValueVerifier = (value, reference, isOpenProperty, dupChecker) =>
             {
                 value.Should().Be(resourceValue);
                 reference.Should().BeNull();
-                isTopLevel.Should().BeFalse();
                 isOpenProperty.Should().BeTrue();
                 verifierCalls.Should().Be(1);
                 verifierCalls++;
@@ -574,7 +573,7 @@ namespace Microsoft.OData.Tests.Json
 
             bool calledWriteResource = false;
 
-            this.valueWriter.WriteResourceValueVerifier = (resourceValue, typeReference, isTopLevel, isOpenProperty, dupChecker) =>
+            this.valueWriter.WriteResourceValueVerifier = (resourceValue, typeReference, isOpenProperty, dupChecker) =>
             {
                 typeReference.Should().NotBeNull();
                 typeReference.IsComplex().Should().BeTrue();
