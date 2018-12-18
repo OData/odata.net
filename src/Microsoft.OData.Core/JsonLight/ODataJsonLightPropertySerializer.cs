@@ -252,6 +252,11 @@ namespace Microsoft.OData.JsonLight
             ODataResourceValue resourceValue = value as ODataResourceValue;
             if (resourceValue != null)
             {
+                if (isTopLevel)
+                {
+                    throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                }
+
                 this.WriteResourceProperty(property, resourceValue, isOpenPropertyType);
                 return;
             }
@@ -259,6 +264,14 @@ namespace Microsoft.OData.JsonLight
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
+                if (isTopLevel)
+                {
+                    if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
+                    {
+                        throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                    }
+                }
+
                 this.WriteCollectionProperty(collectionValue, isOpenPropertyType);
                 return;
             }

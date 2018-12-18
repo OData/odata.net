@@ -586,6 +586,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Not allowed to write top level property '{0}' with 'ODataResourceValue' or collection of resource value."
+        /// </summary>
+        internal static string ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, p0);
+        }
+
+        /// <summary>
         /// A string like "Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null."
         /// </summary>
         internal static string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth {
