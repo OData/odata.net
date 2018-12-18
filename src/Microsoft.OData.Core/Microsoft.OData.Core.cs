@@ -139,6 +139,7 @@ namespace Microsoft.OData {
         internal const string ODataMessageWriter_CannotSpecifyOperationWithoutModel = "ODataMessageWriter_CannotSpecifyOperationWithoutModel";
         internal const string ODataMessageWriter_JsonPaddingOnInvalidContentType = "ODataMessageWriter_JsonPaddingOnInvalidContentType";
         internal const string ODataMessageWriter_NonCollectionType = "ODataMessageWriter_NonCollectionType";
+        internal const string ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue = "ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue";
         internal const string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth = "ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromStart = "ODataCollectionWriterCore_InvalidTransitionFromStart";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromCollection = "ODataCollectionWriterCore_InvalidTransitionFromCollection";

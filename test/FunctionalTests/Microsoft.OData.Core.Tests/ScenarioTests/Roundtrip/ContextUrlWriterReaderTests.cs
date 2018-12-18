@@ -1106,30 +1106,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             }
         }
 
-        [Fact]
-        public void IndividualPropertyWithComplexType_UsingODataResourceValue()
-        {
-            var address = new Address() { Street = "TestStreet", City = "TestCity" };
-            foreach (ODataFormat mimeType in mimeTypes)
-            {
-                string payload, contentType;
-                this.WriteAndValidateContextUri(mimeType, model,
-                    omWriter =>
-                    {
-                        var odataUriParser = new ODataUriParser(this.model, this.testServiceRootUri, new Uri(TestBaseUri + "People(1)/HomeAddress"));
-                        omWriter.Settings.ODataUri = new ODataUri()
-                        {
-                            ServiceRoot = this.testServiceRootUri,
-                            Path = odataUriParser.ParsePath()
-                        };
-                        omWriter.WriteProperty(this.CreateODataProperty(address, "HomeAddress"));
-                    },
-                    string.Format("\"{0}$metadata#People(1)/HomeAddress\"", TestBaseUri), out payload, out contentType);
-
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
-            }
-        }
-
         // V4 Protocol Spec Chapter 10.13: Collection of individual property with complex type
         // Sample Request: http://host/service/People(1)/Addresses
         // Context Url in Response: http://host/service/$metadata#People(1)/Addresses
