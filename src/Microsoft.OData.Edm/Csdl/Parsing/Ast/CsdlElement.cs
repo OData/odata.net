@@ -53,12 +53,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             get { return this.location; }
         }
 
-        public virtual void AddAnnotation(CsdlDirectValueAnnotation annotation)
+        public void AddAnnotation(CsdlDirectValueAnnotation annotation)
         {
             this.AddUntypedAnnotation(annotation);
         }
 
-        public virtual void AddAnnotation(CsdlAnnotation annotation)
+        public void AddAnnotation(CsdlAnnotation annotation)
         {
             this.AddUntypedAnnotation(annotation);
         }

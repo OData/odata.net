@@ -115,9 +115,25 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmTypeReference ComputeReturnType()
         {
-            return this.operation.ReturnType == null ?
-                null :
-                CsdlSemanticsModel.WrapTypeReference(this.Context, this.operation.ReturnType.ReturnType, this);
+            if (this.operation.ReturnType == null || this.operation.ReturnType.ReturnType == null)
+            {
+                return null;
+            }
+
+            // We should copy the "annotations" from "CsdlOperationReturnType" to its "CsdlTypeReference"
+            // because, we use "CsdlTypeReference" to constructor the "CsdlSemanticOperation****ReturnType".
+            CsdlTypeReference typeReference = this.operation.ReturnType.ReturnType;
+            foreach (var annotation in this.operation.ReturnType.VocabularyAnnotations)
+            {
+                typeReference.AddAnnotation(annotation);
+            }
+
+            foreach (var annotation in this.operation.ReturnType.ImmediateValueAnnotations)
+            {
+                typeReference.AddAnnotation(annotation);
+            }
+
+            return CsdlSemanticsModel.WrapTypeReference(this.Context, typeReference, this);
         }
 
         private IEnumerable<IEdmOperationParameter> ComputeParameters()

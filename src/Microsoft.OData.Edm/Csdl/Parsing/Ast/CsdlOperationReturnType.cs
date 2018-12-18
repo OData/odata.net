@@ -18,17 +18,5 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         }
 
         public CsdlTypeReference ReturnType { get; }
-
-        public override void AddAnnotation(CsdlDirectValueAnnotation annotation)
-        {
-            base.AddAnnotation(annotation);
-            ReturnType.AddAnnotation(annotation);
-        }
-
-        public override void AddAnnotation(CsdlAnnotation annotation)
-        {
-            base.AddAnnotation(annotation);
-            ReturnType.AddAnnotation(annotation);
-        }
     }
 }
