@@ -66,9 +66,11 @@ namespace Microsoft.OData.Tests.Evaluation
             EdmComplexType airportType = new EdmComplexType("TestModel", "Airport");
             airportType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(/*isNullable*/false));
             airportType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "City", Target = cityType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
+            this.edmModel.AddElement(airportType);
 
             EdmComplexType regionalAirportType = new EdmComplexType("TestModel", "RegionalAirport", airportType);
             airportType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Region", Target = districtType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
+            this.edmModel.AddElement(regionalAirportType);
 
             this.metropolisType = new EdmEntityType("TestModel", "Metropolis", this.cityType);
             this.metropolisType.AddStructuralProperty("MetropolisStream", EdmCoreModel.Instance.GetStream(/*isNullable*/false));
@@ -474,7 +476,7 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
-        public void ExpandTokenForNavigationPropertyDerivedOnComplexShouldHaveEntireSubtree()
+        public void ExpandTokenForNavigationPropertyOnDerivedComplexShouldHaveEntireSubtree()
         {
             SelectedPropertiesNode.Create("NearestAirport/TestModel.RegionalAirport/Region()", this.metropolisType, this.edmModel).Should().HaveEntireSubtree();
         }
@@ -486,7 +488,7 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
-        public void ExpandTokenForNavigationPropertyDerivedOnComplexWithSelectShouldHavePartialSubtree()
+        public void ExpandTokenForNavigationPropertyOnDerivedComplexWithSelectShouldHavePartialSubtree()
         {
             SelectedPropertiesNode p = SelectedPropertiesNode.Create("NearestAirport/TestModel.RegionalAirport(Name),NearestAirport/TestModel.RegionalAirport/Region()", this.metropolisType, this.edmModel);
             p.IsEntireSubtree().Should().BeFalse();
