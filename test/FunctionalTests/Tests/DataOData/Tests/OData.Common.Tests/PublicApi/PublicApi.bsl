@@ -2627,6 +2627,7 @@ public class Microsoft.OData.Edm.EdmIncludeAnnotations : IEdmIncludeAnnotations 
 
 public class Microsoft.OData.Edm.EdmModel : Microsoft.OData.Edm.EdmModelBase, IEdmElement, IEdmModel {
 	public EdmModel ()
+	public EdmModel (bool enableBuiltInVocabularyModel)
 
 	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public virtual get; }
@@ -2836,6 +2837,7 @@ public sealed class Microsoft.OData.Edm.Csdl.SchemaReader {
 	public static bool TryParse (System.Collections.Generic.IEnumerable`1[[System.Xml.XmlReader]] readers, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Collections.Generic.IEnumerable`1[[System.Xml.XmlReader]] readers, Microsoft.OData.Edm.IEdmModel reference, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Collections.Generic.IEnumerable`1[[System.Xml.XmlReader]] readers, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryParse (System.Collections.Generic.IEnumerable`1[[System.Xml.XmlReader]] readers, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors, bool enableVocabularySupport)
 }
 
 [
@@ -2947,6 +2949,7 @@ public class Microsoft.OData.Edm.Csdl.CsdlReader {
 	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Xml.XmlReader reader, System.Func`2[[System.Uri],[System.Xml.XmlReader]] getReferencedModelReaderFunc, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, Microsoft.OData.Edm.Csdl.CsdlReaderSettings settings, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors, bool enableVocabularySupport)
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlWriter {

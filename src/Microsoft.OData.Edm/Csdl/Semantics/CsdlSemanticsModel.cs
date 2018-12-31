@@ -15,6 +15,7 @@ using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -58,7 +59,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <param name="mainCsdlModel">The main raw CsdlModel.</param>
         /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
         /// <param name="referencedCsdlModels">The referenced raw CsdlModels.</param>
-        public CsdlSemanticsModel(CsdlModel mainCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<CsdlModel> referencedCsdlModels)
+        /// <param name="enableVocabularySupport">A value indicating enable/disable the built-in vocabulary supporting.</param>
+        public CsdlSemanticsModel(CsdlModel mainCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<CsdlModel> referencedCsdlModels, bool enableVocabularySupport)
             : base(Enumerable.Empty<IEdmModel>(), annotationsManager)
         {
             this.astModel = mainCsdlModel;
@@ -67,7 +69,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             // 1. build semantics for referenced models
             foreach (var tmp in referencedCsdlModels)
             {
-                this.AddReferencedModel(new CsdlSemanticsModel(tmp, this.DirectValueAnnotationsManager, this));
+                var refModel = new CsdlSemanticsModel(tmp, this.DirectValueAnnotationsManager, this);
+                if (enableVocabularySupport)
+                {
+                    refModel.AddToReferencedModels(VocabularyModelProvider.VocabularyModels);
+                }
+
+                this.AddReferencedModel(refModel);
             }
 
             // 2. build semantics for current model

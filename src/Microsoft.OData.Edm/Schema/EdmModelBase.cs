@@ -7,8 +7,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Vocabularies.Community.V1;
-using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm
 {
@@ -37,33 +35,8 @@ namespace Microsoft.OData.Edm
 
             this.referencedEdmModels = new List<IEdmModel>(referencedModels);
 
-            this.referencedEdmModels.Add(EdmCoreModel.Instance);
-
-            if (CoreVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(CoreVocabularyModel.Instance);
-            }
-
-            // Make sure the core vocabulary model is initialized.
-            if (!CoreVocabularyModel.IsInitializing && CapabilitiesVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(CapabilitiesVocabularyModel.Instance);
-            }
-
-            if (AlternateKeysVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(AlternateKeysVocabularyModel.Instance);
-            }
-
-            if (AuthorizationVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(AuthorizationVocabularyModel.Instance);
-            }
-
-            if (ValidationVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(ValidationVocabularyModel.Instance);
-            }
+            // EdmCoreModel is always embeded.
+            this.referencedEdmModels.Insert(0, EdmCoreModel.Instance);
 
             this.annotationsManager = annotationsManager;
         }

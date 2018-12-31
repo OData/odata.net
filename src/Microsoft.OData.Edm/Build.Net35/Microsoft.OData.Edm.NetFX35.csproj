@@ -361,6 +361,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\AuthorizationVocabularyModel.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\VocabularyModelProvider.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\VocabularyModelProvider.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\DuplicateOperationValidator.cs">
       <Link>Microsoft\OData\Edm\Validation\DuplicateOperationValidator.cs</Link>
     </Compile>

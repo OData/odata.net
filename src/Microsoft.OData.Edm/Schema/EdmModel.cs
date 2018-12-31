@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm
 {
@@ -25,7 +26,17 @@ namespace Microsoft.OData.Edm
         /// Initializes a new instance of the <see cref="EdmModel"/> class.
         /// </summary>
         public EdmModel()
-            : base(Enumerable.Empty<IEdmModel>(), new EdmDirectValueAnnotationsManager())
+            : this(true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmModel"/> class.
+        /// </summary>
+        /// <param name="enableBuiltInVocabularyModel">a boolean value indicating whether to embed the built vocabulary models.</param>
+        public EdmModel(bool enableBuiltInVocabularyModel)
+            : base(enableBuiltInVocabularyModel ? VocabularyModelProvider.VocabularyModels : Enumerable.Empty<IEdmModel>(),
+                  new EdmDirectValueAnnotationsManager())
         {
         }
 
