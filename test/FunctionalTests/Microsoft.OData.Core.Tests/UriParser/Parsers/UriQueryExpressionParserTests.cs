@@ -130,7 +130,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "invalid(UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby",0,apply));
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby|compute|expand", 0,apply));
         }
 
         [Fact]
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupBy((UnitPrice), aggregate(UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby", 0, apply));
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby|compute|expand", 0, apply));
         }
 
         [Fact]
@@ -651,6 +651,30 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             FunctionCallToken funcToken = funcAggregate.Expression as FunctionCallToken;
             funcToken.Should().NotBeNull();
             funcToken.Name.ShouldBeEquivalentTo("cast");
+        }
+
+        [Fact]
+        public void ParseApplyWithComputeWithMathematicalOperations()
+        {
+            string compute = "compute(Prop1 mul Prop2 as Product,Prop1 div Prop2 as Ratio,Prop2 mod Prop2 as Remainder)";
+            ComputeToken token = this.testSubject.ParseApply(compute).First() as ComputeToken;
+            token.Kind.ShouldBeEquivalentTo(QueryTokenKind.Compute);
+            List<ComputeExpressionToken> tokens = token.Expressions.ToList();
+            tokens.Count.Should().Be(3);
+            tokens[0].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
+            tokens[1].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
+            tokens[2].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
+            tokens[0].Alias.ShouldBeEquivalentTo("Product");
+            tokens[1].Alias.ShouldBeEquivalentTo("Ratio");
+            tokens[2].Alias.ShouldBeEquivalentTo("Remainder");
+            (tokens[0].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Multiply);
+            (tokens[1].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Divide);
+            (tokens[2].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Modulo);
+
+            Action accept1 = () => tokens[0].Accept<ComputeExpression>(null);
+            accept1.ShouldThrow<NotImplementedException>();
+            Action accept2 = () => token.Accept<ComputeExpression>(null);
+            accept2.ShouldThrow<NotImplementedException>();
         }
 
         [Fact]

@@ -30,7 +30,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// List of supported $apply keywords
         /// </summary>
-        private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy });
+        private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy, ExpressionConstants.KeywordCompute, ExpressionConstants.KeywordExpand });
 
         /// <summary>
         /// Set of parsed parameters
