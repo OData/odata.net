@@ -1221,12 +1221,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ReferenceComputeAliasCreatedBeforeAggrageteThrows()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
-            HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
-            new Dictionary<string, string>()
-            {
-                            {"$orderby", "DoubleFavorite asc"},
-                            {"$apply", "compute(FavoriteNumber mul 2 as DoubleFavorite)/aggregate(DoubleFavorite with sum as Total)"}
-            });
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "DoubleFavorite asc"},
+                    {"$apply", "compute(FavoriteNumber mul 2 as DoubleFavorite)/aggregate(DoubleFavorite with sum as Total)"}
+                });
             Action parseAction = () => { odataQueryOptionParser.ParseApply(); odataQueryOptionParser.ParseOrderBy(); };
             parseAction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "DoubleFavorite"));
         }
