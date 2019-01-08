@@ -327,42 +327,36 @@ public void ValidateAndSetIgnoreUnexpectedElementsAndAttributesFromString(string
 }
 
 public void ValidateAndSetCustomHttpHeadersFromString(string stringValue){
-    var defaultReturn = new Dictionary<string, string>();
-    if(String.IsNullOrWhiteSpace(stringValue)){
-        this.CustomHttpHeaders = defaultReturn;
+    this.CustomHttpHeaders = new Dictionary<string, string>();
+    if(String.IsNullOrWhiteSpace(stringValue)){        
         return;
     }
-        
-    stringValue = stringValue
-        // remove surrounding "[]"
-        .Replace("[", "").Replace("]", "");
-
-    if(String.IsNullOrWhiteSpace(stringValue)){
-        this.CustomHttpHeaders = defaultReturn;
-        return;
-    }
-    if(
-        // Check if we have any valid object in the string
-        !stringValue.Contains("{") || !stringValue.Contains("}") || 
-        // Check if the count of the keys are the same as the count of values
-        (stringValue.Count(d => d == ':') != stringValue.Count(d => d == '{')) ||
-        // Check all objects of a '{' and a '}'
-        (stringValue.Count(d => d == '{') != stringValue.Count(d => d == '}')) ||
-        // Check all values and keys are strings
-        (stringValue.Count(d => d == ':')*4 != stringValue.Count(d => d == '\''))
-        ){
-        throw new ArgumentException("Please check your custom http headers string format!");
-    }
-    this.CustomHttpHeaders = stringValue     
-        // Replace the comma with a better spliting symbol
-        .Replace("},{", "}||{")
-        // Remove surrounding "{}" on each object
-        .Replace("{", "").Replace("}", "")
-        // now we have all header name and header values in one string each pair
-        .Split(new[] { "||" }, StringSplitOptions.None)
-        // Create a dictionary
-        .ToDictionary(d => d.Split(':')[0].Replace("'", "").Trim(), d => d.Split(':')[1].Replace("'", "").Trim());    
-    
+    for(var i = 0; stringValue.Length - 1 == i; i++){
+        if(stringValue[i] == '{'){ // Key Value Pair starts            
+            var startIndexHeaderName = i + 1;
+            var indexOfKeyValueDelimiter = stringValue.IndexOf(':', i); // positon of delimiter between key and value
+            if(indexOfKeyValueDelimiter == -1){
+                throw new ArgumentException("Please check your custom http headers string format! You have open a key value pair but missed the delimiter ':'.");
+            }
+            var headerNameLength = (indexOfKeyValueDelimiter -1) - startIndexHeaderName;
+            var headerName = stringValue.Substring(startIndexHeaderName, headerNameLength);
+            var startIndexValue = indexOfKeyValueDelimiter + 1;
+            var endKeyValuePair = stringValue.IndexOf('}', startIndexValue); // end of key value pair
+            if(endKeyValuePair == -1){
+                throw new ArgumentException("Please check your custom http headers string format! You have open a key value pair but never defined an end with '}'");
+            }
+            var valueLength = (stringValue.IndexOf('}', startIndexValue) - 1) - startIndexValue;
+            var valueContent = stringValue.Substring(startIndexValue, valueLength);
+            this.CustomHttpHeaders.Add(headerName, valueContent);
+            var commaForNextValue = stringValue[endKeyValuePair + 1];
+            if((stringValue.Length - 1) >= commaForNextValue && stringValue[commaForNextValue] != ','){
+                throw new ArgumentException("Please check your custom http headers string format! You have defined more then one header and forget to set a comma between the closing and opening curly braces.");
+            }
+            i = commaForNextValue;
+        }else{
+            throw new ArgumentException("Please check your custom http headers string format! You have set the custom http header but not use the format '{headerName:value},{headerName:value}'");
+        }
+    } 
 }
 
 /// <summary>
