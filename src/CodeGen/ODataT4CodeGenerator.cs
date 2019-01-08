@@ -154,6 +154,8 @@ public static class Configuration
 	// the client code if any. The value must be set to true or false.
 	public const bool IgnoreUnexpectedElementsAndAttributes = true;	
 	// Here you can set custom http headers like this: {headerName:value},{headerName:value}
+    // This parameter is cosumed by the WebClient that ask your OData api for the EDM schema. This is usefull for example to set an authorization header if you OData Api protects the schema.
+    // The generated odata client doesn't use this headers to communicate with you API.
 	public const string CustomHttpHeaders = "";
 }
 
