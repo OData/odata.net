@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
 
             foreach (object item in objectCollection)
             {
-                this.collection.Add(new ConstantNode(item, item.ToString(), this.itemType));
+                this.collection.Add(new ConstantNode(item, item != null ? item.ToString() : "null", this.itemType));
             }
         }
 
