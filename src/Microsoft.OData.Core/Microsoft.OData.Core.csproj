@@ -79,6 +79,7 @@
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyMetadataTypeInfo.cs" />
     <Compile Include="PropertySerializationInfo.cs" />
+    <Compile Include="DerivedTypeValidator.cs" />
     <Compile Include="DuplicatePropertyNameChecker.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="BindingPathHelper.cs" />

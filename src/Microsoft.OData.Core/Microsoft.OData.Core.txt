@@ -283,6 +283,7 @@ ReaderValidationUtils_ContextUriValidationNonMatchingDeclaringTypes=The context 
 ReaderValidationUtils_NonMatchingPropertyNames=The property or operation import name '{0}' was read from the payload; however, the name of the expected property or operation import is '{1}'.
 ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType=The context URI '{0}' references the type '{1}'; however the expected type is '{2}'.
 ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType=The context URI '{0}' refers to the item type '{1}' which is not assignable to the expected item type '{2}'.
+ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint=The value type '{0}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on {1} '{2}'.
 
 ODataMessageReader_ReaderAlreadyUsed=The ODataMessageReader has already been used to read a message payload. An ODataMessageReader can only be used once to read a payload for a given message.
 ODataMessageReader_ErrorPayloadInRequest=A top-level error cannot be read from request payloads. Top-level errors are only supported in responses.

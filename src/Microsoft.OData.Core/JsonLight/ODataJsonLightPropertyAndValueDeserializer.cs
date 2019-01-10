@@ -871,6 +871,15 @@ namespace Microsoft.OData.JsonLight
                 propertyTypeName = (string)propertyAnnotation.Value;
             }
 
+            if (propertyTypeName != null)
+            {
+                var validator = propertyAndAnnotationCollector.GetDerivedTypeValidator(propertyName);
+                if (validator != null)
+                {
+                    validator.ValidateResourceType(propertyTypeName);
+                }
+            }
+
             return propertyTypeName;
         }
 

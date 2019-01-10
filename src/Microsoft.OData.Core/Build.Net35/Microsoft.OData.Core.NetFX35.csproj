@@ -1551,6 +1551,9 @@
     <Compile Include="..\Buffers\BufferUtils.cs">
       <Link>Microsoft\OData\Core\Buffers\BufferUtils.cs</Link>
     </Compile>
+    <Compile Include="..\DerivedTypeValidator.cs">
+      <Link>Microsoft\OData\Core\DerivedTypeValidator.cs</Link>
+    </Compile>
     <Compile Include="..\DuplicatePropertyNameChecker.cs">
       <Link>Microsoft\OData\Core\DuplicatePropertyNameChecker.cs</Link>
     </Compile>

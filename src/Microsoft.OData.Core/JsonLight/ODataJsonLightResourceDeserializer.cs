@@ -1237,6 +1237,12 @@ namespace Microsoft.OData.JsonLight
                         throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StreamPropertyWithValue(propertyName));
                     }
 
+                    var derivedTypeConstrants = this.JsonLightInputContext.Model.GetDerivedTypeConstraints(edmProperty);
+                    if (derivedTypeConstrants != null)
+                    {
+                        resourceState.PropertyAndAnnotationCollector.SetDerivedTypeValidator(propertyName, new DerivedTypeValidator(propertyTypeReference.Definition, derivedTypeConstrants, "property", propertyName));
+                    }
+
                     // NOTE: we currently do not check whether the property should be skipped
                     //       here because this can only happen for navigation properties and open properties.
                     this.ReadEntryDataProperty(resourceState, edmProperty, ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, propertyName));

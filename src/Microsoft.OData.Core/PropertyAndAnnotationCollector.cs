@@ -379,6 +379,44 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Set the derived type validator for a property.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="validator">Derived type validator.</param>
+        internal void SetDerivedTypeValidator(string propertyName, DerivedTypeValidator validator)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(propertyName));
+
+            if (validator == null)
+            {
+                return;
+            }
+
+            PropertyData data;
+            if (!propertyData.TryGetValue(propertyName, out data))
+            {
+                propertyData[propertyName] = data = new PropertyData(PropertyState.AnnotationSeen);
+            }
+
+            data.DerivedTypeValidator = validator;
+        }
+
+        /// <summary>
+        /// Gets the derived type validator for a property.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>Null or the derived type validator.</returns>
+        internal DerivedTypeValidator GetDerivedTypeValidator(string propertyName)
+        {
+            Debug.Assert(propertyName != null);
+
+            PropertyData data;
+            return propertyData.TryGetValue(propertyName, out data)
+                   ? data.DerivedTypeValidator
+                   : null;
+        }
+
+        /// <summary>
         /// Returns OData annotations for a property.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
@@ -528,6 +566,11 @@ namespace Microsoft.OData
             /// Denotes whether the property has been marked as processed.
             /// </summary>
             internal bool Processed { get; set; }
+
+            /// <summary>
+            /// The derived type validator for property.
+            /// </summary>
+            internal DerivedTypeValidator DerivedTypeValidator { get; set; }
         }
     }
 }
