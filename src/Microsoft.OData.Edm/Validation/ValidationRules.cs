@@ -1725,6 +1725,51 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that if a bound function has Org.OData.Community.V1.UrlEscapeFunction annotation, it must be bound function.
+        /// </summary>
+        public static readonly ValidationRule<IEdmFunction> FunctionWithUrlEscapeFunctionMustBeBound =
+            new ValidationRule<IEdmFunction>(
+                (context, function) =>
+                {
+                    if (!context.Model.IsUrlEscapeFunction(function))
+                    {
+                        return;
+                    }
+
+                    // The UrlEscape function should be bound function.
+                    if (!function.IsBound)
+                    {
+                        context.AddError(
+                            function.Location(),
+                            EdmErrorCode.UrlEscapeFunctionMustBeBoundFunction,
+                            Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction(function.Name));
+                    }
+                });
+
+        /// <summary>
+        /// Validates that if a bound function has Org.OData.Community.V1.UrlEscapeFunction annotation, it must have only one string parameter.
+        /// </summary>
+        public static readonly ValidationRule<IEdmFunction> FunctionWithUrlEscapeFunctionMustHaveOneStringParameter =
+            new ValidationRule<IEdmFunction>(
+                (context, function) =>
+                {
+                    if (!context.Model.IsUrlEscapeFunction(function))
+                    {
+                        return;
+                    }
+
+                    // The UrlEscape function should have and only have two parameters, the non-binding parameter type should be "Edm.String"
+                    if (function.Parameters == null ||
+                        function.Parameters.Count() != 2 ||
+                        function.Parameters.ElementAt(1).Type.FullName() != "Edm.String")
+                    {
+                        context.AddError(
+                            function.Location(),
+                            EdmErrorCode.UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter,
+                            Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter(function.Name));
+                    }
+                });
         #endregion
 
         #region IEdmOperation

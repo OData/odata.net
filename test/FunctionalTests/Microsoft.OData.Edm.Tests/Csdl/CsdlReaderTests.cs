@@ -874,6 +874,45 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("Smith", parameter.DefaultValueString);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ParsingUrlEscapeFunctionWorks(bool escaped)
+        {
+            string format = @"<?xml version=""1.0"" encoding=""utf-16""?>
+            <edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" >
+               <edmx:DataServices>
+                <Schema Namespace=""NS"" xmlns =""http://docs.oasis-open.org/odata/ns/edm"" >
+                   <EntityType Name=""Entity"" >
+                    <Key>
+                      <PropertyRef Name=""Id"" />
+                    </Key>
+                    <Property Name=""Id"" Type =""Edm.Int32"" Nullable =""false"" />
+                  </EntityType>
+                  <Function Name=""Function"" IsBound =""true"" >
+                    <Parameter Name=""entity"" Type =""NS.Entity"" />
+                    <Parameter Name=""path"" Type =""Edm.String"" />
+                    <ReturnType Type=""Edm.Int32"" />
+                    {0}
+                  </Function>
+                </Schema>
+              </edmx:DataServices>
+            </edmx:Edmx>";
+
+            string annotation = escaped ? "<Annotation Term=\"Org.OData.Community.V1.UrlEscapeFunction\" Bool=\"true\" />" : "";
+            string csdl = String.Format(format, annotation);
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            bool result = CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            var function = model.SchemaElements.OfType<IEdmFunction>().First();
+            Assert.Equal(escaped, model.IsUrlEscapeFunction(function));
+        }
+
         [Fact]
         public void ParsingBaseAndDerivedTypeWithSameAnnotationWorksButValidationSuccessful()
         {
