@@ -59,6 +59,26 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
+        public void NullableCollectionTypeSetsConstantNodeCorrectly()
+        {
+            const string text = "('abc','def', null)";
+            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true)));
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("['abc','def', null]", HardCodedTestModel.TestModel, expectedType);
+            LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
+
+            CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
+                (literalToken.Value as ODataCollectionValue)?.Items, text, expectedType);
+
+            var expectedList = new ConstantNode[] {
+                new ConstantNode("abc", "abc", EdmCoreModel.Instance.GetString(true)),
+                new ConstantNode("def", "def", EdmCoreModel.Instance.GetString(true)),
+                new ConstantNode(null, "null", EdmCoreModel.Instance.GetString(true)),
+            };
+
+            collectionConstantNode.Collection.ShouldBeEquivalentTo(expectedList);
+        }
+
+        [Fact]
         public void TextIsSetCorrectly()
         {
             const string text = "(1,2,3)";
