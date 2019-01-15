@@ -328,5 +328,88 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             Assert.AreEqual(secondHeaderName, gen.CustomHttpHeaders.LastOrDefault().Key);
             Assert.AreEqual(secondHeaderValue, gen.CustomHttpHeaders.LastOrDefault().Value);
         }
+
+        [TestMethod]
+        public void TestTheValidationErrorForMissingColonInHeaders()
+        {
+            var gen = new ODataT4CodeGenerator();
+            gen.CustomHttpHeaders = null;
+            var firstHeaderName = "firstHeaderName";
+            var firstHeaderValue = "firstHeaderValue";
+            try
+            {
+                gen.ValidateAndSetCustomHttpHeadersFromString("{" + firstHeaderName + firstHeaderValue + "}");
+            }
+            catch (ArgumentException ex)
+            {
+
+                Assert.IsNotNull(ex);
+                return;
+            }
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void TestTheValidationErrorForMissingCurlyBreaketsAtTheEndInHeaders()
+        {
+            var gen = new ODataT4CodeGenerator();
+            gen.CustomHttpHeaders = null;
+            var firstHeaderName = "firstHeaderName";
+            var firstHeaderValue = "firstHeaderValue";
+            try
+            {
+                gen.ValidateAndSetCustomHttpHeadersFromString("{" + firstHeaderName + firstHeaderValue);
+            }
+            catch (ArgumentException ex)
+            {
+
+                Assert.IsNotNull(ex);
+                return;
+            }
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void TestTheValidationErrorForMissingCurlyBreaketsAtTheBeginInHeaders()
+        {
+            var gen = new ODataT4CodeGenerator();
+            gen.CustomHttpHeaders = null;
+            var firstHeaderName = "firstHeaderName";
+            var firstHeaderValue = "firstHeaderValue";
+            try
+            {
+                gen.ValidateAndSetCustomHttpHeadersFromString(firstHeaderName + firstHeaderValue + "}");
+            }
+            catch (ArgumentException ex)
+            {
+
+                Assert.IsNotNull(ex);
+                return;
+            }
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void TestTheValidationErrorForMissingCommaBetweenHeaders()
+        {
+            var gen = new ODataT4CodeGenerator();
+            gen.CustomHttpHeaders = null;
+            var firstHeaderName = "firstHeaderName";
+            var firstHeaderValue = "firstHeaderValue";
+            var secondHeaderName = "secondHeaderName";
+            var secondHeaderValue = "secondHeaderValue";
+
+            try
+            {
+                gen.ValidateAndSetCustomHttpHeadersFromString("{" + firstHeaderName + ":" + firstHeaderValue + "}{" + secondHeaderName + ":" + secondHeaderValue + "}");
+            }
+            catch (ArgumentException ex)
+            {
+
+                Assert.IsNotNull(ex);
+                return;
+            }
+            Assert.Fail();
+        }
     }
 }
