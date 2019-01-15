@@ -294,5 +294,39 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 Assert.AreEqual(ex.Message, "Only file, http, https schemes are supported for paths to metadata source locations.");
             }
         }
+
+        [TestMethod]
+        public void TestTheValidationForASingleHeader()
+        {
+            var gen = new ODataT4CodeGenerator();
+            gen.CustomHttpHeaders = null;
+            var testHeaderName = "testHeaderName";
+            var testHeaderValue = "testHeaderValue";
+            gen.ValidateAndSetCustomHttpHeadersFromString("{" + testHeaderName + ":" + testHeaderValue + "}");
+
+            Assert.IsNotNull(gen.CustomHttpHeaders);
+            Assert.AreEqual(1, gen.CustomHttpHeaders.Count);
+            Assert.AreEqual(testHeaderName, gen.CustomHttpHeaders.FirstOrDefault().Key);
+            Assert.AreEqual(testHeaderValue, gen.CustomHttpHeaders.FirstOrDefault().Value);
+        }
+
+        [TestMethod]
+        public void TestTheValidationForMultipleHeaders()
+        {
+            var gen = new ODataT4CodeGenerator();
+            gen.CustomHttpHeaders = null;
+            var firstHeaderName = "firstHeaderName";
+            var firstHeaderValue = "firstHeaderValue";
+            var secondHeaderName = "secondHeaderName";
+            var secondHeaderValue = "secondHeaderValue";
+            gen.ValidateAndSetCustomHttpHeadersFromString("{" + firstHeaderName + ":" + firstHeaderValue + "},{" + secondHeaderName + ":" + secondHeaderValue + "}");
+
+            Assert.IsNotNull(gen.CustomHttpHeaders);
+            Assert.AreEqual(2, gen.CustomHttpHeaders.Count);
+            Assert.AreEqual(firstHeaderName, gen.CustomHttpHeaders.FirstOrDefault().Key);
+            Assert.AreEqual(firstHeaderValue, gen.CustomHttpHeaders.FirstOrDefault().Value);
+            Assert.AreEqual(secondHeaderName, gen.CustomHttpHeaders.LastOrDefault().Key);
+            Assert.AreEqual(secondHeaderValue, gen.CustomHttpHeaders.LastOrDefault().Value);
+        }
     }
 }
