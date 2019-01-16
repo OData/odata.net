@@ -61,6 +61,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                     case QueryTokenKind.Compute:
                         var compute = BindComputeToken((ComputeToken)token);
                         transformations.Add(compute);
+                        state.AggregatedPropertyNames = compute.Expressions.Select(statement => statement.Alias).ToList();
                         break;
                     case QueryTokenKind.Expand:
                         SelectExpandClause expandClause = SelectExpandSemanticBinder.Bind(this.odataPathInfo,  (ExpandToken)token, null, this.configuration);
