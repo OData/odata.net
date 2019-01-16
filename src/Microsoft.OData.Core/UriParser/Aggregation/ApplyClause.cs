@@ -21,6 +21,8 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private readonly IEnumerable<GroupByPropertyNode> lastGroupByPropertyNodes;
 
+        private readonly List<ComputeExpression> lastComputeExpressions;
+
         /// <summary>
         /// Create a ApplyClause.
         /// </summary>
@@ -51,6 +53,11 @@ namespace Microsoft.OData.UriParser.Aggregation
 
                     break;
                 }
+                else if (transformations[i].Kind == TransformationNodeKind.Compute)
+                {
+                    lastComputeExpressions = lastComputeExpressions ?? new List<ComputeExpression>();
+                    lastComputeExpressions.AddRange((transformations[i] as ComputeTransformationNode).Expressions);
+                }
             }
         }
 
@@ -73,12 +80,21 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         internal List<string> GetLastAggregatedPropertyNames()
         {
-            if (lastAggregateExpressions != null)
+            if (lastAggregateExpressions == null && lastComputeExpressions == null)
             {
-                return lastAggregateExpressions.Select(statement => statement.Alias).ToList();
+                return null;
             }
 
-            return null;
+            List<string> result = new List<string>();
+            if (lastAggregateExpressions != null)
+            {
+                result.AddRange(lastAggregateExpressions.Select(statement => statement.Alias));
+            }
+            if (lastComputeExpressions != null)
+            {
+                result.AddRange(lastComputeExpressions.Select(statement => statement.Alias));
+            }
+            return result;
         }
 
         private string CreatePropertiesUriSegment(

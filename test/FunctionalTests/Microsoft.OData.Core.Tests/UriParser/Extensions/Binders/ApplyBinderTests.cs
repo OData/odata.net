@@ -248,6 +248,30 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
+        public void BindApplyWithComputeShouldReturnApplyClause()
+        {
+            var tokens = _parser.ParseApply("compute(UnitPrice mul 5 as BigPrice)");
+
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
+            var actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            var transformations = actual.Transformations.ToList();
+            var compute = transformations[0] as ComputeTransformationNode;
+
+            compute.Should().NotBeNull();
+            compute.Kind.Should().Be(TransformationNodeKind.Compute);
+            compute.Expressions.Should().HaveCount(1);
+
+            var statements = compute.Expressions.ToList();
+            var statement = statements[0];
+            VerifyIsFakeSingleValueNode(statement.Expression);
+            statement.Alias.ShouldBeEquivalentTo("BigPrice");
+        }
+
+        [Fact]
         public void BindApplyWithEntitySetAggregationReturnApplyClause()
         {
             IEnumerable<QueryToken> tokens =
