@@ -1762,7 +1762,7 @@ namespace Microsoft.OData.Edm.Validation
                     // The UrlEscape function should have and only have two parameters, the non-binding parameter type should be "Edm.String"
                     if (function.Parameters == null ||
                         function.Parameters.Count() != 2 ||
-                        function.Parameters.ElementAt(1).Type.FullName() != "Edm.String")
+                        !function.Parameters.ElementAt(1).Type.IsString())
                     {
                         context.AddError(
                             function.Location(),

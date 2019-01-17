@@ -42,8 +42,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <param name="astModel">The raw CsdlModel.</param>
         /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
         /// <param name="referencedModels">The IEdmModels to be referenced. if any element or namespce is not supposed to be include, you should have removed it before passing to this constructor.</param>
-        public CsdlSemanticsModel(CsdlModel astModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<IEdmModel> referencedModels)
-            : base(referencedModels, annotationsManager)
+        /// <param name="includeDefaultVocabularies">A value indicating enable/disable the built-in vocabulary supporting.</param>
+        public CsdlSemanticsModel(CsdlModel astModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<IEdmModel> referencedModels, bool includeDefaultVocabularies = true)
+            : base(referencedModels, annotationsManager, includeDefaultVocabularies)
         {
             this.astModel = astModel;
             this.SetEdmReferences(astModel.CurrentModelReferences);
@@ -59,9 +60,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <param name="mainCsdlModel">The main raw CsdlModel.</param>
         /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
         /// <param name="referencedCsdlModels">The referenced raw CsdlModels.</param>
-        /// <param name="enableVocabularySupport">A value indicating enable/disable the built-in vocabulary supporting.</param>
-        public CsdlSemanticsModel(CsdlModel mainCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<CsdlModel> referencedCsdlModels, bool enableVocabularySupport)
-            : base(Enumerable.Empty<IEdmModel>(), annotationsManager)
+        /// <param name="includeDefaultVocabularies">A value indicating enable/disable the built-in vocabulary supporting.</param>
+        public CsdlSemanticsModel(CsdlModel mainCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<CsdlModel> referencedCsdlModels, bool includeDefaultVocabularies)
+            : base(Enumerable.Empty<IEdmModel>(), annotationsManager, includeDefaultVocabularies)
         {
             this.astModel = mainCsdlModel;
             this.SetEdmReferences(astModel.CurrentModelReferences);
@@ -69,12 +70,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             // 1. build semantics for referenced models
             foreach (var tmp in referencedCsdlModels)
             {
-                var refModel = new CsdlSemanticsModel(tmp, this.DirectValueAnnotationsManager, this);
-                if (enableVocabularySupport)
-                {
-                    refModel.AddToReferencedModels(VocabularyModelProvider.VocabularyModels);
-                }
-
+                var refModel = new CsdlSemanticsModel(tmp, this.DirectValueAnnotationsManager, this, includeDefaultVocabularies);
                 this.AddReferencedModel(refModel);
             }
 
@@ -96,8 +92,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <param name="referencedCsdlModel">The referenced raw CsdlModel.</param>
         /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
         /// <param name="mainCsdlSemanticsModel">The CsdlSemanticsModel that will reference this new CsdlSemanticsModel. </param>
-        private CsdlSemanticsModel(CsdlModel referencedCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, CsdlSemanticsModel mainCsdlSemanticsModel)
-            : base(Enumerable.Empty<IEdmModel>(), annotationsManager)
+        private CsdlSemanticsModel(CsdlModel referencedCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, CsdlSemanticsModel mainCsdlSemanticsModel, bool includeDefaultVocabularies)
+            : base(Enumerable.Empty<IEdmModel>(), annotationsManager, includeDefaultVocabularies)
         {
             this.mainEdmModel = mainCsdlSemanticsModel;
             Debug.Assert(referencedCsdlModel.ParentModelReferences.Any(), "referencedCsdlModel.ParentModelReferences.Any()");

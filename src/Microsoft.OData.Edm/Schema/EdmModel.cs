@@ -26,17 +26,16 @@ namespace Microsoft.OData.Edm
         /// Initializes a new instance of the <see cref="EdmModel"/> class.
         /// </summary>
         public EdmModel()
-            : this(true)
+            : this(true /*includeDefaultVocabularies*/)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmModel"/> class.
         /// </summary>
-        /// <param name="enableBuiltInVocabularyModel">a boolean value indicating whether to embed the built vocabulary models.</param>
-        public EdmModel(bool enableBuiltInVocabularyModel)
-            : base(enableBuiltInVocabularyModel ? VocabularyModelProvider.VocabularyModels : Enumerable.Empty<IEdmModel>(),
-                  new EdmDirectValueAnnotationsManager())
+        /// <param name="includeDefaultVocabularies">a boolean value indicating whether to embed the built-in vocabulary models.</param>
+        public EdmModel(bool includeDefaultVocabularies)
+            : base(Enumerable.Empty<IEdmModel>(), new EdmDirectValueAnnotationsManager(), includeDefaultVocabularies)
         {
         }
 

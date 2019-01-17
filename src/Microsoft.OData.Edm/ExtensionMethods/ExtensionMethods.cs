@@ -1257,25 +1257,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Set annotation Org.OData.Community.V1.UrlEscapeFunction to <see cref="IEdmFunction"/>.
-        /// </summary>
-        /// <param name="model">The model to add annotation</param>
-        /// <param name="function">The target function to set the inline annotation</param>
-        public static void SetUrlEscapeFunction(this EdmModel model, IEdmFunction function)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(function, "function");
-
-            IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
-            IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
-
-            Debug.Assert(term != null, "term!=null");
-            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
-            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
-            model.SetVocabularyAnnotation(annotation);
-        }
-
-        /// <summary>
         /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to EntitySet
         /// </summary>
         /// <param name="model">The model to add annotation</param>
@@ -2390,30 +2371,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Determines whether the specified function is UrlEscape function or not.
-        /// </summary>
-        /// <param name="model">The Edm model.</param>
-        /// <param name="function">The specified function</param>
-        /// <returns><c>true</c> if the specified operation is UrlEscape function; otherwise, <c>false</c>.</returns>
-        public static bool IsUrlEscapeFunction(this IEdmModel model, IEdmFunction function)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(function, "function");
-
-            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(function, CommunityVocabularyModel.UrlEscapeFunctionTerm).FirstOrDefault();
-            if (annotation != null)
-            {
-                IEdmBooleanConstantExpression tagConstant = annotation.Value as IEdmBooleanConstantExpression;
-                if (tagConstant != null)
-                {
-                    return tagConstant.Value;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Checks whether all operations have the same return type
         /// </summary>
         /// <param name="operations">the list to check</param>
@@ -2708,6 +2665,51 @@ namespace Microsoft.OData.Edm
             }
 
             return result;
+        }
+        #endregion
+
+        #region UrlEscape
+        /// <summary>
+        /// Determines whether the specified function is UrlEscape function or not.
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="function">The specified function</param>
+        /// <returns><c>true</c> if the specified operation is UrlEscape function; otherwise, <c>false</c>.</returns>
+        internal static bool IsUrlEscapeFunction(this IEdmModel model, IEdmFunction function)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(function, "function");
+
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(function, CommunityVocabularyModel.UrlEscapeFunctionTerm).FirstOrDefault();
+            if (annotation != null)
+            {
+                IEdmBooleanConstantExpression tagConstant = annotation.Value as IEdmBooleanConstantExpression;
+                if (tagConstant != null)
+                {
+                    return tagConstant.Value;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Set annotation Org.OData.Community.V1.UrlEscapeFunction to <see cref="IEdmFunction"/>.
+        /// </summary>
+        /// <param name="model">The model to add annotation</param>
+        /// <param name="function">The target function to set the inline annotation</param>
+        internal static void SetUrlEscapeFunction(this EdmModel model, IEdmFunction function)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(function, "function");
+
+            IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
+            IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
+
+            Debug.Assert(term != null, "term!=null");
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
         }
         #endregion
 

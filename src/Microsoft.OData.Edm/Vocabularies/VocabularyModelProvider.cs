@@ -101,7 +101,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             {
                 IEdmModel model;
                 IEnumerable<EdmError> errors;
-                CsdlReader.TryParse(XmlReader.Create(stream), referenceModels, out model, out errors, enableVocabularySupport:false);
+                CsdlReader.TryParse(XmlReader.Create(stream), referenceModels, false, out model, out errors);
                 return model;
             }
         }
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             {
                 IEdmModel model;
                 IEnumerable<EdmError> errors;
-                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, referenceModels, out model, out errors, enableVocabularySupport:false);
+                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, referenceModels, false, out model, out errors);
                 return model;
             }
         }
