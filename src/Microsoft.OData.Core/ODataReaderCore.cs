@@ -345,7 +345,7 @@ namespace Microsoft.OData
         {
             get
             {
-                Debug.Assert(this.State == ODataReaderState.ResourceStart, "CurrentDerivedTypeValidator should only be called while reading a resource.");
+                Debug.Assert(this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.DeletedResourceStart, "CurrentDerivedTypeValidator should only be called while reading a resource.");
                 return this.ParentScope == null ? null : this.ParentScope.DerivedTypeValidator;
             }
         }
@@ -525,7 +525,7 @@ namespace Microsoft.OData
                 scope.ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(scope.ResourceType);
             }
 
-            if (scope.State == ODataReaderState.ResourceSetStart)
+            if (scope.State == ODataReaderState.ResourceSetStart || scope.State == ODataReaderState.DeltaResourceSetStart)
             {
                 scope.DerivedTypeValidator = this.CurrentScope.DerivedTypeValidator;
             }

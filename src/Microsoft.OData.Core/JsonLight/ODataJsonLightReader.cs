@@ -1900,7 +1900,7 @@ namespace Microsoft.OData.JsonLight
             this.ApplyResourceTypeNameFromPayload(currentResource.TypeName);
 
             // Validate type with derived type validator if available
-            if (this.CurrentDerivedTypeValidator != null && !(this.ReadingDelta && this.CurrentResourceDepth == 0))
+            if (this.CurrentDerivedTypeValidator != null)
             {
                 this.CurrentDerivedTypeValidator.ValidateResourceType(this.CurrentResourceType);
             }

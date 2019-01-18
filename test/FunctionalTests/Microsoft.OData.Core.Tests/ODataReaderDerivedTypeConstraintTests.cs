@@ -594,6 +594,39 @@ namespace Microsoft.OData.Tests
         }
         #endregion
 
+        #region Delta scenarios
+        [Fact]
+        public void ReadingDeltaResourceSetMultipleNavigationProppertyWithOrWithoutDerivedTypeConstraintWorks()
+        {
+            // Add a <NavigationProperty Name="FriendCustomers" Type="Collection(NS.Customer)" />
+            var navigationProperty = this.edmCustomerType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Target = this.edmCustomerType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Name = "FriendCustomers"
+            });
+
+            string payload = "{\"@context\":\"http://example.com/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FriendCustomers@delta\":[{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}, {\"@odata.type\":\"#NS.NormalCustomer\",\"Id\":9,\"Email\":\"a@abc.com\"}]}]}";
+
+            // Navigation property doesn't have the derived type constraint.
+            var items = ReadDeltaPayload(payload, this.edmModel, this.edmCustomerType, ODataVersion.V401);
+            Assert.Equal(6, items.Count); // 1 top level delta resource set
+                                          //    [ 1 deleted resource
+                                          //      1 nested resource info
+                                          //         [ 1 nested delta resource set
+                                          //             {2 nested delta resource }
+                                          //         ]
+                                          //    ]
+
+            // Negative test case --Navigation property has the derived type constraint.
+            SetDerivedTypeAnnotation(this.edmModel, navigationProperty, "NS.VipCustomer");
+
+            Action test = () => ReadDeltaPayload(payload, this.edmModel, this.edmCustomerType, ODataVersion.V401);
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "nested resource", "FriendCustomers"), exception.Message);
+        }
+        #endregion
+
         private static void SetDerivedTypeAnnotation(EdmModel model, IEdmVocabularyAnnotatable target, params string[] derivedTypes)
         {
             IEdmTerm term = ValidationVocabularyModel.DerivedTypeConstraintTerm;
@@ -607,17 +640,24 @@ namespace Microsoft.OData.Tests
         {
             Func<ODataMessageReader, ODataReader> createReader = (msReader) => msReader.CreateODataResourceReader(source, sourceType);
 
-            return ReadPayload(payload, edmModel, createReader);
+            return ReadPayload(payload, edmModel, createReader, ODataVersion.V4);
         }
 
         private Stack<ODataItem> ReadEntitySetPayload(string payload, IEdmModel edmModel, IEdmEntitySetBase source, IEdmEntityType sourceType)
         {
             Func<ODataMessageReader, ODataReader> createReader = (msReader) => msReader.CreateODataResourceSetReader(source, sourceType);
 
-            return ReadPayload(payload, edmModel, createReader);
+            return ReadPayload(payload, edmModel, createReader, ODataVersion.V4);
         }
 
-        private Stack<ODataItem> ReadPayload(string payload, IEdmModel edmModel, Func<ODataMessageReader, ODataReader> createReader)
+        private Stack<ODataItem> ReadDeltaPayload(string payload, IEdmModel edmModel, IEdmEntityType sourceType, ODataVersion version)
+        {
+            Func<ODataMessageReader, ODataReader> createReader = (msReader) => msReader.CreateODataDeltaResourceSetReader(sourceType);
+
+            return ReadPayload(payload, edmModel, createReader, version);
+        }
+
+        private Stack<ODataItem> ReadPayload(string payload, IEdmModel edmModel, Func<ODataMessageReader, ODataReader> createReader, ODataVersion version)
         {
             var message = new InMemoryMessage()
             {
@@ -629,7 +669,7 @@ namespace Microsoft.OData.Tests
             {
                 BaseUri = new Uri(TestBaseUri + "$metadata"),
                 EnableMessageStreamDisposal = true,
-                Version = ODataVersion.V4,
+                Version = version,
             };
 
             Stack<ODataItem> items = new Stack<ODataItem>();
@@ -643,6 +683,8 @@ namespace Microsoft.OData.Tests
                         case ODataReaderState.ResourceSetEnd:
                         case ODataReaderState.ResourceEnd:
                         case ODataReaderState.NestedResourceInfoEnd:
+                        case ODataReaderState.DeltaResourceSetEnd:
+                        case ODataReaderState.DeletedResourceEnd:
                             items.Push(reader.Item);
                             break;
                     }

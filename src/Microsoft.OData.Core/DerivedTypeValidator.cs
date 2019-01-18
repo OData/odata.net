@@ -23,7 +23,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="expectedType">The exptected type.</param>
+        /// <param name="expectedType">The expected type.</param>
         /// <param name="derivedTypeConstraints">The derived type contraints.</param>
         /// <param name="resourceKind">The resource type, be used at error message.</param>
         /// <param name="resourceName">The resource name, be used at error message.</param>
