@@ -516,7 +516,7 @@ namespace Microsoft.OData {
         internal const string ODataJsonLightContextUriParser_NoModel = "ODataJsonLightContextUriParser_NoModel";
         internal const string ODataJsonLightContextUriParser_InvalidContextUrl = "ODataJsonLightContextUriParser_InvalidContextUrl";
         internal const string ODataJsonLightContextUriParser_LastSegmentIsKeySegment = "ODataJsonLightContextUriParser_LastSegmentIsKeySegment";
-        internal const string ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute = "ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute";
+        internal const string ODataJsonLightContextUriParser_TopLevelContextUrlIsInvalid = "ODataJsonLightContextUriParser_TopLevelContextUrlIsInvalid";
         internal const string ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject = "ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject";
         internal const string ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst = "ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst";
         internal const string ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty = "ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty";

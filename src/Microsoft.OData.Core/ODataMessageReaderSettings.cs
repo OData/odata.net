@@ -177,6 +177,11 @@ namespace Microsoft.OData
         public bool ReadUntypedAsString { get; set; }
 
         /// <summary>
+        /// Gets or sets current request Uri.
+        /// </summary>
+        public Uri RequestUri { get; set; }
+
+        /// <summary>
         /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
         /// be read and false if the annotation should be skipped. A null value indicates that all annotations should be skipped.
         /// </summary>
@@ -262,6 +267,7 @@ namespace Microsoft.OData
             this.validations = other.validations;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
+            this.RequestUri = other.RequestUri;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;

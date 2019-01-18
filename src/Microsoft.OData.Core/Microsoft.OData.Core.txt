@@ -543,7 +543,7 @@ ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption=A '$selec
 ODataJsonLightContextUriParser_NoModel=No model was specified for the ODataMessageReader. A message reader requires a model for JSON Light payload to be specified in the ODataMessageReader constructor.
 ODataJsonLightContextUriParser_InvalidContextUrl=The context URL '{0}' is invalid.
 ODataJsonLightContextUriParser_LastSegmentIsKeySegment=Last segment in context URL '{0}' should not be KeySegment.
-ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute=The top level context URL '{0}' should be an absolute Uri.
+ODataJsonLightContextUriParser_TopLevelContextUrlIsInvalid=The top level context URL '{0}' is not a valid absolute or relative Uri.
 
 ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject=Invalid primitive value '{0}' for @removed annotation. @removed annotation must be a JSON object, optionally containing a 'reason' property.
 ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst=The 'odata.type' instance annotation in a resource object is preceded by an invalid property. In OData, the 'odata.type' instance annotation must be either the first property in the JSON object or the second if the 'odata.context' instance annotation is present.

@@ -255,7 +255,8 @@ namespace Microsoft.OData.JsonLight
                     payloadKind,
                     this.MessageReaderSettings.ClientCustomTypeResolver,
                     this.JsonLightInputContext.ReadingResponse,
-                    this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                    this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                    this.MessageReaderSettings.RequestUri);
             }
 
             this.contextUriParseResult = parseResult;
@@ -306,7 +307,9 @@ namespace Microsoft.OData.JsonLight
                             contextUriAnnotationValue,
                             payloadKind,
                             this.MessageReaderSettings.ClientCustomTypeResolver,
-                            this.JsonLightInputContext.ReadingResponse);
+                            this.JsonLightInputContext.ReadingResponse,
+                            this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                            this.MessageReaderSettings.RequestUri);
                     }
 
 #if DEBUG
