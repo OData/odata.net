@@ -1217,6 +1217,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal2");
         }
 
+
+        [Fact]
+        public void GroupedByComputePropertiesTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "Median asc"},
+                    {"$apply", "compute(1 as Median)/groupby((Median))"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Median");
+        }
+
         [Fact]
         public void ReferenceComputeAliasCreatedBeforeAggrageteThrows()
         {

@@ -80,7 +80,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         internal List<string> GetLastAggregatedPropertyNames()
         {
-            if (lastAggregateExpressions == null && lastComputeExpressions == null)
+            if (lastAggregateExpressions == null && lastComputeExpressions == null && lastGroupByPropertyNodes == null)
             {
                 return null;
             }
@@ -94,6 +94,12 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 result.AddRange(lastComputeExpressions.Select(statement => statement.Alias));
             }
+
+            if (lastGroupByPropertyNodes != null)
+            {
+                result.AddRange(lastGroupByPropertyNodes.Select(statement => statement.Name));
+            }
+
             return result;
         }
 
