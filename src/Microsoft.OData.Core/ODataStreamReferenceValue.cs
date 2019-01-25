@@ -60,7 +60,7 @@ namespace Microsoft.OData
         /// PrimitiveTypeKind of the stream.
         /// </summary>
         /// <returns>
-        /// EdmPrimitiveTypeKind.String, if the contents is a plain string; 
+        /// EdmPrimitiveTypeKind.String, if the contents is a plain string;
         /// EdmPrimitiveTypeKind.None if it could be a binary string
         /// </returns>
         public EdmPrimitiveTypeKind TypeKind
@@ -89,12 +89,15 @@ namespace Microsoft.OData
         }
     }
 
+    /// <summary>
+    /// Represents a Text value to be written as a stream.
+    /// </summary>
     public sealed class ODataTextStreamValue : ODataStreamValue
     {
         /// <summary>
         /// Class for writing a string value as text
         /// </summary>
-        public ODataTextStreamValue() : base (EdmPrimitiveTypeKind.String)
+        public ODataTextStreamValue() : base(EdmPrimitiveTypeKind.String)
         {
         }
     }

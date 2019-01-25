@@ -19,13 +19,13 @@ namespace Microsoft.OData
     internal abstract class ODataBatchOperationStream : Stream
     {
         /// <summary>Listener interface to be notified of operation changes.</summary>
-        private IODataBatchOperationListener listener;
+        private IODataStreamListener listener;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
-        internal ODataBatchOperationStream(IODataBatchOperationListener listener)
+        internal ODataBatchOperationStream(IODataStreamListener listener)
         {
             Debug.Assert(listener != null, "listener != null");
 
@@ -55,7 +55,7 @@ namespace Microsoft.OData
                 {
                     // Tell the listener that the stream is being disposed; we expect
                     // that no asynchronous action is triggered by doing so.
-                    this.listener.BatchOperationContentStreamDisposed();
+                    this.listener.StreamDisposed();
                     this.listener = null;
                 }
             }

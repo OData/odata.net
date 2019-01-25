@@ -309,8 +309,12 @@ namespace Microsoft.OData
 
             if (!writingResponse)
             {
-                // Stream properties are only valid in responses; writers fail if they encounter them in requests.
-                throw new ODataException(Strings.WriterValidationUtils_StreamPropertyInRequest(streamProperty.Name));
+                // Read/Write links and ETags on Stream properties are only valid in responses; writers fail if they encounter them in requests.
+                ODataStreamReferenceValue referenceValue = streamProperty.Value as ODataStreamReferenceValue;
+                if (referenceValue != null && referenceValue.EditLink != null || referenceValue.ReadLink != null || referenceValue.ETag != null)
+                {
+                    throw new ODataException(Strings.WriterValidationUtils_StreamPropertyInRequest(streamProperty.Name));
+                }
             }
         }
 

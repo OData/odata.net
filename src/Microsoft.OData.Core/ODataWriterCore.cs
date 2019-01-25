@@ -23,7 +23,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Base class for OData writers that verifies a proper sequence of write calls on the writer.
     /// </summary>
-    internal abstract class ODataWriterCore : ODataWriter, IODataOutputInStreamErrorListener, IODataBatchOperationListener
+    internal abstract class ODataWriterCore : ODataWriter, IODataOutputInStreamErrorListener, IODataStreamListener
     {
         /// <summary>The writer validator to use.</summary>
         protected readonly IWriterValidator WriterValidator;
@@ -785,7 +785,7 @@ namespace Microsoft.OData
         /// <summary>
         /// This method is called when a stream is requested. It is a no-op.
         /// </summary>
-        void IODataBatchOperationListener.BatchOperationContentStreamRequested()
+        void IODataStreamListener.StreamRequested()
         {
         }
 
@@ -794,16 +794,16 @@ namespace Microsoft.OData
         /// This method is called when an async stream is requested. It is a no-op.
         /// </summary>
         /// <returns>A task for method called when a stream is requested.</returns>
-        Task IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync()
+        Task IODataStreamListener.StreamRequestedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataBatchOperationListener)this).BatchOperationContentStreamRequested());
+            return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataStreamListener)this).StreamRequested());
         }
 #endif
 
         /// <summary>
         /// This method is called when a stream is disposed.
         /// </summary>
-        void IODataBatchOperationListener.BatchOperationContentStreamDisposed()
+        void IODataStreamListener.StreamDisposed()
         {
             Debug.Assert(this.State == WriterState.Stream || this.State == WriterState.String, "Stream was disposed when not in WriterState.Stream state.");
 

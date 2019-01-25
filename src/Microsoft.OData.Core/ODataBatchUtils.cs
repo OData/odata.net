@@ -81,7 +81,7 @@ namespace Microsoft.OData
         internal static ODataBatchOperationReadStream CreateBatchOperationReadStream(
             ODataBatchReaderStream batchReaderStream,
             ODataBatchOperationHeaders headers,
-            IODataBatchOperationListener operationListener)
+            IODataStreamListener operationListener)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -110,7 +110,7 @@ namespace Microsoft.OData
         /// <returns>A new <see cref="ODataBatchOperationWriteStream"/> instance.</returns>
         internal static ODataBatchOperationWriteStream CreateBatchOperationWriteStream(
             Stream outputStream,
-            IODataBatchOperationListener operationListener)
+            IODataStreamListener operationListener)
         {
             Debug.Assert(outputStream != null, "outputStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");

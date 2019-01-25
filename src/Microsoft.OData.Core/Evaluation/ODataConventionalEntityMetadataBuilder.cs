@@ -355,6 +355,9 @@ namespace Microsoft.OData.Evaluation
             return ODataUtilsInternal.ConcatEnumerables(this.ResourceMetadataContext.Resource.NonComputedFunctions, this.MissingOperationGenerator.GetComputedFunctions());
         }
 
+        // mikep todo: why does MarkNestedResourceInfoProcessed and GetNextUprocessedNavigationLink exist here with 
+        // apparently same implementation as in base class?
+
         /// <summary>
         /// Marks the given nested resource info as processed.
         /// </summary>

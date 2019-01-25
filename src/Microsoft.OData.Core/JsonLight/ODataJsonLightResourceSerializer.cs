@@ -157,7 +157,7 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataEditLink);
                 this.JsonWriter.WriteValue(this.UriToString(
-                    resource.HasNonComputedEditLink
+                    resource.HasNonComputedEditLink || !editLinkUriValue.IsAbsoluteUri
                     ? editLinkUriValue
                     : this.MetadataDocumentBaseUri.MakeRelativeUri(editLinkUriValue)));
                 resourceState.EditLinkWritten = true;
@@ -240,6 +240,7 @@ namespace Microsoft.OData.JsonLight
 
             ODataResourceBase resource = resourceState.Resource;
 
+            // write computed navigation properties
             var navigationLinkInfo = resource.MetadataBuilder.GetNextUnprocessedNavigationLink();
             while (navigationLinkInfo != null)
             {
@@ -248,6 +249,14 @@ namespace Microsoft.OData.JsonLight
 
                 this.WriteNavigationLinkMetadata(navigationLinkInfo.NestedResourceInfo, duplicatePropertyNameChecker);
                 navigationLinkInfo = resource.MetadataBuilder.GetNextUnprocessedNavigationLink();
+            }
+
+            // write computed stream properties
+            ODataProperty streamProperty = resource.MetadataBuilder.GetNextUnprocessedStreamProperty();
+            while (streamProperty != null)
+            {
+                this.WriteProperty(streamProperty, resourceState.ResourceType, /*isTopLevel*/ false, duplicatePropertyNameChecker);
+                streamProperty = resource.MetadataBuilder.GetNextUnprocessedStreamProperty();
             }
 
             // write "odata.actions" metadata

@@ -56,44 +56,6 @@ namespace Microsoft.OData
             chars = new char[charLength];
         }
 
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            int bytesCopied = 0;
-            int bytesRemaining = bytes.Length - bytesOffset;
-
-            while (bytesCopied < count)
-            {
-                if (bytesRemaining == 0)
-                {
-                    int charsRead = reader(chars, offset, charLength);
-                    if (charsRead < 1)
-                    {
-                        break;
-                    }
-
-                    chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
-                    bytes = Convert.FromBase64CharArray(chars, 0, charsRead);
-
-
-                    bytesRemaining = bytes.Length;
-                    bytesOffset = 0;
-
-                    // If the remaining characters were padding characters then no bytes will be returned
-                    if (bytesRemaining < 1)
-                    {
-                        break;
-                    }
-                }
-
-                buffer[bytesCopied] = bytes[bytesOffset];
-                bytesCopied++;
-                bytesOffset++;
-                bytesRemaining--;
-            }
-
-            return bytesCopied;
-        }
-
         /// <summary>
         /// Determines if the stream can read - this one can
         /// </summary>
@@ -133,6 +95,43 @@ namespace Microsoft.OData
         {
             get { throw new NotSupportedException(); }
             set { throw new NotSupportedException(); }
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int bytesCopied = 0;
+            int bytesRemaining = bytes.Length - bytesOffset;
+
+            while (bytesCopied < count)
+            {
+                if (bytesRemaining == 0)
+                {
+                    int charsRead = reader(chars, offset, charLength);
+                    if (charsRead < 1)
+                    {
+                        break;
+                    }
+
+  //                  chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
+                    bytes = Convert.FromBase64CharArray(chars, 0, charsRead);
+
+                    bytesRemaining = bytes.Length;
+                    bytesOffset = 0;
+
+                    // If the remaining characters were padding characters then no bytes will be returned
+                    if (bytesRemaining < 1)
+                    {
+                        break;
+                    }
+                }
+
+                buffer[bytesCopied] = bytes[bytesOffset];
+                bytesCopied++;
+                bytesOffset++;
+                bytesRemaining--;
+            }
+
+            return bytesCopied;
         }
 
         /// <summary>

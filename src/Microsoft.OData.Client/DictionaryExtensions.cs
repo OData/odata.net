@@ -88,9 +88,13 @@ namespace Microsoft.OData.Client
         }
 #else
         /// <summary>
-        /// Convenience function that wraps ConcurrentDictionary.TryAdd() to allow same signature as IDictionary
+        /// Convenience function that wraps ConcurrentDictionary.TryAdd() to allow same signature as IDictionary.
         /// </summary>
-        public static void Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
+        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>        /// <param name="self">The ConcurrentDictionary to which to add the item.</param>
+        /// <param name="key">The key to use in adding the item to the ConcurrentDictionary.</param>
+        /// <param name="value">The value to add to the ConcurrentDictionary.</param>
+        internal static void Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
         {
             if (!self.TryAdd(key, value))
             {
@@ -99,9 +103,16 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Convenience function for ConcurrentDictionary to allow same signature as IDictionary
+        /// Convenience function for ConcurrentDictionary to allow same signature as IDictionary.
         /// </summary>
-        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key)
+        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="self">The concurrent dictionary from which to remove the item.</param>
+        /// <param name="key">The key of the item to be removed.</param>
+        /// <returns>
+        /// True, if the item is removed, otherwise False.
+        /// </returns>
+        internal static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key)
         {
             return ((IDictionary<TKey, TValue>)self).Remove(key);
         }

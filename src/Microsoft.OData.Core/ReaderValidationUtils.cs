@@ -68,12 +68,9 @@ namespace Microsoft.OData
 
             if (structuredType != null && structuredType.IsOpen)
             {
-                // If no property match was found in the metadata and an error wasn't raised,
-                // it is an open property (which is not supported for streams).
                 if (streamEdmProperty == null && throwOnUndeclaredLinkProperty)
                 {
-                    // Fails with the correct error message.
-                    ValidationUtils.ValidateOpenPropertyValue(streamProperty.Name, streamProperty.Value);
+                    throw new ODataException(Strings.ValidationUtils_OpenStreamProperty(streamProperty.Name));
                 }
             }
         }

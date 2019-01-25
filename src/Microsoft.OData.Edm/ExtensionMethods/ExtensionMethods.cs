@@ -1823,6 +1823,30 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Determines whether the specified property is a key for its contained type.
+        /// </summary>
+        /// <param name="property">The property that may be a key.</param>
+        /// <returns>True, if the property is a key, False if the property is not a key.</returns>
+        public static bool IsKey(this IEdmProperty property)
+        {
+            EdmUtil.CheckArgumentNull(property, "property");
+            IEdmEntityType entityType = property.DeclaringType as IEdmEntityType;
+
+            if (entityType != null)
+            {
+                foreach (IEdmProperty key in entityType.Key())
+                {
+                    if (key == property)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Gets the declared alternate keys of the most defined entity with a declared key present.
         /// </summary>
         /// <param name="model">The model to be used.</param>

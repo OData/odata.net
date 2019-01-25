@@ -177,7 +177,7 @@ namespace Microsoft.OData.Json
         /// Creates a stream for reading a stream value
         /// </summary>
         /// <returns>A Stream used to read a stream value</returns>
-        public Stream CreateReadStream()
+        public virtual Stream CreateReadStream()
         {
             IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
             if (!this.isBuffering && streamReader != null)
@@ -185,17 +185,17 @@ namespace Microsoft.OData.Json
                 return streamReader.CreateReadStream();
             }
 
+            Stream result = new MemoryStream(this.Value == null ? new byte[0] :
+                           Convert.FromBase64String((string)this.Value));
             this.innerReader.Read();
-
-            return new MemoryStream(
-                Convert.FromBase64String(((string)this.Value).Replace('_', '/').Replace('-', '+')));
+            return result;
         }
 
         /// <summary>
         /// Creates a TextReader for reading a text value.
         /// </summary>
         /// <returns>A TextReader for reading the text value.</returns>
-        public TextReader CreateTextReader()
+        public virtual TextReader CreateTextReader()
         {
             IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
             if (!this.isBuffering && streamReader != null)
@@ -203,26 +203,26 @@ namespace Microsoft.OData.Json
                 return streamReader.CreateTextReader();
             }
 
+            TextReader result = new StringReader(this.Value == null ? "" : (string)this.Value);
             this.innerReader.Read();
-
-            return new StringReader((string)this.Value);
+            return result;
         }
 
         /// <summary>
         /// Whether or not the current value can be streamed
         /// </summary>
         /// <returns>True if the current value can be streamed, otherwise false</returns>
-        public bool CanStream()
+        public virtual bool CanStream()
         {
             IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
             if (!this.isBuffering && streamReader != null)
             {
                 return streamReader.CanStream();
             }
-            
+
             return (this.Value is string || this.Value == null);
         }
-        
+
         /// <summary>
         /// Reads the next node from the input.
         /// </summary>

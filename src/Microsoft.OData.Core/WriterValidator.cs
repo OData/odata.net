@@ -207,7 +207,9 @@ namespace Microsoft.OData
                 WriterValidationUtils.ValidateNullPropertyValue(expectedPropertyTypeReference, propertyName, model);
             }
 
-            if (isTopLevel && this.settings.LibraryCompatibility >= ODataLibraryCompatibility.Version7)
+            if (isTopLevel
+                && (this.settings.LibraryCompatibility >= ODataLibraryCompatibility.Version7
+                || this.settings.Version >= ODataVersion.V401))
             {
                 // From the spec:
                 // 11.2.3 Requesting Individual Properties

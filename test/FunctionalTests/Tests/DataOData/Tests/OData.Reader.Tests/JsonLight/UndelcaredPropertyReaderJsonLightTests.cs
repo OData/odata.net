@@ -83,13 +83,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new UndeclaredPropertyTestCase
                 {
-                    DebugDescription = "Navigation link with another odata.type annotation - should fail",
+                    DebugDescription = "Navigation link with odata.type annotation",
                     Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navigationlink\"",
                     IsLink = true,
-                    ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("UndeclaredProperty", "http://odata.org/navigationlink")
                 },
                 new UndeclaredPropertyTestCase
                 {

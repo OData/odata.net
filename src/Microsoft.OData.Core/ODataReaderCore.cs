@@ -928,7 +928,7 @@ namespace Microsoft.OData
                     state == ODataReaderState.Exception && item == null ||
                     state == ODataReaderState.ResourceStart && (item == null || item is ODataResource) ||
                     state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
-                    state == ODataReaderState.Primitive && (item == null || item is ODataPrimitiveValue) ||
+                    state == ODataReaderState.Primitive && (item == null || item is ODataPrimitiveValue || item is ODataNullValue) ||
                     state == ODataReaderState.Stream && (item == null || item is ODataStreamValue) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||

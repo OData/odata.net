@@ -25,7 +25,7 @@ namespace Microsoft.OData.JsonLight
     internal sealed class ODataJsonLightBatchBodyContentReaderStream : MemoryStream
     {
         /// <summary>Listener interface to be notified of operation changes.</summary>
-        private IODataBatchOperationListener listener;
+        private IODataStreamListener listener;
 
         /// <summary>
         /// Cached body content which needs to be processed later when we have information
@@ -37,7 +37,7 @@ namespace Microsoft.OData.JsonLight
         /// Constructor using default encoding (Base64Url without the BOM preamble).
         /// </summary>
         /// <param name="listener">The batch operation listener.</param>
-        internal ODataJsonLightBatchBodyContentReaderStream(IODataBatchOperationListener listener)
+        internal ODataJsonLightBatchBodyContentReaderStream(IODataStreamListener listener)
         {
             this.listener = listener;
         }
@@ -161,7 +161,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     // Tell the listener that the stream is being disposed; we expect
                     // that no asynchronous action is triggered by doing so.
-                    this.listener.BatchOperationContentStreamDisposed();
+                    this.listener.StreamDisposed();
                     this.listener = null;
                 }
             }

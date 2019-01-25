@@ -1,0 +1,429 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataJsonLightStreamWritingTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using FluentAssertions;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
+using Xunit;
+
+namespace Microsoft.OData.Tests.JsonLight
+{
+    public class ODataJsonLightStreamWritingTests
+    {
+        private EdmModel model;
+        private IEdmEntitySet customersEntitySet;
+        private string binaryValue;
+        private string resourcePayload = "{{\"@context\":\"http://testservice/$metadata#customers/$entity\",\"id\":\"1\"{0}}}";
+
+        public ODataJsonLightStreamWritingTests()
+        {
+            binaryValue = Convert.ToBase64String(CreateBinaryStreamValue().ToArray());
+        }
+
+        private ODataResource resource = new ODataResource
+        {
+            Properties = new ODataProperty[]
+            {
+                new ODataProperty { Name = "id", Value = "1" },
+            }
+        };
+
+        [Fact]
+        public void CanWriteIndividualPrimitiveProperty()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"age\":37"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write some properties within the resource and others separately
+                writer.WriteStart(resource);
+                writer.Write(new ODataProperty { Name = "age", Value = 37 });
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+        
+        [Fact]
+        public void CanWriteBinaryPropertyAsStream()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"binaryAsStream\":\"" + binaryValue + "\""
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.Write(new ODataProperty
+                {
+                    Name = "binaryAsStream",
+                    Value = new ODataBinaryStreamValue(CreateBinaryStreamValue())
+                });
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteTextPropertyAsStream()
+        {
+            string textValue = "My String Value";
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"textAsStream\":\"" + textValue + "\""
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataProperty
+                {
+                    Name = "textAsStream",
+                    Value = new ODataTextStreamValue()
+                });
+                using (TextWriter textWriter = writer.CreateTextWriter())
+                {
+                    textWriter.Write(textValue);
+                    textWriter.Flush();
+                };
+                writer.WriteEnd(); // property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteIndividualStreamPropertyMetadata()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"stream@mediaEditLink\":\"http://testservice/customers/1/stream\"" +
+                ",\"stream@mediaContentType\":\"text/plain\""
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write metadata for stream property
+                writer.WriteStart(resource);
+                writer.Write(new ODataProperty
+                {
+                    Name = "stream",
+                    Value = new ODataStreamReferenceValue
+                    {
+                        EditLink = new Uri("http://testservice/customers/1/stream", UriKind.Absolute),
+                        ContentType = "text/plain"
+                    }
+                });
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteIndividualStreamPropertyValue()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"stream\":\"" + binaryValue + "\""
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write metadata for stream property
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataProperty
+                {
+                    Name = "stream",
+                    Value = new ODataStreamReferenceValue()
+                });
+                using (Stream binaryStream = writer.CreateBinaryWriteStream())
+                {
+                    CreateBinaryStreamValue().CopyTo(binaryStream);
+                    binaryStream.Flush();
+                } // stream must be disposed before continuing
+                writer.WriteEnd();  // stream property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteIndividualStreamPropertyValueAndMetadata()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"stream@mediaEditLink\":\"http://testservice/customers/1/stream\"" +
+                ",\"stream@mediaContentType\":\"text/plain\"" +
+                ",\"stream\":\"" + binaryValue + "\""
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write metadata for stream property
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataProperty
+                {
+                    Name = "stream",
+                    Value = new ODataStreamReferenceValue
+                    {
+                        EditLink = new Uri("http://testservice/customers/1/stream", UriKind.Absolute),
+                        ContentType = "text/plain"
+                    }
+                });
+                using (Stream binaryStream = writer.CreateBinaryWriteStream())
+                {
+                    CreateBinaryStreamValue().CopyTo(binaryStream);
+                    binaryStream.Flush();
+                } // stream must be disposed before continuing
+                writer.WriteEnd();  // stream property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteCollectionOfPrimitives()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"comments\":[\"one\",\"two\",null]"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write individual elements within a collection
+                writer.WriteStart(resource);
+                writer.WriteStart(
+                     new ODataNestedResourceInfo { Name = "comments" });
+                writer.WriteStart(new ODataResourceSet());
+                writer.WritePrimitive(new ODataPrimitiveValue("one"));
+                writer.WritePrimitive(new ODataPrimitiveValue("two"));
+                writer.WritePrimitive(null);
+                writer.WriteEnd(); // collection
+                writer.WriteEnd(); // nested info
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteDynamicCollectionOfStreams()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"streamCollection@type\":\"Collection(Stream)\"" +
+                ",\"streamCollection\":[\"" + binaryValue + "\",\"" + binaryValue + "\"]"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write individual elements in a collection writing to a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataNestedResourceInfo { Name = "streamCollection" });
+                writer.WriteStart(new ODataResourceSet { TypeName = "Collection(Edm.Stream)" });
+                writer.WriteStream(new ODataBinaryStreamValue(CreateBinaryStreamValue()));
+                writer.WriteStream(new ODataBinaryStreamValue(CreateBinaryStreamValue()));
+                writer.WriteEnd(); // collection
+                writer.WriteEnd(); // nestedinfo
+                writer.WriteEnd(); //resource
+
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteDynamicCollectionOfBinaryAsStream()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"binaryCollection@type\":\"Collection(Binary)\"" +
+                ",\"binaryCollection\":[\"" + binaryValue + "\",\"" + binaryValue + "\"]"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write individual elements in a binary collection
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataNestedResourceInfo { Name = "binaryCollection" });
+                writer.WriteStart(new ODataResourceSet{TypeName = "Collection(Edm.Binary)"});
+                // write a binary value
+                writer.WriteStream(new ODataBinaryStreamValue(CreateBinaryStreamValue()));
+                writer.WriteStream(new ODataBinaryStreamValue(CreateBinaryStreamValue()));
+                writer.WriteEnd(); // collection
+                writer.WriteEnd(); // nested property
+
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteCollectionOfTextAsStream()
+        {
+            string textString = "My String Value";
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"comments\":[\"" + textString + "\",\"" + textString + "\"]"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write individual elements in a text collection
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataNestedResourceInfo { Name = "comments" });
+                writer.WriteStart(new ODataResourceSet());
+                // write text values
+                using (TextWriter textWriter = writer.CreateTextWriter())
+                {
+                    textWriter.Write(textString);
+                    textWriter.Flush();
+                }
+                using (TextWriter textWriter = writer.CreateTextWriter())
+                {
+                    textWriter.Write(textString);
+                    textWriter.Flush();
+                }
+                writer.WriteEnd(); // collection
+                writer.WriteEnd(); // nested property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteUntypedCollection()
+        {
+            string textString = "My String Value";
+            string expectedPayload = String.Format(resourcePayload,
+//                ",\"untypedCollection@type\":\"Collection(Untyped)\"" +
+                ",\"untypedCollection\":[" +
+                "\"" + binaryValue + "\"" +
+                ",\"" + textString + "\"" +
+                ",\"" + textString + "\"" +
+                ",null" +
+                ",-10.5]"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write individual elements in a text collection
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataNestedResourceInfo { Name = "untypedCollection", IsCollection = true });
+                writer.WriteStart(new ODataResourceSet { TypeName = "Collection(Edm.Untyped)" });
+                writer.WriteStream(new ODataBinaryStreamValue(CreateBinaryStreamValue()));
+                writer.WritePrimitive(new ODataPrimitiveValue(textString));
+                using (TextWriter textWriter = writer.CreateTextWriter())
+                {
+                    textWriter.Write(textString);
+                    textWriter.Flush();
+                }
+                writer.WritePrimitive(null);
+                writer.WritePrimitive(new ODataPrimitiveValue(-10.5));
+                writer.WriteEnd(); // collection
+                writer.WriteEnd(); // nested property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        #region Test Helper Methods
+
+        private IEdmModel GetModel()
+        {
+            if (this.model == null)
+            {
+                var model = new EdmModel();
+
+                var customerType = new EdmEntityType("test", "customer", null, false, true);
+                customerType.AddKeys(customerType.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false));
+                customerType.AddStructuralProperty("name", EdmPrimitiveTypeKind.String);
+                customerType.AddStructuralProperty("age", EdmPrimitiveTypeKind.Int32, false);
+                customerType.AddStructuralProperty("stream", EdmPrimitiveTypeKind.Stream);
+                customerType.AddStructuralProperty("binaryAsStream", EdmPrimitiveTypeKind.Binary);
+                customerType.AddStructuralProperty("textAsStream", EdmPrimitiveTypeKind.String);
+                customerType.AddStructuralProperty("comments", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
+                model.AddElement(customerType);
+
+                var container = model.AddEntityContainer("test", "container");
+                this.customersEntitySet = container.AddEntitySet("customers", customerType);
+
+                this.model = model;
+            }
+
+            return this.model;
+        }
+
+        private void RunTest(Action<ODataWriter> test, string expectedPayload)
+        {
+            Stream stream = new MemoryStream();
+            ODataWriter writer = CreateODataWriter(stream);
+            test(writer);
+            string payload = ReadPayload(stream);
+            payload.Should().Be(expectedPayload);
+        }
+
+        private string ReadPayload(Stream stream)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+            return new StreamReader(stream).ReadToEnd();
+        }
+
+        private MemoryStream CreateBinaryStreamValue()
+        {
+            MemoryStream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write("binaryStream");
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+        private ODataWriter CreateODataWriter(Stream stream)
+        {
+            return CreateODataWriter(stream, ODataVersion.V401, false, false);
+        }
+
+        private ODataWriter CreateODataWriter(Stream stream, ODataVersion version, bool isRequest, bool fullMetadata)
+        {
+            var settings = new ODataMessageWriterSettings
+            {
+                Version = version,
+                ODataUri = new ODataUri
+                {
+                    ServiceRoot = new Uri("http://testService"),
+                    RequestUri = new Uri("http://testService/customers")
+                },
+            };
+
+            ODataMessageWriter messageWriter;
+
+            if (isRequest)
+            {
+                IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
+                if (fullMetadata)
+                {
+                    requestMessage.SetHeader("Content-Type", "application/json;odata.metadata=full");
+                }
+               messageWriter = new ODataMessageWriter(requestMessage, settings, this.GetModel());
+            }
+            else
+            {
+                IODataResponseMessage responseMessage = new InMemoryMessage { Stream = stream };
+                if (fullMetadata)
+                {
+                    responseMessage.SetHeader("Content-Type", "application/json;odata.metadata=full");
+                }
+                messageWriter =  new ODataMessageWriter(responseMessage, settings, this.GetModel());
+            }
+
+            ODataWriter writer = messageWriter.CreateODataResourceWriter(this.customersEntitySet, this.customersEntitySet.EntityType());
+            return writer;
+        }
+
+        #endregion
+    }
+}

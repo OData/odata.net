@@ -21,7 +21,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Abstract class for writing OData batch messages; also verifies the proper sequence of write calls on the writer.
     /// </summary>
-    public abstract class ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener
+    public abstract class ODataBatchWriter : IODataStreamListener, IODataOutputInStreamErrorListener
     {
         /// <summary>The output context to write to.</summary>
         private readonly ODataOutputContext outputContext;
@@ -411,7 +411,7 @@ namespace Microsoft.OData
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
-        public abstract void BatchOperationContentStreamRequested();
+        public abstract void StreamRequested();
 
 #if PORTABLELIB
         /// <summary>
@@ -421,13 +421,13 @@ namespace Microsoft.OData
         /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
-        public abstract Task BatchOperationContentStreamRequestedAsync();
+        public abstract Task StreamRequestedAsync();
 #endif
 
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
         /// </summary>
-        public abstract void BatchOperationContentStreamDisposed();
+        public abstract void StreamDisposed();
 
         /// <summary>
         /// This method notifies the listener, that an in-stream error is to be written.

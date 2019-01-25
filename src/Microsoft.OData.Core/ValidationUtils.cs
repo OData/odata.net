@@ -36,11 +36,6 @@ namespace Microsoft.OData
         internal static void ValidateOpenPropertyValue(string propertyName, object value)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-
-            if (value is ODataStreamReferenceValue)
-            {
-                throw new ODataException(Strings.ValidationUtils_OpenStreamProperty(propertyName));
-            }
         }
 
         /// <summary>

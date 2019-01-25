@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text;
 #if PORTABLELIB
 using System.Threading.Tasks;
 #endif
@@ -17,7 +18,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Json;
-using System.Text;
 
 namespace Microsoft.OData.JsonLight
 {
@@ -272,22 +272,30 @@ namespace Microsoft.OData.JsonLight
         /// <param name="property">The property to write.</param>
         protected override void StartProperty(ODataProperty property)
         {
-            Debug.Assert(this.ParentScope is ResourceBaseScope, "Writing a property and the parent scope is not a resource");
+            ResourceBaseScope scope = this.ParentScope as ResourceBaseScope;
+            Debug.Assert(scope != null, "Writing a property and the parent scope is not a resource");
             this.jsonLightPropertySerializer.WriteProperty(
                 property,
-                ((ResourceBaseScope)this.ParentScope).ResourceType,
+                scope.ResourceType,
                 false /*isTopLevel*/,
-                true /*allowStreamProperty*/,
                 this.DuplicatePropertyNameChecker);
+
+            // todo (mikep) better way to do this?
+            if (property.Value is ODataStreamReferenceValue)
+            {
+                ODataResource resource = scope.Item as ODataResource;
+                Debug.Assert(resource != null && resource.MetadataBuilder != null, "Writing a property with no parent resource MetadataBuilder");
+                resource.MetadataBuilder.MarkStreamPropertyProcessed(property.Name);
+            }
         }
 
         /// <summary>
-        /// Start writing a property.
+        /// End writing a property.
         /// </summary>
         /// <param name="property">The property to write.</param>
         protected override void EndProperty(ODataProperty property)
         {
-            // todo (mikep) anything to do here?
+            // todo (mikep) anything to do here? At least ensure that it's called to transition to resource state?
         }
 
         /// <summary>
@@ -365,12 +373,23 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
 
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
-            this.jsonLightResourceSerializer.WriteProperties(
+            if (resource.NonComputedProperties != null)
+            {
+                this.jsonLightResourceSerializer.WriteProperties(
                 this.ResourceType,
-                resource.Properties,
+                resource.NonComputedProperties,
                 false /* isComplexValue */,
                 this.DuplicatePropertyNameChecker);
-            this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+
+                // mikep todo: better place to put this?
+                // Mark stream properties as processed
+                foreach (ODataProperty property in resource.NonComputedProperties.Where(p => p.Value is ODataStreamReferenceValue))
+                {
+                    Debug.Assert(resource != null && resource.MetadataBuilder != null, "Writing a property with no parent resource MetadataBuilder");
+                    resource.MetadataBuilder.MarkStreamPropertyProcessed(property.Name);
+                }
+            }
 
             // COMPAT 48: Position of navigation properties/links in JSON differs.
         }
@@ -926,7 +945,9 @@ namespace Microsoft.OData.JsonLight
             {
                 // Write @odata.context annotation for navigation property
                 var containedEntitySet = this.CurrentScope.NavigationSource as IEdmContainedEntitySet;
-                if (containedEntitySet != null && this.jsonLightOutputContext.MessageWriterSettings.LibraryCompatibility < ODataLibraryCompatibility.Version7)
+                if (containedEntitySet != null
+                    && this.jsonLightOutputContext.MessageWriterSettings.LibraryCompatibility < ODataLibraryCompatibility.Version7
+                    && this.jsonLightOutputContext.MessageWriterSettings.Version < ODataVersion.V401)
                 {
                     ODataContextUrlInfo info = ODataContextUrlInfo.Create(
                                                 this.CurrentScope.NavigationSource,
@@ -970,7 +991,7 @@ namespace Microsoft.OData.JsonLight
                 // wrote at least one resource set, close the resulting array here.
                 if (navigationLinkScope.ResourceSetWritten)
                 {
-                    Debug.Assert(nestedResourceInfo.IsCollection.Value, "nestedResourceInfo.IsCollection.Value");
+                    Debug.Assert(nestedResourceInfo.IsCollection == null || nestedResourceInfo.IsCollection.Value, "nestedResourceInfo.IsCollection.Value");
                     this.jsonWriter.EndArrayScope();
                 }
             }
@@ -1344,7 +1365,7 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
 
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
-            this.WriteDeltaResourceProperties(resource.Properties);
+            this.WriteDeltaResourceProperties(resource);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
         }
 
@@ -1374,16 +1395,27 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writes the properties for a delta resource.
         /// </summary>
-        /// <param name="properties">The properties to write.</param>
-        private void WriteDeltaResourceProperties(IEnumerable<ODataProperty> properties)
+        /// <param name="resource">The resource whose properties to write.</param>
+        private void WriteDeltaResourceProperties(ODataResourceBase resource)
         {
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
-            this.jsonLightResourceSerializer.WriteProperties(
+            if (resource.NonComputedProperties != null)
+            {
+                this.jsonLightResourceSerializer.WriteProperties(
                 this.ResourceType,
-                properties,
+                resource.NonComputedProperties,
                 false /* isComplexValue */,
                 this.DuplicatePropertyNameChecker);
-            this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+
+                // mikep todo: better place to put this?
+                // Mark stream properties as processed
+                foreach (ODataProperty property in resource.NonComputedProperties.Where(p => p.Value is ODataStreamReferenceValue))
+                {
+                    Debug.Assert(resource != null && resource.MetadataBuilder != null, "Writing a property with no parent resource MetadataBuilder");
+                    resource.MetadataBuilder.MarkStreamPropertyProcessed(property.Name);
+                }
+            }
         }
 
         /// <summary>

@@ -19,11 +19,17 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Start the stream property valuescope.
         /// </summary>
+        /// <returns>
+        /// A Stream to write to
+        /// </returns>
         Stream StartStreamValueScope();
 
         /// <summary>
         /// Start the TextWriter value valuescope.
         /// </summary>
+        /// <returns>
+        /// A Text writer to write to the stream
+        /// </returns>
         TextWriter StartTextWriterValueScope();
 
         /// <summary>

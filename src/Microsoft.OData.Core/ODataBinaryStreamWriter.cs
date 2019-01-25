@@ -21,33 +21,13 @@ namespace Microsoft.OData
     internal sealed class ODataNotificationWriter : TextWriter
     {
         private readonly TextWriter textWriter;
-        private IODataBatchOperationListener listener;
+        private IODataStreamListener listener;
 
-        internal ODataNotificationWriter(TextWriter textWriter, IODataBatchOperationListener listener)
-            : base (System.Globalization.CultureInfo.InvariantCulture)
+        internal ODataNotificationWriter(TextWriter textWriter, IODataStreamListener listener)
+            : base(System.Globalization.CultureInfo.InvariantCulture)
         {
             this.textWriter = textWriter;
             this.listener = listener;
-        }
-
-        /// <summary>
-        /// Disposes the object.
-        /// </summary>
-        /// <param name="disposing">True if called from Dispose; false if called from the finalizer.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (this.listener != null)
-                {
-                    // Tell the listener that the stream is being disposed.
-                    this.listener.BatchOperationContentStreamDisposed();
-                    this.listener = null;
-                }
-            }
-
-            // mikep todo: don't call dispose if this is the jsonreader's underlying reader!
-            base.Dispose(disposing);
         }
 
         public override Encoding Encoding
@@ -99,14 +79,35 @@ namespace Microsoft.OData
         }
 
         //todo: implement more methods
+
+
+        /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing">True if called from Dispose; false if called from the finalizer.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.listener != null)
+                {
+                    // Tell the listener that the stream is being disposed.
+                    this.listener.StreamDisposed();
+                    this.listener = null;
+                }
+            }
+
+            // mikep todo: don't call dispose if this is the jsonreader's underlying reader!
+            base.Dispose(disposing);
+        }
     }
 
     internal sealed class ODataNotificationStream : Stream
     {
         private readonly Stream stream;
-        private IODataBatchOperationListener listener;
+        private IODataStreamListener listener;
 
-        internal ODataNotificationStream(Stream underlyingStream, IODataBatchOperationListener listener)
+        internal ODataNotificationStream(Stream underlyingStream, IODataStreamListener listener)
         {
             this.stream = underlyingStream;
             this.listener = listener;
@@ -193,7 +194,7 @@ namespace Microsoft.OData
                 if (this.listener != null)
                 {
                     // Tell the listener that the stream is being disposed.
-                    this.listener.BatchOperationContentStreamDisposed();
+                    this.listener.StreamDisposed();
                     this.listener = null;
                 }
             }
@@ -396,11 +397,5 @@ namespace Microsoft.OData
 
             return prefixByteString + Convert.ToBase64String(bytes, offset + numberOfBytesToPrefix, length - numberOfBytesToPrefix - remainingBytes);
         }
-
-        //private static string UrlEncode(string unencodedString)
-        //{
-        //    // todo (mikep): official method for UrlEncoding the string?
-        //    return unencodedString.Replace('/', '_').Replace('+', '-');
-        //}
     }
 }

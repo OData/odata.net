@@ -737,7 +737,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="collectionProperty">The collection of stream property for which to read the nested resource info. null for undeclared property.</param>
         /// <param name="propertyName">The property name.</param>
-        /// <param name="primitiveType">They primitive type of the collection element</param>
+        /// <param name="elementType">They primitive type of the collection element</param>
         /// <returns>The nested resource info for the stream collection.</returns>
         /// <remarks>
         /// This method doesn't move the reader.

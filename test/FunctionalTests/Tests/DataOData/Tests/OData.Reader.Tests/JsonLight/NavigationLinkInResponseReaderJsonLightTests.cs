@@ -59,28 +59,25 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new NavigationLinkTestCase
                 {
-                    DebugDescription = "Invalid annotation on navigation link - just that annotation",
+                    DebugDescription = "Type annotation on navigation link - just that annotation",
                     Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
-                    ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedEntity = PayloadBuilder.Entity().NavigationProperty(new NavigationPropertyInstance {Name="CityHall" }),
                 },
                 new NavigationLinkTestCase
                 {
-                    DebugDescription = "Invalid annotation on navigation link - with navigation link",
+                    DebugDescription = "Type annotation on navigation link - with navigation link",
                     Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/deferredlink1\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
-                    ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("CityHall","http://odata.org/deferredlink1"),
                 },
                 new NavigationLinkTestCase
                 {
-                    DebugDescription = "Invalid annotation on navigation link - with association link",
+                    DebugDescription = "Type annotation on navigation link - with association link",
                     Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/deferredlink1\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
-                    ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("CityHall", null, "http://odata.org/deferredlink1")
                 },
                 new NavigationLinkTestCase
                 {

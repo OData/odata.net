@@ -83,7 +83,6 @@ namespace Microsoft.OData.JsonLight
                         property,
                         null /*owningType*/,
                         true /* isTopLevel */,
-                        false /* allowStreamProperty */,
                         this.CreateDuplicatePropertyNameChecker());
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -118,7 +117,6 @@ namespace Microsoft.OData.JsonLight
                     property,
                     owningType,
                     false /* isTopLevel */,
-                    !isComplexValue,
                     duplicatePropertyNameChecker);
             }
         }
@@ -129,15 +127,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="property">The property to write out.</param>
         /// <param name="owningType">The owning type for the <paramref name="property"/> or null if no metadata is available.</param>
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
-        /// <param name="allowStreamProperty">Should pass in true if we are writing a property of an ODataResource instance, false otherwise.
-        /// Named stream properties should only be defined on ODataResource instances.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
         internal void WriteProperty(
             ODataProperty property,
             IEdmStructuredType owningType,
             bool isTopLevel,
-            bool allowStreamProperty,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             WriterValidationUtils.ValidatePropertyNotNull(property);
@@ -180,14 +175,8 @@ namespace Microsoft.OData.JsonLight
             }
 
             ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
-            if (streamReferenceValue != null)
+            if (streamReferenceValue != null && !(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
             {
-                if (!allowStreamProperty)
-                {
-                    throw new ODataException(ODataErrorStrings.ODataWriter_StreamPropertiesMustBePropertiesOfODataResource(propertyName));
-                }
-
-                Debug.Assert(owningType == null || owningType.IsODataEntityTypeKind(), "The metadata should not allow named stream properties to be defined on a non-entity type.");
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
                 WriterValidationUtils.ValidateStreamReferenceProperty(property, currentPropertyInfo.MetadataType.EdmProperty, this.WritingResponse);
                 this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
@@ -378,7 +367,7 @@ namespace Microsoft.OData.JsonLight
             if (this.currentPropertyInfo.IsTopLevel)
             {
                 if (this.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility <
-                    ODataLibraryCompatibility.Version7)
+                    ODataLibraryCompatibility.Version7 && this.JsonLightOutputContext.MessageWriterSettings.Version < ODataVersion.V401)
                 {
                     // The 6.x library used an OData 3.0 protocol element in this case: @odata.null=true
                     this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);

@@ -45,7 +45,6 @@ namespace Microsoft.OData.UriParser
         /// <returns>A new SelectExpandClause decorated with the information from the selectToken</returns>
         public SelectExpandClause Bind(SelectToken tokenIn)
         {
-
             if (tokenIn == null || !tokenIn.Properties.Any())
             {
                 // if there are no properties selected for this level, then by default we select

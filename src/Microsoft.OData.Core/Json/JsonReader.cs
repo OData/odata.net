@@ -202,7 +202,7 @@ namespace Microsoft.OData.Json
             {
                 if (this.readingStream)
                 {
-                    //mikep: make this a real exception
+                    // mikep: make this a real exception
                     throw new Exception("Can't access Value when reading primitive as stream.");
                 }
 
@@ -227,16 +227,6 @@ namespace Microsoft.OData.Json
             }
         }
 
-
-        /// <summary>
-        /// Whether the reader can stream the current value.
-        /// </summary>
-        /// <remarks>If the property is a string (or null) it can be streamed</remarks>
-        public bool CanStream()
-        {
-            return this.canStream;
-        }
-        
         /// <summary>
         /// The type of the last node read.
         /// </summary>
@@ -257,6 +247,17 @@ namespace Microsoft.OData.Json
             {
                 return this.isIeee754Compatible;
             }
+        }
+
+        /// <summary>
+        /// Whether the reader can stream the current value.
+        /// </summary>
+        /// <returns>
+        /// True if the current value can be streamed, otherwise false</returns>
+        /// <remarks>If the property is a string (or null) it can be streamed</remarks>
+        public bool CanStream()
+        {
+            return this.canStream;
         }
 
         /// <summary>
@@ -450,7 +451,7 @@ namespace Microsoft.OData.Json
                 this.ParseNullPrimitiveValue();
                 this.scopes.Peek().ValueCount++;
                 this.Read();
-                return new ODataBinaryStreamReader((a,b,c)=> { return 0; });
+                return new ODataBinaryStreamReader((a, b, c) => { return 0; });
             }
 
             this.tokenStartIndex++;
@@ -533,9 +534,10 @@ namespace Microsoft.OData.Json
                     this.PushScope(ScopeType.Array);
                     this.tokenStartIndex++;
                     this.SkipWhitespaces();
-                    this.canStream = 
+                    this.canStream =
                         this.characterBuffer[this.tokenStartIndex] == '"' ||
-                        this.characterBuffer[this.tokenStartIndex] == '\'';
+                        this.characterBuffer[this.tokenStartIndex] == '\'' ||
+                        this.characterBuffer[this.tokenStartIndex] == 'n';
                     return JsonNodeType.StartArray;
 
                 case '"':
@@ -546,6 +548,7 @@ namespace Microsoft.OData.Json
                     break;
 
                 case 'n':
+                    // Null value
                     // Don't parse yet, as user may be streaming a stream. Defer parsing until .Value is called.
                     this.canStream = true;
                     break;
@@ -923,6 +926,7 @@ namespace Microsoft.OData.Json
         /// Reads bytes from the current string value.
         /// </summary>
         /// <param name="chars">The character buffer to populate</param>
+        /// <param name="offset">The number of characters offset into the buffer to read</param>
         /// <param name="maxLength">The maximum number of characters to read into the buffer</param>
         /// <returns>The number of characters read.</returns>
         /// <remarks>
@@ -949,6 +953,7 @@ namespace Microsoft.OData.Json
                     this.tokenStartIndex++;
                     readingStream = false;
                     this.scopes.Peek().ValueCount++;
+
                     // move to next node
                     this.Read();
                     return charsRead;

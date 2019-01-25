@@ -24,6 +24,16 @@ namespace Microsoft.OData.JsonLight
     internal sealed class ODataJsonLightOutputContext : ODataOutputContext
     {
         /// <summary>
+        /// An in-memory stream for writing stream properties to non-streaming json writer.
+        /// </summary>
+        internal MemoryStream binaryValueStream = null;
+
+        /// <summary>
+        /// An in-memory StringWriter for writing string properties to non-streaming json writer.
+        /// </summary>
+        internal StringWriter stringWriter = null;
+
+        /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
         private readonly JsonLightMetadataLevel metadataLevel;
@@ -33,16 +43,6 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
-
-        /// <summary>
-        /// An in-memory stream for writing stream properties to non-streaming json writer.
-        /// </summary>
-        internal MemoryStream binaryValueStream = null;
-
-        /// <summary>
-        /// An in-memory StringWriter for writing string properties to non-streaming json writer.
-        /// </summary>
-        internal StringWriter stringWriter = null;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;

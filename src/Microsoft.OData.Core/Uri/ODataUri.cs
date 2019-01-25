@@ -52,7 +52,8 @@ namespace Microsoft.OData
         /// <param name="search">Any $search option for this uri. Can be null</param>
         /// <param name="apply">Any $apply option for this uri. Can be null</param>
         /// <param name="skip">Any $skip option for this uri. Can be null.</param>
-        /// <param name="top">Any $top option for this uri. Can be null.</param>
+        /// <param name="top">Any $top option for this uri. Can be null.</param
+        /// <param name="index">Any index for this uri. Can be null.</param>
         /// <param name="queryCount">Any query $count option for this uri. Can be null.</param>
         /// <param name="compute">Any query $compute option for this uri. Can be null.</param>
         internal ODataUri(

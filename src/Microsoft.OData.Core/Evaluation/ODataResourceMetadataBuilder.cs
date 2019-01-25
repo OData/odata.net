@@ -157,6 +157,24 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
+        /// Returns the next unprocessed stream property or null if there's no more stream properties to process.
+        /// </summary>
+        /// <returns>Returns the next unprocessed stream property or null if there's no more stream properties to process.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
+        internal virtual ODataProperty GetNextUnprocessedStreamProperty()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Marks the given stream property as processed.
+        /// </summary>
+        /// <param name="streamPropertyName">The stream property we've already processed.</param>
+        internal virtual void MarkStreamPropertyProcessed(string streamPropertyName)
+        {
+        }
+
+        /// <summary>
         /// Returns the next unprocessed nested resource info or null if there's no more navigation links to process.
         /// </summary>
         /// <returns>Returns the next unprocessed nested resource info or null if there's no more navigation links to process.</returns>

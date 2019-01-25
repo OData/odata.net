@@ -31,7 +31,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="batchStream">The underlying stream to write the message to.</param>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
-        internal ODataBatchOperationWriteStream(Stream batchStream, IODataBatchOperationListener listener)
+        internal ODataBatchOperationWriteStream(Stream batchStream, IODataStreamListener listener)
             : base(listener)
         {
             Debug.Assert(batchStream != null, "batchStream != null");

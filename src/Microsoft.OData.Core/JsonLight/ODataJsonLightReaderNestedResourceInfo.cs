@@ -10,8 +10,8 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.OData.Edm;
     using System.Text;
+    using Microsoft.OData.Edm;
     #endregion Namespaces
 
     // todo (mikep): move to own filie
@@ -72,7 +72,7 @@ namespace Microsoft.OData.JsonLight
             }
         }
     }
-    
+
     /// <summary>
     /// Class which holds information about nested resource info to be reported by the reader.
     /// </summary>
@@ -107,7 +107,7 @@ namespace Microsoft.OData.JsonLight
         /// The type of the nested resource info which will be reported.
         /// </summary>
         private IEdmType nestedResourceType;
-                
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -179,7 +179,7 @@ namespace Microsoft.OData.JsonLight
         /// Whether individual members of the collection should be streamed.
         /// </summary>
         internal bool StreamMembers { get; set; }
-        
+
         /// <summary>
                  /// true if the nested resource info has a value.
                  /// </summary>
