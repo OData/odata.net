@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
+    using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -69,6 +70,12 @@ namespace Microsoft.OData
         /// <summary>Gets or sets the OData protocol version to be used for reading payloads. </summary>
         /// <returns>The OData protocol version to be used for reading payloads.</returns>
         public ODataVersion? Version { get; set; }
+
+        /// <summary>
+        /// Get/sets the character buffer pool. This pool is used for non-container scenario.
+        /// If the service container has an array pool, that pool will be used.
+        /// </summary>
+        public ICharArrayPool ArrayPool { get; set; }
 
         /// <summary>
         /// Gets or sets validation settings.

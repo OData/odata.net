@@ -5234,6 +5234,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	public ODataMessageReaderSettings ()
 	public ODataMessageReaderSettings (Microsoft.OData.ODataVersion odataVersion)
 
+	Microsoft.OData.Buffers.ICharArrayPool ArrayPool  { public get; public set; }
 	System.Uri BaseUri  { public get; public set; }
 	System.Func`3[[Microsoft.OData.Edm.IEdmType],[System.String],[Microsoft.OData.Edm.IEdmType]] ClientCustomTypeResolver  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
@@ -5489,6 +5490,11 @@ public sealed class Microsoft.OData.ODataUri {
 public sealed class Microsoft.OData.ODataUrlKeyDelimiter {
 	Microsoft.OData.ODataUrlKeyDelimiter Parentheses  { public static get; }
 	Microsoft.OData.ODataUrlKeyDelimiter Slash  { public static get; }
+}
+
+public interface Microsoft.OData.Buffers.ICharArrayPool {
+	char[] Rent (int minSize)
+	void Return (char[] array)
 }
 
 public enum Microsoft.OData.Json.JsonNodeType : int {

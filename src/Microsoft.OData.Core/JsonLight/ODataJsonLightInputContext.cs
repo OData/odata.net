@@ -16,6 +16,7 @@ namespace Microsoft.OData.JsonLight
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Metadata;
+    using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     // ReSharper disable RedundantUsingDirective
@@ -76,6 +77,16 @@ namespace Microsoft.OData.JsonLight
             {
                 this.textReader = textReader;
                 var innerReader = CreateJsonReader(this.Container, this.textReader, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
+                if (messageReaderSettings.ArrayPool != null)
+                {
+                    // make sure customer also can use reading setting if without DI.
+                    JsonReader jsonReader = innerReader as JsonReader;
+                    if (jsonReader != null && jsonReader.ArrayPool == null)
+                    {
+                        jsonReader.ArrayPool = messageReaderSettings.ArrayPool;
+                    }
+                }
+
                 if (messageInfo.MediaType.HasStreamingSetToTrue())
                 {
                     this.jsonReader = new BufferingJsonReader(
@@ -635,6 +646,12 @@ namespace Microsoft.OData.JsonLight
             var jsonReaderFactory = container.GetRequiredService<IJsonReaderFactory>();
             var jsonReader = jsonReaderFactory.CreateJsonReader(textReader, isIeee754Compatible);
             Debug.Assert(jsonReader != null, "jsonWriter != null");
+
+            JsonReader odataJsonReader = jsonReader as JsonReader;
+            if (odataJsonReader != null)
+            {
+                odataJsonReader.ArrayPool = container.GetService<ICharArrayPool>();
+            }
 
             return jsonReader;
         }
