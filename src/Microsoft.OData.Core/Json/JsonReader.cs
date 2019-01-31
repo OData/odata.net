@@ -951,7 +951,7 @@ namespace Microsoft.OData.Json
                     this.tokenStartIndex = 0;
                     this.storedCharacterCount = 0;
                 }
-                else if (this.tokenStartIndex == 0)
+                else if (this.tokenStartIndex < this.characterBuffer.Length / 2)
                 {
                     // The entire buffer is full of unconsumed characters
                     // We need to grow the buffer. Double the size of the buffer.
