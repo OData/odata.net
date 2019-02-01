@@ -89,6 +89,9 @@
     <Compile Include="..\ContainerBuilderExtensions.cs">
       <Link>ContainerBuilderExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\DerivedTypeValidator.cs">
+      <Link>DerivedTypeValidator.cs</Link>
+    </Compile>
     <Compile Include="..\DuplicatePropertyNameChecker.cs">
       <Link>DuplicatePropertyNameChecker.cs</Link>
     </Compile>
