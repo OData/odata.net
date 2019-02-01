@@ -1881,6 +1881,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The value type '{0}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on {1} '{2}'."
+        /// </summary>
+        internal static string ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(object p0, object p1, object p2) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The ODataMessageReader has already been used to read a message payload. An ODataMessageReader can only be used once to read a payload for a given message."
         /// </summary>
         internal static string ODataMessageReader_ReaderAlreadyUsed {

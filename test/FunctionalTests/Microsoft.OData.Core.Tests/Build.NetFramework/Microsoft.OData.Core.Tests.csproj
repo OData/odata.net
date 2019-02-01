@@ -204,6 +204,7 @@
     <Compile Include="..\ODataPrimitiveValueTests.cs" />
     <Compile Include="..\ODataPropertySerializationInfoAnnotationTests.cs" />
     <Compile Include="..\ODataPropertyTests.cs" />
+    <Compile Include="..\ODataReaderDerivedTypeConstraintTests.cs" />
     <Compile Include="..\ODataRequestMessageTests.cs" />
     <Compile Include="..\ODataStreamReferenceValueTests.cs" />
     <Compile Include="..\ODataUtilsInternalTests.cs" />

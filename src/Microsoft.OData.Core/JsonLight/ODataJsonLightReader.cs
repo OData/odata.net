@@ -171,6 +171,16 @@ namespace Microsoft.OData.JsonLight
 
             ResolveScopeInfoFromContextUrl();
 
+            Scope currentScope = this.CurrentScope;
+            if (this.jsonLightInputContext.Model.IsUserModel())
+            {
+                var derivedTypeConstraints = this.jsonLightInputContext.Model.GetDerivedTypeConstraints(currentScope.NavigationSource);
+                if (derivedTypeConstraints != null)
+                {
+                    currentScope.DerivedTypeValidator = new DerivedTypeValidator(currentScope.ResourceType, derivedTypeConstraints, "navigation source", currentScope.NavigationSource.Name);
+                }
+            }
+
             return this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector);
         }
 
@@ -1889,6 +1899,12 @@ namespace Microsoft.OData.JsonLight
             // Resolve the type name
             this.ApplyResourceTypeNameFromPayload(currentResource.TypeName);
 
+            // Validate type with derived type validator if available
+            if (this.CurrentDerivedTypeValidator != null)
+            {
+                this.CurrentDerivedTypeValidator.ValidateResourceType(this.CurrentResourceType);
+            }
+
             // Validate type with resource set validator if available and not reading top-level delta resource set
             if (this.CurrentResourceSetValidator != null && !(this.ReadingDelta && this.CurrentResourceDepth == 0))
             {
@@ -2147,8 +2163,16 @@ namespace Microsoft.OData.JsonLight
 
             odataUri.Path = odataPath;
 
-            this.EnterScope(new JsonLightNestedResourceInfoScope(readerNestedResourceInfo, navigationSource,
-                targetResourceType, odataUri));
+            JsonLightNestedResourceInfoScope newScope = new JsonLightNestedResourceInfoScope(readerNestedResourceInfo, navigationSource,
+                targetResourceType, odataUri);
+
+            var derivedTypeConstraints = this.jsonLightInputContext.Model.GetDerivedTypeConstraints(nestedProperty);
+            if (derivedTypeConstraints != null)
+            {
+                newScope.DerivedTypeValidator = new DerivedTypeValidator(nestedProperty.Type.ToStructuredType(), derivedTypeConstraints, "nested resource", nestedProperty.Name);
+            }
+
+            this.EnterScope(newScope);
         }
 
         /// <summary>
