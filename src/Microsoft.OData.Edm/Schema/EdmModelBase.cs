@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm
@@ -31,38 +30,30 @@ namespace Microsoft.OData.Edm
         /// <param name="annotationsManager">Annotations manager for the model to use.</param>
         /// <remarks>Only either mainModel and referencedModels should have value.</remarks>
         protected EdmModelBase(IEnumerable<IEdmModel> referencedModels, IEdmDirectValueAnnotationsManager annotationsManager)
+            : this(referencedModels, annotationsManager, true /*includeDefaultVocabularies*/)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmModelBase"/> class.
+        /// </summary>
+        /// <param name="referencedModels">Models to which this model refers.</param>
+        /// <param name="annotationsManager">Annotations manager for the model to use.</param>
+        /// <param name="includeDefaultVocabularies">a boolean value indicating whether to embed the built-in vocabulary models.</param>
+        /// <remarks>Only either mainModel and referencedModels should have value.</remarks>
+        protected EdmModelBase(IEnumerable<IEdmModel> referencedModels, IEdmDirectValueAnnotationsManager annotationsManager, bool includeDefaultVocabularies)
         {
             EdmUtil.CheckArgumentNull(referencedModels, "referencedModels");
             EdmUtil.CheckArgumentNull(annotationsManager, "annotationsManager");
 
             this.referencedEdmModels = new List<IEdmModel>(referencedModels);
 
-            this.referencedEdmModels.Add(EdmCoreModel.Instance);
+            // EdmCoreModel is always embeded.
+            this.referencedEdmModels.Insert(0, EdmCoreModel.Instance);
 
-            if (CoreVocabularyModel.Instance != null)
+            if (includeDefaultVocabularies)
             {
-                this.referencedEdmModels.Add(CoreVocabularyModel.Instance);
-            }
-
-            // Make sure the core vocabulary model is initialized.
-            if (!CoreVocabularyModel.IsInitializing && CapabilitiesVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(CapabilitiesVocabularyModel.Instance);
-            }
-
-            if (AlternateKeysVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(AlternateKeysVocabularyModel.Instance);
-            }
-
-            if (AuthorizationVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(AuthorizationVocabularyModel.Instance);
-            }
-
-            if (ValidationVocabularyModel.Instance != null)
-            {
-                this.referencedEdmModels.Add(ValidationVocabularyModel.Instance);
+                this.referencedEdmModels.AddRange(VocabularyModelProvider.VocabularyModels);
             }
 
             this.annotationsManager = annotationsManager;
