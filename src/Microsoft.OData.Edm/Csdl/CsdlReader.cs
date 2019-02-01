@@ -95,7 +95,7 @@ namespace Microsoft.OData.Edm.Csdl
         public static bool TryParse(XmlReader reader, out IEdmModel model, out IEnumerable<EdmError> errors)
         {
             CsdlReader edmxReader = new CsdlReader(reader, null);
-            return edmxReader.TryParse(Enumerable.Empty<IEdmModel>(), out model, out errors);
+            return edmxReader.TryParse(Enumerable.Empty<IEdmModel>(), true /*includeDefaultVocabularies*/, out model, out errors);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Microsoft.OData.Edm.Csdl
         {
             CsdlReader edmxReader = new CsdlReader(reader, null);
             edmxReader.ignoreUnexpectedAttributesAndElements = ignoreUnexpectedAttributesAndElements;
-            return edmxReader.TryParse(Enumerable.Empty<IEdmModel>(), out model, out errors);
+            return edmxReader.TryParse(Enumerable.Empty<IEdmModel>(), true /*includeDefaultVocabularies*/, out model, out errors);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Edm.Csdl
         public static bool TryParse(XmlReader reader, Func<Uri, XmlReader> getReferencedModelReaderFunc, out IEdmModel model, out IEnumerable<EdmError> errors)
         {
             CsdlReader edmxReader = new CsdlReader(reader, getReferencedModelReaderFunc);
-            return edmxReader.TryParse(Enumerable.Empty<IEdmModel>(), out model, out errors);
+            return edmxReader.TryParse(Enumerable.Empty<IEdmModel>(), true /*includeDefaultVocabularies*/, out model, out errors);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Edm.Csdl
         public static bool TryParse(XmlReader reader, IEdmModel reference, out IEdmModel model, out IEnumerable<EdmError> errors)
         {
             CsdlReader edmxReader = new CsdlReader(reader, null);
-            return edmxReader.TryParse(new[] { reference }, out model, out errors);
+            return edmxReader.TryParse(new[] { reference }, true /*includeDefaultVocabularies*/, out model, out errors);
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Edm.Csdl
             {
                 ignoreUnexpectedAttributesAndElements = settings.IgnoreUnexpectedAttributesAndElements
             };
-            return edmxReader.TryParse(references, out model, out errors);
+            return edmxReader.TryParse(references, true /*includeDefaultVocabularies*/, out model, out errors);
         }
 
         /// <summary>
@@ -305,11 +305,6 @@ namespace Microsoft.OData.Edm.Csdl
 
             version = new Version(major, minor);
             return true;
-        }
-
-        private bool TryParse(IEnumerable<IEdmModel> referencedModels, out IEdmModel model, out IEnumerable<EdmError> parsingErrors)
-        {
-            return TryParse(referencedModels, true /*includeDefaultVocabularies*/, out model, out parsingErrors);
         }
 
         private bool TryParse(IEnumerable<IEdmModel> referencedModels, bool includeDefaultVocabularies, out IEdmModel model, out IEnumerable<EdmError> parsingErrors)
