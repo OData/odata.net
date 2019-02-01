@@ -792,8 +792,10 @@ namespace Microsoft.OData.Edm
         /// <returns>Null or a collection string of qualifed type name.</returns>
         public static IEnumerable<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmVocabularyAnnotatable target)
         {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(target, "target");
+            if (model == null || target == null)
+            {
+                return null;
+            }
 
             IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(target, ValidationVocabularyModel.DerivedTypeConstraintTerm).FirstOrDefault();
             if (annotation != null)

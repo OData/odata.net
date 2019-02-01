@@ -306,6 +306,7 @@ namespace Microsoft.OData {
         internal const string ReaderValidationUtils_NonMatchingPropertyNames = "ReaderValidationUtils_NonMatchingPropertyNames";
         internal const string ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType = "ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType";
         internal const string ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType = "ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType";
+        internal const string ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint = "ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint";
         internal const string ODataMessageReader_ReaderAlreadyUsed = "ODataMessageReader_ReaderAlreadyUsed";
         internal const string ODataMessageReader_ErrorPayloadInRequest = "ODataMessageReader_ErrorPayloadInRequest";
         internal const string ODataMessageReader_ServiceDocumentInRequest = "ODataMessageReader_ServiceDocumentInRequest";
