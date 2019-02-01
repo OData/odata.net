@@ -272,6 +272,7 @@
     <Compile Include="Vocabularies\EdmToClrConverter.cs" />
     <Compile Include="Vocabularies\EdmToClrEvaluator.cs" />
     <Compile Include="Vocabularies\ValidationVocabularyModel.cs" />
+    <Compile Include="Vocabularies\VocabularyModelProvider.cs" />
     <Compile Include="Vocabularies\Expressions\EdmApplyExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmCastExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmCollectionExpression.cs" />

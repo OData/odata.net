@@ -441,6 +441,16 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         DuplicatePropertySpecifiedInEntityKey = 154,
 
+        /// <summary>
+        /// A UrlEscape function must have be bound function.
+        /// </summary>
+        UrlEscapeFunctionMustBeBoundFunction = 155,
+
+        /// <summary>
+        /// A UrlEscape function must have and only one 'Edm.String' parameter.
+        /// </summary>
+        UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter = 156,
+
         //// <summary> Function declares a ReturnType attribute and element</summary>
         // AmbiguousFunctionReturnType = 156,
 

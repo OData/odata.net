@@ -71,7 +71,6 @@ namespace Microsoft.OData.Edm {
     internal sealed class EntityRes {
         internal const string EdmPrimitive_UnexpectedKind = "EdmPrimitive_UnexpectedKind";
         internal const string EdmPath_UnexpectedKind = "EdmPath_UnexpectedKind";
-        internal const string Annotations_DocumentationPun = "Annotations_DocumentationPun";
         internal const string Annotations_TypeMismatch = "Annotations_TypeMismatch";
         internal const string Constructable_VocabularyAnnotationMustHaveTarget = "Constructable_VocabularyAnnotationMustHaveTarget";
         internal const string Constructable_EntityTypeOrCollectionOfEntityTypeExpected = "Constructable_EntityTypeOrCollectionOfEntityTypeExpected";
@@ -133,6 +132,8 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation = "EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation";
         internal const string EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument = "EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument";
         internal const string EdmModel_Validator_Semantic_FunctionMustHaveReturnType = "EdmModel_Validator_Semantic_FunctionMustHaveReturnType";
+        internal const string EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction = "EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction";
+        internal const string EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter = "EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter";
         internal const string EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate = "EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate";
         internal const string EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName = "EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName";
         internal const string EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType = "EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType";
