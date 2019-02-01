@@ -1093,6 +1093,46 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(expected, csdlStr);
         }
 
+        [Fact]
+        public void CanWriteUrlEscapeFunction()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EntityType Name=\"Entity\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                  "</EntityType>" +
+                  "<Function Name=\"Function\" IsBound=\"true\">" +
+                    "<Parameter Name=\"entity\" Type=\"NS.Entity\" />" +
+                    "<Parameter Name=\"path\" Type=\"Edm.String\" />" +
+                    "<ReturnType Type=\"Edm.Int32\" />" +
+                    "<Annotation Term=\"Org.OData.Community.V1.UrlEscapeFunction\" Bool=\"true\" />" +
+                  "</Function>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmEntityType entityType = new EdmEntityType("NS", "Entity");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            EdmFunction function = new EdmFunction("NS", "Function", EdmCoreModel.Instance.GetInt32(true), true, null, false);
+            function.AddParameter("entity", new EdmEntityTypeReference(entityType, true));
+            function.AddParameter("path", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(entityType);
+            model.AddElement(function);
+            model.SetUrlEscapeFunction(function);
+
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
         private string GetCsdl(IEdmModel model, CsdlTarget target)
         {
             string edmx = string.Empty;
