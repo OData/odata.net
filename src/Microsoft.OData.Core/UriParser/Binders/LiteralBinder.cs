@@ -58,7 +58,9 @@ namespace Microsoft.OData.UriParser
                             return new CollectionConstantNode(collectionValue.Items, literalToken.OriginalText, collectionReference);
                         }
                     }
+                    return new ConstantNode(literalToken.Value, literalToken.OriginalText, literalToken.ExpectedEdmTypeReference);
                 }
+                return new ConstantNode(literalToken.Value, literalToken.OriginalText);
             }
             return new ConstantNode(literalToken.Value);
         }
