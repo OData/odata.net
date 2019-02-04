@@ -420,6 +420,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
+        public void BuildFilterWithInOperatorUsingBracketedCollectionConstant()
+        {
+            Uri queryUri = new Uri("People?$filter=ID in [1,2,3]", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=ID%20in%20[1%2C2%2C3]"), actualUri);
+        }
+
+        [Fact]
         public void BuildFilterWithInOperatorUsingSingleConstant()
         {
             Uri queryUri = new Uri("People?$filter=1 in RelatedIDs", UriKind.Relative);
