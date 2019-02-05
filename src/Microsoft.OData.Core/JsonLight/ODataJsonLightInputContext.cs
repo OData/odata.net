@@ -647,12 +647,6 @@ namespace Microsoft.OData.JsonLight
             var jsonReader = jsonReaderFactory.CreateJsonReader(textReader, isIeee754Compatible);
             Debug.Assert(jsonReader != null, "jsonWriter != null");
 
-            JsonReader odataJsonReader = jsonReader as JsonReader;
-            if (odataJsonReader != null)
-            {
-                odataJsonReader.ArrayPool = container.GetService<ICharArrayPool>();
-            }
-
             return jsonReader;
         }
 
