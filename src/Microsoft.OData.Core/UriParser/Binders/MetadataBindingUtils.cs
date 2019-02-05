@@ -64,7 +64,8 @@ namespace Microsoft.OData.UriParser
                     IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
                     if (enumType.Members.Any(m => string.Compare(m.Name, memberName, StringComparison.Ordinal) == 0))
                     {
-                        return new ConstantNode(new ODataEnumValue(constantNode.Value.ToString(), targetTypeReference.Definition.ToString()), constantNode.Value.ToString(), targetTypeReference);
+                        string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
+                        return new ConstantNode(new ODataEnumValue(constantNode.Value.ToString(), targetTypeReference.Definition.ToString()), literalText, targetTypeReference);
                     }
                     else
                     {
