@@ -355,6 +355,7 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespacePet2.AddKeys(FullyQualifiedNamespacePet2.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Single, false));
             FullyQualifiedNamespacePet2.AddStructuralProperty("Color", EdmPrimitiveTypeKind.String);
             FullyQualifiedNamespacePet2.AddStructuralProperty("PetColorPattern", colorTypeReference);
+            FullyQualifiedNamespacePet2.AddStructuralProperty("Shape", new EdmEnumTypeReference(NonFlagShapeType, false));
             model.AddElement(FullyQualifiedNamespacePet2);
 
             FullyQualifiedNamespacePet3.AddKeys(FullyQualifiedNamespacePet3.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Double, false));
@@ -1144,6 +1145,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""ID"" Type=""Edm.Single"" Nullable=""false"" />
         <Property Name=""Color"" Type=""Edm.String"" />
         <Property Name=""PetColorPattern"" Type=""Fully.Qualified.Namespace.ColorPattern"" Nullable=""false"" />
+        <Property Name=""Shape"" Type=""Fully.Qualified.Namespace.NonFlagShape"" Nullable=""false"" />
       </EntityType>
       <EntityType Name=""Pet3"">
         <Key>
