@@ -357,6 +357,8 @@ namespace Microsoft.OData.UriParser
         {
             Func<QueryToken, QueryNode> InBinderMethod = (queryToken) =>
              {
+                 ExceptionUtils.CheckArgumentNotNull(queryToken, "queryToken");
+
                  if (queryToken.Kind == QueryTokenKind.Literal)
                  {
                      return LiteralBinder.BindInLiteral((LiteralToken)queryToken);
