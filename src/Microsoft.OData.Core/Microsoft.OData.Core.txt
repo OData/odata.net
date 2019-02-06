@@ -242,7 +242,6 @@ HttpHeaderValueLexer_TokenExpectedButFoundQuotedString=An error occurred when pa
 HttpHeaderValueLexer_FailedToReadTokenOrQuotedString=An error occurred when parsing the HTTP header '{0}'. The header value '{1}' is incorrect at position '{2}' because a token or a quoted-string is expected at this position but were not found.
 HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString=An error occurred when parsing the HTTP header '{0}'. The header value '{1}' is incorrect at position '{2}' because '{3}' is not a valid separator after a quoted-string.
 HttpHeaderValueLexer_EndOfFileAfterSeparator=An error occurred when parsing the HTTP header '{0}'. The header value '{1}' is incorrect at position '{2}' because the header value should not end with the separator '{3}'.
-
 MediaType_EncodingNotSupported=The character set '{0}' is not supported.
 
 MediaTypeUtils_DidNotFindMatchingMediaType=A supported MIME type could not be found that matches the acceptable MIME types for the request. The supported type(s) '{0}' do not match any of the acceptable MIME types '{1}'.

@@ -166,6 +166,29 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 {
                     ValidateContentType(testMessage, expectedResults, true, assert);
                 }
+
+                if (testConfiguration.MessageWriterSettings.OmitNullValues)
+                {
+                    if (!testConfiguration.IsRequest)
+                    {
+                        // Verify that omit-values is set to nulls in response's Preference-Applied header.
+                        assert.IsTrue(testMessage is TestResponseMessage, "Expected response message type.");
+                        ODataPreferenceHeader preferenceAppliedHeader =
+                            new ODataPreferenceHeader((TestResponseMessage) testMessage);
+                        assert.IsNotNull(preferenceAppliedHeader, "Expect to find non-null Preference-Applied header.");
+                        assert.AreEqual(Microsoft.OData.ODataConstants.OmitValuesNulls,
+                            preferenceAppliedHeader.OmitValues, "Expect omit-values value to be 'nulls'");
+                    }
+                    else
+                    {
+                        // Verify that omit-values doesn't affect request payload.
+                        assert.IsTrue(testMessage is TestRequestMessage, "Expected request message type.");
+                        ODataPreferenceHeader preferHeader =
+                            new ODataPreferenceHeader((TestRequestMessage) testMessage);
+                        assert.IsNull(preferHeader.OmitValues,
+                            "Expect omit-value preference not be found in the Prefer header");
+                    }
+                }
             }
         }
 
@@ -281,7 +304,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             this PayloadWriterTestDescriptor<T> testDescriptor,
             WriterTestConfiguration testConfiguration,
             bool alwaysSpecifyOwningContainer = false,
-            BaselineLogger baselineLogger = null, 
+            BaselineLogger baselineLogger = null,
             Action<ODataMessageWriterTestWrapper> writeAction = null)
         {
             T property = testDescriptor.PayloadItems.Single();
@@ -488,6 +511,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 }
 
                 responseMessage.StatusCode = 200;
+
+                if (testConfiguration.MessageWriterSettings.OmitNullValues)
+                {
+                    responseMessage.PreferenceAppliedHeader().OmitValues = Microsoft.OData.ODataConstants.OmitValuesNulls;
+                }
+
                 message = responseMessage;
             }
 
@@ -679,9 +708,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <param name="flush">A boolean flag indicating whether to flush the writer after writing.</param>
         /// <param name="items">The payload items to write.</param>
         /// <remarks>
-        ///     The list of <paramref name="items"/> is interpreted in the following way: 
+        ///     The list of <paramref name="items"/> is interpreted in the following way:
         ///     for every non-null item we call WriteStart; for every null item we call WriteEnd.
-        ///     null items can be omitted at the end of the list, e.g., a list of a feed and an entry 
+        ///     null items can be omitted at the end of the list, e.g., a list of a feed and an entry
         ///     item would be 'auto-completed' with two null entries.
         /// </remarks>
         internal static void WritePayload<T>(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, bool flush, IList<T> items, int throwUserExceptionAt = -1)

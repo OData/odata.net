@@ -681,6 +681,16 @@ namespace Microsoft.OData
             this.currentResourceDepth--;
         }
 
+
+        /// <summary>
+        /// Returns whether properties of null values should be restored when materializing the payload.
+        /// </summary>
+        /// <returns>Return true to restore null-value properties; false otherwise.</returns>
+        protected bool ShouldRestoreNullValues()
+        {
+            return this.inputContext.ShouldRestoreNullValues();
+        }
+
         /// <summary>
         /// Reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>

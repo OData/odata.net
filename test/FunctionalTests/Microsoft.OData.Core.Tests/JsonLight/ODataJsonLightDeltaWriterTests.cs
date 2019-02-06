@@ -60,6 +60,22 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         };
 
+        private readonly ODataResource customerUpdatedWithNullValues = new ODataResource
+        {
+            Id = new Uri("Customers('BOTTM')", UriKind.Relative),
+            Properties = new List<ODataProperty>
+            {
+                new ODataProperty { Name = "ContactName", Value = null },
+            },
+            TypeName = "MyNS.Customer",
+            SerializationInfo = new ODataResourceSerializationInfo
+            {
+                NavigationSourceEntityTypeName = "MyNS.Customer",
+                NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
+                NavigationSourceName = "Customers"
+            }
+        };
+
         private readonly ODataDeltaDeletedLink linkToOrder10643 = new ODataDeltaDeletedLink(new Uri("Customers('ALFKI')", UriKind.Relative), new Uri("Orders('10643')", UriKind.Relative), "Orders");
 
         private readonly ODataDeltaLink linkToOrder10645 = new ODataDeltaLink(new Uri("Customers('BOTTM')", UriKind.Relative), new Uri("Orders('10645')", UriKind.Relative), "Orders");
@@ -1356,7 +1372,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 new ODataDeletedResource()
                 {
                     Reason = DeltaDeletedEntryReason.Deleted,
-                    Properties = new ODataProperty[] 
+                    Properties = new ODataProperty[]
                     {
                         new ODataProperty() { Name = "Name", Value = "Scissors" },
                         new ODataProperty() { Name = "Id", Value = 1 }
@@ -2031,7 +2047,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             this.TestPayload().Should().Be("{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}");
         }
-        
+
         [Fact]
         public void WriteTopLevelDeletedEntityFromDifferentSetWithoutInfo()
         {
@@ -2047,6 +2063,155 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.Flush();
 
             this.TestPayload().Should().Be("{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}");
+        }
+
+        /// <summary>
+        /// When using regular OData writer with required <code>writingDelta = true</code> to write
+        /// <see cref="ODataDeltaResourceSet"/> containing <see cref="ODataResource"/>, property value of null
+        /// should always be written in response (regardless of omitNullValues preference setting).
+        /// </summary>
+        [Fact]
+        public void WriteTopLevelEntityWithNullPropertyValues()
+        {
+            this.TestInit(this.GetModel());
+
+
+            foreach (bool omitNullValues in new bool[] {true, false})
+            {
+                using (this.stream = new MemoryStream())
+                {
+                    // Create resource set writer with specified omitNullValues setting
+                    ODataJsonLightWriter writer = new ODataJsonLightWriter(
+                        CreateJsonLightOutputContext(this.stream, this.GetModel(), omitNullValues, false, null, ODataVersion.V401),
+                        this.GetCustomers(),
+                        this.GetCustomerType(),
+                        true,
+                        false,
+                        /*writingDelta*/ true);
+                    writer.WriteStart(feedWithoutInfo);
+                    writer.WriteStart(customerUpdatedWithNullValues);
+                    writer.WriteEnd(); // customer
+                    writer.WriteEnd(); // delta resource set
+                    writer.Flush();
+
+                    this.TestPayload().Should().Be(
+                            "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":null}]}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// When using <see cref="ODataJsonLightDeltaWriter"/> with required <code>writingDelta = true</code> to write
+        /// <see cref="ODataDeltaResourceSet"/> containing <see cref="ODataNestedResourceInfo"/>, property value of null
+        /// should always be written in response (regardless of omitNullValues preference setting).
+        /// </summary>
+        [Fact]
+        public void WriteEntityWithNullPropertyValueInDeltaFeed()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
+
+            ODataResource orderEntry = new ODataResource()
+            {
+                SerializationInfo = new ODataResourceSerializationInfo
+                {
+                    NavigationSourceEntityTypeName = "MyNS.Order",
+                    NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
+                    NavigationSourceName = "Orders"
+                },
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty() { Name = "Id", Value = 1 }
+                },
+            };
+
+            ODataNestedResourceInfo shippingAddressInfo = new ODataNestedResourceInfo
+            {
+                Name = "ShippingAddress",
+                IsCollection = false
+            };
+
+            ODataResource shippingAddress = new ODataResource
+            {
+                Properties = new List<ODataProperty>
+                {
+                    new ODataProperty { Name = "City", Value = "Shanghai" },
+                    new ODataProperty { Name = "PostalCode", Value = null }
+                }
+            };
+
+            var result = new ODataQueryOptionParser(this.GetModel(), this.GetCustomerType(), this.GetCustomers(), new Dictionary<string, string> { { "$expand", "Orders($select=ShippingAddress)" }}).ParseSelectAndExpand();
+
+            ODataUri odataUri = new ODataUri()
+            {
+                ServiceRoot = new Uri("http://host/service"),
+                SelectAndExpand = result
+            };
+
+            foreach (bool omitNullValues in new bool[] {true, false})
+            {
+                using (this.stream = new MemoryStream())
+                {
+                    var outputContext = CreateJsonLightOutputContext(this.stream, this.GetModel(), omitNullValues,
+                        false, odataUri, ODataVersion.V401);
+                    ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(outputContext, this.GetProducts(),
+                        this.GetProductType());
+                    writer.WriteStart(feed);
+                    writer.WriteStart(orderEntry);
+                    writer.WriteStart(shippingAddressInfo);
+                    writer.WriteStart(shippingAddress);
+                    writer.WriteEnd(); // shippingAddress
+                    writer.WriteEnd(); // shippingAddressInfo
+                    writer.WriteEnd(); // Order
+                    writer.WriteEnd(); // Feed
+                    writer.Flush();
+
+                    this.TestPayload().Should().Be(
+                            "{\"@context\":\"http://host/service/$metadata#Products(Orders(ShippingAddress))/$delta\",\"value\":[{\"@context\":\"http://host/service/$metadata#Orders/$entity\",\"Id\":1,\"ShippingAddress\":{\"City\":\"Shanghai\",\"PostalCode\":null}}]}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// When using regular OData writer with required <code>writingDelta = true</code> to write <see cref="ODataDeletedResource"/>,
+        /// property value of null should always be written in response (regardless of omitNullValues preference setting).
+        /// </summary>
+        [Fact]
+        public void WriteDeletedResourceWithPropertyValueNull()
+        {
+            this.TestInit(this.GetModel());
+            ODataDeletedResource deletedEntity = new ODataDeletedResource()
+            {
+                Reason = DeltaDeletedEntryReason.Changed,
+                TypeName = "MyNS.PhysicalProduct",
+                Properties = new[]
+                    {
+                        new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
+                        new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
+                        new ODataProperty {Name = "Material", Value = null}
+                    }
+            };
+
+            foreach (bool omitNullValues in new bool[] {true, false})
+            {
+                using (this.stream = new MemoryStream())
+                {
+                    ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
+                    ODataJsonLightWriter writer = new ODataJsonLightWriter(
+                        CreateJsonLightOutputContext(this.stream, this.GetModel(), omitNullValues, false, null,
+                            ODataVersion.V401),
+                        this.GetProducts(), this.GetProductType(), true, false, /*writingDelta*/true);
+                    writer.WriteStart(feed);
+                    writer.WriteStart(deletedEntity);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.Flush();
+
+                    this.TestPayload().Should().Be(
+                            "{\"@context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"@type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":null}]}");
+                }
+            }
         }
 
         [Fact]
@@ -2423,9 +2588,20 @@ namespace Microsoft.OData.Tests.JsonLight
             return (new StreamReader(stream)).ReadToEnd();
         }
 
-        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null, ODataVersion version = ODataVersion.V4)
+        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel,
+            bool fullMetadata = false, ODataUri uri = null, ODataVersion version = ODataVersion.V4)
         {
-            var settings = new ODataMessageWriterSettings { Version = version, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
+            return CreateJsonLightOutputContext(stream, userModel, /*omitNullValues*/ false, fullMetadata, uri, version);
+        }
+
+        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool omitNullValues, bool fullMetadata = false, ODataUri uri = null, ODataVersion version = ODataVersion.V4)
+        {
+            var settings = new ODataMessageWriterSettings
+            {
+                Version = version,
+                ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*"),
+                OmitNullValues = omitNullValues
+            };
             settings.SetServiceDocumentUri(new Uri("http://host/service"));
             if (uri != null)
             {

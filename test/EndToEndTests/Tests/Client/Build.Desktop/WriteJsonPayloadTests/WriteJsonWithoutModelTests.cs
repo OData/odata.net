@@ -146,6 +146,36 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         }
 
         /// <summary>
+        /// Write and read an expanded customer entry containing primitive, complex, collection of primitive/complex properties with null values
+        /// using omit-value=nulls Preference header.
+        /// </summary>
+        [TestMethod]
+        public void ExpandedCustomerEntryOmitNullValuesTest()
+        {
+            // Repeat with full and minimal metadata.
+            foreach (string mimeType in this.mimeTypes.GetRange(0, 2))
+            {
+                var settings = new ODataMessageWriterSettings();
+                settings.ODataUri = new ODataUri() {ServiceRoot = this.ServiceUri};
+                string rspRecvd = null;
+
+                var responseMessageWithModel = new StreamResponseMessage(new MemoryStream());
+                responseMessageWithModel.SetHeader("Content-Type", mimeType);
+                responseMessageWithModel.PreferenceAppliedHeader().OmitValues = ODataConstants.OmitValuesNulls;
+
+                using (var messageWriter = new ODataMessageWriter(responseMessageWithModel, settings,
+                        WritePayloadHelper.Model))
+                {
+                    var odataWriter = messageWriter.CreateODataResourceWriter(WritePayloadHelper.CustomerSet,
+                        WritePayloadHelper.CustomerType);
+                    rspRecvd = this.WriteAndVerifyExpandedCustomerEntryWithSomeNullValues(
+                        responseMessageWithModel, odataWriter, /* hasModel */false);
+                    Assert.IsNotNull(rspRecvd);
+                }
+            }
+        }
+
+        /// <summary>
         /// Write an entry containing stream, named stream
         /// </summary>
         [TestMethod]
@@ -519,10 +549,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return WritePayloadHelper.ReadStreamContent(stream);
         }
 
-        private string WriteAndVerifyExpandedCustomerEntry(StreamResponseMessage responseMessage,
-                                                           ODataWriter odataWriter, bool hasModel, string mimeType)
+        private void WriteCustomerEntry( ODataWriter odataWriter, bool hasModel, bool withSomeNullValues)
         {
-            ODataResourceWrapper customerEntry = WritePayloadHelper.CreateCustomerEntry(hasModel);
+            ODataResourceWrapper customerEntry = WritePayloadHelper.CreateCustomerEntry(hasModel, withSomeNullValues);
 
             var loginFeed = new ODataResourceSet() { Id = new Uri(this.ServiceUri + "Customer(-9)/Logins") };
             if (!hasModel)
@@ -533,30 +562,41 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var loginEntry = WritePayloadHelper.CreateLoginEntry(hasModel);
 
 
-            customerEntry.NestedResourceInfoWrappers = customerEntry.NestedResourceInfoWrappers.Concat(WritePayloadHelper.CreateCustomerNavigationLinks());
-            customerEntry.NestedResourceInfoWrappers = customerEntry.NestedResourceInfoWrappers.Concat(new[]{  new ODataNestedResourceInfoWrapper()
-            {
-                NestedResourceInfo = new ODataNestedResourceInfo()
-                {
-                    Name = "Logins",
-                    IsCollection = true,
-                    Url = new Uri(this.ServiceUri + "Customer(-9)/Logins")
-                },
-                NestedResourceOrResourceSet = new ODataResourceSetWrapper()
-                {
-                    ResourceSet = loginFeed,
-                    Resources = new List<ODataResourceWrapper>()
-                    {
-                        new ODataResourceWrapper()
+            // Setting null values for some navigation links, those null links won't be serialized
+            // as odata.navigationlink annotations.
+            customerEntry.NestedResourceInfoWrappers = customerEntry.NestedResourceInfoWrappers.Concat(
+                WritePayloadHelper.CreateCustomerNavigationLinks(withSomeNullValues));
+            customerEntry.NestedResourceInfoWrappers = customerEntry.NestedResourceInfoWrappers.Concat(
+                new[]{  new ODataNestedResourceInfoWrapper()
                         {
-                            Resource = loginEntry,
-                            NestedResourceInfoWrappers = WritePayloadHelper.CreateLoginNavigationLinksWrapper().ToList()
+                            NestedResourceInfo = new ODataNestedResourceInfo()
+                            {
+                                Name = "Logins",
+                                IsCollection = true,
+                                Url = new Uri(this.ServiceUri + "Customer(-9)/Logins")
+                            },
+                            NestedResourceOrResourceSet = new ODataResourceSetWrapper()
+                            {
+                                ResourceSet = loginFeed,
+                                Resources = new List<ODataResourceWrapper>()
+                                {
+                                    new ODataResourceWrapper()
+                                    {
+                                        Resource = loginEntry,
+                                        NestedResourceInfoWrappers = WritePayloadHelper.CreateLoginNavigationLinksWrapper(withSomeNullValues).ToList()
+                                    }
+                                }
+                            }
                         }
-                    }
-                }
-            }});
+                    });
 
             ODataWriterHelper.WriteResource(odataWriter, customerEntry);
+        }
+
+        private string WriteAndVerifyExpandedCustomerEntry(StreamResponseMessage responseMessage,
+                                                           ODataWriter odataWriter, bool hasModel, string mimeType)
+        {
+            WriteCustomerEntry(odataWriter, hasModel, false);
 
             // Some very basic verification for the payload.
             bool verifyFeedCalled = false;
@@ -597,6 +637,57 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 Assert.IsTrue(verifyFeedCalled && verifyEntryCalled == 2 && verifyNavigationCalled,
                               "Verification action not called.");
             }
+
+            return WritePayloadHelper.ReadStreamContent(stream);
+        }
+
+        private string WriteAndVerifyExpandedCustomerEntryWithSomeNullValues(StreamResponseMessage responseMessage,
+                                                   ODataWriter odataWriter, bool hasModel)
+        {
+            WriteCustomerEntry(odataWriter, hasModel, /* withSomeNullValues */true);
+
+            // Some very basic verification for the payload.
+            bool verifyFeedCalled = false;
+            int verifyEntryCalled = 0;
+            int verifyNullValuesCount = 0;
+            bool verifyNavigationCalled = false;
+            Action<ODataResourceSet> verifyFeed = (feed) =>
+            {
+                verifyFeedCalled = true;
+            };
+
+            Action<ODataResource> verifyEntry = (entry) =>
+            {
+                if (entry.TypeName.Contains("Customer"))
+                {
+                    Assert.AreEqual(4, entry.Properties.Count());
+                    verifyEntryCalled++;
+                }
+
+                if (entry.TypeName.Contains("Login"))
+                {
+                    Assert.AreEqual(2, entry.Properties.Count());
+                    verifyEntryCalled++;
+                }
+
+                // Counting restored null property value during response de-serialization.
+                verifyNullValuesCount += entry.Properties.Count(p => p.Value == null);
+            };
+
+            Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
+            {
+                Assert.IsNotNull(navigation.Name);
+                verifyNavigationCalled = true;
+            };
+
+            Stream stream = responseMessage.GetStream();
+            stream.Seek(0, SeekOrigin.Begin);
+            WritePayloadHelper.ReadAndVerifyFeedEntryMessage(false, responseMessage, WritePayloadHelper.CustomerSet, WritePayloadHelper.CustomerType,
+                                                verifyFeed, verifyEntry, verifyNavigation);
+            Assert.IsTrue(verifyFeedCalled);
+            Assert.IsTrue(verifyEntryCalled == 2);
+            Assert.IsTrue(verifyNullValuesCount == 4);
+            Assert.IsTrue(verifyNavigationCalled);
 
             return WritePayloadHelper.ReadStreamContent(stream);
         }

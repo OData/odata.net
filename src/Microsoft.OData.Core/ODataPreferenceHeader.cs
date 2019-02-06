@@ -6,8 +6,10 @@
 
 namespace Microsoft.OData
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     /// <summary>
@@ -60,6 +62,11 @@ namespace Microsoft.OData
         /// The odata.track-changes preference token.
         /// </summary>
         private const string ODataTrackChangesPreferenceToken = "odata.track-changes";
+
+        /// <summary>
+        /// The omit-values preference token.
+        /// </summary>
+        private const string OmitValuesPreferenceToken = "omit-values";
 
         /// <summary>
         /// The Prefer header name.
@@ -240,6 +247,34 @@ namespace Microsoft.OData
                 {
                     this.Set(new HttpHeaderValueElement(ODataAnnotationPreferenceToken, AddQuotes(value), EmptyParameters));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set the "omit-values" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// For the preference or applied preference of omitting null values, use string "nulls".
+        /// </summary>
+        public string OmitValues
+        {
+            get
+            {
+                HttpHeaderValueElement omitValues = this.Get(OmitValuesPreferenceToken);
+                return omitValues != null ? omitValues.Value : null;
+            }
+
+            [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Need lower case string here.")]
+            set
+            {
+                ExceptionUtils.CheckArgumentStringNotEmpty(value, "OmitValues");
+
+                string normalizedValue = value.Trim().ToLowerInvariant();
+                if (string.Equals(normalizedValue, ODataConstants.OmitValuesNulls, StringComparison.Ordinal))
+                {
+                    this.Set(new HttpHeaderValueElement(OmitValuesPreferenceToken, ODataConstants.OmitValuesNulls, EmptyParameters));
+                }
+
+                // No-ops for other preference values, including "defaults" which is in the OData protocol but not implemented yet.
             }
         }
 

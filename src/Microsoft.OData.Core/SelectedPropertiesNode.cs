@@ -4,6 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections;
+using System.Runtime.InteropServices.ComTypes;
+using Microsoft.OData.JsonLight;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -37,6 +41,9 @@ namespace Microsoft.OData
 
         /// <summary>An empty set of navigation properties to return when nothing is selected.</summary>
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
+
+        /// <summary>An empty enumeration of EDM properties to return when nothing is selected.</summary>
+        private static readonly IEnumerable<IEdmProperty> EmptyEdmProperties = Enumerable.Empty<IEdmProperty>();
 
         /// <summary>The type of the current node.</summary>
         private SelectionType selectionType = SelectionType.PartialSubtree;
@@ -215,6 +222,19 @@ namespace Microsoft.OData
             /// The normal case where a partial subtree has been selected.
             /// </summary>
             PartialSubtree = 2,
+        }
+
+        /// <summary>
+        /// Gets names of the expanded entity nodes at current level.
+        /// </summary>
+        internal IEnumerable<string> SelectedExpandedEntities
+        {
+            get
+            {
+                return this.children == null
+                    ? Enumerable.Empty<string>()
+                    : this.children.Where(node => node.Value.isExpandedNavigationProperty).Select(c => c.Key);
+            }
         }
 
         /// <summary>
@@ -454,10 +474,109 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Gets all selected structured properties at the current node.
+        /// </summary>
+        /// <param name="structuredType">The current structured type.</param>
+        /// <returns>The selected structured properties at this node level.</returns>
+        /// <remarks>Result does not include the dynamic properties, which can be retrieved by <code>GetSelectedDynamicProperties</code></remarks>
+        internal IEnumerable<IEdmProperty> GetSelectedProperties(IEdmStructuredType structuredType)
+        {
+            if (this.selectionType == SelectionType.Empty)
+            {
+                return EmptyEdmProperties;
+            }
+
+            // We cannot determine the selected properties without the user model. This means we won't be computing the missing properties.
+            if (structuredType == null)
+            {
+                return EmptyEdmProperties;
+            }
+
+            if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
+            {
+                return structuredType.Properties();
+            }
+
+            Debug.Assert(this.selectedProperties != null, "selectedProperties != null");
+
+            // Get properties selected, and filter out unrecognized properties.
+            return this.selectedProperties.Select(structuredType.FindProperty).OfType<IEdmProperty>();
+        }
+
+        /// <summary>
+        /// Gets the list of names for selected nullable declared or dynamic properties missing from payload.
+        /// </summary>
+        /// <param name="structuredType">The current structured type.</param>
+        /// <param name="resourceState">The current resource state.</param>
+        /// <returns>The list of property names missing from payload.</returns>
+        internal IList<string> GetSelectedNullValueProperties(IEdmStructuredType structuredType,
+            IODataJsonLightReaderResourceState resourceState)
+        {
+            IList<string> result = new List<string>();
+
+            // Nothing is selected.
+            // Or we cannot determine the selected properties without the user model. This means we won't be computing the missing properties.
+            if (this.selectionType == SelectionType.Empty || structuredType == null)
+            {
+                return result;
+            }
+
+            if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
+            {
+                // Combine the list of declared properties with selected properties w/o wildcard,
+                IEnumerable<string> properties = structuredType.Properties()
+                    .Where(p => p.Type.IsNullable &&
+                                p.PropertyKind != EdmPropertyKind.Navigation)
+                    .Select(p => p.Name);
+
+                if (this.selectedProperties != null)
+                {
+                    properties = properties.Concat(
+                        this.selectedProperties.Where(name => !name.Equals(StarSegment)));
+                }
+
+                // Get distinct items that haven't been read.
+                result = properties.Where(name =>
+                    !resourceState.Resource.Properties.Any(pRead => pRead.Name.Equals(name, StringComparison.Ordinal)) &&
+                    !resourceState.NavigationPropertiesRead.Contains(name))
+                    .Distinct().ToList();
+            }
+            else
+            {
+                foreach (string selected in this.selectedProperties)
+                {
+                    // Skip properties that have been read (primitive or structural).
+                    bool alreadyRead = resourceState.Resource.Properties.Any(p => p.Name.Equals(selected, StringComparison.Ordinal))
+                                       || resourceState.NavigationPropertiesRead.Contains(selected);
+
+                    if (alreadyRead)
+                    {
+                        continue;
+                    }
+
+                    IEdmProperty property = structuredType.FindProperty(selected);
+                    if (property != null
+                        && (!property.Type.IsNullable
+                            || property.PropertyKind == EdmPropertyKind.Navigation))
+                    {
+                        // When resolved to declared property successfully,
+                        // Skip declared properties that are not null-able types.
+                        // Skip navigation properties (no navigation links need to be restored as null.)
+                        continue;
+                    }
+
+                    result.Add(selected);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets the selected stream properties for the current node.
         /// </summary>
         /// <param name="entityType">The current entity type.</param>
-        /// <returns>The selected stream properties.</returns>
+        /// <returns>The selected stream properties at this node level.</returns>
         internal IDictionary<string, IEdmStructuralProperty> GetSelectedStreamProperties(IEdmEntityType entityType)
         {
             if (this.selectionType == SelectionType.Empty)

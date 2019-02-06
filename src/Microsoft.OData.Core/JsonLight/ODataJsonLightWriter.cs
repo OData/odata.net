@@ -270,15 +270,32 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(parentNavLink.GetInstanceAnnotations(), parentNavLink.Name);
-                }
 
-                // Write the property name of an expanded navigation property to start the value.
-                this.jsonWriter.WriteName(parentNavLink.Name);
+                    // Annotated resource won't be omitted even if it is null.
+                    if (!this.ShouldOmitNullValues() || parentNavLink.GetInstanceAnnotations().Count > 0)
+                    {
+                        // Write the property name of an expanded navigation property to start the value of null per preference setting.
+                        this.jsonWriter.WriteName(parentNavLink.Name);
+
+                        // Optimization: write null and return directly.
+                        this.jsonWriter.WriteValue((string)null);
+                        return;
+                    }
+                }
+                else
+                {
+                    // Write the property name of an expanded navigation property to start the value.
+                    this.jsonWriter.WriteName(parentNavLink.Name);
+                }
             }
 
             if (resource == null)
             {
-                this.jsonWriter.WriteValue((string)null);
+                if (!this.ShouldOmitNullValues())
+                {
+                    this.jsonWriter.WriteValue((string)null);
+                }
+
                 return;
             }
 
@@ -331,6 +348,7 @@ namespace Microsoft.OData.JsonLight
                 this.ResourceType,
                 resource.Properties,
                 false /* isComplexValue */,
+                this.ShouldOmitNullValues(),
                 this.DuplicatePropertyNameChecker);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -1228,6 +1246,7 @@ namespace Microsoft.OData.JsonLight
                 this.ResourceType,
                 properties,
                 false /* isComplexValue */,
+                false /* omitNullValues */,
                 this.DuplicatePropertyNameChecker);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
         }

@@ -205,6 +205,7 @@
     <Compile Include="UriBuilderTests\UriBuilderTests.cs" />
     <Compile Include="UrlModifyingTests\UrlModifyingTests.cs" />
     <Compile Include="WriteJsonPayloadTests\JsonLightConstants.cs" />
+    <Compile Include="WriteJsonPayloadTests\ReadOmitNullsResponseTests.cs" />
     <Compile Include="WriteJsonPayloadTests\VerifyPayloadHelper.cs" />
     <Compile Include="WriteJsonPayloadTests\SerializationInfoEdgeTests.cs" />
     <Compile Include="WriteJsonPayloadTests\WritePayloadHelper.cs" />

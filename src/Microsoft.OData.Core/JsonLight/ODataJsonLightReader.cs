@@ -1668,6 +1668,12 @@ namespace Microsoft.OData.JsonLight
             IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.ParentScope;
             parentResourceState.NavigationPropertiesRead.Add(this.CurrentNestedResourceInfo.Name);
 
+            if (parentResourceState.SelectedProperties.SelectedExpandedEntities.Contains(this.CurrentNestedResourceInfo.Name))
+            {
+                // Record that we read the expanded entity
+                parentResourceState.MetadataBuilder.MarkExpandedEntityProcessed(this.CurrentNestedResourceInfo.Name);
+            }
+
             // replace the 'NestedResourceInfoStart' scope with the 'NestedResourceInfoEnd' scope
             this.ReplaceScope(ODataReaderState.NestedResourceInfoEnd);
         }
@@ -2256,6 +2262,9 @@ namespace Microsoft.OData.JsonLight
 
             if (this.State == ODataReaderState.ResourceStart)
             {
+                // For non-delta response, need to restore omitted null values as required.
+                RestoreOmittedNullValues();
+
                 this.EndEntry(
                     new JsonLightResourceScope(
                         ODataReaderState.ResourceEnd,
@@ -2277,6 +2286,82 @@ namespace Microsoft.OData.JsonLight
                         this.CurrentResourceState.PropertyAndAnnotationCollector,
                         this.CurrentResourceState.SelectedProperties,
                         this.CurrentScope.ODataUri));
+            }
+        }
+
+        /// <summary>
+        /// For response de-serialization, restore the null values for properties that are omitted
+        /// by the omit-values=nulls preference header.
+        /// </summary>
+        private void RestoreOmittedNullValues()
+        {
+            // Restore omitted null value only when processing response and when
+            // Preference header omit-values=nulls is specified.
+            if (ShouldRestoreNullValues())
+            {
+                IODataJsonLightReaderResourceState resourceState = this.CurrentResourceState;
+                IEdmStructuredType edmStructuredType = resourceState.ResourceType;
+                SelectedPropertiesNode selectedProperties = resourceState.SelectedProperties;
+
+                if (selectedProperties == SelectedPropertiesNode.Empty)
+                {
+                    return;
+                }
+                else if (resourceState.Resource != null)
+                {
+                    Debug.Assert(edmStructuredType != null, "edmStructuredType != null");
+                    ODataResourceBase resource = resourceState.Resource;
+
+
+                    IList<string> nullPropertyNames =
+                        selectedProperties.GetSelectedNullValueProperties(edmStructuredType, resourceState);
+
+                    // Restore null Expanded entities, which are specified as "isExpandedNavigationProperty" the child nodes.
+                    foreach (string name in selectedProperties.SelectedExpandedEntities)
+                    {
+                        if (!resource.MetadataBuilder.IsExpandedEntityProcessed(name))
+                        {
+                            nullPropertyNames.Add(name);
+                        }
+                    }
+
+                    // Mark as processed, will throw if duplicate is detected.
+                    foreach (string name in nullPropertyNames)
+                    {
+                        this.CurrentResourceState.PropertyAndAnnotationCollector.MarkPropertyAsProcessed(name);
+                    }
+
+                    RestoreNullODataProperties(nullPropertyNames);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Restore the null property values in the resource.
+        /// </summary>
+        /// <param name="nullPropertyNames">The list of names of the properties to be restored with null values.</param>
+        private void RestoreNullODataProperties(IList<string> nullPropertyNames)
+        {
+            IList<ODataProperty> properties = nullPropertyNames.Select(name => new ODataProperty()
+                {
+                    Name = name,
+                    Value = new ODataNullValue()
+                }).ToList();
+
+            ODataResourceBase resource = this.CurrentResourceState.Resource;
+
+            ReadOnlyEnumerable<ODataProperty> readonlyEnumerable =
+                resource.Properties as ReadOnlyEnumerable<ODataProperty>;
+            if (readonlyEnumerable != null)
+            {
+                // For non-entity resource, add the property underneath the read-only enumerable.
+                resource.Properties.ConcatToReadOnlyEnumerable("Properties", properties);
+            }
+            else
+            {
+                // For entity resource, concatenate the property to original enumerable.
+                resource.Properties =
+                    resource.Properties.Concat(properties);
             }
         }
 

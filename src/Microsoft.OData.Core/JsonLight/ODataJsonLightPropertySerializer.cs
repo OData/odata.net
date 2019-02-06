@@ -84,6 +84,7 @@ namespace Microsoft.OData.JsonLight
                         null /*owningType*/,
                         true /* isTopLevel */,
                         false /* allowStreamProperty */,
+                        false /*omitNullValues */,
                         this.CreateDuplicatePropertyNameChecker());
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -100,11 +101,15 @@ namespace Microsoft.OData.JsonLight
         /// Whether the properties are being written for complex value. Also used for detecting whether stream properties
         /// are allowed as named stream properties should only be defined on ODataResource instances
         /// </param>
+        /// <param name="omitNullValues">Whether to omit null property values.
+        /// Value should be 'false' if writing delta payload, otherwise derived from request preference header.
+        /// </param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         internal void WriteProperties(
             IEdmStructuredType owningType,
             IEnumerable<ODataProperty> properties,
             bool isComplexValue,
+            bool omitNullValues,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             if (properties == null)
@@ -119,6 +124,8 @@ namespace Microsoft.OData.JsonLight
                     owningType,
                     false /* isTopLevel */,
                     !isComplexValue,
+                    // Annotated properties won't be omitted even if it is null.
+                    omitNullValues && property.InstanceAnnotations.Count == 0,
                     duplicatePropertyNameChecker);
             }
         }
@@ -141,7 +148,7 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // TODO: (issue #888) this logic results in type annotations not being written for dynamic properties on types that are not
-                // marked as open. Type annotations should always be written for dynamic properties whose type cannot be hueristically
+                // marked as open. Type annotations should always be written for dynamic properties whose type cannot be heuristically
                 // determined. Need to change this.currentPropertyInfo.MetadataType.IsOpenProperty to this.currentPropertyInfo.MetadataType.IsDynamic,
                 // and fix related tests and other logic (this change alone results in writing type even if it's already implied by context).
                 isOpenProperty = (!this.WritingResponse && this.currentPropertyInfo.MetadataType.OwningType == null) // Treat property as dynamic property when writing request and owning type is null
@@ -164,6 +171,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="allowStreamProperty">Should pass in true if we are writing a property of an ODataResource instance, false otherwise.
         /// Named stream properties should only be defined on ODataResource instances.</param>
+        /// <param name="omitNullValues"> Whether to omit null property values for writing.
+        /// Value should be 'false' if writing top level properties or delta payload, otherwise derived from request preference header.
+        /// </param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
         private void WriteProperty(
@@ -171,6 +181,7 @@ namespace Microsoft.OData.JsonLight
             IEdmStructuredType owningType,
             bool isTopLevel,
             bool allowStreamProperty,
+            bool omitNullValues,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             WriterValidationUtils.ValidatePropertyNotNull(property);
@@ -204,6 +215,15 @@ namespace Microsoft.OData.JsonLight
 
             ODataValue value = property.ODataValue;
 
+            bool isNullValue = (value == null || value is ODataNullValue);
+            if (isNullValue && omitNullValues)
+            {
+                if (!this.currentPropertyInfo.IsTopLevel)
+                {
+                    return;
+                }
+            }
+
             // handle ODataUntypedValue
             ODataUntypedValue untypedValue = value as ODataUntypedValue;
             if (untypedValue != null)
@@ -227,7 +247,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            if (value is ODataNullValue || value == null)
+            if (isNullValue)
             {
                 this.WriteNullProperty(property);
                 return;

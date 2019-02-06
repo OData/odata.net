@@ -1146,6 +1146,16 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Returns whether properties of null values should be omitted when serializing the payload.
+        /// </summary>
+        /// <returns>Return true to omit null-value properties; false otherwise.</returns>
+        protected bool ShouldOmitNullValues()
+        {
+            // Per protocol, omitNullValues doesn't affect delta payload.
+            return !this.writingDelta && this.outputContext.ShouldOmitNullValues();
+        }
+
+        /// <summary>
         /// Verifies that calling WriteStart resourceSet is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>

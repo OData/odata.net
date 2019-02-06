@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics;
+
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
@@ -23,6 +25,9 @@ namespace Microsoft.OData.Evaluation
     /// </summary>
     internal abstract class ODataResourceMetadataBuilder
     {
+        /// <summary>The expanded entities that have been processed.</summary>
+        protected readonly HashSet<string> ProcessedExpandedEntityNames = new HashSet<string>(StringComparer.Ordinal);
+
 #if !ODATA_CLIENT
         /// <summary>
         /// Gets an instance of the metadata builder which never returns anything other than nulls.
@@ -35,6 +40,7 @@ namespace Microsoft.OData.Evaluation
             }
         }
 #endif
+
 
         /// <summary>
         /// Gets instance of the metadata builder which belongs to the parent odata resource
@@ -173,6 +179,27 @@ namespace Microsoft.OData.Evaluation
         /// <param name="navigationPropertyName">The nested resource info we've already processed.</param>
         internal virtual void MarkNestedResourceInfoProcessed(string navigationPropertyName)
         {
+        }
+
+        /// <summary>
+        /// Return whether the given expanded entity of specified name has been processed.
+        /// </summary>
+        /// <param name="name">The name of the expanded entity.</param>
+        /// <returns>True if the expanded entity has been processed; False otherwise.</returns>
+        internal virtual bool IsExpandedEntityProcessed(string name)
+        {
+            return this.ProcessedExpandedEntityNames.Contains(name);
+        }
+
+        /// <summary>
+        /// Marks the given expanded entity as processed.
+        /// </summary>
+        /// <param name="expandedEntityName">The name of the expanded entity we've already processed.</param>
+        internal virtual void MarkExpandedEntityProcessed(string expandedEntityName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(expandedEntityName), "!string.IsNullOrEmpty(expandedEntityName)");
+            Debug.Assert(this.ProcessedExpandedEntityNames != null, "this.ProcessedExpandedEntityNames != null");
+            this.ProcessedExpandedEntityNames.Add(expandedEntityName);
         }
 
         /// <summary>

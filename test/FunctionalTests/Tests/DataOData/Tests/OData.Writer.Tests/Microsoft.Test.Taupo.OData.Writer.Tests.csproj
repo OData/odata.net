@@ -182,6 +182,9 @@
     <Content Include="JsonLight\JsonLightEntryWriterTests.OpenPropertiesInEntryTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="JsonLight\JsonLightEntryWriterTests.OmitNullPropertiesInEntryTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteFloatingPointValue.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

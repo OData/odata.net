@@ -4686,6 +4686,7 @@ public sealed class Microsoft.OData.ODataConstants {
 	public static string MethodPost = "POST"
 	public static string MethodPut = "PUT"
 	public static string ODataVersionHeader = "OData-Version"
+	public static string OmitValuesNulls = "nulls"
 }
 
 [
@@ -4853,6 +4854,7 @@ public class Microsoft.OData.ODataPreferenceHeader {
 	string AnnotationFilter  { public get; public set; }
 	bool ContinueOnError  { public get; public set; }
 	System.Nullable`1[[System.Int32]] MaxPageSize  { public get; public set; }
+	string OmitValues  { public get; public set; }
 	bool RespondAsync  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] ReturnContent  { public get; public set; }
 	bool TrackChanges  { public get; public set; }

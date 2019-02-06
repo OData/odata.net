@@ -83,5 +83,20 @@ namespace Microsoft.OData
             readOnlyEnumerable.AddToSourceList(item);
             return readOnlyEnumerable;
         }
+
+        /// <summary>
+        /// Returns a ReadOnlyEnumerableOfT that is the result of <paramref name="source"/> plus <paramref name="items"/>.
+        /// </summary>
+        /// <typeparam name="T">The element type of the enumerable.</typeparam>
+        /// <param name="source">The source enumerable to concatenate.</param>
+        /// <param name="collectionName">The name of the collection to report in case there's an error.</param>
+        /// <param name="items">Items to be concatenated to the source enumerable.</param>
+        /// <returns>Returns a ReadOnlyEnumerableOfT that is the result of <paramref name="source"/> plus <paramref name="items"/>.</returns>
+        internal static ReadOnlyEnumerable<T> ConcatToReadOnlyEnumerable<T>(this IEnumerable<T> source, string collectionName, IList<T> items)
+        {
+            ReadOnlyEnumerable<T> readOnlyEnumerable = source.GetOrCreateReadOnlyEnumerable(collectionName);
+            readOnlyEnumerable.AddToSourceList(items);
+            return readOnlyEnumerable;
+        }
     }
 }

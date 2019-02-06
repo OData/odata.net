@@ -647,6 +647,15 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Returns whether properties of null values should be restored when materializing the payload.
+        /// </summary>
+        /// <returns>Return true to restore null-value properties; false otherwise.</returns>
+        internal bool ShouldRestoreNullValues()
+        {
+            return this.ReadingResponse && this.MessageReaderSettings.NullValuesOmitted;
+        }
+
+        /// <summary>
         /// Perform the actual cleanup work.
         /// </summary>
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>

@@ -124,6 +124,15 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
+        public void WildcardShouldSelectAllProperties()
+        {
+            SelectedPropertiesNode.Create("*").Should()
+                .HaveProperties(this.cityType, "Id", "Name", "Size", "Photo", "Districts")
+                .And.HaveNavigations(this.cityType, "Districts")
+                .And.HaveChild(this.cityType, "Districts", c => c.Should().BeSameAsEmpty());
+        }
+
+        [Fact]
         public void SingleStreamPropertyWithNormalProperty()
         {
             SelectedPropertiesNode.Create("Size,Photo").Should().HaveOnlyStreams(this.cityType, "Photo");
@@ -151,6 +160,12 @@ namespace Microsoft.OData.Tests.Evaluation
         public void SpecifyingAWildCardShouldNotCauseDuplicates()
         {
             SelectedPropertiesNode.Create("Districts,*,Photo").Should().HaveStreams(this.cityType, "Photo").And.HaveNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
+
+            SelectedPropertiesNode.Create("Districts,*,Photo").Should()
+                .HaveStreams(this.cityType, "Photo")
+                .And.HaveProperties(this.cityType, "Id", "Name", "Size", "Photo", "Districts")
+                .And.HaveNavigations(this.cityType, "Districts")
+                .And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
 
         [Fact]
@@ -176,6 +191,7 @@ namespace Microsoft.OData.Tests.Evaluation
             // 2) 'Districts/*' should not override 'Districts'
             SelectedPropertiesNode.Create("*,Districts,Districts/*").Should()
                 .HaveStreams(this.cityType, "Photo")
+                .And.HaveProperties(this.cityType, "Id", "Name", "Size", "Photo", "Districts")
                 .And.HaveNavigations(this.cityType, "Districts")
                 .And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
@@ -190,6 +206,7 @@ namespace Microsoft.OData.Tests.Evaluation
                     "Districts",
                     c => c.Should()
                         .HaveStreams(this.districtType, "Thumbnail")
+                        .And.HaveProperties(this.districtType, "Id", "Zip", "Thumbnail", "City")
                         .And.HaveChild(this.districtType, "City", c2 => c2.Should().HaveEntireSubtree()));
         }
 
@@ -203,6 +220,7 @@ namespace Microsoft.OData.Tests.Evaluation
                     "Districts",
                     c => c.Should()
                         .HaveStreams(this.districtType, "Thumbnail")
+                        .And.HaveProperties(this.districtType, "Id", "Zip", "Thumbnail", "City")
                         .And.HaveNavigations(this.districtType, "City"));
         }
 
@@ -342,7 +360,10 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             SelectedPropertiesNode left = SelectedPropertiesNode.Create("*");
             SelectedPropertiesNode right = SelectedPropertiesNode.Create("Fake");
-            this.VerifyCombination(left, right, n => n.Should().HaveStreams(this.cityType, "Photo").And.HaveNavigations(this.cityType, "Districts"));
+            this.VerifyCombination(left, right,
+                n => n.Should().HaveStreams(this.cityType, "Photo")
+                    .And.HaveProperties(this.cityType, "Id", "Name", "Size", "Photo", "Districts")
+                    .And.HaveNavigations(this.cityType, "Districts"));
         }
 
         [Fact]
@@ -353,6 +374,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
             Action<SelectedPropertiesNode> verify = n => n.Should()
                 .HaveStreams(this.cityType, "Photo")
+                .And.HaveProperties(this.cityType, "Photo")
                 .And.HaveNavigations(this.cityType, "Districts")
                 .And.HaveChild(this.cityType, "Districts", c => c.Should().HaveOnlyStreams(this.districtType, "Thumbnail"));
 
@@ -372,6 +394,7 @@ namespace Microsoft.OData.Tests.Evaluation
                     "Districts",
                     c => c.Should()
                         .HaveStreams(this.districtType, "Thumbnail")
+                        .And.HaveProperties(this.districtType, "Thumbnail")
                         .And.HaveNavigations(this.districtType, "City")
                         .And.HaveChild(this.districtType, "City", c2 => c2.Should().HaveOnlyNavigations(this.cityType, "Districts")));
 
@@ -631,6 +654,12 @@ namespace Microsoft.OData.Tests.Evaluation
 
         internal SelectedPropertiesNodeAssertions(SelectedPropertiesNode node) : base(node)
         {
+        }
+
+        internal AndConstraint<SelectedPropertiesNodeAssertions> HaveProperties(IEdmEntityType entityType, params string[] propertyNames)
+        {
+            this.Subject.As<SelectedPropertiesNode>().GetSelectedProperties(entityType).Select(p => p.Name).Should().BeEquivalentTo(propertyNames);
+            return new AndConstraint<SelectedPropertiesNodeAssertions>(this);
         }
 
         internal AndConstraint<SelectedPropertiesNodeAssertions> HaveStreams(IEdmEntityType entityType, params string[] streamPropertyNames)

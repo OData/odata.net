@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics;
+
 namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 {
     using System;
@@ -594,9 +596,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         #region ExpandedCustomerEntryTestHelper
 
-        public static ODataResourceWrapper CreateCustomerEntry(bool hasModel)
+        public static ODataResourceWrapper CreateCustomerEntry(bool hasModel, bool withSomeNullValues = false)
         {
-            var customerEntryWrapper = CreateCustomerResourceWrapperNoMetadata(hasModel);
+            var customerEntryWrapper = CreateCustomerResourceWrapperNoMetadata(hasModel, withSomeNullValues);
             var customerEntry = customerEntryWrapper.Resource;
 
             customerEntry.Id = new Uri(ServiceUri + "Customer(-9)");
@@ -1079,7 +1081,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             };
         }
 
-        public static IEnumerable<ODataNestedResourceInfoWrapper> CreateCustomerNavigationLinks()
+        public static IEnumerable<ODataNestedResourceInfoWrapper> CreateCustomerNavigationLinks(bool withSomeNullValues)
         {
             return new List<ODataNestedResourceInfoWrapper>()
             {
@@ -1098,7 +1100,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     {
                         Name = "Husband",
                         IsCollection = false,
-                        Url = new Uri(ServiceUri + "Customer(-9)/Husband")
+                        Url = withSomeNullValues
+                            ? null
+                            : new Uri(ServiceUri + "Customer(-9)/Husband")
                     }
                 },
                 new ODataNestedResourceInfoWrapper()
@@ -1107,7 +1111,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     {
                         Name = "Wife",
                         IsCollection = false,
-                        Url = new Uri(ServiceUri + "Customer(-9)/Wife")
+                        Url = withSomeNullValues
+                            ? null
+                            : new Uri(ServiceUri + "Customer(-9)/Wife")
                     }
                 },
                 new ODataNestedResourceInfoWrapper()
@@ -1131,7 +1137,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return loginEntry;
         }
 
-        public static IEnumerable<ODataNestedResourceInfoWrapper> CreateLoginNavigationLinksWrapper()
+        public static IEnumerable<ODataNestedResourceInfoWrapper> CreateLoginNavigationLinksWrapper(bool withSomeNullValues)
         {
             return new List<ODataNestedResourceInfoWrapper>()
             {
@@ -1150,7 +1156,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     {
                         Name = "LastLogin",
                         IsCollection = false,
-                        Url = new Uri(ServiceUri + "Login('2')/LastLogin")
+                        Url = withSomeNullValues
+                            ? null
+                            : new Uri(ServiceUri + "Login('2')/LastLogin")
                     }
                 },
                 new ODataNestedResourceInfoWrapper()
@@ -1159,7 +1167,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     {
                         Name = "SentMessages",
                         IsCollection = true,
-                        Url = new Uri(ServiceUri + "Login('2')/SentMessages")
+                        Url = withSomeNullValues
+                            ? null
+                            : new Uri(ServiceUri + "Login('2')/SentMessages")
                     }
                 },
                 new ODataNestedResourceInfoWrapper()
@@ -1386,7 +1396,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry2Navigation;
         }
 
-        public static ODataResourceWrapper CreateCustomerResourceWrapperNoMetadata(bool hasModel)
+        public static ODataResourceWrapper CreateCustomerResourceWrapperNoMetadata(bool hasModel, bool withSomeNullValues = false)
         {
             var customerEntry = new ODataResource()
             {
@@ -1394,7 +1404,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             };
 
             var customerEntryP1 = new ODataProperty { Name = "CustomerId", Value = -9 };
-            var customerEntryP2 = new ODataProperty { Name = "Name", Value = "CustomerName" };
+            string aCustomerName = withSomeNullValues ? null : "CustomerName";
+            var customerEntryP2 = new ODataProperty {Name = "Name", Value = aCustomerName };
 
             var primaryContactInfo_nestedInfoWrapper = new ODataNestedResourceInfoWrapper()
             {
