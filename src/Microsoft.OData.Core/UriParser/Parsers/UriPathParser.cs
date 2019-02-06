@@ -91,7 +91,39 @@ namespace Microsoft.OData.UriParser
                             throw new ODataException(Strings.UriQueryPathParser_TooManySegments);
                         }
 
-                        segments.Add(Uri.UnescapeDataString(segment));
+                        if (segment.Length != 0 && segment[segment.Length - 1] == ':' && i != uriSegments.Length - 1)
+                        {
+                            segment = segment.Substring(0, segment.Length - 1);
+                            segments.Add(Uri.UnescapeDataString(segment));
+
+                            int j = i + 1;
+                            for(; j < uriSegments.Length; j++)
+                            {
+                                string subSegment = uriSegments[j];
+                                if (subSegment.Length != 0 && subSegment[subSegment.Length - 1] == ':')
+                                {
+                                    break;
+                                }
+                            }
+
+                            if (j == uriSegments.Length)
+                            {
+                                string escapedSegment = ":" + String.Join("/", uriSegments, i + 1, uriSegments.Length - i - 1);
+                                segments.Add(Uri.UnescapeDataString(escapedSegment));
+                                break;
+                            }
+                            else
+                            {
+                                uriSegments[j] = uriSegments[j].Substring(0, uriSegments[j].Length - 1); // remove the last ':'
+                                string escapedSegment = ":" + String.Join("/", uriSegments, i + 1, j - i);
+                                segments.Add(Uri.UnescapeDataString(escapedSegment));
+                                i = j;
+                            }
+                        }
+                        else
+                        {
+                            segments.Add(Uri.UnescapeDataString(segment));
+                        }
                     }
                 }
 

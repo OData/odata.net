@@ -889,6 +889,8 @@ RequestUriProcessor_ResourceNotFound=Resource not found for the segment '{0}'.
 RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset=Batched service action '{0}' cannot be invoked because it was bound to an entity created in the same changeset.
 RequestUriProcessor_Forbidden=Forbidden
 RequestUriProcessor_OperationSegmentBoundToANonEntityType=Found an operation bound to a non-entity type.
+RequestUriProcessor_NoBoundEscapeFunctionSupported=The request URI is not valid. The bound function binding to '{0}' supports the escape function annotation.
+RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter=The UrlEscape function '{0}' must have and only have one 'Edm.String' parameter.
 
 ; Note: The below list of error messages are common to both the OData and the OData.Query project.
 General_InternalError=An internal error '{0}' occurred.

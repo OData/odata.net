@@ -199,6 +199,28 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 #endif
         }
 
+        [Theory]
+        [InlineData("root:/", new[] { "root", ":" })]
+        [InlineData("root:/:/permissions", new[] { "root", ":", "permissions" })]
+        [InlineData("root:/photos/2018/February", new[] { "root", ":photos/2018/February" } )]
+        [InlineData("root:/photos%2f2018%2fFebruary", new[] { "root", ":photos/2018/February" } )]
+        [InlineData("root:/photos/2018/February:/permissions", new[] { "root", ":photos/2018/February", "permissions" } )]
+        [InlineData("root:/photos:2018:/permissions:/abc", new[] { "root", ":photos:2018", "permissions", ":abc" } )]
+        [InlineData("EntitySet('key'):/xyz:/perm", new[] { "EntitySet('key')", ":xyz", "perm" } )]
+        [InlineData(":/xyz:/perm", new[] { "", ":xyz", "perm" })]
+        public void ParsePathShouldAllowEscapeFunctionPattern(string pattern, string[] expected)
+        {
+            // Arrange
+            var fullUrl = new Uri(this.baseUri.AbsoluteUri + pattern);
+
+            // Act
+            var actual = this.pathParser.ParsePathIntoSegments(fullUrl, this.baseUri);
+
+            // Assert
+            Assert.Equal(expected.Length, actual.Count);
+            Assert.Equal(expected, actual);
+        }
+
         [Fact]
         public void ParsePathRequiresBaseUriToMatch()
         {

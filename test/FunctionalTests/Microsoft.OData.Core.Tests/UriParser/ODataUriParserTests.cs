@@ -10,10 +10,12 @@ using System.Globalization;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
-using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -1100,6 +1102,96 @@ namespace Microsoft.OData.Tests.UriParser
 
             Uri resultUri = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUriString, Uri.UnescapeDataString(resultUri.OriginalString));
+        }
+
+        [Fact]
+        public void ParseEscapeFunctionUrlReturnsTheSameODataPath()
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
+
+            // Act
+            string fullUriString = ServiceRoot + "/root/NS.Function(path='photos%2F2018%2FFebruray')";
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var functionPath = parser.ParsePath();
+
+            fullUriString = ServiceRoot + "/root:/photos/2018/Februray";
+            parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.True(functionPath.Equals(escapePath));
+
+            Assert.Equal(2, escapePath.Count());
+            OperationSegment segment = Assert.IsType<OperationSegment>(escapePath.Last());
+            Assert.Equal("NS.Function", segment.Operations.First().FullName());
+        }
+
+        [Fact]
+        public void ParseEscapeFunctionUrlThrowsWithoutEscapeFunction()
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: false);
+
+            // Act
+            var fullUriString = ServiceRoot + "/root:/photos/2018/Februray";
+            var parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            Action test = () => parser.ParsePath();
+
+            // Assert
+            var odataException = Assert.Throws<ODataException>(test);
+            Assert.Equal(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported("NS.OneDrive"), odataException.Message);
+        }
+
+        [Fact]
+        public void ParseEscapeFunctionUrlThrowsInvalidEscapeFunction()
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: true, multipleParameter: true);
+
+            // Act
+            var fullUriString = ServiceRoot + "/root:/photos/2018/Februray";
+            var parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            Action test = () => parser.ParsePath();
+
+            // Assert
+            var odataException = Assert.Throws<ODataException>(test);
+            Assert.Equal(ODataErrorStrings.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter("NS.Function"), odataException.Message);
+        }
+
+        internal static IEdmModel GetEdmModelWithEscapeFunction(bool escape, bool multipleParameter = false)
+        {
+            EdmModel model = new EdmModel();
+            EdmEntityType entityType = new EdmEntityType("NS", "OneDrive");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+
+            EdmFunction function = new EdmFunction("NS", "Function", EdmCoreModel.Instance.GetInt32(true), true, null, false);
+            function.AddParameter("entity", new EdmEntityTypeReference(entityType, true));
+            function.AddParameter("path", EdmCoreModel.Instance.GetString(true));
+
+            if (multipleParameter)
+            {
+                function.AddParameter("path2", EdmCoreModel.Instance.GetString(true));
+            }
+
+            model.AddElement(entityType);
+            model.AddElement(function);
+
+            EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
+            container.AddSingleton("root", entityType);
+            model.AddElement(container);
+
+            if (escape)
+            {
+                IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
+                IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
+
+                EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
+                annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+                model.SetVocabularyAnnotation(annotation);
+            }
+
+            return model;
         }
     }
 }
