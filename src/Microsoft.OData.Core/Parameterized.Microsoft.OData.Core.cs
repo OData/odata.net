@@ -5657,6 +5657,20 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The request URI is not valid. The bound function binding to '{0}' supports the escape function annotation."
+        /// </summary>
+        internal static string RequestUriProcessor_NoBoundEscapeFunctionSupported(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoBoundEscapeFunctionSupported, p0);
+        }
+
+        /// <summary>
+        /// A string like "The UrlEscape function '{0}' must have and only have one 'Edm.String' parameter."
+        /// </summary>
+        internal static string RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter, p0);
+        }
+
+        /// <summary>
         /// A string like "An internal error '{0}' occurred."
         /// </summary>
         internal static string General_InternalError(object p0) {
