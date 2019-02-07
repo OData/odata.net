@@ -310,17 +310,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperation function;
 
-            // Resolve overload function without parameter. Be noted, it picks the 
+            // Resolve overload function without parameter. Be noted, it picks the one with no optional parameters.
             var parameters = new string[] { };
             FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
             function.Should().BeSameAs(functionWithoutParameter);
 
-            // Resolve overload function with one required and three optional parameters (one omitted).
+            // Resolve overload function with one bound and two optional parameters (one omitted).
             parameters = new string[] { "Parameter1" };
             FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
             function.Should().BeSameAs(functionWithAllOptionalParameters);
 
-            // Resolve overload function with one required and three optional parameters (one omitted).
+            // Resolve overload function with one bound and two optional parameters (both specified).
             parameters = new string[] { "Parameter1", "Parameter2" };
             FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
             function.Should().BeSameAs(functionWithAllOptionalParameters);
