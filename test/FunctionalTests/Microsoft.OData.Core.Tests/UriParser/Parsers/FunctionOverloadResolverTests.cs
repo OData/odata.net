@@ -192,7 +192,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             parameters = new string[] { "Parameter1", "Parameter4" };
             Action resolve = () => FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
             resolve.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads("FunctionImport"));
-
         }
 
         [Fact]
@@ -288,7 +287,47 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             parameters = new string[] { "Parameter1", "Parameter4" };
             Action resolve = () => FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
             resolve.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Fully.Qualified.Namespace.Function", string.Join(",", parameters)));
+        }
 
+        [Fact]
+        public void OverloadBoundFunctionsWithAllOptionalParametersSuccessfullyResolved()
+        {
+            var model = new EdmModel();
+
+            var int32TypeReference = EdmCoreModel.Instance.GetInt32(false);
+
+            // Add function with all optional parameters.
+            var functionWithAllOptionalParameters = new EdmFunction("NS", "Function", int32TypeReference, true, null, true);
+            functionWithAllOptionalParameters.AddParameter("BindingParameter", int32TypeReference);
+            functionWithAllOptionalParameters.AddOptionalParameter("Parameter1", int32TypeReference);
+            functionWithAllOptionalParameters.AddOptionalParameter("Parameter2", int32TypeReference);
+            model.AddElement(functionWithAllOptionalParameters);
+
+            // Add an overload function without parameter.
+            var functionWithoutParameter = new EdmFunction("NS", "Function", int32TypeReference, true, null, true);
+            functionWithoutParameter.AddParameter("BindingParameter", int32TypeReference);
+            model.AddElement(functionWithoutParameter);
+
+            IEdmOperation function;
+
+            // Resolve overload function without parameter. Be noted, it picks the 
+            var parameters = new string[] { };
+            FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
+            function.Should().BeSameAs(functionWithoutParameter);
+
+            // Resolve overload function with one required and three optional parameters (one omitted).
+            parameters = new string[] { "Parameter1" };
+            FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
+            function.Should().BeSameAs(functionWithAllOptionalParameters);
+
+            // Resolve overload function with one required and three optional parameters (one omitted).
+            parameters = new string[] { "Parameter1", "Parameter2" };
+            FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
+            function.Should().BeSameAs(functionWithAllOptionalParameters);
+
+            // Return false if no match.
+            parameters = new string[] { "Parameter1", "Parameter4" };
+            FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeFalse();
         }
     }
 }
