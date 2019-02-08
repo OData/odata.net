@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     #region Namespaces
 
     using System.Collections.Generic;
@@ -354,7 +355,17 @@ namespace Microsoft.OData.UriParser
         /// <returns>The bound In token.</returns>
         protected virtual QueryNode BindIn(InToken inToken)
         {
-            InBinder inBinder = new InBinder(this.Bind);
+            Func<QueryToken, QueryNode> InBinderMethod = (queryToken) =>
+             {
+                 ExceptionUtils.CheckArgumentNotNull(queryToken, "queryToken");
+
+                 if (queryToken.Kind == QueryTokenKind.Literal)
+                 {
+                     return LiteralBinder.BindInLiteral((LiteralToken)queryToken);
+                 }
+                 return this.Bind(queryToken);
+             };
+            InBinder inBinder = new InBinder(InBinderMethod);
             return inBinder.BindInOperator(inToken, this.BindingState);
         }
     }
