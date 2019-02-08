@@ -217,7 +217,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var actual = this.pathParser.ParsePathIntoSegments(fullUrl, this.baseUri);
 
             // Assert
-            Assert.Equal(expected.Length, actual.Count);
             Assert.Equal(expected, actual);
         }
 
