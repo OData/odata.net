@@ -1879,6 +1879,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithInOperationWithBracketedCollection()
+        {
+            FilterClause filter = ParseFilter("ID in [1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("[1,2,3]");
+        }
+
+        [Fact]
         public void FilterWithInOperationWithMismatchedClosureCollection()
         {
             Action parse = () => ParseFilter("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -2022,6 +2030,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             OrderByClause orderby = ParseOrderBy("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
             orderby.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("(1,2,3)");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithBracketedCollection()
+        {
+            OrderByClause orderby = ParseOrderBy("ID in [1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            orderby.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("[1,2,3]");
         }
 
         [Fact]
