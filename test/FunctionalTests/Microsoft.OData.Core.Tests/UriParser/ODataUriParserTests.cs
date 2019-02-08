@@ -842,6 +842,72 @@ namespace Microsoft.OData.Tests.UriParser
         }
         #endregion
 
+        [Theory]
+        [InlineData("NS.GetMinSalary(minSalary=1,maxSalary=2)", 2)]
+        [InlineData("NS.GetMinSalary(minSalary=1)", 1)]
+        [InlineData("NS.GetMinSalary()", 0)]
+        public void ParsePathBoundFunctionWithOptionalParametersWorks(string functionPath, int expectedParameterCount)
+        {
+            // Arrange
+            var model = new EdmModel();
+
+            var customer = new EdmEntityType("NS", "Customer", null, false, false);
+            var customerId = customer.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false);
+            customer.AddKeys(customerId);
+            model.AddElement(customer);
+
+            var function = new EdmFunction("NS", "GetMinSalary", EdmCoreModel.Instance.GetString(isNullable: true), true /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
+            IEdmTypeReference int32Type = EdmCoreModel.Instance.GetInt32(isNullable: true);
+            function.AddParameter("p", new EdmEntityTypeReference(customer, isNullable: true));
+            function.AddOptionalParameter("minSalary", int32Type);
+            function.AddOptionalParameter("maxSalary", int32Type);
+            model.AddElement(function);
+
+            var container = new EdmEntityContainer("NS", "Container");
+            var me = container.AddSingleton("me", customer);
+            model.AddElement(container);
+
+            // Act
+            var parser = new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/me/" + functionPath));
+            var pathSegments = parser.ParsePath().ToList();
+
+            // Assert
+            Assert.Equal(2, pathSegments.Count);
+            var operationSegment = Assert.IsType<OperationSegment>(pathSegments[1]);
+            Assert.Equal("NS.GetMinSalary", operationSegment.Operations.First().FullName());
+            Assert.Equal(expectedParameterCount, operationSegment.Parameters.Count());
+        }
+
+        [Theory]
+        [InlineData("UnboundGetMinSalary(minSalary=1,maxSalary=2)", 2)]
+        [InlineData("UnboundGetMinSalary(minSalary=1)", 1)]
+        [InlineData("UnboundGetMinSalary()", 0)]
+        public void ParsePathUnboundFunctionWithOptionalParametersWorks(string functionPath, int expectedParameterCount)
+        {
+            // Arrange
+            var model = new EdmModel();
+
+            var function = new EdmFunction("NS", "UnboundGetMinSalary", EdmCoreModel.Instance.GetString(isNullable: true), false /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
+            IEdmTypeReference int32Type = EdmCoreModel.Instance.GetInt32(isNullable: true);
+            function.AddOptionalParameter("minSalary", int32Type);
+            function.AddOptionalParameter("maxSalary", int32Type);
+            model.AddElement(function);
+
+            var container = new EdmEntityContainer("NS", "Container");
+            var me = container.AddFunctionImport(function);
+            model.AddElement(container);
+
+            // Act
+            var parser = new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/" + functionPath));
+            var pathSegments = parser.ParsePath().ToList();
+
+            // Assert
+            Assert.Single(pathSegments);
+            var operationImportSegment = Assert.IsType<OperationImportSegment>(pathSegments[0]);
+            Assert.Equal("UnboundGetMinSalary", operationImportSegment.OperationImports.First().Name);
+            Assert.Equal(expectedParameterCount, operationImportSegment.Parameters.Count());
+        }
+
         #region Parse Compute Tests
 
         [Fact]
