@@ -341,6 +341,18 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Validator to validate the derived type constraint.
+        /// </summary>
+        protected DerivedTypeValidator CurrentDerivedTypeValidator
+        {
+            get
+            {
+                Debug.Assert(this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.DeletedResourceStart, "CurrentDerivedTypeValidator should only be called while reading a resource.");
+                return this.ParentScope == null ? null : this.ParentScope.DerivedTypeValidator;
+            }
+        }
+
+        /// <summary>
         /// Reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
         /// <returns>true if more items were read; otherwise false.</returns>
@@ -578,6 +590,11 @@ namespace Microsoft.OData
                 && this.inputContext.Model.IsUserModel())
             {
                 scope.ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(scope.ResourceType);
+            }
+
+            if (scope.State == ODataReaderState.ResourceSetStart || scope.State == ODataReaderState.DeltaResourceSetStart)
+            {
+                scope.DerivedTypeValidator = this.CurrentScope.DerivedTypeValidator;
             }
 
             // TODO: implement some basic validation that the transitions are ok
@@ -1011,6 +1028,11 @@ namespace Microsoft.OData
                     this.resourceTypeValidator = value;
                 }
             }
+
+            /// <summary>
+            /// Gets or sets the derived type constraint validator.
+            /// </summary>
+            internal DerivedTypeValidator DerivedTypeValidator { get; set; }
         }
     }
 }

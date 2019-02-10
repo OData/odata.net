@@ -248,6 +248,30 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
+        public void BindApplyWithComputeShouldReturnApplyClause()
+        {
+            var tokens = _parser.ParseApply("compute(UnitPrice mul 5 as BigPrice)");
+
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
+            var actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            var transformations = actual.Transformations.ToList();
+            var compute = transformations[0] as ComputeTransformationNode;
+
+            compute.Should().NotBeNull();
+            compute.Kind.Should().Be(TransformationNodeKind.Compute);
+            compute.Expressions.Should().HaveCount(1);
+
+            var statements = compute.Expressions.ToList();
+            var statement = statements[0];
+            VerifyIsFakeSingleValueNode(statement.Expression);
+            statement.Alias.ShouldBeEquivalentTo("BigPrice");
+        }
+
+        [Fact]
         public void BindApplyWithEntitySetAggregationReturnApplyClause()
         {
             IEnumerable<QueryToken> tokens =
@@ -275,7 +299,77 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             entitySetAggregate.Should().NotBeNull();
         }
 
-    private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
+        private readonly ODataUriParserConfiguration V4configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel);
+
+        [Fact]
+        public void BindApplyWithExpandReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens =
+                _parser.ParseApply(
+                    "expand(MyPaintings, filter(FrameColor eq 'Red'))/groupby((LifeTime),aggregate(MyPaintings($count as Count)))");
+
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState, V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(2);
+
+            ExpandTransformationNode expand = actual.Transformations.First() as ExpandTransformationNode;
+            expand.Should().NotBeNull();
+            expand.ExpandClause.Should().NotBeNull();
+            expand.ExpandClause.SelectedItems.Should().HaveCount(1);
+            ExpandedNavigationSelectItem expandItem = expand.ExpandClause.SelectedItems.First() as ExpandedNavigationSelectItem;
+            expandItem.Should().NotBeNull();
+            expandItem.NavigationSource.Name.ShouldBeEquivalentTo("Paintings");
+            expandItem.FilterOption.Should().NotBeNull();
+            
+            GroupByTransformationNode groupBy = actual.Transformations.Last() as GroupByTransformationNode;
+            groupBy.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+
+            AggregateTransformationNode aggregate = groupBy.ChildTransformations as AggregateTransformationNode;
+            aggregate.Should().NotBeNull();
+            aggregate.AggregateExpressions.Should().HaveCount(1);
+
+            EntitySetAggregateExpression entitySetAggregate = aggregate.AggregateExpressions.First() as EntitySetAggregateExpression;
+            entitySetAggregate.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void BindApplyWithNestedExpandReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens =
+                _parser.ParseApply(
+                    "expand(MyPaintings, filter(FrameColor eq 'Red'), expand(Owner, filter(Name eq 'Me')))");
+
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState, V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            ExpandTransformationNode expand = actual.Transformations.First() as ExpandTransformationNode;
+            expand.Should().NotBeNull();
+            expand.ExpandClause.Should().NotBeNull();
+            expand.ExpandClause.SelectedItems.Should().HaveCount(1);
+            ExpandedNavigationSelectItem expandItem = expand.ExpandClause.SelectedItems.First() as ExpandedNavigationSelectItem;
+            expandItem.Should().NotBeNull();
+            expandItem.NavigationSource.Name.ShouldBeEquivalentTo("Paintings");
+            expandItem.SelectAndExpand.Should().NotBeNull();
+            expandItem.SelectAndExpand.SelectedItems.Should().HaveCount(1);
+            expandItem.FilterOption.Should().NotBeNull();
+
+            ExpandedNavigationSelectItem expandItem1 = expandItem.SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem;
+            expandItem1.FilterOption.Should().NotBeNull();
+        }
+
+        private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
 
         private static SingleValueNode BindMethodReturnsBooleanPrimitive(QueryToken token)
         {

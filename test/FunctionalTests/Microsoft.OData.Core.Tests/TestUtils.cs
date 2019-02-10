@@ -152,6 +152,14 @@ namespace Microsoft.OData.Tests
             }
             else
             {
+                ODataResourceValue resourceValue1 = value1 as ODataResourceValue;
+                ODataResourceValue resourceValue2 = value2 as ODataResourceValue;
+                if (resourceValue1 != null && resourceValue2 != null)
+                {
+                    AssertODataResourceValueAreEqual(resourceValue1, resourceValue2);
+                    return;
+                }
+
                 ODataEnumValue enumValue1 = value1 as ODataEnumValue;
                 ODataEnumValue enumValue2 = value2 as ODataEnumValue;
                 if (enumValue1 != null && enumValue2 != null)
@@ -198,6 +206,14 @@ namespace Microsoft.OData.Tests
                     Assert.Equal(itemsArray1[i], itemsArray2[i]);
                 }
             }
+        }
+
+        private static void AssertODataResourceValueAreEqual(ODataResourceValue resourceValue1, ODataResourceValue resourceValue2)
+        {
+            Assert.NotNull(resourceValue1);
+            Assert.NotNull(resourceValue2);
+            Assert.Equal(resourceValue1.TypeName, resourceValue2.TypeName);
+            AssertODataPropertiesAreEqual(resourceValue1.Properties, resourceValue2.Properties);
         }
 
         public static void AssertODataPropertiesAreEqual(IEnumerable<ODataProperty> properties1, IEnumerable<ODataProperty> properties2)

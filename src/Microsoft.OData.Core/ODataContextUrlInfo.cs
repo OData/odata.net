@@ -340,6 +340,12 @@ namespace Microsoft.OData
                 return enumValue.TypeName;
             }
 
+            var resourceValue = value as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                return resourceValue.TypeName;
+            }
+
             var untypedValue = value as ODataUntypedValue;
             if (untypedValue != null)
             {

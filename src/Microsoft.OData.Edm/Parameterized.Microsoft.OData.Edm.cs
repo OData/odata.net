@@ -403,7 +403,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive, an enum or an untyped type, or a collection of complex, primitive, or enum types."
+        /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive, an enum, a type definition or an untyped type, or a collection of complex, primitive, enum types, or type definition."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_InvalidPropertyType(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidPropertyType, p0);
@@ -484,6 +484,20 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string EdmModel_Validator_Semantic_FunctionMustHaveReturnType(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionMustHaveReturnType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The UrlEscape function '{0}' must be a bound function."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction, p0);
+        }
+
+        /// <summary>
+        /// A string like "The UrlEscape function '{0}' must have and only have one 'Edm.String' parameter."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter, p0);
         }
 
         /// <summary>

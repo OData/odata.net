@@ -45,6 +45,11 @@ namespace Microsoft.OData
         {
             IEdmPrimitiveTypeReference primitiveTypeReference = edmTypeReference as IEdmPrimitiveTypeReference;
             Debug.Assert(primitiveTypeReference != null, "primitiveTypeReference != null");
+            if (primitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.PrimitiveType)
+            {
+                return value;
+            }
+
             try
             {
                 Type targetType = EdmLibraryExtensions.GetPrimitiveClrType(primitiveTypeReference.PrimitiveDefinition(), false);

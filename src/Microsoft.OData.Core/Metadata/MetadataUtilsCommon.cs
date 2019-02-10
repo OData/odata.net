@@ -425,6 +425,12 @@ namespace Microsoft.OData.Metadata
 
             EdmPrimitiveTypeKind sourcePrimitiveKind = sourcePrimitiveType.PrimitiveKind;
             EdmPrimitiveTypeKind targetPrimitiveKind = targetPrimitiveType.PrimitiveKind;
+
+            if (targetPrimitiveKind == EdmPrimitiveTypeKind.PrimitiveType)
+            {
+                return true;
+            }
+
             switch (sourcePrimitiveKind)
             {
                 case EdmPrimitiveTypeKind.SByte:

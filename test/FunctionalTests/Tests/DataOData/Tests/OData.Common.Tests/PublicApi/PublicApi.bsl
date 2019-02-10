@@ -289,6 +289,17 @@ public abstract class Microsoft.Spatial.GmlFormatter : Microsoft.Spatial.Spatial
 	public static Microsoft.Spatial.GmlFormatter Create ()
 }
 
+public abstract class Microsoft.Spatial.SpatialFactory {
+	protected virtual void AddLine (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void AddPos (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginFigure (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginGeo (Microsoft.Spatial.SpatialType type)
+	protected virtual void EndFigure ()
+	protected virtual void EndGeo ()
+	protected virtual void Finish ()
+	protected virtual void StartRing (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+}
+
 public abstract class Microsoft.Spatial.SpatialFormatter`2 {
 	protected SpatialFormatter`2 (Microsoft.Spatial.SpatialImplementation creator)
 
@@ -348,6 +359,31 @@ public sealed class Microsoft.Spatial.FormatterExtensions {
 	public static string Write (Microsoft.Spatial.SpatialFormatter`2[[System.Xml.XmlReader],[System.Xml.XmlWriter]] formatter, Microsoft.Spatial.ISpatial spatial)
 }
 
+public sealed class Microsoft.Spatial.GeographyFactory {
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyCollection]] Collection ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyCollection]] Collection (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (double latitude, double longitude)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiLineString]] MultiLineString ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiLineString]] MultiLineString (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiPoint]] MultiPoint ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiPoint]] MultiPoint (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiPolygon]] MultiPolygon ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyMultiPolygon]] MultiPolygon (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (double latitude, double longitude)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPolygon]] Polygon ()
+	public static Microsoft.Spatial.GeographyFactory`1[[Microsoft.Spatial.GeographyPolygon]] Polygon (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+}
+
 [
 ExtensionAttribute(),
 ]
@@ -366,6 +402,31 @@ public sealed class Microsoft.Spatial.GeographyOperationsExtensions {
 	ExtensionAttribute(),
 	]
 	public static System.Nullable`1[[System.Double]] Length (Microsoft.Spatial.Geography operand)
+}
+
+public sealed class Microsoft.Spatial.GeometryFactory {
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryCollection]] Collection ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryCollection]] Collection (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (double x, double y)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryLineString]] LineString (Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiLineString]] MultiLineString ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiLineString]] MultiLineString (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiPoint]] MultiPoint ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiPoint]] MultiPoint (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiPolygon]] MultiPolygon ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryMultiPolygon]] MultiPolygon (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (double x, double y)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPoint]] Point (Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPolygon]] Polygon ()
+	public static Microsoft.Spatial.GeometryFactory`1[[Microsoft.Spatial.GeometryPolygon]] Polygon (Microsoft.Spatial.CoordinateSystem coordinateSystem)
 }
 
 [
@@ -419,6 +480,30 @@ public class Microsoft.Spatial.CoordinateSystem {
 	public string ToWktId ()
 }
 
+public class Microsoft.Spatial.GeographyFactory`1 : Microsoft.Spatial.SpatialFactory {
+	protected virtual void AddLine (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginFigure (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginGeo (Microsoft.Spatial.SpatialType type)
+	public T Build ()
+	public Microsoft.Spatial.GeographyFactory`1 Collection ()
+	protected virtual void EndFigure ()
+	protected virtual void EndGeo ()
+	public Microsoft.Spatial.GeographyFactory`1 LineString ()
+	public Microsoft.Spatial.GeographyFactory`1 LineString (double latitude, double longitude)
+	public Microsoft.Spatial.GeographyFactory`1 LineString (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeographyFactory`1 LineTo (double latitude, double longitude)
+	public Microsoft.Spatial.GeographyFactory`1 LineTo (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeographyFactory`1 MultiLineString ()
+	public Microsoft.Spatial.GeographyFactory`1 MultiPoint ()
+	public Microsoft.Spatial.GeographyFactory`1 MultiPolygon ()
+	public Microsoft.Spatial.GeographyFactory`1 Point ()
+	public Microsoft.Spatial.GeographyFactory`1 Point (double latitude, double longitude)
+	public Microsoft.Spatial.GeographyFactory`1 Point (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeographyFactory`1 Polygon ()
+	public Microsoft.Spatial.GeographyFactory`1 Ring (double latitude, double longitude)
+	public Microsoft.Spatial.GeographyFactory`1 Ring (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+}
+
 public class Microsoft.Spatial.GeographyPosition : IEquatable`1 {
 	public GeographyPosition (double latitude, double longitude)
 	public GeographyPosition (double latitude, double longitude, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
@@ -432,6 +517,30 @@ public class Microsoft.Spatial.GeographyPosition : IEquatable`1 {
 	public virtual bool Equals (object obj)
 	public virtual int GetHashCode ()
 	public virtual string ToString ()
+}
+
+public class Microsoft.Spatial.GeometryFactory`1 : Microsoft.Spatial.SpatialFactory {
+	protected virtual void AddLine (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginFigure (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	protected virtual void BeginGeo (Microsoft.Spatial.SpatialType type)
+	public T Build ()
+	public Microsoft.Spatial.GeometryFactory`1 Collection ()
+	protected virtual void EndFigure ()
+	protected virtual void EndGeo ()
+	public Microsoft.Spatial.GeometryFactory`1 LineString ()
+	public Microsoft.Spatial.GeometryFactory`1 LineString (double x, double y)
+	public Microsoft.Spatial.GeometryFactory`1 LineString (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeometryFactory`1 LineTo (double x, double y)
+	public Microsoft.Spatial.GeometryFactory`1 LineTo (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeometryFactory`1 MultiLineString ()
+	public Microsoft.Spatial.GeometryFactory`1 MultiPoint ()
+	public Microsoft.Spatial.GeometryFactory`1 MultiPolygon ()
+	public Microsoft.Spatial.GeometryFactory`1 Point ()
+	public Microsoft.Spatial.GeometryFactory`1 Point (double x, double y)
+	public Microsoft.Spatial.GeometryFactory`1 Point (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
+	public Microsoft.Spatial.GeometryFactory`1 Polygon ()
+	public Microsoft.Spatial.GeometryFactory`1 Ring (double x, double y)
+	public Microsoft.Spatial.GeometryFactory`1 Ring (double x, double y, System.Nullable`1[[System.Double]] z, System.Nullable`1[[System.Double]] m)
 }
 
 public class Microsoft.Spatial.GeometryPosition : IEquatable`1 {
@@ -989,6 +1098,7 @@ public abstract class Microsoft.OData.Edm.EdmLocation {
 
 public abstract class Microsoft.OData.Edm.EdmModelBase : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmModel {
 	protected EdmModelBase (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] referencedModels, Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationsManager annotationsManager)
+	protected EdmModelBase (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] referencedModels, Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationsManager annotationsManager, bool includeDefaultVocabularies)
 
 	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public abstract get; }
 	Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager  { public virtual get; }
@@ -1836,6 +1946,16 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static System.Collections.Generic.IEnumerable`1[[System.String]] GetDerivedTypeConstraints (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static System.Collections.Generic.IEnumerable`1[[System.String]] GetDerivedTypeConstraints (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static string GetDescriptionAnnotation (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target)
 
 	[
@@ -2518,6 +2638,7 @@ public class Microsoft.OData.Edm.EdmIncludeAnnotations : IEdmIncludeAnnotations 
 
 public class Microsoft.OData.Edm.EdmModel : Microsoft.OData.Edm.EdmModelBase, IEdmElement, IEdmModel {
 	public EdmModel ()
+	public EdmModel (bool includeDefaultVocabularies)
 
 	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public virtual get; }
@@ -2727,6 +2848,7 @@ public sealed class Microsoft.OData.Edm.Csdl.SchemaReader {
 	public static bool TryParse (System.Collections.Generic.IEnumerable`1[[System.Xml.XmlReader]] readers, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Collections.Generic.IEnumerable`1[[System.Xml.XmlReader]] readers, Microsoft.OData.Edm.IEdmModel reference, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Collections.Generic.IEnumerable`1[[System.Xml.XmlReader]] readers, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryParse (System.Collections.Generic.IEnumerable`1[[System.Xml.XmlReader]] readers, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, bool includeDefaultVocabularies, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 }
 
 [
@@ -2838,6 +2960,7 @@ public class Microsoft.OData.Edm.Csdl.CsdlReader {
 	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Xml.XmlReader reader, System.Func`2[[System.Uri],[System.Xml.XmlReader]] getReferencedModelReaderFunc, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, Microsoft.OData.Edm.Csdl.CsdlReaderSettings settings, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, bool includeDefaultVocabularies, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlWriter {
@@ -3080,6 +3203,8 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	UnresolvedNavigationPropertyBindingPath = 378
 	UnresolvedNavigationPropertyPartnerPath = 377
 	UnresolvedReferenceUriInEdmxReference = 374
+	UrlEscapeFunctionMustBeBoundFunction = 155
+	UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter = 156
 	XmlError = 5
 }
 
@@ -3175,6 +3300,8 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression]] FunctionApplicationExpressionParametersMatchAppliedFunction = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunctionImport]] FunctionImportWithParameterShouldNotBeIncludedInServiceDocument = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunctionImport]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunction]] FunctionMustHaveReturnType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunction]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunction]] FunctionWithUrlEscapeFunctionMustBeBound = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunction]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunction]] FunctionWithUrlEscapeFunctionMustHaveOneStringParameter = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunction]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmIfExpression]] IfExpressionAssertCorrectTestType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmIfExpression]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] ImmediateValueAnnotationElementAnnotationHasNameAndNamespace = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] ImmediateValueAnnotationElementAnnotationIsValid = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]
@@ -3925,7 +4052,9 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel {
+	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm DerivedTypeConstraintTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+	public static readonly string Namespace = "Org.OData.Validation.V1"
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyConstants {
@@ -3935,6 +4064,11 @@ public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysV
 public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyModel {
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm AlternateKeysTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.CommunityVocabularyModel {
+	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm UrlEscapeFunctionTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 }
 
 public enum Microsoft.OData.BatchPayloadUriOption : int {
@@ -5308,6 +5442,14 @@ public sealed class Microsoft.OData.ODataResourceSet : Microsoft.OData.ODataReso
 
 	public void AddAction (Microsoft.OData.ODataAction action)
 	public void AddFunction (Microsoft.OData.ODataFunction function)
+}
+
+public sealed class Microsoft.OData.ODataResourceValue : Microsoft.OData.ODataValue {
+	public ODataResourceValue ()
+
+	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataProperty]] Properties  { public get; public set; }
+	string TypeName  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.ODataServiceDocument : Microsoft.OData.ODataAnnotatable {
@@ -7026,6 +7168,7 @@ public enum Microsoft.OData.UriParser.Aggregation.AggregationMethod : int {
 public enum Microsoft.OData.UriParser.Aggregation.TransformationNodeKind : int {
 	Aggregate = 0
 	Compute = 3
+	Expand = 4
 	Filter = 2
 	GroupBy = 1
 }
@@ -7144,6 +7287,13 @@ public sealed class Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToke
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 	public static Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken Merge (Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token1, Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token2)
 	public string Path ()
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.ExpandTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {
+	public ExpandTransformationNode (Microsoft.OData.UriParser.SelectExpandClause expandClause)
+
+	Microsoft.OData.UriParser.SelectExpandClause ExpandClause  { public get; }
+	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
 }
 
 public sealed class Microsoft.OData.UriParser.Aggregation.FilterTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {

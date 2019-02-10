@@ -458,6 +458,34 @@ namespace Microsoft.OData.Tests.Metadata
         }
 
         [Fact]
+        public void ValidateAllPrimitiveTypesAssignableToEdmPrimitiveType()
+        {
+            foreach (var typeKind in Enum.GetValues(typeof(EdmPrimitiveTypeKind)).OfType<EdmPrimitiveTypeKind>())
+            {
+                if (typeKind != EdmPrimitiveTypeKind.None)
+                {
+                    ValidateAssignableToType(true, EdmPrimitiveTypeKind.PrimitiveType, typeKind);
+                }
+            }
+        }
+
+        [Fact]
+        public void ValidateComplexTypeAssignableToEdmComplexType()
+        {
+            IEdmComplexType baseType = EdmCoreModel.Instance.GetComplexType();
+            EdmComplexType complexType = new EdmComplexType("NS", "Complex");
+            Assert.True(baseType.IsAssignableFrom(complexType));
+        }
+
+        [Fact]
+        public void ValidateEntityTypeAssignableToEdmEntityType()
+        {
+            IEdmEntityType baseType = EdmCoreModel.Instance.GetEntityType();
+            EdmEntityType entityType = new EdmEntityType("NS", "Entity");
+            Assert.True(baseType.IsAssignableFrom(entityType));
+        }
+
+        [Fact]
         public void ValidateGeometrySubTypesAssignableToGeometryBaseType()
         {
             ValidateAssignableToType(true, EdmPrimitiveTypeKind.Geometry, GeometryAllTypeKinds);

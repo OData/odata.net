@@ -255,7 +255,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action action = () => this.Run("MyFriendsDogs($apply=Invalid Expression)", PersonType, PeopleSet);
             var exception = Assert.Throws<ODataException>(action);
-            Assert.Equal("'aggregate|filter|groupby' expected at position 0 in 'Invalid Expression'.", exception.Message);
+            Assert.Equal("'aggregate|filter|groupby|compute|expand' expected at position 0 in 'Invalid Expression'.", exception.Message);
         }
         #endregion $apply
 

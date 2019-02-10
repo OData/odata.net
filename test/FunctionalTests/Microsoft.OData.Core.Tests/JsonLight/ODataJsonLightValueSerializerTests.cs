@@ -133,6 +133,145 @@ namespace Microsoft.OData.Tests.JsonLight
             result.Should().Be("\"Thu, 12 Apr 2012 18:43:10 GMT\"");
         }
 
+        [Fact]
+        public void WritingResourceValueWithoutMetadataTypeAndWithoutTypeNameInRequestShouldFail()
+        {
+            var serializer = CreateODataJsonLightValueSerializer(false);
+
+            var resourceValue = new ODataResourceValue();
+
+            Action test = () => serializer.WriteResourceValue(resourceValue, null, false, null);
+
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
+        }
+
+        [Fact]
+        public void WritingResourceValueWithPropertiesShouldWrite()
+        {
+            var complexType = new EdmComplexType("NS", "Address");
+            complexType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            model.AddElement(complexType);
+
+            var entityType = new EdmEntityType("NS", "Customer");
+            entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            entityType.AddStructuralProperty("Location", new EdmComplexTypeReference(complexType, false));
+            model.AddElement(entityType);
+
+            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            var result = this.SetupSerializerAndRunTest(serializer =>
+            {
+                var resourceValue = new ODataResourceValue
+                {
+                    TypeName = "NS.Customer",
+                    Properties = new []
+                    {
+                        new ODataProperty { Name = "Name", Value = "MyName" },
+                        new ODataProperty { Name = "Location", Value = new ODataResourceValue
+                            {
+                                TypeName = "NS.Address",
+                                Properties = new [] { new ODataProperty {  Name = "City", Value = "MyCity" } }
+                            }
+                        }
+                    }
+                };
+
+                var entityTypeRef = new EdmEntityTypeReference(entityType, false);
+                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+            });
+
+            Assert.Equal(@"{""Name"":""MyName"",""Location"":{""City"":""MyCity""}}", result);
+        }
+
+        [Fact]
+        public void WritingCollectionResourceValueWithPropertiesShouldWrite()
+        {
+            var complexType = new EdmComplexType("NS", "Address");
+            complexType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            model.AddElement(complexType);
+
+            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            var result = this.SetupSerializerAndRunTest(serializer =>
+            {
+                var resourceValue1 = new ODataResourceValue
+                {
+                    TypeName = "NS.Address",
+                    Properties = new[] { new ODataProperty { Name = "City", Value = "MyCity1" } }
+                };
+
+                var resourceValue2 = new ODataResourceValue
+                {
+                    TypeName = "NS.Address",
+                    Properties = new[] { new ODataProperty { Name = "City", Value = "MyCity2" } }
+                };
+
+                var collectionValue = new ODataCollectionValue
+                {
+                    TypeName = "Collection(NS.Address)",
+                    Items = new[] { resourceValue1, resourceValue2 }
+                };
+
+                var collectionTypeRef = new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complexType, false)));
+                serializer.WriteCollectionValue(collectionValue, collectionTypeRef, null, false, false, false);
+            });
+
+            Assert.Equal(@"[{""City"":""MyCity1""},{""City"":""MyCity2""}]", result);
+        }
+
+        [Fact]
+        public void WritingInstanceAnnotationInResourceValueShouldWrite()
+        {
+            var complexType = new EdmComplexType("TestNamespace", "Address");
+            model.AddElement(complexType);
+            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            var result = this.SetupSerializerAndRunTest(serializer =>
+            {
+                var resourceValue = new ODataResourceValue
+                {
+                    TypeName = "TestNamespace.Address",
+                    InstanceAnnotations = new Collection<ODataInstanceAnnotation>
+                    {
+                        new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true))
+                    }
+                };
+
+                var complexTypeRef = new EdmComplexTypeReference(complexType, false);
+                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+            });
+
+            Assert.Equal(@"{""@Is.ReadOnly"":true}", result);
+        }
+
+        [Theory]
+        [InlineData("*", @"{""@Custom.Bool"":true,""@Custom.Int"":123,""@My.String"":""annotation"",""@My.Bool"":false}")]
+        [InlineData("-*", @"{}")]
+        [InlineData("Custom.*", @"{""@Custom.Bool"":true,""@Custom.Int"":123}")]
+        [InlineData("My.*", @"{""@My.String"":""annotation"",""@My.Bool"":false}")]
+        [InlineData("My.Bool", @"{""@My.Bool"":false}")]
+        public void WritingMultipleInstanceAnnotationInResourceValueShouldWrite(string filter, string expect)
+        {
+            var complexType = new EdmComplexType("NS", "Address");
+            model.AddElement(complexType);
+            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter(filter);
+            var result = this.SetupSerializerAndRunTest(serializer =>
+            {
+                var resourceValue = new ODataResourceValue
+                {
+                    TypeName = "NS.Address",
+                    InstanceAnnotations = new Collection<ODataInstanceAnnotation>
+                    {
+                        new ODataInstanceAnnotation("Custom.Bool", new ODataPrimitiveValue(true)),
+                        new ODataInstanceAnnotation("Custom.Int", new ODataPrimitiveValue(123)),
+                        new ODataInstanceAnnotation("My.String", new ODataPrimitiveValue("annotation")),
+                        new ODataInstanceAnnotation("My.Bool", new ODataPrimitiveValue(false))
+                    }
+                };
+
+                var complexTypeRef = new EdmComplexTypeReference(complexType, false);
+                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+            });
+
+            Assert.Equal(expect, result);
+        }
 
         private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse, IServiceProvider container = null)
         {

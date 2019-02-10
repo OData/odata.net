@@ -63,8 +63,18 @@ namespace Microsoft.OData.Tests.Evaluation
             this.defaultContainer.AddEntitySet("Cities", cityType);
             this.defaultContainer.AddEntitySet("Districts", districtType);
 
+            EdmComplexType airportType = new EdmComplexType("TestModel", "Airport");
+            airportType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(/*isNullable*/false));
+            airportType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "City", Target = cityType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
+            this.edmModel.AddElement(airportType);
+
+            EdmComplexType regionalAirportType = new EdmComplexType("TestModel", "RegionalAirport", airportType);
+            airportType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Region", Target = districtType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
+            this.edmModel.AddElement(regionalAirportType);
+
             this.metropolisType = new EdmEntityType("TestModel", "Metropolis", this.cityType);
             this.metropolisType.AddStructuralProperty("MetropolisStream", EdmCoreModel.Instance.GetStream(/*isNullable*/false));
+            this.metropolisType.AddStructuralProperty("NearestAirport", new EdmComplexTypeReference(airportType,false));
             this.edmModel.AddElement(metropolisType);
 
             metropolisType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MetropolisNavigation", Target = districtType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
@@ -399,6 +409,18 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
+        public void SpecificUnqualifedActionWithParametersShouldNotBeSelected()
+        {
+            SelectedPropertiesNode.Create("Action(Edm.Int32)").Should().NotHaveAction(this.cityType, this.action);
+        }
+
+        [Fact]
+        public void SpecificQualifiedActionWithParametersShouldBeSelected()
+        {
+            SelectedPropertiesNode.Create("TestModel.Action(Edm.Int32)").Should().HaveAction(this.cityType, this.action);
+        }
+
+        [Fact]
         public void NamespaceQualifiedActionNameShouldBeSelected()
         {
             SelectedPropertiesNode.Create("TestModel.Action").Should().HaveAction(this.cityType, this.action);
@@ -442,7 +464,51 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
-        public void InvalidExpandTokenShouldHavePartialSubtree()
+        public void ExpandTokenForNavigationPropertyShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("MetropolisNavigation()", this.metropolisType, this.edmModel).Should().HaveEntireSubtree();
+        }
+
+        [Fact]
+        public void ExpandTokenForNavigationPropertyOnDerivedTypeShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("TestModel.Metropolis/MetropolisNavigation()", this.cityType, this.edmModel).Should().HaveEntireSubtree();
+        }
+
+        [Fact]
+        public void ExpandTokenForNavigationPropertyOnDerivedComplexShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("NearestAirport/TestModel.RegionalAirport/Region()", this.metropolisType, this.edmModel).Should().HaveEntireSubtree();
+        }
+
+        [Fact]
+        public void ExpandTokenForNavigationPropertyOnComplexShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("NearestAirport/City()", this.metropolisType, this.edmModel).Should().HaveEntireSubtree();
+        }
+
+        [Fact]
+        public void ExpandTokenForNavigationPropertyOnDerivedComplexWithSelectShouldHavePartialSubtree()
+        {
+            SelectedPropertiesNode p = SelectedPropertiesNode.Create("NearestAirport/TestModel.RegionalAirport(Name),NearestAirport/TestModel.RegionalAirport/Region()", this.metropolisType, this.edmModel);
+            p.IsEntireSubtree().Should().BeFalse();
+        }
+
+        [Fact]
+        public void ExpandTokenForNavigationPropertyOnComplexOnDerivedTypeShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("TestModel.Metropolis/NearestAirport/City()", this.cityType, this.edmModel).Should().HaveEntireSubtree();
+        }
+
+        [Fact]
+        public void ExpandTokenForNavigationPropertyOnDerivedTypeShouldNotBeAddedToProperties()
+        {
+            var p = SelectedPropertiesNode.Create("Name,TestModel.Metropolis/MetropolisNavigation()", this.cityType, this.edmModel);
+            p.IsEntireSubtree().Should().BeFalse();
+        }
+
+        [Fact]
+        public void InvalidExpandTokenShouldHaveEntireSubtree()
         {
             SelectedPropertiesNode.Create("FabrikamNavProp()", this.cityType, this.edmModel).Should().HaveEntireSubtree();
         }

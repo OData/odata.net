@@ -757,7 +757,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*collectionValidator*/ null,
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ true,
-                /*insideComplexValue*/ false,
+                /*insideResourceValue*/ false,
                 /*propertyName*/ null);
             action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
         }
@@ -776,7 +776,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*collectionValidator*/ null,
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ true,
-                /*insideComplexValue*/ false,
+                /*insideResourceValue*/ false,
                 /*propertyName*/ null);
             action.ShouldThrow<ODataException>().WithMessage("Value '123456789' was either too large or too small for a 'NS.UInt16'.");
         }
@@ -814,6 +814,30 @@ namespace Microsoft.OData.Tests.JsonLight
             ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@odata.context\":\"http://odata.org/test/$metadata#Customers(1)/Name\",\"@odata.null\":true}", model));
             ODataProperty property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
             TestUtils.AssertODataValueAreEqual(new ODataNullValue(), property.ODataValue);
+        }
+
+        public static IEnumerable<object[]> PrimitiveData => new List<object[]>
+        {
+            new object[] { 42,                     "\"@odata.type\":\"#Int32\",\"value\":42" },
+            new object[] { new Date(2018, 11, 28), "\"@odata.type\":\"#Date\",\"value\":\"2018-11-28\"" },
+            new object[] { 8.9,                    "\"@odata.type\":\"#Double\",\"value\":8.9" },
+            new object[] { true,                   "\"@odata.type\":\"#Boolean\",\"value\":true" }
+        };
+
+        [Theory]
+        [MemberData("PrimitiveData")]
+        public void TopLevelPropertyShouldReadEdmPrimitiveTypeProperty(object value, string valueString)
+        {
+            string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Customers(1)/PrimitiveProperty\"," + valueString + "}";
+            var model = this.CreateEdmModelWithEntity();
+            EdmEntityType entityType = model.SchemaElements.First() as EdmEntityType;
+            var edmProperty = entityType.AddStructuralProperty("PrimitiveProperty", EdmPrimitiveTypeKind.PrimitiveType);
+            var primitiveTypeRef = edmProperty.Type;
+
+            this.messageReaderSettings = new ODataMessageReaderSettings();
+            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext(payload, model));
+            ODataProperty property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(value), property.ODataValue);
         }
 
         #endregion

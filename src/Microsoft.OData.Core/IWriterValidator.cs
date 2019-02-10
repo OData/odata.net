@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using System.Collections.Generic;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -130,5 +131,16 @@ namespace Microsoft.OData
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmStructuredType declaringStructuredType,
             ODataPayloadKind? expandedPayloadKind);
+
+        /// <summary>
+        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the <see cref="IEdmNavigationSource"/>.
+        /// </summary>
+        /// <param name="resourceType">The input resource type.</param>
+        /// <param name="metadataType">The type from metadata.</param>
+        /// <param name="derivedTypeConstraints">The derived type constraints on the nested resource.</param>
+        /// <param name="itemKind">The item kind.</param>
+        /// <param name="itemName">The item name.</param>
+        void ValidateDerivedTypeConstraint(IEdmStructuredType resourceType,
+            IEdmStructuredType metadataType, IEnumerable<string> derivedTypeConstraints, string itemKind, string itemName);
     }
 }

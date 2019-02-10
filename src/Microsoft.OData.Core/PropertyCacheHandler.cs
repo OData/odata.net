@@ -32,8 +32,7 @@ namespace Microsoft.OData
 
         private int currentResourceScopeLevel;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])")]
-        public PropertySerializationInfo GetProperty(string name, IEdmStructuredType owningType)
+        public PropertySerializationInfo GetProperty(IEdmModel model, string name, IEdmStructuredType owningType)
         {
             int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
 
@@ -46,7 +45,7 @@ namespace Microsoft.OData
                 ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name)
                 : string.Concat(depthStr, name);
 
-            return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
+            return this.currentPropertyCache.GetProperty(model, name, uniqueName, owningType);
         }
 
         public void SetCurrentResourceScopeLevel(int level)

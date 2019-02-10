@@ -353,6 +353,30 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
 
             /// <summary>
+            /// Visits a resource value item.
+            /// </summary>
+            /// <param name="resourceValue">The resource value to visit.</param>
+            protected override ODataPayloadElement VisitResourceValue(ODataResourceValue resourceValue)
+            {
+                if (resourceValue == null)
+                {
+                    return new ComplexInstance(null, true);
+                }
+                else
+                {
+                    ComplexInstance complexElement = new ComplexInstance(resourceValue.TypeName, false);
+                    foreach (ODataProperty childProperty in resourceValue.Properties)
+                    {
+                        complexElement.Add((PropertyInstance)this.Visit(childProperty));
+                    }
+
+                    this.ConvertSerializationTypeNameAnnotation(resourceValue, complexElement);
+
+                    return complexElement;
+                }
+            }
+
+            /// <summary>
             /// Visits a collection item.
             /// </summary>
             /// <param name="collectionValue">The collection to visit.</param>

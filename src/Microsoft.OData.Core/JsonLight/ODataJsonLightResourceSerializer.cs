@@ -9,13 +9,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Evaluation;
 using Microsoft.OData.Json;
 
 namespace Microsoft.OData.JsonLight
 {
     /// <summary>
-    /// OData JsonLight serializer for entries and resource sets.
+    /// OData JsonLight serializer for resources and resource sets.
     /// </summary>
     internal sealed class ODataJsonLightResourceSerializer : ODataJsonLightPropertySerializer
     {

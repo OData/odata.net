@@ -263,6 +263,8 @@
     <Compile Include="Vocabularies\CapabilitiesVocabularyModel.cs" />
     <Compile Include="Vocabularies\AlternateKeysVocabularyConstants.cs" />
     <Compile Include="Vocabularies\AlternateKeysVocabularyModel.cs" />
+    <Compile Include="Vocabularies\CommunityVocabularyConstants.cs" />
+    <Compile Include="Vocabularies\CommunityVocabularyModel.cs" />
     <Compile Include="Vocabularies\CoreVocabularyConstants.cs" />
     <Compile Include="Vocabularies\CoreVocabularyModel.cs" />
     <Compile Include="Vocabularies\EdmExpressionEvaluator.cs" />
@@ -270,6 +272,7 @@
     <Compile Include="Vocabularies\EdmToClrConverter.cs" />
     <Compile Include="Vocabularies\EdmToClrEvaluator.cs" />
     <Compile Include="Vocabularies\ValidationVocabularyModel.cs" />
+    <Compile Include="Vocabularies\VocabularyModelProvider.cs" />
     <Compile Include="Vocabularies\Expressions\EdmApplyExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmCastExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmCollectionExpression.cs" />
@@ -545,6 +548,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Vocabularies\AlternateKeysVocabularies.xml">
       <LogicalName>AlternateKeysVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\CommunityVocabularies.xml">
+      <LogicalName>CommunityVocabularies.xml</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Vocabularies\ValidationVocabularies.xml">

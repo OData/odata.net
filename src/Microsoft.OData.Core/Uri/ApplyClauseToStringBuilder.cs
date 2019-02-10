@@ -57,6 +57,12 @@ namespace Microsoft.OData
             query.Append(text);
         }
 
+        private void AppendExpression(ODataExpandPath path)
+        {
+            string text = path.ToContextUrlPathString();
+            query.Append(text);
+        }
+
         private bool AppendSlash(bool appendSlash)
         {
             if (appendSlash)
@@ -148,6 +154,42 @@ namespace Microsoft.OData
             }
         }
 
+        private void Translate(ExpandTransformationNode transformation)
+        {
+            ExpandedNavigationSelectItem expandedNavigation = transformation.ExpandClause.SelectedItems.Single() as ExpandedNavigationSelectItem;
+            AppendExpandExpression(expandedNavigation);
+        }
+
+        private void AppendExpandExpression(ExpandedNavigationSelectItem expandedNavigation)
+        {
+            AppendExpression(expandedNavigation.PathToNavigationProperty);
+
+            // Append filter
+            if (expandedNavigation.FilterOption != null)
+            {
+                AppendComma(true);
+                query.Append(ExpressionConstants.SymbolEscapedSpace);
+                query.Append(ExpressionConstants.KeywordFilter);
+                query.Append(ExpressionConstants.SymbolOpenParen);
+                AppendExpression(expandedNavigation.FilterOption.Expression);
+                query.Append(ExpressionConstants.SymbolClosedParen);
+            }
+
+            // Append nested expands
+            if (expandedNavigation.SelectAndExpand != null)
+            {
+                foreach (var navigation in expandedNavigation.SelectAndExpand.SelectedItems.OfType<ExpandedNavigationSelectItem>())
+                {
+                    AppendComma(true);
+                    query.Append(ExpressionConstants.SymbolEscapedSpace);
+                    query.Append(ExpressionConstants.KeywordExpand);
+                    query.Append(ExpressionConstants.SymbolOpenParen);
+                    AppendExpandExpression(navigation);
+                    query.Append(ExpressionConstants.SymbolClosedParen);
+                }
+            }
+        }
+
         private void Translate(FilterTransformationNode transformation)
         {
             AppendExpression(transformation.FilterClause.Expression);
@@ -209,6 +251,9 @@ namespace Microsoft.OData
                 case TransformationNodeKind.Compute:
                     query.Append(ExpressionConstants.KeywordCompute);
                     break;
+                case TransformationNodeKind.Expand:
+                    query.Append(ExpressionConstants.KeywordExpand);
+                    break;
                 default:
                     throw new NotSupportedException("unknown TransformationNodeKind value " + transformation.Kind.ToString());
             }
@@ -219,6 +264,7 @@ namespace Microsoft.OData
             AggregateTransformationNode aggTransformation;
             FilterTransformationNode filterTransformation;
             ComputeTransformationNode computeTransformation;
+            ExpandTransformationNode expandTransformation;
             if ((groupByTransformation = transformation as GroupByTransformationNode) != null)
             {
                 Translate(groupByTransformation);
@@ -234,6 +280,10 @@ namespace Microsoft.OData
             else if ((computeTransformation = transformation as ComputeTransformationNode) != null)
             {
                 Translate(computeTransformation);
+            }
+            else if ((expandTransformation = transformation as ExpandTransformationNode) != null)
+            {
+                Translate(expandTransformation);
             }
             else
             {

@@ -367,10 +367,10 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceSerializer.WriteResourceStartMetadataProperties(resourceScope);
             this.jsonLightResourceSerializer.WriteResourceMetadataProperties(resourceScope);
 
+            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
+
             // Write custom instance annotations
             this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(resource.InstanceAnnotations, resourceScope.InstanceAnnotationWriteTracker);
-
-            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
 
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
             if (resource.NonComputedProperties != null)
@@ -1359,10 +1359,10 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceSerializer.WriteResourceStartMetadataProperties(resourceScope);
             this.jsonLightResourceSerializer.WriteResourceMetadataProperties(resourceScope);
 
+            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
+
             // Write custom instance annotations
             this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(resource.InstanceAnnotations, resourceScope.InstanceAnnotationWriteTracker);
-
-            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
 
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
             this.WriteDeltaResourceProperties(resource);
@@ -2156,6 +2156,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     EntityReferenceLinkWritten = this.entityReferenceLinkWritten,
                     ResourceSetWritten = this.resourceSetWritten,
+                    DerivedTypeConstraints = this.DerivedTypeConstraints
                 };
             }
         }

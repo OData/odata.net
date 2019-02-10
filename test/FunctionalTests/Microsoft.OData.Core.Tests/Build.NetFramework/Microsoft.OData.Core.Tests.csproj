@@ -204,11 +204,13 @@
     <Compile Include="..\ODataPrimitiveValueTests.cs" />
     <Compile Include="..\ODataPropertySerializationInfoAnnotationTests.cs" />
     <Compile Include="..\ODataPropertyTests.cs" />
+    <Compile Include="..\ODataReaderDerivedTypeConstraintTests.cs" />
     <Compile Include="..\ODataRequestMessageTests.cs" />
     <Compile Include="..\ODataStreamReferenceValueTests.cs" />
     <Compile Include="..\ODataUtilsInternalTests.cs" />
     <Compile Include="..\ODataUtilsTests.cs" />
     <Compile Include="..\ODataWriterCoreTests.cs" />
+    <Compile Include="..\ODataWriterDerivedTypeConstraintTests.cs" />
     <Compile Include="..\Query\ODataUriConversionUtilsTests.cs" />
     <Compile Include="..\Query\ODataUriUtilsTests.cs" />
     <Compile Include="..\RawValueWriterTests.cs" />
@@ -346,6 +348,7 @@
     <Compile Include="..\UriParser\Parsers\LIteralParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\NodeFactoryTests.cs" />
     <Compile Include="..\UriParser\Parsers\ODataPathParserTests.cs" />
+    <Compile Include="..\UriParser\Parsers\ODataPathParserTypeCastTests.cs" />
     <Compile Include="..\UriParser\Parsers\PathReverserTests.cs" />
     <Compile Include="..\UriParser\Parsers\SearchParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\SegmentKeyHandlerTests.cs" />

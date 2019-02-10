@@ -8,8 +8,10 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -319,6 +321,43 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Validates the value type of a property meets the derived type constraints.
+        /// </summary>
+        /// <param name="propertySerializationInfo">The property serialization info.</param>
+        /// <remarks>This does NOT validate the value of the property, just the type of property.</remarks>
+        internal static void ValidatePropertyDerivedTypeConstraint(PropertySerializationInfo propertySerializationInfo)
+        {
+            Debug.Assert(propertySerializationInfo != null, "propertySerializationInfo != null");
+
+            // Skip the undeclared property
+            if (propertySerializationInfo.MetadataType.IsUndeclaredProperty)
+            {
+                return;
+            }
+
+            PropertyValueTypeInfo valueType = propertySerializationInfo.ValueType;
+            if (valueType == null || valueType.TypeReference == null)
+            {
+                return;
+            }
+
+            // make sure the same type can pass the validation.
+            if (propertySerializationInfo.MetadataType.TypeReference.Definition == valueType.TypeReference.Definition)
+            {
+                return;
+            }
+
+            string fullTypeName = valueType.TypeReference.FullName();
+            if (propertySerializationInfo.MetadataType.DerivedTypeConstraints == null ||
+                propertySerializationInfo.MetadataType.DerivedTypeConstraints.Any(d => d == fullTypeName))
+            {
+                return;
+            }
+
+            throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
+        }
+
+        /// <summary>
         /// Validates that the specified <paramref name="entityReferenceLink"/> is not null.
         /// </summary>
         /// <param name="entityReferenceLink">The entity reference link to validate.</param>
@@ -435,6 +474,31 @@ namespace Microsoft.OData
             }
 
             return navigationProperty;
+        }
+
+        /// <summary>
+        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the odata item.
+        /// </summary>
+        /// <param name="resourceType">The input resource type.</param>
+        /// <param name="metadataType">The type from metadata.</param>
+        /// <param name="derivedTypeConstraints">The derived type constraints on the nested resource.</param>
+        /// <param name="itemKind">The item kind.</param>
+        /// <param name="itemName">The item name.</param>
+        internal static void ValidateDerivedTypeConstraint(IEdmStructuredType resourceType,
+            IEdmStructuredType metadataType, IEnumerable<string> derivedTypeConstraints, string itemKind, string itemName)
+        {
+            if (resourceType == null || metadataType == null || derivedTypeConstraints == null || resourceType == metadataType)
+            {
+                return;
+            }
+
+            string fullTypeName = resourceType.FullTypeName();
+            if (derivedTypeConstraints.Any(c => c == fullTypeName))
+            {
+                return;
+            }
+
+            throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
         }
 
         /// <summary>

@@ -180,7 +180,8 @@ namespace Microsoft.OData.UriParser
             else if (bindingType != null)
             {
                 // Filter out functions with more than one parameter. Actions should not be filtered as the parameters are in the payload not the uri
-                candidateMatchingOperations = candidateMatchingOperations.Where(o => (o.IsFunction() && o.Parameters.Count() == 1) || o.IsAction()).ToList();
+                candidateMatchingOperations = candidateMatchingOperations.Where(o =>
+                (o.IsFunction() && (o.Parameters.Count() == 1 || o.Parameters.Skip(1).All(p => p is IEdmOptionalParameter))) || o.IsAction()).ToList();
             }
             else
             {

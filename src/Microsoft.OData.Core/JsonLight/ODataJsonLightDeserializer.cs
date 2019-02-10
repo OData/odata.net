@@ -541,6 +541,11 @@ namespace Microsoft.OData.JsonLight
                 throw new ODataException(Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
+            if (propertyAndAnnotationCollector != null)
+            {
+                propertyAndAnnotationCollector.MarkPropertyAsProcessed(propertyName);
+            }
+
             // Read over the property name
             this.JsonReader.ReadNext();
             return this.JsonReader.ReadStringValue();

@@ -146,11 +146,11 @@ namespace Microsoft.OData.JsonLight
 
             if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
             {
-                this.currentPropertyInfo = new PropertySerializationInfo(propertyName, owningType) { IsTopLevel = isTopLevel };
+                this.currentPropertyInfo = new PropertySerializationInfo(this.JsonLightOutputContext.Model, propertyName, owningType) { IsTopLevel = isTopLevel };
             }
             else
             {
-                this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(propertyName, owningType);
+                this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(this.JsonLightOutputContext.Model, propertyName, owningType);
             }
 
             WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
@@ -210,9 +210,29 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
+            ODataResourceValue resourceValue = value as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                if (isTopLevel)
+                {
+                    throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                }
+
+                this.WriteResourceProperty(property, resourceValue, isOpenPropertyType);
+                return;
+            }
+
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
+                if (isTopLevel)
+                {
+                    if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
+                    {
+                        throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                    }
+                }
+
                 this.WriteCollectionProperty(collectionValue, isOpenPropertyType);
                 return;
             }
@@ -391,6 +411,27 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Writes a resource property.
+        /// </summary>
+        /// <param name="property">The property to write out.</param>
+        /// <param name="resourceValue">The resource value to be written</param>
+        /// <param name="isOpenPropertyType">If the property is open.</param>
+        private void WriteResourceProperty(
+            ODataProperty property,
+            ODataResourceValue resourceValue,
+            bool isOpenPropertyType)
+        {
+            Debug.Assert(!this.currentPropertyInfo.IsTopLevel, "Resource property should not be top level");
+            this.JsonWriter.WriteName(property.Name);
+
+            this.JsonLightValueSerializer.WriteResourceValue(
+                resourceValue,
+                this.currentPropertyInfo.MetadataType.TypeReference,
+                isOpenPropertyType,
+                this.CreateDuplicatePropertyNameChecker());
+        }
+
+        /// <summary>
         /// Writes a enum property.
         /// </summary>
         /// <param name="enumValue">The enum value to be written.</param>
@@ -510,6 +551,8 @@ namespace Microsoft.OData.JsonLight
             bool isOpenPropertyType)
         {
             ResolvePrimitiveValueTypeName(primitiveValue, isOpenPropertyType);
+
+            WriterValidationUtils.ValidatePropertyDerivedTypeConstraint(this.currentPropertyInfo);
 
             this.WritePropertyTypeName();
             this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);

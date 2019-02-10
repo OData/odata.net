@@ -1770,6 +1770,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     {
                         return new ODataProperty { Name = propertyName, Value = new ODataEnumValue(value.ToString(), t.FullName) };
                     }
+                    else
+                    {
+                        // Build a resource type property. We consider type t to be primitive if t.Namespace is  "System" or if t is spatial type.
+                        List<ODataProperty> properties = new List<ODataProperty>();
+                        foreach (var p in t.GetProperties())
+                        {
+                            properties.Add(CreateODataProperty(t.GetProperty(p.Name).GetValue(value, new object[] { }), p.Name));
+                        }
+
+                        return new ODataProperty { Name = propertyName, Value = new ODataResourceValue() { TypeName = t.FullName, Properties = properties, } };
+                    }
                 }
             }
 

@@ -107,6 +107,8 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.NavigationPropertyMappingMustPointToValidTargetForProperty,
                 ValidationRules.DirectValueAnnotationHasXmlSerializableName,
                 ValidationRules.FunctionMustHaveReturnType,
+                ValidationRules.FunctionWithUrlEscapeFunctionMustBeBound,
+                ValidationRules.FunctionWithUrlEscapeFunctionMustHaveOneStringParameter,
                 ValidationRules.EntitySetTypeCannotBeEdmEntityType,
                 ValidationRules.SingletonTypeCannotBeEdmEntityType,
                 ValidationRules.OperationReturnTypeCannotBeCollectionOfAbstractType,

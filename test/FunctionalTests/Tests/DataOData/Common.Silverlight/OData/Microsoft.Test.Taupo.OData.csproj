@@ -82,9 +82,6 @@
     <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs">
       <Link>$(DataFxIncPath)\AssemblyRefs.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Microsoft.Spatial\Utils\SpatialFactory.cs">
-      <Link>Common\SpatialFactory.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\TestAtomConstants.cs">
       <Link>Atom\TestAtomConstants.cs</Link>
     </Compile>

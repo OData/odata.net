@@ -1066,6 +1066,7 @@ namespace Microsoft.OData.Metadata
                         case EdmPrimitiveTypeKind.Single:
                         case EdmPrimitiveTypeKind.Stream:
                         case EdmPrimitiveTypeKind.Date:
+                        case EdmPrimitiveTypeKind.PrimitiveType:
                             return new EdmPrimitiveTypeReference(primitiveType, nullable);
                         case EdmPrimitiveTypeKind.Binary:
                             IEdmBinaryTypeReference binaryTypeReference = (IEdmBinaryTypeReference)typeReference;
@@ -1200,6 +1201,13 @@ namespace Microsoft.OData.Metadata
                 return true;
             }
 
+            // If the base type is "Edm.ComplexType" or "Edm.EntityType", any other structure type can assign to it.
+            if (baseType == EdmCoreModel.Instance.GetComplexType() ||
+                baseType == EdmCoreModel.Instance.GetEntityType())
+            {
+                return true;
+            }
+
             if (!baseType.IsODataEntityTypeKind() && !baseType.IsODataComplexTypeKind())
             {
                 // we only support complex and entity type inheritance.
@@ -1234,6 +1242,12 @@ namespace Microsoft.OData.Metadata
             Debug.Assert(subtype != null, "subtype != null");
 
             if (baseType.IsEquivalentTo(subtype))
+            {
+                return true;
+            }
+
+            // If the base type is "Edm.Primitive", any other primitive type can assign to it.
+            if (baseType.PrimitiveKind == EdmPrimitiveTypeKind.PrimitiveType)
             {
                 return true;
             }
@@ -1893,6 +1907,7 @@ namespace Microsoft.OData.Metadata
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
                 case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                     return new EdmPrimitiveTypeReference(primitiveType, nullable);
                 case EdmPrimitiveTypeKind.Binary:
                     return new EdmBinaryTypeReference(primitiveType, nullable);

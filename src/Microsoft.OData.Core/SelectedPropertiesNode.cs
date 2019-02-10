@@ -101,7 +101,7 @@ namespace Microsoft.OData
             {
                 string[] segments = null;
                 int idxLP = t.IndexOf('(');
-                if ( -1 == idxLP )
+                if (-1 == idxLP)
                 {
                     segments = t.Split(PathSeparator);
                 }
@@ -117,8 +117,21 @@ namespace Microsoft.OData
                 this.ParsePathSegment(segments, 0);
             }
 
-            if ( (this.selectedProperties == null || this.selectedProperties.Count == 0)
-                && this.children.Values.All( n => n.selectionType == SelectionType.EntireSubtree))
+            DetermineSelectionType();
+        }
+
+        private void DetermineSelectionType()
+        {
+            if (this.children != null)
+            {
+                foreach (SelectedPropertiesNode childNode in this.children.Values)
+                {
+                    childNode.DetermineSelectionType();
+                }
+            }
+
+            if ((this.selectedProperties == null || this.selectedProperties.Count == 0)
+                && (this.children == null || this.children.Values.All(n => n.selectionType == SelectionType.EntireSubtree)))
             {
                 this.selectionType = SelectionType.EntireSubtree;
             }
@@ -364,7 +377,7 @@ namespace Microsoft.OData
             }
 
             // $select=Orders will include the entire subtree when there are no same expanded entity.
-            if (this.selectedProperties.Contains(navigationPropertyName) &&
+            if (this.selectedProperties != null && this.selectedProperties.Contains(navigationPropertyName) &&
                 (this.children == null || !this.children.Any(n => n.Key.Equals(navigationPropertyName) && n.Value.isExpandedNavigationProperty)))
             {
                 return new SelectedPropertiesNode(SelectionType.EntireSubtree);
@@ -411,7 +424,7 @@ namespace Microsoft.OData
             }
 
             if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard
-                || (this.selectedProperties.Count() == 0 && this.children.Values.All( n => n.isExpandedNavigationProperty)))
+                || ((this.selectedProperties == null || this.selectedProperties.Count() == 0) && this.children.Values.All( n => n.isExpandedNavigationProperty)))
             {
                 return structuredType.NavigationProperties();
             }
@@ -420,8 +433,7 @@ namespace Microsoft.OData
             // NOTE: the assumption is that the number of selected properties usually is a lot smaller
             //       than the number of all properties on the type and that FindProperty for each selected
             //       property is faster than iterating through all the properties on the type.
-            Debug.Assert(this.selectedProperties != null, "selectedProperties != null");
-            IEnumerable<string> navigationPropertyNames = this.selectedProperties;
+            IEnumerable<string> navigationPropertyNames = this.selectedProperties ?? CreateSelectedPropertiesHashSet();
             if (this.children != null)
             {
                 navigationPropertyNames = this.children.Keys.Concat(navigationPropertyNames);
@@ -465,13 +477,14 @@ namespace Microsoft.OData
                 return entityType.StructuralProperties().Where(sp => sp.Type.IsStream()).ToDictionary(sp => sp.Name, StringComparer.Ordinal);
             }
 
-            Debug.Assert(this.selectedProperties != null, "selectedProperties != null");
-
-            IDictionary<string, IEdmStructuralProperty> selectedStreamProperties = this.selectedProperties
-                .Select(entityType.FindProperty)
-                .OfType<IEdmStructuralProperty>()
-                .Where(p => p.Type.IsStream())
-                .ToDictionary(p => p.Name, StringComparer.Ordinal);
+            IDictionary<string, IEdmStructuralProperty> selectedStreamProperties = 
+                this.selectedProperties == null ?
+                    new Dictionary<string, IEdmStructuralProperty>() :
+                    this.selectedProperties
+                        .Select(entityType.FindProperty)
+                        .OfType<IEdmStructuralProperty>()
+                        .Where(p => p.Type.IsStream())
+                        .ToDictionary(p => p.Name, StringComparer.Ordinal);
 
             // gather up the selected stream from any child nodes that have type segments matching the current type and add them to the dictionary.
             foreach (SelectedPropertiesNode typeSegmentChild in this.GetMatchingTypeSegments(entityType))
@@ -585,37 +598,17 @@ namespace Microsoft.OData
 
         private bool IsValidExpandToken(string item)
         {
-            // Check #1: Expand token must contain '(' and end with ')', must be related to navigation property.
+            // Expand token must contain '(' and end with ')', must not contain a dot, and must be related to navigation property.
             int idxLP = item.IndexOf('(');
             if (idxLP == -1
                 || !item.EndsWith(")", StringComparison.Ordinal)
-                || (this.structuredType != null && !IsNavigationPropertyToken(item.Substring(0, idxLP))))
+                || !IsNavigationPropertyToken(item.Substring(0, idxLP)))
             {
                 // selected item is not properly parenthesized, or is an operation token.
                 return false;
             }
 
-            // Check #2: parentheses must be balanced.
-            int count = 0;
-            foreach (char c in item)
-            {
-                if (c == '(')
-                {
-                    ++count;
-                }
-                else if (c == ')')
-                {
-                    --count;
-                }
-
-                if (count < 0)
-                {
-                    // Malformed parentheses detected ==> not expand token.
-                    return false;
-                }
-            }
-
-            return count == 0;
+            return true;
         }
 
         /// <summary>
@@ -628,23 +621,29 @@ namespace Microsoft.OData
             const char nameSpaceSeparator = '.';
 
             /* Decision tree:
-             #1. if it matches a defined navigation property => treat it as a navigation property
-             #2. otherwise, if the name contains a dot => it's not a navigation property
+             #1. if the name contains a dot => it's not a navigation property
+             #2. otherwise, if it matches a defined navigation property => treat it as a navigation property
              #3. otherwise, if it matches an unqualified bound operation name => it's not a navigation property
              #4. otherwise, it's a navigation property
              */
 
             // For better readability, set the value in if-else branches corresponding to decision tree above.
             bool found;
-            if (this.structuredType.NavigationProperties().Any(_ => _.Name.Equals(token, StringComparison.Ordinal)))
+            if (token.IndexOf(nameSpaceSeparator) != -1)
             {
                 // #1
+                found = false;
+            }
+            else if (this.structuredType == null || this.structuredType.NavigationProperties().Any(_ => _.Name.Equals(token, StringComparison.Ordinal)))
+            {
+                // #2
+                // Note that action and function names in a contextUrl *SHOULD* always be qualified, 
+                // So if we can't validate against the structured type, should assume it's a nav prop
                 found = true;
             }
-            else if (token.IndexOf(nameSpaceSeparator) != -1 ||
-                     this.edmModel.FindBoundOperations(this.structuredType).Any(op => op.Name.Equals(token, StringComparison.Ordinal)))
+            else if (this.edmModel != null && this.edmModel.FindBoundOperations(this.structuredType).Any(op => op.Name.Equals(token, StringComparison.Ordinal)))
             {
-                // #2, #3
+                //#3
                 found = false;
             }
             else
@@ -694,18 +693,13 @@ namespace Microsoft.OData
             // NOTE: Each path is the name of a property or a series of property names
             //       separated by slash ('/'). The special star ('*') character is only supported at the end of a path.
             string currentSegment = segments[index].Trim();
-            if (this.selectedProperties == null)
-            {
-                this.selectedProperties = CreateSelectedPropertiesHashSet();
-            }
-
             bool isStar = string.CompareOrdinal(StarSegment, currentSegment) == 0;
             int idxLP = currentSegment.IndexOf('(');
 
             if (idxLP != -1 && IsValidExpandToken(currentSegment))
             {
                 string token = currentSegment.Substring(0, idxLP);
-                SelectedPropertiesNode childNode = this.EnsureChildAnnotation(token, /* isExpandedNavigationProperty */ true);
+                SelectedPropertiesNode childNode = this.EnsureChildNode(token, /* isExpandedNavigationProperty */ true);
                 childNode.edmModel = this.edmModel;
 
                 if (idxLP < currentSegment.Length - 2)
@@ -741,11 +735,16 @@ namespace Microsoft.OData
                         throw new ODataException(ODataErrorStrings.SelectedPropertiesNode_StarSegmentNotLastSegment);
                     }
 
-                    SelectedPropertiesNode childNode = this.EnsureChildAnnotation(currentSegment, false);
+                    SelectedPropertiesNode childNode = this.EnsureChildNode(currentSegment, false);
                     childNode.ParsePathSegment(segments, index + 1);
                 }
                 else
                 {
+                    if (this.selectedProperties == null)
+                    {
+                        this.selectedProperties = CreateSelectedPropertiesHashSet();
+                    }
+
                     this.selectedProperties.Add(currentSegment);
                 }
             }
@@ -754,13 +753,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Ensures that a child annotation for the specified segment name already exists; if not creates one.
+        /// Ensures that a child node for the specified segment name already exists; if not creates one.
         /// </summary>
-        /// <param name="segmentName">The segment name to get the child annotation for.</param>
+        /// <param name="segmentName">The segment name to get the child node for.</param>
         /// <param name="isExpandedNavigationProperty">Boolean flag indicating whether this is an expanded navigation property.</param>
 
-        /// <returns>The existing or newly created child annotation for the <paramref name="segmentName"/>.</returns>
-        private SelectedPropertiesNode EnsureChildAnnotation(string segmentName, bool isExpandedNavigationProperty)
+        /// <returns>The existing or newly created child node for the <paramref name="segmentName"/>.</returns>
+        private SelectedPropertiesNode EnsureChildNode(string segmentName, bool isExpandedNavigationProperty)
         {
             Debug.Assert(segmentName != null, "segmentName != null");
 
@@ -791,14 +790,14 @@ namespace Microsoft.OData
         {
             Debug.Assert(operation != null, "operation != null");
 
-            if (this.selectionType == SelectionType.Empty)
-            {
-                return false;
-            }
-
             if (this.selectionType == SelectionType.EntireSubtree)
             {
                 return true;
+            }
+
+            if (this.selectionType == SelectionType.Empty || this.selectedProperties == null )
+            {
+                return false;
             }
 
             return GetPossibleMatchesForSelectedOperation(operation, mustBeNamespaceQualified).Any(possibleMatch => this.selectedProperties.Contains(possibleMatch));
@@ -829,22 +828,22 @@ namespace Microsoft.OData
         }
 
         /// <summary>Create SelectedPropertiesNode using selected name list and expand node list.</summary>
-        /// <param name="selectList">A list of selected item names.</param>
-        /// <param name="expandList">A list of sub expanded nodes.</param>
+        /// <param name="selectList">An enumerable of selected item names.</param>
+        /// <param name="expandList">An enumerable of sub expanded nodes.</param>
         /// <returns>The generated SelectedPropertiesNode.</returns>
-        private static SelectedPropertiesNode CombineSelectAndExpandResult(IList<string> selectList, IList<SelectedPropertiesNode> expandList)
+        private static SelectedPropertiesNode CombineSelectAndExpandResult(IEnumerable<string> selectList, IEnumerable<SelectedPropertiesNode> expandList)
         {
             List<string> rawSelect = selectList.ToList();
             rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
 
-            if (selectList.Count == 0 && expandList.All( n => n.IsEntireSubtree()))
+            if (rawSelect.Count == 0 && expandList.All( n => n.IsEntireSubtree()))
             {
                 return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
             SelectedPropertiesNode node = new SelectedPropertiesNode(SelectionType.PartialSubtree)
             {
-                selectedProperties = CreateSelectedPropertiesHashSet(),
+                selectedProperties = rawSelect.Count > 0 ? CreateSelectedPropertiesHashSet() : null,
                 children = new Dictionary<string, SelectedPropertiesNode>(StringComparer.Ordinal)
             };
 

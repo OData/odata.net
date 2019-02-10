@@ -852,6 +852,38 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ExpandOnDerivedTypeWorks()
+        {
+            var results = RunParseSelectExpand("FirstName, MyAddress", "Fully.Qualified.Namespace.Employee/OfficeDog", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            results.SelectedItems.OfType<PathSelectItem>().ElementAt(0).ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonFirstNameProp())));
+            results.SelectedItems.OfType<PathSelectItem>().ElementAt(1).ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonAddressProp())));
+            results.SelectedItems.OfType<ExpandedNavigationSelectItem>().Should().HaveCount(1);
+            var expand = results.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expand.SelectAndExpand.AllSelected.Should().BeTrue();
+
+            AssertSelectString("FirstName,MyAddress", results);
+            AssertExpandString("Fully.Qualified.Namespace.Employee/OfficeDog", results);
+        }
+
+        [Fact]
+        public void ExpandOnDerivedWithSelectTypeWorks()
+        {
+            var results = RunParseSelectExpand("FirstName, MyAddress", "Fully.Qualified.Namespace.Employee/OfficeDog($select=Color)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            results.SelectedItems.OfType<PathSelectItem>().ElementAt(0).ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonFirstNameProp())));
+            results.SelectedItems.OfType<PathSelectItem>().ElementAt(1).ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonAddressProp())));
+            results.SelectedItems.OfType<ExpandedNavigationSelectItem>().Should().HaveCount(1);
+            var expand = results.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expand.SelectAndExpand.AllSelected.Should().BeFalse();
+            expand.SelectAndExpand.SelectedItems.OfType<PathSelectItem>().Single().ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
+            results.AllSelected.Should().BeFalse();
+
+            AssertSelectString("FirstName,MyAddress", results);
+            AssertExpandString("Fully.Qualified.Namespace.Employee/OfficeDog($select=Color)", results);
+        }
+
+        [Fact]
         public void MultipleDeepLevelExpansionsAndSelectionsShouldWork()
         {
             const string select = "MyDog, MyFavoritePainting";

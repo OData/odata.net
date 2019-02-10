@@ -90,6 +90,7 @@ ODataMessageWriter_CannotWriteMetadataWithoutModel=No model was specified in the
 ODataMessageWriter_CannotSpecifyOperationWithoutModel=No model was specified in the ODataMessageWriterSettings; a model has to be provided in the ODataMessageWriterSettings when CreateODataParameterWriter is called with a non-null operation.
 ODataMessageWriter_JsonPaddingOnInvalidContentType=A JsonPaddingFunctionName was specified, but the content-type '{0}' is not supported with Json Padding.
 ODataMessageWriter_NonCollectionType=The type '{0}' specified as the collection's item type is not primitive, enum or complex. An ODataCollectionWriter can only write collections of primitive, enum or complex values.
+ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue=Not allowed to write top level property '{0}' with 'ODataResourceValue' or collection of resource value.
 
 ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth=Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null.
 
@@ -282,6 +283,7 @@ ReaderValidationUtils_ContextUriValidationNonMatchingDeclaringTypes=The context 
 ReaderValidationUtils_NonMatchingPropertyNames=The property or operation import name '{0}' was read from the payload; however, the name of the expected property or operation import is '{1}'.
 ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType=The context URI '{0}' references the type '{1}'; however the expected type is '{2}'.
 ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType=The context URI '{0}' refers to the item type '{1}' which is not assignable to the expected item type '{2}'.
+ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint=The value type '{0}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on {1} '{2}'.
 
 ODataMessageReader_ReaderAlreadyUsed=The ODataMessageReader has already been used to read a message payload. An ODataMessageReader can only be used once to read a payload for a given message.
 ODataMessageReader_ErrorPayloadInRequest=A top-level error cannot be read from request payloads. Top-level errors are only supported in responses.
@@ -426,6 +428,7 @@ WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolut
 WriterValidationUtils_NavigationLinkMustSpecifyUrl=The ODataNestedResourceInfo.Url property on an navigation link '{0}' is null. The ODataNestedResourceInfo.Url property must be set to a non-null value that represents the entity or entities the navigation link references.
 WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection=The ODataNestedResourceInfo.IsCollection property on a nested resource info '{0}' is null. The ODataNestedResourceInfo.IsCollection property must be specified when writing a nested resource into a request.
 WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage=A JSON Padding function was specified on ODataMessageWriterSettings when trying to write a request message. JSON Padding is only for writing responses.
+WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint=The value type '{0}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on {1} '{2}'.
 
 XmlReaderExtension_InvalidNodeInStringValue=An XML node of type '{0}' was found in a string value. An element with a string value can only contain Text, CDATA, SignificantWhitespace, Whitespace or Comment nodes.
 XmlReaderExtension_InvalidRootNode=An XML node of type '{0}' was found at the root level. The root level of an OData payload must contain a single XML element and no text nodes.
@@ -491,7 +494,7 @@ ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue=The
 ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest=An attempt to write an entity reference link inside a navigation link after a resource set has been written inside the same navigation link in a request was detected. In JSON Light requests, all entity reference links inside a navigation link have to be written before all resource sets inside the same navigation link.
 ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet=The ODataResourceSet.InstanceAnnotations collection must be empty for expanded resource sets. Custom instance annotations are not supported on expanded resource sets.
 
-ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest=Neither an expected type nor a type name in the OData object model was provided for a complex value. When writing a request payload, either an expected type or a type name has to be specified.
+ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest=Neither an expected type nor a type name in the OData object model was provided for a resource value. When writing a request payload, either an expected type or a type name has to be specified.
 ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest=Neither an expected type nor a type name in the OData object model was provided for a collection property. When writing a request payload, either an expected type or a type name has to be specified.
 
 ODataResourceTypeContext_MetadataOrSerializationInfoMissing=When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataResourceWriter method or the ODataResourceSerializationInfo must be set on the ODataResource or ODataResourceSet that is being written.
@@ -514,9 +517,9 @@ ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload=No top
 ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyName=A top-level property with name '{0}' was found in the payload; however, property and collection payloads must always have a top-level property with name '{1}'.
 ODataJsonLightPropertyAndValueDeserializer_InvalidTypeName=The 'odata.type' instance annotation value '{0}' is not a valid type name. The value of the 'odata.type' instance annotation must be a non-empty string.
 ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty=One or more property annotations for property '{0}' were found in the top-level property or collection payload without the property to annotate. Top-level property and collection payloads must contain a single property, with optional annotations for this property.
-ODataJsonLightPropertyAndValueDeserializer_ComplexValuePropertyAnnotationWithoutProperty=One or more property annotations for property '{0}' were found in the complex value without the property to annotate. Complex values must only contain property annotations for existing properties.
+ODataJsonLightPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty=One or more property annotations for property '{0}' were found in the resource value without the property to annotate. Resource values must only contain property annotations for existing properties.
 ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation=A complex property with an '{0}' property annotation was found. Complex properties must not have the '{0}' property annotation, instead the '{0}' should be specified as an instance annotation in the complex value.
-ODataJsonLightPropertyAndValueDeserializer_ComplexTypeAnnotationNotFirst=The 'odata.type' instance annotation in a complex object is not the first property of the object. In OData, the 'odata.type' instance annotation must be the first property of the complex object.
+ODataJsonLightPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst=The 'odata.type' instance annotation in a resource object is not the first property of the object. In OData, the 'odata.type' instance annotation must be the first property of the resource object.
 ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation=The property '{0}' has a property annotation '{1}'. Primitive, complex, collection or open properties can only have an 'odata.type' property annotation.
 ODataJsonLightPropertyAndValueDeserializer_TypePropertyAfterValueProperty=The property with name '{0}' was found after the data property with name '{1}'. If a type is specified for a data property, it must appear before the data property.
 ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue=An '{0}' annotation was read inside a JSON object representing a primitive value; type annotations for primitive values have to be property annotations of the owning property.
@@ -636,6 +639,7 @@ ODataConventionalUriBuilder_NullKeyValue=The key property '{0}' on type '{1}' ha
 ODataResourceMetadataContext_EntityTypeWithNoKeyProperties=An ODataResource of type '{0}' is found without key properties. When writing without a user model, each resource must contain at least one property whose 'ODataProperty.SerializationInfo.PropertyKind' set to 'ODataPropertyKind.Key'. When writing with a user model, the entity type '{0}' defined in the model must define at least one key property.
 ODataResourceMetadataContext_NullKeyValue=The key property '{0}' on type '{1}' has a null value. Key properties must not have null values.
 ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues=The property '{0}' on type '{1}' is a non-primitive value. All key and etag properties must be of primitive types.
+ODataResource_PropertyValueCannotBeODataResourceValue=The value of a property '{0}' in ODataResource cannot be of type ODataResourceValue or collection of ODataResourceValue.
 
 EdmValueUtils_NonPrimitiveValue=The primitive property '{0}' on type '{1}' has a value which is not a primitive value.
 EdmValueUtils_PropertyDoesntExist=The entity instance value of type '{0}' doesn't have a value for property '{1}'. To compute an entity's metadata, its key and concurrency-token property values must be provided.
@@ -687,6 +691,7 @@ UriQueryExpressionParser_WithExpected='with' expected at position {0} in '{1}'.
 UriQueryExpressionParser_UnrecognizedWithMethod=Unrecognized with '{0}' at '{1}' in '{2}'.
 UriQueryExpressionParser_PropertyPathExpected=Expression expected at position {0} in '{1}'.
 UriQueryExpressionParser_KeywordOrIdentifierExpected='{0}' expected at position {1} in '{2}'.
+UriQueryExpressionParser_InnerMostExpandRequireFilter=The inner most expand transformation requires a filter transformation at position {0} in '{1}'.
 
 UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri=The URI '{0}' is not valid because it is not based on '{1}'.
 UriQueryPathParser_SyntaxError=Bad Request: there was an error in the query syntax.
@@ -733,7 +738,7 @@ MetadataBinder_CastOrIsOfCollectionsNotSupported=The Cast and IsOf functions do 
 MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease=Collection open properties are not supported in this release.
 MetadataBinder_IllegalSegmentType=Can only bind segments that are Navigation, Structural, Complex, or Collections. We found a segment '{0}' that isn't any of those. Please revise the query.
 MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities.
-
+StringItemShouldBeQuoted=String item should be single/double quoted: '{0}'.
 ApplyBinder_AggregateExpressionIncompatibleTypeForMethod=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
 ApplyBinder_UnsupportedAggregateMethod=$apply/aggregate does not support method '{0}'.
 ApplyBinder_UnsupportedAggregateKind=$apply/aggregate expression token kind '{0}' not supported.
@@ -819,6 +824,7 @@ PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.
 PathParser_TypeMustBeRelatedToSet=The type '{0}' does not inherit from and is not a base type of '{1}'. The type of '{2}' must be related to the Type of the EntitySet.
 PathParser_TypeCastOnlyAllowedAfterStructuralCollection=Type cast segment '{0}' after a collection which is not of entity or complex type is not allowed.
+PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint=Type cast segment '{0}' on {1} '{2}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation.
 
 ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink=A resource set may contain a next page link, a delta link or neither, but must not contain both.
 
@@ -881,7 +887,6 @@ RequestUriProcessor_ResourceNotFound=Resource not found for the segment '{0}'.
 RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset=Batched service action '{0}' cannot be invoked because it was bound to an entity created in the same changeset.
 RequestUriProcessor_Forbidden=Forbidden
 RequestUriProcessor_OperationSegmentBoundToANonEntityType=Found an operation bound to a non-entity type.
-
 
 ; Note: The below list of error messages are common to both the OData and the OData.Query project.
 General_InternalError=An internal error '{0}' occurred.

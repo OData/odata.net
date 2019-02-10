@@ -758,6 +758,59 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets the collection of qualified type name for term Org.OData.Validation.V1.DerivedTypeConstraint from a navigation source.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <returns>Null or a collection string of qualifed type name.</returns>
+        public static IEnumerable<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmNavigationSource navigationSource)
+        {
+            if (model == null || navigationSource == null)
+            {
+                return null;
+            }
+
+            IEnumerable<string> derivedTypeConstraints = null;
+            switch (navigationSource.NavigationSourceKind())
+            {
+                case EdmNavigationSourceKind.EntitySet:
+                    derivedTypeConstraints = model.GetDerivedTypeConstraints((IEdmVocabularyAnnotatable)(IEdmEntitySet)navigationSource);
+                    break;
+                case EdmNavigationSourceKind.Singleton:
+                    derivedTypeConstraints = model.GetDerivedTypeConstraints((IEdmVocabularyAnnotatable)(IEdmSingleton)navigationSource);
+                    break;
+            }
+
+            return derivedTypeConstraints;
+        }
+
+        /// <summary>
+        /// Gets the collection of qualified type name for term Org.OData.Validation.V1.DerivedTypeConstraint from a target annotatable.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target annotatable to find annotation.</param>
+        /// <returns>Null or a collection string of qualifed type name.</returns>
+        public static IEnumerable<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmVocabularyAnnotatable target)
+        {
+            if (model == null || target == null)
+            {
+                return null;
+            }
+
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(target, ValidationVocabularyModel.DerivedTypeConstraintTerm).FirstOrDefault();
+            if (annotation != null)
+            {
+                IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
+                if (collectionExpression != null && collectionExpression.Elements != null)
+                {
+                    return collectionExpression.Elements.OfType<IEdmStringConstantExpression>().Select(e => e.Value);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets all schema elements from the model, and models referenced by it.
         /// </summary>
         /// <param name="model">Model to search for elements</param>
@@ -2638,6 +2691,51 @@ namespace Microsoft.OData.Edm
             }
 
             return result;
+        }
+        #endregion
+
+        #region UrlEscape
+        /// <summary>
+        /// Determines whether the specified function is UrlEscape function or not.
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="function">The specified function</param>
+        /// <returns><c>true</c> if the specified operation is UrlEscape function; otherwise, <c>false</c>.</returns>
+        internal static bool IsUrlEscapeFunction(this IEdmModel model, IEdmFunction function)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(function, "function");
+
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(function, CommunityVocabularyModel.UrlEscapeFunctionTerm).FirstOrDefault();
+            if (annotation != null)
+            {
+                IEdmBooleanConstantExpression tagConstant = annotation.Value as IEdmBooleanConstantExpression;
+                if (tagConstant != null)
+                {
+                    return tagConstant.Value;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Set annotation Org.OData.Community.V1.UrlEscapeFunction to <see cref="IEdmFunction"/>.
+        /// </summary>
+        /// <param name="model">The model to add annotation</param>
+        /// <param name="function">The target function to set the inline annotation</param>
+        internal static void SetUrlEscapeFunction(this EdmModel model, IEdmFunction function)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(function, "function");
+
+            IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
+            IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
+
+            Debug.Assert(term != null, "term!=null");
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
         }
         #endregion
 

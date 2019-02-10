@@ -4,15 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Xml;
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Vocabularies.V1
 {
@@ -25,143 +17,102 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// The EDM model with core vocabularies.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmModel is immutable")]
-        public static readonly IEdmModel Instance;
+        public static readonly IEdmModel Instance = VocabularyModelProvider.CoreModel;
 
         /// <summary>
         /// The concurrency term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm ConcurrencyTerm;
+        public static readonly IEdmTerm ConcurrencyTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency);
 
         /// <summary>
         /// The description term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm DescriptionTerm;
+        public static readonly IEdmTerm DescriptionTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.Description);
 
         /// <summary>
         /// The description term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm LongDescriptionTerm;
+        public static readonly IEdmTerm LongDescriptionTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.LongDescription);
 
         /// <summary>
         /// The IsLanguageDependent term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm IsLanguageDependentTerm;
+        public static readonly IEdmTerm IsLanguageDependentTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.IsLanguageDependent);
 
         /// <summary>
         /// The RequiresType term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm RequiresTypeTerm;
+        public static readonly IEdmTerm RequiresTypeTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.RequiresType);
 
         /// <summary>
         /// The ResourcePath term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm ResourcePathTerm;
+        public static readonly IEdmTerm ResourcePathTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.ResourcePath);
 
         /// <summary>
         /// The DereferenceableIDs term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm DereferenceableIDsTerm;
+        public static readonly IEdmTerm DereferenceableIDsTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.DereferenceableIDs);
 
         /// <summary>
         /// The ConventionalIDs term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm ConventionalIDsTerm;
+        public static readonly IEdmTerm ConventionalIDsTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.ConventionalIDs);
 
         /// <summary>
         /// The Immutable term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm ImmutableTerm;
+        public static readonly IEdmTerm ImmutableTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.Immutable);
 
         /// <summary>
         /// The Computed term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm ComputedTerm;
+        public static readonly IEdmTerm ComputedTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.Computed);
 
         /// <summary>
         /// The Optional Parameter term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm OptionalParameterTerm;
+        public static readonly IEdmTerm OptionalParameterTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.OptionalParameter);
 
         /// <summary>
         /// The IsURL term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm IsURLTerm;
+        public static readonly IEdmTerm IsURLTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.IsURL);
 
         /// <summary>
         /// The AcceptableMediaTypes term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm AcceptableMediaTypesTerm;
+        public static readonly IEdmTerm AcceptableMediaTypesTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.AcceptableMediaTypes);
 
         /// <summary>
         /// The MediaType term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm MediaTypeTerm;
+        public static readonly IEdmTerm MediaTypeTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.MediaType);
 
         /// <summary>
         /// The IsMediaType term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm IsMediaTypeTerm;
+        public static readonly IEdmTerm IsMediaTypeTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.IsMediaType);
 
         /// <summary>
         /// The Permissions Term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
-        public static readonly IEdmTerm PermissionsTerm;
-
-        internal static bool IsInitializing;
-
-        /// <summary>
-        /// Parse Core Vocabulary Model from CoreVocabularies.xml
-        /// </summary>
-        static CoreVocabularyModel()
-        {
-            IsInitializing = true;
-            Assembly assembly = typeof(CoreVocabularyModel).GetAssembly();
-
-            // Resource name has leading namespace and folder in .NetStandard dll.
-            string[] allResources = assembly.GetManifestResourceNames();
-            string coreVocabularies = allResources.Where(x => x.Contains("CoreVocabularies.xml")).FirstOrDefault();
-            Debug.Assert(coreVocabularies != null, "CoreVocabularies.xml: not found.");
-
-            using (Stream stream = assembly.GetManifestResourceStream(coreVocabularies))
-            {
-                IEnumerable<EdmError> errors;
-                Debug.Assert(stream != null, "CoreVocabularies.xml: stream!=null");
-                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
-                IsInitializing = false;
-            }
-
-            AcceptableMediaTypesTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.AcceptableMediaTypes);
-            ComputedTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Computed);
-            ConcurrencyTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency);
-            ConventionalIDsTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.ConventionalIDs);
-            DereferenceableIDsTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.DereferenceableIDs);
-            DescriptionTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Description);
-            ImmutableTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Immutable);
-            IsLanguageDependentTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.IsLanguageDependent);
-            IsMediaTypeTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.IsMediaType);
-            IsURLTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.IsURL);
-            LongDescriptionTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.LongDescription);
-            MediaTypeTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.MediaType);
-            OptionalParameterTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.OptionalParameter);
-            RequiresTypeTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.RequiresType);
-            ResourcePathTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.ResourcePath);
-            PermissionsTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Permissions);
-        }
+        public static readonly IEdmTerm PermissionsTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.Permissions);
     }
 }

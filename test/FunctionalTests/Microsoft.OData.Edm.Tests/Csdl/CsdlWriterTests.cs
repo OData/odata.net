@@ -9,10 +9,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
+
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
+
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
@@ -137,8 +139,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "/ComplexType>" +
                 "<EntityContainer Name=\"Container\">" +
                 "<EntitySet Name=\"People\" EntityType=\"DefaultNs.Person\">" +
-                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
                     "<NavigationPropertyBinding Path=\"Addresses/City\" Target=\"City\" />" +
+                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
                     "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/CountryOrRegion\" Target=\"CountryOrRegion\" />" +
                 "</EntitySet>" +
                 "<EntitySet Name=\"City\" EntityType=\"DefaultNs.City\" />" +
@@ -962,6 +964,40 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void CanWritePropertyWithCoreTypeDefinitionAndValidationPassed()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<ComplexType Name=\"Complex\">" +
+                    "<Property Name=\"ModifiedDate\" Type=\"Org.OData.Core.V1.LocalDateTime\" />" +
+                    "<Property Name=\"QualifiedName\" Type=\"Org.OData.Core.V1.QualifiedTypeName\" />" +
+                  "</ComplexType>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            var localDateTime = model.FindType("Org.OData.Core.V1.LocalDateTime") as IEdmTypeDefinition;
+            Assert.NotNull(localDateTime);
+
+            var qualifiedTypeName = model.FindType("Org.OData.Core.V1.QualifiedTypeName") as IEdmTypeDefinition;
+            Assert.NotNull(qualifiedTypeName);
+
+            EdmComplexType type = new EdmComplexType("NS", "Complex");
+            type.AddStructuralProperty("ModifiedDate", new EdmTypeDefinitionReference(localDateTime, true));
+            type.AddStructuralProperty("QualifiedName", new EdmTypeDefinitionReference(qualifiedTypeName, true));
+
+            model.AddElement(type);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
         public void CanWriteNavigationPropertyBindingWithTargetPathOnContainmentOnSingleton()
         {
             string expected =
@@ -1053,6 +1089,46 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
+        public void CanWriteUrlEscapeFunction()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EntityType Name=\"Entity\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                  "</EntityType>" +
+                  "<Function Name=\"Function\" IsBound=\"true\">" +
+                    "<Parameter Name=\"entity\" Type=\"NS.Entity\" />" +
+                    "<Parameter Name=\"path\" Type=\"Edm.String\" />" +
+                    "<ReturnType Type=\"Edm.Int32\" />" +
+                    "<Annotation Term=\"Org.OData.Community.V1.UrlEscapeFunction\" Bool=\"true\" />" +
+                  "</Function>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmEntityType entityType = new EdmEntityType("NS", "Entity");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            EdmFunction function = new EdmFunction("NS", "Function", EdmCoreModel.Instance.GetInt32(true), true, null, false);
+            function.AddParameter("entity", new EdmEntityTypeReference(entityType, true));
+            function.AddParameter("path", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(entityType);
+            model.AddElement(function);
+            model.SetUrlEscapeFunction(function);
+
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
         }

@@ -411,6 +411,11 @@ namespace Microsoft.OData
                 {
                     throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadTypeName, expectedTypeReference.FullName()));
                 }
+
+                if (expectedTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.PrimitiveType)
+                {
+                    return payloadType.ToTypeReference(expectedTypeReference.IsNullable);
+                }
             }
 
             // Read using the expected type.

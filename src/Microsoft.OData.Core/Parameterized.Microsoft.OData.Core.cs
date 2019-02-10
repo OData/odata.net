@@ -586,6 +586,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Not allowed to write top level property '{0}' with 'ODataResourceValue' or collection of resource value."
+        /// </summary>
+        internal static string ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, p0);
+        }
+
+        /// <summary>
         /// A string like "Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null."
         /// </summary>
         internal static string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth {
@@ -1874,6 +1881,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The value type '{0}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on {1} '{2}'."
+        /// </summary>
+        internal static string ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(object p0, object p1, object p2) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The ODataMessageReader has already been used to read a message payload. An ODataMessageReader can only be used once to read a payload for a given message."
         /// </summary>
         internal static string ODataMessageReader_ReaderAlreadyUsed {
@@ -2825,6 +2839,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The value type '{0}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on {1} '{2}'."
+        /// </summary>
+        internal static string WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(object p0, object p1, object p2) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "An XML node of type '{0}' was found in a string value. An element with a string value can only contain Text, CDATA, SignificantWhitespace, Whitespace or Comment nodes."
         /// </summary>
         internal static string XmlReaderExtension_InvalidNodeInStringValue(object p0) {
@@ -3142,11 +3163,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Neither an expected type nor a type name in the OData object model was provided for a complex value. When writing a request payload, either an expected type or a type name has to be specified."
+        /// A string like "Neither an expected type nor a type name in the OData object model was provided for a resource value. When writing a request payload, either an expected type or a type name has to be specified."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest {
+        internal static string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
             }
         }
 
@@ -3302,10 +3323,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "One or more property annotations for property '{0}' were found in the complex value without the property to annotate. Complex values must only contain property annotations for existing properties."
+        /// A string like "One or more property annotations for property '{0}' were found in the resource value without the property to annotate. Resource values must only contain property annotations for existing properties."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_ComplexValuePropertyAnnotationWithoutProperty(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ComplexValuePropertyAnnotationWithoutProperty, p0);
+        internal static string ODataJsonLightPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty, p0);
         }
 
         /// <summary>
@@ -3316,11 +3337,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The 'odata.type' instance annotation in a complex object is not the first property of the object. In OData, the 'odata.type' instance annotation must be the first property of the complex object."
+        /// A string like "The 'odata.type' instance annotation in a resource object is not the first property of the object. In OData, the 'odata.type' instance annotation must be the first property of the resource object."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_ComplexTypeAnnotationNotFirst {
+        internal static string ODataJsonLightPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ComplexTypeAnnotationNotFirst);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst);
             }
         }
 
@@ -4054,6 +4075,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The value of a property '{0}' in ODataResource cannot be of type ODataResourceValue or collection of ODataResourceValue."
+        /// </summary>
+        internal static string ODataResource_PropertyValueCannotBeODataResourceValue(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataResource_PropertyValueCannotBeODataResourceValue, p0);
+        }
+
+        /// <summary>
         /// A string like "The primitive property '{0}' on type '{1}' has a value which is not a primitive value."
         /// </summary>
         internal static string EdmValueUtils_NonPrimitiveValue(object p0, object p1) {
@@ -4340,6 +4368,13 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string UriQueryExpressionParser_KeywordOrIdentifierExpected(object p0, object p1, object p2) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_KeywordOrIdentifierExpected, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "The inner most expand transformation requires a filter transformation at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_InnerMostExpandRequireFilter(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_InnerMostExpandRequireFilter, p0, p1);
         }
 
         /// <summary>
@@ -4666,6 +4701,13 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string MetadataBinder_QueryOptionNotApplicable(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_QueryOptionNotApplicable, p0);
+        }
+
+        /// <summary>
+        /// A string like "String item should be single/double quoted: '{0}'."
+        /// </summary>
+        internal static string StringItemShouldBeQuoted(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.StringItemShouldBeQuoted, p0);
         }
 
         /// <summary>
@@ -5206,6 +5248,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Type cast segment '{0}' on {1} '{2}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation."
+        /// </summary>
+        internal static string PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(object p0, object p1, object p2) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "A resource set may contain a next page link, a delta link or neither, but must not contain both."
         /// </summary>
         internal static string ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink {
@@ -5383,45 +5432,38 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "$filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'."
         /// </summary>
-        internal static string RequestUriProcessor_CannotApplyFilterOnSingleEntities(object p0)
-        {
+        internal static string RequestUriProcessor_CannotApplyFilterOnSingleEntities(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CannotApplyFilterOnSingleEntities, p0);
         }
 
         /// <summary>
         /// A string like "$each set-based operation cannot be applied on single entities or singletons. Entity type: '{0}'."
         /// </summary>
-        internal static string RequestUriProcessor_CannotApplyEachOnSingleEntities(object p0)
-        {
+        internal static string RequestUriProcessor_CannotApplyEachOnSingleEntities(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CannotApplyEachOnSingleEntities, p0);
         }
 
         /// <summary>
-        /// A string like "There are no navigation sources found to apply '{0}'."
+        /// A string like "The $filter path segment must be in the form $filter(expression), where the expression resolves to a boolean."
         /// </summary>
-        internal static string RequestUriProcessor_NoNavigationSourceFound(object p0)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoNavigationSourceFound, p0);
-        }
-
-        /// <summary>
-        /// The $filter path segment must be in the form $filter(expression), where the expression resolves to a boolean.
-        /// </summary>
-        internal static string RequestUriProcessor_FilterPathSegmentSyntaxError
-        {
-            get
-            {
+        internal static string RequestUriProcessor_FilterPathSegmentSyntaxError {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterPathSegmentSyntaxError);
             }
         }
 
         /// <summary>
+        /// A string like "There are no navigation sources found to apply '{0}'."
+        /// </summary>
+        internal static string RequestUriProcessor_NoNavigationSourceFound(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoNavigationSourceFound, p0);
+        }
+
+        /// <summary>
         /// A string like "Only a single operation can follow $each."
         /// </summary>
-        internal static string RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment
-        {
-            get
-            {
+        internal static string RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
             }
         }
@@ -5448,8 +5490,7 @@ namespace Microsoft.OData {
         /// A string like "The request URI is not valid, the segment $count cannot be applied to the root of the service."
         /// </summary>
         internal static string RequestUriProcessor_CountOnRoot {
-            get
-            {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CountOnRoot);
             }
         }
@@ -5458,8 +5499,7 @@ namespace Microsoft.OData {
         /// A string like "The request URI is not valid, the segment $filter cannot be applied to the root of the service."
         /// </summary>
         internal static string RequestUriProcessor_FilterOnRoot {
-            get
-            {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterOnRoot);
             }
         }
@@ -5467,10 +5507,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The request URI is not valid, the segment $each cannot be applied to the root of the service."
         /// </summary>
-        internal static string RequestUriProcessor_EachOnRoot
-        {
-            get
-            {
+        internal static string RequestUriProcessor_EachOnRoot {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_EachOnRoot);
             }
         }
@@ -5478,10 +5516,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The request URI is not valid, the segment $ref cannot be applied to the root of the service."
         /// </summary>
-        internal static string RequestUriProcessor_RefOnRoot
-        {
-            get
-            {
+        internal static string RequestUriProcessor_RefOnRoot {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_RefOnRoot);
             }
         }

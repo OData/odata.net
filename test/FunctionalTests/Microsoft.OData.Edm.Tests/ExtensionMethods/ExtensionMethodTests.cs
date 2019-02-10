@@ -862,6 +862,30 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             TestModel.Instance.Model.FindDeclaredOperationImports(operationImportName).Should().HaveCount(0);
         }
 
+        [Fact]
+        public void FindTypeForUndefinedTypeDoesnotGetIntoInfiniteSearchLoop()
+        {
+            // Arrage - create the EdmModel with all vacabulary models
+            EdmModel model = new EdmModel();
+            Assert.Equal(7, model.ReferencedModels.Count()); // core model + 6 vocabulary models
+
+            // Act
+            var unknownType = model.FindType("NS.UnKnownType");
+
+            // Assert
+            Assert.Null(unknownType);
+
+            // Arrage - create the EdmModel without vacabulary models
+            model = new EdmModel(false);
+            Assert.Equal(1, model.ReferencedModels.Count()); // We have the core model added by default
+
+            // Act
+            unknownType = model.FindType("NS.UnKnownType");
+
+            // Assert
+            Assert.Null(unknownType);
+        }
+
         internal class TestModel
         {
             public static TestModel Instance = new TestModel();

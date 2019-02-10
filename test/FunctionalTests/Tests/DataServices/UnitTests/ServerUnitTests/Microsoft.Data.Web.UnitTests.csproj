@@ -247,9 +247,6 @@
     <Compile Include="Utils\UntypedCollection.cs" />
     <Compile Include="Utils\VersioningUtil.cs" />
     <Compile Include="Utils\XmlUtils.cs" />
-    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.OData.TestCommon\SpatialFactory.cs">
-      <Link>Utils\SpatialFactory.cs</Link>
-    </Compile>
   </ItemGroup>
   <!-- Class Diagrams -->
   <ItemGroup>
