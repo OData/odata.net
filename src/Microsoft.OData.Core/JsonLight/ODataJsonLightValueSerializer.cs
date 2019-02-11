@@ -150,7 +150,8 @@ namespace Microsoft.OData.JsonLight
                 resourceValueTypeReference == null ? null : resourceValueTypeReference.StructuredDefinition(),
                 resourceValue.Properties,
                 true /* isComplexValue */,
-                duplicatePropertyNamesChecker);
+                duplicatePropertyNamesChecker,
+                null);
 
             // End the object scope which represents the resource instance;
             this.JsonWriter.EndObjectScope();
@@ -374,18 +375,7 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 Stream stream = streamWriter.StartStreamValueScope();
-#if PORTABLELIB
                 streamValue.Stream.CopyTo(stream);
-#else
-                // mikep todo: move this to separate method (extension method?)
-                int BUFFER_SIZE = 81920;
-                byte[] buffer = new byte[BUFFER_SIZE];
-                int bytesRead;
-                while ((bytesRead = streamValue.Stream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    stream.Write(buffer, 0, bytesRead);
-                }
-#endif
                 stream.Flush();
                 stream.Dispose();
                 streamWriter.EndStreamValueScope();
@@ -420,4 +410,23 @@ namespace Microsoft.OData.JsonLight
             this.recursionDepth--;
         }
     }
+
+#if !PORTABLELIB
+    internal static class StreamExtensions
+    { 
+        /// Extension method to copy one stream to another
+        /// <param name="source">Stream to copy from</param>
+        /// <param name="target">Stream to copy to</param>
+        internal static void CopyTo(this Stream source, Stream target)
+        {
+            int BUFFER_SIZE = 81920;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead;
+            while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                target.Write(buffer, 0, bytesRead);
+            }
+        }
+    }
+#endif
 }

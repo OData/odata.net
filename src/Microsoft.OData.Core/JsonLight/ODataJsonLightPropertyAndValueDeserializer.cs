@@ -760,7 +760,6 @@ namespace Microsoft.OData.JsonLight
             ODataResourceSet expandedResourceSet = CreateCollectionResourceSet(resourceState, propertyName);
 
             ODataJsonLightReaderNestedResourceInfo nestedInfo = ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, elementType, expandedResourceSet);
-            nestedInfo.StreamMembers = true;
             return nestedInfo;
         }
 

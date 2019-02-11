@@ -329,17 +329,60 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.Stream:
-                            ((ODataStreamValue)reader.Item).PropertyName.Should().NotBe("id", "Should never stream id");
+                            var streamValue = reader.Item as ODataStreamReferenceValue;
+                            streamValue.Should().NotBeNull();
+                            streamValue.PropertyName.Should().NotBe("id", "Should never stream id");
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
                 }
 
                 resource.Should().NotBeNull();
-//                resource.Properties.Count().Should().Be(1);
+                resource.Properties.Count().Should().Be(2);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
                 propertyValues.Count.Should().Be(1);
                 propertyValues[0].Should().Be(binaryString);
+            }
+        }
+
+//        [Fact]
+        public void ReadJsonStreamProperty()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"stream@mediaContentType\":\"application/json\"" +
+                ",\"stream\":{stringProp:\"string\",numProp:-10.5,boolProp:true,arrayProp[\"value1\",-10.5,false]}"
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                ODataResource resource = null;
+                
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.Primitive:
+                            Assert.False(true, "Should not read as Primitive if Caller Specifies Stream");
+                            break;
+
+                        case ODataReaderState.Stream:
+                            var streamValue = reader.Item as ODataStreamReferenceValue;
+                            streamValue.Should().NotBeNull();
+                            streamValue.PropertyName.Should().NotBe("id", "Should never stream id");
+                            streamValue.ContentType.Should().Be("application/json");
+                            ReadStream(reader);
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(1);
+                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
             }
         }
 
@@ -484,7 +527,7 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = String.Format(resourcePayload,
                 ",\"name\":\"Thor\"" +
                 ",\"isMarvel\":true" +
-                ",\"spouse\":null" +
+                ",\"nickName\":null" +
                 ",\"gender\":\"male\"" +
                 ",\"age\":4000"
                 );
@@ -630,9 +673,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 var customerType = new EdmEntityType("test", "customer", null, false, true);
                 customerType.AddKeys(customerType.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false));
                 customerType.AddStructuralProperty("name", EdmPrimitiveTypeKind.String);
+                customerType.AddStructuralProperty("nickName", EdmPrimitiveTypeKind.String);
                 customerType.AddStructuralProperty("age", EdmPrimitiveTypeKind.Int32, false);
                 customerType.AddStructuralProperty("isMarvel", EdmPrimitiveTypeKind.Boolean, false);
-                customerType.AddStructuralProperty("spouse", EdmPrimitiveTypeKind.String);
                 customerType.AddStructuralProperty("gender", new EdmEnumTypeReference(enumType, true));
                 customerType.AddStructuralProperty("stream", EdmPrimitiveTypeKind.Stream);
                 customerType.AddStructuralProperty("binaryAsStream", EdmPrimitiveTypeKind.Binary);
@@ -766,6 +809,17 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             return result;
+        }
+
+        private void ReadJson(ODataReader reader)
+        {
+            ODataStreamValue streamValue = reader.Item as ODataStreamValue;
+            streamValue.Should().NotBeNull();
+            streamValue.TypeKind.Should().Be(EdmPrimitiveTypeKind.Stream);
+
+            using (Stream stream = reader.CreateReadStream())
+            {
+            }
         }
 
         private string ReadPartialStream(ODataReader reader)

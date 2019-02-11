@@ -2079,13 +2079,9 @@ namespace Microsoft.OData.JsonLight
 
             // Should stream primitive if
             // 1. Primitive is a stream value
-            // 2. Reading an individual value within a primitive collection
-            // 3. Primitive is a string or binary value within an untyped collection that the reader wants to read as a stream
-//            JsonLightNestedResourceInfoScope parentScope = this.ParentScope as JsonLightNestedResourceInfoScope;
-//            ODataJsonLightReaderNestedResourceInfo parentInfo = parentScope == null ? null : parentScope.ReaderNestedResourceInfo;
+            // 2. Primitive is a string or binary value (within an untyped or streamed collection) that the reader wants to read as a stream
             if (
                 (resourceType != null && resourceType.IsStream()) ||
-//                (parentInfo != null && parentInfo.StreamMembers && this.jsonLightInputContext.JsonReader.CanStream()) ||
                 (resourceType != null
                    && readAsStream != null
                    && (resourceType.IsBinary() || resourceType.IsString())

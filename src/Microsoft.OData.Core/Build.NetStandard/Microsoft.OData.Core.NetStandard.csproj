@@ -179,8 +179,8 @@
     <Compile Include="..\InternalErrorCodesCommon.cs">
       <Link>InternalErrorCodesCommon.cs</Link>
     </Compile>
-    <Compile Include="..\IODataBatchOperationListener.cs">
-      <Link>IODataBatchOperationListener.cs</Link>
+    <Compile Include="..\IODataStreamListener.cs">
+      <Link>IODataStreamListener.cs</Link>
     </Compile>
     <Compile Include="..\IODataOutputInStreamErrorListener.cs">
       <Link>IODataOutputInStreamErrorListener.cs</Link>
@@ -545,8 +545,8 @@
     <Compile Include="..\ODataBatchOperationMessage.cs">
       <Link>ODataBatchOperationMessage.cs</Link>
     </Compile>
-    <Compile Include="..\ODataBatchOperationReadStream.cs">
-      <Link>ODataBatchOperationReadStream.cs</Link>
+    <Compile Include="..\ODataReadStream.cs">
+      <Link>ODataReadStream.cs</Link>
     </Compile>
     <Compile Include="..\ODataBatchOperationRequestMessage.cs">
       <Link>ODataBatchOperationRequestMessage.cs</Link>
@@ -554,11 +554,11 @@
     <Compile Include="..\ODataBatchOperationResponseMessage.cs">
       <Link>ODataBatchOperationResponseMessage.cs</Link>
     </Compile>
-    <Compile Include="..\ODataBatchOperationStream.cs">
-      <Link>ODataBatchOperationStream.cs</Link>
+    <Compile Include="..\ODataStream.cs">
+      <Link>ODataStream.cs</Link>
     </Compile>
-    <Compile Include="..\ODataBatchOperationWriteStream.cs">
-      <Link>ODataBatchOperationWriteStream.cs</Link>
+    <Compile Include="..\ODataWriteStream.cs">
+      <Link>ODataWriteStream.cs</Link>
     </Compile>
     <Compile Include="..\ODataBatchPayloadUriConverter.cs">
       <Link>ODataBatchPayloadUriConverter.cs</Link>

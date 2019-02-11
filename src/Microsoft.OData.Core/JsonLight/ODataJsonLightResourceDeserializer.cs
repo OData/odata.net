@@ -1257,7 +1257,7 @@ namespace Microsoft.OData.JsonLight
                     var derivedTypeConstrants = this.JsonLightInputContext.Model.GetDerivedTypeConstraints(edmProperty);
                     if (derivedTypeConstrants != null)
                     {
-                        resourceState.PropertyAndAnnotationCollector.SetDerivedTypeValidator(propertyName, new DerivedTypeValidator(propertyTypeReference.Definition, derivedTypeConstrants, "property", propertyName));
+                        resourceState.PropertyAndAnnotationCollector.SetDerivedTypeValidator(propertyName, new DerivedTypeValidator(edmProperty.Type.Definition, derivedTypeConstrants, "property", propertyName));
                     }
 
                     // NOTE: we currently do not check whether the property should be skipped

@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-//mikep todo:rename file
-
 namespace Microsoft.OData
 {
     #region Namespaces

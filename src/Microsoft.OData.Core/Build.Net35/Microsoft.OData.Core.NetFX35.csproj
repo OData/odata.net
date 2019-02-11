@@ -130,8 +130,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\HttpUtils.cs">
       <Link>Microsoft\OData\Core\HttpUtils.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\IODataBatchOperationListener.cs">
-      <Link>Microsoft\OData\Core\IODataBatchOperationListener.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\IODataStreamListener.cs">
+      <Link>Microsoft\OData\Core\IODataStreamListener.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\IODataResourceTypeContext.cs">
       <Link>Microsoft\OData\Core\IODataResourceTypeContext.cs</Link>
@@ -499,8 +499,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchOperationMessage.cs">
       <Link>Microsoft\OData\Core\ODataBatchOperationMessage.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchOperationReadStream.cs">
-      <Link>Microsoft\OData\Core\ODataBatchOperationReadStream.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReadStream.cs">
+      <Link>Microsoft\OData\Core\ODataReadStream.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchOperationRequestMessage.cs">
       <Link>Microsoft\OData\Core\ODataBatchOperationRequestMessage.cs</Link>
@@ -508,11 +508,11 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchOperationResponseMessage.cs">
       <Link>Microsoft\OData\Core\ODataBatchOperationResponseMessage.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchOperationStream.cs">
-      <Link>Microsoft\OData\Core\ODataBatchOperationStream.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataStream.cs">
+      <Link>Microsoft\OData\Core\ODataStream.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchOperationWriteStream.cs">
-      <Link>Microsoft\OData\Core\ODataBatchOperationWriteStream.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataWriteStream.cs">
+      <Link>Microsoft\OData\Core\ODataWriteStream.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReader.cs">
       <Link>Microsoft\OData\Core\ODataBatchReader.cs</Link>

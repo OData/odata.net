@@ -176,13 +176,8 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Whether individual members of the collection should be streamed.
+        /// true if the nested resource info has a value.
         /// </summary>
-        internal bool StreamMembers { get; set; }
-
-        /// <summary>
-                 /// true if the nested resource info has a value.
-                 /// </summary>
         internal bool HasValue
         {
             get

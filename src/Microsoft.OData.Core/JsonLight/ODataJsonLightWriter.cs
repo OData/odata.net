@@ -274,19 +274,14 @@ namespace Microsoft.OData.JsonLight
         {
             ResourceBaseScope scope = this.ParentScope as ResourceBaseScope;
             Debug.Assert(scope != null, "Writing a property and the parent scope is not a resource");
+            ODataResource resource = scope.Item as ODataResource;
+            Debug.Assert(resource != null && resource.MetadataBuilder != null, "Writing a property with no parent resource MetadataBuilder");
             this.jsonLightPropertySerializer.WriteProperty(
                 property,
                 scope.ResourceType,
                 false /*isTopLevel*/,
-                this.DuplicatePropertyNameChecker);
-
-            // todo (mikep) better way to do this?
-            if (property.Value is ODataStreamReferenceValue)
-            {
-                ODataResource resource = scope.Item as ODataResource;
-                Debug.Assert(resource != null && resource.MetadataBuilder != null, "Writing a property with no parent resource MetadataBuilder");
-                resource.MetadataBuilder.MarkStreamPropertyProcessed(property.Name);
-            }
+                this.DuplicatePropertyNameChecker,
+                resource.MetadataBuilder);
         }
 
         /// <summary>
@@ -376,19 +371,12 @@ namespace Microsoft.OData.JsonLight
             if (resource.NonComputedProperties != null)
             {
                 this.jsonLightResourceSerializer.WriteProperties(
-                this.ResourceType,
-                resource.NonComputedProperties,
-                false /* isComplexValue */,
-                this.DuplicatePropertyNameChecker);
+                    this.ResourceType,
+                    resource.NonComputedProperties,
+                    false /* isComplexValue */,
+                    this.DuplicatePropertyNameChecker,
+                    resource.MetadataBuilder);
                 this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
-
-                // mikep todo: better place to put this?
-                // Mark stream properties as processed
-                foreach (ODataProperty property in resource.NonComputedProperties.Where(p => p.Value is ODataStreamReferenceValue))
-                {
-                    Debug.Assert(resource != null && resource.MetadataBuilder != null, "Writing a property with no parent resource MetadataBuilder");
-                    resource.MetadataBuilder.MarkStreamPropertyProcessed(property.Name);
-                }
             }
 
             // COMPAT 48: Position of navigation properties/links in JSON differs.
@@ -846,8 +834,6 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                // spec says to url encode binary values, but we have never done so for properties
-                // bool urlEncode = this.ParentScope.ItemType == null || !this.ParentScope.ItemType.IsBinary();
                 stream = this.jsonStreamWriter.StartStreamValueScope();
             }
 
@@ -1402,19 +1388,12 @@ namespace Microsoft.OData.JsonLight
             if (resource.NonComputedProperties != null)
             {
                 this.jsonLightResourceSerializer.WriteProperties(
-                this.ResourceType,
-                resource.NonComputedProperties,
-                false /* isComplexValue */,
-                this.DuplicatePropertyNameChecker);
+                    this.ResourceType,
+                    resource.NonComputedProperties,
+                    false /* isComplexValue */,
+                    this.DuplicatePropertyNameChecker,
+                    resource.MetadataBuilder);
                 this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
-
-                // mikep todo: better place to put this?
-                // Mark stream properties as processed
-                foreach (ODataProperty property in resource.NonComputedProperties.Where(p => p.Value is ODataStreamReferenceValue))
-                {
-                    Debug.Assert(resource != null && resource.MetadataBuilder != null, "Writing a property with no parent resource MetadataBuilder");
-                    resource.MetadataBuilder.MarkStreamPropertyProcessed(property.Name);
-                }
             }
         }
 

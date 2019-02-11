@@ -152,7 +152,7 @@
     <Compile Include="HttpHeaderValueElement.cs" />
     <Compile Include="HttpHeaderValueLexer.cs" />
     <Compile Include="HttpUtils.cs" />
-    <Compile Include="IODataBatchOperationListener.cs" />
+    <Compile Include="IODataStreamListener.cs" />
     <Compile Include="IODataResourceTypeContext.cs" />
     <Compile Include="IODataOutputInStreamErrorListener.cs" />
     <Compile Include="IODataReaderWriterListener.cs" />
@@ -254,11 +254,8 @@
     <Compile Include="ODataAsynchronousWriter.cs" />
     <Compile Include="ODataBatchOperationHeaders.cs" />
     <Compile Include="ODataBatchOperationMessage.cs" />
-    <Compile Include="ODataBatchOperationReadStream.cs" />
     <Compile Include="ODataBatchOperationRequestMessage.cs" />
     <Compile Include="ODataBatchOperationResponseMessage.cs" />
-    <Compile Include="ODataBatchOperationStream.cs" />
-    <Compile Include="ODataBatchOperationWriteStream.cs" />
     <Compile Include="ODataBatchReader.cs" />
     <Compile Include="ODataBatchReaderState.cs" />
     <Compile Include="ODataBatchReaderStream.cs" />
@@ -299,10 +296,13 @@
     <Compile Include="ODataError.cs" />
     <Compile Include="ODataErrorException.cs" />
     <Compile Include="ODataException.cs" />
+    <Compile Include="ODataReadStream.cs" />
     <Compile Include="ODataResourceSet.cs" />
     <Compile Include="ODataResourceSerializationInfo.cs" />
     <Compile Include="ODataResourceTypeContext.cs" />
     <Compile Include="ODataResourceSetBase.cs" />
+    <Compile Include="ODataStream.cs" />
+    <Compile Include="ODataWriteStream.cs" />
     <Compile Include="ODataFormat.cs" />
     <Compile Include="ODataFunction.cs" />
     <Compile Include="ODataFunctionImportInfo.cs" />

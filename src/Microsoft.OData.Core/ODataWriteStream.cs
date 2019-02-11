@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataBatchOperationWriteStream.cs" company="Microsoft">
+// <copyright file="ODataWriteStream.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,25 +17,26 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync.
-    /// This stream communicates status changes to the owning batch writer (via IODataBatchOperationListener)
-    /// to properly flush buffered data and move the batch writer's state machine forward.
+    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync,
+    /// or to write an inline stream value.
+    /// This stream communicates status changes to the owning writer (via IODataStreamListener)
+    /// to properly flush buffered data and move the writer's state machine forward.
     /// </summary>
-    internal sealed class ODataBatchOperationWriteStream : ODataBatchOperationStream
+    internal sealed class ODataWriteStream : ODataStream
     {
         /// <summary>The batch stream underlying this operation stream.</summary>
-        private Stream batchStream;
+        private Stream stream;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="batchStream">The underlying stream to write the message to.</param>
+        /// <param name="stream">The underlying stream to write the message to.</param>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
-        internal ODataBatchOperationWriteStream(Stream batchStream, IODataStreamListener listener)
+        internal ODataWriteStream(Stream stream, IODataStreamListener listener)
             : base(listener)
         {
-            Debug.Assert(batchStream != null, "batchStream != null");
-            this.batchStream = batchStream;
+            Debug.Assert(stream != null, "stream != null");
+            this.stream = stream;
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace Microsoft.OData
             get
             {
                 this.ValidateNotDisposed();
-                return this.batchStream.Length;
+                return this.stream.Length;
             }
         }
 
@@ -82,7 +83,7 @@ namespace Microsoft.OData
             get
             {
                 this.ValidateNotDisposed();
-                return this.batchStream.Position;
+                return this.stream.Position;
             }
 
             set
@@ -98,7 +99,7 @@ namespace Microsoft.OData
         public override void SetLength(long value)
         {
             this.ValidateNotDisposed();
-            this.batchStream.SetLength(value);
+            this.stream.SetLength(value);
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace Microsoft.OData
         public override void Write(byte[] buffer, int offset, int count)
         {
             this.ValidateNotDisposed();
-            this.batchStream.Write(buffer, offset, count);
+            this.stream.Write(buffer, offset, count);
         }
 
 #if PORTABLELIB
@@ -118,7 +119,7 @@ namespace Microsoft.OData
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             this.ValidateNotDisposed();
-            return this.batchStream.WriteAsync(buffer, offset, count, cancellationToken);
+            return this.stream.WriteAsync(buffer, offset, count, cancellationToken);
         }
 #else
         /// <summary>
@@ -133,7 +134,7 @@ namespace Microsoft.OData
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
             this.ValidateNotDisposed();
-            return this.batchStream.BeginWrite(buffer, offset, count, callback, state);
+            return this.stream.BeginWrite(buffer, offset, count, callback, state);
         }
 
         /// <summary>
@@ -143,7 +144,7 @@ namespace Microsoft.OData
         public override void EndWrite(IAsyncResult asyncResult)
         {
             this.ValidateNotDisposed();
-            this.batchStream.EndWrite(asyncResult);
+            this.stream.EndWrite(asyncResult);
         }
 #endif
 
@@ -165,7 +166,7 @@ namespace Microsoft.OData
         public override void Flush()
         {
             this.ValidateNotDisposed();
-            this.batchStream.Flush();
+            this.stream.Flush();
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace Microsoft.OData
             if (disposing)
             {
                 // NOTE: don't dispose the batch stream since this instance does not own it.
-                this.batchStream = null;
+                this.stream = null;
             }
 
             base.Dispose(disposing);

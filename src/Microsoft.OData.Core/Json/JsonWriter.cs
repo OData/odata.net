@@ -21,12 +21,12 @@ namespace Microsoft.OData.Json
     /// Writer for the JSON format. http://www.json.org
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This class does not own the underlying stream/writer and thus should never dispose it.")]
-    internal class JsonWriter : IJsonStreamWriter, IDisposable
+    internal sealed class JsonWriter : IJsonStreamWriter, IDisposable
     {
         /// <summary>
         /// Writer to write text into.
         /// </summary>
-        protected readonly TextWriterWrapper TextWriter;
+        private readonly TextWriterWrapper writer;
 
         /// <summary>
         /// Scope of the json text - object, array.
@@ -72,7 +72,7 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">Specifies how to escape string.</param>
         internal JsonWriter(TextWriter writer, bool isIeee754Compatible, ODataStringEscapeOption stringEscapeOption)
         {
-            this.TextWriter = new NonIndentedTextWriter(writer);
+            this.writer = new NonIndentedTextWriter(writer);
             this.scopes = new Stack<Scope>();
             this.isIeee754Compatible = isIeee754Compatible;
             this.stringEscapeOption = stringEscapeOption;
@@ -115,13 +115,13 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
-            this.TextWriter.WriteLine();
-            this.TextWriter.DecreaseIndentation();
+            this.writer.WriteLine();
+            this.writer.DecreaseIndentation();
             Scope scope = this.scopes.Pop();
 
             Debug.Assert(scope.Type == ScopeType.Padding, "Ending scope does not match.");
 
-            this.TextWriter.Write(scope.EndString);
+            this.writer.Write(scope.EndString);
         }
 
         /// <summary>
@@ -139,13 +139,13 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
-            this.TextWriter.WriteLine();
-            this.TextWriter.DecreaseIndentation();
+            this.writer.WriteLine();
+            this.writer.DecreaseIndentation();
             Scope scope = this.scopes.Pop();
 
             Debug.Assert(scope.Type == ScopeType.Object, "Ending scope does not match.");
 
-            this.TextWriter.Write(scope.EndString);
+            this.writer.Write(scope.EndString);
         }
 
         /// <summary>
@@ -163,13 +163,13 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
-            this.TextWriter.WriteLine();
-            this.TextWriter.DecreaseIndentation();
+            this.writer.WriteLine();
+            this.writer.DecreaseIndentation();
             Scope scope = this.scopes.Pop();
 
             Debug.Assert(scope.Type == ScopeType.Array, "Ending scope does not match.");
 
-            this.TextWriter.Write(scope.EndString);
+            this.writer.Write(scope.EndString);
         }
 
         /// <summary>
@@ -185,13 +185,13 @@ namespace Microsoft.OData.Json
             Scope currentScope = this.scopes.Peek();
             if (currentScope.ObjectCount != 0)
             {
-                this.TextWriter.Write(JsonConstants.ObjectMemberSeparator);
+                this.writer.Write(JsonConstants.ObjectMemberSeparator);
             }
 
             currentScope.ObjectCount++;
 
-            JsonValueUtils.WriteEscapedJsonString(this.TextWriter, name, this.stringEscapeOption, ref this.buffer);
-            this.TextWriter.Write(JsonConstants.NameValueSeparator);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, name, this.stringEscapeOption, ref this.buffer);
+            this.writer.Write(JsonConstants.NameValueSeparator);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Microsoft.OData.Json
         /// <param name="functionName">Name of the padding function to write.</param>
         public void WritePaddingFunctionName(string functionName)
         {
-            this.TextWriter.Write(functionName);
+            this.writer.Write(functionName);
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(bool value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(int value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(float value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(short value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -254,12 +254,12 @@ namespace Microsoft.OData.Json
             // if it is IEEE754Compatible, write numbers with quotes; otherwise, write numbers directly.
             if (isIeee754Compatible)
             {
-                JsonValueUtils.WriteValue(this.TextWriter, value.ToString(CultureInfo.InvariantCulture),
+                JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture),
                     this.stringEscapeOption, ref this.buffer);
             }
             else
             {
-                JsonValueUtils.WriteValue(this.TextWriter, value);
+                JsonValueUtils.WriteValue(this.writer, value);
             }
         }
 
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(double value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(Guid value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -294,12 +294,12 @@ namespace Microsoft.OData.Json
             // if it is not IEEE754Compatible, write numbers directly without quotes;
             if (isIeee754Compatible)
             {
-                JsonValueUtils.WriteValue(this.TextWriter, value.ToString(CultureInfo.InvariantCulture),
+                JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture),
                     this.stringEscapeOption, ref this.buffer);
             }
             else
             {
-                JsonValueUtils.WriteValue(this.TextWriter, value);
+                JsonValueUtils.WriteValue(this.writer, value);
             }
         }
 
@@ -310,7 +310,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(DateTimeOffset value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value, ODataJsonDateTimeFormat.ISO8601DateTime);
+            JsonValueUtils.WriteValue(this.writer, value, ODataJsonDateTimeFormat.ISO8601DateTime);
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(TimeSpan value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(TimeOfDay value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(Date value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(byte value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(sbyte value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(string value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value, this.stringEscapeOption, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, value, this.stringEscapeOption, ref this.buffer);
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(byte[] value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace Microsoft.OData.Json
         public void WriteRawValue(string rawValue)
         {
             this.WriteValueSeparator();
-            this.TextWriter.Write(rawValue);
+            this.writer.Write(rawValue);
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void Flush()
         {
-            this.TextWriter.Flush();
+            this.writer.Flush();
         }
 
         /// <summary>
@@ -408,11 +408,10 @@ namespace Microsoft.OData.Json
         public Stream StartStreamValueScope()
         {
             this.WriteValueSeparator();
-            this.TextWriter.Write(JsonConstants.QuoteCharacter);
-            this.TextWriter.Flush();
+            this.writer.Write(JsonConstants.QuoteCharacter);
+            this.writer.Flush();
 
-            // Todo (mikep): should we listen for dispose?
-            this.binaryValueStream = new ODataBinaryStreamWriter(TextWriter);
+            this.binaryValueStream = new ODataBinaryStreamWriter(writer);
 
             return this.binaryValueStream;
         }
@@ -425,8 +424,8 @@ namespace Microsoft.OData.Json
             this.binaryValueStream.Flush();
             this.binaryValueStream.Dispose();
             this.binaryValueStream = null;
-            this.TextWriter.Flush();
-            this.TextWriter.Write(JsonConstants.QuoteCharacter);
+            this.writer.Flush();
+            this.writer.Write(JsonConstants.QuoteCharacter);
         }
 
         /// <summary>
@@ -436,11 +435,11 @@ namespace Microsoft.OData.Json
         public TextWriter StartTextWriterValueScope()
         {
             this.WriteValueSeparator();
-            this.TextWriter.Write(JsonConstants.QuoteCharacter);
-            this.TextWriter.Flush();
+            this.writer.Write(JsonConstants.QuoteCharacter);
+            this.writer.Flush();
 
             // mikep: todo wrap to make sure they don't write invalid characters
-            return TextWriter;
+            return writer;
         }
 
         /// <summary>
@@ -448,7 +447,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void EndTextWriterValueScope()
         {
-            this.TextWriter.Write(JsonConstants.QuoteCharacter);
+            this.writer.Write(JsonConstants.QuoteCharacter);
         }
 
         void IDisposable.Dispose()
@@ -469,7 +468,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Writes a separator of a value if it's needed for the next value to be written.
         /// </summary>
-        protected void WriteValueSeparator()
+        private void WriteValueSeparator()
         {
             if (this.scopes.Count == 0)
             {
@@ -481,7 +480,7 @@ namespace Microsoft.OData.Json
             {
                 if (currentScope.ObjectCount != 0)
                 {
-                    this.TextWriter.Write(JsonConstants.ArrayElementSeparator);
+                    this.writer.Write(JsonConstants.ArrayElementSeparator);
                 }
 
                 currentScope.ObjectCount++;
@@ -500,7 +499,7 @@ namespace Microsoft.OData.Json
                 if ((currentScope.Type == ScopeType.Array) &&
                     (currentScope.ObjectCount != 0))
                 {
-                    this.TextWriter.Write(JsonConstants.ArrayElementSeparator);
+                    this.writer.Write(JsonConstants.ArrayElementSeparator);
                 }
 
                 currentScope.ObjectCount++;
@@ -509,9 +508,9 @@ namespace Microsoft.OData.Json
             Scope scope = new Scope(type);
             this.scopes.Push(scope);
 
-            this.TextWriter.Write(scope.StartString);
-            this.TextWriter.IncreaseIndentation();
-            this.TextWriter.WriteLine();
+            this.writer.Write(scope.StartString);
+            this.writer.IncreaseIndentation();
+            this.writer.WriteLine();
         }
 
         /// <summary>

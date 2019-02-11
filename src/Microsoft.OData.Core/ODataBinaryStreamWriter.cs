@@ -203,19 +203,44 @@ namespace Microsoft.OData
         }
     }
 
-
     /// <summary>
-    /// A stream for writing stream values.
+    /// A stream for writing base64 encoded binary values.
     /// </summary>
-    internal abstract class ODataStreamWriter : Stream
+    internal sealed class ODataBinaryStreamWriter : Stream
     {
         /// <summary>The writer to write to the underlying stream.</summary>
-        protected readonly TextWriter Writer;
+        private readonly TextWriter Writer;
 
-        public ODataStreamWriter(TextWriter writer)
+        /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
+        private Byte[] trailingBytes = new Byte[0];
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="writer">A Textwriter for writing to the stream.</param>
+        public ODataBinaryStreamWriter(TextWriter writer)
         {
             this.Writer = writer;
         }
+
+        /// <summary>
+        /// Writes to the stream.
+        /// </summary>
+        /// <param name="buffer">The buffer to get data from.</param>
+        /// <param name="offset">The offset in the buffer to start from.</param>
+        /// <param name="count">The number of bytes to write.</param>
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            this.Writer.Write(Base64Encode(buffer, offset, count));
+        }
+
+#if PORTABLELIB
+        /// <inheritdoc />
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            return this.Writer.WriteAsync(Base64Encode(buffer, offset, count));
+        }
+#endif
 
         /// <summary>
         /// Determines if the stream can read - this one can't
@@ -316,44 +341,7 @@ namespace Microsoft.OData
         {
             Writer.Flush();
         }
-    }
-
-    /// <summary>
-    /// A stream for writing base64 encoded binary values.
-    /// </summary>
-    internal sealed class ODataBinaryStreamWriter : ODataStreamWriter
-    {
-        /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
-        private Byte[] trailingBytes = new Byte[0];
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="writer">A Textwriter for writing to the stream.</param>
-        public ODataBinaryStreamWriter(TextWriter writer) : base(writer)
-        {
-            Debug.Assert(writer != null, "writer cannot be null");
-        }
-
-        /// <summary>
-        /// Writes to the stream.
-        /// </summary>
-        /// <param name="buffer">The buffer to get data from.</param>
-        /// <param name="offset">The offset in the buffer to start from.</param>
-        /// <param name="count">The number of bytes to write.</param>
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            this.Writer.Write(Base64Encode(buffer, offset, count));
-        }
-
-#if PORTABLELIB
-        /// <inheritdoc />
-        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            return this.Writer.WriteAsync(Base64Encode(buffer, offset, count));
-        }
-#endif
-
+        
         /// <summary>
         /// Disposes the object.
         /// </summary>

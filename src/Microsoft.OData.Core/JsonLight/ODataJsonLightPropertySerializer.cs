@@ -14,6 +14,7 @@ namespace Microsoft.OData.JsonLight
     using System.Linq;
     using System.Globalization;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
@@ -83,7 +84,8 @@ namespace Microsoft.OData.JsonLight
                         property,
                         null /*owningType*/,
                         true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker());
+                        this.CreateDuplicatePropertyNameChecker(),
+                        null /* metadataBuilder */);
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
                     this.JsonWriter.EndObjectScope();
@@ -104,7 +106,8 @@ namespace Microsoft.OData.JsonLight
             IEdmStructuredType owningType,
             IEnumerable<ODataProperty> properties,
             bool isComplexValue,
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
+            ODataResourceMetadataBuilder metadataBuilder)
         {
             if (properties == null)
             {
@@ -117,7 +120,8 @@ namespace Microsoft.OData.JsonLight
                     property,
                     owningType,
                     false /* isTopLevel */,
-                    duplicatePropertyNameChecker);
+                    duplicatePropertyNameChecker,
+                    metadataBuilder);
             }
         }
 
@@ -128,12 +132,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="owningType">The owning type for the <paramref name="property"/> or null if no metadata is available.</param>
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
+        /// <param name="metadataBuilder">The metadatabuilder for the resource</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
         internal void WriteProperty(
             ODataProperty property,
             IEdmStructuredType owningType,
             bool isTopLevel,
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
+            ODataResourceMetadataBuilder metadataBuilder)
         {
             WriterValidationUtils.ValidatePropertyNotNull(property);
 
@@ -180,6 +186,10 @@ namespace Microsoft.OData.JsonLight
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
                 WriterValidationUtils.ValidateStreamReferenceProperty(property, currentPropertyInfo.MetadataType.EdmProperty, this.WritingResponse);
                 this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
+                if (metadataBuilder != null)
+                {
+                    metadataBuilder.MarkStreamPropertyProcessed(property.Name);
+                }
                 return;
             }
 

@@ -16,6 +16,10 @@ namespace Microsoft.OData.Json
     using System.Text;
     #endregion Namespaces
 
+    /// <summary>
+    /// Reader for the JSON format. http://www.json.org
+    /// </summary>
+    [DebuggerDisplay("{NodeType}")]
     internal class JsonReader : IJsonStreamReader
     {
         /// <summary>

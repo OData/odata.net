@@ -2116,6 +2116,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static bool IsKey (Microsoft.OData.Edm.IEdmProperty property)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static bool IsOpen (Microsoft.OData.Edm.IEdmStructuredTypeReference type)
 
 	[
@@ -4265,7 +4270,7 @@ public abstract class Microsoft.OData.ODataAnnotatable {
 	Microsoft.OData.ODataTypeAnnotation TypeAnnotation  { public get; public set; }
 }
 
-public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationListener {
+public abstract class Microsoft.OData.ODataBatchReader : IODataStreamListener {
 	protected ODataBatchReader (Microsoft.OData.ODataInputContext inputContext, bool synchronous)
 
 	string CurrentGroupId  { public get; }
@@ -4281,9 +4286,9 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync ()
 	protected abstract Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation ()
 	protected virtual string GetCurrentGroupIdImplementation ()
-	void Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamDisposed ()
-	void Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamRequested ()
-	System.Threading.Tasks.Task Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync ()
+	void Microsoft.OData.IODataStreamListener.StreamDisposed ()
+	void Microsoft.OData.IODataStreamListener.StreamRequested ()
+	System.Threading.Tasks.Task Microsoft.OData.IODataStreamListener.StreamRequestedAsync ()
 	public bool Read ()
 	public System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
 	protected abstract Microsoft.OData.ODataBatchReaderState ReadAtChangesetEndImplementation ()
@@ -4293,14 +4298,11 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 	protected void ThrowODataException (string errorMessage)
 }
 
-public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener {
+public abstract class Microsoft.OData.ODataBatchWriter : IODataOutputInStreamErrorListener, IODataStreamListener {
 	Microsoft.OData.ODataBatchOperationRequestMessage CurrentOperationRequestMessage  { protected get; protected set; }
 	Microsoft.OData.ODataBatchOperationResponseMessage CurrentOperationResponseMessage  { protected get; protected set; }
 	Microsoft.OData.ODataOutputContext OutputContext  { protected get; }
 
-	public abstract void BatchOperationContentStreamDisposed ()
-	public abstract void BatchOperationContentStreamRequested ()
-	public abstract System.Threading.Tasks.Task BatchOperationContentStreamRequestedAsync ()
 	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri, string contentId, string groupId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
 	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.IO.Stream outputStream, string contentId, string groupId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId)
@@ -4320,6 +4322,9 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationLis
 	protected abstract System.Collections.Generic.IEnumerable`1[[System.String]] GetDependsOnRequestIds (System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
 	public abstract void OnInStreamError ()
 	protected void SetState (Microsoft.OData.ODataBatchWriter+BatchWriterState newState)
+	public abstract void StreamDisposed ()
+	public abstract void StreamRequested ()
+	public abstract System.Threading.Tasks.Task StreamRequestedAsync ()
 	protected abstract void VerifyNotDisposed ()
 	public void WriteEndBatch ()
 	public System.Threading.Tasks.Task WriteEndBatchAsync ()

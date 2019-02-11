@@ -97,7 +97,7 @@ namespace Microsoft.OData
             OperationCreated,
 
             /// <summary>
-            /// ODataMessage.GetStreamAsync() has been called on an operation which caused a <see cref="ODataBatchOperationStream"/> to be created;
+            /// ODataMessage.GetStreamAsync() has been called on an operation which caused a <see cref="ODataStream"/> to be created;
             /// the batch writer is unusable while an operation is being written.
             /// </summary>
             OperationStreamRequested,
