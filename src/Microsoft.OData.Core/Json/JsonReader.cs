@@ -14,13 +14,14 @@ namespace Microsoft.OData.Json
     using System.Globalization;
     using System.IO;
     using System.Text;
+    using Microsoft.OData.Buffers;
     #endregion Namespaces
 
     /// <summary>
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
     [DebuggerDisplay("{NodeType}: {Value}")]
-    internal class JsonReader : IJsonReader
+    internal class JsonReader : IJsonReader, IDisposable
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -32,12 +33,6 @@ namespace Microsoft.OData.Json
         /// too many L1 cache misses.
         /// </remarks>
         private const int InitialCharacterBufferSize = ((4 * 1024) / 2) - 8;
-
-        /// <summary>
-        /// Maximum number of characters to move in the buffer. If the current token size is bigger than this, we will allocate a larger buffer.
-        /// </summary>
-        /// <remarks>This threshold is copied from the XmlReader implementation.</remarks>
-        private const int MaxCharacterCountToMove = 128 / 2;
 
         /// <summary>
         /// The text reader to read input characters from.
@@ -122,7 +117,6 @@ namespace Microsoft.OData.Json
             this.nodeType = JsonNodeType.None;
             this.nodeValue = null;
             this.reader = reader;
-            this.characterBuffer = new char[InitialCharacterBufferSize];
             this.storedCharacterCount = 0;
             this.tokenStartIndex = 0;
             this.endOfInputReached = false;
@@ -131,6 +125,11 @@ namespace Microsoft.OData.Json
             this.scopes = new Stack<Scope>();
             this.scopes.Push(new Scope(ScopeType.Root));
         }
+
+        /// <summary>
+        /// Get/sets the character buffer pool.
+        /// </summary>
+        public ICharArrayPool ArrayPool { get; set; }
 
         /// <summary>
         /// Various scope types for Json writer.
@@ -813,6 +812,13 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.nodeValue == null, "The node value should have been reset to null.");
 
             this.nodeType = JsonNodeType.EndOfInput;
+
+            if (this.ArrayPool != null)
+            {
+                BufferUtils.ReturnToBuffer(this.ArrayPool, this.characterBuffer);
+                this.characterBuffer = null;
+            }
+
             return false;
         }
 
@@ -921,7 +927,6 @@ namespace Microsoft.OData.Json
         /// all indeces to the characterBuffer are invalid except for tokenStartIndex.</remarks>
         private bool ReadInput()
         {
-            Debug.Assert(this.storedCharacterCount <= this.characterBuffer.Length, "We can only store as many characters as fit into our buffer.");
             Debug.Assert(this.tokenStartIndex >= 0 && this.tokenStartIndex <= this.storedCharacterCount, "The token start is out of stored characters range.");
 
             if (this.endOfInputReached)
@@ -929,51 +934,54 @@ namespace Microsoft.OData.Json
                 return false;
             }
 
-            // We need to make sure we have more room in the buffer to read characters into
-            if (this.storedCharacterCount == this.characterBuffer.Length)
+            // initialze the buffer
+            if (this.characterBuffer == null)
+            {
+                this.characterBuffer = BufferUtils.RentFromBuffer(ArrayPool, InitialCharacterBufferSize);
+            }
+            Debug.Assert(this.storedCharacterCount <= this.characterBuffer.Length, "We can only store as many characters as fit into our buffer.");
+
+            // If the buffer is empty (all characters were consumed from it), just start over.
+            if (this.tokenStartIndex == this.storedCharacterCount)
+            {
+                this.tokenStartIndex = 0;
+                this.storedCharacterCount = 0;
+            }
+            else if (this.storedCharacterCount == this.characterBuffer.Length)
             {
                 // No more room in the buffer, move or grow the buffer.
-                if (this.tokenStartIndex == this.storedCharacterCount)
+                if (this.tokenStartIndex < this.characterBuffer.Length / 4) // Tested 1/2, 3/4 and 1/4, it seems 1/4 is better than other two.
                 {
-                    // If the buffer is empty (all characters were consumed from it)
-                    // just start over.
-                    this.tokenStartIndex = 0;
-                    this.storedCharacterCount = 0;
-                }
-                else if (this.tokenStartIndex > (this.characterBuffer.Length - MaxCharacterCountToMove))
-                {
-                    // Some characters were consumed, we can just move them in the buffer
-                    // to get more room without allocating.
-                    Array.Copy(
-                        this.characterBuffer,
-                        this.tokenStartIndex,
-                        this.characterBuffer,
-                        0,
+                    // The entire buffer is full of unconsumed characters
+                    // We need to grow the buffer. Double the size of the buffer.
+                    if (this.characterBuffer.Length == int.MaxValue)
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_MaxBufferReached);
+                    }
+
+                    int newBufferSize = this.characterBuffer.Length * 2;
+                    newBufferSize = newBufferSize < 0 ? int.MaxValue : newBufferSize; // maybe overflow
+
+                    char[] newCharacterBuffer = BufferUtils.RentFromBuffer(ArrayPool, newBufferSize);
+
+                    // Copy the existing characters to the new buffer.
+                    Array.Copy(this.characterBuffer, this.tokenStartIndex, newCharacterBuffer, 0,
                         this.storedCharacterCount - this.tokenStartIndex);
-                    this.storedCharacterCount -= this.tokenStartIndex;
+                    this.storedCharacterCount = this.storedCharacterCount - this.tokenStartIndex;
                     this.tokenStartIndex = 0;
+
+                    // And switch the buffers
+                    BufferUtils.ReturnToBuffer(ArrayPool, this.characterBuffer);
+                    this.characterBuffer = newCharacterBuffer;
                 }
                 else
                 {
-                    // The entire buffer is full of unconsumed characters
-                    // We need to grow the buffer.
-                    // Double the size of the buffer.
-                    int newBufferSize = this.characterBuffer.Length * 2;
-                    char[] newCharacterBuffer = new char[newBufferSize];
-
-                    // Copy the existing characters to the new buffer.
-                    Array.Copy(
-                        this.characterBuffer,
-                        0,  // The tokenStartIndex is 0 - we checked above.
-                        newCharacterBuffer,
-                        0,
-                        this.characterBuffer.Length);  // The storedCharacterCount is the size of the old buffer
-
-                    // And switch the buffers
-                    this.characterBuffer = newCharacterBuffer;
-
-                    // Note that the number of characters stored in the buffer remains unchanged
-                    // as well as the token start index which is 0.
+                    // Some characters were consumed, we can just move them in the buffer
+                    // to get more room without allocating.
+                    Array.Copy(this.characterBuffer, this.tokenStartIndex, this.characterBuffer, 0,
+                        this.storedCharacterCount - this.tokenStartIndex);
+                    this.storedCharacterCount -= this.tokenStartIndex;
+                    this.tokenStartIndex = 0;
                 }
             }
 
@@ -999,6 +1007,18 @@ namespace Microsoft.OData.Json
 
             this.storedCharacterCount += readCount;
             return true;
+        }
+
+        /// <summary>
+        /// Dispose the reader
+        /// </summary>
+        public void Dispose()
+        {
+            if (this.ArrayPool != null && this.characterBuffer != null)
+            {
+                BufferUtils.ReturnToBuffer(this.ArrayPool, this.characterBuffer);
+                this.characterBuffer = null;
+            }
         }
 
         /// <summary>

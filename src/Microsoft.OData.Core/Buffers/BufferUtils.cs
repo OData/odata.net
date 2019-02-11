@@ -6,8 +6,6 @@
 
 namespace Microsoft.OData.Buffers
 {
-    using System;
-
     /// <summary>
     /// Helpers to deal with buffers
     /// </summary>
@@ -31,6 +29,36 @@ namespace Microsoft.OData.Buffers
             }
 
             return buffer;
+        }
+
+        /// <summary>
+        /// Rents a character array from the pool.
+        /// </summary>
+        /// <param name="bufferPool">The character pool.</param>
+        /// <param name="minSize">The min required size of the character array.</param>
+        /// <returns>The character array from the pool.</returns>
+        public static char[] RentFromBuffer(ICharArrayPool bufferPool, int minSize)
+        {
+            if (bufferPool == null)
+            {
+                return new char[minSize];
+            }
+
+            char[] buffer = bufferPool.Rent(minSize);
+            return buffer;
+        }
+
+        /// <summary>
+        /// Returns a character array to the pool.
+        /// </summary>
+        /// <param name="bufferPool">The character pool.</param>
+        /// <param name="buffer">The character array should be returned.</param>
+        public static void ReturnToBuffer(ICharArrayPool bufferPool, char[] buffer)
+        {
+            if (bufferPool != null)
+            {
+                bufferPool.Return(buffer);
+            }
         }
     }
 }

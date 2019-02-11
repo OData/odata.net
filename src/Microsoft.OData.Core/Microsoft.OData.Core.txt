@@ -944,6 +944,7 @@ JsonReader_UnexpectedEndOfString=Invalid JSON. Unexpected end of input reached w
 JsonReader_InvalidNumberFormat=Invalid JSON. The value '{0}' is not a valid number.
 JsonReader_MissingComma=Invalid JSON. A comma character ',' was expected in scope '{0}'. Every two elements in an array and properties of an object must be separated by commas.
 JsonReader_InvalidPropertyNameOrUnexpectedComma=Invalid JSON. The property name '{0}' is not valid. The name of a property cannot be empty.
+JsonReader_MaxBufferReached=Cannot increase the JSON reader buffer to hold the input JSON which has very long token.
 
 JsonReaderExtensions_UnexpectedNodeDetected=An unexpected '{1}' node was found when reading from the JSON reader. A '{0}' node was expected.
 JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName=An unexpected '{1}' node was found for property named '{2}' when reading from the JSON reader. A '{0}' node was expected.

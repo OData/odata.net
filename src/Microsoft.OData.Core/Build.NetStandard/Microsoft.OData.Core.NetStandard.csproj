@@ -83,6 +83,9 @@
     <Compile Include="..\Buffers\BufferUtils.cs">
       <Link>Buffers\BufferUtils.cs</Link>
     </Compile>
+    <Compile Include="..\Buffers\ICharArrayPool.cs">
+      <Link>Buffers\ICharArrayPool.cs</Link>
+    </Compile>
     <Compile Include="..\CollectionWithoutExpectedTypeValidator.cs">
       <Link>CollectionWithoutExpectedTypeValidator.cs</Link>
     </Compile>

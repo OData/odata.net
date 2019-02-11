@@ -5952,6 +5952,15 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Cannot increase the JSON reader buffer to hold the input JSON which has very long token."
+        /// </summary>
+        internal static string JsonReader_MaxBufferReached {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_MaxBufferReached);
+            }
+        }
+
+        /// <summary>
         /// A string like "An unexpected '{1}' node was found when reading from the JSON reader. A '{0}' node was expected."
         /// </summary>
         internal static string JsonReaderExtensions_UnexpectedNodeDetected(object p0, object p1) {
