@@ -845,6 +845,7 @@ namespace Microsoft.OData {
         internal const string JsonReader_InvalidNumberFormat = "JsonReader_InvalidNumberFormat";
         internal const string JsonReader_MissingComma = "JsonReader_MissingComma";
         internal const string JsonReader_InvalidPropertyNameOrUnexpectedComma = "JsonReader_InvalidPropertyNameOrUnexpectedComma";
+        internal const string JsonReader_MaxBufferReached = "JsonReader_MaxBufferReached";
         internal const string JsonReaderExtensions_UnexpectedNodeDetected = "JsonReaderExtensions_UnexpectedNodeDetected";
         internal const string JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName = "JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName";
         internal const string JsonReaderExtensions_CannotReadPropertyValueAsString = "JsonReaderExtensions_CannotReadPropertyValueAsString";
