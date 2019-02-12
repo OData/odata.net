@@ -741,9 +741,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void CollectionOfExpandedEntities()
         {
-            string contextString = "\"{0}$metadata#Employees(AssociatedCompany())\"";
             foreach (ODataVersion version in Versions)
             {
+                string contextString = version <= ODataVersion.V4 ? "\"{0}$metadata#Employees(AssociatedCompany)\"" : "\"{0}$metadata#Employees(AssociatedCompany())\"";
                 foreach (ODataFormat mimeType in mimeTypes)
                 {
                     string payload, contentType;
@@ -790,6 +790,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 var writerSettings = new ODataMessageWriterSettings
                 {
                     //LibraryCompatibility = ODataLibraryCompatibility.Version7_4_1,
+                    Version = ODataVersion.V401
                 };
 
                 string payload, contentType;
@@ -815,7 +816,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     var reader = omReader.CreateODataResourceSetReader(this.employeeSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
-                });
+                }, true, ODataVersion.V401);
             }
         }
 
@@ -871,11 +872,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void ExpandedEntity()
         {
+
             ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",
                 Properties = new[]
-                {
+           {
                     new ODataProperty {Name = "PersonId", Value = 1},
                     new ODataProperty {Name = "Name", Value = "Test1"},
                     new ODataProperty {Name = "Age", Value = 20},
@@ -911,7 +913,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 },
-                string.Format("\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"", TestBaseUri),
+                string.Format("\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany)/$entity\"", TestBaseUri),
                 out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader =>
@@ -926,11 +928,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         // V4 Protocol Spec Chapter 10.10: Projected Expanded Entities (not contain select)
         // Sample Request: http://host/service/Employees(0)?$expand=AssociatedCompany
         [Theory]
-        [InlineData(ODataVersion.V4)]
-        [InlineData(ODataVersion.V401)]
-        public void ExpandedMultiSegmentEntity(ODataVersion version)
+        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany)/$entity\"")]
+        [InlineData(ODataVersion.V401, "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"")]
+        public void ExpandedMultiSegmentEntity(ODataVersion version, string contextString)
         {
-            string contextString = "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"";
             ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",
