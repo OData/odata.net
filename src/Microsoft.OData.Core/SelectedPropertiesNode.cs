@@ -243,8 +243,9 @@ namespace Microsoft.OData
         /// Creates a node from the given SelectExpandClause.
         /// </summary>
         /// <param name="selectExpandClause">The value of the $select query option.</param>
+        /// <param name="version">OData Version.</param>
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
-        internal static SelectedPropertiesNode Create(SelectExpandClause selectExpandClause)
+        internal static SelectedPropertiesNode Create(SelectExpandClause selectExpandClause, ODataVersion version)
         {
             if (selectExpandClause.AllSelected
             && selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().All(_ => _.SelectAndExpand.AllSelected))
@@ -253,7 +254,7 @@ namespace Microsoft.OData
                 return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
-            return CreateFromSelectExpandClause(selectExpandClause);
+            return CreateFromSelectExpandClause(selectExpandClause, version);
         }
 
         /// <summary>
@@ -806,19 +807,21 @@ namespace Microsoft.OData
 
         /// <summary>Create SelectedPropertiesNode from SelectExpandClause.</summary>
         /// <param name="selectExpandClause">The SelectExpandClause representing $select and $expand clauses.</param>
+        /// <param name="version">OData Version.</param>
         /// <returns>SelectedPropertiesNode generated using <paramref name="selectExpandClause"/></returns>
-        private static SelectedPropertiesNode CreateFromSelectExpandClause(SelectExpandClause selectExpandClause)
+        private static SelectedPropertiesNode CreateFromSelectExpandClause(SelectExpandClause selectExpandClause, ODataVersion version)
         {
             SelectedPropertiesNode node;
-            selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out node);
+            selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, version, out node);
             return node;
         }
 
         /// <summary>Process sub expand node, set name for the node.</summary>
         /// <param name="nodeName">Node name for the subexpandnode.</param>
         /// <param name="subExpandNode">Generated sub expand node.</param>
+        /// <param name="version">OData Version.</param>
         /// <returns>The sub expanded node passed in.</returns>
-        private static SelectedPropertiesNode ProcessSubExpand(string nodeName, SelectedPropertiesNode subExpandNode)
+        private static SelectedPropertiesNode ProcessSubExpand(string nodeName, SelectedPropertiesNode subExpandNode, ODataVersion version)
         {
             if (subExpandNode != null)
             {

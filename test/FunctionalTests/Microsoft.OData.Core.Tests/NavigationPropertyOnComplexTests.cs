@@ -381,8 +381,8 @@ namespace Microsoft.OData.Tests
                 }, true, version: version);
 
             string expected = version == ODataVersion.V4 ?
-                //OData V4.01
-                "{\"@odata.context\":\"http://host/$metadata#People(UserName,Address/WorkAddress/DefaultNs.WorkAddress/City2())\"," +
+                //OData V4.0
+                "{\"@odata.context\":\"http://host/$metadata#People(UserName,Address/WorkAddress/DefaultNs.WorkAddress/City2)\"," +
                     "\"value\":[" +
                     "{" +
                         "\"UserName\":\"abc\"," +
@@ -431,7 +431,7 @@ namespace Microsoft.OData.Tests
         }
 
         private const string v4MinimalMetadataPayload =
-                                               "{\"@odata.context\":\"http://host/$metadata#Entities(ID,Complex/CollectionOfNav())/$entity\"," +
+                                               "{\"@odata.context\":\"http://host/$metadata#Entities(ID,Complex/CollectionOfNav)/$entity\"," +
                                                        "\"ID\":\"abc\"," +
                                                         "\"Complex\":{" +
                                                         "\"Prop1\":123," +
@@ -444,7 +444,7 @@ namespace Microsoft.OData.Tests
                                                     "}" +
                                                 "}";
         private const string v4FullMetadataPayload =
-                                         "{\"@odata.context\":\"http://host/$metadata#Entities(ID,Complex/CollectionOfNav())/$entity\"," +
+                                         "{\"@odata.context\":\"http://host/$metadata#Entities(ID,Complex/CollectionOfNav)/$entity\"," +
                                              "\"@odata.id\":\"Entities('abc')\"," +
                                              "\"@odata.editLink\":\"Entities('abc')\"," +
                                              "\"ID\":\"abc\"," +
@@ -671,7 +671,7 @@ namespace Microsoft.OData.Tests
 
             string expectedPayload = version == ODataVersion.V4 ?
                 // OData version 4.0
-                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address/WorkAddress(DefaultNs.WorkAddress/City2(ZipCode,Region()))\"," +
+                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address/WorkAddress(DefaultNs.WorkAddress/City2(ZipCode,Region))\"," +
                 "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
                 "\"Road\":\"Ziyue\"," +
                 "\"City2\":{" +
@@ -737,7 +737,7 @@ namespace Microsoft.OData.Tests
 
             string expectedPayload = version == ODataVersion.V4 ?
                 // OData V4 Version
-                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address/WorkAddress(DefaultNs.WorkAddress/City2(Region()))\"," +
+                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address/WorkAddress(DefaultNs.WorkAddress/City2(Region))\"," +
                 "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
                 "\"Road\":\"Ziyue\"," +
                 "\"City2\":{" +
@@ -815,7 +815,7 @@ namespace Microsoft.OData.Tests
 
             string expectedPayload = version == ODataVersion.V4 ?
                 // OData version 4.0
-                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address(WorkAddress/DefaultNs.WorkAddress/City2(ZipCode,Region()))\"," +
+                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address(WorkAddress/DefaultNs.WorkAddress/City2(ZipCode,Region))\"," +
                 "\"Road\":\"Zixing\"," +
                 "\"WorkAddress\":{" +
                     "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +

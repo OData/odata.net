@@ -283,7 +283,7 @@ namespace Microsoft.OData
             get
             {
                 return this.SelectExpandClause != null
-                    ? SelectedPropertiesNode.Create(this.SelectExpandClause)
+                    ? SelectedPropertiesNode.Create(this.SelectExpandClause, this.Version ?? ODataVersion.V4)
                     : new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree);
             }
         }
