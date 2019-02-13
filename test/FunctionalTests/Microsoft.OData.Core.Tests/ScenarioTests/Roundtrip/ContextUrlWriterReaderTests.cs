@@ -396,20 +396,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model, omWriter =>
                 {
-                    omWriter.Settings.ODataUri = new ODataUriParser(model,new Uri("Companys(1)/Locations", UriKind.Relative)).ParseUri();
+                    omWriter.Settings.ODataUri = new ODataUriParser(model, new Uri("Companys(1)/Locations", UriKind.Relative)).ParseUri();
                     omWriter.Settings.ODataUri.ServiceRoot = new Uri(TestBaseUri);
                     omWriter.Settings.SetContentType("application/json;odata.metadata=full", "");
                     IEdmEntitySetBase target = this.companySet.FindNavigationTarget(this.companyType.FindProperty("Locations") as IEdmNavigationProperty) as IEdmEntitySetBase;
                     var writer = omWriter.CreateODataResourceSetWriter(target);
                     writer.WriteStart(new ODataResourceSet());
-                    writer.WriteStart(new ODataResource {
+                    writer.WriteStart(new ODataResource
+                    {
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty {Name="LocationId", Value = 1 },
                             new ODataProperty {Name="Name", Value = "Burlington Factory" }
                         }
                     });
-                    writer.WriteStart(new ODataNestedResourceInfo{ Name="Employees"});
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "Employees" });
                     writer.WriteStart(new ODataResourceSet());
                     writer.WriteStart(new ODataResource
                     {
@@ -738,41 +739,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         // V4 Protocol Spec Chapter 10.9: Collection of Projected Expanded Entities (not contain select)
         // Sample Request: http://host/service/Employees?$expand=Company
         // Context Url in Response: http://host/service/$metadata#Employees(Company())
-        [Fact]
-        public void CollectionOfExpandedEntities()
+        [Theory]
+        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany)\"")]
+        [InlineData(ODataVersion.V401, "\"{0}$metadata#Employees(AssociatedCompany())\"")]
+        public void CollectionOfExpandedEntities(ODataVersion version, string contextString)
         {
-            foreach (ODataVersion version in Versions)
+            foreach (ODataFormat mimeType in mimeTypes)
             {
-                string contextString = version <= ODataVersion.V4 ? "\"{0}$metadata#Employees(AssociatedCompany)\"" : "\"{0}$metadata#Employees(AssociatedCompany())\"";
-                foreach (ODataFormat mimeType in mimeTypes)
+                string payload, contentType;
+                this.WriteAndValidateContextUri(mimeType, model, omWriter =>
                 {
-                    string payload, contentType;
-                    this.WriteAndValidateContextUri(mimeType, model, omWriter =>
+                    var selectExpandClause = new ODataQueryOptionParser(this.model, this.employeeType, this.employeeSet, new Dictionary<string, string> { { "$expand", "AssociatedCompany" }, { "$select", null } }).ParseSelectAndExpand();
+
+                    omWriter.Settings.ODataUri = new ODataUri()
                     {
-                        var selectExpandClause = new ODataQueryOptionParser(this.model, this.employeeType, this.employeeSet, new Dictionary<string, string> { { "$expand", "AssociatedCompany" }, { "$select", null } }).ParseSelectAndExpand();
+                        ServiceRoot = this.testServiceRootUri,
+                        SelectAndExpand = selectExpandClause
+                    };
 
-                        omWriter.Settings.ODataUri = new ODataUri()
-                        {
-                            ServiceRoot = this.testServiceRootUri,
-                            SelectAndExpand = selectExpandClause
-                        };
+                    omWriter.Settings.Version = version;
 
-                        omWriter.Settings.Version = version;
+                    var writer = omWriter.CreateODataResourceSetWriter(this.employeeSet, this.employeeType);
+                    var feed = new ODataResourceSet();
+                    feed.Id = new Uri("urn:test");
+                    writer.WriteStart(feed);
+                    writer.WriteEnd();
+                }, string.Format(contextString, TestBaseUri), out payload, out contentType);
 
-                        var writer = omWriter.CreateODataResourceSetWriter(this.employeeSet, this.employeeType);
-                        var feed = new ODataResourceSet();
-                        feed.Id = new Uri("urn:test");
-                        writer.WriteStart(feed);
-                        writer.WriteEnd();
-                    }, string.Format(contextString, TestBaseUri), out payload, out contentType);
-
-                    this.ReadPayload(payload, contentType, model, omReader =>
-                    {
-                        var reader = omReader.CreateODataResourceSetReader(this.employeeSet, this.employeeType);
-                        while (reader.Read()) { }
-                        Assert.Equal(ODataReaderState.Completed, reader.State);
-                    }, version: version);
-                }
+                this.ReadPayload(payload, contentType, model, omReader =>
+                {
+                    var reader = omReader.CreateODataResourceSetReader(this.employeeSet, this.employeeType);
+                    while (reader.Read()) { }
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
+                }, version: version);
             }
 
         }
@@ -1096,9 +1095,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 omReader =>
                     {
                         var odatareader = omReader.CreateODataResourceReader();
-                        while(odatareader.Read())
+                        while (odatareader.Read())
                         {
-                            if(odatareader.State == ODataReaderState.ResourceEnd)
+                            if (odatareader.State == ODataReaderState.ResourceEnd)
                             {
                                 Assert.NotNull(odatareader.Item as ODataResource);
                             }
