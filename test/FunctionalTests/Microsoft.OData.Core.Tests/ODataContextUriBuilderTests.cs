@@ -273,14 +273,12 @@ namespace Microsoft.OData.Tests
         }
 
         [Theory]
-        [InlineData(ODataVersion.V4)]
-        [InlineData(ODataVersion.V401)]
-        public void EntryContextUriWithExpandNestedExpandString(ODataVersion version)
+        [InlineData(ODataVersion.V4, "Districts(City(Districts))")]
+        [InlineData(ODataVersion.V401, "Districts(City(Districts()))")]
+        public void EntryContextUriWithExpandNestedExpandString(ODataVersion version, string expectedClause)
         {
-            string emptyParens = version == ODataVersion.V401 ? "()" : "";
             // Without inner $select, $expand=A($expand=B($expand=C))
             string expandClause = "Districts($expand=City($expand=Districts))";
-            string expectedClause = "Districts(City(Districts" + emptyParens + "))";
             string urlString = this.CreateEntryContextUri(null, expandClause, version).OriginalString;
             urlString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
 
@@ -301,13 +299,12 @@ namespace Microsoft.OData.Tests
         }
 
         [Theory]
-        [InlineData(ODataVersion.V4)]
-        [InlineData(ODataVersion.V401)]
-        public void FeedContextUriWithMixedSelectAndExpandString(ODataVersion version)
+        [InlineData(ODataVersion.V4, "Size,Name,Districts(Zip,City,City(Name,Districts))")]
+        [InlineData(ODataVersion.V401, "Size,Name,Districts(Zip,City,City(Name,Districts()))")]
+        public void FeedContextUriWithMixedSelectAndExpandString(ODataVersion version, string expectedClause)
         {
             const string selectClause = "Size,Name";
             const string expandClause = "Districts($select=Zip,City;$expand=City($expand=Districts;$select=Name))";
-            string expectedClause = version == ODataVersion.V401 ? "Size,Name,Districts(Zip,City,City(Name,Districts()))" : "Size,Name,Districts(Zip,City,City(Name,Districts))";
             this.CreateFeedContextUri(selectClause, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
         }
         #endregion context uri with $select and $expand
