@@ -710,7 +710,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 {"Accounts(101)?$select=AccountID&$expand=MyPaymentInstruments($select=PaymentInstrumentID;$expand=TheStoredPI($select=StoredPIID))", new int[] {7, 4}},
             };
 
-            ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri, Version = ODataVersion.V401 };
+            ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
             foreach (var testCase in testCases)
             {

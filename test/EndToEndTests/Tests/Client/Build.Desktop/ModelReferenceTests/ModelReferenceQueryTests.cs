@@ -374,7 +374,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 { "Trucks('Key1')?$expand=HeadUnit,VehicleGPS", new int[] {3, 4} },
             };
 
-            ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri, Version = ODataVersion.V401 };
+            ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
             foreach (var testCase in testCases)
             {
