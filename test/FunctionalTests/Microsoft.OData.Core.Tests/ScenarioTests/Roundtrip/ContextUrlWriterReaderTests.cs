@@ -876,7 +876,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             {
                 TypeName = TestNameSpace + ".Employee",
                 Properties = new[]
-           {
+                {
                     new ODataProperty {Name = "PersonId", Value = 1},
                     new ODataProperty {Name = "Name", Value = "Test1"},
                     new ODataProperty {Name = "Age", Value = 20},
