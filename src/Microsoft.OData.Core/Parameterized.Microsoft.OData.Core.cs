@@ -250,6 +250,28 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The ODataResourceSet.DeltaLink must be null for request payloads. Delta links are only supported in responses."
+        /// </summary>
+        internal static string ODataWriterCore_QueryDeltaLinkInRequest
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_QueryDeltaLinkInRequest);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The ODataResourceSet.NextPageLink must be null for request payloads. Next page links are only supported in responses."
+        /// </summary>
+        internal static string ODataWriterCore_QueryNextLinkInRequest
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_QueryNextLinkInRequest);
+            }
+        }
+
+        /// <summary>
         /// A string like "Cannot write a delta deleted resource, link, or deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter."
         /// </summary>
         internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter {
