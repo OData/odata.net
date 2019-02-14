@@ -478,7 +478,7 @@ namespace Microsoft.OData
                 return entityType.StructuralProperties().Where(sp => sp.Type.IsStream()).ToDictionary(sp => sp.Name, StringComparer.Ordinal);
             }
 
-            IDictionary<string, IEdmStructuralProperty> selectedStreamProperties = 
+            IDictionary<string, IEdmStructuralProperty> selectedStreamProperties =
                 this.selectedProperties == null ?
                     new Dictionary<string, IEdmStructuralProperty>() :
                     this.selectedProperties
@@ -638,7 +638,7 @@ namespace Microsoft.OData
             else if (this.structuredType == null || this.structuredType.NavigationProperties().Any(_ => _.Name.Equals(token, StringComparison.Ordinal)))
             {
                 // #2
-                // Note that action and function names in a contextUrl *SHOULD* always be qualified, 
+                // Note that action and function names in a contextUrl *SHOULD* always be qualified,
                 // So if we can't validate against the structured type, should assume it's a nav prop
                 found = true;
             }
@@ -834,7 +834,7 @@ namespace Microsoft.OData
         /// <param name="selectList">An enumerable of selected item names.</param>
         /// <param name="expandList">An enumerable of sub expanded nodes.</param>
         /// <returns>The generated SelectedPropertiesNode.</returns>
-        private static SelectedPropertiesNode CombineSelectAndExpandResult(IEnumerable<string> selectList, IEnumerable<SelectedPropertiesNode> expandList)
+        private static SelectedPropertiesNode CombineSelectAndExpandResult(IList<string> selectList, IList<SelectedPropertiesNode> expandList, ODataVersion version)
         {
             List<string> rawSelect = selectList.ToList();
             rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);

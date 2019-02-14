@@ -97,7 +97,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="combineSelectAndExpand">The method to combine select and expand result lists.</param>
         /// <param name="version">OData version to use in traversing the selectExpand clause</param>
         /// <param name="result">The result of the traversing.</param>
-        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, ODataVersion, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, ODataVersion version, out T result)
+        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, ODataVersion, T> processSubResult, Func<IList<string>, IList<T>, ODataVersion, T> combineSelectAndExpand, ODataVersion version, out T result)
         {
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
             List<T> expandList = new List<T>();
@@ -130,7 +130,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            result = combineSelectAndExpand(selectList, expandList);
+            result = combineSelectAndExpand(selectList, expandList, version);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="selectList">A list of selected item names.</param>
         /// <param name="expandList">A list of sub expanded item names.</param>
         /// <returns>The generated expand string.</returns>
-        private static string CombineSelectAndExpandResult(IList<string> selectList, IList<string> expandList)
+        private static string CombineSelectAndExpandResult(IList<string> selectList, IList<string> expandList, ODataVersion version)
         {
             string currentExpandClause = "";
             if (selectList.Any())
