@@ -411,13 +411,33 @@ namespace Microsoft.OData
         /// <param name="selectList">A list of selected item names.</param>
         /// <param name="expandList">A list of sub expanded item names.</param>
         /// <returns>The generated expand string.</returns>
-        private static string CombineSelectAndExpandResult(IList<string> selectList, IList<string> expandList)
+        private static string CombineSelectAndExpandResult(IList<string> selectList, IList<string> expandList, ODataVersion version)
         {
             string currentExpandClause = string.Empty;
-
+            IList<string> RemoveFromExpandList = new List<string>();
             if (selectList.Any())
             {
+                if (version <= ODataVersion.V4)
+                {
+                    foreach (var item in expandList)
+                    {
+                        //For backwards compatibility, we want to remove duplicate properties in select and expand list for v4
+                        int idx = item.IndexOf(ODataConstants.ContextUriProjectionStart);
+                        if (idx >= 0)
+                        {
+                            selectList.Remove(item.Substring(0, idx));
+                        }
+                        else if(selectList.Contains(item))
+                        {
+                            RemoveFromExpandList.Add(item);
+                        }
+                    }
 
+                    foreach (string s in RemoveFromExpandList)
+                    {
+                        expandList.Remove(s);
+                    }
+                }
                 currentExpandClause += String.Join(ODataConstants.ContextUriProjectionPropertySeparator, selectList.ToArray());
             }
 

@@ -835,7 +835,7 @@ namespace Microsoft.OData
         /// <param name="selectList">A list of selected item names.</param>
         /// <param name="expandList">A list of sub expanded nodes.</param>
         /// <returns>The generated SelectedPropertiesNode.</returns>
-        private static SelectedPropertiesNode CombineSelectAndExpandResult(IList<string> selectList, IList<SelectedPropertiesNode> expandList)
+        private static SelectedPropertiesNode CombineSelectAndExpandResult(IList<string> selectList, IList<SelectedPropertiesNode> expandList, ODataVersion version)
         {
             List<string> rawSelect = selectList.ToList();
             rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
