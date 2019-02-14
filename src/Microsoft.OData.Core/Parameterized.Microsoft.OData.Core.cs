@@ -249,8 +249,8 @@ namespace Microsoft.OData {
             }
         }
 
-        /// <summary>
-        /// A string like "The ODataResourceSet.DeltaLink must be null for request payloads. Delta links are only supported in responses."
+
+        /// A string like "The DeltaLink must be null for request payloads. Delta links are only supported in responses."
         /// </summary>
         internal static string ODataWriterCore_QueryDeltaLinkInRequest
         {
@@ -261,7 +261,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The ODataResourceSet.NextPageLink must be null for request payloads. Next page links are only supported in responses."
+        /// A string like "The NextPageLink must be null for request payloads. Next page links are only supported in responses."
         /// </summary>
         internal static string ODataWriterCore_QueryNextLinkInRequest
         {

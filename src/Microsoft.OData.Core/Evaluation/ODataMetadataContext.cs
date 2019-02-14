@@ -43,9 +43,9 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="resourceState">Resource state to use as reference for information needed by the builder.</param>
         /// <param name="useKeyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.</param>
-        /// <param name="isDelta">true if the payload being read is a delta payload</param>
+        /// <param name="isDelta">true if the payload being read is a delta payload.</param>
         /// <returns>An entity metadata builder.</returns>
-        ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool useKeyAsSegment, bool isDelta = false);
+        ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool useKeyAsSegment, bool isDelta);
 
         /// <summary>
         /// Gets the list of operations that are bindable to a type.
