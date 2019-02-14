@@ -80,17 +80,21 @@ namespace Microsoft.OData.Tests.JsonLight
 
         #region ODataV4 tests
 
-        [Fact]
-        public void ReadExample30FromV4Spec()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadExample30FromV4Spec(bool isResponse)
         {
-            var tuples = this.ReadItem(payload, Model, customers, customer);
+            var tuples = this.ReadItem(payload, Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
-        [Fact]
-        public async void ReadExample30FromV4SpecAsync()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public async void ReadExample30FromV4SpecAsync(bool isResponse)
         {
-            var tuples = await this.ReadItemAsync(payload, Model, customers, customer);
+            var tuples = await this.ReadItemAsync(payload, Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
@@ -99,7 +103,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ReadExample30FromV4SpecWithNavigationLinks()
         {
-            var tuples = this.ReadItem(payloadWithNavigationLinks, this.Model, customers, customer);
+            var tuples = this.ReadItem(payloadWithNavigationLinks, this.Model, customers, customer, /*isResponse*/ true);
             this.ValidateTuples(tuples);
         }
 
@@ -107,7 +111,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadExample30FromV4SpecWithFullODataAnnotationsODataSimplified()
         {
             // cover "@odata.deltaLink"
-            var tuples = this.ReadItem(payloadWithNavigationLinks, this.Model, customers, customer, enableReadingODataAnnotationWithoutPrefix: true);
+            var tuples = this.ReadItem(payloadWithNavigationLinks, this.Model, customers, customer, /*isResponse*/ true, enableReadingODataAnnotationWithoutPrefix: true);
             this.ValidateTuples(tuples);
         }
 
@@ -115,17 +119,19 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadExample30FromV4SpecWithSimplifiedODataAnnotationsODataSimplified()
         {
             // cover "@deltaLink"
-            var tuples = this.ReadItem(payloadWithSimplifiedAnnotations, this.Model, customers, customer, enableReadingODataAnnotationWithoutPrefix: true);
+            var tuples = this.ReadItem(payloadWithSimplifiedAnnotations, this.Model, customers, customer, /*isResponse*/ true, enableReadingODataAnnotationWithoutPrefix: true);
             this.ValidateTuples(tuples);
         }
 
         #endregion
 
-        [Fact]
-        public void ReadODataType()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadODataType(bool isResponse)
         {
             var payloadWithODataType = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"Address\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}}]}";
-            var tuples = this.ReadItem(payloadWithODataType, Model, customers, customer);
+            var tuples = this.ReadItem(payloadWithODataType, Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
@@ -133,7 +139,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadNextLinkAtStart()
         {
             var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.nextLink\":\"http://tempuri.org/\",\"value\":[]}";
-            var tuples = this.ReadItem(payload, this.Model, customers, customer);
+            var tuples = this.ReadItem(payload, this.Model, customers, customer, /*isResponse*/ true);
             this.ValidateTuples(tuples, new Uri("http://tempuri.org/"));
         }
 
@@ -141,7 +147,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadNextLinkAtEnd()
         {
             var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[],\"@odata.nextLink\":\"http://tempuri.org/\"}";
-            var tuples = this.ReadItem(payload, this.Model, customers, customer);
+            var tuples = this.ReadItem(payload, this.Model, customers, customer, /*isResponse*/ true);
             this.ValidateTuples(tuples, new Uri("http://tempuri.org/"));
         }
 
@@ -149,7 +155,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadDeltaLinkAtStart()
         {
             var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.deltaLink\":\"http://tempuri.org/\",\"value\":[]}";
-            var tuples = this.ReadItem(payload, this.Model, customers, customer);
+            var tuples = this.ReadItem(payload, this.Model, customers, customer, /*isResponse*/ true);
             this.ValidateTuples(tuples, null, new Uri("http://tempuri.org/"));
         }
 
@@ -157,7 +163,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadDeltaLinkAtEnd()
         {
             var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[],\"@odata.deltaLink\":\"http://tempuri.org/\"}";
-            var tuples = this.ReadItem(payload, this.Model, customers, customer);
+            var tuples = this.ReadItem(payload, this.Model, customers, customer, /*isResponse*/ true);
             this.ValidateTuples(tuples, null, new Uri("http://tempuri.org/"));
         }
 
@@ -192,17 +198,21 @@ namespace Microsoft.OData.Tests.JsonLight
                     "]" +
                 "}";
 
-        [Fact]
-        public void ReadExpandedFeed()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadExpandedFeed(bool isResponse)
         {
-            var tuples = this.ReadItem(expandedPayload, this.Model, customers, customer);
+            var tuples = this.ReadItem(expandedPayload, this.Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
-        [Fact]
-        public async void ReadExpandedFeedAsync()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public async void ReadExpandedFeedAsync(bool isResponse)
         {
-            var tuples = await this.ReadItemAsync(expandedPayload, this.Model, customers, customer);
+            var tuples = await this.ReadItemAsync(expandedPayload, this.Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
@@ -248,7 +258,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         "}" +
                     "]" +
                 "}";
-            var tuples = this.ReadItem(payload, this.Model, customers, customer);
+            var tuples = this.ReadItem(payload, this.Model, customers, customer, /*isResponse*/ true);
             this.ValidateTuples(tuples);
         }
 
@@ -289,22 +299,28 @@ namespace Microsoft.OData.Tests.JsonLight
                     "]" +
                 "}";
 
-        [Fact]
-        public void ReadMutlipleExpandedFeeds()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadMutlipleExpandedFeeds(bool isResponse)
         {
-            var tuples = this.ReadItem(multipleExpandedPayload, this.Model, customers, customer);
+            var tuples = this.ReadItem(multipleExpandedPayload, this.Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
-        [Fact]
-        public async void ReadMutlipleExpandedFeedsAsync()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public async void ReadMutlipleExpandedFeedsAsync(bool isResponse)
         {
-            var tuples = await this.ReadItemAsync(multipleExpandedPayload, this.Model, customers, customer);
+            var tuples = await this.ReadItemAsync(multipleExpandedPayload, this.Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
-        [Fact]
-        public void ReadContainmentExpandedFeed()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadContainmentExpandedFeed(bool isResponse)
         {
             var payload =
                 "{" +
@@ -333,12 +349,14 @@ namespace Microsoft.OData.Tests.JsonLight
                         "}" +
                     "]" +
                 "}";
-            var tuples = this.ReadItem(payload, this.Model, customers, customer);
+            var tuples = this.ReadItem(payload, this.Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
-        [Fact]
-        public void ReadExpandedSingleton()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadExpandedSingleton(bool isResponse)
         {
             var payload =
                 "{" +
@@ -365,12 +383,14 @@ namespace Microsoft.OData.Tests.JsonLight
                         "}" +
                     "]" +
                 "}";
-            var tuples = this.ReadItem(payload, this.Model, customers, customer);
+            var tuples = this.ReadItem(payload, this.Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
 
-        [Fact]
-        public void ReadExpandedFeedException()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadExpandedFeedException(bool isResponse)
         {
             var payload =
                 "{" +
@@ -403,7 +423,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Action readAction = () =>
             {
-                var tuples = this.ReadItem(payload, this.Model, customers, customer);
+                var tuples = this.ReadItem(payload, this.Model, customers, customer, isResponse);
                 this.ValidateTuples(tuples);
             };
             readAction.ShouldThrow<ODataException>().Where(e => e.Message.Contains("Id shouldn't be a string"));
@@ -413,8 +433,10 @@ namespace Microsoft.OData.Tests.JsonLight
 
         #region ComplexProperty
 
-        [Fact]
-        public void ReadNestedComplexProperty()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedComplexProperty(bool isResponse)
         {
             var payload =
                 "{" +
@@ -437,12 +459,14 @@ namespace Microsoft.OData.Tests.JsonLight
                         "}" +
                     "]" +
                 "}";
-            var tuples = this.ReadItem(payload, this.Model, orders, order);
+            var tuples = this.ReadItem(payload, this.Model, orders, order, isResponse);
             this.ValidateTuples(tuples);
         }
 
-        [Fact]
-        public void ReadNestedOpenCollectionOfComplexProperty()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedOpenCollectionOfComplexProperty(bool isResponse)
         {
             var payload =
                 "{" +
@@ -479,7 +503,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         "}" +
                     "]" +
                 "}";
-            var tuples = this.ReadItem(payload, this.Model, orders, order);
+            var tuples = this.ReadItem(payload, this.Model, orders, order, isResponse);
             this.ValidateTuples(tuples);
         }
 
@@ -489,11 +513,13 @@ namespace Microsoft.OData.Tests.JsonLight
 
         #region ODataV401 tests
 
-        [Fact]
-        public void Read41DeletedEntryWithId()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void Read41DeletedEntryWithId(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"@id\":\"Customers/1\"}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -509,11 +535,13 @@ namespace Microsoft.OData.Tests.JsonLight
             deletedResource.Id.Should().Be(new Uri("Customers/1", UriKind.Relative));
         }
 
-        [Fact]
-        public void Read41DeletedEntryWithKeyProperties()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void Read41DeletedEntryWithKeyProperties(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -526,16 +554,18 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("http://host/service/Customers/1"));
+            deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value.Should().Be(1);
             deletedResource.Properties.Count().Should().Be(1);
             deletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
         }
 
-        [Fact]
-        public void Read41DeletedEntryRemovedAtEnd()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void Read41DeletedEntryRemovedAtEnd(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"@removed\":{\"reason\":\"changed\"}}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -548,14 +578,16 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("http://host/service/Customers/1"));
-        }
+            deletedResource.Properties.FirstOrDefault(p=>p.Name == "Id").Value.Should().Be(1);
+       }
 
-        [Fact]
-        public void Read41DeletedEntryWithEmptyRemoved()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void Read41DeletedEntryWithEmptyRemoved(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{},\"Id\":1}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -568,14 +600,16 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("http://host/service/Customers/1"));
+            deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value.Should().Be(1);
         }
 
-        [Fact]
-        public void Read41DeletedEntryWithNullRemoved()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void Read41DeletedEntryWithNullRemoved(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":null,\"Id\":1}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -588,14 +622,16 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("http://host/service/Customers/1"));
+            deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value.Should().Be(1);
         }
 
-        [Fact]
-        public void Read41DeletedEntryWithExtraContentInRemoved()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void Read41DeletedEntryWithExtraContentInRemoved(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\",\"extraProperty\":\"value\",\"@extra.annotation\":\"annotationValue\"},\"Id\":1}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -608,14 +644,16 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("http://host/service/Customers/1"));
+            deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value.Should().Be(1);
         }
 
-        [Fact]
-        public void ReadPropertiesIn41DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadPropertiesIn41DeletedEntry(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"ContactName\":\"Samantha Stones\"}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while(reader.Read())
             {
@@ -628,18 +666,19 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("http://host/service/Customers/1"));
             deletedResource.Properties.Count().Should().Be(2);
             deletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
-            deletedResource.Properties.First(p=>p.Name=="ContactName").Value.Should().Be("Samantha Stones");
+            deletedResource.Properties.First(p => p.Name=="ContactName").Value.Should().Be("Samantha Stones");
             deletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Changed);
         }
 
-        [Fact]
-        public void ReadIgnorePropertiesIn40DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadIgnorePropertiesIn40DeletedEntry(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"id\":\"Customers('BOTTM')\",\"reason\":\"deleted\",\"ContactName\":\"Susan Halvenstern\"}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -656,12 +695,14 @@ namespace Microsoft.OData.Tests.JsonLight
             deletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
         }
 
-        [Fact]
-        public void ReadNestedResourceIn41DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedResourceIn41DeletedEntry(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"ProductBeingViewed\":{\"Name\":\"Scissors\",\"Id\":10}}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource nestedResource = null;
@@ -685,18 +726,19 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.NotNull(nestedResourceInfo);
             nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
             Assert.NotNull(nestedResource);
-            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedResource.Properties.Count().Should().Be(2);
             nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
             nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Scissors");
         }
 
-        [Fact]
-        public void ReadNullResourceIn41DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNullResourceIn41DeletedEntry(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"ProductBeingViewed\":null}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource nestedResource = null;
@@ -722,12 +764,14 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Null(nestedResource);
         }
 
-        [Fact]
-        public void ReadNestedResourceIn41DeltaResource()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedResourceIn41DeltaResource(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"ProductBeingViewed\":{\"Name\":\"Scissors\",\"Id\":10},\"ContactName\":\"Samantha Stones\"}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataResource deltaResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource nestedResource = null;
@@ -752,25 +796,25 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deltaResource);
-            deltaResource.Id.Should().Be(new Uri("http://host/service/Customers/1"));
             deltaResource.Properties.Count().Should().Be(2);
             deltaResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
             deltaResource.Properties.First(p => p.Name == "ContactName").Value.Should().Be("Samantha Stones");
             Assert.NotNull(nestedResourceInfo);
             nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
             Assert.NotNull(nestedResource);
-            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedResource.Properties.Count().Should().Be(2);
             nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
             nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Scissors");
         }
 
-        [Fact]
-        public void ReadNestedDeletedEntryIn41DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedDeletedEntryIn41DeletedEntry(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"deleted\"},\"Name\":\"Scissors\",\"Id\":10}}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataDeletedResource nestedResource = null;
@@ -799,18 +843,19 @@ namespace Microsoft.OData.Tests.JsonLight
             nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
             Assert.NotNull(nestedResource);
             nestedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedResource.Properties.Count().Should().Be(2);
             nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
             nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Scissors");
         }
 
-        [Fact]
-        public void ReadNestedDerivedDeletedEntryIn41DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedDerivedDeletedEntryIn41DeletedEntry(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"deleted\"},\"@type\":\"#MyNS.PhysicalProduct\",\"Id\":10,\"Name\":\"car\",\"Material\":\"gold\"}}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataDeletedResource nestedResource = null;
@@ -840,19 +885,20 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.NotNull(nestedResource);
             nestedResource.TypeName.Should().Be("MyNS.PhysicalProduct");
             nestedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedResource.Properties.Count().Should().Be(3);
             nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
             nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("car");
             nestedResource.Properties.First(p => p.Name == "Material").Value.Should().Be("gold");
         }
 
-        [Fact]
-        public void ReadNestedDeletedEntryIn41DeltaResource()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedDeletedEntryIn41DeltaResource(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"deleted\"},\"Name\":\"Scissors\",\"Id\":10}}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataResource deltaResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataDeletedResource nestedDeletedResource = null;
@@ -877,18 +923,21 @@ namespace Microsoft.OData.Tests.JsonLight
             nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
             Assert.NotNull(nestedDeletedResource);
             nestedDeletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedDeletedResource.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedDeletedResource.Properties.Count().Should().Be(2);
             nestedDeletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
             nestedDeletedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Scissors");
         }
 
-        [Fact]
-        public void ReadNestedDeltaResourceSetIn41DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedDeltaResourceSetIn41DeletedEntry(bool isResponse)
         {
-            string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}";
+            string payload = isResponse ?
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}" :
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource nestedResource = null;
@@ -927,27 +976,31 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.NotNull(nestedResourceInfo);
             nestedResourceInfo.Name.Should().Be("FavouriteProducts");
             Assert.NotNull(nestedDeltaResourceSet);
-            nestedDeltaResourceSet.Count.Should().Be(5);
-            nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            if (isResponse)
+            {
+                nestedDeltaResourceSet.Count.Should().Be(5);
+                nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            }
             Assert.NotNull(nestedResource);
-            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/1"));
             nestedResource.Properties.Count().Should().Be(2);
             nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
             nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Car");
             Assert.NotNull(nestedDeletedResource);
             nestedDeletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedDeletedResource.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedDeletedResource.Properties.Count().Should().Be(1);
             nestedDeletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
         }
 
-
-        [Fact]
-        public void ReadEmptyDeltaResourceSetIn41DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadEmptyDeltaResourceSetIn41DeletedEntry(bool isResponse)
         {
-            string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts@count\":2,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts@delta\":[]}]}";
+            string payload = isResponse ?
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts@count\":2,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts@delta\":[]}]}" :
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts@delta\":[]}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataDeltaResourceSet nestedDeltaResourceSet = null;
@@ -974,16 +1027,23 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.NotNull(nestedResourceInfo);
             nestedResourceInfo.Name.Should().Be("FavouriteProducts");
             Assert.NotNull(nestedDeltaResourceSet);
-            nestedDeltaResourceSet.Count.Should().Be(2);
-            nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            if (isResponse)
+            {
+                nestedDeltaResourceSet.Count.Should().Be(2);
+                nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            }
         }
 
-        [Fact]
-        public void ReadNestedDeltaResourceSetIn41DeltaResource()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedDeltaResourceSetIn41DeltaResource(bool isResponse)
         {
-            string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}";
+            string payload = isResponse ?
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}" :
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataResource deltaResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource nestedResource = null;
@@ -1022,26 +1082,31 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.NotNull(nestedResourceInfo);
             nestedResourceInfo.Name.Should().Be("FavouriteProducts");
             Assert.NotNull(nestedDeltaResourceSet);
-            nestedDeltaResourceSet.Count.Should().Be(5);
-            nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            if (isResponse)
+            {
+                nestedDeltaResourceSet.Count.Should().Be(5);
+                nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            }
             Assert.NotNull(nestedResource);
-            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/1"));
             nestedResource.Properties.Count().Should().Be(2);
             nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
             nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Car");
             Assert.NotNull(nestedDeletedResource);
             nestedDeletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedDeletedResource.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedDeletedResource.Properties.Count().Should().Be(1);
             nestedDeletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
         }
 
-        [Fact]
-        public void ReadNestedResourceSetIn41DeletedEntry()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedResourceSetIn41DeletedEntry(bool isResponse)
         {
-            string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}";
+            string payload = isResponse ?
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}" :
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource nestedResource = null;
@@ -1077,25 +1142,30 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.NotNull(nestedResourceInfo);
             nestedResourceInfo.Name.Should().Be("FavouriteProducts");
             Assert.NotNull(nestedResourceSet);
-            nestedResourceSet.Count.Should().Be(5);
-            nestedResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            if (isResponse)
+            {
+                nestedResourceSet.Count.Should().Be(5);
+                nestedResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            }
             Assert.NotNull(nestedResource);
-            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/1"));
             nestedResource.Properties.Count().Should().Be(2);
             nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
             nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Car");
             Assert.NotNull(nestedResource2);
-            nestedResource2.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedResource2.Properties.Count().Should().Be(1);
             nestedResource2.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
         }
 
-        [Fact]
-        public void ReadNestedResourceSetIn41DeltaResource()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedResourceSetIn41DeltaResource(bool isResponse)
         {
-            string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}";
+            string payload = isResponse ?
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}" :
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataResource deltaResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource nestedResource = null;
@@ -1132,24 +1202,27 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.NotNull(nestedResourceInfo);
             nestedResourceInfo.Name.Should().Be("FavouriteProducts");
             Assert.NotNull(nestedResourceSet);
-            nestedResourceSet.Count.Should().Be(5);
-            nestedResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            if (isResponse)
+            {
+                nestedResourceSet.Count.Should().Be(5);
+                nestedResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+            }
             Assert.NotNull(nestedResource);
-            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/1"));
             nestedResource.Properties.Count().Should().Be(2);
             nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
             nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Car");
             Assert.NotNull(nestedResource2);
-            nestedResource2.Id.Should().Be(new Uri("http://host/service/Products/10"));
             nestedResource2.Properties.Count().Should().Be(1);
             nestedResource2.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
         }
 
-        [Fact]
-        public void ReadDeletedEntryFromDifferentSetIn41()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadDeletedEntryFromDifferentSetIn41(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"changed\"},\"Id\":1}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -1162,16 +1235,17 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("http://host/service/Orders/1"));
             deletedResource.Properties.Count().Should().Be(1);
             deletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
         }
 
-        [Fact]
-        public void ReadDerivedDeletedResourceIn41()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadDerivedDeletedResourceIn41(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"@odata.type\":\"#MyNS.PreferredCustomer\",\"Id\":1,\"HonorLevel\":\"Gold\"}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
             while (reader.Read())
             {
@@ -1184,18 +1258,19 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("http://host/service/Customers/1"));
             deletedResource.Properties.Count().Should().Be(2);
             deletedResource.TypeName.Should().Be("MyNS.PreferredCustomer");
             deletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
             deletedResource.Properties.First(p => p.Name == "HonorLevel").Value.Should().Be("Gold");
         }
 
-        [Fact]
-        public void ReadNestedDeletedEntryFromDifferentSetShouldFail()
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void ReadNestedDeletedEntryFromDifferentSetShouldFail(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders\":[{\"@context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"@removed\":{\"reason\":\"changed\"},\"Id\":1}]}]}";
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
 
             Action readAction = () =>
             {
@@ -1318,7 +1393,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-        private IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> ReadItem(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool enableReadingODataAnnotationWithoutPrefix = false)
+        private IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> ReadItem(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool isResponse = true, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
             var settings = new ODataMessageReaderSettings
             {
@@ -1327,7 +1402,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var messageInfo = new ODataMessageInfo
             {
-                IsResponse = true,
+                IsResponse = isResponse,
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = false,
                 Model = model ?? new EdmModel(),
@@ -1347,7 +1422,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-        private async Task<IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>> ReadItemAsync(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool enableReadingODataAnnotationWithoutPrefix = false)
+        private async Task<IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>> ReadItemAsync(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool isResponse = true, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
             List<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> tuples = new List<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>();
             var settings = new ODataMessageReaderSettings
@@ -1357,7 +1432,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var messageInfo = new ODataMessageInfo
             {
-                IsResponse = true,
+                IsResponse = isResponse,
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = true,
                 Model = model ?? new EdmModel(),
@@ -1507,7 +1582,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-        private ODataReader GetODataReader(string deltaPayload, IEdmModel model, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool keyAsSegment = true)
+        private ODataReader GetODataReader(string deltaPayload, IEdmModel model, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool isResponse, bool keyAsSegment = true)
         {
             var settings = new ODataMessageReaderSettings
             {
@@ -1516,7 +1591,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var messageInfo = new ODataMessageInfo
             {
-                IsResponse = true,
+                IsResponse = isResponse,
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = false,
                 Model = model ?? new EdmModel(),
