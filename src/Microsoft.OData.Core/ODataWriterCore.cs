@@ -1215,17 +1215,19 @@ namespace Microsoft.OData
 
             this.InterceptException(() =>
             {
-                // Verify query count
-                if (deltaResourceSet.Count.HasValue)
+                // Check that links are not set for requests
+                if (!this.outputContext.WritingResponse)
                 {
-                    // Check that Count is not set for requests
-                    if (!this.outputContext.WritingResponse)
+                    if (deltaResourceSet.NextPageLink != null)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_QueryCountInRequest, deltaResourceSet);
+                        this.ThrowODataException(Strings.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSet);
                     }
 
-                    // Verify version requirements
+                    if (deltaResourceSet.DeltaLink != null)
+                    {
+                        this.ThrowODataException(Strings.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSet);
                     }
+                }
 
                 this.StartDeltaResourceSet(deltaResourceSet);
             });
@@ -1747,6 +1749,8 @@ namespace Microsoft.OData
                         {
                             throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(resourceType.FullTypeName(), resourceScope.NavigationSource.EntityType()));
                         }
+
+                        resourceScope.ResourceTypeFromMetadata = resourceScope.NavigationSource.EntityType();
                     }
                     else
                     {
@@ -2003,7 +2007,7 @@ namespace Microsoft.OData
                 {
                     selectedProperties = currentScope.SelectedProperties.GetSelectedPropertiesForNavigationProperty(currentScope.ResourceType, nestedResourceInfo.Name);
 
-                    if (this.outputContext.WritingResponse)
+                    if (this.outputContext.WritingResponse || this.writingDelta)
                     {
                         ODataPath odataPath = odataUri.Path;
                         IEdmStructuredType currentResourceType = currentScope.ResourceType;

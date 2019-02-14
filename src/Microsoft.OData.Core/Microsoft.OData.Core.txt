@@ -45,6 +45,8 @@ ODataWriterCore_WriteEndCalledInInvalidState=ODataWriter.WriteEnd was called in 
 
 ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties=No Id or key properties were found. A resource in a delta response requires an ID or key properties be specified.
 ODataWriterCore_QueryCountInRequest=The ODataResourceSet.Count must be null for request payloads. Query counts are only supported in responses.
+ODataWriterCore_QueryNextLinkInRequest=The NextPageLink must be null for request payloads. Next page links are only supported in responses.
+ODataWriterCore_QueryDeltaLinkInRequest=The DeltaLink must be null for request payloads. Delta links are only supported in responses.
 ODataWriterCore_CannotWriteDeltaWithResourceSetWriter=Cannot write a delta deleted resource, link, or deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter.
 ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry=Nested content is not allowed in an OData 4.0 deleted entry. For content in deleted entries, please specify OData 4.01 or greater.
 ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter=Cannot write a top-level resource set with a writer that was created to write a top-level resource.
