@@ -51,6 +51,7 @@ namespace Microsoft.OData
 
         /// <summary>The Edm model.</summary>
         private IEdmModel edmModel;
+        private readonly ODataVersion version;
 
         /// <summary>The separator character used to separate property names in a path.</summary>
         private const char PathSeparator = '/';
@@ -80,13 +81,14 @@ namespace Microsoft.OData
         /// the same format as in the $select query option.</param>
         /// <param name="structuredType">The Edm structured type of this node.</param>
         /// <param name="edmModel">The Edm model.</param>
-        internal SelectedPropertiesNode(string selectClause, IEdmStructuredType structuredType, IEdmModel edmModel)
+        internal SelectedPropertiesNode(string selectClause, IEdmStructuredType structuredType, IEdmModel edmModel, ODataVersion version = ODataVersion.V4)
             : this(SelectionType.PartialSubtree)
         {
             Debug.Assert(!string.IsNullOrEmpty(selectClause), "!string.IsNullOrEmpty(selectClause)");
 
             this.structuredType = structuredType;
             this.edmModel = edmModel;
+            this.version = version;
 
             // NOTE: The select clause is a list of paths and parenthesized expand tokens separated by comma (',').
             // E.g, Accounts('abc')?$expand=User($select(FirstName, LastName)), for the case of projected expanded entity.
@@ -129,12 +131,34 @@ namespace Microsoft.OData
                     childNode.DetermineSelectionType();
                 }
             }
-
+            if (AllSelectedAreNavigationProperties(this.selectedProperties))
+            {
+                this.selectedProperties = null;
+                this.selectionType = SelectionType.EntireSubtree;
+            }
             if ((this.selectedProperties == null || this.selectedProperties.Count == 0)
                 && (this.children == null || this.children.Values.All(n => n.selectionType == SelectionType.EntireSubtree)))
             {
                 this.selectionType = SelectionType.EntireSubtree;
             }
+        }
+
+        private bool AllSelectedAreNavigationProperties(HashSet<string> selectedProperties)
+        {
+            if (selectedProperties == null || (this.version > ODataVersion.V4) || this.structuredType == null)
+            {
+                return false;
+            }
+            IEnumerable<IEdmNavigationProperty> navProps = this.structuredType.NavigationProperties();
+            foreach (string s in selectedProperties)
+            {
+                if(!navProps.Any(_ => _.Name.Equals(s, StringComparison.Ordinal)))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static string[] GetTopLevelItems(string selectClause)
@@ -224,7 +248,7 @@ namespace Microsoft.OData
         /// <param name="structuredType">The structured type of this node.</param>
         /// <param name="edmModel">The Edm model.</param>
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
-        internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType, IEdmModel edmModel)
+        internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType, IEdmModel edmModel, ODataVersion? version = ODataVersion.V4)
         {
             if (selectQueryOption == null)
             {
@@ -239,7 +263,7 @@ namespace Microsoft.OData
                 return Empty;
             }
 
-            return new SelectedPropertiesNode(selectQueryOption, structuredType, edmModel);
+            return new SelectedPropertiesNode(selectQueryOption, structuredType, edmModel, version ?? ODataVersion.V4);
         }
 
         /// <summary>
