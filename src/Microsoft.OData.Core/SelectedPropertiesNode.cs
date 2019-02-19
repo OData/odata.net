@@ -51,6 +51,8 @@ namespace Microsoft.OData
 
         /// <summary>The Edm model.</summary>
         private IEdmModel edmModel;
+
+        /// <summary> The OData version.</summary>
         private readonly ODataVersion version;
 
         /// <summary>The separator character used to separate property names in a path.</summary>
@@ -81,6 +83,7 @@ namespace Microsoft.OData
         /// the same format as in the $select query option.</param>
         /// <param name="structuredType">The Edm structured type of this node.</param>
         /// <param name="edmModel">The Edm model.</param>
+        /// <param name="version">The OData version. Default value is <see cref="ODataVersion.V4".</param>
         internal SelectedPropertiesNode(string selectClause, IEdmStructuredType structuredType, IEdmModel edmModel, ODataVersion version = ODataVersion.V4)
             : this(SelectionType.PartialSubtree)
         {
@@ -149,6 +152,7 @@ namespace Microsoft.OData
             {
                 return false;
             }
+
             IEnumerable<IEdmNavigationProperty> navProps = this.structuredType.NavigationProperties();
             foreach (string s in selectedProperties)
             {
@@ -205,7 +209,17 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="selectionType">Type of the selection.</param>
         internal SelectedPropertiesNode(SelectionType selectionType)
-            :this(selectionType, /*isExpandedNavigationProperty*/ false)
+            : this(selectionType, /*isExpandedNavigationProperty*/ false, ODataVersion.V4)
+        {
+        }
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="SelectedPropertiesNode"/> class from being created.
+        /// </summary>
+        /// <param name="selectionType">Type of the selection.</param>
+        /// <param name="version">The OData version.</param>
+        internal SelectedPropertiesNode(SelectionType selectionType, ODataVersion version)
+            :this(selectionType, /*isExpandedNavigationProperty*/ false, version)
         {
         }
 
@@ -214,10 +228,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="selectionType">Type of the selection.</param>
         /// <param name="isExpandedNavigationProperty">Boolean flag indicating whether this is an expanded navigation property.</param>
-        private SelectedPropertiesNode(SelectionType selectionType, bool isExpandedNavigationProperty)
+        /// <param name="version"> The OData version.</param>
+        private SelectedPropertiesNode(SelectionType selectionType, bool isExpandedNavigationProperty, ODataVersion version)
         {
             this.selectionType = selectionType;
             this.isExpandedNavigationProperty = isExpandedNavigationProperty;
+            this.version = version;
         }
 
         /// <summary>
@@ -247,12 +263,13 @@ namespace Microsoft.OData
         /// <param name="selectQueryOption">The value of the $select query option.</param>
         /// <param name="structuredType">The structured type of this node.</param>
         /// <param name="edmModel">The Edm model.</param>
+        /// <param name="version"> The OData version. Default value is <see cref="ODataVersion.V4"/></param>
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
         internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType, IEdmModel edmModel, ODataVersion? version = ODataVersion.V4)
         {
             if (selectQueryOption == null)
             {
-                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree, version ?? ODataVersion.V4);
             }
 
             selectQueryOption = selectQueryOption.Trim();
@@ -288,7 +305,7 @@ namespace Microsoft.OData
             && selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().All(_ => _.SelectAndExpand.AllSelected))
             {
                 // All items are selected and all expanded entities are all-selected.
-                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree, version);
             }
 
             return CreateFromSelectExpandClause(selectExpandClause, version);
@@ -796,7 +813,7 @@ namespace Microsoft.OData
             SelectedPropertiesNode childNode;
             if (!this.children.TryGetValue(segmentName, out childNode))
             {
-                childNode = new SelectedPropertiesNode(SelectionType.PartialSubtree, isExpandedNavigationProperty);
+                childNode = new SelectedPropertiesNode(SelectionType.PartialSubtree, isExpandedNavigationProperty, this.version);
                 this.children.Add(segmentName, childNode);
             }
 
