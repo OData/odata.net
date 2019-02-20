@@ -44,6 +44,11 @@ namespace Microsoft.OData.UriParser
         private readonly ODataUriResolver resolver;
 
         /// <summary>
+        /// Properties generated in $apply or $compute
+        /// </summary>
+        private readonly HashSet<string> generatedProperties;
+
+        /// <summary>
         /// Build a property visitor to visit the select tree and decorate a SelectExpandClause
         /// </summary>
         /// <param name="model">The model used for binding.</param>
@@ -51,13 +56,14 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
         /// <param name="resolver">Resolver for uri parser.</param>
-        public SelectPropertyVisitor(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver)
+        public SelectPropertyVisitor(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, List<string> generatedProperties)
         {
             this.model = model;
             this.edmType = edmType;
             this.maxDepth = maxDepth;
             this.expandClauseToDecorate = expandClauseToDecorate;
             this.resolver = resolver;
+            this.generatedProperties =  new HashSet<string>(generatedProperties ?? new List<string>());
         }
 
         /// <summary>
@@ -126,7 +132,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // next, create a segment for the first non-type segment in the path.
-            ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.model, currentLevelType, resolver);
+            ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.model, currentLevelType, resolver, this.generatedProperties);
 
             // next, create an ODataPath and add the segments to it.
             if (lastSegment != null)
@@ -159,7 +165,7 @@ namespace Microsoft.OData.UriParser
                     if (UriParserHelper.IsAnnotation(nextToken.Identifier))
                     {
                         lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model,
-                            currentLevelType, resolver);
+                            currentLevelType, resolver, null);
                     }
                     else if (primitiveType == null && dynamicPath == null)
                     {
@@ -173,7 +179,7 @@ namespace Microsoft.OData.UriParser
                         // If there is no collection type in the path yet, will try to bind property for the next token
                         // first try bind the segment as property.
                         lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model,
-                            currentLevelType, resolver);
+                            currentLevelType, resolver, null);
                     }
                     else
                     {

@@ -1294,6 +1294,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         #endregion
 
+        #region "$select and generated properties"
+        [Fact]
+        public void DollarComputedPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "DoubleTotal"},
+                    {"$compute", "FavoriteNumber mul 2 as DoubleTotal"}
+                });
+            odataQueryOptionParser.ParseCompute();
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+        }
+        #endregion
         #region Test Running Helpers
 
         private static SelectExpandClause RunParseSelectExpand(string select, string expand, IEdmStructuredType type, IEdmEntitySet enitytSet)

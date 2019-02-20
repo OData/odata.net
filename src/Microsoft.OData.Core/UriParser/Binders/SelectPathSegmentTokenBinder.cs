@@ -29,7 +29,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="edmType">the type of the current scope based on type segments.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <returns>The segment created from the token.</returns>
-        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver)
+        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver, HashSet<string> generatedProperties = null)
         {
             ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
@@ -76,7 +76,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            if (edmType.IsOpen)
+            if (edmType.IsOpen  || (generatedProperties?.Contains(tokenIn.Identifier) ?? false))
             {
                 return new DynamicPathSegment(tokenIn.Identifier);
             }

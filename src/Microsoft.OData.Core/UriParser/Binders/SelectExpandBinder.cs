@@ -104,7 +104,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="tokenIn">the token to visit</param>
         /// <returns>a SelectExpand clause based on this ExpandToken</returns>
-        public SelectExpandClause Bind(ExpandToken tokenIn)
+        public SelectExpandClause Bind(ExpandToken tokenIn, List<string> generatedProperties = null)
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
 
@@ -120,7 +120,7 @@ namespace Microsoft.OData.UriParser
             SelectExpandClause topLevelExpand = new SelectExpandClause(expandedTerms, isAllSelected);
             if (!isAllSelected)
             {
-                SelectBinder selectBinder = new SelectBinder(this.Model, this.EdmType, this.Configuration.Settings.SelectExpandLimit, topLevelExpand, this.configuration.Resolver);
+                SelectBinder selectBinder = new SelectBinder(this.Model, this.EdmType, this.Configuration.Settings.SelectExpandLimit, topLevelExpand, configuration.Resolver, generatedProperties);
                 selectBinder.Bind(tokenIn.ExpandTerms.Single().SelectOption);
             }
 
@@ -159,7 +159,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>A new SelectExpand clause decorated with the select token.</returns>
         private SelectExpandClause DecorateExpandWithSelect(SelectExpandClause subExpand, IEdmNavigationProperty currentNavProp, SelectToken select)
         {
-            SelectBinder selectBinder = new SelectBinder(this.Model, currentNavProp.ToEntityType(), this.Settings.SelectExpandLimit, subExpand, this.configuration.Resolver);
+            SelectBinder selectBinder = new SelectBinder(this.Model, currentNavProp.ToEntityType(), this.Settings.SelectExpandLimit, subExpand, this.configuration.Resolver, null);
             return selectBinder.Bind(select);
         }
 
