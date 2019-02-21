@@ -43,6 +43,7 @@ namespace Microsoft.OData.UriParser
         {
             return TryBindIdentifier(identifier, typeReference, modelWhenNoTypeReference, null, out boundEnum);
         }
+
         /// <summary>
         /// Try to bind an identifier to a EnumNode
         /// </summary>
