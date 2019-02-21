@@ -363,8 +363,10 @@ namespace Microsoft.OData.UriParser
                  {
                      return LiteralBinder.BindInLiteral((LiteralToken)queryToken);
                  }
+
                  return this.Bind(queryToken);
              };
+
             InBinder inBinder = new InBinder(InBinderMethod);
             return inBinder.BindInOperator(inToken, this.BindingState);
         }

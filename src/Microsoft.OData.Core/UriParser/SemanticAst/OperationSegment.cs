@@ -257,10 +257,10 @@ namespace Microsoft.OData.UriParser
 
             // Unwrap the return type if it's a collection
             var unwrappedCollectionType = this.computedReturnEdmType;
-            var collectoinType = this.computedReturnEdmType as IEdmCollectionType;
-            if (collectoinType != null)
+            var collectionType = this.computedReturnEdmType as IEdmCollectionType;
+            if (collectionType != null)
             {
-                unwrappedCollectionType = collectoinType.ElementType.Definition;
+                unwrappedCollectionType = collectionType.ElementType.Definition;
             }
 
             // Ensure that the return type is in the same type hierarhcy as the entity set provided

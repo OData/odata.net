@@ -19,35 +19,50 @@ namespace Microsoft.OData.Edm
         public static readonly EdmCoreModelUntypedType Instance = new EdmCoreModelUntypedType();
 
         /// <summary>
-        /// Gets the Edm type kind of this type.
-        /// </summary>
-        public override EdmTypeKind TypeKind => EdmTypeKind.Untyped;
-
-        /// <summary>
-        /// Gets the scheme element type kind of this type.
-        /// </summary>
-        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.TypeDefinition;
-
-        /// <summary>
-        /// Gets the name of this type.
-        /// </summary>
-        public string Name => CsdlConstants.TypeName_Untyped_Short;
-
-        /// <summary>
-        /// Gets the namespace of this type.
-        /// </summary>
-        public string Namespace => EdmConstants.EdmNamespace;
-
-        /// <summary>
-        /// Gets the full name of this type.
-        /// </summary>
-        public string FullName => CsdlConstants.TypeName_Untyped;
-
-        /// <summary>
         /// Private constructor.
         /// </summary>
         private EdmCoreModelUntypedType()
         {
+        }
+
+        /// <summary>
+        /// Gets the Edm type kind of this type.
+        /// </summary>
+        public override EdmTypeKind TypeKind
+        {
+            get { return EdmTypeKind.Untyped; }
+        }
+
+        /// <summary>
+        /// Gets the scheme element type kind of this type.
+        /// </summary>
+        public EdmSchemaElementKind SchemaElementKind
+        {
+            get { return EdmSchemaElementKind.TypeDefinition; }
+        }
+
+        /// <summary>
+        /// Gets the name of this type.
+        /// </summary>
+        public string Name
+        {
+            get { return CsdlConstants.TypeName_Untyped_Short; }
+        }
+
+        /// <summary>
+        /// Gets the namespace of this type.
+        /// </summary>
+        public string Namespace
+        {
+            get { return EdmConstants.EdmNamespace; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this type.
+        /// </summary>
+        public string FullName
+        {
+            get { return CsdlConstants.TypeName_Untyped; }
         }
     }
 }
