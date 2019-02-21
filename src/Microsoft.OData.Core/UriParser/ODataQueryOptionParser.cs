@@ -629,7 +629,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="configuration">The configuration used for binding.</param>
         /// <param name="odataPathInfo">The path info from Uri path.</param>
         /// <returns>A <see cref="ComputeClause"/> representing the metadata bound compute expression.</returns>
-        private static ComputeClause ParseComputeImplementation(string compute, ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
+        private ComputeClause ParseComputeImplementation(string compute, ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(compute, "compute");
@@ -639,9 +639,7 @@ namespace Microsoft.OData.UriParser
             ComputeToken computeToken = expressionParser.ParseCompute(compute);
 
             // Bind it to metadata
-            BindingState state = new BindingState(configuration);
-            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(odataPathInfo.TargetEdmType.ToTypeReference(), odataPathInfo.TargetNavigationSource);
-            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            BindingState state = CreateBindingState(configuration, odataPathInfo);
             MetadataBinder binder = new MetadataBinder(state);
             ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
             ComputeClause boundNode = computeBinder.BindCompute(computeToken);

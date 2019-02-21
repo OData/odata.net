@@ -1322,6 +1322,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             odataQueryOptionParser.ParseApply();
             var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
         }
+
+        [Fact]
+        public void ComputeAfterApplyPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "DoubleTotal, NewTotal"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as DoubleTotal)"},
+                    {"$compute", "DoubleTotal as NewTotal"},
+                });
+            odataQueryOptionParser.ParseApply();
+            odataQueryOptionParser.ParseCompute();
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+        }
+
+
         #endregion
         #region Test Running Helpers
 
