@@ -30,7 +30,6 @@ namespace Microsoft.OData.UriParser
             IEnumerable<ODataSelectPath> selectedPaths = selectItems.OfType<PathSelectItem>().Select(item => item.SelectedPath);
             foreach (ExpandedNavigationSelectItem navigationSelect in selectItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
             {
-
                 AddExplicitNavPropLinksWhereNecessary(navigationSelect.SelectAndExpand);
             }
 

@@ -92,46 +92,6 @@ namespace Microsoft.OData
             return result;
         }
 
-        private static object ConvertFromResourceOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
-        {
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-            settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
-
-            using (StringReader reader = new StringReader(value))
-            {
-                ODataMessageInfo messageInfo = new ODataMessageInfo
-                {
-                    MediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType),
-                    Model = model,
-                    IsResponse = false,
-                    IsAsync = false,
-                    MessageStream = null,
-                };
-
-                using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(reader, messageInfo, settings))
-                {
-                    ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
-
-                    // TODO: The way JSON array literals look in the URI is different that response payload with an array in it.
-                    // The fact that we have to manually setup the underlying reader shows this different in the protocol.
-                    // There is a discussion on if we should change this or not.
-                    deserializer.JsonReader.Read(); // Move to first thing
-                    object rawResult = deserializer.ReadNonEntityValue(
-                        null /*payloadTypeName*/,
-                        typeReference,
-                        null /*DuplicatePropertyNameChecker*/,
-                        null /*CollectionWithoutExpectedTypeValidator*/,
-                        true /*validateNullValue*/,
-                        false /*isTopLevelPropertyValue*/,
-                        false /*insideResourceValue*/,
-                        null /*propertyName*/);
-                    deserializer.ReadPayloadEnd(false);
-
-                    return rawResult;
-                }
-            }
-        }
-
         /// <summary>
         /// Verifies that the given <paramref name="primitiveValue"/> is or can be coerced to <paramref name="expectedTypeReference"/>, and coerces it if necessary.
         /// </summary>
@@ -630,6 +590,46 @@ namespace Microsoft.OData
                     writeAction(jsonOutputContext);
                     stream.Position = 0;
                     return new StreamReader(stream).ReadToEnd();
+                }
+            }
+        }
+
+        private static object ConvertFromResourceOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
+        {
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
+            settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+
+            using (StringReader reader = new StringReader(value))
+            {
+                ODataMessageInfo messageInfo = new ODataMessageInfo
+                {
+                    MediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType),
+                    Model = model,
+                    IsResponse = false,
+                    IsAsync = false,
+                    MessageStream = null,
+                };
+
+                using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(reader, messageInfo, settings))
+                {
+                    ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
+
+                    // TODO: The way JSON array literals look in the URI is different that response payload with an array in it.
+                    // The fact that we have to manually setup the underlying reader shows this different in the protocol.
+                    // There is a discussion on if we should change this or not.
+                    deserializer.JsonReader.Read(); // Move to first thing
+                    object rawResult = deserializer.ReadNonEntityValue(
+                        null /*payloadTypeName*/,
+                        typeReference,
+                        null /*DuplicatePropertyNameChecker*/,
+                        null /*CollectionWithoutExpectedTypeValidator*/,
+                        true /*validateNullValue*/,
+                        false /*isTopLevelPropertyValue*/,
+                        false /*insideResourceValue*/,
+                        null /*propertyName*/);
+                    deserializer.ReadPayloadEnd(false);
+
+                    return rawResult;
                 }
             }
         }

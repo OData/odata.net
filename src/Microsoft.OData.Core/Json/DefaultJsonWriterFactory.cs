@@ -14,14 +14,15 @@ namespace Microsoft.OData.Json
     /// </summary>
     public sealed class DefaultJsonWriterFactory : IJsonWriterFactory
     {
-        private ODataStringEscapeOption _stringEscapeOption;
+        private ODataStringEscapeOption stringEscapeOption;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultJsonWriterFactory" />.
         /// </summary>
         public DefaultJsonWriterFactory()
             : this(ODataStringEscapeOption.EscapeNonAscii)
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultJsonWriterFactory" />.
@@ -29,7 +30,7 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         public DefaultJsonWriterFactory(ODataStringEscapeOption stringEscapeOption)
         {
-            _stringEscapeOption = stringEscapeOption;
+            this.stringEscapeOption = stringEscapeOption;
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Microsoft.OData.Json
         [CLSCompliant(false)]
         public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
         {
-            return new JsonWriter(textWriter, isIeee754Compatible, _stringEscapeOption);
+            return new JsonWriter(textWriter, isIeee754Compatible, this.stringEscapeOption);
         }
     }
 }
