@@ -87,7 +87,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             // Authorization
             string authorizationVocabularies = allResources.FirstOrDefault(x => x.Contains("AuthorizationVocabularies.xml"));
             Debug.Assert(authorizationVocabularies != null, "AuthorizationVocabularies.xml: not found.");
-            AuthorizationModel = LoadCsdlEdmModel(assembly, authorizationVocabularies, new[] { CoreModel });// authorization relies on core
+            AuthorizationModel = LoadCsdlEdmModel(assembly, authorizationVocabularies, new[] { CoreModel }); // authorization relies on core
 
             VocabularyModels = new List<IEdmModel>
             {

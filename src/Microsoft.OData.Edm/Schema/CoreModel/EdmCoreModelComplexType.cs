@@ -69,7 +69,10 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the full name of this type.
         /// </summary>
-        public string FullName => CsdlConstants.TypeName_Complex;
+        public string FullName
+        {
+            get { return CsdlConstants.TypeName_Complex; }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this type is abstract.

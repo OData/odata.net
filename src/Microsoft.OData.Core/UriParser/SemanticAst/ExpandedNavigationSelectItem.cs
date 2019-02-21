@@ -108,6 +108,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="searchOption">An levels clause for this expand (can be null)</param>
         /// <param name="levelsOption">An levels clause for this expand (can be null)</param>
         /// <param name="computeOption">A compute clause for this expand (can be null)</param>
+        /// <param name="applyOption">An apply clause for this expand (can be null)</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
         public ExpandedNavigationSelectItem(
              ODataExpandPath pathToNavigationProperty,

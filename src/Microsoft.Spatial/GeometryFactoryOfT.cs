@@ -84,7 +84,7 @@ namespace Microsoft.Spatial
 
         /// <summary>
         /// Start a new empty Point
-        /// </summary>  
+        /// </summary>
         /// <returns>The current instance of GeometryFactory</returns>
         public GeometryFactory<T> Point()
         {
