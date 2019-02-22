@@ -14,6 +14,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.UriParser.Aggregation;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -1340,6 +1341,76 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             odataQueryOptionParser.ParseCompute();
             var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
             AssertSelectString("DoubleTotal, NewTotal", selectClause);
+        }
+
+        [Fact]
+        public void ComputeInExpandPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyDog($compute=Color as ColorAlias;$select=ColorAlias)"},
+                });
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+            // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expandedSelectionItem.ComputeOption.Should().NotBeNull();
+            expandedSelectionItem.ComputeOption.ComputedItems.Single().Alias.ShouldBeEquivalentTo("ColorAlias");
+            expandedSelectionItem.SelectAndExpand.SelectedItems.Single().ShouldBeSelectedItemOfType<PathSelectItem>().And.SelectedPath.LastSegment.Identifier.ShouldBeEquivalentTo("ColorAlias");
+        }
+
+        [Fact]
+        public void ComputeInExpandPropertyTreatedAsOpenPropertyInFilter()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyDog($compute=Color as ColorAlias;$filter=ColorAlias eq 'Red')"},
+                });
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+            // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expandedSelectionItem.ComputeOption.Should().NotBeNull();
+            expandedSelectionItem.ComputeOption.ComputedItems.Single().Alias.ShouldBeEquivalentTo("ColorAlias");
+            var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("ColorAlias");
+        }
+
+        [Fact]
+        public void ApplyInExpandPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyDog($apply=aggregate(Color with max as MaxColor);$select=MaxColor)"},
+                });
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+            // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expandedSelectionItem.ApplyOption.Should().NotBeNull();
+            expandedSelectionItem.ApplyOption.Transformations.Single().As<AggregateTransformationNode>().Expressions.Single().Alias.ShouldBeEquivalentTo("MaxColor");
+            expandedSelectionItem.SelectAndExpand.SelectedItems.Single().ShouldBeSelectedItemOfType<PathSelectItem>().And.SelectedPath.LastSegment.Identifier.ShouldBeEquivalentTo("MaxColor");
+        }
+
+        [Fact]
+        public void ApplyInExpandPropertyTreatedAsOpenPropertyInFilter()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyDog($apply=aggregate(Color with max as MaxColor);$filter=MaxColor eq 'Red')"},
+                });
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+            // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expandedSelectionItem.ApplyOption.Should().NotBeNull();
+            expandedSelectionItem.ApplyOption.Transformations.Single().As<AggregateTransformationNode>().Expressions.Single().Alias.ShouldBeEquivalentTo("MaxColor");
+            var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("MaxColor");
         }
 
         #endregion
