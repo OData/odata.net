@@ -236,6 +236,7 @@ namespace Microsoft.OData.Edm
                     }
                 }
             }
+
             return result.OrderBy(x=>x?.Path?.Path);
         }
 #else

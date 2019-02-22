@@ -253,7 +253,7 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            // Void operations cannot specificy return entity set
+            // Void operations cannot specify return entity set
             if (this.computedReturnEdmType == null)
             {
                 throw new ODataException(ODataErrorStrings.OperationSegment_CannotReturnNull);
@@ -261,10 +261,10 @@ namespace Microsoft.OData.UriParser
 
             // Unwrap the return type if it's a collection
             var unwrappedCollectionType = this.computedReturnEdmType;
-            var collectoinType = this.computedReturnEdmType as IEdmCollectionType;
-            if (collectoinType != null)
+            var collectionType = this.computedReturnEdmType as IEdmCollectionType;
+            if (collectionType != null)
             {
-                unwrappedCollectionType = collectoinType.ElementType.Definition;
+                unwrappedCollectionType = collectionType.ElementType.Definition;
             }
 
             // Ensure that the return type is in the same type hierarhcy as the entity set provided

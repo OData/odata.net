@@ -307,6 +307,7 @@ namespace Microsoft.OData.UriParser
             {
                 throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
+
             this.lexer.NextToken();
 
             List<ExpandTermToken> termTokens = new List<ExpandTermToken>();
@@ -314,7 +315,7 @@ namespace Microsoft.OData.UriParser
             // First token must be Path
             var termParser = new SelectExpandTermParser(this.lexer, this.maxDepth - 1, false);
             PathSegmentToken pathToken = termParser.ParseTerm(allowRef: true);
-            
+
             QueryToken filterToken = null;
             ExpandToken nestedExpand = null;
 
@@ -328,17 +329,16 @@ namespace Microsoft.OData.UriParser
                     switch (this.lexer.CurrentToken.GetIdentifier())
                     {
                         case ExpressionConstants.KeywordFilter:
-                            filterToken= this.ParseApplyFilter();
+                            filterToken = this.ParseApplyFilter();
                             break;
                         case ExpressionConstants.KeywordExpand:
                             ExpandToken tempNestedExpand = ParseExpand();
-                            nestedExpand = nestedExpand == null 
-                                ? tempNestedExpand 
+                            nestedExpand = nestedExpand == null
+                                ? tempNestedExpand
                                 : new ExpandToken(nestedExpand.ExpandTerms.Concat(tempNestedExpand.ExpandTerms));
                             break;
                         default:
                             throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
-
                     }
                 }
             }
@@ -349,7 +349,7 @@ namespace Microsoft.OData.UriParser
                 throw ParseError(ODataErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
-            ExpandTermToken expandTermToken = new ExpandTermToken(pathToken, filterToken, null, null, null, null, null, null, null, nestedExpand); 
+            ExpandTermToken expandTermToken = new ExpandTermToken(pathToken, filterToken, null, null, null, null, null, null, null, nestedExpand);
             termTokens.Add(expandTermToken);
 
             // ")"
