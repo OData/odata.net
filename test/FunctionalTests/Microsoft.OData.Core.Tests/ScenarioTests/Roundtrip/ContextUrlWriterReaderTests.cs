@@ -871,7 +871,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void ExpandedEntity()
         {
-
             ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",

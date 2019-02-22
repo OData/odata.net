@@ -265,11 +265,11 @@ namespace Microsoft.OData
         /// <param name="edmModel">The Edm model.</param>
         /// <param name="version"> The OData version. Default value is <see cref="ODataVersion.V4"/></param>
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
-        internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType, IEdmModel edmModel, ODataVersion? version = ODataVersion.V4)
+        internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType, IEdmModel edmModel, ODataVersion version = ODataVersion.V4)
         {
             if (selectQueryOption == null)
             {
-                return new SelectedPropertiesNode(SelectionType.EntireSubtree, version ?? ODataVersion.V4);
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree, version);
             }
 
             selectQueryOption = selectQueryOption.Trim();
@@ -280,7 +280,7 @@ namespace Microsoft.OData
                 return Empty;
             }
 
-            return new SelectedPropertiesNode(selectQueryOption, structuredType, edmModel, version ?? ODataVersion.V4);
+            return new SelectedPropertiesNode(selectQueryOption, structuredType, edmModel, version);
         }
 
         /// <summary>
@@ -874,8 +874,9 @@ namespace Microsoft.OData
         /// <summary>Create SelectedPropertiesNode using selected name list and expand node list.</summary>
         /// <param name="selectList">An enumerable of selected item names.</param>
         /// <param name="expandList">An enumerable of sub expanded nodes.</param>
+        /// <param name="version"> The OData version for combining selected name list and expand node list.</param>
         /// <returns>The generated SelectedPropertiesNode.</returns>
-        private static SelectedPropertiesNode CombineSelectAndExpandResult(IList<string> selectList, IList<SelectedPropertiesNode> expandList, ODataVersion version)
+        private static SelectedPropertiesNode CombineSelectAndExpandResult(IEnumerable<string> selectList, IEnumerable<SelectedPropertiesNode> expandList, ODataVersion version)
         {
             List<string> rawSelect = selectList.ToList();
             rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);

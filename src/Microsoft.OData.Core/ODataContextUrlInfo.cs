@@ -72,7 +72,7 @@ namespace Microsoft.OData
         /// Create ODataContextUrlInfo for OdataValue.
         /// </summary>
         /// <param name="value">The ODataValue to be used.</param>
-        /// <param name="version">OData Version.</param>
+        /// <param name="version">OData Version for context uri.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <param name="model">The model used to handle unsigned int conversions.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
@@ -118,7 +118,7 @@ namespace Microsoft.OData
         /// <param name="expectedEntityTypeName">The expectedEntity for current element.</param>
         /// <param name="isSingle">Whether target is single item.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
-        /// <param name="version">The OData Version of the response.</param>
+        /// <param name="version">The OData Version for creating a context uri.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
         internal static ODataContextUrlInfo Create(IEdmNavigationSource navigationSource, string expectedEntityTypeName, bool isSingle, ODataUri odataUri, ODataVersion version)
         {
@@ -142,7 +142,7 @@ namespace Microsoft.OData
         /// Create ODataContextUrlInfo from ODataResourceTypeContext
         /// </summary>
         /// <param name="typeContext">The ODataResourceTypeContext to be used.</param>
-        /// <param name="version">The OData Version of the response</param>
+        /// <param name="version">The OData Version for the context uri</param>
         /// <param name="isSingle">Whether target is single item.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
@@ -184,7 +184,7 @@ namespace Microsoft.OData
         /// Create contextUrlInfo for delta
         /// </summary>
         /// <param name="typeContext">The ODataResourceTypeContext to be used.</param>
-        /// <param name="version">The OData version of the response.</param>
+        /// <param name="version">The OData version for the context uri.</param>
         /// <param name="kind">The delta kind.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
@@ -385,7 +385,7 @@ namespace Microsoft.OData
         /// Build the expand clause for a given level in the selectExpandClause
         /// </summary>
         /// <param name="selectExpandClause">the current level select expand clause</param>
-        /// <param name="version">OData Version of the response</param>
+        /// <param name="version">OData Version for which the context uri is being created.</param>
         /// <returns>the select and expand segment for context url in this level.</returns>
         private static string CreateSelectExpandContextUriSegment(SelectExpandClause selectExpandClause, ODataVersion version)
         {

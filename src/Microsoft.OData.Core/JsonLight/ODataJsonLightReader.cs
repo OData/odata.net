@@ -819,7 +819,7 @@ namespace Microsoft.OData.JsonLight
                 ? null
                 : this.jsonLightResourceDeserializer.ContextUriParseResult.SelectQueryOption;
 
-            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, this.CurrentResourceType, this.jsonLightInputContext.Model, this.jsonLightInputContext.MessageReaderSettings.Version);
+            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, this.CurrentResourceType, this.jsonLightInputContext.Model, this.jsonLightInputContext.MessageReaderSettings.Version ?? ODataVersion.V4);
 
             if (this.ReadingResourceSet)
             {
