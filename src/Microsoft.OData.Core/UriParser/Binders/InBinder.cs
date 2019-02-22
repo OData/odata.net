@@ -25,14 +25,6 @@ namespace Microsoft.OData.UriParser
         private readonly Func<QueryToken, QueryNode> bindMethod;
 
         /// <summary>
-        /// Delegate for a function that normalizes a string item representing a certain type.
-        /// Each type should define a different implementation of the delegate.
-        /// </summary>
-        /// <param name="item">The item to be normalized.</param>
-        /// <returns>Normalized string of the item.</returns>
-        private delegate string NormalizeFunction(string item);
-
-        /// <summary>
         /// Constructs a InBinder with the given method to be used binding the parent token if needed.
         /// </summary>
         /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
@@ -40,6 +32,14 @@ namespace Microsoft.OData.UriParser
         {
             this.bindMethod = bindMethod;
         }
+
+        /// <summary>
+        /// Delegate for a function that normalizes a string item representing a certain type.
+        /// Each type should define a different implementation of the delegate.
+        /// </summary>
+        /// <param name="item">The item to be normalized.</param>
+        /// <returns>Normalized string of the item.</returns>
+        private delegate string NormalizeFunction(string item);
 
         /// <summary>
         /// Binds an In operator token.
@@ -171,9 +171,7 @@ namespace Microsoft.OData.UriParser
         private static string NormalizeStringItem(string str)
         {
             // Validate the string item is quoted properly.
-            if ( !(    str[0] == '\'' && str[str.Length-1] == '\''
-                    || str[0] == '"'  && str[str.Length-1] == '"')
-                )
+            if (!((str[0] == '\'' && str[str.Length - 1] == '\'') || (str[0] == '"' && str[str.Length - 1] == '"')))
             {
                 throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(str));
             }

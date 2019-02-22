@@ -92,6 +92,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <param name="referencedCsdlModel">The referenced raw CsdlModel.</param>
         /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
         /// <param name="mainCsdlSemanticsModel">The CsdlSemanticsModel that will reference this new CsdlSemanticsModel. </param>
+        /// <param name="includeDefaultVocabularies">A value indicating enable/disable the built-in vocabulary supporting.</param>
         private CsdlSemanticsModel(CsdlModel referencedCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, CsdlSemanticsModel mainCsdlSemanticsModel, bool includeDefaultVocabularies)
             : base(Enumerable.Empty<IEdmModel>(), annotationsManager, includeDefaultVocabularies)
         {
