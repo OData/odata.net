@@ -25,7 +25,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         private IEnumerable<AggregateExpressionBase> aggregateExpressionsCache;
 
         public ApplyBinder(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
-            :this(bindMethod, state, null, null)
+            : this(bindMethod, state, null, null)
         {
         }
 

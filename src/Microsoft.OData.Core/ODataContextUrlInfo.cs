@@ -444,6 +444,7 @@ namespace Microsoft.OData
                         expandList.Remove(s);
                     }
                 }
+
                 currentExpandClause += String.Join(ODataConstants.ContextUriProjectionPropertySeparator, selectList.ToArray());
             }
 

@@ -12,9 +12,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Metadata;
 using ODataErrorStrings = Microsoft.OData.Strings;
-using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.UriParser
 {
@@ -1443,7 +1443,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(previous != null);
             Debug.Assert(targetEdmType != null);
 
-            //  Make sure: cast to itself can pass the validation.
+            // Make sure: cast to itself can pass the validation.
             IEdmType previousTargetEdmType = previous.TargetEdmType.AsElementType();
             if (previousTargetEdmType == targetEdmType)
             {
@@ -1477,8 +1477,9 @@ namespace Microsoft.OData.UriParser
                 ODataPathSegment previousPrevious = this.parsedSegments[this.parsedSegments.Count - 2]; // -2 means skip the "KeySegment"
                 entitySetSegment = previousPrevious as EntitySetSegment;
                 navigationPropertySegment = previousPrevious as NavigationPropertySegment;
-                if (entitySetSegment != null || navigationPropertySegment != null) // entitySet or  Navigation property
+                if (entitySetSegment != null || navigationPropertySegment != null)
                 {
+                    // entitySet or  Navigation property
                     IEdmVocabularyAnnotatable target;
                     string kind, name;
                     if (entitySetSegment != null)
@@ -1496,6 +1497,7 @@ namespace Microsoft.OData.UriParser
 
                     VerifyDerivedTypeConstraints(this.configuration.Model, target, fullTypeName, kind, name);
                 }
+
                 return;
             }
 
@@ -1511,8 +1513,8 @@ namespace Microsoft.OData.UriParser
             PropertySegment propertySegment = previous as PropertySegment;
             if (propertySegment != null)
             {
-                IEdmProperty edmProperty = propertySegment.Property;
                 // Verify the DerivedTypeConstrictions on property.
+                IEdmProperty edmProperty = propertySegment.Property;
                 VerifyDerivedTypeConstraints(this.configuration.Model, edmProperty, fullTypeName, "property", edmProperty.Name);
 
                 // Verify the Type Definition, the following codes should work if fix: https://github.com/OData/odata.net/issues/1326

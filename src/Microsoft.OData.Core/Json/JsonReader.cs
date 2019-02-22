@@ -127,11 +127,6 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Get/sets the character buffer pool.
-        /// </summary>
-        public ICharArrayPool ArrayPool { get; set; }
-
-        /// <summary>
         /// Various scope types for Json writer.
         /// </summary>
         private enum ScopeType
@@ -167,6 +162,11 @@ namespace Microsoft.OData.Json
             /// so that it doesn't appear on the stack after the value (ever).</remarks>
             Property,
         }
+
+        /// <summary>
+        /// Get/sets the character buffer pool.
+        /// </summary>
+        public ICharArrayPool ArrayPool { get; set; }
 
         /// <summary>
         /// The value of the last reported node.
@@ -360,6 +360,18 @@ namespace Microsoft.OData.Json
                 "Read should never go back to None and EndOfInput should be reported by directly returning.");
 
             return true;
+        }
+
+        /// <summary>
+        /// Dispose the reader
+        /// </summary>
+        public void Dispose()
+        {
+            if (this.ArrayPool != null && this.characterBuffer != null)
+            {
+                BufferUtils.ReturnToBuffer(this.ArrayPool, this.characterBuffer);
+                this.characterBuffer = null;
+            }
         }
 
         /// <summary>
@@ -939,6 +951,7 @@ namespace Microsoft.OData.Json
             {
                 this.characterBuffer = BufferUtils.RentFromBuffer(ArrayPool, InitialCharacterBufferSize);
             }
+
             Debug.Assert(this.storedCharacterCount <= this.characterBuffer.Length, "We can only store as many characters as fit into our buffer.");
 
             // If the buffer is empty (all characters were consumed from it), just start over.
@@ -1007,18 +1020,6 @@ namespace Microsoft.OData.Json
 
             this.storedCharacterCount += readCount;
             return true;
-        }
-
-        /// <summary>
-        /// Dispose the reader
-        /// </summary>
-        public void Dispose()
-        {
-            if (this.ArrayPool != null && this.characterBuffer != null)
-            {
-                BufferUtils.ReturnToBuffer(this.ArrayPool, this.characterBuffer);
-                this.characterBuffer = null;
-            }
         }
 
         /// <summary>

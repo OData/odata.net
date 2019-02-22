@@ -1754,8 +1754,8 @@ namespace Microsoft.OData.JsonLight
                         this.jsonLightInputContext.ReadingResponse || this.ReadingDelta);
                     if (parseResult != null)
                     {
-                        resourceKind = parseResult.DeltaKind;
                         // a top-level (deleted) resource in a delta response can come from any entity set
+                        resourceKind = parseResult.DeltaKind;
                         if (this.ReadingDelta && this.IsTopLevel && (resourceKind == ODataDeltaKind.Resource || resourceKind == ODataDeltaKind.DeletedEntry))
                         {
                             IEdmStructuredType parsedType = parseResult.EdmType as IEdmStructuredType;
