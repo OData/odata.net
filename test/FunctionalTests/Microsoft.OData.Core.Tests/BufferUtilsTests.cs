@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Tests
 {
+    using System;
     using FluentAssertions;
     using Microsoft.OData.Buffers;
     using Xunit;
@@ -34,6 +35,52 @@ namespace Microsoft.OData.Tests
             char[] buffer = new char[10];
             buffer = BufferUtils.InitializeBufferIfRequired(buffer);
             buffer.ShouldBeEquivalentTo(buffer);
+        }
+
+        [Fact]
+        public void RentFromBufferShouldThrowsIfNullBufferReturns()
+        {
+            // Arrange
+            Action test = () => BufferUtils.RentFromBuffer(new BadCharArrayPool(), 1024);
+
+            // Act & Assert
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.BufferUtils_InvalidBufferOrSize(1024), exception.Message);
+        }
+
+        public class BadCharArrayPool : ICharArrayPool
+        {
+            public char[] Rent(int minSize)
+            {
+                return null;
+            }
+
+            public void Return(char[] array)
+            {
+            }
+        }
+
+        [Fact]
+        public void RentFromBufferShouldThrowsIfStringyBufferReturns()
+        {
+            // Arrange
+            Action test = () => BufferUtils.RentFromBuffer(new StingyCharArrayPool(), 1024);
+
+            // Act & Assert
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.BufferUtils_InvalidBufferOrSize(1024), exception.Message);
+        }
+
+        public class StingyCharArrayPool : ICharArrayPool
+        {
+            public char[] Rent(int minSize)
+            {
+                return new char[minSize - 1];
+            }
+
+            public void Return(char[] array)
+            {
+            }
         }
     }
 }
