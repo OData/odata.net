@@ -955,4 +955,6 @@ JsonReaderExtensions_CannotReadValueAsString=Cannot read the value '{0}' as a qu
 JsonReaderExtensions_CannotReadValueAsDouble=Cannot read the value '{0}' as a double numeric value.
 JsonReaderExtensions_UnexpectedInstanceAnnotationName=An unexpected instance annotation name '{0}' was found when reading from the JSON reader, In OData, Instance annotation name must start with @.
 
+BufferUtils_InvalidBufferOrSize=The buffer from pool cannot be null or less than the required minimal size '{0}'.
+
 ServiceProviderExtensions_NoServiceRegistered=No service for type '{0}' has been registered.

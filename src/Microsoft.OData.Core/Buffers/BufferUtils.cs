@@ -45,6 +45,11 @@ namespace Microsoft.OData.Buffers
             }
 
             char[] buffer = bufferPool.Rent(minSize);
+            if (buffer == null || buffer.Length < minSize)
+            {
+                throw new ODataException(Strings.BufferUtils_InvalidBufferOrSize(minSize));
+            }
+
             return buffer;
         }
 
