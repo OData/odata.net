@@ -99,8 +99,8 @@ namespace Microsoft.OData {
         internal const string ODataWriterCore_WriteEndCalledInInvalidState = "ODataWriterCore_WriteEndCalledInInvalidState";
         internal const string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties = "ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
-        internal const string ODataWriterCore_QueryDeltaLinkInRequest = "ODataWriterCore_QueryDeltaLinkInRequest";
         internal const string ODataWriterCore_QueryNextLinkInRequest = "ODataWriterCore_QueryNextLinkInRequest";
+        internal const string ODataWriterCore_QueryDeltaLinkInRequest = "ODataWriterCore_QueryDeltaLinkInRequest";
         internal const string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter = "ODataWriterCore_CannotWriteDeltaWithResourceSetWriter";
         internal const string ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry = "ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry";
         internal const string ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter = "ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter";
@@ -854,6 +854,7 @@ namespace Microsoft.OData {
         internal const string JsonReaderExtensions_CannotReadValueAsString = "JsonReaderExtensions_CannotReadValueAsString";
         internal const string JsonReaderExtensions_CannotReadValueAsDouble = "JsonReaderExtensions_CannotReadValueAsDouble";
         internal const string JsonReaderExtensions_UnexpectedInstanceAnnotationName = "JsonReaderExtensions_UnexpectedInstanceAnnotationName";
+        internal const string BufferUtils_InvalidBufferOrSize = "BufferUtils_InvalidBufferOrSize";
         internal const string ServiceProviderExtensions_NoServiceRegistered = "ServiceProviderExtensions_NoServiceRegistered";
 
         static TextRes loader = null;
