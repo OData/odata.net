@@ -68,6 +68,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             edmFunction.IsBound.Should().BeTrue();
             edmFunction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Function);
             edmFunction.IsComposable.Should().BeTrue();
+
+            edmFunction.Return.Should().NotBeNull();
+            edmFunction.Return.Type.Should().BeSameAs(edmFunction.ReturnType);
         }
     }
 }

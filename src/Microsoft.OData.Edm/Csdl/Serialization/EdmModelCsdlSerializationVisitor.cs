@@ -276,6 +276,32 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter.WriteOperationParameterEndElement(element);
         }
 
+        protected override void ProcessOperationReturn(IEdmOperationReturn operationReturn)
+        {
+            if (operationReturn == null)
+            {
+                return;
+            }
+
+            bool inlineType = IsInlineType(operationReturn.Type);
+            this.BeginElement(
+                operationReturn.Type,
+                type => this.schemaWriter.WriteReturnTypeElementHeader(),
+                type =>
+                {
+                    if (inlineType)
+                    {
+                        this.schemaWriter.WriteTypeAttribute(type);
+                        this.ProcessFacets(type, true /*inlineType*/);
+                    }
+                    else
+                    {
+                        this.VisitTypeReference(type);
+                    }
+                });
+            this.EndElement(operationReturn);
+        }
+
         protected override void ProcessCollectionType(IEdmCollectionType element)
         {
             bool inlineType = IsInlineType(element.ElementType);
@@ -539,34 +565,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             this.BeginElement(operation, writeElementAction);
             this.VisitOperationParameters(operation.Parameters);
-            this.ProcessOperationReturnType(operation.ReturnType);
+
+            IEdmOperationReturn operationReturn = operation.GetReturn();
+            this.ProcessOperationReturn(operationReturn);
+
             this.EndElement(operation);
-        }
-
-        private void ProcessOperationReturnType(IEdmTypeReference operationReturnType)
-        {
-            if (operationReturnType == null)
-            {
-                return;
-            }
-
-            bool inlineType = IsInlineType(operationReturnType);
-            this.BeginElement(
-                operationReturnType,
-                type => this.schemaWriter.WriteReturnTypeElementHeader(),
-                type =>
-                {
-                    if (inlineType)
-                    {
-                        this.schemaWriter.WriteTypeAttribute(type);
-                        this.ProcessFacets(type, true /*inlineType*/);
-                    }
-                    else
-                    {
-                        this.VisitTypeReference(type);
-                    }
-                });
-            this.EndElement(operationReturnType);
         }
 
         private void ProcessReferentialConstraint(IEdmReferentialConstraint element)

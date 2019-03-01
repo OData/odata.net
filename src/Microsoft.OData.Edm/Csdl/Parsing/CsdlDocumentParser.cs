@@ -340,7 +340,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         //// </Parameter)
 
                         //// <ReturnType>
-                        CsdlElement<CsdlOperationReturnType>(CsdlConstants.Element_ReturnType, this.OnReturnTypeElement,
+                        CsdlElement<CsdlOperationReturn>(CsdlConstants.Element_ReturnType, this.OnReturnTypeElement,
                             //// <TypeRef/>
                             CsdlElement<CsdlTypeReference>(CsdlConstants.Element_TypeRef, this.OnTypeRefElement),
                             //// <CollectionType/>
@@ -369,7 +369,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     //// </Parameter
 
                     //// <ReturnType>
-                    CsdlElement<CsdlOperationReturnType>(CsdlConstants.Element_ReturnType, this.OnReturnTypeElement,
+                    CsdlElement<CsdlOperationReturn>(CsdlConstants.Element_ReturnType, this.OnReturnTypeElement,
                         //// <TypeRef/>
                         CsdlElement<CsdlTypeReference>(CsdlConstants.Element_TypeRef, this.OnTypeRefElement),
                         //// <CollectionType/>
@@ -891,6 +891,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
                 case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                     return new CsdlPrimitiveTypeReference(kind, typeName, isNullable, parentLocation);
 
                 case EdmPrimitiveTypeKind.Binary:
@@ -1068,12 +1069,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             IEnumerable<CsdlOperationParameter> parameters = childValues.ValuesOfType<CsdlOperationParameter>();
 
-            CsdlOperationReturnType returnTypeElement = childValues.ValuesOfType<CsdlOperationReturnType>().FirstOrDefault();
-            CsdlTypeReference returnType = returnTypeElement == null ? null : returnTypeElement.ReturnType;
+            CsdlOperationReturn returnElement = childValues.ValuesOfType<CsdlOperationReturn>().FirstOrDefault();
 
             this.ReportOperationReadErrorsIfExist(entitySetPath, isBound, name);
 
-            return new CsdlAction(name, parameters, returnType, isBound, entitySetPath, element.Location);
+            return new CsdlAction(name, parameters, returnElement, isBound, entitySetPath, element.Location);
         }
 
         internal CsdlFunction OnFunctionElement(XmlElementInfo element, XmlElementValueCollection childValues)
@@ -1085,12 +1085,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             IEnumerable<CsdlOperationParameter> parameters = childValues.ValuesOfType<CsdlOperationParameter>();
 
-            CsdlOperationReturnType returnTypeElement = childValues.ValuesOfType<CsdlOperationReturnType>().FirstOrDefault();
-            CsdlTypeReference returnType = returnTypeElement == null ? null : returnTypeElement.ReturnType;
+            CsdlOperationReturn returnElement = childValues.ValuesOfType<CsdlOperationReturn>().FirstOrDefault();
 
             this.ReportOperationReadErrorsIfExist(entitySetPath, isBound, name);
 
-            return new CsdlFunction(name, parameters, returnType, isBound, entitySetPath, isComposable, element.Location);
+            return new CsdlFunction(name, parameters, returnElement, isBound, entitySetPath, isComposable, element.Location);
         }
 
         private void ReportOperationReadErrorsIfExist(string entitySetPath, bool isBound, string name)
@@ -1189,11 +1188,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return new CsdlExpressionTypeReference(new CsdlCollectionType(elementType, element.Location), elementType.IsNullable, element.Location);
         }
 
-        private CsdlOperationReturnType OnReturnTypeElement(XmlElementInfo element, XmlElementValueCollection childValues)
+        private CsdlOperationReturn OnReturnTypeElement(XmlElementInfo element, XmlElementValueCollection childValues)
         {
             string typeName = RequiredType(CsdlConstants.Attribute_Type);
             CsdlTypeReference type = this.ParseTypeReference(typeName, childValues, element.Location, Optionality.Required);
-            return new CsdlOperationReturnType(type, element.Location);
+            return new CsdlOperationReturn(type, element.Location);
         }
 
         private CsdlEntityContainer OnEntityContainerElement(XmlElementInfo element, XmlElementValueCollection childValues)

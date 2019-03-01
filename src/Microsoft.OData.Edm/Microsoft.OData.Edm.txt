@@ -286,6 +286,7 @@ Bad_UnresolvedEnumType=The enum type '{0}' could not be found.
 Bad_UnresolvedEnumMember=The enum member '{0}' could not be found.
 Bad_UnresolvedProperty=The property '{0}' could not be found.
 Bad_UnresolvedParameter=The parameter '{0}' could not be found.
+Bad_UnresolvedReturn=The return of operation '{0}' could not be found.
 Bad_UnresolvedLabeledElement=The labeled element '{0}' could not be found.
 Bad_CyclicEntity=The entity '{0}' is invalid because its base type is cyclic.
 Bad_CyclicComplex=The complex type '{0}' is invalid because its base type is cyclic.
