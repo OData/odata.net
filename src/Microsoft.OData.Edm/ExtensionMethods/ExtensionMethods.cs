@@ -2391,7 +2391,7 @@ namespace Microsoft.OData.Edm
                 return csdlOperation.Return;
             }
 
-            if (operation.ReturnType == null)
+            if (operation == null || operation.ReturnType == null)
             {
                 return null;
             }
