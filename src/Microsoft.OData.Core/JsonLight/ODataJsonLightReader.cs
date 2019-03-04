@@ -1099,7 +1099,8 @@ namespace Microsoft.OData.JsonLight
                 ODataResourceMetadataBuilder builder =
                     this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
-                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
+                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                        this.ReadingDelta);
                 if (builder != currentResource.MetadataBuilder)
                 {
                     ODataNestedResourceInfo parentNestInfo = this.ParentNestedInfo;
@@ -1837,27 +1838,24 @@ namespace Microsoft.OData.JsonLight
                         contextUriStr,
                         this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.Resource,
                         this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
-                        this.jsonLightInputContext.ReadingResponse);
+                        this.jsonLightInputContext.ReadingResponse || this.ReadingDelta);
                     if (parseResult != null)
                     {
+                        // a top-level (deleted) resource in a delta response can come from any entity set
                         resourceKind = parseResult.DeltaKind;
-                        if (this.jsonLightInputContext.ReadingResponse)
+                        if (this.ReadingDelta && this.IsTopLevel && (resourceKind == ODataDeltaKind.Resource || resourceKind == ODataDeltaKind.DeletedEntry))
                         {
-                            // a top-level (deleted) resource in a delta response can come from any entity set
-                            if (this.ReadingDelta && this.IsTopLevel && (resourceKind == ODataDeltaKind.Resource || resourceKind == ODataDeltaKind.DeletedEntry))
+                            IEdmStructuredType parsedType = parseResult.EdmType as IEdmStructuredType;
+                            if (parsedType != null)
                             {
-                                IEdmStructuredType parsedType = parseResult.EdmType as IEdmStructuredType;
-                                if (parsedType != null)
-                                {
-                                    resourceType = parsedType;
-                                    source = parseResult.NavigationSource;
-                                }
+                                resourceType = parsedType;
+                                source = parseResult.NavigationSource;
                             }
-                            else
-                            {
-                                ReaderValidationUtils.ValidateResourceSetOrResourceContextUri(parseResult, this.CurrentScope,
-                                    false);
-                            }
+                        }
+                        else
+                        {
+                            ReaderValidationUtils.ValidateResourceSetOrResourceContextUri(parseResult, this.CurrentScope,
+                                false);
                         }
                     }
                 }
@@ -2291,7 +2289,8 @@ namespace Microsoft.OData.JsonLight
                 ODataResourceMetadataBuilder resourceMetadataBuilder =
                     this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
-                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
+                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                        this.ReadingDelta);
                 nestedResourceInfo.MetadataBuilder = resourceMetadataBuilder;
             }
 

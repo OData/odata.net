@@ -42,7 +42,7 @@ namespace Microsoft.OData.Json
         [CLSCompliant(false)]
         public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
         {
-            return new JsonWriter(textWriter, isIeee754Compatible, stringEscapeOption);
+            return new JsonWriter(textWriter, isIeee754Compatible, this.stringEscapeOption);
         }
     }
 }

@@ -1552,22 +1552,16 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Reads a resource value, <see cref="ODataResourceValue"/>.
+        /// Reads a resource value, <see cref="ODataResourceValue"/>
         /// </summary>
-        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object
         ///     (or the second property if the first one was odata.type).</param>
         /// <param name="insideResourceValue">true if we are reading a resource value and the reader is already positioned inside the resource value; otherwise false.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="structuredTypeReference">The expected type reference of the value.</param>
         /// <param name="payloadTypeName">The type name read from the payload.</param>
-        /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker.</param>
         /// <returns>The value of the resource value.</returns>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property - the first property of the resource value object, or the second one if the first one was odata.type.
-        ///                 JsonNodeType.EndObject - the end object of the resource value object.
-        /// Post-Condition: almost anything - the node after the resource value (after the EndObject)
-        /// </remarks>
         private ODataResourceValue ReadResourceValue(
             bool insideJsonObjectValue,
             bool insideResourceValue,

@@ -132,7 +132,7 @@ namespace Microsoft.OData.Evaluation
                     return false;
                 }
 
-                if(p.ODataValue is ODataResourceValue)
+                if (p.ODataValue is ODataResourceValue)
                 {
                     throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(p.Name));
                 }

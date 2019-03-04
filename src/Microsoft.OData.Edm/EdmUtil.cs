@@ -457,7 +457,7 @@ namespace Microsoft.OData.Edm
         {
             CheckArgumentNull(dictionary, "dictionary");
             CheckArgumentNull(computeValue, "computeValue");
-            
+
             return dictionary.GetOrAdd(key, computeValue);
         }
 
@@ -537,7 +537,7 @@ namespace Microsoft.OData.Edm
             CheckArgumentNull(dictionary, "dictionary");
 
             TValue val;
-        
+
             lock (dictionary)
             {
                 dictionary.TryGetValue(key, out val);

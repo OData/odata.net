@@ -650,23 +650,18 @@ namespace Microsoft.OData.JsonLight
                     "We should have verified that resource sets can only be written into IsCollection = true links in requests.");
 
                 string propertyName = this.ParentNestedResourceInfo.Name;
-                if (this.jsonLightOutputContext.WritingResponse)
-                {
-                    // Write the inline count if it's available.
-                    this.WriteResourceSetCount(deltaResourceSet.Count, propertyName);
 
-                    // Write the next link if it's available.
-                    this.WriteResourceSetNextLink(deltaResourceSet.NextPageLink, propertyName);
+                // Write the inline count if it's available.
+                this.WriteResourceSetCount(deltaResourceSet.Count, propertyName);
 
-                    //// Write the odata type.
-                    // this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(deltaResourceSet, propertyName, expectedResourceTypeName, isUndeclared);
+                // Write the next link if it's available.
+                this.WriteResourceSetNextLink(deltaResourceSet.NextPageLink, propertyName);
 
-                    //// Write the name for the nested delta payload
-                    this.jsonWriter.WritePropertyAnnotationName(propertyName, JsonLightConstants.ODataDeltaPropertyName);
+                //// Write the name for the nested delta payload
+                this.jsonWriter.WritePropertyAnnotationName(propertyName, JsonLightConstants.ODataDeltaPropertyName);
 
-                    // Start array which will hold the entries in the nested delta resource set.
-                    this.jsonWriter.StartArrayScope();
-                }
+                // Start array which will hold the entries in the nested delta resource set.
+                this.jsonWriter.StartArrayScope();
             }
         }
 

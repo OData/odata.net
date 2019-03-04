@@ -14,11 +14,11 @@ namespace Microsoft.OData.Json
     internal sealed class DefaultJsonReaderFactory : IJsonReaderFactory
     {
         /// <summary>
-        /// Method to create a JSON Reader
+        /// Method to create a <see cref="IJsonReader"/>.
         /// </summary>
         /// <param name="textReader">The underlying text reader</param>
         /// <param name="isIeee754Compatible">Whether the reader returns large integers as strings</param>
-        /// <returns>A new IJsonReader</returns>
+        /// <returns>A new <see cref="IJsonReader"/> instance.</returns>
         public IJsonReader CreateJsonReader(TextReader textReader, bool isIeee754Compatible)
         {
             return new JsonReader(textReader, isIeee754Compatible);

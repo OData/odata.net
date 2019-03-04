@@ -60,9 +60,6 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
 
-            // TODO: Replace the assertion with ODataException.
-            Debug.Assert(jsonLightOutputContext.WritingResponse, "jsonLightOutputContext.WritingResponse is true");
-
             this.navigationSource = navigationSource;
             this.entityType = entityType;
             this.jsonLightOutputContext = jsonLightOutputContext;

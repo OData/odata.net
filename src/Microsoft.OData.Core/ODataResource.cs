@@ -11,8 +11,8 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Evaluation;
     using System.Linq;
+    using Microsoft.OData.Evaluation;
     #endregion Namespaces
 
     /// <summary>

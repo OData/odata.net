@@ -20,7 +20,6 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private readonly SelectPropertyVisitor visitor;
 
-
         /// <summary>
         /// Constructs a new SelectBinder.
         /// </summary>

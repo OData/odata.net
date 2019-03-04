@@ -45,6 +45,8 @@ ODataWriterCore_WriteEndCalledInInvalidState=ODataWriter.WriteEnd was called in 
 
 ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties=No Id or key properties were found. A resource in a delta response requires an ID or key properties be specified.
 ODataWriterCore_QueryCountInRequest=The ODataResourceSet.Count must be null for request payloads. Query counts are only supported in responses.
+ODataWriterCore_QueryNextLinkInRequest=The NextPageLink must be null for request payloads. Next page links are only supported in responses.
+ODataWriterCore_QueryDeltaLinkInRequest=The DeltaLink must be null for request payloads. Delta links are only supported in responses.
 ODataWriterCore_CannotWriteDeltaWithResourceSetWriter=Cannot write a delta deleted resource, link, or deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter.
 ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry=Nested content is not allowed in an OData 4.0 deleted entry. For content in deleted entries, please specify OData 4.01 or greater.
 ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter=Cannot write a top-level resource set with a writer that was created to write a top-level resource.
@@ -944,6 +946,7 @@ JsonReader_UnexpectedEndOfString=Invalid JSON. Unexpected end of input reached w
 JsonReader_InvalidNumberFormat=Invalid JSON. The value '{0}' is not a valid number.
 JsonReader_MissingComma=Invalid JSON. A comma character ',' was expected in scope '{0}'. Every two elements in an array and properties of an object must be separated by commas.
 JsonReader_InvalidPropertyNameOrUnexpectedComma=Invalid JSON. The property name '{0}' is not valid. The name of a property cannot be empty.
+JsonReader_MaxBufferReached=Cannot increase the JSON reader buffer to hold the input JSON which has very long token.
 
 JsonReaderExtensions_UnexpectedNodeDetected=An unexpected '{1}' node was found when reading from the JSON reader. A '{0}' node was expected.
 JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName=An unexpected '{1}' node was found for property named '{2}' when reading from the JSON reader. A '{0}' node was expected.

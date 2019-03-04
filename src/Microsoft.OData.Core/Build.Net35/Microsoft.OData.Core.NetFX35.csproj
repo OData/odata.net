@@ -1560,6 +1560,9 @@
     <Compile Include="..\DerivedTypeValidator.cs">
       <Link>Microsoft\OData\Core\DerivedTypeValidator.cs</Link>
     </Compile>
+    <Compile Include="..\Buffers\ICharArrayPool.cs">
+      <Link>Microsoft\OData\Core\Buffers\ICharArrayPool.cs</Link>
+    </Compile>
     <Compile Include="..\DuplicatePropertyNameChecker.cs">
       <Link>Microsoft\OData\Core\DuplicatePropertyNameChecker.cs</Link>
     </Compile>

@@ -99,6 +99,8 @@ namespace Microsoft.OData {
         internal const string ODataWriterCore_WriteEndCalledInInvalidState = "ODataWriterCore_WriteEndCalledInInvalidState";
         internal const string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties = "ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
+        internal const string ODataWriterCore_QueryDeltaLinkInRequest = "ODataWriterCore_QueryDeltaLinkInRequest";
+        internal const string ODataWriterCore_QueryNextLinkInRequest = "ODataWriterCore_QueryNextLinkInRequest";
         internal const string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter = "ODataWriterCore_CannotWriteDeltaWithResourceSetWriter";
         internal const string ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry = "ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry";
         internal const string ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter = "ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter";
@@ -845,6 +847,7 @@ namespace Microsoft.OData {
         internal const string JsonReader_InvalidNumberFormat = "JsonReader_InvalidNumberFormat";
         internal const string JsonReader_MissingComma = "JsonReader_MissingComma";
         internal const string JsonReader_InvalidPropertyNameOrUnexpectedComma = "JsonReader_InvalidPropertyNameOrUnexpectedComma";
+        internal const string JsonReader_MaxBufferReached = "JsonReader_MaxBufferReached";
         internal const string JsonReaderExtensions_UnexpectedNodeDetected = "JsonReaderExtensions_UnexpectedNodeDetected";
         internal const string JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName = "JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName";
         internal const string JsonReaderExtensions_CannotReadPropertyValueAsString = "JsonReaderExtensions_CannotReadPropertyValueAsString";
