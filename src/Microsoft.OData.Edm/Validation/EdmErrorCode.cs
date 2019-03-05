@@ -1366,6 +1366,11 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// The type of navigation property cannot have path type property.
         /// </summary>
-        TypeOfNavigationPropertyCannotHavePathProperty = 387
+        TypeOfNavigationPropertyCannotHavePathProperty = 387,
+
+        /// <summary>
+        /// Could not find a return on the annotated operation.
+        /// </summary>
+        BadUnresolvedReturn = 388,
     }
 }

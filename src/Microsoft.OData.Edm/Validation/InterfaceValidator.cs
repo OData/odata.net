@@ -1097,6 +1097,34 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
+        private sealed class VisitorOfIEdmOperationReturn : VisitorOfT<IEdmOperationReturn>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmOperationReturn operationReturn, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
+
+                if (operationReturn.Type != null)
+                {
+                    followup.Add(operationReturn.Type);
+                }
+                else
+                {
+                    CollectErrors(CreatePropertyMustNotBeNullError(operationReturn, "Type"), ref errors);
+                }
+
+                if (operationReturn.DeclaringOperation != null)
+                {
+                    references.Add(operationReturn.DeclaringOperation);
+                }
+                else
+                {
+                    CollectErrors(CreatePropertyMustNotBeNullError(operationReturn, "DeclaringOperation"), ref errors);
+                }
+
+                return errors;
+            }
+        }
+
         private sealed class VisitorOfIEdmCollectionTypeReference : VisitorOfT<IEdmCollectionTypeReference>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmCollectionTypeReference typeRef, List<object> followup, List<object> references)
