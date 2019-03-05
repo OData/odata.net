@@ -14,12 +14,12 @@ namespace Microsoft.OData.Edm
     public interface IEdmOperation : IEdmSchemaElement
     {
         /// <summary>
-        /// Gets the return type of this function.
+        /// Gets the return type of this operation.
         /// </summary>
         IEdmTypeReference ReturnType { get; }
 
         /// <summary>
-        /// Gets the collection of parameters for this function.
+        /// Gets the collection of parameters for this operation.
         /// </summary>
         IEnumerable<IEdmOperationParameter> Parameters { get; }
 

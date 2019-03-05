@@ -964,6 +964,11 @@ public interface Microsoft.OData.Edm.IEdmOperationParameter : IEdmElement, IEdmN
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
 }
 
+public interface Microsoft.OData.Edm.IEdmOperationReturn : IEdmElement, IEdmVocabularyAnnotatable {
+	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public abstract get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.IEdmOptionalParameter : IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmVocabularyAnnotatable {
 	string DefaultValueString  { public abstract get; }
 }
@@ -1972,6 +1977,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	ExtensionAttribute(),
 	]
 	public static Microsoft.OData.Edm.IPrimitiveValueConverter GetPrimitiveValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.IEdmOperationReturn GetReturn (Microsoft.OData.Edm.IEdmOperation operation)
 
 	[
 	ExtensionAttribute(),
@@ -2996,6 +3006,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	BadUnresolvedParameter = 304
 	BadUnresolvedPrimitiveType = 226
 	BadUnresolvedProperty = 234
+	BadUnresolvedReturn = 388
 	BadUnresolvedTarget = 361
 	BadUnresolvedTerm = 352
 	BadUnresolvedType = 225

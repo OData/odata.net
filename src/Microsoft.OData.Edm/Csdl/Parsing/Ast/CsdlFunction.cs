@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <param name="returnType">The return type of the function.</param>
+        /// <param name="operationReturn">The return of the function.</param>
         /// <param name="isBound">if set to <c>true</c> [is bound].</param>
         /// <param name="entitySetPath">The entity set path.</param>
         /// <param name="isComposable">if set to <c>true</c> [is composable].</param>
@@ -26,12 +26,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public CsdlFunction(
             string name,
             IEnumerable<CsdlOperationParameter> parameters,
-            CsdlTypeReference returnType,
+            CsdlOperationReturn operationReturn,
             bool isBound,
             string entitySetPath,
             bool isComposable,
             CsdlLocation location)
-            : base(name, parameters, returnType, isBound, entitySetPath, location)
+            : base(name, parameters, operationReturn, isBound, entitySetPath, location)
         {
             this.IsComposable = isComposable;
         }

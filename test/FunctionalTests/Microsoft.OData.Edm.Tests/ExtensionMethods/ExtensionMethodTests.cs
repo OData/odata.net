@@ -228,6 +228,18 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         [Fact]
+        public void GetReturnShouldReturnCorrectly()
+        {
+            IEdmTypeReference typeReference = EdmCoreModel.Instance.GetString(true);
+            var function = new EdmFunction("d.s", "checkout", typeReference);
+            IEdmOperationReturn operationReturn = function.GetReturn();
+            Assert.NotNull(operationReturn);
+            Assert.Same(operationReturn, function.Return);
+            Assert.Same(operationReturn.Type, function.ReturnType);
+            Assert.Same(operationReturn.DeclaringOperation, function);
+        }
+
+        [Fact]
         public void EntityTypeTypeReferenceFullNameTest()
         {
             var entityType = new EdmEntityType("n", "type");
@@ -394,7 +406,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             var action = new CsdlAction(
                 "Checkout",
                 new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), testLocation) },
-                new CsdlNamedTypeReference("Edm.String", false, testLocation),
+                new CsdlOperationReturn(new CsdlNamedTypeReference("Edm.String", false, testLocation), testLocation),
                 true /*isBound*/,
                 "entity",
                 testLocation);

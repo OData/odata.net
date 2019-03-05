@@ -1966,6 +1966,13 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The return of operation '{0}' could not be found."
+        /// </summary>
+        internal static string Bad_UnresolvedReturn(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Bad_UnresolvedReturn, p0);
+        }
+
+        /// <summary>
         /// A string like "The labeled element '{0}' could not be found."
         /// </summary>
         internal static string Bad_UnresolvedLabeledElement(object p0) {

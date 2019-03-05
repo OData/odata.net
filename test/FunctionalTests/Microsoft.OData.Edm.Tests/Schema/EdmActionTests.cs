@@ -57,6 +57,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             edmAction.EntitySetPath.Should().Be(entitySetPath);
             edmAction.IsBound.Should().BeTrue();
             edmAction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Action);
+
+            edmAction.Return.Should().NotBeNull();
+            edmAction.Return.Type.Should().BeSameAs(edmAction.ReturnType);
         }
     }
 }
