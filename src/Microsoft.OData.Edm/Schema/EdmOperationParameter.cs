@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmOperationParameter"/> class.
         /// </summary>
-        /// <param name="declaringOperation">Declaring function of the parameter.</param>
+        /// <param name="declaringOperation">Declaring operation of the parameter.</param>
         /// <param name="name">Name of the parameter.</param>
         /// <param name="type">Type of the parameter.</param>
         public EdmOperationParameter(IEdmOperation declaringOperation, string name, IEdmTypeReference type)

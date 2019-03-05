@@ -232,6 +232,8 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_IncludeAnnotations = "IncludeAnnotations";
         internal const string Element_DataServices = "DataServices";
 
+        internal const string OperationReturnExternalTarget = "$ReturnType";
+
         #endregion
 
         internal static Dictionary<Version, string[]> SupportedVersions = new Dictionary<Version, string[]>()
