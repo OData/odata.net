@@ -374,7 +374,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(byte[] value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value);
+            JsonValueUtils.WriteValue(this.writer, value, ref this.buffer);
         }
 
         /// <summary>
