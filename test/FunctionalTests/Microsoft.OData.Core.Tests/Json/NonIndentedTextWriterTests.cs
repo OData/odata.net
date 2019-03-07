@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             var byteArray = new byte[] { 1, 2, 3 };
-            JsonValueUtils.WriteValue(this.writer, byteArray);
+            JsonValueUtils.WriteValue(this.writer, byteArray, ref this.buffer);
             this.StreamToString().Should().Be("\"AQID\"");
         }
 
