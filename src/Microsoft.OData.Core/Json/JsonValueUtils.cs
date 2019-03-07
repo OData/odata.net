@@ -316,7 +316,8 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Byte array to be written.</param>
-        internal static void WriteValue(TextWriter writer, byte[] value)
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        internal static void WriteValue(TextWriter writer, byte[] value, ref char[] buffer)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -327,8 +328,40 @@ namespace Microsoft.OData.Json
             else
             {
                 writer.Write(JsonConstants.QuoteCharacter);
-                writer.Write(Convert.ToBase64String(value));
+                WriteBinaryString(writer, value, ref buffer);
                 writer.Write(JsonConstants.QuoteCharacter);
+            }
+        }
+
+        /// <summary>
+        /// Write a byte array.
+        /// </summary>
+        /// <param name="writer">The text writer to write the output to.</param>
+        /// <param name="value">Byte array to be written.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        internal static void WriteBinaryString(TextWriter writer, byte[] value, ref char[] buffer)
+        {
+            Debug.Assert(writer != null, "writer != null");
+            Debug.Assert(value != null, "The value must not be null.");
+
+            buffer = BufferUtils.InitializeBufferIfRequired(buffer);
+            Debug.Assert(buffer != null);
+
+            int bufferLength = buffer.Length;
+
+            // Try to hold base64 string as much as possible in one converting.
+            int bufferByteSize = bufferLength * 3 / 4;
+
+            for (int i = 0; i < value.Length; i += bufferByteSize)
+            {
+                int length = bufferByteSize;
+                if (i + length > value.Length)
+                {
+                    length = value.Length - i;
+                }
+
+                int output = Convert.ToBase64CharArray(value, i, length, buffer, 0);
+                writer.Write(new string(buffer, 0, output));
             }
         }
 
