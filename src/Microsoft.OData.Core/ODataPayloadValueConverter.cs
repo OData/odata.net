@@ -22,7 +22,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The default instance for <see cref="ODataPayloadValueConverter"/>.
         /// </summary>
-        private static readonly ODataPayloadValueConverter Default = new ODataPayloadValueConverter();
+        internal static readonly ODataPayloadValueConverter Default = new ODataPayloadValueConverter();
 
         /// <summary>
         /// Converts the given primitive value defined in a type definition from the payload object.
