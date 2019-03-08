@@ -352,16 +352,16 @@ namespace Microsoft.OData.Json
             // Try to hold base64 string as much as possible in one converting.
             int bufferByteSize = bufferLength * 3 / 4;
 
-            for (int i = 0; i < value.Length; i += bufferByteSize)
+            for (int offsetIn = 0; offsetIn < value.Length; offsetIn += bufferByteSize)
             {
                 int length = bufferByteSize;
-                if (i + length > value.Length)
+                if (offsetIn + length > value.Length)
                 {
-                    length = value.Length - i;
+                    length = value.Length - offsetIn;
                 }
 
-                int output = Convert.ToBase64CharArray(value, i, length, buffer, 0);
-                writer.Write(new string(buffer, 0, output));
+                int output = Convert.ToBase64CharArray(value, offsetIn, length, buffer, 0);
+                writer.Write(buffer, 0, output);
             }
         }
 
