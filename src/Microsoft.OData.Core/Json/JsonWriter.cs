@@ -13,6 +13,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -92,6 +93,11 @@ namespace Microsoft.OData.Json
             /// </summary>
             Padding = 2,
         }
+
+        /// <summary>
+        /// Get/sets the character buffer pool.
+        /// </summary>
+        public ICharArrayPool ArrayPool { get; set; }
 
         /// <summary>
         /// Start the padding function scope.
@@ -374,7 +380,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(byte[] value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, value, ref this.buffer, ArrayPool);
         }
 
         /// <summary>
@@ -392,6 +398,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void Flush()
         {
+            BufferUtils.ReturnToBuffer(this.ArrayPool, this.buffer);
             this.writer.Flush();
         }
 
