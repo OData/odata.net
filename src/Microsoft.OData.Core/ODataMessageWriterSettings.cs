@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using Microsoft.OData.Buffers;
     using Microsoft.OData.UriParser;
     #endregion Namespaces
 
@@ -132,6 +133,11 @@ namespace Microsoft.OData
         /// <remarks>If it has a value and we are writing a JSON response, then we will wrap the entirety of the response in
         /// the provided function name and parenthesis for JSONP. Otherwise this value is ignored.</remarks>
         public string JsonPCallback { get; set; }
+
+        /// <summary>
+        /// Get/sets the character buffer pool.
+        /// </summary>
+        public ICharArrayPool ArrayPool { get; set; }
 
         /// <summary>
         /// Quotas to use for limiting resource consumption when writing an OData message.
