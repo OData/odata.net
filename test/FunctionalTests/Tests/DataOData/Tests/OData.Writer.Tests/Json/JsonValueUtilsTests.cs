@@ -15,6 +15,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Json;
+    using Microsoft.OData.Buffers;
 
     /// <summary>
     /// Tests for the ODataJsonConvert class
@@ -285,7 +286,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
             public static void WriteValue(TextWriter writer, TimeSpan value) { ReflectionUtils.InvokeMethod(classType, "WriteValue", writer, value); }
             public static void WriteValue(TextWriter writer, byte value) { ReflectionUtils.InvokeMethod(classType, "WriteValue", writer, value); }
             public static void WriteValue(TextWriter writer, sbyte value) { ReflectionUtils.InvokeMethod(classType, "WriteValue", writer, value); }
-            public static void WriteValue(TextWriter writer, string value) { char[] buffer = null; ReflectionUtils.InvokeMethod(classType, "WriteValue", new Type[] { typeof(TextWriter), typeof(string), typeof(ODataStringEscapeOption), typeof(char[]).MakeByRefType() }, writer, value, ODataStringEscapeOption.EscapeNonAscii, buffer); }
+            public static void WriteValue(TextWriter writer, string value) { char[] buffer = null; ReflectionUtils.InvokeMethod(classType, "WriteValue", new Type[] { typeof(TextWriter), typeof(string), typeof(ODataStringEscapeOption), typeof(char[]).MakeByRefType(), typeof(ICharArrayPool) }, writer, value, ODataStringEscapeOption.EscapeNonAscii, buffer, null); }
         }
 #endif
     }
