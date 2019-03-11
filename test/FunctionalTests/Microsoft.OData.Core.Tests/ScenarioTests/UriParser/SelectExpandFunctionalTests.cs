@@ -1327,6 +1327,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void SelectAfterApplyReferencingCollapsedPropertyThrows()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "FavoriteNumber"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as DoubleTotal)"},
+                });
+
+            odataQueryOptionParser.ParseApply();
+            Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
+
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "FavoriteNumber"));
+        }
+
+        [Fact]
         public void ComputeAfterApplyPropertyTreatedAsOpenPropertyInSelect()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
@@ -1411,6 +1428,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             expandedSelectionItem.ApplyOption.Transformations.Single().As<AggregateTransformationNode>().Expressions.Single().Alias.ShouldBeEquivalentTo("MaxColor");
             var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
             binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("MaxColor");
+        }
+
+        [Theory]
+        [InlineData("$apply=aggregate(Color with max as MaxColor);$filter=Color eq 'Red'")]
+        [InlineData("$apply=aggregate(Color with max as MaxColor)/filter(Color eq 'Red')")]
+        [InlineData("$apply=aggregate(Color with max as MaxColor);$select=Color")]
+        [InlineData("$apply=aggregate(Color with max as MaxColor);$select=MaxColor,Color")]
+        public void FilterAfterApplyReferencingCollapsedPropertyThrows(string nestedClause)
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", $"MyDog({nestedClause})"},
+                });
+
+            Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
+
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Dog", "Color"));
         }
 
         #endregion

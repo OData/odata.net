@@ -57,6 +57,8 @@ namespace Microsoft.OData.UriParser.Aggregation
                     case QueryTokenKind.AggregateGroupBy:
                         GroupByTransformationNode groupBy = BindGroupByToken((GroupByToken)(token));
                         transformations.Add(groupBy);
+                        state.AggregatedPropertyNames = groupBy.GroupingProperties.Select(g => g.Name).ToList();
+                        state.IsCollapsed = true;
                         break;
                     case QueryTokenKind.Compute:
                         var compute = BindComputeToken((ComputeToken)token);
@@ -64,7 +66,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                         state.AggregatedPropertyNames = compute.Expressions.Select(statement => statement.Alias).ToList();
                         break;
                     case QueryTokenKind.Expand:
-                        SelectExpandClause expandClause = SelectExpandSemanticBinder.Bind(this.odataPathInfo,  (ExpandToken)token, null, this.configuration, null);
+                        SelectExpandClause expandClause = SelectExpandSemanticBinder.Bind(this.odataPathInfo,  (ExpandToken)token, null, this.configuration, null, false);
                         ExpandTransformationNode expandNode = new ExpandTransformationNode(expandClause);
                         transformations.Add(expandNode);
                         break;
@@ -144,10 +146,15 @@ namespace Microsoft.OData.UriParser.Aggregation
                 case QueryTokenKind.EntitySetAggregateExpression:
                 {
                     EntitySetAggregateToken token = aggregateToken as EntitySetAggregateToken;
-                    CollectionNavigationNode expression = this.bindMethod(token.EntitySet) as CollectionNavigationNode;
+                    QueryNode boundPath = this.bindMethod(token.EntitySet);
+                    
+                    if (boundPath.Kind != QueryNodeKind.CollectionNavigationNode)
+                    {
+                        throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedForEntitySetAggregation((token.EntitySet as EndPathToken)?.Identifier ?? string.Empty, boundPath.Kind));
+                    }
 
-                    IEnumerable<AggregateExpressionBase> children = token.Expressions.Select(x => BindAggregateExpressionToken(x));
-                    return new EntitySetAggregateExpression(expression, children);
+                    IEnumerable<AggregateExpressionBase> children = token.Expressions.Select(x => BindAggregateExpressionToken(x)).ToList();
+                    return new EntitySetAggregateExpression((CollectionNavigationNode)boundPath, children);
                 }
 
                 default:

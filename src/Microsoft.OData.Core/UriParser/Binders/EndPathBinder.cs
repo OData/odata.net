@@ -143,6 +143,18 @@ namespace Microsoft.OData.UriParser
             SingleValueNode singleValueParent = parent as SingleValueNode;
             if (singleValueParent != null)
             {
+                if (state.IsCollapsed)
+                {
+                    if (IsAggregatedProperty(endPathToken.Identifier))
+                    {
+                        return new SingleValueOpenPropertyAccessNode(singleValueParent, endPathToken.Identifier);
+                    }
+                    else
+                    {
+                        throw ExceptionUtil.CreatePropertyNotFoundException(endPathToken.Identifier, singleValueParent.TypeReference.FullName(), state.IsCollapsed);
+                    }
+                }
+
                 // Now that we have the parent type, can find its corresponding EDM type
                 IEdmStructuredTypeReference structuredParentType =
                     singleValueParent.TypeReference == null ? null : singleValueParent.TypeReference.AsStructuredOrNull();
@@ -184,9 +196,7 @@ namespace Microsoft.OData.UriParser
                 IEdmProperty property = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), endPathToken.Identifier);
 
                 if (property.PropertyKind == EdmPropertyKind.Structural
-                    && !property.Type.IsCollection()
-                    && this.state.AggregatedPropertyNames != null
-                    && this.state.AggregatedPropertyNames.Any(p => p == collectionParent.NavigationProperty.Name))
+                    && !property.Type.IsCollection())
                 {
                     return new AggregatedCollectionPropertyNode(collectionParent, property);
                 }

@@ -29,7 +29,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="edmType">the type of the current scope based on type segments.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <returns>The segment created from the token.</returns>
-        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver, HashSet<string> generatedProperties = null)
+        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver, HashSet<string> generatedProperties = null, bool collapsed = false)
         {
             ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
@@ -53,6 +53,11 @@ namespace Microsoft.OData.UriParser
                 }
 
                 return new AnnotationSegment(new EdmTerm(namespaceName, termName, EdmCoreModel.Instance.GetUntyped()));
+            }
+
+            if (collapsed && !(generatedProperties?.Contains(tokenIn.Identifier) ?? false))
+            {
+                throw ExceptionUtil.CreatePropertyNotFoundException(tokenIn.Identifier, edmType.FullTypeName());
             }
 
             if (TryBindAsDeclaredProperty(tokenIn, edmType, resolver, out nextSegment))

@@ -299,6 +299,47 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             entitySetAggregate.Should().NotBeNull();
         }
 
+        [Fact]
+        public void BindApplyWithEntitySetAggregationWithoutGroupByReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens =
+                _parser.ParseApply(
+                    "aggregate(MyPaintings(Value with sum as TotalValue))");
+
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            AggregateTransformationNode aggregate = actual.Transformations.First() as AggregateTransformationNode;
+            aggregate.Should().NotBeNull();
+            aggregate.AggregateExpressions.Should().HaveCount(1);
+
+            EntitySetAggregateExpression entitySetAggregate = aggregate.AggregateExpressions.First() as EntitySetAggregateExpression;
+            entitySetAggregate.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void BindApplyWithEntitySetAggregationOnSingleNavigationThrows()
+        {
+            IEnumerable<QueryToken> tokens =
+                _parser.ParseApply(
+                    "aggregate(MyDog($count as Count))");
+
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            Action bind = () => binder.BindApply(tokens);
+
+            bind.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.ApplyBinder_UnsupportedForEntitySetAggregation("MyDog", QueryNodeKind.SingleNavigationNode));
+            
+        }
+
         private readonly ODataUriParserConfiguration V4configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel);
 
         [Fact]

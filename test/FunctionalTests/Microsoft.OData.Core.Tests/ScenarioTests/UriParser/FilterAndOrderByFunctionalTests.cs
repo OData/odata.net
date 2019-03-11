@@ -1201,7 +1201,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     {"$filter", "DoubleTotal gt Total"},
                     {"$apply", "aggregate(FavoriteNumber with sum as Total)"},
-                    {"$compute", "FavoriteNumber mul 2 as DoubleTotal"}
+                    {"$compute", "Total mul 2 as DoubleTotal"}
                 });
             odataQueryOptionParser.ParseApply();
             odataQueryOptionParser.ParseCompute();

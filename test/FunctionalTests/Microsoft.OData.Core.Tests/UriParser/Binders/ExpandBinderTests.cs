@@ -23,22 +23,22 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
         public ExpandBinderTests()
         {
-            this.binderForPerson = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()), null);
-            this.binderForAddress = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetAddressType(), null), null);
+            this.binderForPerson = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()), null, false);
+            this.binderForAddress = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetAddressType(), null), null, false);
         }
 
         [Fact]
         public void TopLevelEntityTypeCannotBeNull()
         {
             Action createWithNullTopLevelEntityType =
-                () => new SelectExpandBinder(this.V4configuration, new ODataPathInfo(null, HardCodedTestModel.GetPeopleSet()), null);
+                () => new SelectExpandBinder(this.V4configuration, new ODataPathInfo(null, HardCodedTestModel.GetPeopleSet()), null, false);
             createWithNullTopLevelEntityType.ShouldThrow<Exception>(Error.ArgumentNull("topLevelEntityType").ToString());
         }
 
         [Fact]
         public void TopLevelEntitySetCanBeNull()
         {
-            SelectExpandBinder binder = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(ModelBuildingHelpers.BuildValidEntityType(), null), null);
+            SelectExpandBinder binder = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(ModelBuildingHelpers.BuildValidEntityType(), null), null, false);
             binder.NavigationSource.Should().BeNull();
         }
 
