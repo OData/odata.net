@@ -30,10 +30,20 @@
 
   <Term Name="Minimum" Type="Edm.Decimal" Scale="variable" AppliesTo="Property Parameter Term">
     <Annotation Term="Core.Description" String="Minimum value that a property, parameter, or term can have." />
+    <Annotation Term="Validation.ApplicableTerms">
+      <Collection>
+        <String>Validation.Exclusive</String>
+      </Collection>
+    </Annotation>
   </Term>
 
   <Term Name="Maximum" Type="Edm.Decimal" Scale="variable" AppliesTo="Property Parameter Term">
     <Annotation Term="Core.Description" String="Maximum value that a property, parameter, or term can have." />
+    <Annotation Term="Validation.ApplicableTerms">
+      <Collection>
+        <String>Validation.Exclusive</String>
+      </Collection>
+    </Annotation>
   </Term>
 
   <Term Name="Exclusive" Type="Core.Tag" DefaultValue="true" AppliesTo="Annotation">
@@ -97,6 +107,9 @@ even though they are defined in an `Orders` entity set.</String>
     <Annotation Term="Core.Description" String="Annotate a term of type Edm.AnnotationPath, or a property of type Edm.AnnotationPath that is used within a structured term, to restrict the terms that can be targeted by the path." />
     <Annotation Term="Core.LongDescription" String="The annotation path expression is intended to end in a path segment with one of the listed terms. For forward compatibility, clients should be prepared for the annotation to reference terms besides those listed." />
     <Annotation Term="Core.RequiresType" String="Edm.AnnotationPath" />
+  </Term>
+  <Term Name="ApplicableTerms" Type="Collection(Core.QualifiedTermName)">
+    <Annotation Term="Core.Description" String="Names of specific terms that are applicable and may be applied in the current context. This annotation does not restrict the use of other terms." />
   </Term>
 
   <Term Name="MaxItems" Type="Edm.Int64" Nullable="false" AppliesTo="Collection">

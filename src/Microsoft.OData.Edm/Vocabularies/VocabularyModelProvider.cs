@@ -64,10 +64,15 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             Debug.Assert(coreVocabularies != null, "CoreVocabularies.xml: not found.");
             CoreModel = LoadSchemaEdmModel(assembly, coreVocabularies, new IEdmModel[] { });
 
+            // validation
+            string validationVocabularies = allResources.Where(x => x.Contains("ValidationVocabularies.xml")).FirstOrDefault();
+            Debug.Assert(validationVocabularies != null, "ValidationVocabularies.xml: not found.");
+            ValidationModel = LoadSchemaEdmModel(assembly, validationVocabularies, new[] { CoreModel }); // validation relies on core
+
             // capabilites
             string capabilitiesVocabularies = allResources.FirstOrDefault(x => x.Contains("CapabilitiesVocabularies.xml"));
             Debug.Assert(capabilitiesVocabularies != null, "CapabilitiesVocabularies.xml: not found.");
-            CapabilitesModel = LoadCsdlEdmModel(assembly, capabilitiesVocabularies, new[] { CoreModel }); // capabilities relies on core
+            CapabilitesModel = LoadCsdlEdmModel(assembly, capabilitiesVocabularies, new[] { CoreModel, ValidationModel }); // capabilities relies on core & validation
 
             // alternateKey
             string alternateKeysVocabularies = allResources.Where(x => x.Contains("AlternateKeysVocabularies.xml")).FirstOrDefault();
@@ -78,11 +83,6 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             string communityVocabularies = allResources.Where(x => x.Contains("CommunityVocabularies.xml")).FirstOrDefault();
             Debug.Assert(communityVocabularies != null, "CommunityVocabularies.xml: not found.");
             CommunityModel = LoadCsdlEdmModel(assembly, communityVocabularies, new[] { CoreModel }); // community relies on core
-
-            // validation
-            string validationVocabularies = allResources.Where(x => x.Contains("ValidationVocabularies.xml")).FirstOrDefault();
-            Debug.Assert(validationVocabularies != null, "ValidationVocabularies.xml: not found.");
-            ValidationModel = LoadSchemaEdmModel(assembly, validationVocabularies, new[] { CoreModel }); // validation relies on core
 
             // Authorization
             string authorizationVocabularies = allResources.FirstOrDefault(x => x.Contains("AuthorizationVocabularies.xml"));

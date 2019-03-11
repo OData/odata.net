@@ -56,9 +56,19 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""Minimum"" Type=""Edm.Decimal"" AppliesTo=""Property Parameter Term"" Scale=""Variable"">
     <Annotation Term=""Core.Description"" String=""Minimum value that a property, parameter, or term can have."" />
+    <Annotation Term=""Validation.ApplicableTerms"">
+      <Collection>
+        <String>Validation.Exclusive</String>
+      </Collection>
+    </Annotation>
   </Term>
   <Term Name=""Maximum"" Type=""Edm.Decimal"" AppliesTo=""Property Parameter Term"" Scale=""Variable"">
     <Annotation Term=""Core.Description"" String=""Maximum value that a property, parameter, or term can have."" />
+    <Annotation Term=""Validation.ApplicableTerms"">
+      <Collection>
+        <String>Validation.Exclusive</String>
+      </Collection>
+    </Annotation>
   </Term>
   <Term Name=""Exclusive"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""Annotation"">
     <Annotation Term=""Core.Description"" String=""Tags a Minimum or Maximum as exclusive, i.e. an open interval boundary."" />
@@ -87,6 +97,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""Annotate a term of type Edm.AnnotationPath, or a property of type Edm.AnnotationPath that is used within a structured term, to restrict the terms that can be targeted by the path."" />
     <Annotation Term=""Core.LongDescription"" String=""The annotation path expression is intended to end in a path segment with one of the listed terms. For forward compatibility, clients should be prepared for the annotation to reference terms besides those listed."" />
     <Annotation Term=""Core.RequiresType"" String=""Edm.AnnotationPath"" />
+  </Term>
+  <Term Name=""ApplicableTerms"" Type=""Collection(Core.QualifiedTermName)"">
+    <Annotation Term=""Core.Description"" String=""Names of specific terms that are applicable and may be applied in the current context. This annotation does not restrict the use of other terms."" />
   </Term>
   <Term Name=""MaxItems"" Type=""Edm.Int64"" AppliesTo=""Collection"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""The annotated collection must have at most the specified number of items."" />
@@ -131,6 +144,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         [InlineData("AllowedTerms", "Collection(Core.QualifiedTermName)", "Term Property")]
         [InlineData("MaxItems", "Edm.Int64", "Collection")]
         [InlineData("MinItems", "Edm.Int64", "Collection")]
+        [InlineData("ApplicableTerms", "Collection(Core.QualifiedTermName)", null)]
         public void TestValidationVocabularyTermType(string termName, string typeName, string appliesTo)
         {
             var termType = this._validationModel.FindDeclaredTerm("Org.OData.Validation.V1." + termName);
