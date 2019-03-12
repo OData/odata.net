@@ -53,7 +53,26 @@ namespace Microsoft.OData.Tests.JsonLight
             },
             expectedPayload);
         }
-        
+
+        [Fact]
+        public void CanWritePrimitivePropertyValue()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"age\":37"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write some properties within the resource and others separately
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataPropertyInfo { Name = "age"});
+                writer.WritePrimitive(new ODataPrimitiveValue(37));
+                writer.WriteEnd(); // property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
         [Fact]
         public void CanWriteBinaryPropertyAsStream()
         {
@@ -87,16 +106,38 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 // write a binary property using a stream
                 writer.WriteStart(resource);
-                writer.WriteStart(new ODataProperty
+                writer.WriteStart(new ODataPropertyInfo
                 {
                     Name = "textAsStream",
-                    Value = new ODataTextStreamValue()
                 });
                 using (TextWriter textWriter = writer.CreateTextWriter())
                 {
                     textWriter.Write(textValue);
                     textWriter.Flush();
                 };
+                writer.WriteEnd(); // property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteTextPropertyAsValue()
+        {
+            string textValue = "My String Value";
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"textAsStream\":\"" + textValue + "\""
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataPropertyInfo
+                {
+                    Name = "textAsStream",
+                });
+                writer.WritePrimitive(new ODataPrimitiveValue(textValue));
                 writer.WriteEnd(); // property
                 writer.WriteEnd(); // resource
             },
@@ -140,10 +181,35 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 // write metadata for stream property
                 writer.WriteStart(resource);
-                writer.WriteStart(new ODataProperty
+                writer.WriteStart(new ODataStreamPropertyInfo
                 {
                     Name = "stream",
-                    Value = new ODataStreamReferenceValue()
+                });
+                using (Stream binaryStream = writer.CreateBinaryWriteStream())
+                {
+                    CreateBinaryStreamValue().CopyTo(binaryStream);
+                    binaryStream.Flush();
+                } // stream must be disposed before continuing
+                writer.WriteEnd();  // stream property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteUndeclaredStreamPropertyValue()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"undeclaredStream\":\"" + binaryValue + "\""
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write metadata for stream property
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataStreamPropertyInfo
+                {
+                    Name = "undeclaredStream",
                 });
                 using (Stream binaryStream = writer.CreateBinaryWriteStream())
                 {
@@ -160,7 +226,8 @@ namespace Microsoft.OData.Tests.JsonLight
         public void CanWriteIndividualStreamPropertyValueAndMetadata()
         {
             string expectedPayload = String.Format(resourcePayload,
-                ",\"stream@mediaEditLink\":\"http://testservice/customers/1/stream\"" +
+                ",\"stream@mediaEditLink\":\"http://testservice/customers/1/editStream\"" +
+                ",\"stream@mediaReadLink\":\"http://testservice/customers/1/readStream\"" +
                 ",\"stream@mediaContentType\":\"text/plain\"" +
                 ",\"stream\":\"" + binaryValue + "\""
                 );
@@ -169,14 +236,12 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 // write metadata for stream property
                 writer.WriteStart(resource);
-                writer.WriteStart(new ODataProperty
+                writer.WriteStart(new ODataStreamPropertyInfo
                 {
                     Name = "stream",
-                    Value = new ODataStreamReferenceValue
-                    {
-                        EditLink = new Uri("http://testservice/customers/1/stream", UriKind.Absolute),
-                        ContentType = "text/plain"
-                    }
+                    EditLink = new Uri("http://testservice/customers/1/editStream", UriKind.Absolute),
+                    ReadLink = new Uri("http://testservice/customers/1/readStream", UriKind.Absolute),
+                    ContentType = "text/plain"
                 });
                 using (Stream binaryStream = writer.CreateBinaryWriteStream())
                 {
@@ -184,6 +249,84 @@ namespace Microsoft.OData.Tests.JsonLight
                     binaryStream.Flush();
                 } // stream must be disposed before continuing
                 writer.WriteEnd();  // stream property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteUndeclaredStreamPropertyValueAndMetadata()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"undeclaredStream@mediaEditLink\":\"http://testservice/customers/1/editStream\"" +
+                ",\"undeclaredStream@mediaReadLink\":\"http://testservice/customers/1/readStream\"" +
+                ",\"undeclaredStream@mediaContentType\":\"text/plain\"" +
+                ",\"undeclaredStream\":\"" + binaryValue + "\""
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write metadata for stream property
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataStreamPropertyInfo
+                {
+                    Name = "undeclaredStream",
+                    EditLink = new Uri("http://testservice/customers/1/editStream", UriKind.Absolute),
+                    ReadLink = new Uri("http://testservice/customers/1/readStream", UriKind.Absolute),
+                    ContentType = "text/plain"
+                });
+                using (Stream binaryStream = writer.CreateBinaryWriteStream())
+                {
+                    CreateBinaryStreamValue().CopyTo(binaryStream);
+                    binaryStream.Flush();
+                } // stream must be disposed before continuing
+                writer.WriteEnd();  // stream property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteStreamPropertyAsJson()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"jsonStream@mediaEditLink\":\"http://testservice/customers/1/stream\"" +
+                ",\"jsonStream@mediaContentType\":\"application/json\"" +
+                ",\"jsonStream\":{\"stringProp\":\"string\",\"numProp\":-10.5,\"boolProp\":true,\"arrayProp\":[\"value1\",-10.5,false]}"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write metadata for stream property
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataStreamPropertyInfo
+                {
+                    Name = "jsonStream",
+                    EditLink = new Uri("http://testservice/customers/1/stream", UriKind.Absolute),
+                    ContentType = "application/json"
+                });
+                using (TextWriter textWriter = writer.CreateTextWriter())
+                {
+                    using (Microsoft.OData.Json.JsonWriter jsonWriter = new Microsoft.OData.Json.JsonWriter(textWriter, false))
+                    {
+                        jsonWriter.StartObjectScope();
+                        jsonWriter.WriteName("stringProp");
+                        jsonWriter.WriteValue("string");
+                        jsonWriter.WriteName("numProp");
+                        jsonWriter.WriteValue(-10.5);
+                        jsonWriter.WriteName("boolProp");
+                        jsonWriter.WriteValue(true);
+                        jsonWriter.WriteName("arrayProp");
+                        jsonWriter.StartArrayScope();
+                        jsonWriter.WriteValue("value1");
+                        jsonWriter.WriteValue(-10.5);
+                        jsonWriter.WriteValue(false);
+                        jsonWriter.EndArrayScope();
+                        jsonWriter.EndObjectScope();
+                        jsonWriter.Flush();
+                    }
+                } // stream must be disposed before continuing
+                writer.WriteEnd();  // json stream property
                 writer.WriteEnd(); // resource
             },
             expectedPayload);
@@ -328,6 +471,98 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteEnd(); // resource
             },
             expectedPayload);
+        }
+
+        [Fact]
+        public void CannotWriteValueForODataProperty()
+        {
+            Action writeWithExtraValue = () => RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataProperty
+                {
+                    Name = "textAsStream",
+                    Value = new ODataPrimitiveValue("text")
+                });
+                writer.WritePrimitive(new ODataPrimitiveValue("text"));
+                writer.WriteEnd(); // property
+                writer.WriteEnd(); // resource
+            },
+            null);
+
+            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+        }
+
+        [Fact]
+        public void CannotStreamValueForODataProperty()
+        {
+            Action writeWithExtraValue = () => RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataProperty
+                {
+                    Name = "textAsStream",
+                    Value = new ODataPrimitiveValue("text")
+                });
+                using (TextWriter textWriter = writer.CreateTextWriter())
+                {
+                    textWriter.Write("text");
+                    textWriter.Flush();
+                };
+                writer.WriteEnd(); // property
+                writer.WriteEnd(); // resource
+            },
+            null);
+
+            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+        }
+
+        [Fact]
+        public void CannotWriteValueTwice()
+        {
+            Action writeWithExtraValue = () => RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataPropertyInfo
+                {
+                    Name = "textAsStream"
+                });
+                writer.WritePrimitive(new ODataPrimitiveValue("text"));
+                using (TextWriter textWriter = writer.CreateTextWriter())
+                {
+                    textWriter.Write("text");
+                    textWriter.Flush();
+                };
+                writer.WriteEnd(); // property
+                writer.WriteEnd(); // resource
+            },
+            null);
+
+            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+        }
+
+        [Fact]
+        public void CannotWriteAndStreamValue()
+        {
+            Action writeWithExtraValue = () => RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataPropertyInfo
+                {
+                    Name = "textAsStream"
+                });
+                writer.WritePrimitive(new ODataPrimitiveValue("text"));
+                writer.WritePrimitive(new ODataPrimitiveValue("text"));
+                writer.WriteEnd(); // property
+                writer.WriteEnd(); // resource
+            },
+            null);
+
+            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
         }
 
         #region Test Helper Methods

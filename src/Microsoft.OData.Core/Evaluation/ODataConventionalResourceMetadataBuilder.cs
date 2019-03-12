@@ -399,7 +399,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Marks the given stream property as processed.
         /// </summary>
-        /// <param name="streamPropertyName">The nested resource info we've already processed.</param>
+        /// <param name="streamPropertyName">The stream property we've already processed.</param>
         internal override void MarkStreamPropertyProcessed(string streamPropertyName)
         {
             Debug.Assert(!string.IsNullOrEmpty(streamPropertyName), "!string.IsNullOrEmpty(streamPropertyName)");
@@ -485,6 +485,40 @@ namespace Microsoft.OData.Evaluation
 
             return hasAssociationLinkUrl ? associationLinkUrl : this.UriBuilder.BuildAssociationLinkUri(readLink, navigationPropertyName);
         }
+
+        /// <summary>
+        /// Gets the edit link of a stream value.
+        /// </summary>
+        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for;
+        /// or null for the default media resource.</param>
+        /// <returns>
+        /// The absolute URI of the edit link for the specified stream property or the default media resource.
+        /// Or null if it is not possible to determine the stream edit link.
+        /// </returns>
+        internal override Uri GetStreamEditLink(string streamPropertyName)
+        {
+            ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
+
+            return this.UriBuilder.BuildStreamEditLinkUri(this.GetEditUrl(), streamPropertyName);
+        }
+
+        /// <summary>
+        /// Gets the read link of a stream value.
+        /// </summary>
+        /// <param name="streamPropertyName">The name of the stream property the read link is computed for;
+        /// or null for the default media resource.</param>
+        /// <returns>
+        /// The absolute URI of the read link for the specified stream property or the default media resource.
+        /// Or null if it is not possible to determine the stream read link.
+        /// </returns>
+        internal override Uri GetStreamReadLink(string streamPropertyName)
+        {
+            ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
+
+            return this.UriBuilder.BuildStreamReadLinkUri(this.GetReadUrl(), streamPropertyName);
+        }
+
+        //// Stream content type and ETag can't be computed from conventions.
 
         /// <summary>
         /// Get the operation target URI for the specified <paramref name="operationName"/>.

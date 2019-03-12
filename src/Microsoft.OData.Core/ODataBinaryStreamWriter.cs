@@ -7,201 +7,12 @@
 namespace Microsoft.OData
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Threading;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-
-    // todo (mikep): move these to their own files...
-    internal sealed class ODataNotificationWriter : TextWriter
-    {
-        private readonly TextWriter textWriter;
-        private IODataStreamListener listener;
-
-        internal ODataNotificationWriter(TextWriter textWriter, IODataStreamListener listener)
-            : base(System.Globalization.CultureInfo.InvariantCulture)
-        {
-            this.textWriter = textWriter;
-            this.listener = listener;
-        }
-
-        public override Encoding Encoding
-        {
-            get
-            {
-                return textWriter.Encoding;
-            }
-        }
-
-        public override void Write(char value)
-        {
-            textWriter.Write(value);
-        }
-
-        public override void Write(bool value)
-        {
-            textWriter.Write(value);
-        }
-
-        public override void Write(string value)
-        {
-            textWriter.Write(value);
-        }
-
-        public override void Write(char[] buffer)
-        {
-            textWriter.Write(buffer);
-        }
-
-        public override void Write(char[] buffer, int index, int count)
-        {
-            textWriter.Write(buffer, index, count);
-        }
-
-        public override void Write(string format, params object[] arg)
-        {
-            textWriter.Write(format, arg);
-        }
-
-        public override void Write(decimal value)
-        {
-            textWriter.Write(value);
-        }
-
-        public override void Write(object value)
-        {
-            textWriter.Write(value);
-        }
-
-        //todo: implement more methods
-
-
-        /// <summary>
-        /// Disposes the object.
-        /// </summary>
-        /// <param name="disposing">True if called from Dispose; false if called from the finalizer.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (this.listener != null)
-                {
-                    // Tell the listener that the stream is being disposed.
-                    this.listener.StreamDisposed();
-                    this.listener = null;
-                }
-            }
-
-            // mikep todo: don't call dispose if this is the jsonreader's underlying reader!
-            base.Dispose(disposing);
-        }
-    }
-
-    internal sealed class ODataNotificationStream : Stream
-    {
-        private readonly Stream stream;
-        private IODataStreamListener listener;
-
-        internal ODataNotificationStream(Stream underlyingStream, IODataStreamListener listener)
-        {
-            this.stream = underlyingStream;
-            this.listener = listener;
-        }
-
-        public override bool CanRead
-        {
-            get
-            {
-                return this.stream.CanRead;
-            }
-        }
-
-        public override bool CanSeek
-        {
-            get
-            {
-                return this.stream.CanSeek;
-            }
-        }
-
-        public override bool CanWrite
-        {
-            get
-            {
-                return this.stream.CanWrite;
-            }
-        }
-
-        public override long Length
-        {
-            get
-            {
-                return this.stream.Length;
-            }
-        }
-
-        public override long Position
-        {
-            get
-            {
-                return this.stream.Position;
-            }
-
-            set
-            {
-                this.stream.Position = value;
-            }
-        }
-
-        public override void Flush()
-        {
-            this.stream.Flush();
-        }
-
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            return this.stream.Read(buffer, offset, count);
-        }
-
-        public override void SetLength(long value)
-        {
-            this.stream.SetLength(value);
-        }
-
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            this.stream.Write(buffer, offset, count);
-        }
-
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            return stream.Seek(offset, origin);
-        }
-
-        /// <summary>
-        /// Disposes the object.
-        /// </summary>
-        /// <param name="disposing">True if called from Dispose; false if called from the finalizer.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (this.listener != null)
-                {
-                    // Tell the listener that the stream is being disposed.
-                    this.listener.StreamDisposed();
-                    this.listener = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
-    }
 
     /// <summary>
     /// A stream for writing base64 encoded binary values.
@@ -223,24 +34,6 @@ namespace Microsoft.OData
             this.Writer = writer;
         }
 
-        /// <summary>
-        /// Writes to the stream.
-        /// </summary>
-        /// <param name="buffer">The buffer to get data from.</param>
-        /// <param name="offset">The offset in the buffer to start from.</param>
-        /// <param name="count">The number of bytes to write.</param>
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            this.Writer.Write(Base64Encode(buffer, offset, count));
-        }
-
-#if PORTABLELIB
-        /// <inheritdoc />
-        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            return this.Writer.WriteAsync(Base64Encode(buffer, offset, count));
-        }
-#endif
 
         /// <summary>
         /// Determines if the stream can read - this one can't
@@ -303,6 +96,25 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Writes to the stream.
+        /// </summary>
+        /// <param name="buffer">The buffer to get data from.</param>
+        /// <param name="offset">The offset in the buffer to start from.</param>
+        /// <param name="count">The number of bytes to write.</param>
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            this.Writer.Write(Base64Encode(buffer, offset, count));
+        }
+
+#if PORTABLELIB
+        /// <inheritdoc />
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            return this.Writer.WriteAsync(Base64Encode(buffer, offset, count));
+        }
+#endif
+
+        /// <summary>
         /// Reads data from the stream. This operation is not supported by this stream.
         /// </summary>
         /// <param name="buffer">The buffer to read the data to.</param>
@@ -341,7 +153,7 @@ namespace Microsoft.OData
         {
             Writer.Flush();
         }
-        
+
         /// <summary>
         /// Disposes the object.
         /// </summary>

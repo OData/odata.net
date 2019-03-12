@@ -55,6 +55,11 @@ namespace Microsoft.OData.Json
         private Stream binaryValueStream = null;
 
         /// <summary>
+        /// Content type of a value being written using TextWriter
+        /// </summary>
+        private string currentContentType;
+
+        /// <summary>
         /// Creates a new instance of Json writer.
         /// </summary>
         /// <param name="writer">Writer to which text needs to be written.</param>
@@ -97,6 +102,18 @@ namespace Microsoft.OData.Json
             /// JSON padding function scope.
             /// </summary>
             Padding = 2,
+        }
+
+        /// <summary>
+        /// Whether the current TextWriter is writing JSON
+        /// </summary>
+        /// <returns></returns>
+        private bool IsWritingJson
+        {
+            get
+            {
+                return String.IsNullOrEmpty(this.currentContentType) || this.currentContentType.StartsWith("application/json", StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         /// <summary>
@@ -412,7 +429,6 @@ namespace Microsoft.OData.Json
             this.writer.Flush();
 
             this.binaryValueStream = new ODataBinaryStreamWriter(writer);
-
             return this.binaryValueStream;
         }
 
@@ -431,11 +447,17 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Start the TextWriter valuescope.
         /// </summary>
+        /// <param name="contentType">ContentType of the string being written.</param>
         /// <returns>The textwriter to write the text property value to</returns>
-        public TextWriter StartTextWriterValueScope()
+        public TextWriter StartTextWriterValueScope(string contentType)
         {
             this.WriteValueSeparator();
-            this.writer.Write(JsonConstants.QuoteCharacter);
+            this.currentContentType = contentType;
+            if (!IsWritingJson)
+            {
+                this.writer.Write(JsonConstants.QuoteCharacter);
+            }
+
             this.writer.Flush();
 
             // mikep: todo wrap to make sure they don't write invalid characters
@@ -447,7 +469,10 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void EndTextWriterValueScope()
         {
-            this.writer.Write(JsonConstants.QuoteCharacter);
+            if (!IsWritingJson)
+            {
+                this.writer.Write(JsonConstants.QuoteCharacter);
+            }
         }
 
         void IDisposable.Dispose()

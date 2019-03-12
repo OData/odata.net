@@ -4,36 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
 namespace Microsoft.OData.Json
 {
-    using System.IO;
-    using System.Text;
-
-    /// <summary>
-    /// Interface for a class that can read arbitrary JSON and stream binary properties.
-    /// </summary>
-    public interface IJsonStreamReader : IJsonReader
-    {
-        /// <summary>
-        /// Creates a Stream for reading a binary value.
-        /// </summary>
-        /// <returns>A Stream for reading the binary value.</returns>
-        Stream CreateReadStream();
-
-        /// <summary>
-        /// Creates a TextReader for reading a string value.
-        /// </summary>
-        /// <returns>A TextReader for reading the string value.</returns>
-        TextReader CreateTextReader();
-
-        /// <summary>
-        /// Whether or not the current value can be streamed
-        /// </summary>
-        /// <returns>True if the current value can be streamed, otherwise false</returns>
-        bool CanStream();
-    }
-
     /// <summary>
     /// Interface for a class that can read arbitrary JSON.
     /// </summary>

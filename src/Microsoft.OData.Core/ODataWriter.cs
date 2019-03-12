@@ -292,7 +292,7 @@ namespace Microsoft.OData
 
         /// <summary>Writes a primitive property within a resource.</summary>
         /// <param name="primitiveProperty">The primitive property to write.</param>
-        public virtual void WriteStart(ODataProperty primitiveProperty)
+        public virtual void WriteStart(ODataPropertyInfo primitiveProperty)
         {
             throw new NotImplementedException();
         }
@@ -300,6 +300,7 @@ namespace Microsoft.OData
         /// <summary>Writes a primitive property within a resource.</summary>
         /// <param name="primitiveProperty">The primitive property to write.</param>
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ODataWriter Write(ODataProperty primitiveProperty)
         {
             WriteStart(primitiveProperty);
@@ -311,6 +312,7 @@ namespace Microsoft.OData
         /// <param name="primitiveProperty">The primitive property to write.</param>
         /// <param name="nestedAction">The action to perform in-between the writing.</param>
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ODataWriter Write(ODataProperty primitiveProperty, Action nestedAction)
         {
             WriteStart(primitiveProperty);
@@ -336,9 +338,6 @@ namespace Microsoft.OData
             throw new NotImplementedException();
         }
 
-// mikep todo: provide an implementation for NET35
-#if PORTABLELIB
-
         /// <summary>Creates a stream for writing a binary value.</summary>
         /// <param name="stream">The stream to write.</param>
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
@@ -350,8 +349,6 @@ namespace Microsoft.OData
             writeStream.Dispose();
             return this;
         }
-
-#endif
 
 #if PORTABLELIB
         /// <summary>Asynchronously creates a stream for writing a binary value.</summary>

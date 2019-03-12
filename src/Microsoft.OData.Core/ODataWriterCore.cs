@@ -611,7 +611,7 @@ namespace Microsoft.OData
 
         /// <summary>Writes a primitive property within a resource.</summary>
         /// <param name="primitiveProperty">The primitive property to write.</param>
-        public sealed override void WriteStart(ODataProperty primitiveProperty)
+        public sealed override void WriteStart(ODataPropertyInfo primitiveProperty)
         {
             this.VerifyCanWriteProperty(true, primitiveProperty);
             this.WriteStartPropertyImplementation(primitiveProperty);
@@ -910,7 +910,7 @@ namespace Microsoft.OData
         /// Start writing a single property.
         /// </summary>
         /// <param name="property">The property to write.</param>
-        protected virtual void StartProperty(ODataProperty property)
+        protected virtual void StartProperty(ODataPropertyInfo property)
         {
             throw new NotImplementedException();
         }
@@ -919,7 +919,7 @@ namespace Microsoft.OData
         /// Finish writing a property.
         /// </summary>
         /// <param name="property">The property to write.</param>
-        protected virtual void EndProperty(ODataProperty property)
+        protected virtual void EndProperty(ODataPropertyInfo property)
         {
             throw new NotImplementedException();
         }
@@ -1121,7 +1121,7 @@ namespace Microsoft.OData
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly created property scope.</returns>
-        protected virtual PropertyScope CreatePropertyScope(ODataProperty property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        protected virtual PropertyInfoScope CreatePropertyInfoScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             throw new NotImplementedException();
         }
@@ -1489,7 +1489,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="property">Primitive property to write.</param>
-        private void VerifyCanWriteProperty(bool synchronousCall, ODataProperty property)
+        private void VerifyCanWriteProperty(bool synchronousCall, ODataPropertyInfo property)
         {
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 
@@ -1501,7 +1501,7 @@ namespace Microsoft.OData
         /// Start writing a property - implementation of the actual functionality.
         /// </summary>
         /// <param name="property">Property to write.</param>
-        private void WriteStartPropertyImplementation(ODataProperty property)
+        private void WriteStartPropertyImplementation(ODataPropertyInfo property)
         {
             this.EnterScope(WriterState.Property, property);
             if (!this.SkipWriting)
@@ -1509,6 +1509,12 @@ namespace Microsoft.OData
                 this.InterceptException(() =>
                 {
                     this.StartProperty(property);
+                    if (property is ODataProperty)
+                    {
+                        PropertyInfoScope scope = this.CurrentScope as PropertyInfoScope;
+                        Debug.Assert(scope != null, "Scope for ODataPropertyInfo is not ODataPropertyInfoScope");
+                        scope.ValueWritten = true;
+                    }
                 });
             }
         }
@@ -1567,7 +1573,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Write primitive value within an untyped collection - implementation of the actual functionality.
+        /// Write primitive value - implementation of the actual functionality.
         /// </summary>
         /// <param name="primitiveValue">Primitive value to write.</param>
         private void WritePrimitiveValueImplementation(ODataPrimitiveValue primitiveValue)
@@ -1717,7 +1723,7 @@ namespace Microsoft.OData
                         break;
                     case WriterState.Property:
                         {
-                            ODataProperty property = (ODataProperty)currentScope.Item;
+                            ODataPropertyInfo property = (ODataPropertyInfo)currentScope.Item;
                             this.EndProperty(property);
                         }
 
@@ -1727,8 +1733,7 @@ namespace Microsoft.OData
                         break;
                     case WriterState.Stream:
                     case WriterState.String:
-                        // todo (mikep): make this a real error
-                        throw new ODataException("Stream or TextWriter must be disposed before calling WriteEnd");
+                        throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
                     case WriterState.Start:                 // fall through
                     case WriterState.Completed:             // fall through
                     case WriterState.Error:                 // fall through
@@ -1956,8 +1961,7 @@ namespace Microsoft.OData
                     {
                         this.InterceptException(() =>
                         {
-                            // mikep todo: also check to see if contentPayload.TypeName is specified as a primitive or complex type or collection of primitive or complex types
-                            if (!(currentNestedResourceInfo.SerializationInfo != null && (currentNestedResourceInfo.SerializationInfo.IsComplex || currentNestedResourceInfo.SerializationInfo.IsComplex))
+                            if (!(currentNestedResourceInfo.SerializationInfo != null && currentNestedResourceInfo.SerializationInfo.IsComplex)
                                 && (this.CurrentScope.ItemType == null || this.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
                             {
                                 this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfo);
@@ -2581,7 +2585,21 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.Property:
-                    if (newState != WriterState.Stream && newState != WriterState.String)
+                    PropertyInfoScope propertyScope = this.CurrentScope as PropertyInfoScope;
+                    Debug.Assert(propertyScope != null, "Scope in WriterState.Property is not PropertyInfoScope");
+                    if (propertyScope.ValueWritten)
+                    {
+                        // we've already written the value for this property
+                        ODataPropertyInfo propertyInfo = propertyScope.Item as ODataPropertyInfo;
+                        Debug.Assert(propertyInfo != null, "Item in PropertyInfoScope is not ODataPropertyInfo");
+                        throw new ODataException(Strings.ODataWriterCore_PropertyValueAlreadyWritten(propertyInfo.Name));
+                    }
+
+                    if (newState == WriterState.Stream || newState == WriterState.String || newState == WriterState.Primitive)
+                    {
+                        propertyScope.ValueWritten = true;
+                    }
+                    else
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidStateTransition(this.State.ToString(), newState.ToString()));
                     }
@@ -2589,8 +2607,7 @@ namespace Microsoft.OData
                     break;
                 case WriterState.Stream:
                 case WriterState.String:
-                    // todo (mikep): create appropriate error string
-                    throw new ODataException("Stream or TextWriter must be disposed before calling Write on ODataWriter");
+                    throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
                 case WriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
                     throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
@@ -2633,7 +2650,7 @@ namespace Microsoft.OData
                 state == WriterState.ResourceSet && item is ODataResourceSet ||
                 state == WriterState.DeltaResourceSet && item is ODataDeltaResourceSet ||
                 state == WriterState.Primitive && (item == null || item is ODataPrimitiveValue) ||
-                state == WriterState.Property && (item is ODataProperty) ||
+                state == WriterState.Property && (item is ODataPropertyInfo) ||
                 state == WriterState.NestedResourceInfo && item is ODataNestedResourceInfo ||
                 state == WriterState.NestedResourceInfoWithContent && item is ODataNestedResourceInfo ||
                 state == WriterState.Stream && item == null ||
@@ -2687,7 +2704,7 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.Property:
-                    scope = this.CreatePropertyScope((ODataProperty)item, navigationSource, resourceType, selectedProperties, odataUri);
+                    scope = this.CreatePropertyInfoScope((ODataPropertyInfo)item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 case WriterState.NestedResourceInfo:            // fall through
                 case WriterState.NestedResourceInfoWithContent:
@@ -3377,7 +3394,7 @@ namespace Microsoft.OData
         /// <summary>
         /// A scope for writing a single property within a resource.
         /// </summary>
-        internal class PropertyScope : Scope
+        internal class PropertyInfoScope : Scope
         {
             /// <summary>
             /// Constructor to create a new property scope.
@@ -3387,12 +3404,13 @@ namespace Microsoft.OData
             /// <param name="resourceType">The structured type for the resource containing the property to be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal PropertyScope(ODataProperty property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            internal PropertyInfoScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(WriterState.Property, property, navigationSource, resourceType, /*skipWriting*/ false, selectedProperties, odataUri)
             {
+                ValueWritten = false;
             }
 
-            public ODataProperty Property
+            public ODataPropertyInfo Property
             {
                 get
                 {
@@ -3400,6 +3418,8 @@ namespace Microsoft.OData
                     return this.Item as ODataProperty;
                 }
             }
+
+            internal bool ValueWritten { get; set; }
         }
 
         /// <summary>

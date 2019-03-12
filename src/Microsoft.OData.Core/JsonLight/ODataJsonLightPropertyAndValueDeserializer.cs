@@ -703,38 +703,8 @@ namespace Microsoft.OData.JsonLight
             return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, navigationProperty, propertyType, expandedResourceSet);
         }
 
-/*
         /// <summary>
-        /// Reads a nested stream
-        /// </summary>
-        /// <param name="resourceState">The state of the reader for resource to read.</param>
-        /// <param name="property">The property for which to read the nested resource info. null for undeclared property.</param>
-        /// <param name="propertyName">The property name.</param>
-        /// <returns>The nested resource info for the stream collection.</returns>
-        /// <remarks>
-        /// This method doesn't move the reader.
-        /// </remarks>
-        protected static ODataJsonLightReaderNestedInfo ReadStreamNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty property, string propertyName)
-        {
-            Debug.Assert(resourceState != null, "resourceState != null");
-            Debug.Assert((propertyName != null) || (property != null),
-                "The collection property and property name shouldn't both be null");
-            Debug.Assert(property == null || property.Type.Definition.IsStream(),
-                "The type of the property, if specified, must be Edm.Stream");
-
-            ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
-            {
-                Name = propertyName,
-                IsCollection = false,
-                IsComplex = false
-            };
-
-            return ODataJsonLightReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(nestedResourceInfo, property, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream));
-        }
-*/
-
-        /// <summary>
-        /// Reads a nested stream collection as a resource set.
+        /// Reads a nested stream collection as nested resource set info.
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="collectionProperty">The collection of stream property for which to read the nested resource info. null for undeclared property.</param>

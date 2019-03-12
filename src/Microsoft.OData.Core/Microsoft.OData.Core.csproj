@@ -49,7 +49,17 @@
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="EdmExtensionMethods.cs" />
     <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
+    <Compile Include="JsonLight\ODataJsonLightReaderNestedPropertyInfo.cs" />
+    <Compile Include="JsonLight\ODataJsonLightReaderNestedInfo.cs" />
+    <Compile Include="JsonLight\ODataJsonLightReaderNestedStreamInfo.cs" />
+    <Compile Include="Json\IJsonStreamReader.cs" />
+    <Compile Include="Json\IJsonStreamWriter.cs" />
+    <Compile Include="StreamExtensions.cs" />
+    <Compile Include="ODataTextStreamReader.cs" />
     <Compile Include="ODataBinaryStreamReader.cs" />
+    <Compile Include="ODataNotificationStream.cs" />
+    <Compile Include="ODataNotificationReader.cs" />
+    <Compile Include="ODataNotificationWriter.cs" />
     <Compile Include="ODataBinaryStreamWriter.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchAtomicGroupCache.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs" />
@@ -66,6 +76,9 @@
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchReader.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchReaderStream.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchWriter.cs" />
+    <Compile Include="IODataStreamInfo.cs" />
+    <Compile Include="ODataStreamPropertyInfo.cs" />
+    <Compile Include="ODataPropertyInfo.cs" />
     <Compile Include="UnknownEntitySet.cs" />
     <Compile Include="IContainerProvider.cs" />
     <Compile Include="IDuplicatePropertyNameChecker.cs" />
@@ -599,6 +612,8 @@
     <Compile Include="UriUtils.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="ValidationUtils.cs" />
+    <Compile Include="Value\ODataBinaryStreamValue.cs" />
+    <Compile Include="Value\ODataStreamValue.cs" />
     <Compile Include="WriterUtils.cs" />
     <Compile Include="WriterValidationUtils.cs" />
     <Compile Include="UriParser\Aggregation\ApplyBinder.cs" />

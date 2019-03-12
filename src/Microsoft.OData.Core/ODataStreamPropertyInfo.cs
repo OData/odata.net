@@ -1,22 +1,19 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataStreamReferenceValue.cs" company="Microsoft">
+// <copyright file="ODataStreamPropertyInfo.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 namespace Microsoft.OData
 {
-    #region Namespaces
     using System;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
-    using Edm;
-
-    #endregion
 
     /// <summary>
-    /// Represents a Stream reference.
+    /// Represents information about a single stream property of a resource.
     /// </summary>
-    public sealed class ODataStreamReferenceValue : ODataStreamValue, IODataStreamInfo
+    public sealed class ODataStreamPropertyInfo : ODataPropertyInfo, IODataStreamInfo
     {
         /// <summary>The name of the named stream this value belongs to; null for the default media resource.</summary>
         private string edmPropertyName;
@@ -35,14 +32,6 @@ namespace Microsoft.OData
 
         /// <summary>Read link for media resource.</summary>
         private Uri computedReadLink;
-
-        /// <summary>
-        /// Creates an instance of an <see ref="ODataStreamReferenceValue" /> for writing a
-        /// stream property
-        /// </summary>
-        public ODataStreamReferenceValue() : base(EdmPrimitiveTypeKind.Stream)
-        {
-        }
 
         /// <summary>Gets or sets the edit link for media resource.</summary>
         /// <returns>The edit link for media resource.</returns>
@@ -95,6 +84,27 @@ namespace Microsoft.OData
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Gets or sets the kind of primitive type of the property.
+        /// The PrimitiveTypeKind of an ODataStreamPropertyInfo must be EdmPrimitiveTypeKind.Stream.
+        /// </summary>
+        /// <returns>The <see cref="EdmPrimitiveTypeKind"/> of the property.</returns>
+        public override EdmPrimitiveTypeKind PrimitiveTypeKind
+        {
+            get
+            {
+                return EdmPrimitiveTypeKind.Stream;
+            }
+
+            set
+            {
+                if (value != EdmPrimitiveTypeKind.Stream)
+                {
+                    throw new ODataException(Strings.ODataStreamPropertyInfo_CannotChangePrimitiveType);
+                }
+            }
         }
 
         /// <summary>

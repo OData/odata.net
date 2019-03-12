@@ -82,6 +82,15 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Implementation of the reader logic when in state 'PropertyInfo'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtNestedPropertyInfoImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtNestedPropertyInfoImplementation);
+        }
+
+        /// <summary>
         /// Implementation of the reader logic when in state 'Stream'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
@@ -201,6 +210,10 @@ namespace Microsoft.OData
 
                 case ODataReaderState.Stream:
                     result = this.ReadAtStreamImplementationAsync();
+                    break;
+
+                case ODataReaderState.NestedProperty:
+                    result = this.ReadAtNestedPropertyInfoImplementationAsync();
                     break;
 
                 case ODataReaderState.NestedResourceInfoStart:

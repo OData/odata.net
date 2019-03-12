@@ -183,7 +183,11 @@ namespace Microsoft.OData
         /// </remarks>
         public IEnumerable<ODataProperty> Properties
         {
-            get { return this.MetadataBuilder.GetProperties(this.properties); }
+            get
+            {
+                return this.MetadataBuilder.GetProperties(this.properties);
+            }
+
             set
             {
                 VerifyProperties(value);

@@ -341,6 +341,15 @@
     <Compile Include="..\JsonLight\ODataJsonLightReaderNestedResourceInfo.cs">
       <Link>JsonLight\ODataJsonLightReaderNestedResourceInfo.cs</Link>
     </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightReaderNestedPropertyInfo.cs">
+      <Link>JsonLight\ODataJsonLightReaderNestedPropertyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightReaderNestedInfo.cs">
+      <Link>JsonLight\ODataJsonLightReaderNestedInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightReaderNestedStreamInfo.cs">
+      <Link>JsonLight\ODataJsonLightReaderNestedStreamInfo.cs</Link>
+    </Compile>
     <Compile Include="..\JsonLight\ODataJsonLightReaderUtils.cs">
       <Link>JsonLight\ODataJsonLightReaderUtils.cs</Link>
     </Compile>
@@ -391,6 +400,12 @@
     </Compile>
     <Compile Include="..\Json\IJsonReader.cs">
       <Link>Json\IJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\IJsonStreamReader.cs">
+      <Link>Json\IJsonStreamReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\IJsonStreamWriter.cs">
+      <Link>Json\IJsonStreamWriter.cs</Link>
     </Compile>
     <Compile Include="..\Json\IJsonReaderFactory.cs">
       <Link>Json\IJsonReaderFactory.cs</Link>
@@ -595,6 +610,18 @@
     </Compile>
     <Compile Include="..\ODataBinaryStreamWriter.cs">
       <Link>ODataBinaryStreamWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataTextStreamReader.cs">
+      <Link>ODataTextStreamReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataNotificationStream.cs">
+      <Link>ODataNotificationStream.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataNotificationReader.cs">
+      <Link>ODataNotificationReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataNotificationWriter.cs">
+      <Link>ODataNotificationWriter.cs</Link>
     </Compile>
     <Compile Include="..\ODataCollectionReader.cs">
       <Link>ODataCollectionReader.cs</Link>
@@ -814,6 +841,15 @@
     </Compile>
     <Compile Include="..\ODataPreferenceHeader.cs">
       <Link>ODataPreferenceHeader.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataStreamInfo.cs">
+      <Link>IODataStreamInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPropertyInfo.cs">
+      <Link>ODataPropertyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataStreamPropertyInfo.cs">
+      <Link>ODataStreamPropertyInfo.cs</Link>
     </Compile>
     <Compile Include="..\ODataProperty.cs">
       <Link>ODataProperty.cs</Link>
@@ -1753,6 +1789,12 @@
     </Compile>
     <Compile Include="..\Value\ODataResourceValue.cs">
       <Link>Value\ODataResourceValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataBinaryStreamValue.cs">
+      <Link>Value\ODataBinaryStreamValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Value\ODataStreamValue.cs">
+      <Link>Value\ODataStreamValue.cs</Link>
     </Compile>
     <Compile Include="..\Value\ODataStreamReferenceValue.cs">
       <Link>Value\ODataStreamReferenceValue.cs</Link>

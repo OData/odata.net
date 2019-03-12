@@ -26,12 +26,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// An in-memory stream for writing stream properties to non-streaming json writer.
         /// </summary>
-        internal MemoryStream binaryValueStream = null;
+        internal MemoryStream BinaryValueStream = null;
 
         /// <summary>
         /// An in-memory StringWriter for writing string properties to non-streaming json writer.
         /// </summary>
-        internal StringWriter stringWriter = null;
+        internal StringWriter StringWriter = null;
 
         /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.
@@ -96,7 +96,7 @@ namespace Microsoft.OData.JsonLight
 
                 // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
                 // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
-                this.jsonWriter = CreateJsonWriter(this.Container, outputStream, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
+                this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
             }
             catch (Exception e)
             {
@@ -131,7 +131,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             this.textWriter = textWriter;
-            this.jsonWriter = CreateJsonWriter(messageInfo.Container, messageInfo.MessageStream, textWriter, true /*isIeee754Compatible*/);
+            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, true /*isIeee754Compatible*/);
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
@@ -790,32 +790,32 @@ namespace Microsoft.OData.JsonLight
                     this.messageOutputStream.Dispose();
                 }
 
-                if (this.binaryValueStream != null)
+                if (this.BinaryValueStream != null)
                 {
-                    this.binaryValueStream.Flush();
-                    this.binaryValueStream.Dispose();
+                    this.BinaryValueStream.Flush();
+                    this.BinaryValueStream.Dispose();
                 }
 
-                if (this.stringWriter != null)
+                if (this.StringWriter != null)
                 {
-                    this.stringWriter.Flush();
-                    this.stringWriter.Dispose();
+                    this.StringWriter.Flush();
+                    this.StringWriter.Dispose();
                 }
             }
             finally
             {
                 this.messageOutputStream = null;
                 this.asynchronousOutputStream = null;
-                this.binaryValueStream = null;
+                this.BinaryValueStream = null;
                 this.textWriter = null;
                 this.jsonWriter = null;
-                this.stringWriter = null;
+                this.StringWriter = null;
             }
 
             base.Dispose(disposing);
         }
 
-        private static IJsonWriter CreateJsonWriter(IServiceProvider container, Stream stream, TextWriter textWriter, bool isIeee754Compatible)
+        private static IJsonWriter CreateJsonWriter(IServiceProvider container, TextWriter textWriter, bool isIeee754Compatible)
         {
             if (container == null)
             {

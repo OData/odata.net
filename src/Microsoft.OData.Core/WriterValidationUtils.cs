@@ -45,7 +45,7 @@ namespace Microsoft.OData
         /// Validates an <see cref="ODataProperty"/> for not being null.
         /// </summary>
         /// <param name="property">The property to validate for not being null.</param>
-        internal static void ValidatePropertyNotNull(ODataProperty property)
+        internal static void ValidatePropertyNotNull(ODataPropertyInfo property)
         {
             if (property == null)
             {
@@ -299,23 +299,23 @@ namespace Microsoft.OData
         /// <summary>
         /// Validates a named stream property to ensure it's not null and it's name if correct.
         /// </summary>
-        /// <param name="streamProperty">The stream reference property to validate.</param>
+        /// <param name="streamPropertyInfo">The stream reference property to validate.</param>
         /// <param name="edmProperty">Property metadata to validate against.</param>
+        /// <param name="propertyName">The name of the property being validated.</param>
         /// <param name="writingResponse">true when writing a response; otherwise false.</param>
         /// <remarks>This does NOT validate the value of the stream property, just the property itself.</remarks>
-        internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty, bool writingResponse)
+        internal static void ValidateStreamPropertyInfo(IODataStreamInfo streamPropertyInfo, IEdmProperty edmProperty, string propertyName, bool writingResponse)
         {
-            Debug.Assert(streamProperty != null, "streamProperty != null");
+            Debug.Assert(streamPropertyInfo != null, "streamProperty != null");
 
-            ValidationUtils.ValidateStreamReferenceProperty(streamProperty, edmProperty);
+            ValidationUtils.ValidateStreamPropertyInfo(streamPropertyInfo, edmProperty, propertyName);
 
             if (!writingResponse)
             {
                 // Read/Write links and ETags on Stream properties are only valid in responses; writers fail if they encounter them in requests.
-                ODataStreamReferenceValue referenceValue = streamProperty.Value as ODataStreamReferenceValue;
-                if (referenceValue != null && referenceValue.EditLink != null || referenceValue.ReadLink != null || referenceValue.ETag != null)
+                if (streamPropertyInfo != null && streamPropertyInfo.EditLink != null || streamPropertyInfo.ReadLink != null || streamPropertyInfo.ETag != null)
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_StreamPropertyInRequest(streamProperty.Name));
+                    throw new ODataException(Strings.WriterValidationUtils_StreamPropertyInRequest(propertyName));
                 }
             }
         }

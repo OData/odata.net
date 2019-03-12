@@ -269,28 +269,42 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Start writing a property.
         /// </summary>
-        /// <param name="property">The property to write.</param>
-        protected override void StartProperty(ODataProperty property)
+        /// <param name="property">The property info to write.</param>
+        protected override void StartProperty(ODataPropertyInfo property)
         {
             ResourceBaseScope scope = this.ParentScope as ResourceBaseScope;
             Debug.Assert(scope != null, "Writing a property and the parent scope is not a resource");
             ODataResource resource = scope.Item as ODataResource;
             Debug.Assert(resource != null && resource.MetadataBuilder != null, "Writing a property with no parent resource MetadataBuilder");
-            this.jsonLightPropertySerializer.WriteProperty(
+
+            ODataProperty propertyWithValue = property as ODataProperty;
+            if (propertyWithValue != null)
+            {
+                this.jsonLightPropertySerializer.WriteProperty(
+                propertyWithValue,
+                scope.ResourceType,
+                false /*isTopLevel*/,
+                this.DuplicatePropertyNameChecker,
+                resource.MetadataBuilder);
+            }
+            else
+            {
+                this.jsonLightPropertySerializer.WritePropertyInfo(
                 property,
                 scope.ResourceType,
                 false /*isTopLevel*/,
                 this.DuplicatePropertyNameChecker,
                 resource.MetadataBuilder);
+            }
         }
 
         /// <summary>
         /// End writing a property.
         /// </summary>
         /// <param name="property">The property to write.</param>
-        protected override void EndProperty(ODataProperty property)
+        protected override void EndProperty(ODataPropertyInfo property)
         {
-            // todo (mikep) anything to do here? At least ensure that it's called to transition to resource state?
+            // nothing to do
         }
 
         /// <summary>
@@ -797,6 +811,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="primitiveValue">The primitive value to write.</param>
         protected override void WritePrimitiveValue(ODataPrimitiveValue primitiveValue)
         {
+            ODataPropertyInfo property;
+            if (this.ParentScope != null && (property = this.ParentScope.Item as ODataPropertyInfo) != null)
+            {
+                this.jsonWriter.WriteName(property.Name);
+            }
+
             if (primitiveValue == null)
             {
                 this.jsonLightValueSerializer.WriteNullValue();
@@ -813,8 +833,8 @@ namespace Microsoft.OData.JsonLight
         /// <returns>Stream for writing a binary value.</returns>
         protected override Stream StartBinaryStream()
         {
-            ODataProperty property = this.ParentScope.Item as ODataProperty;
-            if (property != null)
+            ODataPropertyInfo property;
+            if (this.ParentScope != null && (property = this.ParentScope.Item as ODataPropertyInfo) != null)
             {
                 // writing a stream property - write the property name
                 this.jsonWriter.WriteName(property.Name);
@@ -824,8 +844,8 @@ namespace Microsoft.OData.JsonLight
             Stream stream;
             if (this.jsonStreamWriter == null)
             {
-                this.jsonLightOutputContext.binaryValueStream = new MemoryStream();
-                stream = this.jsonLightOutputContext.binaryValueStream;
+                this.jsonLightOutputContext.BinaryValueStream = new MemoryStream();
+                stream = this.jsonLightOutputContext.BinaryValueStream;
             }
             else
             {
@@ -842,10 +862,10 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.jsonStreamWriter == null)
             {
-                this.jsonWriter.WriteValue(this.jsonLightOutputContext.binaryValueStream.ToArray());
-                this.jsonLightOutputContext.binaryValueStream.Flush();
-                this.jsonLightOutputContext.binaryValueStream.Dispose();
-                this.jsonLightOutputContext.binaryValueStream = null;
+                this.jsonWriter.WriteValue(this.jsonLightOutputContext.BinaryValueStream.ToArray());
+                this.jsonLightOutputContext.BinaryValueStream.Flush();
+                this.jsonLightOutputContext.BinaryValueStream.Dispose();
+                this.jsonLightOutputContext.BinaryValueStream = null;
             }
             else
             {
@@ -859,8 +879,8 @@ namespace Microsoft.OData.JsonLight
         /// <returns>TextWriter for writing a string value.</returns>
         protected override TextWriter StartTextWriter()
         {
-            ODataProperty property = this.ParentScope.Item as ODataProperty;
-            if (property != null)
+            ODataPropertyInfo property = null;
+            if (this.ParentScope != null && (property = this.ParentScope.Item as ODataPropertyInfo) != null)
             {
                 // writing a text property - write the property name
                 this.jsonWriter.WriteName(property.Name);
@@ -870,12 +890,19 @@ namespace Microsoft.OData.JsonLight
             TextWriter writer;
             if (this.jsonStreamWriter == null)
             {
-                this.jsonLightOutputContext.stringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-                writer = this.jsonLightOutputContext.stringWriter;
+                this.jsonLightOutputContext.StringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+                writer = this.jsonLightOutputContext.StringWriter;
             }
             else
             {
-                writer = this.jsonStreamWriter.StartTextWriterValueScope();
+                string contentType = "text/plain";
+                ODataStreamPropertyInfo streamInfo = property as ODataStreamPropertyInfo;
+                if (streamInfo != null && streamInfo.ContentType != null)
+                {
+                    contentType = streamInfo.ContentType;
+                }
+
+                writer = this.jsonStreamWriter.StartTextWriterValueScope(contentType);
             }
 
             return writer;
@@ -888,11 +915,11 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.jsonStreamWriter == null)
             {
-                Debug.Assert(this.jsonLightOutputContext.stringWriter != null, "Calling EndTextWriter with a non-streaming JsonWriter and a null StringWriter");
-                this.jsonLightOutputContext.stringWriter.Flush();
-                this.jsonWriter.WriteValue(this.jsonLightOutputContext.stringWriter.GetStringBuilder().ToString());
-                this.jsonLightOutputContext.stringWriter.Dispose();
-                this.jsonLightOutputContext.stringWriter = null;
+                Debug.Assert(this.jsonLightOutputContext.StringWriter != null, "Calling EndTextWriter with a non-streaming JsonWriter and a null StringWriter");
+                this.jsonLightOutputContext.StringWriter.Flush();
+                this.jsonWriter.WriteValue(this.jsonLightOutputContext.StringWriter.GetStringBuilder().ToString());
+                this.jsonLightOutputContext.StringWriter.Dispose();
+                this.jsonLightOutputContext.StringWriter = null;
             }
             else
             {
@@ -1095,7 +1122,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly created property scope.</returns>
-        protected override PropertyScope CreatePropertyScope(ODataProperty property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        protected override PropertyInfoScope CreatePropertyInfoScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             return new JsonLightPropertyScope(property, navigationSource, resourceType, selectedProperties, odataUri);
         }
@@ -1764,7 +1791,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// A scope for a property in JSON Light writer.
         /// </summary>
-        private sealed class JsonLightPropertyScope : PropertyScope
+        private sealed class JsonLightPropertyScope : PropertyInfoScope
         {
             /// <summary>
             /// Constructor to create a new property scope.
@@ -1774,7 +1801,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="resourceType">The structured type for the resource containing the property to be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightPropertyScope(ODataProperty property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            internal JsonLightPropertyScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(property, navigationSource, resourceType, selectedProperties, odataUri)
             {
             }

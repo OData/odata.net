@@ -11,39 +11,6 @@ namespace Microsoft.OData.Json
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// Interface for writing JSON including streaming binary values.
-    /// </summary>
-    [CLSCompliant(false)]
-    public interface IJsonStreamWriter : IJsonWriter
-    {
-        /// <summary>
-        /// Start the stream property valuescope.
-        /// </summary>
-        /// <returns>
-        /// A Stream to write to
-        /// </returns>
-        Stream StartStreamValueScope();
-
-        /// <summary>
-        /// Start the TextWriter value valuescope.
-        /// </summary>
-        /// <returns>
-        /// A Text writer to write to the stream
-        /// </returns>
-        TextWriter StartTextWriterValueScope();
-
-        /// <summary>
-        /// End the current stream property value scope.
-        /// </summary>
-        void EndStreamValueScope();
-
-        /// <summary>
-        /// End the current TextWriter value valuescope.
-        /// </summary>
-        void EndTextWriterValueScope();
-    }
-
-    /// <summary>
     /// Interface for a class that can write arbitrary JSON.
     /// </summary>
     [CLSCompliant(false)]

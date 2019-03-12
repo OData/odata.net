@@ -196,7 +196,7 @@ namespace Microsoft.OData
         /// Function returns:
         /// * True, to have the value streamed, otherwise false
         /// </Remarks>
-        public Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ReadAsStream { get; set; }
+        public Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ReadAsStreamFunc { get; set; }
 
         /// <summary>
         /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
@@ -287,7 +287,7 @@ namespace Microsoft.OData
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
-            this.ReadAsStream = other.ReadAsStream;
+            this.ReadAsStreamFunc = other.ReadAsStreamFunc;
         }
     }
 }

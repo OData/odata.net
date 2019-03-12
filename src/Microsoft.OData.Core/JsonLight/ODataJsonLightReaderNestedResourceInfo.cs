@@ -9,69 +9,8 @@ namespace Microsoft.OData.JsonLight
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
-    using System.Text;
     using Microsoft.OData.Edm;
     #endregion Namespaces
-
-    // todo (mikep): move to own filie
-    internal abstract class ODataJsonLightReaderNestedInfo
-    {
-        /// <summary>
-        /// The nested property for which the nested resource info will be reported.
-        /// </summary>
-        private readonly IEdmProperty nestedProperty;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="nestedProperty">The nested property for which the nested resource info will be reported.</param>
-        protected ODataJsonLightReaderNestedInfo(IEdmProperty nestedProperty)
-        {
-            this.nestedProperty = nestedProperty;
-        }
-
-        /// <summary>
-        /// The Edm property for which the nested resource info will be reported.
-        /// </summary>
-        internal IEdmProperty NestedProperty
-        {
-            get
-            {
-                return this.nestedProperty;
-            }
-        }
-    }
-
-    internal sealed class ODataJsonLightReaderNestedStreamInfo : ODataJsonLightReaderNestedInfo
-    {
-        /// <summary>
-        /// The Stream associated with the nested info.
-        /// </summary>
-        private readonly ODataStreamValue nestedStreamValue;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="nestedProperty">The nested property for which the nested resource info will be reported.</param>
-        /// <param name="streamValue">The ODataStreamValue representing the stream value.</param>
-        internal ODataJsonLightReaderNestedStreamInfo(IEdmProperty nestedProperty, ODataStreamValue streamValue)
-            : base(nestedProperty)
-        {
-            this.nestedStreamValue = streamValue;
-        }
-
-        /// <summary>
-        /// The stream value describing the nested stream.
-        /// </summary>
-        internal ODataStreamValue StreamValue
-        {
-            get
-            {
-                return this.nestedStreamValue;
-            }
-        }
-    }
 
     /// <summary>
     /// Class which holds information about nested resource info to be reported by the reader.

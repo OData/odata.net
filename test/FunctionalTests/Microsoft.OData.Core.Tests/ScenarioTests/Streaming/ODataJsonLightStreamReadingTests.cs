@@ -94,8 +94,11 @@ namespace Microsoft.OData.Tests.JsonLight
                             Assert.False(true, "Should not read as Primitive if Caller Specifies Stream");
                             break;
 
+                        case ODataReaderState.NestedProperty:
+                            ((ODataPropertyInfo)reader.Item).Name.Should().NotBe("id", "Should never stream id");
+                            break;
+
                         case ODataReaderState.Stream:
-                            ((ODataStreamValue)reader.Item).PropertyName.Should().NotBe("id", "Should never stream id");
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
@@ -266,6 +269,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 int expectedPropertyCount = variant.IsRequest ? 2 : 3;
                 ODataResource resource = null;
                 List<string> propertyValues = new List<string>();
+                string currentProperty;
 
                 ODataReader reader = CreateODataReader(payload, variant);
                 while (reader.Read())
@@ -280,8 +284,13 @@ namespace Microsoft.OData.Tests.JsonLight
                             Assert.False(true, "Should not read as Primitive if collection not streamed");
                             break;
 
+                        case ODataReaderState.NestedProperty:
+                            ODataPropertyInfo propertyInfo = reader.Item as ODataPropertyInfo;
+                            currentProperty = propertyInfo.Name;
+                            propertyInfo.Name.Should().NotBe("id", "Should never stream id");
+                            break;
+
                         case ODataReaderState.Stream:
-                            ((ODataStreamValue)reader.Item).PropertyName.Should().NotBe("id", "Should never stream id");
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
@@ -314,6 +323,7 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 ODataResource resource = null;
                 List<string> propertyValues = new List<string>();
+                ODataPropertyInfo propertyInfo = null;
 
                 ODataReader reader = CreateODataReader(payload, variant);
                 while (reader.Read())
@@ -328,10 +338,17 @@ namespace Microsoft.OData.Tests.JsonLight
                             Assert.False(true, "Should not read as Primitive if Caller Specifies Stream");
                             break;
 
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("stream");
+
+                            break;
+
                         case ODataReaderState.Stream:
-                            var streamValue = reader.Item as ODataStreamReferenceValue;
-                            streamValue.Should().NotBeNull();
-                            streamValue.PropertyName.Should().NotBe("id", "Should never stream id");
+                            var streamInfo = reader.Item as ODataStreamValue;
+                            streamInfo.Should().NotBeNull();
+                            streamInfo.TypeKind.Should().Be(EdmPrimitiveTypeKind.Stream);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
@@ -345,12 +362,152 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-//        [Fact]
-        public void ReadJsonStreamProperty()
+        [Fact]
+        public void ReadUndeclaredStreamProperty()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"undeclaredStream@type\":\"Stream\"" +
+                ",\"undeclaredStream\":\"" + binaryValue + "\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                int expectedPropertyCount = variant.IsRequest ? 2 : 3;
+                ODataResource resource = null;
+                List<string> propertyValues = new List<string>();
+                ODataPropertyInfo propertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("undeclaredStream");
+                            break;
+
+                        case ODataReaderState.Stream:
+                            var streamInfo = reader.Item as ODataStreamValue;
+                            streamInfo.Should().NotBeNull();
+                            propertyValues.Add(ReadStream(reader));
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(expectedPropertyCount);
+                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                propertyValues.Count.Should().Be(1);
+                propertyValues[0].Should().Be(binaryString);
+            }
+        }
+
+        [Fact]
+        public void ReadStreamPropertyWithMetadata()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"stream@mediaContentType\":\"text/plain\"" +
+                ",\"stream\":\"" + binaryValue + "\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                ODataResource resource = null;
+                List<string> propertyValues = new List<string>();
+                ODataStreamPropertyInfo propertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("stream");
+                            propertyInfo.ContentType.Should().Be("text/plain");
+                            break;
+
+                        case ODataReaderState.Stream:
+                            var streamInfo = reader.Item as ODataStreamValue;
+                            streamInfo.Should().NotBeNull();
+                            propertyValues.Add(ReadStream(reader));
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(2);
+                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                propertyValues.Count.Should().Be(1);
+                propertyValues[0].Should().Be(binaryString);
+            }
+        }
+
+        [Fact]
+        public void ReadUndeclaredStreamPropertyWithMetadata()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"undeclaredStream@mediaContentType\":\"text/plain\"" +
+                ",\"undeclaredStream\":\"" + binaryValue + "\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                int expectedCount = variant.IsRequest ? 2 : 3;
+                ODataResource resource = null;
+                List<string> propertyValues = new List<string>();
+                ODataStreamPropertyInfo propertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("undeclaredStream");
+                            propertyInfo.ContentType.Should().Be("text/plain");
+                            break;
+
+                        case ODataReaderState.Stream:
+                            var streamInfo = reader.Item as ODataStreamValue;
+                            streamInfo.Should().NotBeNull();
+                            propertyValues.Add(ReadStream(reader));
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(expectedCount);
+                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                propertyValues.Count.Should().Be(1);
+                propertyValues[0].Should().Be(binaryString);
+            }
+        }
+
+        // mikep
+        // [Fact]
+        public void ReadStreamPropertyAsJson()
         {
             string payload = String.Format(resourcePayload,
                 ",\"stream@mediaContentType\":\"application/json\"" +
-                ",\"stream\":{stringProp:\"string\",numProp:-10.5,boolProp:true,arrayProp[\"value1\",-10.5,false]}"
+                ",\"stream\":{\"stringProp\":\"string\",\"numProp\":-10.5,\"boolProp\":true,\"arrayProp\":[\"value1\",-10.5,false]}"
                 );
 
             foreach (Variant variant in GetVariants(null))
@@ -366,16 +523,20 @@ namespace Microsoft.OData.Tests.JsonLight
                             resource = reader.Item as ODataResource;
                             break;
 
-                        case ODataReaderState.Primitive:
-                            Assert.False(true, "Should not read as Primitive if Caller Specifies Stream");
+                        case ODataReaderState.NestedProperty:
+                            ODataStreamPropertyInfo propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("stream");
                             break;
 
                         case ODataReaderState.Stream:
                             var streamValue = reader.Item as ODataStreamReferenceValue;
                             streamValue.Should().NotBeNull();
-                            streamValue.PropertyName.Should().NotBe("id", "Should never stream id");
                             streamValue.ContentType.Should().Be("application/json");
-                            ReadStream(reader);
+                            using (TextReader textReader = reader.CreateTextReader())
+                            {
+                                string jsonStream = textReader.ReadToEnd();
+                            }
                             break;
                     }
                 }
@@ -386,24 +547,19 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-        // mikep todo: add one for reading partial textStreams
-        // mikep todo: need to make binary value > buffersize (1024)
-        // mikep todo: currently throws exception if you don't read to end
-        [Fact]
-        public void CanReadPartialStream()
+
+        // mikep
+        // [Fact]
+        public void ReadUndelcaredPropertyAsJson()
         {
             string payload = String.Format(resourcePayload,
-                ",\"stream\":\"" + binaryValue + "\"" +
-                ",\"untypedCollection@type\":\"Collection(Untyped)\"" +
-                ",\"untypedCollection\":[" +
-                "\"" + binaryValue + "\"" +
-                ",-10.5]"
+                ",\"jsonStream@mediaContentType\":\"application/json\"" +
+                ",\"jsonStream\":{\"stringProp\":\"string\",\"numProp\":-10.5,\"boolProp\":true,\"arrayProp\":[\"value1\",-10.5,false]}"
                 );
 
             foreach (Variant variant in GetVariants(null))
             {
                 ODataResource resource = null;
-                List<object> propertyValues = new List<object>();
 
                 ODataReader reader = CreateODataReader(payload, variant);
                 while (reader.Read())
@@ -414,24 +570,100 @@ namespace Microsoft.OData.Tests.JsonLight
                             resource = reader.Item as ODataResource;
                             break;
 
+                        case ODataReaderState.NestedProperty:
+                            ODataPropertyInfo propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("jsonStream");
+                            break;
+
                         case ODataReaderState.Stream:
-                            ODataStreamValue stream = reader.Item as ODataStreamValue;
-                            propertyValues.Add(ReadPartialStream(reader));
+                            var streamValue = reader.Item as ODataStreamReferenceValue;
+                            streamValue.Should().NotBeNull();
+                            streamValue.ContentType.Should().Be("application/json");
+                            using (TextReader textReader = reader.CreateTextReader())
+                            {
+                                string jsonStream = textReader.ReadToEnd();
+                            }
                             break;
                     }
                 }
 
                 resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(3);
+                resource.Properties.Count().Should().Be(1);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                resource.Properties.FirstOrDefault(p => p.Name == "stream").Value.Should().NotBeNull();
-                var collection = resource.Properties.FirstOrDefault(p => p.Name == "untypedCollection").Value as ODataCollectionValue;
-                collection.Should().NotBeNull();
-                collection.Items.Count().Should().Be(2);
-                collection.Items.First().Should().Be(binaryValue);
-                ((Decimal)collection.Items.Last()).Should().Be(-10.5m);
             }
         }
+
+        [Fact]
+        public void CannotReadPartialStream()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"stream\":\"" + binaryValue + "\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                Action readPartialStream = () =>
+                {
+                    ODataResource resource = null;
+                    List<object> propertyValues = new List<object>();
+
+                    ODataReader reader = CreateODataReader(payload, variant);
+                    while (reader.Read())
+                    {
+                        switch (reader.State)
+                        {
+                            case ODataReaderState.ResourceStart:
+                                resource = reader.Item as ODataResource;
+                                break;
+
+                            case ODataReaderState.Stream:
+                                ODataStreamValue stream = reader.Item as ODataStreamValue;
+                                propertyValues.Add(ReadPartialStream(reader));
+                                break;
+                        }
+                    }
+                };
+
+                readPartialStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+            }
+        }
+
+        // mikep
+        // [Fact]
+        public void CannotIgnoreInlineStream()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"stream\":\"" + binaryValue + "\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                Action readPartialStream = () =>
+                {
+                    ODataResource resource = null;
+                    List<object> propertyValues = new List<object>();
+
+                    ODataReader reader = CreateODataReader(payload, variant);
+                    while (reader.Read())
+                    {
+                        switch (reader.State)
+                        {
+                            case ODataReaderState.ResourceStart:
+                                resource = reader.Item as ODataResource;
+                                break;
+
+                            case ODataReaderState.Stream:
+                                // Don't read the stream
+                                break;
+                        }
+                    }
+                };
+
+                readPartialStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+            }
+        }
+
         [Fact]
         public void ReadStreamCollection()
         {
@@ -496,6 +728,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 int expectedPropertyCount = variant.IsRequest ? 1 : 2;
                 ODataResource resource = null;
                 List<string> streamValues = new List<string>();
+                ODataPropertyInfo propertyInfo = null;
 
                 ODataReader reader = CreateODataReader(payload, variant);
                 while (reader.Read())
@@ -504,6 +737,11 @@ namespace Microsoft.OData.Tests.JsonLight
                     {
                         case ODataReaderState.ResourceStart:
                             resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo.Should().BeNull();
+                            propertyInfo = reader.Item as ODataPropertyInfo;
                             break;
 
                         case ODataReaderState.Stream:
@@ -515,6 +753,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 resource.Should().NotBeNull();
                 resource.Properties.Count().Should().Be(expectedPropertyCount);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                propertyInfo.Name.Should().Be("name");
+                propertyInfo.PrimitiveTypeKind.Should().Be(EdmPrimitiveTypeKind.String);
                 streamValues.Should().NotBeNull();
                 streamValues.Count.Should().Be(1);
                 streamValues[0].Should().Be("Thor");
@@ -591,9 +831,10 @@ namespace Microsoft.OData.Tests.JsonLight
 
             foreach (Variant variant in GetVariants(ShouldStream))
             {
-                int expectedPropertyCount = variant.IsRequest ? 2 : 3;
+                int expectedPropertyCount = variant.IsRequest ? 1 : 2;
                 ODataResource resource = null;
                 List<string> streamValues = new List<string>();
+                ODataPropertyInfo propertyInfo = null;
 
                 ODataReader reader = CreateODataReader(payload, variant);
                 while (reader.Read())
@@ -602,6 +843,11 @@ namespace Microsoft.OData.Tests.JsonLight
                     {
                         case ODataReaderState.ResourceStart:
                             resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo.Should().BeNull();
+                            propertyInfo = reader.Item as ODataPropertyInfo;
                             break;
 
                         case ODataReaderState.Stream:
@@ -613,6 +859,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 resource.Should().NotBeNull();
                 resource.Properties.Count().Should().Be(expectedPropertyCount);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                propertyInfo.Name.Should().Be("binaryAsStream");
+                propertyInfo.PrimitiveTypeKind.Should().Be(EdmPrimitiveTypeKind.Binary);
                 streamValues.Should().NotBeNull();
                 streamValues.Count.Should().Be(1);
                 streamValues[0].Should().Be(binaryString);
@@ -736,7 +984,7 @@ namespace Microsoft.OData.Tests.JsonLight
                                 {
                                     Version = version,
                                     ReadUntypedAsString = false,
-                                    ReadAsStream = readAsStream,
+                                    ReadAsStreamFunc = readAsStream,
                                 },
                                 IsRequest = isRequest,
                                 IsStreaming = isStreaming,
@@ -838,7 +1086,6 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 Stream stream = reader.CreateReadStream();
                 {
-                    // read two bytes from the stream
                     stream.Read(new byte[2],0,2);
                 }
             }

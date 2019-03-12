@@ -112,7 +112,7 @@ namespace Microsoft.OData
                         break;
                     }
 
-  //                  chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
+                   // chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
                     bytes = Convert.FromBase64CharArray(chars, 0, charsRead);
 
                     bytesRemaining = bytes.Length;
@@ -171,29 +171,6 @@ namespace Microsoft.OData
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException();
-        }
-    }
-
-    /// <summary>
-    /// A textreader for reading a text value.
-    /// </summary>
-    internal sealed class ODataTextStreamReader : TextReader
-    {
-        private Func<char[], int, int, int> reader;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="reader">A function from which to read character values.</param>
-        internal ODataTextStreamReader(Func<char[], int, int, int> reader)
-        {
-            Debug.Assert(reader != null, "reader cannot be null");
-            this.reader = reader;
-        }
-
-        public override int Read(char[] buffer, int offset, int count)
-        {
-            return reader(buffer, offset, count);
         }
     }
 }

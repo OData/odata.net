@@ -162,20 +162,17 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates a stream reference property to ensure it's not null and its name if correct.
+        /// Validates a stream reference property info to ensure it's not null and its name if correct.
         /// </summary>
-        /// <param name="streamProperty">The stream reference property to validate.</param>
+        /// <param name="streamInfo">The stream reference info to validate.</param>
         /// <param name="edmProperty">Property metadata to validate against.</param>
-        internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty)
+        /// <param name="propertyName">The name of the property being validated.</param>
+        internal static void ValidateStreamPropertyInfo(IODataStreamInfo streamInfo, IEdmProperty edmProperty, string propertyName)
         {
-            Debug.Assert(streamProperty != null, "streamProperty != null");
-            Debug.Assert(!string.IsNullOrEmpty(streamProperty.Name), "!string.IsNullOrEmpty(streamProperty.Name)");
-            Debug.Assert(streamProperty.Value is ODataStreamReferenceValue, "This method should only be called for stream reference properties.");
-            Debug.Assert(edmProperty == null || edmProperty.Name == streamProperty.Name, "edmProperty == null || edmProperty.Name == streamProperty.Name");
-
+            Debug.Assert(streamInfo != null, "streamInfo != null");
             if (edmProperty != null && !edmProperty.Type.IsStream())
             {
-                throw new ODataException(Strings.ValidationUtils_MismatchPropertyKindForStreamProperty(streamProperty.Name));
+                throw new ODataException(Strings.ValidationUtils_MismatchPropertyKindForStreamProperty(propertyName));
             }
         }
 

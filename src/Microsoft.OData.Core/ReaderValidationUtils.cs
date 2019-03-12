@@ -54,23 +54,24 @@ namespace Microsoft.OData
         /// <summary>
         /// Validates a stream reference property.
         /// </summary>
-        /// <param name="streamProperty">The stream property to check.</param>
+        /// <param name="streamInfo">The stream info for the property to check.</param>
+        /// <param name="propertyName">The name of the property being checked.</param>
         /// <param name="structuredType">The owning type of the stream property or null if no metadata is available.</param>
         /// <param name="streamEdmProperty">The stream property defined by the model.</param>
         /// <param name="throwOnUndeclaredLinkProperty">Whether ThrowOnUndeclaredLinkProperty validation setting is enabled.</param>
         internal static void ValidateStreamReferenceProperty(
-            ODataProperty streamProperty, IEdmStructuredType structuredType,
+            IODataStreamInfo streamInfo, string propertyName, IEdmStructuredType structuredType,
             IEdmProperty streamEdmProperty, bool throwOnUndeclaredLinkProperty)
         {
-            Debug.Assert(streamProperty != null, "streamProperty != null");
+            Debug.Assert(streamInfo != null, "streamInfo != null");
 
-            ValidationUtils.ValidateStreamReferenceProperty(streamProperty, streamEdmProperty);
+            ValidationUtils.ValidateStreamPropertyInfo(streamInfo, streamEdmProperty, propertyName);
 
             if (structuredType != null && structuredType.IsOpen)
             {
                 if (streamEdmProperty == null && throwOnUndeclaredLinkProperty)
                 {
-                    throw new ODataException(Strings.ValidationUtils_OpenStreamProperty(streamProperty.Name));
+                    throw new ODataException(Strings.ValidationUtils_OpenStreamProperty(propertyName));
                 }
             }
         }

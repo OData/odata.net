@@ -205,8 +205,7 @@ namespace Microsoft.OData.Json
             {
                 if (this.readingStream)
                 {
-                    // mikep: make this a real exception
-                    throw new Exception("Can't access Value when reading primitive as stream.");
+                    throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotAccessValueInStreamState);
                 }
 
                 if (this.canStream)
@@ -272,8 +271,7 @@ namespace Microsoft.OData.Json
         {
             if (this.readingStream)
             {
-                // todo (mikep): create a proper error for this
-                throw new Exception("Must read to end of stream before calling Read()");
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCallReadInStreamState);
             }
 
             if (this.canStream)
@@ -445,7 +443,7 @@ namespace Microsoft.OData.Json
         {
             if (!this.canStream)
             {
-                throw new Exception("CreateTextReader cannot be called in the current state");
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCreateReadStream);
             }
 
             this.canStream = false;
@@ -470,7 +468,7 @@ namespace Microsoft.OData.Json
         {
             if (!this.canStream)
             {
-                throw new Exception("CreateTextReader cannot be called in the current state");
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCreateTextReader);
             }
 
             this.canStream = false;
@@ -1147,7 +1145,8 @@ namespace Microsoft.OData.Json
             else if (this.storedCharacterCount == this.characterBuffer.Length)
             {
                 // No more room in the buffer, move or grow the buffer.
-                if (this.tokenStartIndex < this.characterBuffer.Length / 4) // Tested 1/2, 3/4 and 1/4, it seems 1/4 is better than other two.
+                // Tested 1/2, 3/4 and 1/4, it seems 1/4 is better than other two.
+                if (this.tokenStartIndex < this.characterBuffer.Length / 4)
                 {
                     // The entire buffer is full of unconsumed characters
                     // We need to grow the buffer. Double the size of the buffer.

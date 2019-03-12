@@ -24,7 +24,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Base class for OData readers that verifies a proper sequence of read calls on the reader.
     /// </summary>
-    internal abstract class ODataReaderCore : ODataReader
+    internal abstract class ODataReaderCore : ODataReader, IODataStreamListener
     {
         /// <summary>The input to read the payload from.</summary>
         private readonly ODataInputContext inputContext;
@@ -43,6 +43,9 @@ namespace Microsoft.OData
 
         /// <summary>The number of entries which have been started but not yet ended.</summary>
         private int currentResourceDepth;
+
+        /// <summary>Whether the reader is currently streaming</summary>
+        private bool isStreaming = false;
 
         /// <summary>
         /// Constructor.
@@ -382,14 +385,12 @@ namespace Microsoft.OData
         {
             if (this.State == ODataReaderState.Stream)
             {
-                // todo (mikep): if we decide we need async version, implement
-                // and call this.VerifyCanReadStream(true);
-                return this.InterceptException(this.CreateReadStreamImplementation);
+                this.isStreaming = true;
+                return new ODataNotificationStream(this.InterceptException(this.CreateReadStreamImplementation), this);
             }
             else
             {
-                // todo (mikep): create a proper error for this
-                throw new Exception("CreateReadStream can only be called while in ODataReaderState.Stream");
+                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
             }
         }
 
@@ -401,15 +402,41 @@ namespace Microsoft.OData
         {
             if (this.State == ODataReaderState.Stream)
             {
-                // todo (mikep): if we decide we need async version, implement
-                // and call this.VerifyCanReadStream(true);
-                return this.InterceptException(this.CreateTextReaderImplementation);
+                this.isStreaming = true;
+                return new ODataNotificationReader(this.InterceptException(this.CreateTextReaderImplementation), this);
             }
             else
             {
-                // todo (mikep): create a proper error for this
-                throw new Exception("CreateTextReader can only be called while in ODataReaderState.Stream");
+                throw new ODataException(Strings.ODataReaderCore_CreateTextReaderCalledInInvalidState);
             }
+        }
+
+        /// <summary>
+        /// This method is called when a stream is requested. It is a no-op.
+        /// </summary>
+        void IODataStreamListener.StreamRequested()
+        {
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// This method is called when an async stream is requested. It is a no-op.
+        /// </summary>
+        /// <returns>A task for method called when a stream is requested.</returns>
+        Task IODataStreamListener.StreamRequestedAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataStreamListener)this).StreamRequested());
+        }
+#endif
+
+        /// <summary>
+        /// This method is called when a stream is disposed.
+        /// </summary>
+        void IODataStreamListener.StreamDisposed()
+        {
+            Debug.Assert(this.State == ODataReaderState.Stream, "Stream was disposed when not in ReaderState.Stream state.");
+            Debug.Assert(this.isStreaming, "StreamDisposed called when reader was not streaming");
+            this.isStreaming = false;
         }
 
         /// <summary>
@@ -475,6 +502,15 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         protected virtual bool ReadAtPrimitiveImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'PropertyInfo'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtNestedPropertyInfoImplementation()
         {
             throw new NotImplementedException();
         }
@@ -787,6 +823,10 @@ namespace Microsoft.OData
                     result = this.ReadAtStreamImplementation();
                     break;
 
+                case ODataReaderState.NestedProperty:
+                    result = this.ReadAtNestedPropertyInfoImplementation();
+                    break;
+
                 case ODataReaderState.NestedResourceInfoStart:
                     result = this.ReadAtNestedResourceInfoStartImplementation();
                     break;
@@ -872,6 +912,11 @@ namespace Microsoft.OData
             {
                 throw new ODataException(Strings.ODataReaderCore_ReadOrReadAsyncCalledInInvalidState(this.State));
             }
+
+            if (this.isStreaming)
+            {
+                throw new ODataException(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+            }
         }
 
         /// <summary>
@@ -947,6 +992,7 @@ namespace Microsoft.OData
                     state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
                     state == ODataReaderState.Primitive && (item == null || item is ODataPrimitiveValue || item is ODataNullValue) ||
                     state == ODataReaderState.Stream && (item == null || item is ODataStreamValue) ||
+                    state == ODataReaderState.NestedProperty && (item == null || item is ODataPropertyInfo) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
                     state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||
