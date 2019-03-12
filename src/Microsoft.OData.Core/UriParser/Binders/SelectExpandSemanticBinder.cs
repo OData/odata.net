@@ -27,15 +27,14 @@ namespace Microsoft.OData.UriParser
             ExpandToken expandToken,
             SelectToken selectToken,
             ODataUriParserConfiguration configuration,
-            List<string> generatedProperties,
-            bool isCollapsed)
+            BindingState state)
         {
             ExpandToken unifiedSelectExpandToken = SelectExpandSyntacticUnifier.Combine(expandToken, selectToken);
 
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
             ExpandToken normalizedSelectExpandToken = expandTreeNormalizer.NormalizeExpandTree(unifiedSelectExpandToken);
 
-            SelectExpandBinder selectExpandBinder = new SelectExpandBinder(configuration, odataPathInfo, generatedProperties, isCollapsed);
+            SelectExpandBinder selectExpandBinder = new SelectExpandBinder(configuration, odataPathInfo, state);
             SelectExpandClause clause = selectExpandBinder.Bind(normalizedSelectExpandToken);
 
             SelectExpandClauseFinisher.AddExplicitNavPropLinksWhereNecessary(clause);

@@ -65,7 +65,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                         state.AggregatedPropertyNames = compute.Expressions.Select(statement => statement.Alias).ToList();
                         break;
                     case QueryTokenKind.Expand:
-                        SelectExpandClause expandClause = SelectExpandSemanticBinder.Bind(this.odataPathInfo,  (ExpandToken)token, null, this.configuration, null, false);
+                        SelectExpandClause expandClause = SelectExpandSemanticBinder.Bind(this.odataPathInfo,  (ExpandToken)token, null, this.configuration, null);
                         ExpandTransformationNode expandNode = new ExpandTransformationNode(expandClause);
                         transformations.Add(expandNode);
                         break;

@@ -447,7 +447,7 @@ namespace Microsoft.OData.UriParser
 
             // semantic pass
             BindingState state = CreateBindingState(configuration, odataPathInfo);
-            return SelectExpandSemanticBinder.Bind(odataPathInfo, expandTree, selectTree, configuration, state.AggregatedPropertyNames, state.IsCollapsed);
+            return SelectExpandSemanticBinder.Bind(odataPathInfo, expandTree, selectTree, configuration, state);
         }
 
         /// <summary>

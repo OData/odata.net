@@ -46,12 +46,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Properties generated in $apply or $compute
         /// </summary>
-        private readonly HashSet<string> generatedProperties;
-
-        /// <summary>
-        /// $apply was evaluated before and we must consider only generatedProperties
-        /// </summary>
-        private readonly bool collapsed;
+        private BindingState state;
 
         /// <summary>
         /// Build a property visitor to visit the select tree and decorate a SelectExpandClause
@@ -61,15 +56,14 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
         /// <param name="resolver">Resolver for uri parser.</param>
-        public SelectPropertyVisitor(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, List<string> generatedProperties, bool collapsed)
+        public SelectPropertyVisitor(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, BindingState state)
         {
             this.model = model;
             this.edmType = edmType;
             this.maxDepth = maxDepth;
             this.expandClauseToDecorate = expandClauseToDecorate;
             this.resolver = resolver;
-            this.generatedProperties =  new HashSet<string>(generatedProperties ?? new List<string>());
-            this.collapsed = collapsed;
+            this.state = state;
         }
 
         /// <summary>
@@ -138,7 +132,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // next, create a segment for the first non-type segment in the path.
-            ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.model, currentLevelType, resolver, this.generatedProperties, this.collapsed);
+            ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.model, currentLevelType, resolver, this.state);
 
             // next, create an ODataPath and add the segments to it.
             if (lastSegment != null)
