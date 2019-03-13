@@ -1200,6 +1200,12 @@ namespace Microsoft.OData.JsonLight
                             propertyAnnotationReaderForTopLevelProperty,
                             (propertyParsingResult, propertyName) =>
                             {
+                                if (this.JsonReader.NodeType == JsonNodeType.Property)
+                                {
+                                    // Read over property name
+                                    this.JsonReader.Read();
+                                }
+
                                 switch (propertyParsingResult)
                                 {
                                     case PropertyParsingResult.ODataInstanceAnnotation:
@@ -1596,6 +1602,12 @@ namespace Microsoft.OData.JsonLight
                     this.ReadTypePropertyAnnotationValue,
                     (propertyParsingResult, propertyName) =>
                     {
+                        if (this.JsonReader.NodeType == JsonNodeType.Property)
+                        {
+                            // Read over property name
+                            this.JsonReader.Read();
+                        }
+
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation: // odata.*
@@ -2038,6 +2050,12 @@ namespace Microsoft.OData.JsonLight
                 propertyAnnotationReaderForTopLevelNull,
                 (propertyParsingResult, propertyName) =>
                 {
+                    if (this.JsonReader.NodeType == JsonNodeType.Property)
+                    {
+                        // Read over property name
+                        this.JsonReader.Read();
+                    }
+
                     switch (propertyParsingResult)
                     {
                         case PropertyParsingResult.ODataInstanceAnnotation:

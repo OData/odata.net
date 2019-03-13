@@ -95,7 +95,7 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property being validated.</param>
         /// <param name="structuredType">The owning type of the stream property or null if no metadata is available.</param>
         /// <param name="streamEdmProperty">The stream property defined by the model.</param>
-        void ValidateStreamReferenceProperty(IODataStreamInfo streamInfo,
+        void ValidateStreamReferenceProperty(IODataStreamReferenceInfo streamInfo,
             string propertyName,
             IEdmStructuredType structuredType,
             IEdmProperty streamEdmProperty);

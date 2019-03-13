@@ -159,10 +159,6 @@ namespace Microsoft.OData.JsonLight
             {
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
                 WriteStreamValue(streamReferenceValue, property.Name, metadataBuilder);
-            }
-
-            if (value is ODataStreamValue)
-            {
                 return;
             }
 
@@ -311,7 +307,7 @@ namespace Microsoft.OData.JsonLight
             return;
         }
 
-        private void WriteStreamValue(IODataStreamInfo streamInfo, string propertyName, ODataResourceMetadataBuilder metadataBuilder)
+        private void WriteStreamValue(IODataStreamReferenceInfo streamInfo, string propertyName, ODataResourceMetadataBuilder metadataBuilder)
         {
             WriterValidationUtils.ValidateStreamPropertyInfo(streamInfo, currentPropertyInfo.MetadataType.EdmProperty, propertyName, this.WritingResponse);
             this.WriteStreamInfo(propertyName, streamInfo);
@@ -375,7 +371,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="propertyName">The name of the stream property to write.</param>
         /// <param name="streamInfo">The stream reference value to be written</param>
-        private void WriteStreamInfo(string propertyName, IODataStreamInfo streamInfo)
+        private void WriteStreamInfo(string propertyName, IODataStreamReferenceInfo streamInfo)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(streamInfo != null, "streamReferenceValue != null");

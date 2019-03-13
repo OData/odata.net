@@ -4190,6 +4190,7 @@ public enum Microsoft.OData.ODataReaderState : int {
 	DeltaResourceSetStart = 11
 	EntityReferenceLink = 7
 	Exception = 8
+	NestedProperty = 17
 	NestedResourceInfoEnd = 6
 	NestedResourceInfoStart = 5
 	Primitive = 10
@@ -4198,7 +4199,7 @@ public enum Microsoft.OData.ODataReaderState : int {
 	ResourceSetStart = 1
 	ResourceStart = 3
 	Start = 0
-	Stream = 17
+	Stream = 18
 }
 
 public enum Microsoft.OData.ODataVersion : int {
@@ -4659,7 +4660,7 @@ public abstract class Microsoft.OData.ODataWriter {
 	public virtual void WriteStart (Microsoft.OData.ODataDeletedResource deletedResource)
 	public virtual void WriteStart (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
 	public abstract void WriteStart (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
-	public virtual void WriteStart (Microsoft.OData.ODataProperty primitiveProperty)
+	public virtual void WriteStart (Microsoft.OData.ODataPropertyInfo primitiveProperty)
 	public abstract void WriteStart (Microsoft.OData.ODataResource resource)
 	public abstract void WriteStart (Microsoft.OData.ODataResourceSet resourceSet)
 	public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeletedResource deletedResource)
@@ -4892,9 +4893,12 @@ public class Microsoft.OData.ODataPreferenceHeader {
 	protected void Set (Microsoft.OData.HttpHeaderValueElement preference)
 }
 
-public class Microsoft.OData.ODataStreamValue : Microsoft.OData.ODataValue {
-	string PropertyName  { public get; }
-	Microsoft.OData.Edm.EdmPrimitiveTypeKind TypeKind  { public get; }
+public class Microsoft.OData.ODataPropertyInfo : Microsoft.OData.ODataItem {
+	public ODataPropertyInfo ()
+
+	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
+	string Name  { public get; public set; }
+	Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public virtual get; public virtual set; }
 }
 
 public sealed class Microsoft.OData.HttpHeaderValueElement {
@@ -5284,7 +5288,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	System.Func`3[[System.Object],[System.String],[Microsoft.OData.Edm.IEdmTypeReference]] PrimitiveTypeResolver  { public get; public set; }
-	System.Func`5[[Microsoft.OData.Edm.IEdmPrimitiveType],[System.Boolean],[System.String],[Microsoft.OData.Edm.IEdmProperty],[System.Boolean]] ReadAsStream  { public get; public set; }
+	System.Func`5[[Microsoft.OData.Edm.IEdmPrimitiveType],[System.Boolean],[System.String],[Microsoft.OData.Edm.IEdmProperty],[System.Boolean]] ReadAsStreamFunc  { public get; public set; }
 	bool ReadUntypedAsString  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
@@ -5393,7 +5397,6 @@ public sealed class Microsoft.OData.ODataNestedResourceInfoSerializationInfo {
 	public ODataNestedResourceInfoSerializationInfo ()
 
 	bool IsComplex  { public get; public set; }
-	bool IsPrimitive  { public get; public set; }
 	bool IsUndeclared  { public get; public set; }
 }
 
@@ -5412,11 +5415,9 @@ public sealed class Microsoft.OData.ODataPrimitiveValue : Microsoft.OData.ODataV
 	object Value  { public get; }
 }
 
-public sealed class Microsoft.OData.ODataProperty : Microsoft.OData.ODataItem {
+public sealed class Microsoft.OData.ODataProperty : Microsoft.OData.ODataPropertyInfo {
 	public ODataProperty ()
 
-	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	string Name  { public get; public set; }
 	object Value  { public get; public set; }
 }
 
@@ -5483,17 +5484,27 @@ public sealed class Microsoft.OData.ODataSingletonInfo : Microsoft.OData.ODataSe
 	public ODataSingletonInfo ()
 }
 
-public sealed class Microsoft.OData.ODataStreamReferenceValue : Microsoft.OData.ODataStreamValue {
-	public ODataStreamReferenceValue ()
-
-	string ContentType  { public get; public set; }
-	System.Uri EditLink  { public get; public set; }
-	string ETag  { public get; public set; }
-	System.Uri ReadLink  { public get; public set; }
+public sealed class Microsoft.OData.ODataStreamInfo : Microsoft.OData.ODataItem {
+	Microsoft.OData.Edm.EdmPrimitiveTypeKind TypeKind  { public get; }
 }
 
-public sealed class Microsoft.OData.ODataTextStreamValue : Microsoft.OData.ODataStreamValue {
-	public ODataTextStreamValue ()
+public sealed class Microsoft.OData.ODataStreamPropertyInfo : Microsoft.OData.ODataPropertyInfo, IODataStreamReferenceInfo {
+	public ODataStreamPropertyInfo ()
+
+	string ContentType  { public virtual get; public virtual set; }
+	System.Uri EditLink  { public virtual get; public virtual set; }
+	string ETag  { public virtual get; public virtual set; }
+	Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public virtual get; public virtual set; }
+	System.Uri ReadLink  { public virtual get; public virtual set; }
+}
+
+public sealed class Microsoft.OData.ODataStreamReferenceValue : Microsoft.OData.ODataValue, IODataStreamReferenceInfo {
+	public ODataStreamReferenceValue ()
+
+	string ContentType  { public virtual get; public virtual set; }
+	System.Uri EditLink  { public virtual get; public virtual set; }
+	string ETag  { public virtual get; public virtual set; }
+	System.Uri ReadLink  { public virtual get; public virtual set; }
 }
 
 public sealed class Microsoft.OData.ODataTypeAnnotation {
@@ -5584,7 +5595,7 @@ public interface Microsoft.OData.Json.IJsonStreamWriter : IJsonWriter {
 	void EndStreamValueScope ()
 	void EndTextWriterValueScope ()
 	System.IO.Stream StartStreamValueScope ()
-	System.IO.TextWriter StartTextWriterValueScope ()
+	System.IO.TextWriter StartTextWriterValueScope (string contentType)
 }
 
 [

@@ -304,7 +304,7 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property being validated.</param>
         /// <param name="writingResponse">true when writing a response; otherwise false.</param>
         /// <remarks>This does NOT validate the value of the stream property, just the property itself.</remarks>
-        internal static void ValidateStreamPropertyInfo(IODataStreamInfo streamPropertyInfo, IEdmProperty edmProperty, string propertyName, bool writingResponse)
+        internal static void ValidateStreamPropertyInfo(IODataStreamReferenceInfo streamPropertyInfo, IEdmProperty edmProperty, string propertyName, bool writingResponse)
         {
             Debug.Assert(streamPropertyInfo != null, "streamProperty != null");
 

@@ -107,6 +107,13 @@ namespace Microsoft.OData.Json
         private int tokenStartIndex;
 
         /// <summary>
+        /// Number of times an opening character (for example, '{') has been read
+        /// greater than the number of times the corresponding closing character
+        /// (for example '}') has been read.
+        /// </summary>
+        private int balancedQuoteCount;
+
+        /// <summary>
         /// The last reported node type.
         /// </summary>
         private JsonNodeType nodeType;
@@ -210,8 +217,12 @@ namespace Microsoft.OData.Json
 
                 if (this.canStream)
                 {
-                    this.canStream = false;
-                    if (this.nodeType != JsonNodeType.StartArray)
+                    if (this.nodeType != JsonNodeType.Property)
+                    {
+                        this.canStream = false;
+                    }
+
+                    if (this.nodeType == JsonNodeType.PrimitiveValue)
                     {
                         if (this.characterBuffer[this.tokenStartIndex] == 'n')
                         {
@@ -277,7 +288,7 @@ namespace Microsoft.OData.Json
             if (this.canStream)
             {
                 this.canStream = false;
-                if (this.nodeType != JsonNodeType.StartArray)
+                if (this.nodeType == JsonNodeType.PrimitiveValue)
                 {
                     // caller is positioned on a string value that they haven't read, so skip it
                     if (this.characterBuffer[this.tokenStartIndex] == 'n')
@@ -472,15 +483,24 @@ namespace Microsoft.OData.Json
             }
 
             this.canStream = false;
+            this.SkipWhitespaces();
+
+            Debug.Assert(this.NodeType == JsonNodeType.PrimitiveValue || this.NodeType == JsonNodeType.Property, "Streaming in an unknown state");
             if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
             {
+                // value is null
                 this.ParseNullPrimitiveValue();
                 this.scopes.Peek().ValueCount++;
                 this.Read();
                 return new ODataTextStreamReader((a, b, c) => { return 0; });
             }
 
-            this.tokenStartIndex++;
+            // skip over the opening quote character for a string value
+            if (this.NodeType == JsonNodeType.PrimitiveValue)
+            {
+                this.tokenStartIndex++;
+            }
+
             this.readingStream = true;
             return new ODataTextStreamReader(this.ReadChars);
         }
@@ -620,7 +640,10 @@ namespace Microsoft.OData.Json
             // Consume the colon.
             Debug.Assert(this.characterBuffer[this.tokenStartIndex] == ':', "The above should verify that there's a colon.");
             this.tokenStartIndex++;
+            this.SkipWhitespaces();
 
+            // if the content is nested json, we can stream
+            this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
             return JsonNodeType.Property;
         }
 
@@ -959,10 +982,19 @@ namespace Microsoft.OData.Json
             while (charsRead < maxLength && (this.tokenStartIndex < this.storedCharacterCount || this.ReadInput()))
             {
                 char character = this.characterBuffer[this.tokenStartIndex];
+                bool advance = true;
 
-                if (character == this.streamOpeningQuoteCharacter)
+                if (character == GetClosingQuoteCharacter(this.streamOpeningQuoteCharacter) && --this.balancedQuoteCount < 1)
                 {
-                    // Consume the quote character.
+                    if (character != '"')
+                    {
+                        // The character is part of the JSON stream; copy it to the output buffer
+                        chars[charsRead + offset] = character;
+                        charsRead++;
+                        this.scopes.Pop();
+                    }
+
+                    // Consume the closing quote character.
                     this.tokenStartIndex++;
                     readingStream = false;
                     this.scopes.Peek().ValueCount++;
@@ -972,10 +1004,80 @@ namespace Microsoft.OData.Json
                     return charsRead;
                 }
 
-                // Normal character, just skip over it - it will become part of the value as is.
-                this.tokenStartIndex++;
+                if (character == this.streamOpeningQuoteCharacter)
+                {
+                    this.balancedQuoteCount++;
+                }
+
+                if (character == '\\')
+                {
+                    // Consume the escape
+                    this.tokenStartIndex++;
+                    if (!this.EnsureAvailableCharacters(1))
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
+                    }
+
+                    character = this.characterBuffer[this.tokenStartIndex];
+
+                    switch (character)
+                    {
+                        case 'b':
+                            character = '\b';
+                            break;
+                        case 'f':
+                            character = '\f';
+                            break;
+                        case 'n':
+                            character = '\n';
+                            break;
+                        case 'r':
+                            character = '\r';
+                            break;
+                        case 't':
+                            character = '\t';
+                            break;
+                        case '\\':
+                        case '\"':
+                        case '\'':
+                        case '/':
+                            // Use the (now unescaped) character from reader;
+                            break;
+                        case 'u':
+
+                            // Consume the "u"
+                            tokenStartIndex++;
+
+                            // We need 4 hex characters
+                            if (!this.EnsureAvailableCharacters(4))
+                            {
+                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
+                            }
+
+                            string unicodeHexValue = this.ConsumeTokenToString(4);
+                            int characterValue;
+                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+                            {
+                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
+                            }
+
+                            character = (char)characterValue;
+
+                            // We are already positioned on the next character, so don't advance at the end
+                            advance = false;
+                            break;
+                        default:
+                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\" + character));
+                    }
+                }
+
                 chars[charsRead + offset] = character;
                 charsRead++;
+
+                if (advance)
+                {
+                    this.tokenStartIndex++;
+                }
             }
 
             // we reached the end of the file without finding a closing quote character
@@ -985,6 +1087,19 @@ namespace Microsoft.OData.Json
             }
 
             return charsRead;
+        }
+
+        private static char GetClosingQuoteCharacter(char openingCharacter)
+        {
+            switch (openingCharacter)
+            {
+                case '{':
+                    return '}';
+                case '[':
+                    return ']';
+                default:
+                    return openingCharacter;
+            }
         }
 
         /// <summary>

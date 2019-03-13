@@ -25,6 +25,12 @@ namespace Microsoft.OData
         /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
         private Byte[] trailingBytes = new Byte[0];
 
+        // mikep todo: get this from user
+        private char[] buffer = new char[2048];
+
+        /// <summary> An empty byte[].</summary>
+        private static byte[] emptyByteArray = new byte[0];
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -98,19 +104,42 @@ namespace Microsoft.OData
         /// <summary>
         /// Writes to the stream.
         /// </summary>
-        /// <param name="buffer">The buffer to get data from.</param>
+        /// <param name="bytes">The bytes to write to the stream.</param>
         /// <param name="offset">The offset in the buffer to start from.</param>
         /// <param name="count">The number of bytes to write.</param>
-        public override void Write(byte[] buffer, int offset, int count)
+        public override void Write(byte[] bytes, int offset, int count)
         {
-            this.Writer.Write(Base64Encode(buffer, offset, count));
+            byte[] prefixByteString = emptyByteArray;
+            int trailingByteLength = trailingBytes.Length;
+            int numberOfBytesToPrefix = trailingByteLength > 0 ? 3 - trailingByteLength : 0;
+
+            // if we have less than 3 bytes, store the bytes and continue
+            if (count + trailingByteLength < 3)
+            {
+                trailingBytes = trailingBytes.Concat(bytes.Skip(offset).Take(count)).ToArray();
+                return;
+            }
+
+            // if we have bytes left over from the previous write, prepend them
+            if (trailingByteLength > 0)
+            {
+                // convert the trailing bytes plus the first 3-trailingByteLength bytes of the new byte[]
+                prefixByteString = trailingBytes.Concat(bytes.Skip(offset).Take(numberOfBytesToPrefix)).ToArray();
+            }
+
+            // compute if there will be trailing bytes from this write
+            int remainingBytes = (count - numberOfBytesToPrefix) % 3;
+            trailingBytes = bytes.Skip(offset + count - remainingBytes).Take(remainingBytes).ToArray();
+
+            WriteBinaryString(this.Writer, prefixByteString.Concat(bytes.Skip(offset + numberOfBytesToPrefix).Take(count - numberOfBytesToPrefix - remainingBytes)).ToArray(), buffer);
         }
 
-#if PORTABLELIB
+        #if PORTABLELIB
         /// <inheritdoc />
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return this.Writer.WriteAsync(Base64Encode(buffer, offset, count));
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+                this.Write(buffer, offset, count));
         }
 #endif
 
@@ -171,31 +200,30 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-        private string Base64Encode(byte[] bytes, int offset, int length)
+        /// <summary>
+        /// Write a byte array.
+        /// </summary>
+        /// <param name="writer">TextWriter to write the byte[]</param>
+        /// <param name="value">Byte array to be written.</param>
+        /// <param name="buffer">Temporary buffer to hold the converted chars</param>
+        private static void WriteBinaryString(TextWriter writer, byte[] value, char[] buffer)
         {
-            string prefixByteString = String.Empty;
-            int trailingByteLength = trailingBytes.Length;
-            int numberOfBytesToPrefix = trailingByteLength > 0 ? 3 - trailingByteLength : 0;
+            int bufferLength = buffer.Length;
 
-            // if we have less than 3 bytes, store the bytes and continue
-            if (length + trailingByteLength < 3)
+            // Try to hold base64 string as much as possible in one converting.
+            int bufferByteSize = bufferLength * 3 / 4;
+
+            for (int offsetIn = 0; offsetIn < value.Length; offsetIn += bufferByteSize)
             {
-                trailingBytes = trailingBytes.Concat(bytes.Skip(offset).Take(length)).ToArray();
-                return String.Empty;
+                int length = bufferByteSize;
+                if (offsetIn + length > value.Length)
+                {
+                    length = value.Length - offsetIn;
+                }
+
+                int output = Convert.ToBase64CharArray(value, offsetIn, length, buffer, 0);
+                writer.Write(buffer, 0, output);
             }
-
-            // if we have bytes left over from the previous write, prepend them
-            if (trailingByteLength > 0)
-            {
-                // convert the trailing bytes plus the first 3-trailingByteLength bytes of the new byte[]
-                prefixByteString = Convert.ToBase64String(trailingBytes.Concat(bytes.Skip(offset).Take(numberOfBytesToPrefix)).ToArray(), 0, 3);
-            }
-
-            // compute if there will be trailing bytes from this write
-            int remainingBytes = (length - numberOfBytesToPrefix) % 3;
-            trailingBytes = bytes.Skip(offset + length - remainingBytes).Take(remainingBytes).ToArray();
-
-            return prefixByteString + Convert.ToBase64String(bytes, offset + numberOfBytesToPrefix, length - numberOfBytesToPrefix - remainingBytes);
         }
     }
 }

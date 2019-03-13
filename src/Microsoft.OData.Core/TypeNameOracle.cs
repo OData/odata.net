@@ -267,10 +267,10 @@ namespace Microsoft.OData
                 return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Binary, true).FullName();
             }
 
-            ODataStreamValue streamValue = value as ODataStreamValue;
+            ODataStreamReferenceValue streamValue = value as ODataStreamReferenceValue;
             if (streamValue != null)
             {
-                return EdmCoreModel.Instance.GetPrimitive(streamValue.TypeKind, true).FullName();
+                return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Stream, true).FullName();
             }
 
             IEdmPrimitiveTypeReference primitiveTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());

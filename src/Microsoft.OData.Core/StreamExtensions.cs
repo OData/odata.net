@@ -14,7 +14,6 @@ namespace Microsoft.OData
     /// </summary>
     internal static class StreamExtensions
     {
-
 #if !PORTABLELIB
         /// Extension method to copy one stream to another
         /// <param name="source">Stream to copy from</param>
@@ -30,6 +29,5 @@ namespace Microsoft.OData
             }
         }
 #endif
-
     }
 }

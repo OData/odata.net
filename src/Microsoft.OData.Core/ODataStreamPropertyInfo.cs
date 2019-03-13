@@ -13,7 +13,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Represents information about a single stream property of a resource.
     /// </summary>
-    public sealed class ODataStreamPropertyInfo : ODataPropertyInfo, IODataStreamInfo
+    public sealed class ODataStreamPropertyInfo : ODataPropertyInfo, IODataStreamReferenceInfo
     {
         /// <summary>The name of the named stream this value belongs to; null for the default media resource.</summary>
         private string edmPropertyName;
@@ -32,6 +32,9 @@ namespace Microsoft.OData
 
         /// <summary>Read link for media resource.</summary>
         private Uri computedReadLink;
+
+        /// <summary>PrimitiveTypeKind of the media resource.</summary>
+        private EdmPrimitiveTypeKind primitiveTypeKind;
 
         /// <summary>Gets or sets the edit link for media resource.</summary>
         /// <returns>The edit link for media resource.</returns>
@@ -74,8 +77,7 @@ namespace Microsoft.OData
         /// <returns>The content media type.</returns>
         public string ContentType
         {
-            get;
-            set;
+            get; set;
         }
 
         /// <summary>Gets or sets the media resource ETag.</summary>
@@ -88,22 +90,26 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Gets or sets the kind of primitive type of the property.
-        /// The PrimitiveTypeKind of an ODataStreamPropertyInfo must be EdmPrimitiveTypeKind.Stream.
+        /// The PrimitiveTypeKind of an ODataStreamPropertyInfo must be EdmPrimitiveTypeKind.String, EdmPrimitiveTypeKind.Binary, or EdmPrimitiveTypeKind.None.
         /// </summary>
         /// <returns>The <see cref="EdmPrimitiveTypeKind"/> of the property.</returns>
         public override EdmPrimitiveTypeKind PrimitiveTypeKind
         {
             get
             {
-                return EdmPrimitiveTypeKind.Stream;
+                return this.primitiveTypeKind;
             }
 
             set
             {
-                if (value != EdmPrimitiveTypeKind.Stream)
+                if (value != EdmPrimitiveTypeKind.Binary &&
+                    value != EdmPrimitiveTypeKind.String &&
+                    value != EdmPrimitiveTypeKind.None)
                 {
-                    throw new ODataException(Strings.ODataStreamPropertyInfo_CannotChangePrimitiveType);
+                    throw new ODataException(Strings.StringItemShouldBeQuoted(value));
                 }
+
+                this.primitiveTypeKind = value;
             }
         }
 

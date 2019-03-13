@@ -220,7 +220,7 @@ namespace Microsoft.OData.Json
                 return streamReader.CanStream();
             }
 
-            return (this.Value is string || this.Value == null);
+            return (this.Value is string || this.Value == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
         }
 
         /// <summary>

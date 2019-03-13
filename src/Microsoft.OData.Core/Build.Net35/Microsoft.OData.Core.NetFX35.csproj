@@ -334,6 +334,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\IJsonStreamWriter.cs">
       <Link>Microsoft\OData\Core\Json\IJsonStreamWriter.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\ODataJsonTextWriter.cs">
+      <Link>Microsoft\OData\Core\Json\ODataJsonTextWriter.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataTextStreamReader.cs">
       <Link>Microsoft\OData\Core\ODataTextStreamReader.cs</Link>
     </Compile>
@@ -346,8 +349,11 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataNotificationWriter.cs">
       <Link>Microsoft\OData\Core\ODataNotificationWriter.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\IODataStreamInfo.cs">
-      <Link>Microsoft\OData\Core\IODataStreamInfo.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\IODataStreamReferenceInfo.cs">
+      <Link>Microsoft\OData\Core\IODataStreamReferenceInfo.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataStreamItem.cs">
+      <Link>Microsoft\OData\Core\ODataStreamItem.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataStreamPropertyInfo.cs">
       <Link>Microsoft\OData\Core\ODataStreamPropertyInfo.cs</Link>
@@ -1583,9 +1589,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataBinaryStreamValue.cs" >
       <Link>Microsoft\OData\Core\Value\ODataBinaryStreamValue.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataStreamValue.cs" >
-      <Link>Microsoft\OData\Core\Value\ODataStreamValue.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Value\ODataUntypedValue.cs" >
       <Link>Microsoft\OData\Core\Value\ODataUntypedValue.cs</Link>

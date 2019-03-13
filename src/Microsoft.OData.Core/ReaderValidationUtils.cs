@@ -60,7 +60,7 @@ namespace Microsoft.OData
         /// <param name="streamEdmProperty">The stream property defined by the model.</param>
         /// <param name="throwOnUndeclaredLinkProperty">Whether ThrowOnUndeclaredLinkProperty validation setting is enabled.</param>
         internal static void ValidateStreamReferenceProperty(
-            IODataStreamInfo streamInfo, string propertyName, IEdmStructuredType structuredType,
+            IODataStreamReferenceInfo streamInfo, string propertyName, IEdmStructuredType structuredType,
             IEdmProperty streamEdmProperty, bool throwOnUndeclaredLinkProperty)
         {
             Debug.Assert(streamInfo != null, "streamInfo != null");

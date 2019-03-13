@@ -77,6 +77,12 @@ namespace Microsoft.OData.JsonLight
                         this.ReadTypePropertyAnnotationValue,
                         (propertyParsingResult, propertyName) =>
                         {
+                            if (this.JsonReader.NodeType == JsonNodeType.Property)
+                            {
+                                // Read over property name
+                                this.JsonReader.Read();
+                            }
+
                             switch (propertyParsingResult)
                             {
                                 case PropertyParsingResult.ODataInstanceAnnotation:
@@ -231,6 +237,12 @@ namespace Microsoft.OData.JsonLight
                         this.ReadTypePropertyAnnotationValue,
                         (propertyParsingResult, propertyName) =>
                         {
+                            if (this.JsonReader.NodeType == JsonNodeType.Property)
+                            {
+                                // Read over property name
+                                this.JsonReader.Read();
+                            }
+
                             // This method will allow and skip over any custom annotations, but will not report them as enum values, so any result we get other than EndOfObject indicates a malformed payload.
                             switch (propertyParsingResult)
                             {

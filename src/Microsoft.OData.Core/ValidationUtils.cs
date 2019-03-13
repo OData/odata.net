@@ -167,7 +167,7 @@ namespace Microsoft.OData
         /// <param name="streamInfo">The stream reference info to validate.</param>
         /// <param name="edmProperty">Property metadata to validate against.</param>
         /// <param name="propertyName">The name of the property being validated.</param>
-        internal static void ValidateStreamPropertyInfo(IODataStreamInfo streamInfo, IEdmProperty edmProperty, string propertyName)
+        internal static void ValidateStreamPropertyInfo(IODataStreamReferenceInfo streamInfo, IEdmProperty edmProperty, string propertyName)
         {
             Debug.Assert(streamInfo != null, "streamInfo != null");
             if (edmProperty != null && !edmProperty.Type.IsStream())

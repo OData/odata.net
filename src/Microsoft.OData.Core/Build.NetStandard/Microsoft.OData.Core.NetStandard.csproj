@@ -407,6 +407,9 @@
     <Compile Include="..\Json\IJsonStreamWriter.cs">
       <Link>Json\IJsonStreamWriter.cs</Link>
     </Compile>
+    <Compile Include="..\Json\ODataJsonTextWriter.cs">
+      <Link>Json\ODataJsonTextWriter.cs</Link>
+    </Compile>
     <Compile Include="..\Json\IJsonReaderFactory.cs">
       <Link>Json\IJsonReaderFactory.cs</Link>
     </Compile>
@@ -842,8 +845,11 @@
     <Compile Include="..\ODataPreferenceHeader.cs">
       <Link>ODataPreferenceHeader.cs</Link>
     </Compile>
-    <Compile Include="..\IODataStreamInfo.cs">
-      <Link>IODataStreamInfo.cs</Link>
+    <Compile Include="..\IODataStreamReferenceInfo.cs">
+      <Link>IODataStreamReferenceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataStreamItem.cs">
+      <Link>ODataStreamItem.cs</Link>
     </Compile>
     <Compile Include="..\ODataPropertyInfo.cs">
       <Link>ODataPropertyInfo.cs</Link>
@@ -1792,9 +1798,6 @@
     </Compile>
     <Compile Include="..\Value\ODataBinaryStreamValue.cs">
       <Link>Value\ODataBinaryStreamValue.cs</Link>
-    </Compile>
-    <Compile Include="..\Value\ODataStreamValue.cs">
-      <Link>Value\ODataStreamValue.cs</Link>
     </Compile>
     <Compile Include="..\Value\ODataStreamReferenceValue.cs">
       <Link>Value\ODataStreamReferenceValue.cs</Link>

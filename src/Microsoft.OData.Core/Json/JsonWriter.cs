@@ -112,7 +112,7 @@ namespace Microsoft.OData.Json
         {
             get
             {
-                return String.IsNullOrEmpty(this.currentContentType) || this.currentContentType.StartsWith("application/json", StringComparison.OrdinalIgnoreCase);
+                return String.IsNullOrEmpty(this.currentContentType) || this.currentContentType.StartsWith(MimeConstants.MimeApplicationJson, StringComparison.Ordinal);
             }
         }
 
@@ -456,12 +456,13 @@ namespace Microsoft.OData.Json
             if (!IsWritingJson)
             {
                 this.writer.Write(JsonConstants.QuoteCharacter);
+                this.writer.Flush();
+                return new ODataJsonTextWriter(writer, ref buffer);
             }
 
             this.writer.Flush();
 
-            // mikep: todo wrap to make sure they don't write invalid characters
-            return writer;
+            return this.writer;
         }
 
         /// <summary>

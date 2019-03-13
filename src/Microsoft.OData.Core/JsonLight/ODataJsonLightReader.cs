@@ -1537,7 +1537,17 @@ namespace Microsoft.OData.JsonLight
             ODataPropertyInfo propertyInfo = this.CurrentScope.Item as ODataPropertyInfo;
             Debug.Assert(propertyInfo != null, "Reading Nested Property Without an ODataPropertyInfo");
 
-            this.StartNestedStreamInfo(new ODataJsonLightReaderStreamInfo(propertyInfo.PrimitiveTypeKind));
+            ODataStreamPropertyInfo streamPropertyInfo = propertyInfo as ODataStreamPropertyInfo;
+            if (streamPropertyInfo != null && !String.IsNullOrEmpty(streamPropertyInfo.ContentType))
+            {
+                this.StartNestedStreamInfo(new ODataJsonLightReaderStreamInfo(streamPropertyInfo.PrimitiveTypeKind, streamPropertyInfo.ContentType));
+            }
+            else
+            {
+                this.StartNestedStreamInfo(
+                    new ODataJsonLightReaderStreamInfo(propertyInfo.PrimitiveTypeKind));
+            }
+
             return true;
         }
 
@@ -2137,7 +2147,7 @@ namespace Microsoft.OData.JsonLight
                 }
                 else if (resourceType.IsStream() || resourceType.IsBinary())
                 {
-                    this.StartNestedStreamInfo(new ODataJsonLightReaderStreamInfo(EdmPrimitiveTypeKind.Stream));
+                    this.StartNestedStreamInfo(new ODataJsonLightReaderStreamInfo(EdmPrimitiveTypeKind.Binary));
                 }
                 else
                 {
@@ -2413,7 +2423,7 @@ namespace Microsoft.OData.JsonLight
         private void StartNestedPropertyInfo(ODataJsonLightReaderNestedPropertyInfo readerNestedPropertyInfo)
         {
             Debug.Assert(readerNestedPropertyInfo != null, "readerNestedResourceInfo != null");
-            Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue || this.CurrentScope is JsonLightResourceSetScope,
+            Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.CanStream() || this.CurrentScope is JsonLightResourceSetScope,
                 "Starting stream while not positioned on a primitive value or within an array");
 
             this.EnterScope(new JsonLightNestedPropertyInfoScope(readerNestedPropertyInfo, this.CurrentNavigationSource, this.CurrentScope.ODataUri));
@@ -2426,7 +2436,7 @@ namespace Microsoft.OData.JsonLight
         private void StartNestedStreamInfo(ODataJsonLightReaderStreamInfo readerStreamInfo)
         {
             Debug.Assert(readerStreamInfo != null, "readerNestedResourceInfo != null");
-            Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue || this.CurrentScope is JsonLightResourceSetScope,
+            Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.CanStream() || this.CurrentScope is JsonLightResourceSetScope,
                 "Starting stream while not positioned on a primitive value or within an array");
 
             this.EnterScope(new JsonLightStreamScope(readerStreamInfo, this.CurrentNavigationSource, this.CurrentScope.ODataUri));
@@ -2931,7 +2941,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             internal JsonLightStreamScope(ODataJsonLightReaderStreamInfo streamInfo, IEdmNavigationSource navigationSource, ODataUri odataUri)
-                : base(ODataReaderState.Stream, new ODataStreamValue(streamInfo.PrimitiveTypeKind), navigationSource, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), odataUri)
+                : base(ODataReaderState.Stream, new ODataStreamItem(streamInfo.PrimitiveTypeKind, streamInfo.ContentType), navigationSource, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), odataUri)
             {
                 Debug.Assert(streamInfo != null, "JsonLightNestedStreamScope created with a null streamInfo");
             }

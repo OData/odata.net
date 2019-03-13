@@ -16,7 +16,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Represents a Stream reference.
     /// </summary>
-    public sealed class ODataStreamReferenceValue : ODataStreamValue, IODataStreamInfo
+    public sealed class ODataStreamReferenceValue : ODataValue, IODataStreamReferenceInfo
     {
         /// <summary>The name of the named stream this value belongs to; null for the default media resource.</summary>
         private string edmPropertyName;
@@ -35,14 +35,6 @@ namespace Microsoft.OData
 
         /// <summary>Read link for media resource.</summary>
         private Uri computedReadLink;
-
-        /// <summary>
-        /// Creates an instance of an <see ref="ODataStreamReferenceValue" /> for writing a
-        /// stream property
-        /// </summary>
-        public ODataStreamReferenceValue() : base(EdmPrimitiveTypeKind.Stream)
-        {
-        }
 
         /// <summary>Gets or sets the edit link for media resource.</summary>
         /// <returns>The edit link for media resource.</returns>

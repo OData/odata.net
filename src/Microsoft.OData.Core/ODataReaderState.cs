@@ -136,7 +136,7 @@ namespace Microsoft.OData
         /// <summary>The reader is reading a stream.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns
-        /// an <see cref="ODataStreamValue"/>.
+        /// an <see cref="ODataStreamItem"/>.
         /// </remarks>
         Stream
     }

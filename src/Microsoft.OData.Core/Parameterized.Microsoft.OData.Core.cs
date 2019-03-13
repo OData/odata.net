@@ -4790,6 +4790,15 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// Invalid PrimitiveTypeKind {0}. A Stream item must be of type binary or string, or none if unknown."
+        /// </summary>
+        internal static string StreamItemInvalidPrimitiveKind(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.StreamItemInvalidPrimitiveKind, p0);
+        }
+        
+
+        /// <summary>
         /// A string like "$apply/aggregate expression '{0}' operation does not support value type '{1}'."
         /// </summary>
         internal static string ApplyBinder_AggregateExpressionIncompatibleTypeForMethod(object p0, object p1) {

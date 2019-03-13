@@ -346,9 +346,9 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.Stream:
-                            var streamInfo = reader.Item as ODataStreamValue;
+                            var streamInfo = reader.Item as ODataStreamItem;
                             streamInfo.Should().NotBeNull();
-                            streamInfo.TypeKind.Should().Be(EdmPrimitiveTypeKind.Stream);
+                            streamInfo.PrimitiveTypeKind.Should().Be(EdmPrimitiveTypeKind.None);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
@@ -358,7 +358,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 resource.Properties.Count().Should().Be(2);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
                 propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryString);
+                propertyValues[0].Should().Be(binaryValue);
             }
         }
 
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.Stream:
-                            var streamInfo = reader.Item as ODataStreamValue;
+                            var streamInfo = reader.Item as ODataStreamItem;
                             streamInfo.Should().NotBeNull();
                             propertyValues.Add(ReadStream(reader));
                             break;
@@ -404,12 +404,98 @@ namespace Microsoft.OData.Tests.JsonLight
                 resource.Properties.Count().Should().Be(expectedPropertyCount);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
                 propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryString);
+                propertyValues[0].Should().Be(binaryValue);
+            }
+        }
+
+        [Fact]
+        public void ReadUndeclaredStreamPropertyReference()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"undeclaredStream@mediaContentType\":\"text/plain\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                int expectedPropertyCount = variant.IsRequest ? 2 : 3;
+                ODataResource resource = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            Assert.False(true, "Should Not enter nested property without a value");
+                            break;
+
+                        case ODataReaderState.Stream:
+                            Assert.False(true, "Should Not enter stream without a value");
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(expectedPropertyCount);
+                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                ODataStreamReferenceValue undeclaredStreamProperty = resource.Properties.FirstOrDefault(p => p.Name == "undeclaredStream").Value as ODataStreamReferenceValue;
+                undeclaredStreamProperty.Should().NotBeNull();
+                undeclaredStreamProperty.ContentType.Should().Be("text/plain");
             }
         }
 
         [Fact]
         public void ReadStreamPropertyWithMetadata()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"stream@mediaContentType\":\"image/jpg\"" +
+                ",\"stream\":\"" + binaryValue + "\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                ODataResource resource = null;
+                List<string> propertyValues = new List<string>();
+                ODataStreamPropertyInfo propertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("stream");
+                            propertyInfo.ContentType.Should().Be("image/jpg");
+                            break;
+
+                        case ODataReaderState.Stream:
+                            var streamInfo = reader.Item as ODataStreamItem;
+                            streamInfo.Should().NotBeNull();
+                            propertyValues.Add(ReadStream(reader));
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(2);
+                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                propertyValues.Count.Should().Be(1);
+                propertyValues[0].Should().Be(binaryValue);
+            }
+        }
+
+        [Fact]
+        public void ReadTextStreamPropertyWithMetadata()
         {
             string payload = String.Format(resourcePayload,
                 ",\"stream@mediaContentType\":\"text/plain\"" +
@@ -439,7 +525,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.Stream:
-                            var streamInfo = reader.Item as ODataStreamValue;
+                            var streamInfo = reader.Item as ODataStreamItem;
                             streamInfo.Should().NotBeNull();
                             propertyValues.Add(ReadStream(reader));
                             break;
@@ -450,12 +536,106 @@ namespace Microsoft.OData.Tests.JsonLight
                 resource.Properties.Count().Should().Be(2);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
                 propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryString);
+                propertyValues[0].Should().Be(binaryValue);
+            }
+        }
+
+        [Fact]
+        public void ReadXmlStreamPropertyWithMetadata()
+        {
+            string xmlValue = @"<Outer><Element>123</Element></Outer>";
+            string payload = String.Format(resourcePayload,
+                ",\"stream@mediaContentType\":\"application/xml\"" +
+                ",\"stream\":\"" + xmlValue + "\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                ODataResource resource = null;
+                List<string> propertyValues = new List<string>();
+                ODataStreamPropertyInfo propertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("stream");
+                            propertyInfo.ContentType.Should().Be("application/xml");
+                            break;
+
+                        case ODataReaderState.Stream:
+                            var streamInfo = reader.Item as ODataStreamItem;
+                            streamInfo.Should().NotBeNull();
+                            propertyValues.Add(ReadStream(reader));
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(2);
+                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                propertyValues.Count.Should().Be(1);
+                propertyValues[0].Should().Be(xmlValue);
             }
         }
 
         [Fact]
         public void ReadUndeclaredStreamPropertyWithMetadata()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"undeclaredStream@mediaContentType\":\"image/jpg\"" +
+                ",\"undeclaredStream\":\"" + binaryValue + "\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                int expectedCount = variant.IsRequest ? 2 : 3;
+                ODataResource resource = null;
+                List<string> propertyValues = new List<string>();
+                ODataStreamPropertyInfo propertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            propertyInfo = reader.Item as ODataStreamPropertyInfo;
+                            propertyInfo.Should().NotBeNull();
+                            propertyInfo.Name.Should().Be("undeclaredStream");
+                            propertyInfo.ContentType.Should().Be("image/jpg");
+                            break;
+
+                        case ODataReaderState.Stream:
+                            var streamInfo = reader.Item as ODataStreamItem;
+                            streamInfo.Should().NotBeNull();
+                            propertyValues.Add(ReadStream(reader));
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(expectedCount);
+                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                propertyValues.Count.Should().Be(1);
+                propertyValues[0].Should().Be(binaryValue);
+            }
+        }
+
+        [Fact]
+        public void ReadUndeclaredTextStreamPropertyWithMetadata()
         {
             string payload = String.Format(resourcePayload,
                 ",\"undeclaredStream@mediaContentType\":\"text/plain\"" +
@@ -486,7 +666,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.Stream:
-                            var streamInfo = reader.Item as ODataStreamValue;
+                            var streamInfo = reader.Item as ODataStreamItem;
                             streamInfo.Should().NotBeNull();
                             propertyValues.Add(ReadStream(reader));
                             break;
@@ -497,12 +677,12 @@ namespace Microsoft.OData.Tests.JsonLight
                 resource.Properties.Count().Should().Be(expectedCount);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
                 propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryString);
+                propertyValues[0].Should().Be(binaryValue);
             }
         }
 
         // mikep
-        // [Fact]
+        //[Fact]
         public void ReadStreamPropertyAsJson()
         {
             string payload = String.Format(resourcePayload,
@@ -513,7 +693,7 @@ namespace Microsoft.OData.Tests.JsonLight
             foreach (Variant variant in GetVariants(null))
             {
                 ODataResource resource = null;
-                
+
                 ODataReader reader = CreateODataReader(payload, variant);
                 while (reader.Read())
                 {
@@ -530,7 +710,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.Stream:
-                            var streamValue = reader.Item as ODataStreamReferenceValue;
+                            var streamValue = reader.Item as ODataStreamItem;
                             streamValue.Should().NotBeNull();
                             streamValue.ContentType.Should().Be("application/json");
                             using (TextReader textReader = reader.CreateTextReader())
@@ -542,11 +722,13 @@ namespace Microsoft.OData.Tests.JsonLight
                 }
 
                 resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(1);
+                resource.Properties.Count().Should().Be(2);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                ODataStreamReferenceValue streamReference = resource.Properties.FirstOrDefault(p => p.Name == "stream").Value as ODataStreamReferenceValue;
+                streamReference.Should().NotBeNull();
+                streamReference.ContentType.Should().Be("application/json");
             }
         }
-
 
         // mikep
         // [Fact]
@@ -618,7 +800,7 @@ namespace Microsoft.OData.Tests.JsonLight
                                 break;
 
                             case ODataReaderState.Stream:
-                                ODataStreamValue stream = reader.Item as ODataStreamValue;
+                                ODataStreamItem stream = reader.Item as ODataStreamItem;
                                 propertyValues.Add(ReadPartialStream(reader));
                                 break;
                         }
@@ -629,8 +811,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-        // mikep
-        // [Fact]
+        [Fact]
         public void CannotIgnoreInlineStream()
         {
             string payload = String.Format(resourcePayload,
@@ -661,6 +842,41 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 readPartialStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+            }
+        }
+
+        [Fact]
+        public void CanIgnoreStreamReference()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"stream@mediaContentType\":\"text/plain\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                ODataResource resource = null;
+                List<object> propertyValues = new List<object>();
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.Stream:
+                            // Don't read the stream
+                            break;
+                    }
+                }
+
+                resource.Should().NotBeNull();
+                resource.Properties.Count().Should().Be(2);
+                ODataStreamReferenceValue propertyInfo = resource.Properties.FirstOrDefault(p => p.Name == "stream").Value as ODataStreamReferenceValue;
+                propertyInfo.Should().NotBeNull();
+                propertyInfo.ContentType.Should().Be("text/plain");
             }
         }
 
@@ -1038,10 +1254,11 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private string ReadStream(ODataReader reader)
         {
-            ODataStreamValue streamValue = reader.Item as ODataStreamValue;
+            ODataStreamItem streamValue = reader.Item as ODataStreamItem;
             streamValue.Should().NotBeNull();
             string result;
-            if (streamValue.TypeKind == EdmPrimitiveTypeKind.String)
+            if (streamValue.PrimitiveTypeKind == EdmPrimitiveTypeKind.String ||
+                streamValue.PrimitiveTypeKind == EdmPrimitiveTypeKind.None)
             {
                 using (TextReader textReader = reader.CreateTextReader())
                 {
@@ -1061,9 +1278,9 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private void ReadJson(ODataReader reader)
         {
-            ODataStreamValue streamValue = reader.Item as ODataStreamValue;
+            ODataStreamItem streamValue = reader.Item as ODataStreamItem;
             streamValue.Should().NotBeNull();
-            streamValue.TypeKind.Should().Be(EdmPrimitiveTypeKind.Stream);
+            streamValue.PrimitiveTypeKind.Should().Be(EdmPrimitiveTypeKind.Stream);
 
             using (Stream stream = reader.CreateReadStream())
             {
@@ -1072,9 +1289,9 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private string ReadPartialStream(ODataReader reader)
         {
-            ODataStreamValue streamValue = reader.Item as ODataStreamValue;
+            ODataStreamItem streamValue = reader.Item as ODataStreamItem;
             streamValue.Should().NotBeNull();
-            if (streamValue.TypeKind == EdmPrimitiveTypeKind.String)
+            if (streamValue.PrimitiveTypeKind == EdmPrimitiveTypeKind.String)
             {
                 TextReader textReader = reader.CreateTextReader();
                 {

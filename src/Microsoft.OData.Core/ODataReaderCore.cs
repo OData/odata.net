@@ -385,6 +385,13 @@ namespace Microsoft.OData
         {
             if (this.State == ODataReaderState.Stream)
             {
+                ODataStreamItem streamItem = this.CurrentScope.Item as ODataStreamItem;
+                Debug.Assert(streamItem != null, "ODataReaderState.Stream when item is not an ODataStreamItem");
+                if (streamItem.PrimitiveTypeKind != EdmPrimitiveTypeKind.Binary && streamItem.PrimitiveTypeKind != EdmPrimitiveTypeKind.None)
+                {
+                    throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+                }
+
                 this.isStreaming = true;
                 return new ODataNotificationStream(this.InterceptException(this.CreateReadStreamImplementation), this);
             }
@@ -402,6 +409,13 @@ namespace Microsoft.OData
         {
             if (this.State == ODataReaderState.Stream)
             {
+                ODataStreamItem streamItem = this.CurrentScope.Item as ODataStreamItem;
+                Debug.Assert(streamItem != null, "ODataReaderState.Stream when item is not an ODataStreamItem");
+                if (streamItem.PrimitiveTypeKind != EdmPrimitiveTypeKind.String && streamItem.PrimitiveTypeKind != EdmPrimitiveTypeKind.None)
+                {
+                    throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+                }
+
                 this.isStreaming = true;
                 return new ODataNotificationReader(this.InterceptException(this.CreateTextReaderImplementation), this);
             }
@@ -991,7 +1005,7 @@ namespace Microsoft.OData
                     state == ODataReaderState.ResourceStart && (item == null || item is ODataResource) ||
                     state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
                     state == ODataReaderState.Primitive && (item == null || item is ODataPrimitiveValue || item is ODataNullValue) ||
-                    state == ODataReaderState.Stream && (item == null || item is ODataStreamValue) ||
+                    state == ODataReaderState.Stream && (item == null || item is ODataStreamItem) ||
                     state == ODataReaderState.NestedProperty && (item == null || item is ODataPropertyInfo) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
