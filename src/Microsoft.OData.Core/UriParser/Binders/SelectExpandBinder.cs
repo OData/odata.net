@@ -317,9 +317,9 @@ namespace Microsoft.OData.UriParser
             return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption, computeOption, applyOption);
         }
 
-        private static List<string> GetGeneratedProperties(ComputeClause computeOption, ApplyClause applyOption)
+        private static HashSet<EndPathToken> GetGeneratedProperties(ComputeClause computeOption, ApplyClause applyOption)
         {
-            List<string> generatedProperties = null;
+            HashSet<EndPathToken> generatedProperties = null;
 
             if (applyOption != null)
             {
@@ -328,14 +328,14 @@ namespace Microsoft.OData.UriParser
 
             if (computeOption != null)
             {
-                var computedProperties = computeOption.ComputedItems.Select(i => i.Alias).ToList();
+                var computedProperties = new HashSet<EndPathToken>(computeOption.ComputedItems.Select(i => new EndPathToken(i.Alias, null)));
                 if (generatedProperties == null)
                 {
                     generatedProperties = computedProperties;
                 }
                 else
                 {
-                    generatedProperties.AddRange(computedProperties);
+                    generatedProperties.UnionWith(computedProperties);
                 }
             }
 
@@ -425,13 +425,13 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="targetNavigationSource">The navigation source being expanded.</param>
         /// <returns>A new MetadataBinder ready to bind a Filter or Orderby clause.</returns>
-        private MetadataBinder BuildNewMetadataBinder(IEdmNavigationSource targetNavigationSource, List<string> generatedProperties = null, bool collapsed = false)
+        private MetadataBinder BuildNewMetadataBinder(IEdmNavigationSource targetNavigationSource, HashSet<EndPathToken> generatedProperties = null, bool collapsed = false)
         {
             BindingState state = CreateBindingState(targetNavigationSource, generatedProperties, collapsed);
             return new MetadataBinder(state);
         }
 
-        private BindingState CreateBindingState(IEdmNavigationSource targetNavigationSource, List<string> generatedProperties, bool collapsed)
+        private BindingState CreateBindingState(IEdmNavigationSource targetNavigationSource, HashSet<EndPathToken> generatedProperties, bool collapsed)
         {
             if (targetNavigationSource == null)
             {

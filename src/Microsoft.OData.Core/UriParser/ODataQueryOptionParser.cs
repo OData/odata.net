@@ -490,14 +490,14 @@ namespace Microsoft.OData.UriParser
 
             if (computeClause != null)
             {
-                var computedProperties = computeClause.ComputedItems.Select(i => i.Alias).ToList();
+                var computedProperties = new HashSet<EndPathToken>(computeClause.ComputedItems.Select(i => new EndPathToken(i.Alias, null)));
                 if(state.AggregatedPropertyNames == null)
                 {
                     state.AggregatedPropertyNames = computedProperties;
                 }
                 else
                 {
-                    state.AggregatedPropertyNames.AddRange(computedProperties);
+                    state.AggregatedPropertyNames.UnionWith(computedProperties);
                 }
             }
 

@@ -1250,6 +1250,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void NavigationPropertiesTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "MyDog/Color"},
+                    {"$apply", "groupby((MyDog/Color))"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Color");
+        }
+
+        [Fact]
         public void MultipleComputePropertiesTreatedAsOpenPropertyInOrderBy()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,

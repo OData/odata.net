@@ -55,7 +55,9 @@ namespace Microsoft.OData.UriParser
                 return new AnnotationSegment(new EdmTerm(namespaceName, termName, EdmCoreModel.Instance.GetUntyped()));
             }
 
-            if ((state?.IsCollapsed ?? false) && !(state?.AggregatedPropertyNames?.Contains(tokenIn.Identifier) ?? false))
+            EndPathToken endPathToken = new EndPathToken(tokenIn.Identifier, null);
+
+            if ((state?.IsCollapsed ?? false) && !(state?.AggregatedPropertyNames?.Contains(endPathToken) ?? false))
             {
                 throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(tokenIn.Identifier));
             }
@@ -81,7 +83,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            if (edmType.IsOpen  || (state?.AggregatedPropertyNames?.Contains(tokenIn.Identifier) ?? false))
+            if (edmType.IsOpen  || (state?.AggregatedPropertyNames?.Contains(endPathToken) ?? false))
             {
                 return new DynamicPathSegment(tokenIn.Identifier);
             }

@@ -113,7 +113,7 @@ namespace Microsoft.OData.UriParser
         {
             if (parentNode.TypeReference == null ||
                 parentNode.TypeReference.Definition.IsOpen() ||
-                IsAggregatedProperty(endPathToken.Identifier))
+                IsAggregatedProperty(endPathToken))
             {
                 return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
             }
@@ -145,7 +145,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (state.IsCollapsed)
                 {
-                    if (IsAggregatedProperty(endPathToken.Identifier))
+                    if (IsAggregatedProperty(endPathToken))
                     {
                         return new SingleValueOpenPropertyAccessNode(singleValueParent, endPathToken.Identifier);
                     }
@@ -235,11 +235,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Determines the token if represents an aggregated property or not.
         /// </summary>
-        /// <param name="identifier">Tokon identifier.</param>
+        /// <param name="endPath">EndPathToken to check in the list of aggregated properties.</param>
         /// <returns>Whether the token represents an aggregated property.</returns>
-        private bool IsAggregatedProperty(string identifier)
+        private bool IsAggregatedProperty(EndPathToken endPath)
         {
-            return (state.AggregatedPropertyNames != null && state.AggregatedPropertyNames.Contains(identifier));
+            return (state.AggregatedPropertyNames != null && state.AggregatedPropertyNames.Contains(endPath));
         }
     }
 }

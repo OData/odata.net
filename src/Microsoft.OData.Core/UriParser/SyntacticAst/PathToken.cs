@@ -27,5 +27,38 @@ namespace Microsoft.OData.UriParser
         /// The name of the property to access.
         /// </summary>
         public abstract string Identifier { get; }
+
+        // TODO: Implement Generic Equals to improve performance
+        public override bool Equals(object obj)
+        {
+            var otherPath = obj as PathToken;
+            if (otherPath == null)
+            {
+                return false;
+            }
+
+            return this.Identifier.Equals(otherPath.Identifier) 
+                && (this.NextToken == null && otherPath.NextToken == null
+                    || this.NextToken.Equals(otherPath.NextToken));
+        }
+
+        public override int GetHashCode()
+        {
+            int identifierHashCode = this.Identifier.GetHashCode();
+            if (this.NextToken != null)
+            {
+                identifierHashCode = Combine(identifierHashCode, this.NextToken.GetHashCode());
+            }
+            return identifierHashCode;
+        }
+
+        private static int Combine(int h1, int h2)
+        {
+            // RyuJIT optimizes this to use the ROL instruction
+            // Related GitHub pull request: dotnet/coreclr#1830
+            // Based on https://github.com/dotnet/coreclr/blob/master/src/System.Private.CoreLib/shared/System/Numerics/Hashing/HashHelpers.cs
+            uint rol5 = ((uint)h1 << 5) | ((uint)h1 >> 27);
+            return ((int)rol5 + h1) ^ h2;
+        }
     }
 }

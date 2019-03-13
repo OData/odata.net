@@ -51,18 +51,20 @@ namespace Microsoft.OData.UriParser.Aggregation
                         AggregateTransformationNode aggregate = BindAggregateToken((AggregateToken)(token));
                         transformations.Add(aggregate);
                         aggregateExpressionsCache = aggregate.AggregateExpressions;
-                        state.AggregatedPropertyNames = aggregate.AggregateExpressions.Select(statement => statement.Alias).ToList();
+                        state.AggregatedPropertyNames = new HashSet<EndPathToken>(aggregate.AggregateExpressions.Select(statement => new EndPathToken(statement.Alias, null)));
                         state.IsCollapsed = true;
                         break;
                     case QueryTokenKind.AggregateGroupBy:
-                        GroupByTransformationNode groupBy = BindGroupByToken((GroupByToken)(token));
+                        GroupByToken groupByToken = (GroupByToken)(token);
+                        GroupByTransformationNode groupBy = BindGroupByToken(groupByToken);
                         transformations.Add(groupBy);
+                        state.AggregatedPropertyNames = new HashSet<EndPathToken>(groupByToken.Properties);
                         state.IsCollapsed = true;
                         break;
                     case QueryTokenKind.Compute:
                         var compute = BindComputeToken((ComputeToken)token);
                         transformations.Add(compute);
-                        state.AggregatedPropertyNames = compute.Expressions.Select(statement => statement.Alias).ToList();
+                        state.AggregatedPropertyNames = new HashSet<EndPathToken>(compute.Expressions.Select(statement => new EndPathToken(statement.Alias, null)));
                         break;
                     case QueryTokenKind.Expand:
                         SelectExpandClause expandClause = SelectExpandSemanticBinder.Bind(this.odataPathInfo,  (ExpandToken)token, null, this.configuration, null);
@@ -260,8 +262,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 {
                     aggregate = BindAggregateToken((AggregateToken)token.Child);
                     aggregateExpressionsCache = ((AggregateTransformationNode)aggregate).AggregateExpressions;
-                    state.AggregatedPropertyNames =
-                        aggregateExpressionsCache.Select(statement => statement.Alias).ToList();
+                    state.AggregatedPropertyNames = new HashSet<EndPathToken>(aggregateExpressionsCache.Select(statement => new EndPathToken(statement.Alias, null)));
                 }
                 else
                 {

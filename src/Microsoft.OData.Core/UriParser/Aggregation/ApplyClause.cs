@@ -78,30 +78,49 @@ namespace Microsoft.OData.UriParser.Aggregation
             return CreatePropertiesUriSegment(lastGroupByPropertyNodes, lastAggregateExpressions, computeExpressions);
         }
 
-        internal List<string> GetLastAggregatedPropertyNames()
+        internal HashSet<EndPathToken> GetLastAggregatedPropertyNames()
         {
             if (lastAggregateExpressions == null && lastComputeExpressions == null && lastGroupByPropertyNodes == null)
             {
                 return null;
             }
 
-            List<string> result = new List<string>();
+            HashSet<EndPathToken> result = new HashSet<EndPathToken>();
             if (lastAggregateExpressions != null)
             {
-                result.AddRange(lastAggregateExpressions.Select(statement => statement.Alias));
+                result.UnionWith(lastAggregateExpressions.Select(statement => new EndPathToken(statement.Alias, null)));
             }
 
             if (lastComputeExpressions != null)
             {
-                result.AddRange(lastComputeExpressions.Select(statement => statement.Alias));
+                result.UnionWith(lastComputeExpressions.Select(statement => new EndPathToken(statement.Alias, null)));
             }
 
             if (lastGroupByPropertyNodes != null)
             {
-                result.AddRange(lastGroupByPropertyNodes.Select(statement => statement.Name));
+                result.UnionWith(GetGroupByPaths(lastGroupByPropertyNodes, null));
             }
 
             return result;
+        }
+
+        private IEnumerable<EndPathToken> GetGroupByPaths(IEnumerable<GroupByPropertyNode> nodes, EndPathToken token)
+        {
+            foreach(var node in nodes)
+            {
+                var nodeToken = new EndPathToken(node.Name, token);
+                if (node.ChildTransformations == null || !node.ChildTransformations.Any())
+                {
+                    yield return nodeToken;
+                }
+                else
+                {
+                    foreach(var child in GetGroupByPaths(node.ChildTransformations, nodeToken))
+                    {
+                        yield return child;
+                    }
+                }
+            }
         }
 
         private string CreatePropertiesUriSegment(
