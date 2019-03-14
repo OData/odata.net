@@ -698,6 +698,7 @@ UriQueryExpressionParser_InnerMostExpandRequireFilter=The inner most expand tran
 UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri=The URI '{0}' is not valid because it is not based on '{1}'.
 UriQueryPathParser_SyntaxError=Bad Request: there was an error in the query syntax.
 UriQueryPathParser_TooManySegments=Too many segments in URI.
+UriQueryPathParser_InvalidEscapeUri=The URI part '{0}' is not valid because there's no escape leading delimiter before.
 
 UriUtils_DateTimeOffsetInvalidFormat=The DateTimeOffset text '{0}' should be in format 'yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?' and each field value is within valid range.
 
@@ -889,7 +890,7 @@ RequestUriProcessor_ResourceNotFound=Resource not found for the segment '{0}'.
 RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset=Batched service action '{0}' cannot be invoked because it was bound to an entity created in the same changeset.
 RequestUriProcessor_Forbidden=Forbidden
 RequestUriProcessor_OperationSegmentBoundToANonEntityType=Found an operation bound to a non-entity type.
-RequestUriProcessor_NoBoundEscapeFunctionSupported=The request URI is not valid. The bound function binding to '{0}' supports the escape function annotation.
+RequestUriProcessor_NoBoundEscapeFunctionSupported=The request URI is not valid. The bound function binding to '{0}' does not support the escape function annotation.
 RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter=The UrlEscape function '{0}' must have and only have one 'Edm.String' parameter.
 
 ; Note: The below list of error messages are common to both the OData and the OData.Query project.

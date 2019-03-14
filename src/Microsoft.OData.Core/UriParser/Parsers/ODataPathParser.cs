@@ -1012,7 +1012,7 @@ namespace Microsoft.OData.UriParser
                 bindingType = (previousSegment is EachSegment) ? previousSegment.TargetEdmType : previousSegment.EdmType;
             }
 
-            if (identifier != null && identifier.Length >= 1 && identifier[0] == ':' && bindingType != null)
+            if (!String.IsNullOrEmpty(identifier) && identifier[0] == ':' && bindingType != null)
             {
                 identifier = ResolveEscapeFunction(identifier, bindingType, configuration.Model, out parenthesisExpression);
             }
@@ -1606,8 +1606,19 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(identifier != null && identifier.Length >= 1 && identifier[0] == ':');
             Debug.Assert(bindingType != null);
 
-            IEnumerable<IEdmOperation> operations = model.FindBoundOperations(bindingType);
-            IEdmFunction function = operations.OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(model, f));
+            bool isComposableRequired = identifier.Length >= 2 && identifier[identifier.Length - 1] == ':';
+            IEnumerable<IEdmFunction> functions = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().Where(f => IsUrlEscapeFunction(model, f));
+
+            IEdmFunction function = functions.FirstOrDefault(f => f.IsComposable == isComposableRequired);
+            if (function == null)
+            {
+                // If no non-composable escape function exist, use the composable function
+                if (!isComposableRequired)
+                {
+                    function = functions.FirstOrDefault(f => f.IsComposable == true);
+                }
+            }
+
             if (function == null)
             {
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported(bindingType.FullTypeName()));
@@ -1618,7 +1629,7 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter(function.FullName()));
             }
 
-            parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + identifier.Substring(1) + "'";
+            parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(1, identifier.Length - 2) : identifier.Substring(1)) + "'";
             return function.FullName();
         }
 

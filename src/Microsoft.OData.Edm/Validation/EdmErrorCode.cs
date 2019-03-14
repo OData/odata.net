@@ -1372,5 +1372,15 @@ namespace Microsoft.OData.Edm.Validation
         /// Could not find a return on the annotated operation.
         /// </summary>
         BadUnresolvedReturn = 388,
+
+        /// <summary>
+        /// The composable escape bound function should not declare more than one.
+        /// </summary>
+        EntityComposableBoundEscapeFunctionMustBeLessOne,
+
+        /// <summary>
+        /// The non-composable escape bound function should not declare more than one.
+        /// </summary>
+        EntityNoncomposableBoundEscapeFunctionMustBeLessOne,
     }
 }

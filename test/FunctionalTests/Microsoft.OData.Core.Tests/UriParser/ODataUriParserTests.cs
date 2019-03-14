@@ -1104,18 +1104,25 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(fullUriString, Uri.UnescapeDataString(resultUri.OriginalString));
         }
 
-        [Fact]
-        public void ParseEscapeFunctionUrlReturnsTheSameODataPath()
+        #region Escape Function Parse
+        [Theory]
+        [InlineData("/root:/", "/root/NS.NormalFunction(path='')")]
+        [InlineData("/root:/abc", "/root/NS.NormalFunction(path='abc')")]
+        [InlineData("/root:/photos:February", "/root/NS.NormalFunction(path='photos:February')")]
+        [InlineData("/root:/photos/2018/February", "/root/NS.NormalFunction(path='photos%2f2018%2fFebruary')")]
+        [InlineData("/root:/photos/2018////February", "/root/NS.NormalFunction(path='photos%2f2018%2f%2f%2f%2fFebruary')")]
+        [InlineData("/root:/photos%2F2018%2F/:February", "/root/NS.NormalFunction(path='photos%2F2018%2f%2f:February')")]
+        public void ParseNonComposableEscapeFunctionUrlReturnsTheSameODataPath(string escapePathString, string normalPathString)
         {
             // Arrange
             IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
 
             // Act
-            string fullUriString = ServiceRoot + "/root/NS.Function(path='photos%2F2018%2FFebruray')";
+            string fullUriString = ServiceRoot + normalPathString;
             ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
             var functionPath = parser.ParsePath();
 
-            fullUriString = ServiceRoot + "/root:/photos/2018/Februray";
+            fullUriString = ServiceRoot + escapePathString;
             parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
             var escapePath = parser.ParsePath();
 
@@ -1124,7 +1131,62 @@ namespace Microsoft.OData.Tests.UriParser
 
             Assert.Equal(2, escapePath.Count());
             OperationSegment segment = Assert.IsType<OperationSegment>(escapePath.Last());
-            Assert.Equal("NS.Function", segment.Operations.First().FullName());
+            Assert.Equal("NS.NormalFunction", segment.Operations.First().FullName());
+        }
+
+        [Theory]
+        [InlineData("/root:/:", "/root/NS.ComposableFunction(arg='')")]
+        [InlineData("/root:/abc:", "/root/NS.ComposableFunction(arg='abc')")]
+        [InlineData("/root:/photos:February:", "/root/NS.ComposableFunction(arg='photos:February')")]
+        [InlineData("/root:/photos/2018/February:", "/root/NS.ComposableFunction(arg='photos%2f2018%2fFebruary')")]
+        [InlineData("/root:/photos/2018//////February:", "/root/NS.ComposableFunction(arg='photos%2f2018%2f%2f%2f%2f%2f%2fFebruary')")]
+        [InlineData("/root:/photos%2F2018%2F/:February:", "/root/NS.ComposableFunction(arg='photos%2F2018%2F%2f:February')")]
+        public void ParseComposableEscapeFunctionUrlReturnsTheSameODataPath(string escapePathString, string normalPathString)
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
+
+            // Act
+            string fullUriString = ServiceRoot + normalPathString;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var functionPath = parser.ParsePath();
+
+            fullUriString = ServiceRoot + escapePathString;
+            parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.True(functionPath.Equals(escapePath));
+
+            Assert.Equal(2, escapePath.Count());
+            OperationSegment segment = Assert.IsType<OperationSegment>(escapePath.Last());
+            Assert.Equal("NS.ComposableFunction", segment.Operations.First().FullName());
+        }
+
+        [Fact]
+        public void ParseComposableEscapeFunctionUrlAndPropertyReturnsTheSameODataPath()
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
+
+            // Act
+            string fullUriString = ServiceRoot + "/root/NS.ComposableFunction(arg='photos%2F2018%2F%2f:February')/Name";
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var functionPath = parser.ParsePath();
+
+            fullUriString = ServiceRoot + "/root:/photos%2F2018%2F/:February:/Name";
+            parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.True(functionPath.Equals(escapePath));
+
+            Assert.Equal(3, escapePath.Count());
+            OperationSegment segment = escapePath.First(c => c is OperationSegment) as OperationSegment;
+            Assert.Equal("NS.ComposableFunction", segment.Operations.First().FullName());
+
+            PropertySegment proSegment = Assert.IsType<PropertySegment>(escapePath.Last());
+            Assert.Equal("Name", proSegment.Property.Name);
         }
 
         [Fact]
@@ -1134,7 +1196,7 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmModel model = GetEdmModelWithEscapeFunction(escape: false);
 
             // Act
-            var fullUriString = ServiceRoot + "/root:/photos/2018/Februray";
+            var fullUriString = ServiceRoot + "/root:/photos/2018/February";
             var parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
             Action test = () => parser.ParsePath();
 
@@ -1150,13 +1212,13 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmModel model = GetEdmModelWithEscapeFunction(escape: true, multipleParameter: true);
 
             // Act
-            var fullUriString = ServiceRoot + "/root:/photos/2018/Februray";
+            var fullUriString = ServiceRoot + "/root:/photos/2018/February";
             var parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
             Action test = () => parser.ParsePath();
 
             // Assert
             var odataException = Assert.Throws<ODataException>(test);
-            Assert.Equal(ODataErrorStrings.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter("NS.Function"), odataException.Message);
+            Assert.Equal(ODataErrorStrings.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter("NS.NormalFunction"), odataException.Message);
         }
 
         internal static IEdmModel GetEdmModelWithEscapeFunction(bool escape, bool multipleParameter = false)
@@ -1164,18 +1226,25 @@ namespace Microsoft.OData.Tests.UriParser
             EdmModel model = new EdmModel();
             EdmEntityType entityType = new EdmEntityType("NS", "OneDrive");
             entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            entityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
 
-            EdmFunction function = new EdmFunction("NS", "Function", EdmCoreModel.Instance.GetInt32(true), true, null, false);
-            function.AddParameter("entity", new EdmEntityTypeReference(entityType, true));
-            function.AddParameter("path", EdmCoreModel.Instance.GetString(true));
+            var entityTypeRef = new EdmEntityTypeReference(entityType, true);
+            EdmFunction nonComFunction = new EdmFunction("NS", "NormalFunction", EdmCoreModel.Instance.GetInt32(true), true, null, false);
+            nonComFunction.AddParameter("entity", entityTypeRef);
+            nonComFunction.AddParameter("path", EdmCoreModel.Instance.GetString(true));
 
             if (multipleParameter)
             {
-                function.AddParameter("path2", EdmCoreModel.Instance.GetString(true));
+                nonComFunction.AddParameter("path2", EdmCoreModel.Instance.GetString(true));
             }
 
             model.AddElement(entityType);
-            model.AddElement(function);
+            model.AddElement(nonComFunction);
+
+            EdmFunction compFunction = new EdmFunction("NS", "ComposableFunction", entityTypeRef, true, null, true);
+            compFunction.AddParameter("entity", entityTypeRef);
+            compFunction.AddParameter("arg", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(compFunction);
 
             EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
             container.AddSingleton("root", entityType);
@@ -1185,11 +1254,195 @@ namespace Microsoft.OData.Tests.UriParser
             {
                 IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
                 IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
+                foreach (var function in new[] { nonComFunction, compFunction })
+                {
+                    EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
+                    annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+                    model.SetVocabularyAnnotation(annotation);
+                }
+            }
 
+            return model;
+        }
+
+        [Theory]
+        [InlineData("Customers(2):/abc:xyz")]
+        [InlineData("Customers(2):/abc:xyz:")]
+        public void ParseEscapeFunctionUrlWithOrWithoutColonDelimiterReturnsSameODataPath(string escapePathString)
+        {
+            // Arrange
+            IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
+
+            // Act
+            string fullUriString = ServiceRoot + "/" + escapePathString;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.Equal(3, escapePath.Count());
+            OperationSegment segment = escapePath.Last() as OperationSegment;
+            Assert.Equal("NS.FindOrder", segment.Operations.First().FullName());
+
+            Assert.Equal(1, segment.Parameters.Count());
+            var parameter = segment.Parameters.First();
+            Assert.Equal("orderName", parameter.Name);
+            Assert.Equal("abc:xyz", ((ConstantNode)parameter.Value).Value);
+        }
+
+        [Fact]
+        public void ParseEscapeFunctionUrlWithPropertyAndEscapeFunctionReturnsCorrectODataPath()
+        {
+            // Arrange
+            IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
+
+            // Act
+            string fullUriString = ServiceRoot + "/Customers(2)/MyOrders:/xyz/abc";
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.Equal(4, escapePath.Count());
+            OperationSegment segment = Assert.IsType<OperationSegment>(escapePath.Last());
+            Assert.Equal("NS.FindAllOrders", segment.Operations.First().FullName());
+
+            Assert.Equal(1, segment.Parameters.Count());
+            var parameter = segment.Parameters.First();
+            Assert.Equal("name", parameter.Name);
+            Assert.Equal("xyz/abc", ((ConstantNode)parameter.Value).Value);
+        }
+
+        [Theory]
+        [InlineData("Customers(2):/abc:/:/xyz")]
+        [InlineData("Customers(2):/abc::/xyz")]
+        public void ParseEscapeFunctionUrlWithAnotherEscapeFunctionReturnsCorrectODataPath(string escapePathString)
+        {
+            // Arrange
+            IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
+
+            // Act
+            string fullUriString = ServiceRoot + "/" + escapePathString;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.Equal(4, escapePath.Count());
+            OperationSegment segment = escapePath.First(p => p is OperationSegment) as OperationSegment;
+            Assert.Equal("NS.FindOrder", segment.Operations.First().FullName());
+
+            segment = escapePath.Last(p => p is OperationSegment) as OperationSegment;
+            Assert.Equal("NS.CalcCustomers", segment.Operations.First().FullName());
+        }
+
+        internal static IEdmModel GetCustomerOrderEdmModelWithEscapeFunction()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType orderType = new EdmEntityType("NS", "Order");
+            orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            orderType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            model.AddElement(orderType);
+
+            EdmEntityType customerType = new EdmEntityType("NS", "Customer");
+            customerType.AddKeys(customerType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            model.AddElement(customerType);
+
+            EdmNavigationProperty navOrder = customerType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Target = orderType,
+                Name = "MyOrder",
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            EdmNavigationProperty navOrders = customerType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Target = orderType,
+                Name = "MyOrders",
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+
+            EdmNavigationProperty navCustomer = orderType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Target = customerType,
+                Name = "MyCustomer",
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            EdmEntityTypeReference orderTypeRef = new EdmEntityTypeReference(orderType, false);
+            EdmEntityTypeReference customerTypeRef = new EdmEntityTypeReference(customerType, false);
+
+            EdmFunction orderFunction = new EdmFunction("NS", "CalcCustomers", customerTypeRef, true, null, true);
+            orderFunction.AddParameter("bindingParameter", orderTypeRef);
+            orderFunction.AddParameter("path", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(orderFunction);
+
+            EdmFunction singleFunction = new EdmFunction("NS", "FindOrder", orderTypeRef, true, null, true);
+            singleFunction.AddParameter("bindingParameter", customerTypeRef);
+            singleFunction.AddParameter("orderName", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(singleFunction);
+
+            var multipleFunction = new EdmFunction("NS", "FindAllOrders", new EdmCollectionTypeReference(new EdmCollectionType(orderTypeRef)), true, null, true);
+            multipleFunction.AddParameter("bindingParameter", new EdmCollectionTypeReference(new EdmCollectionType(orderTypeRef)));
+            multipleFunction.AddParameter("name", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(multipleFunction);
+
+            EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
+            EdmEntitySet customers = container.AddEntitySet("Customers", customerType);
+            EdmEntitySet orders = container.AddEntitySet("Orders", orderType);
+            customers.AddNavigationTarget(navOrder, orders);
+            customers.AddNavigationTarget(navOrders, orders);
+            model.AddElement(container);
+
+            IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
+            IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
+            foreach(var function in new[] { orderFunction, singleFunction, multipleFunction })
+            {
                 EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
                 annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
                 model.SetVocabularyAnnotation(annotation);
             }
+
+            return model;
+        }
+        #endregion
+
+        [Theory]
+        [InlineData("Boundaries(1)/NS.Contains(Latitude=46.2632,Longitude=-119.48781)")]
+        [InlineData("Boundaries(1)/NS.Contains(Latitude=46.2632,Longitude=-119.4878)")]
+        public void TestFunction(string normalPathString)
+        {
+            IEdmModel model = GetCction();
+
+            Uri serviceRootUri = new Uri("http://localhost:5000/api/");
+            string fullUriString = "http://localhost:5000/api/Boundaries(1)/NS.Contains(Latitude=46.2632,Longitude=-119.4878)";
+            // Act
+           // string fullUriString = ServiceRoot + "/" + normalPathString;
+            ODataUriParser parser = new ODataUriParser(model, serviceRootUri, new Uri(fullUriString));
+            var normalPath = parser.ParsePath();
+
+            Assert.NotNull(normalPath);
+            Assert.Equal(3, normalPath.Count());
+        }
+
+        internal static IEdmModel GetCction()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType orderType = new EdmEntityType("NS", "Boundary");
+            orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            orderType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            model.AddElement(orderType);
+
+            EdmEntityTypeReference orderTypeRef = new EdmEntityTypeReference(orderType, false);
+
+            EdmFunction orderFunction = new EdmFunction("NS", "Contains", EdmCoreModel.Instance.GetString(true), true, null, true);
+            orderFunction.AddParameter("bindingParameter", orderTypeRef);
+            orderFunction.AddParameter("Latitude", EdmCoreModel.Instance.GetDouble(true));
+            orderFunction.AddParameter("Longitude", EdmCoreModel.Instance.GetDouble(true));
+            model.AddElement(orderFunction);
+
+            EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
+            EdmEntitySet orders = container.AddEntitySet("Boundaries", orderType);
+            model.AddElement(container);
 
             return model;
         }

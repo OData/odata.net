@@ -4428,6 +4428,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The URI part '{0}' is not valid because there's no escape leading delimiter before."
+        /// </summary>
+        internal static string UriQueryPathParser_InvalidEscapeUri(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryPathParser_InvalidEscapeUri, p0);
+        }
+
+        /// <summary>
         /// A string like "The DateTimeOffset text '{0}' should be in format 'yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?' and each field value is within valid range."
         /// </summary>
         internal static string UriUtils_DateTimeOffsetInvalidFormat(object p0) {
@@ -5675,7 +5682,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The request URI is not valid. The bound function binding to '{0}' supports the escape function annotation."
+        /// A string like "The request URI is not valid. The bound function binding to '{0}' does not support the escape function annotation."
         /// </summary>
         internal static string RequestUriProcessor_NoBoundEscapeFunctionSupported(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoBoundEscapeFunctionSupported, p0);
