@@ -143,16 +143,9 @@ namespace Microsoft.OData.UriParser
             SingleValueNode singleValueParent = parent as SingleValueNode;
             if (singleValueParent != null)
             {
-                if (state.IsCollapsed)
+                if (state.IsCollapsed && !IsAggregatedProperty(endPathToken))
                 {
-                    if (IsAggregatedProperty(endPathToken))
-                    {
-                        return new SingleValueOpenPropertyAccessNode(singleValueParent, endPathToken.Identifier);
-                    }
-                    else
-                    {
-                        throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(endPathToken.Identifier));
-                    }
+                    throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(endPathToken.Identifier));
                 }
 
                 // Now that we have the parent type, can find its corresponding EDM type

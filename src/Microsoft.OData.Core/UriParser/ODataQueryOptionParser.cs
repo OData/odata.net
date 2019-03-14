@@ -486,6 +486,10 @@ namespace Microsoft.OData.UriParser
             if (applyClause != null)
             {
                 state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
+                if (applyClause.Transformations.Any(x => x.Kind == TransformationNodeKind.GroupBy || x.Kind == TransformationNodeKind.Aggregate))
+                {
+                    state.IsCollapsed = true;
+                }
             }
 
             if (computeClause != null)

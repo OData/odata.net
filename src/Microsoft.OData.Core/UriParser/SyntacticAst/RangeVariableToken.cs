@@ -58,7 +58,6 @@ namespace Microsoft.OData.UriParser
             return visitor.Visit(this);
         }
 
-        // TODO: Implement Generic Equals to improve performance
         public override bool Equals(object obj)
         {
             var otherPath = obj as RangeVariableToken;

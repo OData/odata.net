@@ -28,7 +28,6 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public abstract string Identifier { get; }
 
-        // TODO: Implement Generic Equals to improve performance
         public override bool Equals(object obj)
         {
             var otherPath = obj as PathToken;

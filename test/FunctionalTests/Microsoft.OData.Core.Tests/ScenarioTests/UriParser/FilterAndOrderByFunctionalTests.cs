@@ -1262,7 +1262,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             odataQueryOptionParser.ParseApply();
             var orderByClause = odataQueryOptionParser.ParseOrderBy();
             orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
-            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Color");
+            orderByClause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp());
         }
 
         [Fact]
@@ -1312,7 +1312,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     {"$apply", "compute(FavoriteNumber mul 2 as DoubleFavorite)/aggregate(DoubleFavorite with sum as Total)"}
                 });
             Action parseAction = () => { odataQueryOptionParser.ParseApply(); odataQueryOptionParser.ParseOrderBy(); };
-            parseAction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "DoubleFavorite"));
+            parseAction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("DoubleFavorite"));
         }
 
         [Fact]

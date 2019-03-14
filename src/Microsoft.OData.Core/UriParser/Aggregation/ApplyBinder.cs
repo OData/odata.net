@@ -55,10 +55,8 @@ namespace Microsoft.OData.UriParser.Aggregation
                         state.IsCollapsed = true;
                         break;
                     case QueryTokenKind.AggregateGroupBy:
-                        GroupByToken groupByToken = (GroupByToken)(token);
-                        GroupByTransformationNode groupBy = BindGroupByToken(groupByToken);
+                        GroupByTransformationNode groupBy = BindGroupByToken((GroupByToken)(token));
                         transformations.Add(groupBy);
-                        state.AggregatedPropertyNames = new HashSet<EndPathToken>(groupByToken.Properties);
                         state.IsCollapsed = true;
                         break;
                     case QueryTokenKind.Compute:
@@ -254,6 +252,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                     }
                 }
             }
+            var newProperties = new HashSet<EndPathToken>(((GroupByToken)token).Properties);
 
             TransformationNode aggregate = null;
             if (token.Child != null)
@@ -262,13 +261,15 @@ namespace Microsoft.OData.UriParser.Aggregation
                 {
                     aggregate = BindAggregateToken((AggregateToken)token.Child);
                     aggregateExpressionsCache = ((AggregateTransformationNode)aggregate).AggregateExpressions;
-                    state.AggregatedPropertyNames = new HashSet<EndPathToken>(aggregateExpressionsCache.Select(statement => new EndPathToken(statement.Alias, null)));
+                    newProperties.UnionWith(aggregateExpressionsCache.Select(statement => new EndPathToken(statement.Alias, null)));
                 }
                 else
                 {
                     throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedGroupByChild(token.Child.Kind));
                 }
             }
+
+            state.AggregatedPropertyNames = newProperties;
 
             // TODO: Determine source
             return new GroupByTransformationNode(properties, aggregate, null);

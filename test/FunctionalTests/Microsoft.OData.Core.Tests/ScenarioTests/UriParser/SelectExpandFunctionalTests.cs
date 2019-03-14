@@ -1340,7 +1340,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             odataQueryOptionParser.ParseApply();
             Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
 
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "FavoriteNumber"));
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("FavoriteNumber"));
         }
 
         [Fact]
@@ -1446,7 +1446,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
 
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Dog", "Color"));
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("Color"));
         }
 
         #endregion
