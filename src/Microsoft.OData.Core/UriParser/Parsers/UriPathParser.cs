@@ -105,7 +105,7 @@ namespace Microsoft.OData.UriParser
                         // Otherwise, it's an invalid Uri.
                         if (escapedStart == -1)
                         {
-                            throw new Exception(Strings.UriQueryPathParser_TooManySegments(segment));
+                            throw new ODataException(Strings.UriQueryPathParser_InvalidEscapeUri(segment));
                         }
                         else
                         {

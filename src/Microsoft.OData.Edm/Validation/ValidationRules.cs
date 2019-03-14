@@ -1039,7 +1039,7 @@ namespace Microsoft.OData.Edm.Validation
 
                     if (composableEscapeFunctions.Count() > 1 )
                     {
-                        string escapeFunctionString = String.Join(",", composableEscapeFunctions.Select(c => c.Name));
+                        string escapeFunctionString = String.Join(",", composableEscapeFunctions.Select(c => c.Name).ToArray());
                         context.AddError(
                                 entityType.Location(),
                                 EdmErrorCode.EntityComposableBoundEscapeFunctionMustBeLessOne,
@@ -1048,7 +1048,7 @@ namespace Microsoft.OData.Edm.Validation
 
                     if (nonComposableEscapeFunctions.Count() > 1)
                     {
-                        string escapeFunctionString = String.Join(",", nonComposableEscapeFunctions.Select(c => c.Name));
+                        string escapeFunctionString = String.Join(",", nonComposableEscapeFunctions.Select(c => c.Name).ToArray());
                         context.AddError(
                                 entityType.Location(),
                                 EdmErrorCode.EntityNoncomposableBoundEscapeFunctionMustBeLessOne,

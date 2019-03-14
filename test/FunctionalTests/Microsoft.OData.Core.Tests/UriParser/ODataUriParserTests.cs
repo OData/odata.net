@@ -1404,47 +1404,5 @@ namespace Microsoft.OData.Tests.UriParser
             return model;
         }
         #endregion
-
-        [Theory]
-        [InlineData("Boundaries(1)/NS.Contains(Latitude=46.2632,Longitude=-119.48781)")]
-        [InlineData("Boundaries(1)/NS.Contains(Latitude=46.2632,Longitude=-119.4878)")]
-        public void TestFunction(string normalPathString)
-        {
-            IEdmModel model = GetCction();
-
-            Uri serviceRootUri = new Uri("http://localhost:5000/api/");
-            string fullUriString = "http://localhost:5000/api/Boundaries(1)/NS.Contains(Latitude=46.2632,Longitude=-119.4878)";
-            // Act
-           // string fullUriString = ServiceRoot + "/" + normalPathString;
-            ODataUriParser parser = new ODataUriParser(model, serviceRootUri, new Uri(fullUriString));
-            var normalPath = parser.ParsePath();
-
-            Assert.NotNull(normalPath);
-            Assert.Equal(3, normalPath.Count());
-        }
-
-        internal static IEdmModel GetCction()
-        {
-            EdmModel model = new EdmModel();
-
-            EdmEntityType orderType = new EdmEntityType("NS", "Boundary");
-            orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            orderType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
-            model.AddElement(orderType);
-
-            EdmEntityTypeReference orderTypeRef = new EdmEntityTypeReference(orderType, false);
-
-            EdmFunction orderFunction = new EdmFunction("NS", "Contains", EdmCoreModel.Instance.GetString(true), true, null, true);
-            orderFunction.AddParameter("bindingParameter", orderTypeRef);
-            orderFunction.AddParameter("Latitude", EdmCoreModel.Instance.GetDouble(true));
-            orderFunction.AddParameter("Longitude", EdmCoreModel.Instance.GetDouble(true));
-            model.AddElement(orderFunction);
-
-            EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
-            EdmEntitySet orders = container.AddEntitySet("Boundaries", orderType);
-            model.AddElement(container);
-
-            return model;
-        }
     }
 }

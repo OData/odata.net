@@ -245,6 +245,22 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Equal(expected, actual);
         }
 
+        [Theory]
+        [InlineData("root::/abc", "root::")]
+        [InlineData("EntitySet('key')::/abc", "EntitySet('key')::")]
+        public void ParseInvalidEscapeUriPathShouldThrow(string pattern, string segment)
+        {
+            // Arrange
+            var fullUrl = new Uri(this.baseUri.AbsoluteUri + pattern);
+
+            // Act
+            Action test = () => this.pathParser.ParsePathIntoSegments(fullUrl, this.baseUri);
+
+            // Assert
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.UriQueryPathParser_InvalidEscapeUri(segment), exception.Message);
+        }
+
         [Fact]
         public void ParsePathRequiresBaseUriToMatch()
         {
