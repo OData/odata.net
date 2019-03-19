@@ -339,7 +339,8 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Byte array to be written.</param>
-        internal static void WriteValue(TextWriter writer, byte[] value)
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        internal static void WriteValue(TextWriter writer, byte[] value, ref char[] buffer)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -350,13 +351,45 @@ namespace Microsoft.OData.Json
             else
             {
                 writer.Write(JsonConstants.QuoteCharacter);
-                writer.Write(Convert.ToBase64String(value));
+                WriteBinaryString(writer, value, ref buffer);
                 writer.Write(JsonConstants.QuoteCharacter);
             }
         }
 
         /// <summary>
-        /// Writes the quoted string value with special characters escaped.
+        /// Write a byte array.
+        /// </summary>
+        /// <param name="writer">The text writer to write the output to.</param>
+        /// <param name="value">Byte array to be written.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        internal static void WriteBinaryString(TextWriter writer, byte[] value, ref char[] buffer)
+        {
+            Debug.Assert(writer != null, "writer != null");
+            Debug.Assert(value != null, "The value must not be null.");
+
+            buffer = BufferUtils.InitializeBufferIfRequired(buffer);
+            Debug.Assert(buffer != null);
+
+            int bufferLength = buffer.Length;
+
+            // Try to hold base64 string as much as possible in one converting.
+            int bufferByteSize = bufferLength * 3 / 4;
+
+            for (int offsetIn = 0; offsetIn < value.Length; offsetIn += bufferByteSize)
+            {
+                int length = bufferByteSize;
+                if (offsetIn + length > value.Length)
+                {
+                    length = value.Length - offsetIn;
+                }
+
+                int output = Convert.ToBase64CharArray(value, offsetIn, length, buffer, 0);
+                writer.Write(buffer, 0, output);
+            }
+        }
+
+        /// <summary>
+        /// Returns the string value with special characters escaped.
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="inputString">Input string value.</param>

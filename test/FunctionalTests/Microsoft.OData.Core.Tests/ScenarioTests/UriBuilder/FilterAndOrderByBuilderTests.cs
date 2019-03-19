@@ -253,6 +253,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
+        public void BuildFilterWithOpenPropertyInsideAnyAndOr()
+        {
+            Uri queryUri = new Uri("People?$filter=MyPaintings%2Fany(p%3Ap%2FOpenProperty) and (ID eq 1 or ID eq 2)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(p%3Ap%2FOpenProperty) and (ID eq 1 or ID eq 2)"), actualUri);
+        }
+
+        [Fact]
         public void BuildFilterWithControlCharactersShouldBeIgnored()
         {
             Uri queryUri = new Uri("People?$filter=length(Name) \neq 30", UriKind.Relative);

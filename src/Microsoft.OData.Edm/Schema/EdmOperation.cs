@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm
         private readonly List<IEdmOperationParameter> parameters = new List<IEdmOperationParameter>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmAction"/> class.
+        /// Initializes a new instance of the <see cref="EdmOperation"/> class.
         /// </summary>
         /// <param name="namespaceName">Name of the namespace.</param>
         /// <param name="name">The name.</param>
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
 
-            this.ReturnType = returnType;
+            this.Return = returnType == null ? null : new EdmOperationReturn(this, returnType);
             this.Namespace = namespaceName;
             this.IsBound = isBound;
             this.EntitySetPath = entitySetPathExpression;
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmAction"/> class.
+        /// Initializes a new instance of the <see cref="EdmOperation"/> class.
         /// </summary>
         /// <param name="namespaceName">Name of the namespace.</param>
         /// <param name="name">The name.</param>
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Edm
         public abstract EdmSchemaElementKind SchemaElementKind { get; }
 
         /// <summary>
-        /// Gets the namespace of this function.
+        /// Gets the namespace of this operation.
         /// </summary>
         public string Namespace { get; private set; }
 
@@ -83,12 +83,15 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the return type of this function.
+        /// Gets the return type of this operation.
         /// </summary>
-        public IEdmTypeReference ReturnType { get; private set; }
+        public IEdmTypeReference ReturnType
+        {
+            get { return Return == null ? null : Return.Type; }
+        }
 
         /// <summary>
-        /// Gets the parameters of this function.
+        /// Gets the parameters of this operation.
         /// </summary>
         public IEnumerable<IEdmOperationParameter> Parameters
         {
@@ -96,7 +99,12 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Searches for a parameter with the given name in this function and returns null if no such parameter exists.
+        /// Gets the return of this operation.
+        /// </summary>
+        internal IEdmOperationReturn Return { get; private set; }
+
+        /// <summary>
+        /// Searches for a parameter with the given name in this operation and returns null if no such parameter exists.
         /// </summary>
         /// <param name="name">The name of the parameter to be found.</param>
         /// <returns>The requested parameter, or null if no such parameter exists.</returns>
@@ -114,7 +122,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Creates and adds a parameter to this function (as the last parameter).
+        /// Creates and adds a parameter to this operation (as the last parameter).
         /// </summary>
         /// <param name="name">The name of the parameter being added.</param>
         /// <param name="type">The type of the parameter being added.</param>
@@ -127,7 +135,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Creates and adds an optional parameter to this function (as the last parameter).
+        /// Creates and adds an optional parameter to this operation (as the last parameter).
         /// </summary>
         /// <param name="name">The name of the parameter being added.</param>
         /// <param name="type">The type of the parameter being added.</param>
@@ -138,7 +146,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Creates and adds an optional parameter to this function (as the last parameter).
+        /// Creates and adds an optional parameter to this operation (as the last parameter).
         /// </summary>
         /// <param name="name">The name of the parameter being added.</param>
         /// <param name="type">The type of the parameter being added.</param>
@@ -152,7 +160,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Adds a parameter to this function (as the last parameter).
+        /// Adds a parameter to this operation (as the last parameter).
         /// </summary>
         /// <param name="parameter">The parameter being added.</param>
         public void AddParameter(IEdmOperationParameter parameter)

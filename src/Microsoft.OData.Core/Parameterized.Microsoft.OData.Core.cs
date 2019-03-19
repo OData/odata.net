@@ -278,25 +278,21 @@ namespace Microsoft.OData {
             }
         }
 
-
-        /// A string like "The DeltaLink must be null for request payloads. Delta links are only supported in responses."
+        /// <summary>
+        /// A string like "The NextPageLink must be null for request payloads. Next page links are only supported in responses."
         /// </summary>
-        internal static string ODataWriterCore_QueryDeltaLinkInRequest
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_QueryDeltaLinkInRequest);
+        internal static string ODataWriterCore_QueryNextLinkInRequest {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_QueryNextLinkInRequest);
             }
         }
 
         /// <summary>
-        /// A string like "The NextPageLink must be null for request payloads. Next page links are only supported in responses."
+        /// A string like "The DeltaLink must be null for request payloads. Delta links are only supported in responses."
         /// </summary>
-        internal static string ODataWriterCore_QueryNextLinkInRequest
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_QueryNextLinkInRequest);
+        internal static string ODataWriterCore_QueryDeltaLinkInRequest {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_QueryDeltaLinkInRequest);
             }
         }
 
@@ -6123,6 +6119,13 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string JsonReaderExtensions_UnexpectedInstanceAnnotationName(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReaderExtensions_UnexpectedInstanceAnnotationName, p0);
+        }
+
+        /// <summary>
+        /// A string like "The buffer from pool cannot be null or less than the required minimal size '{0}'."
+        /// </summary>
+        internal static string BufferUtils_InvalidBufferOrSize(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.BufferUtils_InvalidBufferOrSize, p0);
         }
 
         /// <summary>

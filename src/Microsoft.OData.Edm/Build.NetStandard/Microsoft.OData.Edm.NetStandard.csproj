@@ -208,8 +208,8 @@
     <Compile Include="..\Csdl\Parsing\Ast\CsdlOperationParameter.cs">
       <Link>Csdl\Parsing\Ast\CsdlOperationParameter.cs</Link>
     </Compile>
-    <Compile Include="..\Csdl\Parsing\Ast\CsdlOperationReturnType.cs">
-      <Link>Csdl\Parsing\Ast\CsdlOperationReturnType.cs</Link>
+    <Compile Include="..\Csdl\Parsing\Ast\CsdlOperationReturn.cs">
+      <Link>Csdl\Parsing\Ast\CsdlOperationReturn.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Parsing\Ast\CsdlPathExpression.cs">
       <Link>Csdl\Parsing\Ast\CsdlPathExpression.cs</Link>
@@ -337,6 +337,9 @@
     </Compile>
     <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedParameter.cs">
       <Link>Csdl\Semantics\BadElements\UnresolvedParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedReturn.cs">
+      <Link>Csdl\Semantics\BadElements\UnresolvedReturn.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs">
       <Link>Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs</Link>
@@ -490,6 +493,9 @@
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsOperationParameter.cs">
       <Link>Csdl\Semantics\CsdlSemanticsOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\CsdlSemanticsOperationReturn.cs">
+      <Link>Csdl\Semantics\CsdlSemanticsOperationReturn.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs">
       <Link>Csdl\Semantics\CsdlSemanticsOptionalParameter.cs</Link>
@@ -852,6 +858,9 @@
     <Compile Include="..\Schema\EdmOperationParameter.cs">
       <Link>Schema\EdmOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmOperationReturn.cs">
+      <Link>Schema\EdmOperationReturn.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmOptionalParameter.cs">
       <Link>Schema\EdmOptionalParameter.cs</Link>
     </Compile>
@@ -1056,6 +1065,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
       <Link>Schema\Interfaces\IEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperationReturn.cs">
+      <Link>Schema\Interfaces\IEdmOperationReturn.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOptionalParameter.cs">
       <Link>Schema\Interfaces\IEdmOptionalParameter.cs</Link>

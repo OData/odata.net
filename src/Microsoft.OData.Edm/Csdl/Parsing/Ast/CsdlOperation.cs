@@ -18,18 +18,18 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <param name="returnType">Type of the return.</param>
+        /// <param name="operationReturn">The operation return.</param>
         /// <param name="isBound">if set to <c>true</c> [is bound].</param>
         /// <param name="entitySetPath">The entity set path.</param>
         /// <param name="location">The location.</param>
         public CsdlOperation(
             string name,
             IEnumerable<CsdlOperationParameter> parameters,
-            CsdlTypeReference returnType,
+            CsdlOperationReturn operationReturn,
             bool isBound,
             string entitySetPath,
             CsdlLocation location)
-            : base(name, parameters, returnType, location)
+            : base(name, parameters, operationReturn, location)
         {
             this.IsBound = isBound;
             this.EntitySetPath = entitySetPath;
