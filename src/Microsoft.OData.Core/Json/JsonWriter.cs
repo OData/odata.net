@@ -21,7 +21,7 @@ namespace Microsoft.OData.Json
     /// Writer for the JSON format. http://www.json.org
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This class does not own the underlying stream/writer and thus should never dispose it.")]
-    internal sealed class JsonWriter : IJsonWriter
+    internal sealed class JsonWriter : IJsonWriter, IDisposable
     {
         /// <summary>
         /// Writer to write text into.
@@ -398,8 +398,20 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void Flush()
         {
-            BufferUtils.ReturnToBuffer(this.ArrayPool, this.buffer);
             this.writer.Flush();
+        }
+
+        /// <summary>
+        /// Dispose the writer
+        /// </summary>
+        public void Dispose()
+        {
+            if (this.ArrayPool != null && this.buffer != null)
+            {
+                BufferUtils.ReturnToBuffer(this.ArrayPool, this.buffer);
+                this.ArrayPool = null;
+                this.buffer = null;
+            }
         }
 
         /// <summary>

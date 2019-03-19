@@ -770,6 +770,12 @@ namespace Microsoft.OData.JsonLight
                     // The TextWriter.Flush (Which is in fact StreamWriter.Flush) will call the underlying Stream.Flush.
                     this.jsonWriter.Flush();
 
+                    JsonWriter writer = this.jsonWriter as JsonWriter;
+                    if (writer != null)
+                    {
+                        writer.Dispose();
+                    }
+
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
