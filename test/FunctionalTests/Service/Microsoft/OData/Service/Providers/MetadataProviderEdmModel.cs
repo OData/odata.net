@@ -724,7 +724,7 @@ namespace Microsoft.OData.Service.Providers
             else
             {
                 var list = this.operationsQualifiedNameCache[operation.FullName()];
-                if (!list.Contains(operation))
+                if (!list.Any(o => o.ServiceOperation == operation.ServiceOperation))
                 {
                     list.Add(operation);
                 }
