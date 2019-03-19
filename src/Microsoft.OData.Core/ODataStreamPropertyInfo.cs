@@ -106,7 +106,7 @@ namespace Microsoft.OData
                     value != EdmPrimitiveTypeKind.String &&
                     value != EdmPrimitiveTypeKind.None)
                 {
-                    throw new ODataException(Strings.StringItemShouldBeQuoted(value));
+                    throw new ODataException(Strings.StreamItemInvalidPrimitiveKind(value));
                 }
 
                 this.primitiveTypeKind = value;

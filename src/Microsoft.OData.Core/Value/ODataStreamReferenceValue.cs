@@ -44,7 +44,7 @@ namespace Microsoft.OData
             {
                 return this.HasNonComputedEditLink
                     ? this.editLink
-                    : (this.computedEditLink ?? (this.metadataBuilder == null ? null : this.computedEditLink = this.metadataBuilder.GetStreamEditLink(edmPropertyName)));
+                    : (this.computedEditLink ?? (this.metadataBuilder == null ? null : this.computedEditLink = this.metadataBuilder.GetStreamEditLink(this.edmPropertyName)));
             }
 
             set
@@ -63,7 +63,7 @@ namespace Microsoft.OData
                 return this.HasNonComputedReadLink
                     ? this.readLink
                     : (this.computedReadLink ?? (this.metadataBuilder == null ? null :
-                        this.computedReadLink = this.metadataBuilder.GetStreamReadLink(edmPropertyName)));
+                        this.computedReadLink = this.metadataBuilder.GetStreamReadLink(this.edmPropertyName)));
             }
 
             set

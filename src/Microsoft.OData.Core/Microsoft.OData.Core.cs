@@ -70,7 +70,6 @@ namespace Microsoft.OData {
     /// </summary>
     internal sealed class TextRes {
         internal const string ExceptionUtils_ArgumentStringEmpty = "ExceptionUtils_ArgumentStringEmpty";
-        internal const string ODataStreamPropertyInfo_CannotChangePrimitiveType = "ODataStreamPropertyInfo_CannotChangePrimitiveType";
         internal const string ODataRequestMessage_AsyncNotAvailable = "ODataRequestMessage_AsyncNotAvailable";
         internal const string ODataRequestMessage_StreamTaskIsNull = "ODataRequestMessage_StreamTaskIsNull";
         internal const string ODataRequestMessage_MessageStreamIsNull = "ODataRequestMessage_MessageStreamIsNull";
@@ -852,6 +851,7 @@ namespace Microsoft.OData {
         internal const string JsonReader_UnrecognizedEscapeSequence = "JsonReader_UnrecognizedEscapeSequence";
         internal const string JsonReader_UnexpectedEndOfString = "JsonReader_UnexpectedEndOfString";
         internal const string JsonReader_InvalidNumberFormat = "JsonReader_InvalidNumberFormat";
+        internal const string JsonReader_InvalidBinaryFormat = "JsonReader_InvalidBinaryFormat";
         internal const string JsonReader_MissingComma = "JsonReader_MissingComma";
         internal const string JsonReader_InvalidPropertyNameOrUnexpectedComma = "JsonReader_InvalidPropertyNameOrUnexpectedComma";
         internal const string JsonReader_MaxBufferReached = "JsonReader_MaxBufferReached";

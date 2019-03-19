@@ -44,9 +44,6 @@ namespace Microsoft.OData
         /// <summary>The number of entries which have been started but not yet ended.</summary>
         private int currentResourceDepth;
 
-        /// <summary>Whether the reader is currently streaming</summary>
-        private bool isStreaming = false;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -68,6 +65,16 @@ namespace Microsoft.OData
             this.listener = listener;
             this.currentResourceDepth = 0;
             this.Version = inputContext.MessageReaderSettings.Version;
+        }
+
+        /// <summary>
+        /// Enum used to describe the current state of the stream.
+        /// </summary>
+        internal enum StreamingState
+        {
+            None = 0,
+            Streaming,
+            Completed
         }
 
         /// <summary>
@@ -385,14 +392,14 @@ namespace Microsoft.OData
         {
             if (this.State == ODataReaderState.Stream)
             {
-                ODataStreamItem streamItem = this.CurrentScope.Item as ODataStreamItem;
-                Debug.Assert(streamItem != null, "ODataReaderState.Stream when item is not an ODataStreamItem");
-                if (streamItem.PrimitiveTypeKind != EdmPrimitiveTypeKind.Binary && streamItem.PrimitiveTypeKind != EdmPrimitiveTypeKind.None)
+                StreamScope scope = this.CurrentScope as StreamScope;
+                Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
+                if (scope.StreamingState != StreamingState.None)
                 {
                     throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
                 }
 
-                this.isStreaming = true;
+                scope.StreamingState = StreamingState.Streaming;
                 return new ODataNotificationStream(this.InterceptException(this.CreateReadStreamImplementation), this);
             }
             else
@@ -409,14 +416,14 @@ namespace Microsoft.OData
         {
             if (this.State == ODataReaderState.Stream)
             {
-                ODataStreamItem streamItem = this.CurrentScope.Item as ODataStreamItem;
-                Debug.Assert(streamItem != null, "ODataReaderState.Stream when item is not an ODataStreamItem");
-                if (streamItem.PrimitiveTypeKind != EdmPrimitiveTypeKind.String && streamItem.PrimitiveTypeKind != EdmPrimitiveTypeKind.None)
+                StreamScope scope = this.CurrentScope as StreamScope;
+                Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
+                if (scope.StreamingState != StreamingState.None)
                 {
                     throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
                 }
 
-                this.isStreaming = true;
+                scope.StreamingState = StreamingState.Streaming;
                 return new ODataNotificationReader(this.InterceptException(this.CreateTextReaderImplementation), this);
             }
             else
@@ -449,8 +456,10 @@ namespace Microsoft.OData
         void IODataStreamListener.StreamDisposed()
         {
             Debug.Assert(this.State == ODataReaderState.Stream, "Stream was disposed when not in ReaderState.Stream state.");
-            Debug.Assert(this.isStreaming, "StreamDisposed called when reader was not streaming");
-            this.isStreaming = false;
+            StreamScope scope = this.CurrentScope as StreamScope;
+            Debug.Assert(scope != null, "Stream disposed when not in stream scope");
+            Debug.Assert(scope.StreamingState == StreamingState.Streaming, "StreamDisposed called when reader was not streaming");
+            scope.StreamingState = StreamingState.Completed;
         }
 
         /// <summary>
@@ -927,9 +936,14 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ODataReaderCore_ReadOrReadAsyncCalledInInvalidState(this.State));
             }
 
-            if (this.isStreaming)
+            if (this.State == ODataReaderState.Stream)
             {
-                throw new ODataException(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                StreamScope scope = this.CurrentScope as StreamScope;
+                Debug.Assert(scope != null, "In stream state without a stream scope");
+                if (scope.StreamingState != StreamingState.Completed)
+                {
+                    throw new ODataException(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                }
             }
         }
 
@@ -1093,6 +1107,28 @@ namespace Microsoft.OData
             /// Gets or sets the derived type constraint validator.
             /// </summary>
             internal DerivedTypeValidator DerivedTypeValidator { get; set; }
+        }
+
+        protected internal class StreamScope : Scope
+        {
+            /// <summary>
+            /// Constructor creating a new reader scope.
+            /// </summary>
+            /// <param name="state">The reader state of this scope.</param>
+            /// <param name="item">The item attached to this scope.</param>
+            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
+            /// <param name="expectedResourceType">The expected resource type for the scope.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
+            internal StreamScope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType expectedResourceType, ODataUri odataUri)
+                : base(state, item, navigationSource, expectedResourceType, odataUri)
+            {
+                this.StreamingState = StreamingState.None;
+            }
+
+            /// <summary>
+            /// Current state of the stream.
+            /// </summary>
+            internal StreamingState StreamingState { get; set; }
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Microsoft.OData
                     typeKind != EdmPrimitiveTypeKind.Binary &&
                     typeKind != EdmPrimitiveTypeKind.None)
                 {
-                    throw new ODataException(Strings.StringItemShouldBeQuoted(value));
+                    throw new ODataException(Strings.StreamItemInvalidPrimitiveKind(value));
                 }
 
                 this.typeKind = value;

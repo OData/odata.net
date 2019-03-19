@@ -13,6 +13,7 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Json;
 
     /// <summary>
     /// A stream for writing base64 encoded binary values.
@@ -131,7 +132,7 @@ namespace Microsoft.OData
             int remainingBytes = (count - numberOfBytesToPrefix) % 3;
             trailingBytes = bytes.Skip(offset + count - remainingBytes).Take(remainingBytes).ToArray();
 
-            WriteBinaryString(this.Writer, prefixByteString.Concat(bytes.Skip(offset + numberOfBytesToPrefix).Take(count - numberOfBytesToPrefix - remainingBytes)).ToArray(), buffer);
+            JsonValueUtils.WriteBinaryString(this.Writer, prefixByteString.Concat(bytes.Skip(offset + numberOfBytesToPrefix).Take(count - numberOfBytesToPrefix - remainingBytes)).ToArray(), ref buffer);
         }
 
         #if PORTABLELIB
@@ -198,32 +199,6 @@ namespace Microsoft.OData
 
             this.Writer.Flush();
             base.Dispose(disposing);
-        }
-
-        /// <summary>
-        /// Write a byte array.
-        /// </summary>
-        /// <param name="writer">TextWriter to write the byte[]</param>
-        /// <param name="value">Byte array to be written.</param>
-        /// <param name="buffer">Temporary buffer to hold the converted chars</param>
-        private static void WriteBinaryString(TextWriter writer, byte[] value, char[] buffer)
-        {
-            int bufferLength = buffer.Length;
-
-            // Try to hold base64 string as much as possible in one converting.
-            int bufferByteSize = bufferLength * 3 / 4;
-
-            for (int offsetIn = 0; offsetIn < value.Length; offsetIn += bufferByteSize)
-            {
-                int length = bufferByteSize;
-                if (offsetIn + length > value.Length)
-                {
-                    length = value.Length - offsetIn;
-                }
-
-                int output = Convert.ToBase64CharArray(value, offsetIn, length, buffer, 0);
-                writer.Write(buffer, 0, output);
-            }
         }
     }
 }

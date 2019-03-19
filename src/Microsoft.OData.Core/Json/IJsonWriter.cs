@@ -7,7 +7,6 @@
 namespace Microsoft.OData.Json
 {
     using System;
-    using System.IO;
     using Microsoft.OData.Edm;
 
     /// <summary>

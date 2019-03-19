@@ -1260,7 +1260,6 @@ namespace Microsoft.OData.Json
             else if (this.storedCharacterCount == this.characterBuffer.Length)
             {
                 // No more room in the buffer, move or grow the buffer.
-                // Tested 1/2, 3/4 and 1/4, it seems 1/4 is better than other two.
                 if (this.tokenStartIndex < this.characterBuffer.Length / 4)
                 {
                     // The entire buffer is full of unconsumed characters

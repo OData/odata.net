@@ -1083,13 +1083,11 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-//        [Fact]
-        public void CanSkipStreamProperties()
+        [Fact]
+        public void CannotSkipStreamProperties()
         {
             string payload = String.Format(resourcePayload,
-             ",\"name\":\"Thor\"" +
-             ",\"stream\":\"" + binaryValue + "\"" +
-             ",\"binaryAsStream\":\"" + binaryValue + "\""
+             ",\"name\":\"Thor\""
              );
 
             Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
@@ -1098,28 +1096,27 @@ namespace Microsoft.OData.Tests.JsonLight
                     return true;
                 };
 
+
             foreach (Variant variant in GetVariants(ShouldStream))
             {
-                int expectedPropertyCount = variant.IsRequest ? 1 : 2;
-                ODataResource resource = null;
-
-                ODataReader reader = CreateODataReader(payload, variant);
-                while (reader.Read())
+                Action action = () =>
                 {
-                    switch (reader.State)
+                    ODataReader reader = CreateODataReader(payload, variant);
+                    while (reader.Read())
                     {
-                        case ODataReaderState.ResourceStart:
-                            resource = reader.Item as ODataResource;
-                            break;
+                        switch (reader.State)
+                        {
+                            case ODataReaderState.ResourceStart:
+                                break;
 
-                        case ODataReaderState.Stream:
-                            // do not create nor read the stream
-                            break;
+                            case ODataReaderState.Stream:
+                                // do not create nor read the stream
+                                break;
+                        }
                     }
-                }
+                };
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
+                action.ShouldThrow<ODataException>().WithMessage(Strings.ODataReaderCore_ReadCalledWithOpenStream);
             }
         }
 

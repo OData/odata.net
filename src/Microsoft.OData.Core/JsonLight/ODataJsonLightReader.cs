@@ -2932,7 +2932,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// A reader scope; keeping track of the current reader state and an item associated with this state.
         /// </summary>
-        private sealed class JsonLightStreamScope : Scope
+        private sealed class JsonLightStreamScope : StreamScope
         {
             /// <summary>
             /// Constructor creating a new nested property info scope.

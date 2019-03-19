@@ -4695,6 +4695,11 @@ public sealed class Microsoft.OData.ContainerBuilderExtensions {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.IContainerBuilder AddDefaultODataServices (Microsoft.OData.IContainerBuilder builder, Microsoft.OData.ODataVersion odataVersion)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.IContainerBuilder builder, Microsoft.OData.ServiceLifetime lifetime)
 
 	[
@@ -5495,8 +5500,12 @@ public sealed class Microsoft.OData.ODataSingletonInfo : Microsoft.OData.ODataSe
 	public ODataSingletonInfo ()
 }
 
-public sealed class Microsoft.OData.ODataStreamInfo : Microsoft.OData.ODataItem {
-	Microsoft.OData.Edm.EdmPrimitiveTypeKind TypeKind  { public get; }
+public sealed class Microsoft.OData.ODataStreamItem : Microsoft.OData.ODataItem {
+	public ODataStreamItem (Microsoft.OData.Edm.EdmPrimitiveTypeKind typeKind)
+	public ODataStreamItem (Microsoft.OData.Edm.EdmPrimitiveTypeKind primitiveTypeKind, string contentType)
+
+	string ContentType  { public get; public set; }
+	Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.ODataStreamPropertyInfo : Microsoft.OData.ODataPropertyInfo, IODataStreamReferenceInfo {

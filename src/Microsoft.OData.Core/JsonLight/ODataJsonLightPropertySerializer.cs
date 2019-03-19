@@ -566,8 +566,6 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isOpenPropertyType">If the property is open.</param>
         private void WriteStreamProperty(ODataBinaryStreamValue streamValue, bool isOpenPropertyType)
         {
-            // mikep (todo): resolve and write type if not expected type. need to use type name oracle to determine metadata
-            // this.WritePropertyTypeName();
             this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
             this.JsonLightValueSerializer.WriteStreamValue(streamValue);
         }

@@ -333,6 +333,54 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public void CanWriteStreamPropertyAsJsonArray()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"jsonStream@mediaEditLink\":\"http://testservice/customers/1/stream\"" +
+                ",\"jsonStream@mediaContentType\":\"application/json\"" +
+                ",\"jsonStream\":[{\"stringProp\":\"string\",\"numProp\":-10.5,\"boolProp\":true,\"arrayProp\":[\"value1\",-10.5,false]}]"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                // write metadata for stream property
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataStreamPropertyInfo
+                {
+                    Name = "jsonStream",
+                    EditLink = new Uri("http://testservice/customers/1/stream", UriKind.Absolute),
+                    ContentType = "application/json"
+                });
+                using (TextWriter textWriter = writer.CreateTextWriter())
+                {
+                    using (Microsoft.OData.Json.JsonWriter jsonWriter = new Microsoft.OData.Json.JsonWriter(textWriter, false))
+                    {
+                        jsonWriter.StartArrayScope();
+                        jsonWriter.StartObjectScope();
+                        jsonWriter.WriteName("stringProp");
+                        jsonWriter.WriteValue("string");
+                        jsonWriter.WriteName("numProp");
+                        jsonWriter.WriteValue(-10.5);
+                        jsonWriter.WriteName("boolProp");
+                        jsonWriter.WriteValue(true);
+                        jsonWriter.WriteName("arrayProp");
+                        jsonWriter.StartArrayScope();
+                        jsonWriter.WriteValue("value1");
+                        jsonWriter.WriteValue(-10.5);
+                        jsonWriter.WriteValue(false);
+                        jsonWriter.EndArrayScope();
+                        jsonWriter.EndObjectScope();
+                        jsonWriter.EndArrayScope();
+                        jsonWriter.Flush();
+                    }
+                } // stream must be disposed before continuing
+                writer.WriteEnd();  // json stream property
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
         public void CanWriteCollectionOfPrimitives()
         {
             string expectedPayload = String.Format(resourcePayload,

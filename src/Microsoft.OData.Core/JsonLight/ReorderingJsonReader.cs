@@ -37,8 +37,17 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A Stream used to read a stream value.</returns>
         public override Stream CreateReadStream()
         {
-            Stream result = new MemoryStream(this.Value == null ? new byte[0] :
-                Convert.FromBase64String((string)this.Value));
+            Stream result;
+            try
+            {
+                result = new MemoryStream(this.Value == null ? new byte[0] :
+                    Convert.FromBase64String((string)this.Value));
+            }
+            catch (FormatException)
+            {
+                throw new ODataException(Strings.JsonReader_InvalidBinaryFormat(this.Value));
+            }
+
             this.Read();
             return result;
         }

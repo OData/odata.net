@@ -9,7 +9,6 @@
 
 namespace Microsoft.OData {
     using System;
-    using System.Resources;
 
     /// <summary>
     ///    Strongly-typed and parameterized string resources.
@@ -21,17 +20,6 @@ namespace Microsoft.OData {
         internal static string ExceptionUtils_ArgumentStringEmpty {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExceptionUtils_ArgumentStringEmpty);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Cannot change the primitive type of an ODataStreamPropertyInfo."
-        /// </summary>
-        internal static string ODataStreamPropertyInfo_CannotChangePrimitiveType
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataStreamPropertyInfo_CannotChangePrimitiveType);
             }
         }
 
@@ -6012,6 +6000,14 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string JsonReader_InvalidNumberFormat(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_InvalidNumberFormat, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid Binary value. The value '{0}' is not a valid Base64 encoded value."
+        /// </summary>
+        internal static string JsonReader_InvalidBinaryFormat(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_InvalidBinaryFormat, p0);
         }
 
         /// <summary>
