@@ -147,6 +147,12 @@ namespace Microsoft.OData.UriParser
         internal bool IsCollapsed { get; set; }
 
         /// <summary>
+        /// The property set when entering entity set aggregation context
+        /// </summary>
+
+        internal bool InEntitySetAggregation { get; set; }
+
+        /// <summary>
         /// The parsed segments in path and query option.
         /// </summary>
         internal List<ODataPathSegment> ParsedSegments

@@ -189,7 +189,8 @@ namespace Microsoft.OData.UriParser
                 IEdmProperty property = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), endPathToken.Identifier);
 
                 if (property.PropertyKind == EdmPropertyKind.Structural
-                    && !property.Type.IsCollection())
+                    && !property.Type.IsCollection()
+                    && this.state.InEntitySetAggregation)
                 {
                     return new AggregatedCollectionPropertyNode(collectionParent, property);
                 }

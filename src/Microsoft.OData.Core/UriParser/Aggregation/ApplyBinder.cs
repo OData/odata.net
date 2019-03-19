@@ -65,7 +65,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                         state.AggregatedPropertyNames = new HashSet<EndPathToken>(compute.Expressions.Select(statement => new EndPathToken(statement.Alias, null)));
                         break;
                     case QueryTokenKind.Expand:
-                        SelectExpandClause expandClause = SelectExpandSemanticBinder.Bind(this.odataPathInfo,  (ExpandToken)token, null, this.configuration, null);
+                        SelectExpandClause expandClause = SelectExpandSemanticBinder.Bind(this.odataPathInfo, (ExpandToken)token, null, this.configuration, null);
                         ExpandTransformationNode expandNode = new ExpandTransformationNode(expandClause);
                         transformations.Add(expandNode);
                         break;
@@ -103,25 +103,25 @@ namespace Microsoft.OData.UriParser.Aggregation
                 switch (token.Kind)
                 {
                     case QueryTokenKind.EntitySetAggregateExpression:
-                    {
-                        AggregateTokenBase currentValue;
-                        EntitySetAggregateToken entitySetToken = token as EntitySetAggregateToken;
-                        string key = entitySetToken.Path();
-
-                        if (entitySetTokens.TryGetValue(key, out currentValue))
                         {
-                            entitySetTokens.Remove(key);
+                            AggregateTokenBase currentValue;
+                            EntitySetAggregateToken entitySetToken = token as EntitySetAggregateToken;
+                            string key = entitySetToken.Path();
+
+                            if (entitySetTokens.TryGetValue(key, out currentValue))
+                            {
+                                entitySetTokens.Remove(key);
+                            }
+
+                            entitySetTokens.Add(key, EntitySetAggregateToken.Merge(entitySetToken, currentValue as EntitySetAggregateToken));
+                            break;
                         }
 
-                        entitySetTokens.Add(key, EntitySetAggregateToken.Merge(entitySetToken, currentValue as EntitySetAggregateToken));
-                        break;
-                    }
-
                     case QueryTokenKind.AggregateExpression:
-                    {
-                        mergedTokens.Add(token);
-                        break;
-                    }
+                        {
+                            mergedTokens.Add(token);
+                            break;
+                        }
                 }
             }
 
@@ -133,23 +133,25 @@ namespace Microsoft.OData.UriParser.Aggregation
             switch (aggregateToken.Kind)
             {
                 case QueryTokenKind.AggregateExpression:
-                {
-                    AggregateExpressionToken token = aggregateToken as AggregateExpressionToken;
-                    SingleValueNode expression = this.bindMethod(token.Expression) as SingleValueNode;
-                    IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
+                    {
+                        AggregateExpressionToken token = aggregateToken as AggregateExpressionToken;
+                        SingleValueNode expression = this.bindMethod(token.Expression) as SingleValueNode;
+                        IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
 
-                    // TODO: Determine source
-                    return new AggregateExpression(expression, token.MethodDefinition, token.Alias, typeReference);
-                }
+                        // TODO: Determine source
+                        return new AggregateExpression(expression, token.MethodDefinition, token.Alias, typeReference);
+                    }
 
                 case QueryTokenKind.EntitySetAggregateExpression:
-                {
-                    EntitySetAggregateToken token = aggregateToken as EntitySetAggregateToken;
-                    QueryNode boundPath = this.bindMethod(token.EntitySet);
-                    
-                    IEnumerable<AggregateExpressionBase> children = token.Expressions.Select(x => BindAggregateExpressionToken(x)).ToList();
-                    return new EntitySetAggregateExpression((CollectionNavigationNode)boundPath, children);
-                }
+                    {
+                        EntitySetAggregateToken token = aggregateToken as EntitySetAggregateToken;
+                        QueryNode boundPath = this.bindMethod(token.EntitySet);
+
+                        state.InEntitySetAggregation = true;
+                        IEnumerable<AggregateExpressionBase> children = token.Expressions.Select(x => BindAggregateExpressionToken(x)).ToList();
+                        state.InEntitySetAggregation = false;
+                        return new EntitySetAggregateExpression((CollectionNavigationNode)boundPath, children);
+                    }
 
                 default:
                     throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedAggregateKind(aggregateToken.Kind));
