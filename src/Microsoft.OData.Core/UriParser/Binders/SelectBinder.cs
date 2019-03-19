@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
 
@@ -29,7 +28,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
         /// <param name="resolver">Resolver for uri parser.</param>
-        public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, BindingState state = null)
+        public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, BindingState state)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "tokenIn");
             ExceptionUtils.CheckArgumentNotNull(edmType, "entityType");
