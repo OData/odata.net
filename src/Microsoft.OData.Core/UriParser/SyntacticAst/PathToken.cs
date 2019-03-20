@@ -28,6 +28,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public abstract string Identifier { get; }
 
+        /// <summary>Indicates the Equals overload.</summary>
+        /// <returns>True if equal.</returns>
+        /// <param name="obj">The other PathToken.</param>
         public override bool Equals(object obj)
         {
             var otherPath = obj as PathToken;
@@ -41,6 +44,8 @@ namespace Microsoft.OData.UriParser
                     || this.NextToken.Equals(otherPath.NextToken));
         }
 
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             int identifierHashCode = this.Identifier.GetHashCode();
