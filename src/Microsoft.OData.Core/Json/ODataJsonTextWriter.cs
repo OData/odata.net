@@ -13,6 +13,7 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Buffers;
     using Microsoft.OData.Json;
 
     /// <summary>
@@ -20,15 +21,38 @@ namespace Microsoft.OData
     /// </summary>
     internal sealed class ODataJsonTextWriter : TextWriter
     {
+        /// <summary>
+        /// The underlying textWriter for writing the JSON.
+        /// </summary>
         private readonly TextWriter textWriter;
-        private readonly ODataStringEscapeOption escapeOption = ODataStringEscapeOption.EscapeOnlyControls;
-        private char[] buffer;
 
-        internal ODataJsonTextWriter(TextWriter textWriter, ref char[] buffer)
+        /// <summary>
+        /// The escape option to use in writing text.
+        /// </summary>
+        private readonly ODataStringEscapeOption escapeOption = ODataStringEscapeOption.EscapeOnlyControls;
+
+        /// <summary>
+        /// The buffer to help when converting binary values.
+        /// </summary>
+        private char[] streamingBuffer;
+
+        /// <summary>
+        /// Get/sets the character buffer pool for streaming.
+        /// </summary>
+        private ICharArrayPool bufferPool;
+
+        /// <summary>
+        /// A TextWriter for writing properly escaped JSON text.
+        /// </summary>
+        /// <param name="textWriter">The underlying TextWriter used when writing JSON</param>
+        /// <param name="buffer">Buffer used when converting binary values.</param>
+        /// <param name="bufferPool">Buffer pool used for renting a buffer.</param>
+        internal ODataJsonTextWriter(TextWriter textWriter, ref char[] buffer, ICharArrayPool bufferPool)
             : base(System.Globalization.CultureInfo.InvariantCulture)
         {
             this.textWriter = textWriter;
-            this.buffer = buffer;
+            this.streamingBuffer = buffer;
+            this.bufferPool = bufferPool;
         }
 
         /// <inheritdoc/>
@@ -346,12 +370,12 @@ namespace Microsoft.OData
 
         private void WriteEscapedStringValue(string value)
         {
-            JsonValueUtils.WriteEscapedJsonStringValue(this.textWriter, value, escapeOption, ref buffer);
+            JsonValueUtils.WriteEscapedJsonStringValue(this.textWriter, value, escapeOption, ref streamingBuffer, this.bufferPool);
         }
 
         private void WriteEscapedCharArray(char[] value, int offset, int count)
         {
-            JsonValueUtils.WriteEscapedCharArray(this.textWriter, value, offset, count, escapeOption, ref buffer);
+            JsonValueUtils.WriteEscapedCharArray(this.textWriter, value, offset, count, escapeOption, ref streamingBuffer, this.bufferPool);
         }
         #endregion
     }

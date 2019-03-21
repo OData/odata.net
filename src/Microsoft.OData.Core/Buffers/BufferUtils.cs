@@ -23,12 +23,23 @@ namespace Microsoft.OData.Buffers
         /// <returns>The initialized buffer</returns>
         public static char[] InitializeBufferIfRequired(char[] buffer)
         {
-            if (buffer == null)
+            return InitializeBufferIfRequired(null, buffer);
+        }
+
+        /// <summary>
+        /// Checks if the buffer is not initialized and if initialized returns the same buffer or creates a new one.
+        /// </summary>
+        /// <param name="bufferPool">The character pool.</param>
+        /// <param name="buffer">The buffer to verify</param>
+        /// <returns>The initialized buffer.</returns>
+        public static char[] InitializeBufferIfRequired(ICharArrayPool bufferPool, char[] buffer)
+        {
+            if (buffer != null)
             {
-                return new char[BufferUtils.BufferLength];
+                return buffer;
             }
 
-            return buffer;
+            return RentFromBuffer(bufferPool, BufferLength);
         }
 
         /// <summary>

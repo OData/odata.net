@@ -14,6 +14,7 @@ namespace Microsoft.OData.Json
     using System.Globalization;
     using System.IO;
     using System.Text;
+    using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -103,6 +104,11 @@ namespace Microsoft.OData.Json
             /// </summary>
             Padding = 2,
         }
+
+        /// <summary>
+        /// Get/sets the character buffer pool.
+        /// </summary>
+        public ICharArrayPool ArrayPool { get; set; }
 
         /// <summary>
         /// Whether the current TextWriter is writing JSON
@@ -397,7 +403,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(byte[] value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, value, ref this.buffer, ArrayPool);
         }
 
         /// <summary>
@@ -428,7 +434,7 @@ namespace Microsoft.OData.Json
             this.writer.Write(JsonConstants.QuoteCharacter);
             this.writer.Flush();
 
-            this.binaryValueStream = new ODataBinaryStreamWriter(writer);
+            this.binaryValueStream = new ODataBinaryStreamWriter(writer, ref buffer, ArrayPool);
             return this.binaryValueStream;
         }
 
@@ -457,7 +463,7 @@ namespace Microsoft.OData.Json
             {
                 this.writer.Write(JsonConstants.QuoteCharacter);
                 this.writer.Flush();
-                return new ODataJsonTextWriter(writer, ref buffer);
+                return new ODataJsonTextWriter(writer, ref buffer, this.ArrayPool);
             }
 
             this.writer.Flush();
@@ -488,6 +494,19 @@ namespace Microsoft.OData.Json
                 {
                     this.binaryValueStream = null;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Dispose the writer
+        /// </summary>
+        public void Dispose()
+        {
+            if (this.ArrayPool != null && this.buffer != null)
+            {
+                BufferUtils.ReturnToBuffer(this.ArrayPool, this.buffer);
+                this.ArrayPool = null;
+                this.buffer = null;
             }
         }
 

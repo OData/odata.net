@@ -72,8 +72,7 @@ namespace Microsoft.OData
         public ODataVersion? Version { get; set; }
 
         /// <summary>
-        /// Get/sets the character buffer pool. This pool is used for non-container scenario.
-        /// If the service container has an array pool, that pool will be used.
+        /// Get/sets the character buffer pool.
         /// </summary>
         public ICharArrayPool ArrayPool { get; set; }
 

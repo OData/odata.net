@@ -13,6 +13,7 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Buffers;
     using Microsoft.OData.Json;
 
     /// <summary>
@@ -26,8 +27,15 @@ namespace Microsoft.OData
         /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
         private Byte[] trailingBytes = new Byte[0];
 
-        // mikep todo: get this from user
-        private char[] buffer = new char[2048];
+        /// <summary>
+        /// The buffer to help with streaming responses.
+        /// </summary>
+        private char[] streamingBuffer;
+
+        /// <summary>
+        /// Get/sets the character buffer pool for streaming.
+        /// </summary>
+        private ICharArrayPool bufferPool;
 
         /// <summary> An empty byte[].</summary>
         private static byte[] emptyByteArray = new byte[0];
@@ -41,6 +49,18 @@ namespace Microsoft.OData
             this.Writer = writer;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="writer">A Textwriter for writing to the stream.</param>
+        /// <param name="streamingBuffer">A temporary buffer to use when converting binary values.</param>
+        /// <param name="bufferPool">Array pool for renting a buffer.</param>
+        public ODataBinaryStreamWriter(TextWriter writer, ref char[] streamingBuffer, ICharArrayPool bufferPool)
+        {
+            this.Writer = writer;
+            this.streamingBuffer = streamingBuffer;
+            this.bufferPool = bufferPool;
+        }
 
         /// <summary>
         /// Determines if the stream can read - this one can't
@@ -132,7 +152,7 @@ namespace Microsoft.OData
             int remainingBytes = (count - numberOfBytesToPrefix) % 3;
             trailingBytes = bytes.Skip(offset + count - remainingBytes).Take(remainingBytes).ToArray();
 
-            JsonValueUtils.WriteBinaryString(this.Writer, prefixByteString.Concat(bytes.Skip(offset + numberOfBytesToPrefix).Take(count - numberOfBytesToPrefix - remainingBytes)).ToArray(), ref buffer);
+            JsonValueUtils.WriteBinaryString(this.Writer, prefixByteString.Concat(bytes.Skip(offset + numberOfBytesToPrefix).Take(count - numberOfBytesToPrefix - remainingBytes)).ToArray(), ref streamingBuffer, this.bufferPool);
         }
 
         #if PORTABLELIB

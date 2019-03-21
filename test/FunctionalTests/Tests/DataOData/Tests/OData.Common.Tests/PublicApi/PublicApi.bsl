@@ -5382,6 +5382,7 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	public ODataMessageWriterSettings ()
 
+	Microsoft.OData.Buffers.ICharArrayPool ArrayPool  { public get; public set; }
 	System.Uri BaseUri  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
 	bool EnableMessageStreamDisposal  { public get; public set; }

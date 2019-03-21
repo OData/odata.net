@@ -319,8 +319,9 @@ namespace Microsoft.OData.Json
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">String value to be written.</param>
         /// <param name="stringEscapeOption">The string escape option.</param>
-        /// <param name="buffer">Char buffer to use for streaming data</param>
-        internal static void WriteValue(TextWriter writer, string value, ODataStringEscapeOption stringEscapeOption, ref char[] buffer)
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="arrayPool">Array pool for renting a buffer.</param>
+        internal static void WriteValue(TextWriter writer, string value, ODataStringEscapeOption stringEscapeOption, ref char[] buffer, ICharArrayPool arrayPool = null)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -330,7 +331,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                JsonValueUtils.WriteEscapedJsonString(writer, value, stringEscapeOption, ref buffer);
+                JsonValueUtils.WriteEscapedJsonString(writer, value, stringEscapeOption, ref buffer, arrayPool);
             }
         }
 
@@ -340,7 +341,8 @@ namespace Microsoft.OData.Json
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Byte array to be written.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
-        internal static void WriteValue(TextWriter writer, byte[] value, ref char[] buffer)
+        /// <param name="arrayPool">Array pool for renting a buffer.</param>
+        internal static void WriteValue(TextWriter writer, byte[] value, ref char[] buffer, ICharArrayPool arrayPool = null)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -351,7 +353,7 @@ namespace Microsoft.OData.Json
             else
             {
                 writer.Write(JsonConstants.QuoteCharacter);
-                WriteBinaryString(writer, value, ref buffer);
+                WriteBinaryString(writer, value, ref buffer, arrayPool);
                 writer.Write(JsonConstants.QuoteCharacter);
             }
         }
@@ -362,12 +364,13 @@ namespace Microsoft.OData.Json
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Byte array to be written.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
-        internal static void WriteBinaryString(TextWriter writer, byte[] value, ref char[] buffer)
+        /// <param name="arrayPool">Array pool for renting a buffer.</param>
+        internal static void WriteBinaryString(TextWriter writer, byte[] value, ref char[] buffer, ICharArrayPool arrayPool)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(value != null, "The value must not be null.");
 
-            buffer = BufferUtils.InitializeBufferIfRequired(buffer);
+            buffer = BufferUtils.InitializeBufferIfRequired(arrayPool, buffer);
             Debug.Assert(buffer != null);
 
             int bufferLength = buffer.Length;
@@ -395,14 +398,15 @@ namespace Microsoft.OData.Json
         /// <param name="inputString">Input string value.</param>
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data</param>
+        /// <param name="bufferPool">Array pool for renting a buffer.</param>
         internal static void WriteEscapedJsonString(TextWriter writer, string inputString,
-            ODataStringEscapeOption stringEscapeOption, ref char[] buffer)
+            ODataStringEscapeOption stringEscapeOption, ref char[] buffer, ICharArrayPool bufferPool = null)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(inputString != null, "The string value must not be null.");
 
             writer.Write(JsonConstants.QuoteCharacter);
-            WriteEscapedJsonStringValue(writer, inputString, stringEscapeOption, ref buffer);
+            WriteEscapedJsonStringValue(writer, inputString, stringEscapeOption, ref buffer, bufferPool);
             writer.Write(JsonConstants.QuoteCharacter);
         }
 
@@ -412,9 +416,10 @@ namespace Microsoft.OData.Json
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="inputString">Input string value.</param>
         /// <param name="stringEscapeOption">The string escape option.</param>
-        /// <param name="buffer">Char buffer to use for streaming data</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="bufferPool">Array pool for renting a buffer.</param>
         internal static void WriteEscapedJsonStringValue(TextWriter writer, string inputString,
-        ODataStringEscapeOption stringEscapeOption, ref char[] buffer)
+            ODataStringEscapeOption stringEscapeOption, ref char[] buffer, ICharArrayPool bufferPool)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(inputString != null, "The string value must not be null.");
@@ -429,7 +434,7 @@ namespace Microsoft.OData.Json
                 int inputStringLength = inputString.Length;
 
                 Debug.Assert(firstIndex < inputStringLength, "First index of the special character should be within the string");
-                buffer = BufferUtils.InitializeBufferIfRequired(buffer);
+                buffer = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer);
                 int bufferLength = buffer.Length;
                 int bufferIndex = 0;
                 int currentIndex = 0;
@@ -480,10 +485,12 @@ namespace Microsoft.OData.Json
         /// <param name="inputArrayOffset">How many characters to skip in the input array.</param>
         /// <param name="inputArrayCount">How many characters to write from the input array.</param>
         /// <param name="stringEscapeOption">The string escape option.</param>
-        /// <param name="buffer">Char buffer to use for streaming data</param>
-        internal static void WriteEscapedCharArray(TextWriter writer, char[] inputArray, int inputArrayOffset, int inputArrayCount, ODataStringEscapeOption stringEscapeOption, ref char[] buffer)
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="bufferPool">Character buffer pool.</param>
+        internal static void WriteEscapedCharArray(TextWriter writer, char[] inputArray, int inputArrayOffset, int inputArrayCount, ODataStringEscapeOption stringEscapeOption, ref char[] buffer, ICharArrayPool bufferPool)
         {
             int bufferIndex = 0;
+            buffer = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer);
 
             for (; inputArrayOffset < inputArrayCount; inputArrayOffset++)
             {
