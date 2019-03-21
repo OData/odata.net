@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
-using System.Collections.Generic;
 
 namespace Microsoft.OData.UriParser
 {
@@ -21,6 +20,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="expandToken">the syntactically parsed expand token</param>
         /// <param name="selectToken">the syntactically parsed select token</param>
         /// <param name="configuration">The configuration to use for parsing.</param>
+        /// <param name="state">The state of binding.</param>
         /// <returns>A select expand clause bound to metadata.</returns>
         public static SelectExpandClause Bind(
             ODataPathInfo odataPathInfo,
