@@ -57,5 +57,26 @@ namespace Microsoft.OData.UriParser
         {
             return visitor.Visit(this);
         }
+
+        /// <summary>Indicates the Equals overload.</summary>
+        /// <returns>True if equal.</returns>
+        /// <param name="obj">The other RangeVariableToken.</param>
+        public override bool Equals(object obj)
+        {
+            var otherPath = obj as RangeVariableToken;
+            if (otherPath == null)
+            {
+                return false;
+            }
+
+            return this.Name.Equals(otherPath.Name);
+        }
+
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        public override int GetHashCode()
+        {
+            return this.Name.GetHashCode();
+        }
     }
 }

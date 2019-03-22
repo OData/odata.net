@@ -388,13 +388,7 @@ namespace Microsoft.OData.UriParser
             QueryToken filterToken = expressionParser.ParseFilter(filter);
 
             // Bind it to metadata
-            BindingState state = new BindingState(configuration, odataPathInfo.Segments.ToList());
-            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(odataPathInfo.TargetEdmType.ToTypeReference(), odataPathInfo.TargetNavigationSource);
-            state.RangeVariables.Push(state.ImplicitRangeVariable);
-            if (applyClause != null)
-            {
-                state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
-            }
+            BindingState state = CreateBindingState(configuration, odataPathInfo);
 
             MetadataBinder binder = new MetadataBinder(state);
             FilterBinder filterBinder = new FilterBinder(binder.Bind, state);
@@ -440,7 +434,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="configuration">The configuration used for binding.</param>
         /// <param name="odataPathInfo">The path info from Uri path.</param>
         /// <returns>A <see cref="SelectExpandClause"/> representing the metadata bound select and expand expression.</returns>
-        private static SelectExpandClause ParseSelectAndExpandImplementation(string select, string expand, ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
+        private SelectExpandClause ParseSelectAndExpandImplementation(string select, string expand, ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(configuration.Model, "model");
@@ -452,7 +446,8 @@ namespace Microsoft.OData.UriParser
             SelectExpandSyntacticParser.Parse(select, expand, odataPathInfo.TargetStructuredType, configuration, out expandTree, out selectTree);
 
             // semantic pass
-            return SelectExpandSemanticBinder.Bind(odataPathInfo, expandTree, selectTree, configuration);
+            BindingState state = CreateBindingState(configuration, odataPathInfo);
+            return SelectExpandSemanticBinder.Bind(odataPathInfo, expandTree, selectTree, configuration, state);
         }
 
         /// <summary>
@@ -474,19 +469,43 @@ namespace Microsoft.OData.UriParser
             var orderByQueryTokens = expressionParser.ParseOrderBy(orderBy);
 
             // Bind it to metadata
-            BindingState state = new BindingState(configuration, odataPathInfo.Segments.ToList());
-            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(odataPathInfo.TargetEdmType.ToTypeReference(), odataPathInfo.TargetNavigationSource);
-            state.RangeVariables.Push(state.ImplicitRangeVariable);
-            if (applyClause != null)
-            {
-                state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
-            }
+            BindingState state = CreateBindingState(configuration, odataPathInfo);
 
             MetadataBinder binder = new MetadataBinder(state);
             OrderByBinder orderByBinder = new OrderByBinder(binder.Bind);
             OrderByClause orderByClause = orderByBinder.BindOrderBy(state, orderByQueryTokens);
 
             return orderByClause;
+        }
+
+        private BindingState CreateBindingState(ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
+        {
+            BindingState state = new BindingState(configuration, odataPathInfo.Segments.ToList());
+            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(odataPathInfo.TargetEdmType.ToTypeReference(), odataPathInfo.TargetNavigationSource);
+            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            if (applyClause != null)
+            {
+                state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
+                if (applyClause.Transformations.Any(x => x.Kind == TransformationNodeKind.GroupBy || x.Kind == TransformationNodeKind.Aggregate))
+                {
+                    state.IsCollapsed = true;
+                }
+            }
+
+            if (computeClause != null)
+            {
+                var computedProperties = new HashSet<EndPathToken>(computeClause.ComputedItems.Select(i => new EndPathToken(i.Alias, null)));
+                if(state.AggregatedPropertyNames == null)
+                {
+                    state.AggregatedPropertyNames = computedProperties;
+                }
+                else
+                {
+                    state.AggregatedPropertyNames.UnionWith(computedProperties);
+                }
+            }
+
+            return state;
         }
 
         /// <summary>
@@ -614,7 +633,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="configuration">The configuration used for binding.</param>
         /// <param name="odataPathInfo">The path info from Uri path.</param>
         /// <returns>A <see cref="ComputeClause"/> representing the metadata bound compute expression.</returns>
-        private static ComputeClause ParseComputeImplementation(string compute, ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
+        private ComputeClause ParseComputeImplementation(string compute, ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(compute, "compute");
@@ -624,9 +643,7 @@ namespace Microsoft.OData.UriParser
             ComputeToken computeToken = expressionParser.ParseCompute(compute);
 
             // Bind it to metadata
-            BindingState state = new BindingState(configuration);
-            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(odataPathInfo.TargetEdmType.ToTypeReference(), odataPathInfo.TargetNavigationSource);
-            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            BindingState state = CreateBindingState(configuration, odataPathInfo);
             MetadataBinder binder = new MetadataBinder(state);
             ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
             ComputeClause boundNode = computeBinder.BindCompute(computeToken);

@@ -27,14 +27,14 @@ namespace Microsoft.OData.UriParser
         /// <param name="edmType">The entity type that the $select is being applied to.</param>
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
-       /// <param name="resolver">Resolver for uri parser.</param>
-        public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver)
+        /// <param name="resolver">Resolver for uri parser.</param>
+        public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, BindingState state)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "tokenIn");
             ExceptionUtils.CheckArgumentNotNull(edmType, "entityType");
             ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
-            this.visitor = new SelectPropertyVisitor(model, edmType, maxDepth, expandClauseToDecorate, resolver);
+            this.visitor = new SelectPropertyVisitor(model, edmType, maxDepth, expandClauseToDecorate, resolver, state);
         }
 
         /// <summary>

@@ -1161,6 +1161,57 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void DollarComputedPropertyTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "DoubleTotal asc"},
+                    {"$compute", "FavoriteNumber mul 2 as DoubleTotal"}
+                });
+            odataQueryOptionParser.ParseCompute();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
+        }
+
+        [Fact]
+        public void DollarComputedPropertyTreatedAsOpenPropertyInFilter()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$filter", "DoubleTotal gt 10"},
+                    {"$compute", "FavoriteNumber mul 2 as DoubleTotal"}
+                });
+            odataQueryOptionParser.ParseCompute();
+            var filterClause = odataQueryOptionParser.ParseFilter();
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).And;
+            binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
+        }
+
+        [Fact]
+        public void DollarComputedAndApplyPropertiesTreatedAsOpenPropertyInFilter()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$filter", "DoubleTotal gt Total"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total)"},
+                    {"$compute", "Total mul 2 as DoubleTotal"}
+                });
+            odataQueryOptionParser.ParseApply();
+            odataQueryOptionParser.ParseCompute();
+            var filterClause = odataQueryOptionParser.ParseFilter();
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).And;
+            binaryOperatorNode.Left.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
+            binaryOperatorNode.Right.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+        }
+
+        [Fact]
         public void AggregatedPropertiesTreatedAsOpenPropertyInOrderBy()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
@@ -1196,6 +1247,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             orderByClause = orderByClause.ThenBy;
             orderByClause.Direction.Should().Be(OrderByDirection.Descending);
             orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+        }
+
+        [Fact]
+        public void NavigationPropertiesTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "MyDog/Color"},
+                    {"$apply", "groupby((MyDog/Color))"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp());
         }
 
         [Fact]
@@ -1245,7 +1312,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     {"$apply", "compute(FavoriteNumber mul 2 as DoubleFavorite)/aggregate(DoubleFavorite with sum as Total)"}
                 });
             Action parseAction = () => { odataQueryOptionParser.ParseApply(); odataQueryOptionParser.ParseOrderBy(); };
-            parseAction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "DoubleFavorite"));
+            parseAction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("DoubleFavorite"));
         }
 
         [Fact]
