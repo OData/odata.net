@@ -62,6 +62,9 @@ Overview:
 
 -->
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml">
+    <edmx:Include Alias="Auth" Namespace="Org.OData.Authorization.V1" />
+  </edmx:Reference>
   <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
     <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
   </edmx:Reference>
@@ -241,10 +244,10 @@ supported:
         <Property Name="Countable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be counted" />
         </Property>
-        <Property Name="NonCountableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" >
+        <Property Name="NonCountableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These collection properties do not allow /$count segments" />
         </Property>
-        <Property Name="NonCountableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false" >
+        <Property Name="NonCountableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These navigation properties do not allow /$count segments" />
         </Property>
       </ComplexType>
@@ -282,16 +285,16 @@ supported:
         <Property Name="SortRestrictions" Type="Capabilities.SortRestrictionsType">
           <Annotation Term="Core.Description" String="Restrictions on orderby expressions" />
         </Property>
-        <Property Name="TopSupported" Type="Core.Tag" Nullable="false" DefaultValue="true">
+        <Property Name="TopSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Supports $top" />
         </Property>
-        <Property Name="SkipSupported" Type="Core.Tag" Nullable="false" DefaultValue="true">
+        <Property Name="SkipSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Supports $skip" />
         </Property>
         <Property Name="SelectSupport" Type="Capabilities.SelectSupportType">
           <Annotation Term="Core.Description" String="Support for $select" />
         </Property>
-        <Property Name="IndexableByKey" Type="Core.Tag" Nullable="false" DefaultValue="true">
+        <Property Name="IndexableByKey" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Supports key values according to OData URL conventions" />
         </Property>
         <Property Name="InsertRestrictions" Type="Capabilities.InsertRestrictionsType">
@@ -310,6 +313,13 @@ supported:
         </Property>
         <Property Name="DeleteRestrictions" Type="Capabilities.DeleteRestrictionsType">
           <Annotation Term="Core.Description" String="Restrictions on delete operations" />
+        </Property>
+        <Property Name="OptimisticConcurrencyControl" Type="Edm.Boolean" Nullable="false" DefaultValue="false">
+          <Annotation Term="Core.Description"
+            String="Data modification (including insert) along this navigation property requires the use of ETags" />
+        </Property>
+        <Property Name="ReadRestrictions" Type="Capabilities.ReadRestrictionsType">
+          <Annotation Term="Core.Description" String="Restrictions for retrieving entities" />
         </Property>
       </ComplexType>
       <EnumType Name="NavigationType">
@@ -352,13 +362,13 @@ supported:
         <Property Name="Searchable" Type="Edm.Boolean" Nullable="false" DefaultValue="false">
           <Annotation Term="Core.Description" String="$search within $select is supported" />
         </Property>
-        <Property Name="TopSupported" Type="Core.Tag" Nullable="false" DefaultValue="false">
+        <Property Name="TopSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="false">
           <Annotation Term="Core.Description" String="$top within $select is supported" />
         </Property>
-        <Property Name="SkipSupported" Type="Core.Tag" Nullable="false" DefaultValue="false">
+        <Property Name="SkipSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="false">
           <Annotation Term="Core.Description" String="$skip within $select is supported" />
         </Property>
-        <Property Name="ComputeSupported" Type="Core.Tag" Nullable="false" DefaultValue="false">
+        <Property Name="ComputeSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="false">
           <Annotation Term="Core.Description" String="$compute within $select is supported" />
         </Property>
         <Property Name="Countable" Type="Edm.Boolean" Nullable="false" DefaultValue="false">
@@ -575,12 +585,18 @@ supported:
         <Property Name="Insertable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be inserted" />
         </Property>
+        <Property Name="NonInsertableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
+          <Annotation Term="Core.Description" String="These structural properties cannot be specified on insert" />
+        </Property>
         <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These navigation properties do not allow deep inserts" />
         </Property>
         <Property Name="MaxLevels" Type="Edm.Int32" Nullable="false" DefaultValue="-1">
           <Annotation Term="Core.Description"
             String="The maximum number of navigation properties that can be traversed when addressing the collection to insert into. A value of -1 indicates there is no restriction." />
+        </Property>
+        <Property Name="Permission" Type="Capabilities.PermissionType" Nullable="true">
+          <Annotation Term="Core.Description" String="Required scopes to perform the insert" />
         </Property>
         <Property Name="QueryOptions" Type="Capabilities.ModificationQueryOptionsType" Nullable="true">
           <Annotation Term="Core.Description" String="Support for query options with insert requests" />
@@ -590,6 +606,36 @@ supported:
         </Property>
         <Property Name="CustomQueryOptions" Type="Collection(Capabilities.CustomParameter)">
           <Annotation Term="Core.Description" String="Supported or required custom query options" />
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="PermissionType">
+        <Property Name="Scheme" Type="Auth.SecurityScheme" Nullable="false">
+          <Annotation Term="Core.Description" String="Auth flow scheme name" />
+        </Property>
+        <Property Name="Scopes" Type="Collection(Capabilities.ScopeType)" Nullable="false">
+          <Annotation Term="Core.Description" String="List of scopes that can provide access to the resource" />
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="ScopeType">
+        <Property Name="Scope" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Name of the scope." />
+        </Property>
+        <Property Name="RestrictedProperties" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description"
+            String="Comma-separated string value of all properties that will be included or excluded when using the scope." />
+          <Annotation Term="Core.LongDescription">
+            <String>Possible string value identifiers when specifying properties are `*`, _PropertyName_, `-`_PropertyName_.
+
+`*` denotes all properties are accessible.
+
+`-`_PropertyName_ excludes that specific property.
+
+_PropertyName_ explicitly provides access to the specific property.
+
+The absence of `RestrictedProperties` denotes all properties are accessible using that scope.</String>
+          </Annotation>
         </Property>
       </ComplexType>
 
@@ -620,6 +666,9 @@ supported:
         <Property Name="MaxLevels" Type="Edm.Int32" Nullable="false" DefaultValue="-1">
           <Annotation Term="Core.Description"
             String="The maximum number of navigation properties that can be traversed when addressing the collection or entity to update. A value of -1 indicates there is no restriction." />
+        </Property>
+        <Property Name="Permission" Type="Capabilities.PermissionType" Nullable="true">
+          <Annotation Term="Core.Description" String="Required scopes to perform update" />
         </Property>
         <Property Name="QueryOptions" Type="Capabilities.ModificationQueryOptionsType" Nullable="true">
           <Annotation Term="Core.Description" String="Support for query options with update requests" />
@@ -660,6 +709,9 @@ supported:
           <Annotation Term="Core.Description"
             String="The maximum number of navigation properties that can be traversed when addressing the collection to delete from or the entity to delete. A value of -1 indicates there is no restriction." />
         </Property>
+        <Property Name="Permission" Type="Capabilities.PermissionType" Nullable="true">
+          <Annotation Term="Core.Description" String="Required scopes to perform delete" />
+        </Property>
         <Property Name="CustomHeaders" Type="Collection(Capabilities.CustomParameter)">
           <Annotation Term="Core.Description" String="Supported or required custom headers" />
         </Property>
@@ -691,10 +743,10 @@ supported:
         <Property Name="SortRestrictions" Type="Capabilities.SortRestrictionsType">
           <Annotation Term="Core.Description" String="Restrictions on orderby expressions" />
         </Property>
-        <Property Name="TopSupported" Type="Core.Tag" Nullable="false" DefaultValue="true">
+        <Property Name="TopSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Supports $top" />
         </Property>
-        <Property Name="SkipSupported" Type="Core.Tag" Nullable="false" DefaultValue="true">
+        <Property Name="SkipSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Supports $skip" />
         </Property>
         <Property Name="SelectSupport" Type="Capabilities.SelectSupportType">
@@ -711,6 +763,22 @@ supported:
         </Property>
       </ComplexType>
 
+      <Term Name="OperationRestrictions" Type="Collection(Capabilities.OperationRestriction)" Nullable="false"
+        AppliesTo="Action Function"
+      >
+        <Annotation Term="Core.Description" String="Restrictions for function or action operation" />
+      </Term>
+      <ComplexType Name="OperationRestriction">
+        <Property Name="Permission" Type="Capabilities.PermissionType" Nullable="true">
+          <Annotation Term="Core.Description" String="List of required scopes to invoke an action or function" />
+        </Property>
+        <Property Name="CustomHeaders" Type="Collection(Capabilities.CustomParameter)">
+          <Annotation Term="Core.Description" String="Supported or required custom headers" />
+        </Property>
+        <Property Name="CustomQueryOptions" Type="Collection(Capabilities.CustomParameter)">
+          <Annotation Term="Core.Description" String="Supported or required custom query options" />
+        </Property>
+      </ComplexType>
       <Term Name="AnnotationValuesInQuerySupported" Type="Core.Tag" DefaultValue="true" Nullable="false" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Supports annotation values within system query options" />
       </Term>
@@ -744,19 +812,30 @@ supported:
 
       <Term Name="ReadRestrictions" Type="Capabilities.ReadRestrictionsType" AppliesTo="EntitySet Singleton FunctionImport">
         <Annotation Term="Core.Description"
-          String="Restrictions on read operations: retrieve a collection, retrieve a single instance, invoke a function" />
+          String="Restrictions for retrieving a collection of entities, retrieving a singleton instance, invoking a function" />
       </Term>
-      <ComplexType Name="ReadRestrictionsType">
+      <ComplexType Name="ReadRestrictionsBase" Abstract="true">
         <Property Name="Readable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be retrieved" />
-          <Annotation Term="Core.LongDescription"
-            String="This is only meaningful if the annotation is applied to an entity set or singleton." />
+        </Property>
+        <Property Name="Permission" Type="Capabilities.PermissionType" Nullable="true">
+          <Annotation Term="Core.Description" String="List of required scopes to invoke an action or function" />
         </Property>
         <Property Name="CustomHeaders" Type="Collection(Capabilities.CustomParameter)">
           <Annotation Term="Core.Description" String="Supported or required custom headers" />
         </Property>
         <Property Name="CustomQueryOptions" Type="Collection(Capabilities.CustomParameter)">
           <Annotation Term="Core.Description" String="Supported or required custom query options" />
+        </Property>
+      </ComplexType>
+      <ComplexType Name="ReadByKeyRestrictionsType" BaseType="Capabilities.ReadRestrictionsBase">
+        <Annotation Term="Core.Description" String="Restrictions for retrieving an entity by key" />
+      </ComplexType>
+      <ComplexType Name="ReadRestrictionsType" BaseType="Capabilities.ReadRestrictionsBase">
+        <Property Name="ReadByKeyRestrictions" Type="Capabilities.ReadByKeyRestrictionsType">
+          <Annotation Term="Core.Description" String="Restrictions for retrieving an entity by key" />
+          <Annotation Term="Core.LongDescription"
+            String="Only valid when applied to a collection. If a property of `ReadByKeyRestrictions` is not specified, the corresponding property value of `ReadRestrictions` applies." />
         </Property>
       </ComplexType>
 

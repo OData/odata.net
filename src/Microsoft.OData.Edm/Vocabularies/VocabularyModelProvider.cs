@@ -64,7 +64,12 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             Debug.Assert(coreVocabularies != null, "CoreVocabularies.xml: not found.");
             CoreModel = LoadSchemaEdmModel(assembly, coreVocabularies, new IEdmModel[] { });
 
-            // validation
+            // Authorization
+            string authorizationVocabularies = allResources.FirstOrDefault(x => x.Contains("AuthorizationVocabularies.xml"));
+            Debug.Assert(authorizationVocabularies != null, "AuthorizationVocabularies.xml: not found.");
+            AuthorizationModel = LoadCsdlEdmModel(assembly, authorizationVocabularies, new[] { CoreModel }); // authorization relies on core
+
+            // Validation
             string validationVocabularies = allResources.Where(x => x.Contains("ValidationVocabularies.xml")).FirstOrDefault();
             Debug.Assert(validationVocabularies != null, "ValidationVocabularies.xml: not found.");
             ValidationModel = LoadSchemaEdmModel(assembly, validationVocabularies, new[] { CoreModel }); // validation relies on core
@@ -72,7 +77,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             // capabilites
             string capabilitiesVocabularies = allResources.FirstOrDefault(x => x.Contains("CapabilitiesVocabularies.xml"));
             Debug.Assert(capabilitiesVocabularies != null, "CapabilitiesVocabularies.xml: not found.");
-            CapabilitesModel = LoadCsdlEdmModel(assembly, capabilitiesVocabularies, new[] { CoreModel, ValidationModel }); // capabilities relies on core & validation
+            CapabilitesModel = LoadCsdlEdmModel(assembly, capabilitiesVocabularies, new[] { CoreModel, AuthorizationModel, ValidationModel }); // capabilities relies on core & validation
 
             // alternateKey
             string alternateKeysVocabularies = allResources.Where(x => x.Contains("AlternateKeysVocabularies.xml")).FirstOrDefault();
@@ -83,11 +88,6 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             string communityVocabularies = allResources.Where(x => x.Contains("CommunityVocabularies.xml")).FirstOrDefault();
             Debug.Assert(communityVocabularies != null, "CommunityVocabularies.xml: not found.");
             CommunityModel = LoadCsdlEdmModel(assembly, communityVocabularies, new[] { CoreModel }); // community relies on core
-
-            // Authorization
-            string authorizationVocabularies = allResources.FirstOrDefault(x => x.Contains("AuthorizationVocabularies.xml"));
-            Debug.Assert(authorizationVocabularies != null, "AuthorizationVocabularies.xml: not found.");
-            AuthorizationModel = LoadCsdlEdmModel(assembly, authorizationVocabularies, new[] { CoreModel }); // authorization relies on core
 
             VocabularyModels = new List<IEdmModel>
             {
