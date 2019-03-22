@@ -29,7 +29,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="edmType">the type of the current scope based on type segments.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <returns>The segment created from the token.</returns>
-        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver)
+        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver, BindingState state = null)
         {
             ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
@@ -55,6 +55,13 @@ namespace Microsoft.OData.UriParser
                 return new AnnotationSegment(new EdmTerm(namespaceName, termName, EdmCoreModel.Instance.GetUntyped()));
             }
 
+            EndPathToken endPathToken = new EndPathToken(tokenIn.Identifier, null);
+
+            if ((state?.IsCollapsed ?? false) && !(state?.AggregatedPropertyNames?.Contains(endPathToken) ?? false))
+            {
+                throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(tokenIn.Identifier));
+            }
+
             if (TryBindAsDeclaredProperty(tokenIn, edmType, resolver, out nextSegment))
             {
                 return nextSegment;
@@ -76,7 +83,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            if (edmType.IsOpen)
+            if (edmType.IsOpen  || (state?.AggregatedPropertyNames?.Contains(endPathToken) ?? false))
             {
                 return new DynamicPathSegment(tokenIn.Identifier);
             }

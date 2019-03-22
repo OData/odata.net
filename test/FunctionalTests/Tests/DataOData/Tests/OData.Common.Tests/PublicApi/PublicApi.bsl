@@ -5834,6 +5834,9 @@ public abstract class Microsoft.OData.UriParser.PathToken : Microsoft.OData.UriP
 
 	string Identifier  { public abstract get; }
 	Microsoft.OData.UriParser.QueryToken NextToken  { public abstract get; public abstract set; }
+
+	public virtual bool Equals (object obj)
+	public virtual int GetHashCode ()
 }
 
 public abstract class Microsoft.OData.UriParser.QueryNode {
@@ -6853,6 +6856,8 @@ public sealed class Microsoft.OData.UriParser.RangeVariableToken : Microsoft.ODa
 	string Name  { public get; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+	public virtual bool Equals (object obj)
+	public virtual int GetHashCode ()
 }
 
 public sealed class Microsoft.OData.UriParser.ReferenceSegment : Microsoft.OData.UriParser.ODataPathSegment {
@@ -8277,6 +8282,9 @@ public abstract class Microsoft.OData.Client.ALinq.UriParser.PathToken : Microso
 
 	string Identifier  { public abstract get; }
 	Microsoft.OData.Client.ALinq.UriParser.QueryToken NextToken  { public abstract get; public abstract set; }
+
+	public virtual bool Equals (object obj)
+	public virtual int GetHashCode ()
 }
 
 public abstract class Microsoft.OData.Client.ALinq.UriParser.QueryToken {
@@ -8536,6 +8544,8 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken : 
 	string Name  { public get; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+	public virtual bool Equals (object obj)
+	public virtual int GetHashCode ()
 }
 
 public sealed class Microsoft.OData.Client.ALinq.UriParser.SelectToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
