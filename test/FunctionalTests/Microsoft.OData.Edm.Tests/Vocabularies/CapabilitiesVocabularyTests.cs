@@ -321,7 +321,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""RestrictedProperties"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""Comma-separated string value of all properties that will be included or excluded when using the scope."" />
-      <Annotation Term=""Core.LongDescription"" String=""Possible string value identifiers when specifying properties are `*`, _PropertyName_, `-`_PropertyName_.&#xA;&#xA;`*` denotes all properties are accessible.&#xA;&#xA;`-`_PropertyName_ excludes that specific property.&#xA;&#xA;_PropertyName_ explicitly provides access to the specific property.&#xA;&#xA;The absence of `RestrictedProperties` denotes all properties are accessible using that scope."" />
+      <Annotation Term=""Core.LongDescription"" String=""Possible string value identifiers when specifying properties are '*', _PropertyName_, '-'_PropertyName_. Where, '*' denotes all properties are accessible,'-'_PropertyName_ excludes that specific property and _PropertyName_ explicitly provides access to the specific property. The absence of 'RestrictedProperties' denotes all properties are accessible using that scope."" />
     </Property>
   </ComplexType>
   <ComplexType Name=""DeepInsertSupportType"">
