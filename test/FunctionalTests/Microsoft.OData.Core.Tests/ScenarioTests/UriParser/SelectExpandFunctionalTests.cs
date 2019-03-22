@@ -14,6 +14,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.UriParser.Aggregation;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -1294,6 +1295,161 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         #endregion
 
+        #region "$select and generated properties"
+        [Fact]
+        public void DollarComputedPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "DoubleTotal"},
+                    {"$compute", "FavoriteNumber mul 2 as DoubleTotal"}
+                });
+            odataQueryOptionParser.ParseCompute();
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+            AssertSelectString("DoubleTotal", selectClause);
+        }
+
+        [Fact]
+        public void ApplyComputedPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "DoubleTotal"},
+                    {"$apply", "compute(FavoriteNumber mul 2 as DoubleTotal)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+            AssertSelectString("DoubleTotal", selectClause);
+        }
+
+        [Fact]
+        public void SelectAfterApplyReferencingCollapsedPropertyThrows()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "FavoriteNumber"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as DoubleTotal)"},
+                });
+
+            odataQueryOptionParser.ParseApply();
+            Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
+
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("FavoriteNumber"));
+        }
+
+        [Fact]
+        public void ComputeAfterApplyPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "DoubleTotal, NewTotal"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as DoubleTotal)"},
+                    {"$compute", "DoubleTotal as NewTotal"},
+                });
+            odataQueryOptionParser.ParseApply();
+            odataQueryOptionParser.ParseCompute();
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+            AssertSelectString("DoubleTotal, NewTotal", selectClause);
+        }
+
+        [Fact]
+        public void ComputeInExpandPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyDog($compute=Color as ColorAlias;$select=ColorAlias)"},
+                });
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+            // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expandedSelectionItem.ComputeOption.Should().NotBeNull();
+            expandedSelectionItem.ComputeOption.ComputedItems.Single().Alias.ShouldBeEquivalentTo("ColorAlias");
+            expandedSelectionItem.SelectAndExpand.SelectedItems.Single().ShouldBeSelectedItemOfType<PathSelectItem>().And.SelectedPath.LastSegment.Identifier.ShouldBeEquivalentTo("ColorAlias");
+        }
+
+        [Fact]
+        public void ComputeInExpandPropertyTreatedAsOpenPropertyInFilter()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyDog($compute=Color as ColorAlias;$filter=ColorAlias eq 'Red')"},
+                });
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+            // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expandedSelectionItem.ComputeOption.Should().NotBeNull();
+            expandedSelectionItem.ComputeOption.ComputedItems.Single().Alias.ShouldBeEquivalentTo("ColorAlias");
+            var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("ColorAlias");
+        }
+
+        [Fact]
+        public void ApplyInExpandPropertyTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyDog($apply=aggregate(Color with max as MaxColor);$select=MaxColor)"},
+                });
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+            // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expandedSelectionItem.ApplyOption.Should().NotBeNull();
+            expandedSelectionItem.ApplyOption.Transformations.Single().As<AggregateTransformationNode>().Expressions.Single().Alias.ShouldBeEquivalentTo("MaxColor");
+            expandedSelectionItem.SelectAndExpand.SelectedItems.Single().ShouldBeSelectedItemOfType<PathSelectItem>().And.SelectedPath.LastSegment.Identifier.ShouldBeEquivalentTo("MaxColor");
+        }
+
+        [Fact]
+        public void ApplyInExpandPropertyTreatedAsOpenPropertyInFilter()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyDog($apply=aggregate(Color with max as MaxColor);$filter=MaxColor eq 'Red')"},
+                });
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+            // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            expandedSelectionItem.ApplyOption.Should().NotBeNull();
+            expandedSelectionItem.ApplyOption.Transformations.Single().As<AggregateTransformationNode>().Expressions.Single().Alias.ShouldBeEquivalentTo("MaxColor");
+            var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("MaxColor");
+        }
+
+        [Theory]
+        [InlineData("$apply=aggregate(Color with max as MaxColor);$filter=Color eq 'Red'")]
+        [InlineData("$apply=aggregate(Color with max as MaxColor)/filter(Color eq 'Red')")]
+        [InlineData("$apply=aggregate(Color with max as MaxColor);$select=Color")]
+        [InlineData("$apply=aggregate(Color with max as MaxColor);$select=MaxColor,Color")]
+        public void FilterAfterApplyReferencingCollapsedPropertyThrows(string nestedClause)
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", $"MyDog({nestedClause})"},
+                });
+
+            Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
+
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("Color"));
+        }
+
+        #endregion
         #region Test Running Helpers
 
         private static SelectExpandClause RunParseSelectExpand(string select, string expand, IEdmStructuredType type, IEdmEntitySet enitytSet)

@@ -42,7 +42,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private List<ODataPathSegment> parsedSegments = new List<ODataPathSegment>();
 
-        public SelectExpandBinder(ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
+        private BindingState state;
+
+        public SelectExpandBinder(ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo, BindingState state)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(odataPathInfo.TargetStructuredType, "edmType");
@@ -51,6 +53,7 @@ namespace Microsoft.OData.UriParser
             this.edmType = odataPathInfo.TargetStructuredType;
             this.navigationSource = odataPathInfo.TargetNavigationSource;
             this.parsedSegments = odataPathInfo.Segments.ToList();
+            this.state = state;
         }
 
         /// <summary>
@@ -120,7 +123,7 @@ namespace Microsoft.OData.UriParser
             SelectExpandClause topLevelExpand = new SelectExpandClause(expandedTerms, isAllSelected);
             if (!isAllSelected)
             {
-                SelectBinder selectBinder = new SelectBinder(this.Model, this.EdmType, this.Configuration.Settings.SelectExpandLimit, topLevelExpand, this.configuration.Resolver);
+                SelectBinder selectBinder = new SelectBinder(this.Model, this.EdmType, this.Configuration.Settings.SelectExpandLimit, topLevelExpand, configuration.Resolver, this.state);
                 selectBinder.Bind(tokenIn.ExpandTerms.Single().SelectOption);
             }
 
@@ -146,7 +149,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>a new SelectExpand clause bound to the current token and nav prop</returns>
         private SelectExpandClause GenerateSubExpand(ExpandTermToken tokenIn)
         {
-            SelectExpandBinder nextLevelBinder = new SelectExpandBinder(this.Configuration, new ODataPathInfo(new ODataPath(this.parsedSegments)));
+            SelectExpandBinder nextLevelBinder = new SelectExpandBinder(this.Configuration, new ODataPathInfo(new ODataPath(this.parsedSegments)), null);
             return nextLevelBinder.BindSubLevel(tokenIn.ExpandOption);
         }
 
@@ -156,10 +159,12 @@ namespace Microsoft.OData.UriParser
         /// <param name="subExpand">the already built sub expand</param>
         /// <param name="currentNavProp">the current navigation property</param>
         /// <param name="select">the select token to use</param>
+        /// <param name="generatedProperties">list of properties generated in $compute/$apply</param>
         /// <returns>A new SelectExpand clause decorated with the select token.</returns>
-        private SelectExpandClause DecorateExpandWithSelect(SelectExpandClause subExpand, IEdmNavigationProperty currentNavProp, SelectToken select)
+        private SelectExpandClause DecorateExpandWithSelect(SelectExpandClause subExpand, IEdmNavigationProperty currentNavProp, SelectToken select, BindingState state)
         {
-            SelectBinder selectBinder = new SelectBinder(this.Model, currentNavProp.ToEntityType(), this.Settings.SelectExpandLimit, subExpand, this.configuration.Resolver);
+
+            SelectBinder selectBinder = new SelectBinder(this.Model, currentNavProp.ToEntityType(), this.Settings.SelectExpandLimit, subExpand, this.configuration.Resolver, state);
             return selectBinder.Bind(select);
         }
 
@@ -245,11 +250,30 @@ namespace Microsoft.OData.UriParser
             this.parsedSegments.Add(navSegment);   // Add the navigation property segment to parsed segments for future usage.
             ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
+            ApplyClause applyOption = null;
+            if (tokenIn.ApplyOptions != null)
+            {
+                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
+                ApplyBinder applyBinder = new ApplyBinder(binder.Bind, binder.BindingState);
+                applyOption = applyBinder.BindApply(tokenIn.ApplyOptions);
+            }
+
+            ComputeClause computeOption = null;
+            if (tokenIn.ComputeOption != null)
+            {
+                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
+                ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
+                computeOption = computeBinder.BindCompute(tokenIn.ComputeOption);
+            }
+
+            var generatedProperties = GetGeneratedProperties(computeOption, applyOption);
+            bool collapsed = applyOption?.Transformations.Any(t => t.Kind == TransformationNodeKind.Aggregate || t.Kind == TransformationNodeKind.GroupBy) ?? false;
+
             // call MetadataBinder to build the filter clause
             FilterClause filterOption = null;
             if (tokenIn.FilterOption != null)
             {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
+                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource, generatedProperties, collapsed);
                 FilterBinder filterBinder = new FilterBinder(binder.Bind, binder.BindingState);
                 filterOption = filterBinder.BindFilter(tokenIn.FilterOption);
             }
@@ -258,7 +282,7 @@ namespace Microsoft.OData.UriParser
             OrderByClause orderbyOption = null;
             if (tokenIn.OrderByOptions != null)
             {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
+                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource, generatedProperties, collapsed);
                 OrderByBinder orderByBinder = new OrderByBinder(binder.Bind);
                 orderbyOption = orderByBinder.BindOrderBy(binder.BindingState, tokenIn.OrderByOptions);
             }
@@ -271,21 +295,6 @@ namespace Microsoft.OData.UriParser
                 searchOption = searchBinder.BindSearch(tokenIn.SearchOption);
             }
 
-            ComputeClause computeOption = null;
-            if (tokenIn.ComputeOption != null)
-            {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
-                ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
-                computeOption = computeBinder.BindCompute(tokenIn.ComputeOption);
-            }
-
-            ApplyClause applyOption = null;
-            if (tokenIn.ApplyOptions != null)
-            {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
-                ApplyBinder applyBinder = new ApplyBinder(binder.Bind, binder.BindingState);
-                applyOption = applyBinder.BindApply(tokenIn.ApplyOptions);
-            }
 
             if (isRef)
             {
@@ -302,10 +311,35 @@ namespace Microsoft.OData.UriParser
                 subSelectExpand = BuildDefaultSubExpand();
             }
 
-            subSelectExpand = this.DecorateExpandWithSelect(subSelectExpand, currentNavProp, tokenIn.SelectOption);
+            subSelectExpand = this.DecorateExpandWithSelect(subSelectExpand, currentNavProp, tokenIn.SelectOption, this.CreateBindingState(targetNavigationSource, generatedProperties, collapsed));
 
             LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
             return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption, computeOption, applyOption);
+        }
+
+        private static HashSet<EndPathToken> GetGeneratedProperties(ComputeClause computeOption, ApplyClause applyOption)
+        {
+            HashSet<EndPathToken> generatedProperties = null;
+
+            if (applyOption != null)
+            {
+                generatedProperties = applyOption.GetLastAggregatedPropertyNames();
+            }
+
+            if (computeOption != null)
+            {
+                var computedProperties = new HashSet<EndPathToken>(computeOption.ComputedItems.Select(i => new EndPathToken(i.Alias, null)));
+                if (generatedProperties == null)
+                {
+                    generatedProperties = computedProperties;
+                }
+                else
+                {
+                    generatedProperties.UnionWith(computedProperties);
+                }
+            }
+
+            return generatedProperties;
         }
 
         private IEdmNavigationProperty ParseComplexTypesBeforeNavigation(IEdmStructuralProperty edmProperty, ref PathSegmentToken currentToken, List<ODataPathSegment> pathSoFar)
@@ -391,15 +425,28 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="targetNavigationSource">The navigation source being expanded.</param>
         /// <returns>A new MetadataBinder ready to bind a Filter or Orderby clause.</returns>
-        private MetadataBinder BuildNewMetadataBinder(IEdmNavigationSource targetNavigationSource)
+        private MetadataBinder BuildNewMetadataBinder(IEdmNavigationSource targetNavigationSource, HashSet<EndPathToken> generatedProperties = null, bool collapsed = false)
         {
+            BindingState state = CreateBindingState(targetNavigationSource, generatedProperties, collapsed);
+            return new MetadataBinder(state);
+        }
+
+        private BindingState CreateBindingState(IEdmNavigationSource targetNavigationSource, HashSet<EndPathToken> generatedProperties, bool collapsed)
+        {
+            if (targetNavigationSource == null)
+            {
+                return null;
+            }
+
             BindingState state = new BindingState(this.configuration)
             {
                 ImplicitRangeVariable =
                     NodeFactory.CreateImplicitRangeVariable(targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource)
             };
             state.RangeVariables.Push(state.ImplicitRangeVariable);
-            return new MetadataBinder(state);
+            state.AggregatedPropertyNames = generatedProperties;
+            state.IsCollapsed = collapsed;
+            return state;
         }
     }
 }

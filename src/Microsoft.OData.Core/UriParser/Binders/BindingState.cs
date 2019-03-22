@@ -139,7 +139,18 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Collection of aggregated property names after applying an aggregate transformation.
         /// </summary>
-        internal List<string> AggregatedPropertyNames { get; set; }
+        internal HashSet<EndPathToken> AggregatedPropertyNames { get; set; }
+
+        /// <summary>
+        /// The property set when group by or aggregation is done and properties are collapsed out of scope
+        /// </summary>
+        internal bool IsCollapsed { get; set; }
+
+        /// <summary>
+        /// The property set when entering entity set aggregation context
+        /// </summary>
+
+        internal bool InEntitySetAggregation { get; set; }
 
         /// <summary>
         /// The parsed segments in path and query option.
