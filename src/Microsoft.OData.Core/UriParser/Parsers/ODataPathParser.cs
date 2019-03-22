@@ -1607,18 +1607,8 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(bindingType != null);
 
             bool isComposableRequired = identifier.Length >= 2 && identifier[identifier.Length - 1] == ':';
-            IEnumerable<IEdmFunction> functions = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().Where(f => IsUrlEscapeFunction(model, f));
-
-            IEdmFunction function = functions.FirstOrDefault(f => f.IsComposable == isComposableRequired);
-            if (function == null)
-            {
-                // If no non-composable escape function exist, use the composable function
-                if (!isComposableRequired)
-                {
-                    function = functions.FirstOrDefault(f => f.IsComposable == true);
-                }
-            }
-
+            IEdmFunction function = model.FindBoundOperations(bindingType)
+                .OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
             if (function == null)
             {
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported(bindingType.FullTypeName()));
@@ -1642,6 +1632,12 @@ namespace Microsoft.OData.UriParser
                 Edm.Vocabularies.Community.V1.CommunityVocabularyModel.UrlEscapeFunctionTerm).FirstOrDefault();
             if (annotation != null)
             {
+                if (annotation.Value == null)
+                {
+                    // If the annotation is applied but a value is not specified then the value is assumed to be true.
+                    return true;
+                }
+
                 IEdmBooleanConstantExpression tagConstant = annotation.Value as IEdmBooleanConstantExpression;
                 if (tagConstant != null)
                 {

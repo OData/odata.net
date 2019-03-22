@@ -2712,6 +2712,12 @@ namespace Microsoft.OData.Edm
             IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(function, CommunityVocabularyModel.UrlEscapeFunctionTerm).FirstOrDefault();
             if (annotation != null)
             {
+                if (annotation.Value == null)
+                {
+                    // If the annotation is applied but a value is not specified then the value is assumed to be true.
+                    return true;
+                }
+
                 IEdmBooleanConstantExpression tagConstant = annotation.Value as IEdmBooleanConstantExpression;
                 if (tagConstant != null)
                 {

@@ -4428,7 +4428,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The URI part '{0}' is not valid because there's no escape leading delimiter before."
+        /// A string like "The URI part '{0}' is not valid because there's no leading escape character."
         /// </summary>
         internal static string UriQueryPathParser_InvalidEscapeUri(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryPathParser_InvalidEscapeUri, p0);
@@ -5689,7 +5689,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The UrlEscape function '{0}' must have and only have one 'Edm.String' parameter."
+        /// A string like "The UrlEscape function '{0}' must have exactly one non-binding parameter of type 'Edm.String'."
         /// </summary>
         internal static string RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter, p0);

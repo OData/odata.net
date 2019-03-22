@@ -1266,22 +1266,22 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Theory]
-        [InlineData("Customers(2):/abc:xyz")]
-        [InlineData("Customers(2):/abc:xyz:")]
-        public void ParseEscapeFunctionUrlWithOrWithoutColonDelimiterReturnsSameODataPath(string escapePathString)
+        [InlineData("/Customers(2):/abc:xyz", "NS.FindOrder")]
+        [InlineData("/Customers(2):/abc:xyz:", "NS.FindOrderComposable")]
+        public void ParseEscapeFunctionUrlWithAndWithoutColonDelimiterReturnsODataPath(string escapePathString, string function)
         {
             // Arrange
             IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
 
             // Act
-            string fullUriString = ServiceRoot + "/" + escapePathString;
+            string fullUriString = ServiceRoot + escapePathString;
             ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
             var escapePath = parser.ParsePath();
 
             // Assert
             Assert.Equal(3, escapePath.Count());
             OperationSegment segment = escapePath.Last() as OperationSegment;
-            Assert.Equal("NS.FindOrder", segment.Operations.First().FullName());
+            Assert.Equal(function, segment.Operations.First().FullName());
 
             Assert.Equal(1, segment.Parameters.Count());
             var parameter = segment.Parameters.First();
@@ -1296,7 +1296,7 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
 
             // Act
-            string fullUriString = ServiceRoot + "/Customers(2)/MyOrders:/xyz/abc";
+            string fullUriString = ServiceRoot + "/Customers(2)/MyOrders:/xyz/abc:";
             ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
             var escapePath = parser.ParsePath();
 
@@ -1309,6 +1309,22 @@ namespace Microsoft.OData.Tests.UriParser
             var parameter = segment.Parameters.First();
             Assert.Equal("name", parameter.Name);
             Assert.Equal("xyz/abc", ((ConstantNode)parameter.Value).Value);
+        }
+
+        [Fact]
+        public void ParseEscapeFunctionUrlWithoutEndingDelimiterThrowsWithoutNonComposableFunction()
+        {
+            // Arrange
+            IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
+
+            // Act
+            string fullUriString = ServiceRoot + "/Customers(2)/MyOrders:/xyz/abc";
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            Action test = () => parser.ParsePath();
+
+            // Assert
+            var odataException = Assert.Throws<ODataException>(test);
+            Assert.Equal(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported("Collection(NS.Order)"), odataException.Message);
         }
 
         [Theory]
@@ -1327,7 +1343,7 @@ namespace Microsoft.OData.Tests.UriParser
             // Assert
             Assert.Equal(4, escapePath.Count());
             OperationSegment segment = escapePath.First(p => p is OperationSegment) as OperationSegment;
-            Assert.Equal("NS.FindOrder", segment.Operations.First().FullName());
+            Assert.Equal("NS.FindOrderComposable", segment.Operations.First().FullName());
 
             segment = escapePath.Last(p => p is OperationSegment) as OperationSegment;
             Assert.Equal("NS.CalcCustomers", segment.Operations.First().FullName());
@@ -1370,15 +1386,20 @@ namespace Microsoft.OData.Tests.UriParser
             EdmEntityTypeReference orderTypeRef = new EdmEntityTypeReference(orderType, false);
             EdmEntityTypeReference customerTypeRef = new EdmEntityTypeReference(customerType, false);
 
-            EdmFunction orderFunction = new EdmFunction("NS", "CalcCustomers", customerTypeRef, true, null, true);
+            EdmFunction orderFunction = new EdmFunction("NS", "CalcCustomers", customerTypeRef, true, null, false);
             orderFunction.AddParameter("bindingParameter", orderTypeRef);
             orderFunction.AddParameter("path", EdmCoreModel.Instance.GetString(true));
             model.AddElement(orderFunction);
 
-            EdmFunction singleFunction = new EdmFunction("NS", "FindOrder", orderTypeRef, true, null, true);
-            singleFunction.AddParameter("bindingParameter", customerTypeRef);
-            singleFunction.AddParameter("orderName", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(singleFunction);
+            EdmFunction singleNonComposableFunction = new EdmFunction("NS", "FindOrder", orderTypeRef, true, null, false);
+            singleNonComposableFunction.AddParameter("bindingParameter", customerTypeRef);
+            singleNonComposableFunction.AddParameter("orderName", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(singleNonComposableFunction);
+
+            EdmFunction singleComposableFunction = new EdmFunction("NS", "FindOrderComposable", orderTypeRef, true, null, true);
+            singleComposableFunction.AddParameter("bindingParameter", customerTypeRef);
+            singleComposableFunction.AddParameter("orderName", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(singleComposableFunction);
 
             var multipleFunction = new EdmFunction("NS", "FindAllOrders", new EdmCollectionTypeReference(new EdmCollectionType(orderTypeRef)), true, null, true);
             multipleFunction.AddParameter("bindingParameter", new EdmCollectionTypeReference(new EdmCollectionType(orderTypeRef)));
@@ -1394,7 +1415,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
             IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
-            foreach(var function in new[] { orderFunction, singleFunction, multipleFunction })
+            foreach(var function in new[] { orderFunction, singleNonComposableFunction, singleComposableFunction, multipleFunction })
             {
                 EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
                 annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);

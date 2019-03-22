@@ -1376,11 +1376,11 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// The composable escape bound function should not declare more than one.
         /// </summary>
-        EntityComposableBoundEscapeFunctionMustBeLessOne,
+        EntityComposableBoundEscapeFunctionMustBeLessOne = 389,
 
         /// <summary>
         /// The non-composable escape bound function should not declare more than one.
         /// </summary>
-        EntityNoncomposableBoundEscapeFunctionMustBeLessOne,
+        EntityNoncomposableBoundEscapeFunctionMustBeLessOne= 390
     }
 }
