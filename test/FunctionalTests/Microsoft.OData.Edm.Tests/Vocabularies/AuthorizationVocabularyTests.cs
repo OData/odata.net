@@ -27,12 +27,20 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         {
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Authorization.V1"" Alias=""Auth"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <ComplexType Name=""SecurityScheme"">
+    <Property Name=""Authorization"" Type=""Edm.String"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""The name of a required authorization scheme"" />
+    </Property>
+    <Property Name=""RequiredScopes"" Type=""Collection(Edm.String)"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""The names of scopes required from this authorization scheme"" />
+    </Property>
+  </ComplexType>
   <ComplexType Name=""Authorization"" Abstract=""true"">
-    <Property Name=""Name"" Type=""Edm.String"">
-      <Annotation Term=""Core.Description"" String=""Name that can be used to reference the authorization flow."" />
+    <Property Name=""Name"" Type=""Edm.String"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Name that can be used to reference the authorization scheme"" />
     </Property>
     <Property Name=""Description"" Type=""Edm.String"">
-      <Annotation Term=""Core.Description"" String=""Description of the authorization method"" />
+      <Annotation Term=""Core.Description"" String=""Description of the authorization scheme"" />
     </Property>
     <Annotation Term=""Core.Description"" String=""Base type for all Authorization types"" />
   </ComplexType>
@@ -51,7 +59,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
   </ComplexType>
   <ComplexType Name=""OAuthAuthorization"" BaseType=""Auth.Authorization"" Abstract=""true"">
-    <Property Name=""Scopes"" Type=""Collection(Auth.AuthorizationScope)"">
+    <Property Name=""Scopes"" Type=""Collection(Auth.AuthorizationScope)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Available scopes"" />
     </Property>
     <Property Name=""RefreshUrl"" Type=""Edm.String"">
@@ -91,7 +99,10 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""Scope"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Scope name"" />
     </Property>
-    <Property Name=""Description"" Type=""Edm.String"">
+    <Property Name=""Grant"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""Identity that has access to the scope or can grant access to the scope."" />
+    </Property>
+    <Property Name=""Description"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Description of the scope"" />
     </Property>
   </ComplexType>
@@ -101,14 +112,6 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""Location"" Type=""Auth.KeyLocation"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Whether the API Key is passed in the header or as a query option"" />
-    </Property>
-  </ComplexType>
-  <ComplexType Name=""SecurityScheme"">
-    <Property Name=""AuthorizationSchemeName"" Type=""Edm.String"">
-      <Annotation Term=""Core.Description"" String=""The name of a required authorization scheme"" />
-    </Property>
-    <Property Name=""RequiredScopes"" Type=""Collection(Edm.String)"">
-      <Annotation Term=""Core.Description"" String=""The names of scopes required from this authorization scheme."" />
     </Property>
   </ComplexType>
   <EnumType Name=""KeyLocation"">
@@ -122,11 +125,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""API Key is passed as a cookie"" />
     </Member>
   </EnumType>
-  <Term Name=""Authorizations"" Type=""Collection(Auth.Authorization)"" AppliesTo=""EntityContainer"">
-    <Annotation Term=""Core.Description"" String=""Lists the methods available to authorize access to the annotated resource"" />
-  </Term>
-  <Term Name=""SecuritySchemes"" Type=""Collection(Auth.SecurityScheme)"" AppliesTo=""EntityContainer"">
+  <Term Name=""SecuritySchemes"" Type=""Collection(Auth.SecurityScheme)"" AppliesTo=""EntityContainer"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""At least one of the specified security schemes are required to make a request against the service."" />
+  </Term>
+  <Term Name=""Authorizations"" Type=""Collection(Auth.Authorization)"" AppliesTo=""EntityContainer"" Nullable=""false"">
+    <Annotation Term=""Core.Description"" String=""Lists the methods supported by the service to authorize access"" />
   </Term>
 </Schema>";
 
@@ -148,6 +151,19 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             Assert.True(!errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);
+        }
+
+        [Fact]
+        public void TestAuthorizationVocabularyDependsOnCoreVocabulary()
+        {
+            var referencedModels = this._authorizationModel.ReferencedModels;
+
+            Assert.NotNull(referencedModels);
+
+            Assert.Equal(2, referencedModels.Count());
+
+            Assert.True(referencedModels.Contains(EdmCoreModel.Instance));
+            Assert.True(referencedModels.Contains(CoreVocabularyModel.Instance));
         }
 
         [Fact]
@@ -185,9 +201,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         [InlineData("OAuth2Implicit", "OAuthAuthorization", "AuthorizationUrl", false)]
         [InlineData("OAuth2Password", "OAuthAuthorization", "TokenUrl", false)]
         [InlineData("OAuth2AuthCode", "OAuthAuthorization", "AuthorizationUrl|TokenUrl", false)]
-        [InlineData("AuthorizationScope", null, "Scope|Description", false)]
+        [InlineData("AuthorizationScope", null, "Scope|Grant|Description", false)]
         [InlineData("ApiKey", "Authorization", "KeyName|Location", false)]
-        [InlineData("SecurityScheme", null, "AuthorizationSchemeName|RequiredScopes", false)]
+        [InlineData("SecurityScheme", null, "Authorization|RequiredScopes", false)]
         public void TestAuthorizationVocabularyComplexType(string typeName, string baseName, string properties,
             bool isAbstract)
         {
