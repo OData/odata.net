@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -46,6 +47,8 @@ namespace Microsoft.OData
         /// <param name="writer">A Textwriter for writing to the stream.</param>
         public ODataBinaryStreamWriter(TextWriter writer)
         {
+            Debug.Assert(writer != null, "Creating a binary stream writer for a null textWriter.");
+
             this.Writer = writer;
         }
 

@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Text;
 #if PORTABLELIB
@@ -24,6 +25,9 @@ namespace Microsoft.OData
         internal ODataNotificationWriter(TextWriter textWriter, IODataStreamListener listener)
             : base(System.Globalization.CultureInfo.InvariantCulture)
         {
+            Debug.Assert(textWriter != null, "Creating a notification writer for a null textWriter.");
+            Debug.Assert(listener != null, "Creating a notification writer with a null listener.");
+
             this.textWriter = textWriter;
             this.listener = listener;
         }

@@ -390,28 +390,26 @@ namespace Microsoft.OData
         /// <returns>A stream for reading the stream property.</returns>
         public override sealed Stream CreateReadStream()
         {
-            if (this.State == ODataReaderState.Stream)
-            {
-                StreamScope scope = this.CurrentScope as StreamScope;
-                Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
-                if (scope.StreamingState != StreamingState.None)
-                {
-                    throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
-                }
-
-                scope.StreamingState = StreamingState.Streaming;
-                return new ODataNotificationStream(this.InterceptException(this.CreateReadStreamImplementation), this);
-            }
-            else
+            if (this.State != ODataReaderState.Stream)
             {
                 throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
             }
+
+            StreamScope scope = this.CurrentScope as StreamScope;
+            Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
+            if (scope.StreamingState != StreamingState.None)
+            {
+                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+            }
+
+            scope.StreamingState = StreamingState.Streaming;
+            return new ODataNotificationStream(this.InterceptException(this.CreateReadStreamImplementation), this);
         }
 
         /// <summary>
-        /// Creates a stream for reading an inline stream property.
+        /// Creates a TextWriter for reading an inline stream property.
         /// </summary>
-        /// <returns>A stream for reading the stream property.</returns>
+        /// <returns>A TextWriter for reading the stream property.</returns>
         public override sealed TextReader CreateTextReader()
         {
             if (this.State == ODataReaderState.Stream)

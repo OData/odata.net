@@ -6,9 +6,8 @@
 
 namespace Microsoft.OData
 {
-    using System;
+    using System.Diagnostics;
     using System.IO;
-    using System.Text;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
@@ -23,6 +22,9 @@ namespace Microsoft.OData
 
         internal ODataNotificationReader(TextReader textReader, IODataStreamListener listener)
         {
+            Debug.Assert(textReader != null, "Creating a notification reader for a null textReader.");
+            Debug.Assert(listener != null, "Creating a notification reader with a null textReader.");
+
             this.textReader = textReader;
             this.listener = listener;
         }

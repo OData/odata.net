@@ -21,10 +21,9 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates an ODataStreamValue with a specified typeKind.
         /// </summary>
-        /// <param name="typeKind">The type of stream value.</param>
-        public ODataStreamItem(EdmPrimitiveTypeKind typeKind)
+        /// <param name="primitiveTypeKind">The type of stream value.</param>
+        public ODataStreamItem(EdmPrimitiveTypeKind primitiveTypeKind) : this(primitiveTypeKind, null)
         {
-            this.PrimitiveTypeKind = typeKind;
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace Microsoft.OData
                 return this.typeKind;
             }
 
-            set
+            private set
             {
                 if (typeKind != EdmPrimitiveTypeKind.String &&
                     typeKind != EdmPrimitiveTypeKind.Binary &&
@@ -75,7 +74,7 @@ namespace Microsoft.OData
         /// </returns>
         public string ContentType
         {
-            get; set;
+            get; private set;
         }
     }
 }

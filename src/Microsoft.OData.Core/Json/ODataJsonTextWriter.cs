@@ -50,6 +50,8 @@ namespace Microsoft.OData
         internal ODataJsonTextWriter(TextWriter textWriter, ref char[] buffer, ICharArrayPool bufferPool)
             : base(System.Globalization.CultureInfo.InvariantCulture)
         {
+            ExceptionUtils.CheckArgumentNotNull(textWriter, "textWriter");
+
             this.textWriter = textWriter;
             this.streamingBuffer = buffer;
             this.bufferPool = bufferPool;

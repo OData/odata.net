@@ -10,10 +10,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.JsonLight;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
-using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -52,7 +49,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 resource.Should().NotBeNull();
                 resource.Properties.Count().Should().Be(expectedPropertyCount);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                var comments = resource.Properties.FirstOrDefault(p => p.Name == "comments").ODataValue as ODataCollectionValue; ;
+                var comments = resource.Properties.FirstOrDefault(p => p.Name == "comments").ODataValue as ODataCollectionValue;
                 comments.Should().NotBeNull();
                 List<object> collection = comments.Items.ToList();
                 collection.Count().Should().Be(3);
@@ -681,18 +678,18 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-        // mikep
-        //[Fact]
+        [Fact]
         public void ReadStreamPropertyAsJson()
         {
+            string jsonString = "{\"stringProp\":\"string\",\"numProp\":-10.5,\"boolProp\":true,\"arrayProp\":[\"value1\",-10.5,false]}";
             string payload = String.Format(resourcePayload,
                 ",\"stream@mediaContentType\":\"application/json\"" +
-                ",\"stream\":{\"stringProp\":\"string\",\"numProp\":-10.5,\"boolProp\":true,\"arrayProp\":[\"value1\",-10.5,false]}"
-                );
+                ",\"stream\":" + jsonString);
 
-            foreach (Variant variant in GetVariants(null))
+            foreach (Variant variant in GetVariants(null, false))
             {
                 ODataResource resource = null;
+                string jsonStream = null;
 
                 ODataReader reader = CreateODataReader(payload, variant);
                 while (reader.Read())
@@ -715,7 +712,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             streamValue.ContentType.Should().Be("application/json");
                             using (TextReader textReader = reader.CreateTextReader())
                             {
-                                string jsonStream = textReader.ReadToEnd();
+                                jsonStream = textReader.ReadToEnd();
                             }
                             break;
                     }
@@ -727,21 +724,25 @@ namespace Microsoft.OData.Tests.JsonLight
                 ODataStreamReferenceValue streamReference = resource.Properties.FirstOrDefault(p => p.Name == "stream").Value as ODataStreamReferenceValue;
                 streamReference.Should().NotBeNull();
                 streamReference.ContentType.Should().Be("application/json");
+                jsonStream.Should().Be(jsonString);
             }
         }
 
-        // mikep
-        // [Fact]
-        public void ReadUndelcaredPropertyAsJson()
+        [Fact]
+        public void ReadUndeclaredPropertyAsJson()
         {
+            string jsonString = "{\"stringProp\":\"string\",\"numProp\":-10.5,\"boolProp\":true,\"arrayProp\":[\"value1\",-10.5,false]}";
+
             string payload = String.Format(resourcePayload,
                 ",\"jsonStream@mediaContentType\":\"application/json\"" +
-                ",\"jsonStream\":{\"stringProp\":\"string\",\"numProp\":-10.5,\"boolProp\":true,\"arrayProp\":[\"value1\",-10.5,false]}"
+                ",\"jsonStream\":" + jsonString
                 );
 
-            foreach (Variant variant in GetVariants(null))
+            foreach (Variant variant in GetVariants(null, false))
             {
                 ODataResource resource = null;
+                int expectedCount = variant.IsRequest ? 2 : 3;
+                string jsonStream = null;
 
                 ODataReader reader = CreateODataReader(payload, variant);
                 while (reader.Read())
@@ -759,20 +760,24 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.Stream:
-                            var streamValue = reader.Item as ODataStreamReferenceValue;
-                            streamValue.Should().NotBeNull();
-                            streamValue.ContentType.Should().Be("application/json");
+                            var streamInfo = reader.Item as ODataStreamItem;
+                            streamInfo.Should().NotBeNull();
+                            streamInfo.ContentType.Should().Be("application/json");
                             using (TextReader textReader = reader.CreateTextReader())
                             {
-                                string jsonStream = textReader.ReadToEnd();
+                                jsonStream = textReader.ReadToEnd();
                             }
                             break;
                     }
                 }
 
                 resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(1);
+                resource.Properties.Count().Should().Be(expectedCount);
                 resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                ODataStreamReferenceValue streamReference = resource.Properties.FirstOrDefault(p => p.Name == "jsonStream").Value as ODataStreamReferenceValue;
+                streamReference.Should().NotBeNull();
+                streamReference.ContentType.Should().Be("application/json");
+                jsonStream.Should().Be(jsonString);
             }
         }
 
@@ -1104,15 +1109,6 @@ namespace Microsoft.OData.Tests.JsonLight
                     ODataReader reader = CreateODataReader(payload, variant);
                     while (reader.Read())
                     {
-                        switch (reader.State)
-                        {
-                            case ODataReaderState.ResourceStart:
-                                break;
-
-                            case ODataReaderState.Stream:
-                                // do not create nor read the stream
-                                break;
-                        }
                     }
                 };
 
@@ -1169,7 +1165,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Full
         }
 
-        private IEnumerable<Variant> GetVariants(Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream)
+        private IEnumerable<Variant> GetVariants(Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream, bool includeUnordered = true)
         {
             List<Variant> variants = new List<Variant>();
             foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
@@ -1183,7 +1179,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 {
                     foreach (bool isRequest in new bool[] { true, false })
                     {
-                        foreach (bool isStreaming in new bool[] { true, false })
+                        foreach (bool isStreaming in includeUnordered ? new bool[] { true, false } : new bool[] { true})
                         {
                             variants.Add(new Variant
                             {
@@ -1271,17 +1267,6 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             return result;
-        }
-
-        private void ReadJson(ODataReader reader)
-        {
-            ODataStreamItem streamValue = reader.Item as ODataStreamItem;
-            streamValue.Should().NotBeNull();
-            streamValue.PrimitiveTypeKind.Should().Be(EdmPrimitiveTypeKind.Stream);
-
-            using (Stream stream = reader.CreateReadStream())
-            {
-            }
         }
 
         private string ReadPartialStream(ODataReader reader)

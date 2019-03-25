@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using System.Diagnostics;
     using System.IO;
     using System.Threading;
 #if PORTABLELIB
@@ -22,6 +23,9 @@ namespace Microsoft.OData
 
         internal ODataNotificationStream(Stream underlyingStream, IODataStreamListener listener)
         {
+            Debug.Assert(underlyingStream != null, "Creating a notification stream for a null stream.");
+            Debug.Assert(listener != null, "Creating a notification stream with a null listener.");
+
             this.stream = underlyingStream;
             this.listener = listener;
         }

@@ -13,8 +13,6 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using System.Linq;
-    using System.Text;
 
     #endregion Namespaces
 
@@ -52,6 +50,7 @@ namespace Microsoft.OData
         internal ODataBinaryStreamReader(Func<char[], int, int, int> reader)
         {
             Debug.Assert(reader != null, "reader cannot be null");
+
             this.reader = reader;
             chars = new char[charLength];
         }

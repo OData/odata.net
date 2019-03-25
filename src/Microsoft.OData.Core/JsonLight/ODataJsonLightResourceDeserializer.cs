@@ -1395,7 +1395,7 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     // return without reading over the property node; we will create a stream over the value
-                    this.AssertJsonCondition(JsonNodeType.PrimitiveValue);
+                    this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.Property);
                     return new ODataJsonLightReaderNestedPropertyInfo(propertyInfo, property);
                 }
             }

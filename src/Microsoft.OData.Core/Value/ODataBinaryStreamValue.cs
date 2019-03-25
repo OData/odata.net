@@ -21,6 +21,8 @@ namespace Microsoft.OData
         /// <param name="stream">Input stream</param>
         public ODataBinaryStreamValue(Stream stream)
         {
+            ExceptionUtils.CheckArgumentNotNull(stream, "stream");
+
             this.Stream = stream;
         }
 

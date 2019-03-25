@@ -5,13 +5,8 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Text;
 using FluentAssertions;
-using Microsoft.OData.JsonLight;
-using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -593,7 +588,57 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void CannotWriteAndStreamValue()
+        public void CannotWriteAndStreamProperty()
+        {
+            Action writeWithExtraValue = () => RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataPropertyInfo
+                {
+                    Name = "textAsStream"
+                });
+                writer.WritePrimitive(new ODataPrimitiveValue("text"));
+                writer.WriteEnd(); // property
+                writer.WriteStart(new ODataProperty
+                {
+                    Name = "textAsStream",
+                    Value = new ODataPrimitiveValue("text")
+                });
+                writer.WriteEnd(); // resource
+            },
+            null);
+
+            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.DuplicatePropertyNamesNotAllowed("textAsStream"));
+        }
+
+        [Fact]
+        public void CannotStreamAndWriteProperty()
+        {
+            Action writeWithExtraValue = () => RunTest((ODataWriter writer) =>
+            {
+                // write a binary property using a stream
+                writer.WriteStart(resource);
+                writer.WriteStart(new ODataPropertyInfo
+                {
+                    Name = "textAsStream"
+                });
+                writer.WritePrimitive(new ODataPrimitiveValue("text"));
+                writer.WriteEnd(); // property
+                writer.WriteStart(new ODataProperty
+                {
+                    Name = "textAsStream",
+                    Value = new ODataPrimitiveValue("text")
+                });
+                writer.WriteEnd(); // resource
+            },
+            null);
+
+            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.DuplicatePropertyNamesNotAllowed("textAsStream"));
+        }
+
+        [Fact]
+        public void CannotWritePrimitiveValueTwice()
         {
             Action writeWithExtraValue = () => RunTest((ODataWriter writer) =>
             {
@@ -612,7 +657,6 @@ namespace Microsoft.OData.Tests.JsonLight
 
             writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
         }
-
         #region Test Helper Methods
 
         private IEdmModel GetModel()

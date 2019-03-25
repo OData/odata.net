@@ -49,6 +49,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.Read();
+
             return result;
         }
 
@@ -58,8 +59,15 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A TextReader for reading the text value.</returns>
         public override TextReader CreateTextReader()
         {
+            if (this.NodeType == JsonNodeType.Property)
+            {
+                // reading JSON
+                throw new ODataException("Reading JSON Streams not supported for beta.");
+            }
+
             TextReader result = new StringReader(this.Value == null ? "" : (string)this.Value);
             this.Read();
+
             return result;
         }
 
