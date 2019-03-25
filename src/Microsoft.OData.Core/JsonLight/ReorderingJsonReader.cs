@@ -32,6 +32,55 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Creates a stream for reading a stream value.
+        /// </summary>
+        /// <returns>A Stream used to read a stream value.</returns>
+        public override Stream CreateReadStream()
+        {
+            Stream result;
+            try
+            {
+                result = new MemoryStream(this.Value == null ? new byte[0] :
+                    Convert.FromBase64String((string)this.Value));
+            }
+            catch (FormatException)
+            {
+                throw new ODataException(Strings.JsonReader_InvalidBinaryFormat(this.Value));
+            }
+
+            this.Read();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a TextReader for reading a text value.
+        /// </summary>
+        /// <returns>A TextReader for reading the text value.</returns>
+        public override TextReader CreateTextReader()
+        {
+            if (this.NodeType == JsonNodeType.Property)
+            {
+                // reading JSON
+                throw new ODataException("Reading JSON Streams not supported for beta.");
+            }
+
+            TextReader result = new StringReader(this.Value == null ? "" : (string)this.Value);
+            this.Read();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Whether or not the current value can be streamed.
+        /// </summary>
+        /// <returns>True if the current value can be streamed, otherwise false.</returns>
+        public override bool CanStream()
+        {
+            return (this.Value is string || this.Value == null);
+        }
+
+        /// <summary>
         /// Called whenever we find a new object value in the payload.
         /// Buffers and re-orders an object value for later consumption by the JsonLight reader.
         /// </summary>

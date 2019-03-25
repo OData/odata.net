@@ -72,7 +72,7 @@ namespace Microsoft.OData
             string method,
             Uri requestUrl,
             ODataBatchOperationHeaders headers,
-            IODataBatchOperationListener operationListener,
+            IODataStreamListener operationListener,
             string contentId,
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,

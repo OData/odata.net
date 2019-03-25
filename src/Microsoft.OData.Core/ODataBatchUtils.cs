@@ -77,11 +77,11 @@ namespace Microsoft.OData
         /// <param name="batchReaderStream">The batch stream to create the operation read stream for.</param>
         /// <param name="headers">The headers of the current part; based on the header we create different, optimized stream implementations.</param>
         /// <param name="operationListener">The operation listener to be passed to the newly created read stream.</param>
-        /// <returns>A new <see cref="ODataBatchOperationReadStream"/> instance.</returns>
-        internal static ODataBatchOperationReadStream CreateBatchOperationReadStream(
+        /// <returns>A new <see cref="ODataReadStream"/> instance.</returns>
+        internal static ODataReadStream CreateBatchOperationReadStream(
             ODataBatchReaderStream batchReaderStream,
             ODataBatchOperationHeaders headers,
-            IODataBatchOperationListener operationListener)
+            IODataStreamListener operationListener)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -96,10 +96,10 @@ namespace Microsoft.OData
                     throw new ODataException(Strings.ODataBatchReaderStream_InvalidContentLengthSpecified(contentLengthValue));
                 }
 
-                return ODataBatchOperationReadStream.Create(batchReaderStream, operationListener, length);
+                return ODataReadStream.Create(batchReaderStream, operationListener, length);
             }
 
-            return ODataBatchOperationReadStream.Create(batchReaderStream, operationListener);
+            return ODataReadStream.Create(batchReaderStream, operationListener);
         }
 
         /// <summary>
@@ -107,15 +107,15 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="outputStream">The output stream to create the operation write stream over.</param>
         /// <param name="operationListener">The operation listener to be passed to the newly created write stream.</param>
-        /// <returns>A new <see cref="ODataBatchOperationWriteStream"/> instance.</returns>
-        internal static ODataBatchOperationWriteStream CreateBatchOperationWriteStream(
+        /// <returns>A new <see cref="ODataWriteStream"/> instance.</returns>
+        internal static ODataWriteStream CreateBatchOperationWriteStream(
             Stream outputStream,
-            IODataBatchOperationListener operationListener)
+            IODataStreamListener operationListener)
         {
             Debug.Assert(outputStream != null, "outputStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
-            return new ODataBatchOperationWriteStream(outputStream, operationListener);
+            return new ODataWriteStream(outputStream, operationListener);
         }
 
         /// <summary>

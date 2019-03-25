@@ -18,7 +18,7 @@ namespace Microsoft.OData
         /// Validates property uniqueness.
         /// </summary>
         /// <param name="property">The property.</param>
-        void ValidatePropertyUniqueness(ODataProperty property);
+        void ValidatePropertyUniqueness(ODataPropertyInfo property);
 
         /// <summary>
         /// Validates property uniqueness.

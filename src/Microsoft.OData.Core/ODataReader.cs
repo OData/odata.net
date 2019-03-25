@@ -7,7 +7,9 @@
 namespace Microsoft.OData
 {
     #region Namespaces
+    using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
@@ -30,10 +32,38 @@ namespace Microsoft.OData
         /// <returns>true if more items were read; otherwise false.</returns>
         public abstract bool Read();
 
+        /// <summary>Creates a stream for reading an inline stream property. </summary>
+        /// <returns>A stream for reading the stream property.</returns>
+        public virtual Stream CreateReadStream()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Creates a TextReader for reading an inline string property. </summary>
+        /// <returns>A TextReader for reading the text property.</returns>
+        public virtual TextReader CreateTextReader()
+        {
+            throw new NotImplementedException();
+        }
+
 #if PORTABLELIB
         /// <summary> Asynchronously reads the next <see cref="T:Microsoft.OData.ODataItem" /> from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         public abstract Task<bool> ReadAsync();
+
+        /// <summary>Asynchronously creates a stream for reading an inline stream property. </summary>
+        /// <returns>A stream for reading the stream property.</returns>
+        public virtual Task<Stream> CreateReadStreamAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateReadStream());
+        }
+
+        /// <summary>Asynchronously creates a stream for reading an inline stream property. </summary>
+        /// <returns>A stream for reading the stream property.</returns>
+        public virtual Task<TextReader> CreateTextReaderAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextReader());
+        }
 #endif
     }
 }
