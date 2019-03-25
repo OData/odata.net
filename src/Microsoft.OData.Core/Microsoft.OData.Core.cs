@@ -650,6 +650,7 @@ namespace Microsoft.OData {
         internal const string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri = "UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri";
         internal const string UriQueryPathParser_SyntaxError = "UriQueryPathParser_SyntaxError";
         internal const string UriQueryPathParser_TooManySegments = "UriQueryPathParser_TooManySegments";
+        internal const string UriQueryPathParser_InvalidEscapeUri = "UriQueryPathParser_InvalidEscapeUri";
         internal const string UriUtils_DateTimeOffsetInvalidFormat = "UriUtils_DateTimeOffsetInvalidFormat";
         internal const string SelectionItemBinder_NonNavigationPathToken = "SelectionItemBinder_NonNavigationPathToken";
         internal const string MetadataBinder_UnsupportedQueryTokenKind = "MetadataBinder_UnsupportedQueryTokenKind";
@@ -814,6 +815,8 @@ namespace Microsoft.OData {
         internal const string RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset = "RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset";
         internal const string RequestUriProcessor_Forbidden = "RequestUriProcessor_Forbidden";
         internal const string RequestUriProcessor_OperationSegmentBoundToANonEntityType = "RequestUriProcessor_OperationSegmentBoundToANonEntityType";
+        internal const string RequestUriProcessor_NoBoundEscapeFunctionSupported = "RequestUriProcessor_NoBoundEscapeFunctionSupported";
+        internal const string RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter = "RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter";
         internal const string General_InternalError = "General_InternalError";
         internal const string ExceptionUtils_CheckIntegerNotNegative = "ExceptionUtils_CheckIntegerNotNegative";
         internal const string ExceptionUtils_CheckIntegerPositive = "ExceptionUtils_CheckIntegerPositive";
