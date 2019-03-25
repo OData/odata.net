@@ -1011,6 +1011,50 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that the escape functions are unique.
+        /// </summary>
+        public static readonly ValidationRule<IEdmEntityType> EntityTypeBoundEscapeFunctionMustBeUnique =
+            new ValidationRule<IEdmEntityType>(
+                (context, entityType) =>
+                {
+                    IList<IEdmFunction> composableEscapeFunctions = new List<IEdmFunction>();
+                    IList<IEdmFunction> nonComposableEscapeFunctions = new List<IEdmFunction>();
+                    foreach (var function in context.Model.FindBoundOperations(entityType).Where(o => o.IsFunction()).OfType<IEdmFunction>())
+                    {
+                        if (!context.Model.IsUrlEscapeFunction(function))
+                        {
+                            continue;
+                        }
+
+                        if (function.IsComposable)
+                        {
+                            composableEscapeFunctions.Add(function);
+                        }
+                        else
+                        {
+                            nonComposableEscapeFunctions.Add(function);
+                        }
+                    }
+
+                    if (composableEscapeFunctions.Count() > 1 )
+                    {
+                        string escapeFunctionString = String.Join(",", composableEscapeFunctions.Select(c => c.Name).ToArray());
+                        context.AddError(
+                                entityType.Location(),
+                                EdmErrorCode.EntityComposableBoundEscapeFunctionMustBeLessOne,
+                                Strings.EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne(entityType.FullName(), escapeFunctionString));
+                    }
+
+                    if (nonComposableEscapeFunctions.Count() > 1)
+                    {
+                        string escapeFunctionString = String.Join(",", nonComposableEscapeFunctions.Select(c => c.Name).ToArray());
+                        context.AddError(
+                                entityType.Location(),
+                                EdmErrorCode.EntityNoncomposableBoundEscapeFunctionMustBeLessOne,
+                                Strings.EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne(entityType.FullName(), escapeFunctionString));
+                    }
+                });
         #endregion
 
         #region IEdmEntityReferenceType
