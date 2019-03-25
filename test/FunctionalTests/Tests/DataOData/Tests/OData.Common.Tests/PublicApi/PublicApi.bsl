@@ -3054,10 +3054,12 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	DuplicatePropertySpecifiedInEntityKey = 154
 	EmptyFile = 12
 	EndWithManyMultiplicityCannotHaveOperationsSpecified = 132
+	EntityComposableBoundEscapeFunctionMustBeLessOne = 389
 	EntityContainerElementMustNotHaveKindOfNone = 339
 	EntityKeyMustBeScalar = 128
 	EntityKeyMustNotBeBinary = 129
 	EntityMustHaveEntityBaseType = 237
+	EntityNoncomposableBoundEscapeFunctionMustBeLessOne = 390
 	EntitySetCanOnlyBeContainedByASingleNavigationProperty = 341
 	EntitySetCanOnlyHaveSingleNavigationPropertyWithContainment = 343
 	EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet = 223
@@ -3302,6 +3304,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntitySet]] EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntitySet]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntitySet]] EntitySetTypeCannotBeEdmEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntitySet]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntitySet]] EntitySetTypeMustBeCollectionOfEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntitySet]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeBoundEscapeFunctionMustBeUnique = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeDuplicatePropertyNameSpecifiedInEntityKey = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeEntityKeyMustBeScalar = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeInvalidKeyKeyDefinedInBaseClass = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]

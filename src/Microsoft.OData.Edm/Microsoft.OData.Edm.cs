@@ -102,6 +102,8 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic = "EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic";
         internal const string EdmModel_Validator_Semantic_InvalidKeyNullablePart = "EdmModel_Validator_Semantic_InvalidKeyNullablePart";
         internal const string EdmModel_Validator_Semantic_EntityKeyMustBeScalar = "EdmModel_Validator_Semantic_EntityKeyMustBeScalar";
+        internal const string EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne = "EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne";
+        internal const string EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne = "EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne";
         internal const string EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass = "EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass";
         internal const string EdmModel_Validator_Semantic_KeyMissingOnEntityType = "EdmModel_Validator_Semantic_KeyMissingOnEntityType";
         internal const string EdmModel_Validator_Semantic_BadNavigationPropertyUndefinedRole = "EdmModel_Validator_Semantic_BadNavigationPropertyUndefinedRole";
