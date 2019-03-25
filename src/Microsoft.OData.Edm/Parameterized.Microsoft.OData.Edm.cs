@@ -273,6 +273,20 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The entity type '{0}' has more than one composable escape functions '{1}' defined."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The entity type '{0}' has more than one non-composable escape functions '{1}' defined."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The key usage is not valid. '{0}' cannot define keys because one of its base classes '{1}' defines keys."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(object p0, object p1) {

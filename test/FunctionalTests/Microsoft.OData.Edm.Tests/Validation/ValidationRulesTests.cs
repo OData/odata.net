@@ -80,6 +80,79 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter("GetStuff"));
         }
 
+        [Fact]
+        public void EntityTypeComposableEscapeFunctionMoreThanOneAreInvalid()
+        {
+            EdmModel model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "Entity");
+            entityType.AddKeys(entityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
+            model.AddElement(entityType);
+            var entityRef = new EdmEntityTypeReference(entityType, false);
+            var edmFunction = new EdmFunction("NS", "GetStuff1", EdmCoreModel.Instance.GetString(true), true, null, true);
+            edmFunction.AddParameter("entity", entityRef);
+            model.AddElement(edmFunction);
+            model.SetUrlEscapeFunction(edmFunction);
+
+            edmFunction = new EdmFunction("NS", "GetStuff2", EdmCoreModel.Instance.GetString(true), true, null, true);
+            edmFunction.AddParameter("entity", entityRef);
+            model.AddElement(edmFunction);
+            model.SetUrlEscapeFunction(edmFunction);
+
+            ValidateError(
+                ValidationRules.EntityTypeBoundEscapeFunctionMustBeUnique,
+                model,
+                entityType,
+                EdmErrorCode.EntityComposableBoundEscapeFunctionMustBeLessOne,
+                Strings.EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne("NS.Entity", "GetStuff1,GetStuff2"));
+        }
+
+        [Fact]
+        public void EntityTypeNoncomposableEscapeFunctionMoreThanOneAreInvalid()
+        {
+            EdmModel model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "Entity");
+            entityType.AddKeys(entityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
+            model.AddElement(entityType);
+            var entityRef = new EdmEntityTypeReference(entityType, false);
+            var edmFunction = new EdmFunction("NS", "GetStuff1", EdmCoreModel.Instance.GetString(true), true, null, false);
+            edmFunction.AddParameter("entity", entityRef);
+            model.AddElement(edmFunction);
+            model.SetUrlEscapeFunction(edmFunction);
+
+            edmFunction = new EdmFunction("NS", "GetStuff2", EdmCoreModel.Instance.GetString(true), true, null, false);
+            edmFunction.AddParameter("entity", entityRef);
+            model.AddElement(edmFunction);
+            model.SetUrlEscapeFunction(edmFunction);
+
+            ValidateError(
+                ValidationRules.EntityTypeBoundEscapeFunctionMustBeUnique,
+                model,
+                entityType,
+                EdmErrorCode.EntityNoncomposableBoundEscapeFunctionMustBeLessOne,
+                Strings.EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne("NS.Entity", "GetStuff1,GetStuff2"));
+        }
+
+        [Fact]
+        public void EntityTypeNonComposableAndComposableEscapeFunctionAreValid()
+        {
+            EdmModel model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "Entity");
+            entityType.AddKeys(entityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
+            model.AddElement(entityType);
+            var entityRef = new EdmEntityTypeReference(entityType, false);
+            var edmFunction = new EdmFunction("NS", "GetStuff1", EdmCoreModel.Instance.GetString(true), true, null, false);
+            edmFunction.AddParameter("entity", entityRef);
+            model.AddElement(edmFunction);
+            model.SetUrlEscapeFunction(edmFunction);
+
+            edmFunction = new EdmFunction("NS", "GetStuff2", EdmCoreModel.Instance.GetString(true), true, null, true);
+            edmFunction.AddParameter("entity", entityRef);
+            model.AddElement(edmFunction);
+            model.SetUrlEscapeFunction(edmFunction);
+
+            ValidateNoError(ValidationRules.EntityTypeBoundEscapeFunctionMustBeUnique, model, entityType);
+        }
+
         #region EntityContainerDuplicateEntityContainerMemberName Tests
 
         [Fact]

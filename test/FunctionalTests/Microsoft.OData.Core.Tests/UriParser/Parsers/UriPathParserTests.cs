@@ -199,6 +199,68 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 #endif
         }
 
+        [Theory]
+        [InlineData("root", new[] { "root" })]
+        [InlineData("root:/", new[] { "root", ":" })]
+        [InlineData("root:/:", new[] { "root", "::" })]
+        [InlineData("root:/abc", new[] { "root", ":abc" })]
+        [InlineData("root:/abc:", new[] { "root", ":abc:" })]
+        [InlineData("root:/::/", new[] { "root", "::", ":" })]
+        [InlineData("root:/:/:/", new[] { "root", "::", ":" })]
+        [InlineData("root:/:///////////:/", new[] { "root", "::", ":" })]
+        [InlineData("root:/::/:", new[] { "root", "::", "::" })]
+        [InlineData("root:/abc:/property", new[] { "root", ":abc:", "property" })]
+        [InlineData("root:/abc:/property:/", new[] { "root", ":abc:", "property", ":" })]
+        [InlineData("root:/abc:/property:/:", new[] { "root", ":abc:", "property", "::" })]
+        [InlineData("root:/abc:/property:/::/", new[] { "root", ":abc:", "property", "::", ":" })]
+        [InlineData("root:/:/property", new[] { "root", "::", "property" })]
+        [InlineData("root:/photos/2018/February", new[] { "root", ":photos/2018/February" } )]
+        [InlineData("root:/photos%2f2018%2fFebruary", new[] { "root", ":photos%2f2018%2fFebruary" } )]
+        [InlineData("root:/photos%2f2018%2fFebruary/Others", new[] { "root", ":photos%2f2018%2fFebruary/Others" } )]
+        [InlineData("root:/photos%2f2018%2f/////February/Others", new[] { "root", ":photos%2f2018%2f/////February/Others" } )]
+        [InlineData("root:/photos/2018%2fFebruary:/permissions", new[] { "root", ":photos/2018%2fFebruary:", "permissions" } )]
+        [InlineData("root:/photos:2018:/permissions:/abc", new[] { "root", ":photos:2018:", "permissions", ":abc" } )]
+        [InlineData("root:/photos::::::2018:/permissions:/abc", new[] { "root", ":photos::::::2018:", "permissions", ":abc" })]
+        [InlineData("root:/photos/::::::2018:/permissions:/abc", new[] { "root", ":photos/::::::2018:", "permissions", ":abc" })]
+        [InlineData("EntitySet('key'):/xyz:/perm", new[] { "EntitySet('key')", ":xyz:", "perm" } )]
+        [InlineData("EntitySet('key'):/xyz::/perm", new[] { "EntitySet('key')", ":xyz:", ":perm" } )]
+        [InlineData("EntitySet('key'):/xyz/abc:", new[] { "EntitySet('key')", ":xyz/abc:" } )]
+        [InlineData("EntitySet('key%2fvalue'):/xyz", new[] { "EntitySet('key%2fvalue')", ":xyz" })]
+        [InlineData("EntitySet/key%2fvalue:/xyz", new[] { "EntitySet", "key%2fvalue", ":xyz" })]
+        [InlineData("EntitySet/key:%2fvalue:/xyz", new[] { "EntitySet", "key:%2fvalue", ":xyz" })]
+        [InlineData("EntitySet('key'):/xyz::/perm", new[] { "EntitySet('key')", ":xyz:", ":perm" })]
+        [InlineData("EntitySet('key'):/xyz:/:/perm", new[] { "EntitySet('key')", ":xyz:", ":perm" })]
+        [InlineData(":/xyz::/perm", new[] { ":xyz:", ":perm" })]
+        [InlineData(":/xyz:/:/perm", new[] { ":xyz:", ":perm" })]
+        [InlineData(":/xyz://///:/perm", new[] { ":xyz:", ":perm" })]
+        public void ParsePathShouldAllowEscapeFunctionPattern(string pattern, string[] expected)
+        {
+            // Arrange
+            var fullUrl = new Uri(this.baseUri.AbsoluteUri + pattern);
+
+            // Act
+            var actual = this.pathParser.ParsePathIntoSegments(fullUrl, this.baseUri);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("root::/abc", "root::")]
+        [InlineData("EntitySet('key')::/abc", "EntitySet('key')::")]
+        public void ParseInvalidEscapeUriPathShouldThrow(string pattern, string segment)
+        {
+            // Arrange
+            var fullUrl = new Uri(this.baseUri.AbsoluteUri + pattern);
+
+            // Act
+            Action test = () => this.pathParser.ParsePathIntoSegments(fullUrl, this.baseUri);
+
+            // Assert
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.UriQueryPathParser_InvalidEscapeUri(segment), exception.Message);
+        }
+
         [Fact]
         public void ParsePathRequiresBaseUriToMatch()
         {

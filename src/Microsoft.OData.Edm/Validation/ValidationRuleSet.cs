@@ -34,6 +34,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.EntityTypeInvalidKeyNullablePart,
                 ValidationRules.EntityTypeEntityKeyMustBeScalar,
                 ValidationRules.EntityTypeInvalidKeyKeyDefinedInBaseClass,
+                ValidationRules.EntityTypeBoundEscapeFunctionMustBeUnique,
 ////                ValidationRules.EntityTypeKeyMissingOnEntityType,
                 ValidationRules.StructuredTypeInvalidMemberNameMatchesTypeName,
                 ValidationRules.StructuredTypePropertyNameAlreadyDefined,
