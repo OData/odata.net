@@ -56,7 +56,7 @@ namespace Microsoft.OData.JsonLight
         /// If the reader finds a nested resource info to report, but it must first report the parent resource
         /// it will store the nested resource info in this property. So this will only ever store the first nested resource info of a resource.
         /// </summary>
-        ODataJsonLightReaderNestedResourceInfo FirstNestedResourceInfo { get; set; }
+        ODataJsonLightReaderNestedInfo FirstNestedInfo { get; set; }
 
         /// <summary>
         /// The duplicate property names checker for the resource represented by the current state. May be null.

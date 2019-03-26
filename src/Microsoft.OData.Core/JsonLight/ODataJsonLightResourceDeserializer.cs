@@ -11,13 +11,17 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Vocabularies;
+    using Microsoft.OData.Edm.Vocabularies.V1;
     using ODataErrorStrings = Microsoft.OData.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -375,7 +379,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.StartArray             Expanded resource set
         ///                 JsonNodeType.PrimitiveValue (null)  Expanded null
         /// </remarks>
-        internal ODataJsonLightReaderNestedResourceInfo ReadResourceContent(IODataJsonLightReaderResourceState resourceState)
+        internal ODataJsonLightReaderNestedInfo ReadResourceContent(IODataJsonLightReaderResourceState resourceState)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(resourceState.ResourceType != null && this.Model.IsUserModel(), "A non-null resource type and non-null model are required.");
@@ -384,7 +388,7 @@ namespace Microsoft.OData.JsonLight
                 "Pre-Condition: JsonNodeType.Property or JsonNodeType.EndObject");
             this.JsonReader.AssertNotBuffering();
 
-            ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
+            ODataJsonLightReaderNestedInfo readerNestedResourceInfo = null;
             Debug.Assert(resourceState.ResourceType != null, "In JSON we must always have an structured type when reading resource.");
 
             // Figure out whether we have more properties for this resource
@@ -401,6 +405,7 @@ namespace Microsoft.OData.JsonLight
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
                             case PropertyParsingResult.CustomInstanceAnnotation:
+                                this.ReadOverPropertyName();
                                 object value = ReadODataOrCustomInstanceAnnotationValue(resourceState, propertyParsingResult, propertyName);
                                 this.ApplyEntryInstanceAnnotation(resourceState, propertyName, value);
                                 break;
@@ -411,20 +416,24 @@ namespace Microsoft.OData.JsonLight
                                 break;
 
                             case PropertyParsingResult.NestedDeltaResourceSet:
+                                // Will read over property name in ReadPropertyWithValue
                                 resourceState.AnyPropertyFound = true;
                                 readerNestedResourceInfo = this.ReadPropertyWithValue(resourceState, propertyName, /*isDeltaResourceSet*/ true);
                                 break;
 
                             case PropertyParsingResult.PropertyWithValue:
+                                // Will read over property name in ReadPropertyWithValue
                                 resourceState.AnyPropertyFound = true;
                                 readerNestedResourceInfo = this.ReadPropertyWithValue(resourceState, propertyName, /*isDeltaResourceSet*/ false);
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
+                                this.ReadOverPropertyName();
                                 this.ReadMetadataReferencePropertyValue(resourceState, propertyName);
                                 break;
 
                             case PropertyParsingResult.EndOfObject:
+                                this.ReadOverPropertyName();
                                 break;
                         }
                     });
@@ -447,13 +456,14 @@ namespace Microsoft.OData.JsonLight
             //  - StartObject - if it's an expanded resource
             //  - StartArray - if it's an expanded resource set
             //  - Property - if it's a deferred link
-            //  - PrimitiveValue (null) - if it's an expanded null resource
+            //  - PrimitiveValue- if it's a stream or an expanded null resource
             //  - EndObject - end of the resource
             Debug.Assert(
                 readerNestedResourceInfo != null && this.JsonReader.NodeType == JsonNodeType.StartObject ||
                 readerNestedResourceInfo != null && this.JsonReader.NodeType == JsonNodeType.StartArray ||
                 readerNestedResourceInfo != null && this.JsonReader.NodeType == JsonNodeType.Property ||
-                readerNestedResourceInfo != null && this.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.JsonReader.Value == null ||
+                readerNestedResourceInfo != null && this.JsonReader.NodeType == JsonNodeType.PrimitiveValue ||
+                readerNestedResourceInfo is ODataJsonLightReaderNestedInfo ||
                 this.JsonReader.NodeType == JsonNodeType.EndObject,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Property or JsonNodeType.EndObject or JsonNodeType.Primitive (with null value)");
 
@@ -543,6 +553,7 @@ namespace Microsoft.OData.JsonLight
                         this.ReadTypePropertyAnnotationValue,
                         (propertyParseResult, propertyName) =>
                         {
+                            this.ReadOverPropertyName();
                             switch (propertyParseResult)
                             {
                                 case PropertyParsingResult.ODataInstanceAnnotation:
@@ -954,18 +965,19 @@ namespace Microsoft.OData.JsonLight
         /// Post-Condition: JsonNodeType.EndObject              This method doesn't move the reader.
         ///                 JsonNodeType.Property
         /// </remarks>
-        internal ODataJsonLightReaderNestedResourceInfo ReadPropertyWithoutValue(IODataJsonLightReaderResourceState resourceState, string propertyName)
+        internal ODataJsonLightReaderNestedInfo ReadPropertyWithoutValue(IODataJsonLightReaderResourceState resourceState, string propertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
+            ODataJsonLightReaderNestedInfo readerNestedInfo = null;
             IEdmStructuredType resourceType = resourceState.ResourceType;
             IEdmProperty edmProperty = this.ReaderValidator.ValidatePropertyDefined(propertyName, resourceType);
             if (edmProperty != null && !edmProperty.Type.IsUntyped())
             {
                 // Declared property - read it.
+                ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo;
                 IEdmNavigationProperty navigationProperty = edmProperty as IEdmNavigationProperty;
                 if (navigationProperty != null)
                 {
@@ -988,6 +1000,7 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
+                    readerNestedInfo = readerNestedResourceInfo;
                 }
                 else
                 {
@@ -1007,11 +1020,11 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // Undeclared property - we need to run detection algorithm here.
-                readerNestedResourceInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ false);
+                readerNestedInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ false);
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            return readerNestedResourceInfo;
+            return readerNestedInfo;
         }
 
         /// <summary>
@@ -1078,6 +1091,11 @@ namespace Microsoft.OData.JsonLight
                     case ODataAnnotationNames.ODataAssociationLinkUrl:
                         Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.associationLinkUrl annotation should have been parsed as a non-null Uri.");
                         nestedResourceInfo.AssociationLinkUrl = (Uri)propertyAnnotation.Value;
+                        break;
+
+                    case ODataAnnotationNames.ODataType:
+                        Debug.Assert(propertyAnnotation.Value is String && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
+                        nestedResourceInfo.TypeAnnotation = new ODataTypeAnnotation((string)propertyAnnotation.Value);
                         break;
 
                     default:
@@ -1178,42 +1196,56 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.StartArray             Expanded resource set
         ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource
         /// </remarks>
-        private ODataJsonLightReaderNestedResourceInfo ReadPropertyWithValue(IODataJsonLightReaderResourceState resourceState, string propertyName, bool isDeltaResourceSet)
+        private ODataJsonLightReaderNestedInfo ReadPropertyWithValue(IODataJsonLightReaderResourceState resourceState, string propertyName, bool isDeltaResourceSet)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-            this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
+            this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.Property, JsonNodeType.StartObject, JsonNodeType.StartArray);
 
-            ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
-            IEdmStructuredType resouceType = resourceState.ResourceType;
-            IEdmProperty edmProperty = this.ReaderValidator.ValidatePropertyDefined(propertyName, resouceType);
+            ODataJsonLightReaderNestedInfo readerNestedInfo = null;
+            IEdmStructuredType resourceType = resourceState.ResourceType;
+            IEdmProperty edmProperty = this.ReaderValidator.ValidatePropertyDefined(propertyName, resourceType);
+            bool isCollection = edmProperty == null ? false : edmProperty.Type.IsCollection();
+            IEdmStructuralProperty structuralProperty = edmProperty as IEdmStructuralProperty;
+
+            if (structuralProperty != null)
+            {
+                ODataJsonLightReaderNestedInfo nestedInfo = TryReadAsStream(resourceState, structuralProperty, structuralProperty.Type, structuralProperty.Name);
+                if (nestedInfo != null)
+                {
+                    return nestedInfo;
+                }
+            }
 
             if (edmProperty != null && !edmProperty.Type.IsUntyped())
             {
-                IEdmStructuralProperty structuredProperty = edmProperty as IEdmStructuralProperty;
-                IEdmStructuredType structuredPropertyTypeOrItemType = structuredProperty == null ? null : structuredProperty.Type.ToStructuredType();
+                this.ReadOverPropertyName();
+                IEdmStructuredType structuredPropertyTypeOrItemType = structuralProperty == null ? null : structuralProperty.Type.ToStructuredType();
                 IEdmNavigationProperty navigationProperty = edmProperty as IEdmNavigationProperty;
                 if (structuredPropertyTypeOrItemType != null)
                 {
+                    ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
+
                     // Complex property or collection of complex property.
-                    bool isCollection = structuredProperty.Type.IsCollection();
                     ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, isCollection, propertyName);
 
                     if (isCollection)
                     {
-                        readerNestedResourceInfo = ReadNonExpandedResourceSetNestedResourceInfo(resourceState, structuredProperty, structuredPropertyTypeOrItemType, structuredProperty.Name);
+                        readerNestedResourceInfo = ReadNonExpandedResourceSetNestedResourceInfo(resourceState, structuralProperty, structuredPropertyTypeOrItemType, structuralProperty.Name);
                     }
                     else
                     {
-                        readerNestedResourceInfo = ReadNonExpandedResourceNestedResourceInfo(resourceState, structuredProperty, structuredPropertyTypeOrItemType, structuredProperty.Name);
+                        readerNestedResourceInfo = ReadNonExpandedResourceNestedResourceInfo(resourceState, structuralProperty, structuredPropertyTypeOrItemType, structuralProperty.Name);
                     }
 
                     resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
+                    readerNestedInfo = readerNestedResourceInfo;
                 }
                 else if (navigationProperty != null)
                 {
+                    ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
+
                     // Expanded link
-                    bool isCollection = navigationProperty.Type.IsCollection();
                     ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, isCollection, propertyName);
                     if (isCollection)
                     {
@@ -1229,19 +1261,14 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
+                    readerNestedInfo = readerNestedResourceInfo;
                 }
                 else
                 {
-                    IEdmTypeReference propertyTypeReference = edmProperty.Type;
-                    if (propertyTypeReference.IsStream())
-                    {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StreamPropertyWithValue(propertyName));
-                    }
-
                     var derivedTypeConstrants = this.JsonLightInputContext.Model.GetDerivedTypeConstraints(edmProperty);
                     if (derivedTypeConstrants != null)
                     {
-                        resourceState.PropertyAndAnnotationCollector.SetDerivedTypeValidator(propertyName, new DerivedTypeValidator(propertyTypeReference.Definition, derivedTypeConstrants, "property", propertyName));
+                        resourceState.PropertyAndAnnotationCollector.SetDerivedTypeValidator(propertyName, new DerivedTypeValidator(edmProperty.Type.Definition, derivedTypeConstrants, "property", propertyName));
                     }
 
                     // NOTE: we currently do not check whether the property should be skipped
@@ -1252,13 +1279,149 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // Undeclared property - we need to run detection alogorithm here.
-                readerNestedResourceInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ true);
+                readerNestedInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ true);
 
                 // Note that if nested resource info is returned it's already validated, so we just report it here.
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject, JsonNodeType.StartObject, JsonNodeType.StartArray, JsonNodeType.PrimitiveValue);
-            return readerNestedResourceInfo;
+            return readerNestedInfo;
+        }
+
+        /// <summary>
+        /// Checks to see if the current property should be read as a stream and, if so reads it
+        /// </summary>
+        /// <param name="resourceState">current ResourceState</param>
+        /// <param name="property">The property being serialized (null for a dynamic property)</param>
+        /// <param name="propertyType">The type of the property being serialized</param>
+        /// <param name="propertyName">The name of the property being serialized</param>
+        /// <returns>The ODataJsonLightReaderNestedInfo for a nested stream property, or null if the property shouldn't be streamed</returns>
+        private ODataJsonLightReaderNestedInfo TryReadAsStream(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty property, IEdmTypeReference propertyType, string propertyName)
+        {
+            Debug.Assert(propertyName != null, "Property name must not be null");
+
+            bool isCollection = false;
+            IEdmPrimitiveType primitiveType = null;
+            if (propertyType != null)
+            {
+                primitiveType = propertyType.Definition.AsElementType() as IEdmPrimitiveType;
+                isCollection = propertyType.IsCollection();
+            }
+            else
+            {
+                isCollection = this.JsonReader.NodeType != JsonNodeType.PrimitiveValue;
+            }
+
+            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream = this.MessageReaderSettings.ReadAsStreamFunc;
+
+            // is the property a stream or a stream collection,
+            // or a binary or binary collection the client wants to read as a stream...
+            if (
+                (primitiveType != null &&
+                    (primitiveType.IsStream() ||
+                        (readAsStream != null
+                             && (property == null || !property.IsKey())  // don't stream key properties
+                             && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
+                         && readAsStream(primitiveType, isCollection, propertyName, property))) ||
+                ((propertyType == null || propertyType.Definition.AsElementType().IsUntyped())
+                    && (isCollection || this.JsonReader.CanStream())
+                    && readAsStream != null
+                    && readAsStream(null, isCollection, propertyName, property)))
+            {
+                if (isCollection)
+                {
+                    this.ReadOverPropertyName();
+                    IEdmType elementType = propertyType == null ? EdmCoreModel.Instance.GetUntypedType() : propertyType.Definition.AsElementType();
+
+                    // Collection of streams, or binary/string values to read as streams
+                    return ReadStreamCollectionNestedResourceInfo(resourceState, property, propertyName, elementType);
+                }
+                else
+                {
+                    ODataPropertyInfo propertyInfo;
+                    if (primitiveType != null && primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Stream)
+                    {
+                        ODataStreamPropertyInfo streamPropertyInfo = this.ReadStreamPropertyInfo(resourceState, propertyName);
+
+                        // If it has an instance annotation saying that the content type is JSON, don't read propertyName
+                        // otherwise, if we are on start object, BufferingJsonReader will read ahead to try and determine
+                        // if we are reading an instream error, which destroys our ability to stream json stream values.
+                        if (this.JsonReader.NodeType == JsonNodeType.Property)
+                        {
+                            bool isJson = false;
+                            if (streamPropertyInfo.ContentType != null)
+                            {
+                                if (streamPropertyInfo.ContentType.Contains(MimeConstants.MimeApplicationJson))
+                                {
+                                    isJson = true;
+                                }
+                            }
+                            else if (property != null)
+                            {
+                                IEdmVocabularyAnnotation mediaTypeAnnotation = property.VocabularyAnnotations(this.Model).FirstOrDefault(a => a.Term == CoreVocabularyModel.MediaTypeTerm);
+                                if (mediaTypeAnnotation != null)
+                                {
+                                    // If the property does not have a mediaType annotation specifying application/json, then read over the property name
+                                    IEdmStringConstantExpression stringExpression = mediaTypeAnnotation.Value as IEdmStringConstantExpression;
+                                    if (stringExpression != null && stringExpression.Value.Contains(MimeConstants.MimeApplicationJson))
+                                    {
+                                        isJson = true;
+                                    }
+                                }
+                            }
+
+                            if (!isJson)
+                            {
+                                // Not reading JSON stream, so read over property name
+                                this.ReadOverPropertyName();
+                            }
+                        }
+
+                        // Add the stream reference property
+                        ODataStreamReferenceValue streamReferenceValue = this.ReadStreamPropertyValue(resourceState, propertyName);
+                        AddResourceProperty(resourceState, propertyName, streamReferenceValue);
+
+                        propertyInfo = streamPropertyInfo;
+                    }
+                    else
+                    {
+                        this.ReadOverPropertyName();
+
+                        propertyInfo = new ODataPropertyInfo
+                        {
+                            PrimitiveTypeKind = primitiveType == null ? EdmPrimitiveTypeKind.None : primitiveType.PrimitiveKind,
+                            Name = propertyName,
+                        };
+                    }
+
+                    // return without reading over the property node; we will create a stream over the value
+                    this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.Property);
+                    return new ODataJsonLightReaderNestedPropertyInfo(propertyInfo, property);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Reads over the current property name if positioned on a property
+        /// </summary>
+        private void ReadOverPropertyName()
+        {
+            if (this.JsonReader.NodeType == JsonNodeType.Property)
+            {
+                this.JsonReader.Read();
+            }
+        }
+
+        /// <summary>
+        /// Returns whether or not a StreamPropertyInfo value specifies a content-type of application/json.
+        /// </summary>
+        /// <param name="streamPropertyInfo">The StreamPropertyInfo that may specify application/json.</param>
+        /// <returns>True, if the StreamPropertyInfo specifies application/json, otherwise false.</returns>
+        private static bool IsJsonStream(ODataStreamPropertyInfo streamPropertyInfo)
+        {
+            return streamPropertyInfo.ContentType != null && streamPropertyInfo.ContentType.Contains(MimeConstants.MimeApplicationJson);
         }
 
         /// <summary>
@@ -1318,7 +1481,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
         /// <returns>The NestedResourceInfo or null.</returns>
-        private ODataJsonLightReaderNestedResourceInfo InnerReadUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, IEdmStructuredType owningStructuredType, string propertyName, bool propertyWithValue)
+        private ODataJsonLightReaderNestedInfo InnerReadUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, IEdmStructuredType owningStructuredType, string propertyName, bool propertyWithValue)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -1360,6 +1523,12 @@ namespace Microsoft.OData.JsonLight
                     out typeAnnotation);
             }
 
+            ODataJsonLightReaderNestedInfo nestedResourceInfo = TryReadAsStream(resourceState, null, payloadTypeReference, propertyName);
+            if (nestedResourceInfo != null)
+            {
+                return nestedResourceInfo;
+            }
+
             payloadTypeReference = ResolveUntypedType(
                 this.JsonReader.NodeType,
                 this.JsonReader.Value,
@@ -1369,23 +1538,20 @@ namespace Microsoft.OData.JsonLight
                 this.MessageReaderSettings.ReadUntypedAsString,
                 !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
 
+            bool isCollection = payloadTypeReference.IsCollection();
             IEdmStructuredType payloadTypeOrItemType = payloadTypeReference.ToStructuredType();
             if (payloadTypeOrItemType != null)
             {
                 // Complex property or collection of complex property.
-                bool isCollection = payloadTypeReference.IsCollection();
                 ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, isCollection, propertyName);
-                ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo;
                 if (isCollection)
                 {
-                    readerNestedResourceInfo = ReadNonExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeOrItemType, propertyName);
+                    return ReadNonExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeOrItemType, propertyName);
                 }
                 else
                 {
-                    readerNestedResourceInfo = ReadNonExpandedResourceNestedResourceInfo(resourceState, null, payloadTypeOrItemType, propertyName);
+                    return ReadNonExpandedResourceNestedResourceInfo(resourceState, null, payloadTypeOrItemType, propertyName);
                 }
-
-                return readerNestedResourceInfo;
             }
 
             if (!(payloadTypeReference is IEdmUntypedTypeReference))
@@ -1434,14 +1600,14 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         /// <returns>A nested resource info instance if the property read is a nested resource info which should be reported to the caller.
         /// Otherwise null if the property was either ignored or read and added to the list of properties on the resource.</returns>
-        private ODataJsonLightReaderNestedResourceInfo ReadUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, bool propertyWithValue)
+        private ODataJsonLightReaderNestedInfo ReadUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, bool propertyWithValue)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 #if DEBUG
             if (propertyWithValue)
             {
-                this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
+                this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.Property, JsonNodeType.StartObject, JsonNodeType.StartArray);
             }
             else
             {
@@ -1453,6 +1619,38 @@ namespace Microsoft.OData.JsonLight
             // Link properties are stream properties and deferred links.
             var odataPropertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
             object propertyAnnotationValue;
+
+            // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' annotation, read it as a stream property
+            if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaEditLink, out propertyAnnotationValue) ||
+                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaReadLink, out propertyAnnotationValue) ||
+                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaContentType, out propertyAnnotationValue) ||
+                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaETag, out propertyAnnotationValue))
+            {
+                // Add the stream reference property
+                ODataStreamReferenceValue streamReferenceValue = this.ReadStreamPropertyValue(resourceState, propertyName);
+                AddResourceProperty(resourceState, propertyName, streamReferenceValue);
+
+                if (propertyWithValue)
+                {
+                    ODataStreamPropertyInfo propertyInfo = this.ReadStreamPropertyInfo(resourceState, propertyName);
+                    if (!IsJsonStream(propertyInfo))
+                    {
+                        // Not a JSON Stream, so skip over property name in JSON reader
+                        this.JsonReader.Read();
+                    }
+
+                    return new ODataJsonLightReaderNestedPropertyInfo(propertyInfo, null);
+                }
+
+                return null;
+            }
+
+            // It's not a JSON stream, so skip the property name.
+            // If the property does not have a value we will have already skipped the name
+            if (propertyWithValue)
+            {
+                this.JsonReader.Read();
+            }
 
             // If the property has 'odata.navigationLink' or 'odata.associationLink' annotation, read it as a navigation property
             if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataNavigationLinkUrl, out propertyAnnotationValue) ||
@@ -1477,27 +1675,11 @@ namespace Microsoft.OData.JsonLight
                 return navigationLinkInfo;
             }
 
-            // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' annotation, read it as a stream property
-            if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaEditLink, out propertyAnnotationValue) ||
-                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaReadLink, out propertyAnnotationValue) ||
-                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaContentType, out propertyAnnotationValue) ||
-                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaETag, out propertyAnnotationValue))
-            {
-                // Stream properties can't have a value
-                if (propertyWithValue)
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StreamPropertyWithValue(propertyName));
-                }
-
-                ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
-                AddResourceProperty(resourceState, propertyName, streamPropertyValue);
-                return null;
-            }
 
             if (resourceState.ResourceType.IsOpen)
             {
                 // Open property - read it as such.
-                ODataJsonLightReaderNestedResourceInfo nestedResourceInfo =
+                ODataJsonLightReaderNestedInfo nestedResourceInfo =
                     this.InnerReadUndeclaredProperty(resourceState, resourceState.ResourceType, propertyName, propertyWithValue);
                 return nestedResourceInfo;
             }
@@ -1537,16 +1719,56 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The newly created stream reference value.</returns>
         private ODataStreamReferenceValue ReadStreamPropertyValue(IODataJsonLightReaderResourceState resourceState, string streamPropertyName)
         {
+            ODataStreamReferenceValue streamReferenceValue = new ODataStreamReferenceValue();
+            ReadStreamInfo(streamReferenceValue, resourceState, streamPropertyName);
+            ODataResourceMetadataBuilder builder =
+            this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
+                this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                /*isDelta*/ false);
+
+            // Note that we set the metadata builder even when streamProperty is null, which is the case when the stream property is undeclared.
+            // For undeclared stream properties, we will apply conventional metadata evaluation just as declared stream properties.
+            streamReferenceValue.SetMetadataBuilder(builder, streamPropertyName);
+
+            return streamReferenceValue;
+        }
+
+        /// <summary>
+        /// Reads a stream property info from the property annotations.
+        /// </summary>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
+        /// <param name="streamPropertyName">The name of the stream property to read the value for.</param>
+        /// <returns>The newly created stream reference value.</returns>
+        private ODataStreamPropertyInfo ReadStreamPropertyInfo(IODataJsonLightReaderResourceState resourceState, string streamPropertyName)
+        {
+            ODataStreamPropertyInfo streamInfo = new ODataStreamPropertyInfo
+            {
+                Name = streamPropertyName,
+            };
+
+            ReadStreamInfo(streamInfo, resourceState, streamPropertyName);
+            ODataResourceMetadataBuilder builder =
+            this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
+                this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                /*isDelta*/ false);
+
+            // Note that we set the metadata builder even when streamProperty is null, which is the case when the stream property is undeclared.
+            // For undeclared stream properties, we will apply conventional metadata evaluation just as declared stream properties.
+            streamInfo.SetMetadataBuilder(builder, streamPropertyName);
+
+            return streamInfo;
+        }
+
+        /// <summary>
+        /// Populates StreamInfo from the property annotations.
+        /// </summary>
+        /// <param name="streamInfo">The stream info to populate.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
+        /// <param name="streamPropertyName">The name of the stream property to read the value for.</param>
+        private void ReadStreamInfo(IODataStreamReferenceInfo streamInfo, IODataJsonLightReaderResourceState resourceState, string streamPropertyName)
+        {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(streamPropertyName), "!string.IsNullOrEmpty(streamPropertyName)");
-
-            // Fail on stream properties in requests as they cannot appear there.
-            if (!this.ReadingResponse)
-            {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StreamPropertyInRequest);
-            }
-
-            ODataStreamReferenceValue streamReferenceValue = new ODataStreamReferenceValue();
 
             foreach (var propertyAnnotation
                      in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(streamPropertyName))
@@ -1555,22 +1777,26 @@ namespace Microsoft.OData.JsonLight
                 {
                     case ODataAnnotationNames.ODataMediaEditLink:
                         Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.mediaEditLink annotation should have been parsed as a non-null Uri.");
-                        streamReferenceValue.EditLink = (Uri)propertyAnnotation.Value;
+                        streamInfo.EditLink = (Uri)propertyAnnotation.Value;
                         break;
 
                     case ODataAnnotationNames.ODataMediaReadLink:
                         Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.mediaReadLink annotation should have been parsed as a non-null Uri.");
-                        streamReferenceValue.ReadLink = (Uri)propertyAnnotation.Value;
+                        streamInfo.ReadLink = (Uri)propertyAnnotation.Value;
                         break;
 
                     case ODataAnnotationNames.ODataMediaETag:
                         Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.mediaEtag annotation should have been parsed as a non-null string.");
-                        streamReferenceValue.ETag = (string)propertyAnnotation.Value;
+                        streamInfo.ETag = (string)propertyAnnotation.Value;
                         break;
 
                     case ODataAnnotationNames.ODataMediaContentType:
                         Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.mediaContentType annotation should have been parsed as a non-null string.");
-                        streamReferenceValue.ContentType = (string)propertyAnnotation.Value;
+                        streamInfo.ContentType = (string)propertyAnnotation.Value;
+                        break;
+
+                    case ODataAnnotationNames.ODataType:
+                        Debug.Assert(((string)propertyAnnotation.Value).Contains("Stream"), "Non-stream type annotation on stream property");
                         break;
 
                     default:
@@ -1578,16 +1804,14 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            ODataResourceMetadataBuilder builder =
-                this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
-                    this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
-                    /*isDelta*/ false);
-
-            // Note that we set the metadata builder even when streamProperty is null, which is the case when the stream property is undeclared.
-            // For undeclared stream properties, we will apply conventional metadata evaluation just as declared stream properties.
-            streamReferenceValue.SetMetadataBuilder(builder, streamPropertyName);
-
-            return streamReferenceValue;
+            // Streams in requests cannot contain links or etags
+            if (!this.ReadingResponse)
+            {
+                if (streamInfo.ETag != null || streamInfo.EditLink != null || streamInfo.ReadLink != null)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StreamPropertyInRequest(streamPropertyName));
+                }
+            }
         }
 
         /// <summary>

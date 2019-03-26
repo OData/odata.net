@@ -183,6 +183,21 @@ namespace Microsoft.OData
         public bool ReadUntypedAsString { get; set; }
 
         /// <summary>
+        /// Func to evaluate whether a property should be read as a stream.  Note that IEdmProperty may be null when reading
+        /// within a collection
+        /// </summary>
+        /// <Remarks>
+        /// Function takes:
+        /// * Primitive type of the value being read, or null if unknown
+        /// * Whether the value being read is a collection
+        /// * The name of the property being read (null for values within a collection)
+        /// * The property being read (null for dynamic property or value within a collection)
+        /// Function returns:
+        /// * True, to have the value streamed, otherwise false
+        /// </Remarks>
+        public Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ReadAsStreamFunc { get; set; }
+
+        /// <summary>
         /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
         /// be read and false if the annotation should be skipped. A null value indicates that all annotations should be skipped.
         /// </summary>
@@ -271,6 +286,7 @@ namespace Microsoft.OData
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
+            this.ReadAsStreamFunc = other.ReadAsStreamFunc;
         }
     }
 }

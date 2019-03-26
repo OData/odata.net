@@ -24,7 +24,7 @@ namespace Microsoft.OData
     internal sealed class ODataBatchOperationMessage : ODataMessage
     {
         /// <summary>Listener interface to be notified of operation changes.</summary>
-        private readonly IODataBatchOperationListener operationListener;
+        private readonly IODataStreamListener operationListener;
 
         /// <summary>The URL converter to perform custom URL conversion for URLs read or written from/to the payload.</summary>
         private readonly IODataPayloadUriConverter payloadUriConverter;
@@ -46,7 +46,7 @@ namespace Microsoft.OData
         internal ODataBatchOperationMessage(
             Func<Stream> contentStreamCreatorFunc,
             ODataBatchOperationHeaders headers,
-            IODataBatchOperationListener operationListener,
+            IODataStreamListener operationListener,
             IODataPayloadUriConverter payloadUriConverter,
             bool writing)
             : base(writing, /*disableMessageStreamDisposal*/ false, /*maxMessageSize*/ -1)
@@ -127,7 +127,7 @@ namespace Microsoft.OData
             this.VerifyNotCompleted();
 
             // notify the listener that the stream has been requested
-            this.operationListener.BatchOperationContentStreamRequested();
+            this.operationListener.StreamRequested();
 
             // now remember that we are done processing the part header data (and only the payload is missing)
             Stream contentStream = this.contentStreamCreatorFunc();
@@ -145,7 +145,7 @@ namespace Microsoft.OData
             this.VerifyNotCompleted();
 
             // notify the listener that the stream has been requested
-            Task listenerTask = this.operationListener.BatchOperationContentStreamRequestedAsync();
+            Task listenerTask = this.operationListener.StreamRequestedAsync();
 
             // now remember that we are done processing the part header data (and only the payload is missing)
             Stream contentStream = this.contentStreamCreatorFunc();

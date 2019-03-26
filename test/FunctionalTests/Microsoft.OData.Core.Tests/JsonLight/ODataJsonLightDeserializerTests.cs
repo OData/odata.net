@@ -698,6 +698,12 @@ namespace Microsoft.OData.Tests.JsonLight
                     (propertyName) => null,
                     (propertyParsingResult, propertyName) =>
                     {
+                        if (deserializer.JsonReader.NodeType == JsonNodeType.Property)
+                        {
+                            // Read over property name
+                            deserializer.JsonReader.Read();
+                        }
+
                         propertyParsingResult.Should().Be(ODataJsonLightDeserializer.PropertyParsingResult.MetadataReferenceProperty, "parsing JSON object '{0}'", payload);
                         propertyName.Should().Be("#action", "reported name is wrong for JSON object '{0}'", payload);
 
@@ -1170,6 +1176,12 @@ namespace Microsoft.OData.Tests.JsonLight
                     (propertyName) => readPropertyAnnotationValue(deserializer.JsonReader, propertyName),
                     (propertyParsingResult, propertyName) =>
                     {
+                        if (propertyParsingResult != ODataJsonLightDeserializer.PropertyParsingResult.PropertyWithoutValue && deserializer.JsonReader.NodeType == JsonNodeType.Property)
+                        {
+                            // Read over property name
+                            deserializer.JsonReader.Read();
+                        }
+
                         propertyParsingResult.Should().Be(expectedPropertyParsingResult, "parsing JSON object '{0}'", jsonInput);
                         propertyName.Should().Be(expectedName, "reported name is wrong for JSON object '{0}'", jsonInput);
                         if (additionalVerification != null)

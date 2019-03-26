@@ -193,8 +193,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                            "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/stream/read\"," +
                            "\"StreamProp1@odata.mediaContentType\":\"image/jpeg\"," +
                            "\"StreamProp1@odata.mediaEtag\":\"stream etag\"," +
-                           "\"StreamProp2@odata.mediaEditLink\":\"http://example.com/edit/StreamProp2\"," +
-                           "\"StreamProp2@odata.mediaReadLink\":\"http://example.com/read/StreamProp2\"," +
                            "\"DeferredNavLink@odata.associationLink\":\"http://example.com/association\"," +
                            "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/navigation\"," +
                            "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/expanded/association\"," +
@@ -216,6 +214,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                            "\"UnknownCollectionNavProp@odata.navigationLink\":\"http://example.com/read/UnknownCollectionNavProp\"," +
                            "\"EnumAsKeyContainedNavProp@odata.associationLink\":\"http://example.com/read/EnumAsKeyContainedNavProp/$ref\"," +
                            "\"EnumAsKeyContainedNavProp@odata.navigationLink\":\"http://example.com/read/EnumAsKeyContainedNavProp\"," +
+                           "\"StreamProp2@odata.mediaEditLink\":\"http://example.com/edit/StreamProp2\"," +
+                           "\"StreamProp2@odata.mediaReadLink\":\"http://example.com/read/StreamProp2\"," +
                            "\"#Action\":{\"title\":\"ActionTitle\",\"target\":\"http://example.com/DoAction\"}," +
                            "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction1\"}," +
                            "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction2\"}," +
@@ -241,8 +241,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                            "\"StreamProp1@mediaReadLink\":\"http://example.com/stream/read\"," +
                            "\"StreamProp1@mediaContentType\":\"image/jpeg\"," +
                            "\"StreamProp1@mediaEtag\":\"stream etag\"," +
-                           "\"StreamProp2@mediaEditLink\":\"http://example.com/edit/StreamProp2\"," +
-                           "\"StreamProp2@mediaReadLink\":\"http://example.com/read/StreamProp2\"," +
                            "\"DeferredNavLink@associationLink\":\"http://example.com/association\"," +
                            "\"DeferredNavLink@navigationLink\":\"http://example.com/navigation\"," +
                            "\"ExpandedNavLink@associationLink\":\"http://example.com/expanded/association\"," +
@@ -264,6 +262,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                            "\"UnknownCollectionNavProp@navigationLink\":\"http://example.com/read/UnknownCollectionNavProp\"," +
                            "\"EnumAsKeyContainedNavProp@associationLink\":\"http://example.com/read/EnumAsKeyContainedNavProp/$ref\"," +
                            "\"EnumAsKeyContainedNavProp@navigationLink\":\"http://example.com/read/EnumAsKeyContainedNavProp\"," +
+                           "\"StreamProp2@mediaEditLink\":\"http://example.com/edit/StreamProp2\"," +
+                           "\"StreamProp2@mediaReadLink\":\"http://example.com/read/StreamProp2\"," +
                            "\"#Action\":{\"title\":\"ActionTitle\",\"target\":\"http://example.com/DoAction\"}," +
                            "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction1\"}," +
                            "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction2\"}," +
@@ -982,10 +982,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                                            "\"@odata.mediaEditLink\":\"EntitySet(123)/$value\"," +
                                            "\"ID\":123," +
                                            "\"Name\":\"Bob\"," +
-                                           "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
-                                           "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
-                                           "\"StreamProp2@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp2\"," +
-                                           "\"StreamProp2@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp2\"," +
                                            "\"DeferredNavLink@odata.associationLink\":\"http://example.com/EntitySet(123)/DeferredNavLink/$ref\"," +
                                            "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/EntitySet(123)/DeferredNavLink\"," +
                                            "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/EntitySet(123)/ExpandedNavLink/$ref\"," +
@@ -1007,6 +1003,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                                            "\"UnknownCollectionNavProp@odata.navigationLink\":\"http://example.com/EntitySet(123)/UnknownCollectionNavProp\"," +
                                            "\"EnumAsKeyContainedNavProp@odata.associationLink\":\"http://example.com/EntitySet(123)/EnumAsKeyContainedNavProp/$ref\","+
                                            "\"EnumAsKeyContainedNavProp@odata.navigationLink\":\"http://example.com/EntitySet(123)/EnumAsKeyContainedNavProp\"," +
+                                           "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
+                                           "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
+                                           "\"StreamProp2@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp2\"," +
+                                           "\"StreamProp2@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp2\"," +
                                            "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableAction1\"}," +
                                            "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableAction2\"}," +
                                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableFunction1\"}," +
@@ -1029,13 +1029,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                                            "\"@odata.mediaEditLink\":\"EntitySet(123)/$value\"," +
                                            "\"ID\":123," +
                                            "\"Name\":\"Bob\"," +
-                                           "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
-                                           "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
                                            "\"DeferredNavLink@odata.associationLink\":\"http://example.com/EntitySet(123)/DeferredNavLink/$ref\"," +
                                            "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/EntitySet(123)/DeferredNavLink\"," +
                                            "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/EntitySet(123)/ExpandedNavLink/$ref\"," +
                                            "\"ExpandedNavLink@odata.navigationLink\":\"http://example.com/EntitySet(123)/ExpandedNavLink\"," +
                                            "\"ExpandedNavLink\":[]," +
+                                           "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
+                                           "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
                                            "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableAction1\"}," +
                                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableFunction1\"}" +
                                            "}";
@@ -1057,8 +1057,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                         "\"@odata.mediaEditLink\":\"EntitySet(123)/$value\"," +
                         "\"ID\":123," +
                         "\"Name\":\"Bob\"," +
-                        "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
-                        "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
                         "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/expanded/association\"," +
                         "\"ExpandedNavLink@odata.navigationLink\":\"http://example.com/expanded/navigation\"," +
                         "\"ExpandedNavLink\":[" +
@@ -1069,8 +1067,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                             "\"@odata.mediaEditLink\":\"EntitySet(234)/$value\"," +
                             "\"ID\":234," +
                             "\"Name\":\"Foo\"," +
-                            "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(234)/StreamProp1\"," +
-                            "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(234)/StreamProp1\"," +
                             "\"DeferredNavLink@odata.associationLink\":\"http://example.com/EntitySet(234)/DeferredNavLink/$ref\"," +
                             "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/EntitySet(234)/DeferredNavLink\"," +
                             "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/expanded/association\"," +
@@ -1087,10 +1083,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                                 "\"StreamProp2@odata.mediaReadLink\":\"http://example.com/EntitySet(345)/StreamProp2\"," +
                                 "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/EntitySet(345)/Namespace.AlwaysBindableAction1\"}" +
                             "}]," +
+                            "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(234)/StreamProp1\"," +
+                            "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(234)/StreamProp1\"," +
                             "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/EntitySet(234)/Namespace.AlwaysBindableAction1\"}" +
                         "}]," +
                         "\"DeferredNavLink@odata.associationLink\":\"http://example.com/EntitySet(123)/DeferredNavLink/$ref\"," +
                         "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/EntitySet(123)/DeferredNavLink\"," +
+                        "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
+                        "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
                         "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableAction1\"}," +
                         "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableFunction1\"}" +
                     "}]" +

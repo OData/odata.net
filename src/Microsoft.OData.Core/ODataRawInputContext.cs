@@ -177,7 +177,8 @@ namespace Microsoft.OData
             }
             else
             {
-                if (expectedPrimitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Binary)
+                if (expectedPrimitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Binary ||
+                    expectedPrimitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Stream)
                 {
                     readBinary = true;
                 }

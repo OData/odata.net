@@ -9,19 +9,20 @@ namespace Microsoft.OData
     #region Namespaces
     using System;
     using Microsoft.OData.Evaluation;
+    using Edm;
 
     #endregion
 
     /// <summary>
-    /// Represents a media resource.
+    /// Represents a Stream reference.
     /// </summary>
-    public sealed class ODataStreamReferenceValue : ODataValue
+    public sealed class ODataStreamReferenceValue : ODataValue, IODataStreamReferenceInfo
     {
-        /// <summary>the metadata builder for this OData resource.</summary>
-        private ODataResourceMetadataBuilder metadataBuilder;
-
         /// <summary>The name of the named stream this value belongs to; null for the default media resource.</summary>
         private string edmPropertyName;
+
+        /// <summary>the metadata builder for this OData resource.</summary>
+        private ODataResourceMetadataBuilder metadataBuilder;
 
         /// <summary>Edit link for media resource.</summary>
         private Uri editLink;
@@ -61,7 +62,8 @@ namespace Microsoft.OData
             {
                 return this.HasNonComputedReadLink
                     ? this.readLink
-                    : (this.computedReadLink ?? (this.metadataBuilder == null ? null : this.computedReadLink = this.metadataBuilder.GetStreamReadLink(this.edmPropertyName)));
+                    : (this.computedReadLink ?? (this.metadataBuilder == null ? null :
+                        this.computedReadLink = this.metadataBuilder.GetStreamReadLink(this.edmPropertyName)));
             }
 
             set

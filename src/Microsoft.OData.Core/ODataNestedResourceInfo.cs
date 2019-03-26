@@ -35,7 +35,6 @@ namespace Microsoft.OData
 
         /// <summary>Gets or sets a value that indicates whether the nested resource info represents a collection or a resource.</summary>
         /// <returns>true if the nested resource info represents a collection; false if the navigation represents a resource.</returns>
-        /// <remarks>This property is required to have a value for ATOM payloads and is optional for JSON payloads.</remarks>
         public bool? IsCollection
         {
             get;

@@ -138,6 +138,12 @@ namespace Microsoft.OData.JsonLight
                     readPropertyAnnotationInServiceDoc,
                     (propertyParsingResult, propertyName) =>
                     {
+                        if (this.JsonReader.NodeType == JsonNodeType.Property)
+                        {
+                            // Read over property name
+                            this.JsonReader.Read();
+                        }
+
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
@@ -240,6 +246,12 @@ namespace Microsoft.OData.JsonLight
                     propertyAnnotationValueReader,
                     (propertyParsingResult, propertyName) =>
                     {
+                        if (this.JsonReader.NodeType == JsonNodeType.Property)
+                        {
+                            // Read over property name
+                            this.JsonReader.Read();
+                        }
+
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:

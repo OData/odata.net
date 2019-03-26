@@ -55,9 +55,6 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         private bool isResourceEnd;
 
-        /// <summary>The enumerator for unprocessed navigation links.</summary>
-        private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNestedResourceInfos;
-
         /// <summary>The missing operation generator for the current resource.</summary>
         private ODataMissingOperationGenerator missingOperationGenerator;
 
@@ -354,75 +351,6 @@ namespace Microsoft.OData.Evaluation
         {
             return ODataUtilsInternal.ConcatEnumerables(this.ResourceMetadataContext.Resource.NonComputedFunctions, this.MissingOperationGenerator.GetComputedFunctions());
         }
-
-        /// <summary>
-        /// Marks the given nested resource info as processed.
-        /// </summary>
-        /// <param name="navigationPropertyName">The nested resource info we've already processed.</param>
-        internal override void MarkNestedResourceInfoProcessed(string navigationPropertyName)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(navigationPropertyName), "!string.IsNullOrEmpty(navigationPropertyName)");
-            Debug.Assert(this.ProcessedNestedResourceInfos != null, "this.processedNestedResourceInfos != null");
-            this.ProcessedNestedResourceInfos.Add(navigationPropertyName);
-        }
-
-        /// <summary>
-        /// Returns the next unprocessed navigation link or null if there's no more navigation links to process.
-        /// </summary>
-        /// <returns>Returns the next unprocessed navigation link or null if there's no more navigation links to process.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
-        internal override ODataJsonLightReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
-        {
-            if (this.unprocessedNestedResourceInfos == null)
-            {
-                Debug.Assert(this.ResourceMetadataContext != null, "this.resourceMetadataContext != null");
-                this.unprocessedNestedResourceInfos = this.ResourceMetadataContext.SelectedNavigationProperties
-                    .Where(p => !this.ProcessedNestedResourceInfos.Contains(p.Name))
-                    .Select(ODataJsonLightReaderNestedResourceInfo.CreateProjectedNestedResourceInfo)
-                    .GetEnumerator();
-            }
-
-            if (this.unprocessedNestedResourceInfos.MoveNext())
-            {
-                return this.unprocessedNestedResourceInfos.Current;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the edit link of a stream value.
-        /// </summary>
-        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for;
-        /// or null for the default media resource.</param>
-        /// <returns>
-        /// The absolute URI of the edit link for the specified stream property or the default media resource.
-        /// Or null if it is not possible to determine the stream edit link.
-        /// </returns>
-        internal override Uri GetStreamEditLink(string streamPropertyName)
-        {
-            ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
-
-            return this.UriBuilder.BuildStreamEditLinkUri(this.GetEditLink(), streamPropertyName);
-        }
-
-        /// <summary>
-        /// Gets the read link of a stream value.
-        /// </summary>
-        /// <param name="streamPropertyName">The name of the stream property the read link is computed for;
-        /// or null for the default media resource.</param>
-        /// <returns>
-        /// The absolute URI of the read link for the specified stream property or the default media resource.
-        /// Or null if it is not possible to determine the stream read link.
-        /// </returns>
-        internal override Uri GetStreamReadLink(string streamPropertyName)
-        {
-            ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
-
-            return this.UriBuilder.BuildStreamReadLinkUri(this.GetReadLink(), streamPropertyName);
-        }
-
-        //// Stream content type and ETag can't be computed from conventions.
 
         /// <summary>
         /// Gets the navigation link URI for the specified navigation property.

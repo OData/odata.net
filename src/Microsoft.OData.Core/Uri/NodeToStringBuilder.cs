@@ -67,16 +67,16 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(node, "node");
 
             var left = this.TranslateNode(node.Left);
-            if (node.Left.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Left).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind) || 
-                node.Left.Kind == QueryNodeKind.Convert && ((ConvertNode)node.Left).Source.Kind == QueryNodeKind.BinaryOperator && 
+            if (node.Left.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Left).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind) ||
+                node.Left.Kind == QueryNodeKind.Convert && ((ConvertNode)node.Left).Source.Kind == QueryNodeKind.BinaryOperator &&
                 TranslateBinaryOperatorPriority(((BinaryOperatorNode)((ConvertNode)node.Left).Source).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind))
             {
                 left = String.Concat(ExpressionConstants.SymbolOpenParen, left, ExpressionConstants.SymbolClosedParen);
             }
 
             var right = this.TranslateNode(node.Right);
-            if (node.Right.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Right).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind) || 
-                node.Right.Kind == QueryNodeKind.Convert && ((ConvertNode)node.Right).Source.Kind == QueryNodeKind.BinaryOperator && 
+            if (node.Right.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Right).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind) ||
+                node.Right.Kind == QueryNodeKind.Convert && ((ConvertNode)node.Right).Source.Kind == QueryNodeKind.BinaryOperator &&
                 TranslateBinaryOperatorPriority(((BinaryOperatorNode)((ConvertNode)node.Right).Source).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind))
             {
                 right = String.Concat(ExpressionConstants.SymbolOpenParen, right, ExpressionConstants.SymbolClosedParen);

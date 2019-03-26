@@ -51,7 +51,7 @@ namespace Microsoft.OData.Tests
 
         public bool AnyPropertyFound { get; set; }
 
-        public ODataJsonLightReaderNestedResourceInfo FirstNestedResourceInfo
+        public ODataJsonLightReaderNestedInfo FirstNestedInfo
         {
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }

@@ -21,7 +21,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Abstract class for reading OData batch messages; also verifies the proper sequence of read calls on the reader.
     /// </summary>
-    public abstract class ODataBatchReader : IODataBatchOperationListener
+    public abstract class ODataBatchReader : IODataStreamListener
     {
         /// <summary>The input context to read the content from.</summary>
         private readonly ODataInputContext inputContext;
@@ -216,7 +216,7 @@ namespace Microsoft.OData
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
-        void IODataBatchOperationListener.BatchOperationContentStreamRequested()
+        void IODataStreamListener.StreamRequested()
         {
             this.operationState = OperationState.StreamRequested;
         }
@@ -229,7 +229,7 @@ namespace Microsoft.OData
         /// A task representing any action that is running as part of the status change of the reader;
         /// null if no such action exists.
         /// </returns>
-        Task IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync()
+        Task IODataStreamListener.StreamRequestedAsync()
         {
             this.operationState = OperationState.StreamRequested;
             return TaskUtils.CompletedTask;
@@ -239,7 +239,7 @@ namespace Microsoft.OData
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
         /// </summary>
-        void IODataBatchOperationListener.BatchOperationContentStreamDisposed()
+        void IODataStreamListener.StreamDisposed()
         {
             this.operationState = OperationState.StreamDisposed;
         }
