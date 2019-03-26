@@ -29,7 +29,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     public class ODataMessageTests : ODataTestCase
     {
         private static readonly Type batchOperationsHeadersType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataBatchOperationHeaders");
-        private static readonly Type batchOperationListenerType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.IODataBatchOperationListener");
+        private static readonly Type streamListenerType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.IODataStreamListener");
         private static readonly Type urlResolverType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.ODataBatchPayloadUriConverter");
 
         [InjectDependency]
@@ -181,7 +181,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     typeof(string),
                     typeof(Uri),
                     batchOperationsHeadersType,
-                    batchOperationListenerType,
+                    streamListenerType,
                     typeof(string),
                     urlResolverType,
                     typeof(bool),
@@ -214,7 +214,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 {
                     typeof(Func<Stream>),
                     batchOperationsHeadersType,
-                    batchOperationListenerType,
+                    streamListenerType,
                     typeof(string),
                     typeof(IODataPayloadUriConverter),
                     typeof(bool),

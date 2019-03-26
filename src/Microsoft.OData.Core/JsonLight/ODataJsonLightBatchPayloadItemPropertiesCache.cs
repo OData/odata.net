@@ -81,7 +81,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The Json batch reader for batch processing.
         /// </summary>
-        private IODataBatchOperationListener listener;
+        private IODataStreamListener listener;
 
         /// <summary>
         /// Cache for json properties.

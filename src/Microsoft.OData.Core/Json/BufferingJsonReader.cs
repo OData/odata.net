@@ -6,10 +6,12 @@
 
 namespace Microsoft.OData.Json
 {
+    using System;
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Text;
     using Microsoft.OData.JsonLight;
 
     #endregion Namespaces
@@ -17,7 +19,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Reader for the JSON format (http://www.json.org) that supports look-ahead.
     /// </summary>
-    internal class BufferingJsonReader : IJsonReader
+    internal class BufferingJsonReader : IJsonStreamReader
     {
         /// <summary>The (possibly empty) list of buffered nodes.</summary>
         /// <remarks>This is a circular linked list where this field points to the first item of the list.</remarks>
@@ -169,6 +171,56 @@ namespace Microsoft.OData.Json
             {
                 return this.isBuffering;
             }
+        }
+
+        /// <summary>
+        /// Creates a stream for reading a stream value
+        /// </summary>
+        /// <returns>A Stream used to read a stream value</returns>
+        public virtual Stream CreateReadStream()
+        {
+            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
+            if (!this.isBuffering && streamReader != null)
+            {
+                return streamReader.CreateReadStream();
+            }
+
+            Stream result = new MemoryStream(this.Value == null ? new byte[0] :
+                           Convert.FromBase64String((string)this.Value));
+            this.innerReader.Read();
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a TextReader for reading a text value.
+        /// </summary>
+        /// <returns>A TextReader for reading the text value.</returns>
+        public virtual TextReader CreateTextReader()
+        {
+            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
+            if (!this.isBuffering && streamReader != null)
+            {
+                return streamReader.CreateTextReader();
+            }
+
+            TextReader result = new StringReader(this.Value == null ? "" : (string)this.Value);
+            this.innerReader.Read();
+            return result;
+        }
+
+        /// <summary>
+        /// Whether or not the current value can be streamed
+        /// </summary>
+        /// <returns>True if the current value can be streamed, otherwise false</returns>
+        public virtual bool CanStream()
+        {
+            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
+            if (!this.isBuffering && streamReader != null)
+            {
+                return streamReader.CanStream();
+            }
+
+            return (this.Value is string || this.Value == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
         }
 
         /// <summary>
@@ -970,6 +1022,7 @@ namespace Microsoft.OData.Json
 
             return false;
         }
+
 #endif
         /// <summary>
         /// Private class used to buffer nodes when reading in buffering mode.

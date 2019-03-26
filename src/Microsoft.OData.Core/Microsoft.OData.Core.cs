@@ -85,6 +85,7 @@ namespace Microsoft.OData {
         internal const string ODataWriter_RelativeUriUsedWithoutBaseUriSpecified = "ODataWriter_RelativeUriUsedWithoutBaseUriSpecified";
         internal const string ODataWriter_StreamPropertiesMustBePropertiesOfODataResource = "ODataWriter_StreamPropertiesMustBePropertiesOfODataResource";
         internal const string ODataWriterCore_InvalidStateTransition = "ODataWriterCore_InvalidStateTransition";
+        internal const string ODataWriterCore_PropertyValueAlreadyWritten = "ODataWriterCore_PropertyValueAlreadyWritten";
         internal const string ODataWriterCore_InvalidTransitionFromStart = "ODataWriterCore_InvalidTransitionFromStart";
         internal const string ODataWriterCore_InvalidTransitionFromResource = "ODataWriterCore_InvalidTransitionFromResource";
         internal const string ODataWriterCore_InvalidTransitionFrom40DeletedResource = "ODataWriterCore_InvalidTransitionFrom40DeletedResource";
@@ -97,6 +98,7 @@ namespace Microsoft.OData {
         internal const string ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource = "ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource";
         internal const string ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState = "ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState";
         internal const string ODataWriterCore_WriteEndCalledInInvalidState = "ODataWriterCore_WriteEndCalledInInvalidState";
+        internal const string ODataWriterCore_StreamNotDisposed = "ODataWriterCore_StreamNotDisposed";
         internal const string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties = "ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
         internal const string ODataWriterCore_QueryNextLinkInRequest = "ODataWriterCore_QueryNextLinkInRequest";
@@ -336,6 +338,9 @@ namespace Microsoft.OData {
         internal const string ODataReaderCore_SyncCallOnAsyncReader = "ODataReaderCore_SyncCallOnAsyncReader";
         internal const string ODataReaderCore_AsyncCallOnSyncReader = "ODataReaderCore_AsyncCallOnSyncReader";
         internal const string ODataReaderCore_ReadOrReadAsyncCalledInInvalidState = "ODataReaderCore_ReadOrReadAsyncCalledInInvalidState";
+        internal const string ODataReaderCore_CreateReadStreamCalledInInvalidState = "ODataReaderCore_CreateReadStreamCalledInInvalidState";
+        internal const string ODataReaderCore_CreateTextReaderCalledInInvalidState = "ODataReaderCore_CreateReadTextReaderCalledInInvalidState";
+        internal const string ODataReaderCore_ReadCalledWithOpenStream = "ODataReaderCore_ReadCalledWithOpenStream";
         internal const string ODataReaderCore_NoReadCallsAllowed = "ODataReaderCore_NoReadCallsAllowed";
         internal const string ODataJsonReader_CannotReadResourcesOfResourceSet = "ODataJsonReader_CannotReadResourcesOfResourceSet";
         internal const string ODataJsonReaderUtils_CannotConvertInt32 = "ODataJsonReaderUtils_CannotConvertInt32";
@@ -685,6 +690,7 @@ namespace Microsoft.OData {
         internal const string MetadataBinder_IllegalSegmentType = "MetadataBinder_IllegalSegmentType";
         internal const string MetadataBinder_QueryOptionNotApplicable = "MetadataBinder_QueryOptionNotApplicable";
         internal const string StringItemShouldBeQuoted = "StringItemShouldBeQuoted";
+        internal const string StreamItemInvalidPrimitiveKind = "StreamItemInvalidPrimitiveKind";
         internal const string ApplyBinder_AggregateExpressionIncompatibleTypeForMethod = "ApplyBinder_AggregateExpressionIncompatibleTypeForMethod";
         internal const string ApplyBinder_UnsupportedAggregateMethod = "ApplyBinder_UnsupportedAggregateMethod";
         internal const string ApplyBinder_UnsupportedAggregateKind = "ApplyBinder_UnsupportedAggregateKind";
@@ -845,9 +851,14 @@ namespace Microsoft.OData {
         internal const string JsonReader_UnrecognizedEscapeSequence = "JsonReader_UnrecognizedEscapeSequence";
         internal const string JsonReader_UnexpectedEndOfString = "JsonReader_UnexpectedEndOfString";
         internal const string JsonReader_InvalidNumberFormat = "JsonReader_InvalidNumberFormat";
+        internal const string JsonReader_InvalidBinaryFormat = "JsonReader_InvalidBinaryFormat";
         internal const string JsonReader_MissingComma = "JsonReader_MissingComma";
         internal const string JsonReader_InvalidPropertyNameOrUnexpectedComma = "JsonReader_InvalidPropertyNameOrUnexpectedComma";
         internal const string JsonReader_MaxBufferReached = "JsonReader_MaxBufferReached";
+        internal const string JsonReader_CannotAccessValueInStreamState = "JsonReader_CannotAccessValueInStreamState";
+        internal const string JsonReader_CannotCallReadInStreamState = "JsonReader_CannotCallReadInStreamState";
+        internal const string JsonReader_CannotCreateReadStream = "JsonReader_CannotCreateReadStream";
+        internal const string JsonReader_CannotCreateTextReader = "JsonReader_CannotCreateTextReader";
         internal const string JsonReaderExtensions_UnexpectedNodeDetected = "JsonReaderExtensions_UnexpectedNodeDetected";
         internal const string JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName = "JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName";
         internal const string JsonReaderExtensions_CannotReadPropertyValueAsString = "JsonReaderExtensions_CannotReadPropertyValueAsString";

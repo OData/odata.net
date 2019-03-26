@@ -48,7 +48,7 @@ namespace Microsoft.OData
         /// Validates property uniqueness.
         /// </summary>
         /// <param name="property">The property.</param>
-        public void ValidatePropertyUniqueness(ODataProperty property)
+        public void ValidatePropertyUniqueness(ODataPropertyInfo property)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace Microsoft.OData
     /// </summary>
     internal class NullDuplicatePropertyNameChecker : IDuplicatePropertyNameChecker
     {
-        public void ValidatePropertyUniqueness(ODataProperty property)
+        public void ValidatePropertyUniqueness(ODataPropertyInfo property)
         {
             // nop
         }

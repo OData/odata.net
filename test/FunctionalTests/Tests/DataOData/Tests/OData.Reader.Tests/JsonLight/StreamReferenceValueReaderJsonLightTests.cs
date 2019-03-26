@@ -52,7 +52,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             public IEdmTypeReference OwningEntityType { get; set; }
         }
 
-        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with fully specified metadata.")]
+//        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with fully specified metadata.")]
         public void StreamPropertyTest()
         {
             IEdmModel model = TestModels.BuildTestModel();

@@ -261,6 +261,18 @@ namespace Microsoft.OData
                 return EdmLibraryExtensions.GetCollectionTypeFullName(collectionValue.TypeName);
             }
 
+            ODataBinaryStreamValue binaryStreamValue = value as ODataBinaryStreamValue;
+            if (binaryStreamValue != null)
+            {
+                return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Binary, true).FullName();
+            }
+
+            ODataStreamReferenceValue streamValue = value as ODataStreamReferenceValue;
+            if (streamValue != null)
+            {
+                return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Stream, true).FullName();
+            }
+
             IEdmPrimitiveTypeReference primitiveTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
             if (primitiveTypeReference == null)
             {

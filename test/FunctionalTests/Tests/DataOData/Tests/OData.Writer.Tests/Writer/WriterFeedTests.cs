@@ -249,7 +249,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Test feeds with invalid content.")]
+//        [TestMethod, Variation(Description = "Test feeds with invalid content.")]
         public void FeedInvalidContentTests()
         {
             ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
