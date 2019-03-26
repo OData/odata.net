@@ -10,6 +10,7 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -42,12 +43,6 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         private LinkedList<ODataEntityReferenceLink> entityReferenceLinks;
 
-        /// <summary>
-        /// The type of the nested resource info which will be reported.
-        /// </summary>
-        private IEdmType nestedResourceType;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to report.</param>
@@ -60,6 +55,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(nestedProperty == null || nestedProperty.Name == nestedResourceInfo.Name, "The name of the nested resource info doesn't match the name of the property.");
 
             this.nestedResourceInfo = nestedResourceInfo;
+
+            //ToStructuredType method needs to be called to resolve element type from the collection which AsStructured does not do.
+            NestedResourceTypeReference = (nestedProperty != null) ? nestedProperty.Type.Definition.AsElementType().ToTypeReference(nestedProperty.Type.IsNullable) : null;
             this.hasValue = isExpanded;
         }
 
@@ -77,7 +75,23 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(nestedResourceType != null || nestedProperty != null, "nestedResourceType and nestedProperty are both null");
 
             this.nestedResourceInfo = nestedResourceInfo;
-            this.nestedResourceType = nestedResourceType;
+
+            // We get the nullablity from the nestedProperty if it exists otherwise we consider the resource to be nullable if only the nestedResourceType is specified.
+            bool resourceTypeNullable = true;
+            if (nestedProperty != null && nestedProperty.Type != null)
+            {
+                resourceTypeNullable = nestedProperty.Type.IsNullable;
+            }
+
+            IEdmType nestedType = nestedResourceType;
+
+            // We get the resource type from the nestedProperty if not specified.
+            if (nestedProperty != null && nestedType == null)
+            {
+                nestedType = nestedProperty.Type.Definition;
+            }
+
+            NestedResourceTypeReference = nestedType.ToTypeReference(resourceTypeNullable);
             this.hasValue = isExpanded;
         }
 
@@ -137,20 +151,9 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// The resource type of the nested resource info which will be reported.
+        /// The resource type reference of the nested resource info which will be reported.
         /// </summary>
-        internal IEdmType NestedResourceType
-        {
-            get
-            {
-                if (this.nestedResourceType == null && this.NestedProperty != null)
-                {
-                    this.nestedResourceType = this.NestedProperty.Type.Definition.AsElementType();
-                }
-
-                return this.nestedResourceType;
-            }
-        }
+        internal IEdmTypeReference NestedResourceTypeReference { get; private set; }
 
         /// <summary>
         /// true if the link info has entity reference link which was not yet reported, false otherwise.

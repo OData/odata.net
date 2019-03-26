@@ -774,6 +774,125 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
+        public void ReadingNullValueForNonNullableCollectionOfComplexShouldThrow()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = new EdmComplexType("NS", "Car");
+            EdmComplexTypeReference door = new EdmComplexTypeReference(new EdmComplexType("NS","Door"), false);
+            complexType.AddStructuralProperty("Doors", new EdmCollectionTypeReference(new EdmCollectionType(door)));
+            model.AddElement(complexType);
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Car", new EdmComplexTypeReference(complexType, false));
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                    "\"@odata.id\":\"http://mytest\"," +
+                    "\"Id\":0," +
+                    "\"Car\": { \"Doors\":[null,null]}" +
+                "}";
+
+            List<ODataItem> resources = new List<ODataItem>();
+            Action test = () => this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    if (reader.State == ODataReaderState.ResourceEnd)
+                    {
+                        resources.Add(reader.Item);
+                    }
+                });
+            test.ShouldThrow<ODataException>().WithMessage("A null value was found with the expected type 'NS.Door[Nullable=False]'. The expected type 'NS.Door[Nullable=False]' does not allow null values.");
+        }
+
+        [Fact]
+        public void ReadingNullValueForNonNullableCollectionOfPrimitiveShouldThrow()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = new EdmComplexType("NS", "Car");
+            complexType.AddStructuralProperty("DoorNumbers", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
+            model.AddElement(complexType);
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Car", new EdmComplexTypeReference(complexType, true));
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                    "\"@odata.id\":\"http://mytest\"," +
+                    "\"Id\":0," +
+                    "\"Car\": { \"DoorNumbers\":[1,null]}" +
+                "}";
+
+            List<ODataItem> resources = new List<ODataItem>();
+            Action test = () => this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    if (reader.State == ODataReaderState.ResourceEnd)
+                    {
+                        resources.Add(reader.Item);
+                    }
+                });
+            test.ShouldThrow<ODataException>().WithMessage("A null value was found with the expected type 'Edm.Int32[Nullable=False]'. The expected type 'Edm.Int32[Nullable=False]' does not allow null values.");
+        }
+
+        [Fact]
+        public void ReadingNullValueForNonNullableCollectionOfEnumsShouldThrow()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = new EdmComplexType("NS", "Car");
+
+            // enum with flags
+            var enumFlagsType = new EdmEnumType("NS", "ColorFlags", EdmPrimitiveTypeKind.Int64, true);
+            enumFlagsType.AddMember("Red", new EdmEnumMemberValue(1L));
+            enumFlagsType.AddMember("Green", new EdmEnumMemberValue(2L));
+            enumFlagsType.AddMember("Blue", new EdmEnumMemberValue(4L));
+            enumFlagsType.AddMember("GreenRed", new EdmEnumMemberValue(3L));
+            complexType.AddStructuralProperty("DoorColors", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEnumTypeReference(enumFlagsType, false))));
+            model.AddElement(complexType);
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Car", new EdmComplexTypeReference(complexType, true));
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                    "\"@odata.id\":\"http://mytest\"," +
+                    "\"Id\":0," +
+                    "\"Car\": { \"DoorColors\":[ 'NS.Red' ,null]}" +
+                "}";
+
+            List<ODataItem> resources = new List<ODataItem>();
+            Action test = () => this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    if (reader.State == ODataReaderState.ResourceEnd)
+                    {
+                        resources.Add(reader.Item);
+                    }
+                });
+            test.ShouldThrow<ODataException>().WithMessage("A null value was found with the expected type 'NS.ColorFlags[Nullable=False]'. The expected type 'NS.ColorFlags[Nullable=False]' does not allow null values.");
+        }
+
+        [Fact]
         public void ReadingNullValueForDynamicCollectionPropertyInOpenStructuralTypeShouldWork()
         {
             EdmModel model = new EdmModel();
