@@ -125,5 +125,19 @@ namespace Microsoft.OData
         /// an <see cref="ODataDeltaDeletedLink"/>.
         /// </remarks>
         DeltaDeletedLink,
+
+        /// <summary>The reader is reading a property.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataPropertyInfo"/>.
+        /// </remarks>
+        NestedProperty,
+
+        /// <summary>The reader is reading a stream.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataStreamItem"/>.
+        /// </remarks>
+        Stream
     }
 }

@@ -21,7 +21,7 @@ namespace Microsoft.OData.Json
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
     [DebuggerDisplay("{NodeType}: {Value}")]
-    internal class JsonReader : IJsonReader, IDisposable
+    internal class JsonReader : IJsonStreamReader, IDisposable
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -70,6 +70,24 @@ namespace Microsoft.OData.Json
         private bool endOfInputReached;
 
         /// <summary>
+        /// Whether the user is currently reading a string property as a stream.
+        /// </summary>
+        /// <remarks>This is used to avoid calling Read on the text reader multiple times
+        /// even though it already reported the end of input.</remarks>
+        private bool readingStream = false;
+
+        /// <summary>
+        /// Whether or not the current value can be streamed
+        /// </summary>
+        /// <remarks>True if we are positioned on a string or null value, otherwise false</remarks>
+        private bool canStream = false;
+
+        /// <summary>
+        /// The opening character read when reading a stream value.
+        /// </summary>
+        private char streamOpeningQuoteCharacter = '"';
+
+        /// <summary>
         /// Buffer of characters from the input.
         /// </summary>
         private char[] characterBuffer;
@@ -87,6 +105,13 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <remarks>This can have value from 0 to storedCharacterCount.</remarks>
         private int tokenStartIndex;
+
+        /// <summary>
+        /// Number of times an opening character (for example, '{') has been read
+        /// greater than the number of times the corresponding closing character
+        /// (for example '}') has been read.
+        /// </summary>
+        private int balancedQuoteCount;
 
         /// <summary>
         /// The last reported node type.
@@ -185,6 +210,32 @@ namespace Microsoft.OData.Json
         {
             get
             {
+                if (this.readingStream)
+                {
+                    throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotAccessValueInStreamState);
+                }
+
+                if (this.canStream)
+                {
+                    if (this.nodeType != JsonNodeType.Property)
+                    {
+                        this.canStream = false;
+                    }
+
+                    if (this.nodeType == JsonNodeType.PrimitiveValue)
+                    {
+                        if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                        {
+                            this.nodeValue = this.ParseNullPrimitiveValue();
+                        }
+                        else
+                        {
+                            bool hasLeadingBackslash;
+                            this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                        }
+                    }
+                }
+
                 return this.nodeValue;
             }
         }
@@ -212,12 +263,45 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Whether the reader can stream the current value.
+        /// </summary>
+        /// <returns>
+        /// True if the current value can be streamed, otherwise false</returns>
+        /// <remarks>If the property is a string (or null) it can be streamed</remarks>
+        public bool CanStream()
+        {
+            return this.canStream;
+        }
+
+        /// <summary>
         /// Reads the next node from the input.
         /// </summary>
         /// <returns>true if a new node was found, or false if end of input was reached.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Not really feasible to extract code to methods without introducing unnecessary complexity.")]
         public virtual bool Read()
         {
+            if (this.readingStream)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCallReadInStreamState);
+            }
+
+            if (this.canStream)
+            {
+                this.canStream = false;
+                if (this.nodeType == JsonNodeType.PrimitiveValue)
+                {
+                    // caller is positioned on a string value that they haven't read, so skip it
+                    if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                    {
+                        this.ParseNullPrimitiveValue();
+                    }
+                    else
+                    {
+                        this.ParseStringPrimitiveValue();
+                    }
+                }
+            }
+
             // Reset the node value.
             this.nodeValue = null;
 
@@ -363,6 +447,65 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Creates a stream for reading a base64 binary value.
+        /// </summary>
+        /// <returns>A stream for reading a base64 URL encoded binary value.</returns>
+        public Stream CreateReadStream()
+        {
+            if (!this.canStream)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCreateReadStream);
+            }
+
+            this.canStream = false;
+            if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
+            {
+                this.ParseNullPrimitiveValue();
+                this.scopes.Peek().ValueCount++;
+                this.Read();
+                return new ODataBinaryStreamReader((a, b, c) => { return 0; });
+            }
+
+            this.tokenStartIndex++;
+            this.readingStream = true;
+            return new ODataBinaryStreamReader(this.ReadChars);
+        }
+
+        /// <summary>
+        /// Creates a TextReader for reading text values.
+        /// </summary>
+        /// <returns>A TextReader for reading a text value.</returns>
+        public TextReader CreateTextReader()
+        {
+            if (!this.canStream)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCreateTextReader);
+            }
+
+            this.canStream = false;
+            this.SkipWhitespaces();
+
+            Debug.Assert(this.NodeType == JsonNodeType.PrimitiveValue || this.NodeType == JsonNodeType.Property, "Streaming in an unknown state");
+            if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
+            {
+                // value is null
+                this.ParseNullPrimitiveValue();
+                this.scopes.Peek().ValueCount++;
+                this.Read();
+                return new ODataTextStreamReader((a, b, c) => { return 0; });
+            }
+
+            // skip over the opening quote character for a string value
+            if (this.NodeType == JsonNodeType.PrimitiveValue)
+            {
+                this.tokenStartIndex++;
+            }
+
+            this.readingStream = true;
+            return new ODataTextStreamReader(this.ReadChars);
+        }
+
+        /// <summary>
         /// Dispose the reader
         /// </summary>
         public void Dispose()
@@ -423,17 +566,24 @@ namespace Microsoft.OData.Json
                     // Start of array
                     this.PushScope(ScopeType.Array);
                     this.tokenStartIndex++;
+                    this.SkipWhitespaces();
+                    this.canStream =
+                        this.characterBuffer[this.tokenStartIndex] == '"' ||
+                        this.characterBuffer[this.tokenStartIndex] == '\'' ||
+                        this.characterBuffer[this.tokenStartIndex] == 'n';
                     return JsonNodeType.StartArray;
 
                 case '"':
                 case '\'':
                     // String primitive value
-                    bool hasLeadingBackslash;
-                    this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                    // Don't parse yet, as it may be a stream. Defer parsing until .Value is called.
+                    this.canStream = true;
                     break;
 
                 case 'n':
-                    this.nodeValue = this.ParseNullPrimitiveValue();
+                    // Null value
+                    // Don't parse yet, as user may be streaming a stream. Defer parsing until .Value is called.
+                    this.canStream = true;
                     break;
 
                 case 't':
@@ -490,7 +640,10 @@ namespace Microsoft.OData.Json
             // Consume the colon.
             Debug.Assert(this.characterBuffer[this.tokenStartIndex] == ':', "The above should verify that there's a colon.");
             this.tokenStartIndex++;
+            this.SkipWhitespaces();
 
+            // if the content is nested json, we can stream
+            this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
             return JsonNodeType.Property;
         }
 
@@ -806,6 +959,150 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Reads bytes from the current string value.
+        /// </summary>
+        /// <param name="chars">The character buffer to populate</param>
+        /// <param name="offset">The number of characters offset into the buffer to read</param>
+        /// <param name="maxLength">The maximum number of characters to read into the buffer</param>
+        /// <returns>The number of characters read.</returns>
+        /// <remarks>
+        /// Assumes that the current token position points to the opening quote.
+        /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
+        /// So it can either return a string succesfully or fail.</remarks>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
+        private int ReadChars(char[] chars, int offset, int maxLength)
+        {
+            if (!readingStream)
+            {
+                return 0;
+            }
+
+            int charsRead = 0;
+
+            while (charsRead < maxLength && (this.tokenStartIndex < this.storedCharacterCount || this.ReadInput()))
+            {
+                char character = this.characterBuffer[this.tokenStartIndex];
+                bool advance = true;
+
+                if (character == GetClosingQuoteCharacter(this.streamOpeningQuoteCharacter) && --this.balancedQuoteCount < 1)
+                {
+                    if (character != '"')
+                    {
+                        // The character is part of the JSON stream; copy it to the output buffer
+                        chars[charsRead + offset] = character;
+                        charsRead++;
+                        this.scopes.Pop();
+                    }
+
+                    // Consume the closing quote character.
+                    this.tokenStartIndex++;
+                    readingStream = false;
+                    this.scopes.Peek().ValueCount++;
+
+                    // move to next node
+                    this.Read();
+                    return charsRead;
+                }
+
+                if (character == this.streamOpeningQuoteCharacter)
+                {
+                    this.balancedQuoteCount++;
+                }
+
+                if (character == '\\')
+                {
+                    // Consume the escape
+                    this.tokenStartIndex++;
+                    if (!this.EnsureAvailableCharacters(1))
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
+                    }
+
+                    character = this.characterBuffer[this.tokenStartIndex];
+
+                    switch (character)
+                    {
+                        case 'b':
+                            character = '\b';
+                            break;
+                        case 'f':
+                            character = '\f';
+                            break;
+                        case 'n':
+                            character = '\n';
+                            break;
+                        case 'r':
+                            character = '\r';
+                            break;
+                        case 't':
+                            character = '\t';
+                            break;
+                        case '\\':
+                        case '\"':
+                        case '\'':
+                        case '/':
+                            // Use the (now unescaped) character from reader;
+                            break;
+                        case 'u':
+
+                            // Consume the "u"
+                            tokenStartIndex++;
+
+                            // We need 4 hex characters
+                            if (!this.EnsureAvailableCharacters(4))
+                            {
+                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
+                            }
+
+                            string unicodeHexValue = this.ConsumeTokenToString(4);
+                            int characterValue;
+                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+                            {
+                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
+                            }
+
+                            character = (char)characterValue;
+
+                            // We are already positioned on the next character, so don't advance at the end
+                            advance = false;
+                            break;
+                        default:
+                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\" + character));
+                    }
+                }
+
+                chars[charsRead + offset] = character;
+                charsRead++;
+
+                if (advance)
+                {
+                    this.tokenStartIndex++;
+                }
+            }
+
+            // we reached the end of the file without finding a closing quote character
+            if (charsRead < maxLength)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedEndOfString);
+            }
+
+            return charsRead;
+        }
+
+        private static char GetClosingQuoteCharacter(char openingCharacter)
+        {
+            switch (openingCharacter)
+            {
+                case '{':
+                    return '}';
+                case '[':
+                    return ']';
+                default:
+                    return openingCharacter;
+            }
+        }
+
+        /// <summary>
         /// Called when end of input is reached.
         /// </summary>
         /// <returns>Always returns false, used for easy readability of the callers.</returns>
@@ -963,7 +1260,7 @@ namespace Microsoft.OData.Json
             else if (this.storedCharacterCount == this.characterBuffer.Length)
             {
                 // No more room in the buffer, move or grow the buffer.
-                if (this.tokenStartIndex < this.characterBuffer.Length / 4) // Tested 1/2, 3/4 and 1/4, it seems 1/4 is better than other two.
+                if (this.tokenStartIndex < this.characterBuffer.Length / 4)
                 {
                     // The entire buffer is full of unconsumed characters
                     // We need to grow the buffer. Double the size of the buffer.

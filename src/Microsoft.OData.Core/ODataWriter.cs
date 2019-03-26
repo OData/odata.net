@@ -9,9 +9,10 @@ namespace Microsoft.OData
     #region Namespaces
 
     using System;
-    #if PORTABLELIB
+    using System.IO;
+#if PORTABLELIB
     using System.Threading.Tasks;
-    #endif
+#endif
 
     #endregion Namespaces
 
@@ -286,6 +287,91 @@ namespace Microsoft.OData
         public virtual Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WritePrimitive(primitiveValue));
+        }
+#endif
+
+        /// <summary>Writes a primitive property within a resource.</summary>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        public virtual void WriteStart(ODataPropertyInfo primitiveProperty)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Writes a primitive property within a resource.</summary>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public ODataWriter Write(ODataProperty primitiveProperty)
+        {
+            WriteStart(primitiveProperty);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a primitive property within a resource.</summary>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        /// <param name="nestedAction">The action to perform in-between the writing.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public ODataWriter Write(ODataProperty primitiveProperty, Action nestedAction)
+        {
+            WriteStart(primitiveProperty);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously write a primitive property within a resource. </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        public virtual Task WriteStartAsync(ODataProperty primitiveProperty)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(primitiveProperty));
+        }
+#endif
+
+        /// <summary>Creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public virtual Stream CreateBinaryWriteStream()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Creates a stream for writing a binary value.</summary>
+        /// <param name="stream">The stream to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter WriteStream(ODataBinaryStreamValue stream)
+        {
+            Stream writeStream = this.CreateBinaryWriteStream();
+            stream.Stream.CopyTo(writeStream);
+            writeStream.Flush();
+            writeStream.Dispose();
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public virtual Task<Stream> CreateBinaryWriteStreamAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBinaryWriteStream());
+        }
+#endif
+
+        /// <summary>Creates a TextWriter for writing a string value.</summary>
+        /// <returns>A TextWriter to write a string value.</returns>
+        public virtual TextWriter CreateTextWriter()
+        {
+            throw new NotImplementedException();
+        }
+
+#if PORTABLELIB
+        /// <summary>Asynchronously creates a TextWriter for writing a string value.</summary>
+        /// <returns>A TextWriter to write a string value.</returns>
+        public virtual Task<TextWriter> CreateTextWriterAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextWriter());
         }
 #endif
 

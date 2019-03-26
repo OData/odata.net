@@ -127,15 +127,17 @@ namespace Microsoft.OData
         /// <summary>
         /// Validates a stream reference property.
         /// </summary>
-        /// <param name="streamProperty">The stream property to check.</param>
+        /// <param name="streamInfo">The stream property to check.</param>
+        /// <param name="propertyName">The name of the property being checked.</param>
         /// <param name="structuredType">The owning type of the stream property or null if no metadata is available.</param>
         /// <param name="streamEdmProperty">The stream property defined by the model.</param>
-        public void ValidateStreamReferenceProperty(ODataProperty streamProperty,
+        public void ValidateStreamReferenceProperty(IODataStreamReferenceInfo streamInfo,
+                                                    string propertyName,
                                                     IEdmStructuredType structuredType,
                                                     IEdmProperty streamEdmProperty)
         {
             ReaderValidationUtils.ValidateStreamReferenceProperty(
-                streamProperty, structuredType, streamEdmProperty, settings.ThrowOnUndeclaredPropertyForNonOpenType);
+                streamInfo, propertyName, structuredType, streamEdmProperty, settings.ThrowOnUndeclaredPropertyForNonOpenType);
         }
     }
 }

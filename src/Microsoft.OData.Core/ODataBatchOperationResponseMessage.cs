@@ -52,7 +52,7 @@ namespace Microsoft.OData
         internal ODataBatchOperationResponseMessage(
             Func<Stream> contentStreamCreatorFunc,
             ODataBatchOperationHeaders headers,
-            IODataBatchOperationListener operationListener,
+            IODataStreamListener operationListener,
             string contentId,
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,

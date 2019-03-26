@@ -101,5 +101,24 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
 #endif
+
+        /// <summary>
+        /// Reads the current value using a TextReader.
+        /// </summary>
+        /// <returns>True if more items were read; otherwise false.</returns>
+        public override System.IO.TextReader CreateTextReader()
+        {
+            return this.reader.CreateTextReader();
+        }
+
+        /// <summary>
+        /// Reads the current value as a stream.
+        /// </summary>
+        /// <returns>True if more items were read; otherwise false.</returns>
+        public override System.IO.Stream CreateReadStream()
+        {
+            return this.reader.CreateReadStream();
+        }
+
     }
 }

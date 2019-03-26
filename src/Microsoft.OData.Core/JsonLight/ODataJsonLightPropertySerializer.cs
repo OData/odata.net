@@ -14,6 +14,7 @@ namespace Microsoft.OData.JsonLight
     using System.Linq;
     using System.Globalization;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
@@ -83,8 +84,8 @@ namespace Microsoft.OData.JsonLight
                         property,
                         null /*owningType*/,
                         true /* isTopLevel */,
-                        false /* allowStreamProperty */,
-                        this.CreateDuplicatePropertyNameChecker());
+                        this.CreateDuplicatePropertyNameChecker(),
+                        null /* metadataBuilder */);
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
                     this.JsonWriter.EndObjectScope();
@@ -101,11 +102,13 @@ namespace Microsoft.OData.JsonLight
         /// are allowed as named stream properties should only be defined on ODataResource instances
         /// </param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
+        /// <param name="metadataBuilder">The metadatabuilder for writing the property.</param>
         internal void WriteProperties(
             IEdmStructuredType owningType,
             IEnumerable<ODataProperty> properties,
             bool isComplexValue,
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
+            ODataResourceMetadataBuilder metadataBuilder)
         {
             if (properties == null)
             {
@@ -118,42 +121,9 @@ namespace Microsoft.OData.JsonLight
                     property,
                     owningType,
                     false /* isTopLevel */,
-                    !isComplexValue,
-                    duplicatePropertyNameChecker);
+                    duplicatePropertyNameChecker,
+                    metadataBuilder);
             }
-        }
-
-        /// <summary>
-        /// Test to see if <paramref name="property"/> is an open property or not.
-        /// </summary>
-        /// <param name="property">The property in question.</param>
-        /// <returns>true if the property is an open property; false if it is not, or if openness cannot be determined</returns>
-        private bool IsOpenProperty(ODataProperty property)
-        {
-            Debug.Assert(property != null, "property != null");
-
-            bool isOpenProperty;
-
-            if (property.SerializationInfo != null)
-            {
-                isOpenProperty = property.SerializationInfo.PropertyKind == ODataPropertyKind.Open;
-            }
-            else
-            {
-                // TODO: (issue #888) this logic results in type annotations not being written for dynamic properties on types that are not
-                // marked as open. Type annotations should always be written for dynamic properties whose type cannot be hueristically
-                // determined. Need to change this.currentPropertyInfo.MetadataType.IsOpenProperty to this.currentPropertyInfo.MetadataType.IsDynamic,
-                // and fix related tests and other logic (this change alone results in writing type even if it's already implied by context).
-                isOpenProperty = (!this.WritingResponse && this.currentPropertyInfo.MetadataType.OwningType == null) // Treat property as dynamic property when writing request and owning type is null
-                || this.currentPropertyInfo.MetadataType.IsOpenProperty;
-            }
-
-            if (isOpenProperty)
-            {
-                this.WriterValidator.ValidateOpenPropertyValue(property.Name, property.ODataValue);
-            }
-
-            return isOpenProperty;
         }
 
         /// <summary>
@@ -162,45 +132,17 @@ namespace Microsoft.OData.JsonLight
         /// <param name="property">The property to write out.</param>
         /// <param name="owningType">The owning type for the <paramref name="property"/> or null if no metadata is available.</param>
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
-        /// <param name="allowStreamProperty">Should pass in true if we are writing a property of an ODataResource instance, false otherwise.
-        /// Named stream properties should only be defined on ODataResource instances.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
+        /// <param name="metadataBuilder">The metadatabuilder for the resource</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
-        private void WriteProperty(
+        internal void WriteProperty(
             ODataProperty property,
             IEdmStructuredType owningType,
             bool isTopLevel,
-            bool allowStreamProperty,
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
+            ODataResourceMetadataBuilder metadataBuilder)
         {
-            WriterValidationUtils.ValidatePropertyNotNull(property);
-
-            string propertyName = property.Name;
-
-            if (this.JsonLightOutputContext.MessageWriterSettings.Validations != ValidationKinds.None)
-            {
-                WriterValidationUtils.ValidatePropertyName(propertyName);
-            }
-
-            if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
-            {
-                this.currentPropertyInfo = new PropertySerializationInfo(this.JsonLightOutputContext.Model, propertyName, owningType) { IsTopLevel = isTopLevel };
-            }
-            else
-            {
-                this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(this.JsonLightOutputContext.Model, propertyName, owningType);
-            }
-
-            WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
-
-            duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
-
-            if (currentPropertyInfo.MetadataType.IsUndeclaredProperty)
-            {
-                WriteODataTypeAnnotation(property, isTopLevel);
-            }
-
-            WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
+            this.WritePropertyInfo(property, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder);
 
             ODataValue value = property.ODataValue;
 
@@ -213,17 +155,10 @@ namespace Microsoft.OData.JsonLight
             }
 
             ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
-            if (streamReferenceValue != null)
+            if (streamReferenceValue != null && !(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
             {
-                if (!allowStreamProperty)
-                {
-                    throw new ODataException(ODataErrorStrings.ODataWriter_StreamPropertiesMustBePropertiesOfODataResource(propertyName));
-                }
-
-                Debug.Assert(owningType == null || owningType.IsODataEntityTypeKind(), "The metadata should not allow named stream properties to be defined on a non-entity type.");
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
-                WriterValidationUtils.ValidateStreamReferenceProperty(property, currentPropertyInfo.MetadataType.EdmProperty, this.WritingResponse);
-                this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
+                WriteStreamValue(streamReferenceValue, property.Name, metadataBuilder);
                 return;
             }
 
@@ -275,6 +210,94 @@ namespace Microsoft.OData.JsonLight
                 this.WriteCollectionProperty(collectionValue, isOpenPropertyType);
                 return;
             }
+
+            ODataBinaryStreamValue streamValue = value as ODataBinaryStreamValue;
+            if (streamValue != null)
+            {
+                this.WriteStreamProperty(streamValue, isOpenPropertyType);
+                return;
+            }
+        }
+
+
+        /// <summary>
+        /// Writes the property information for a property.
+        /// </summary>
+        /// <param name="propertyInfo">The property info to write out.</param>
+        /// <param name="owningType">The owning type for the <paramref name="propertyInfo"/> or null if no metadata is available.</param>
+        /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
+        /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
+        /// <param name="metadataBuilder">The metadatabuilder for the resource</param>
+        internal void WritePropertyInfo(
+            ODataPropertyInfo propertyInfo,
+            IEdmStructuredType owningType,
+            bool isTopLevel,
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
+            ODataResourceMetadataBuilder metadataBuilder)
+        {
+            WriterValidationUtils.ValidatePropertyNotNull(propertyInfo);
+
+            string propertyName = propertyInfo.Name;
+
+            if (this.JsonLightOutputContext.MessageWriterSettings.Validations != ValidationKinds.None)
+            {
+                WriterValidationUtils.ValidatePropertyName(propertyName);
+            }
+
+            if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
+            {
+                this.currentPropertyInfo = new PropertySerializationInfo(this.JsonLightOutputContext.Model, propertyName, owningType) { IsTopLevel = isTopLevel };
+            }
+            else
+            {
+                this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(this.JsonLightOutputContext.Model, propertyName, owningType);
+            }
+
+            WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
+
+            duplicatePropertyNameChecker.ValidatePropertyUniqueness(propertyInfo);
+
+            if (currentPropertyInfo.MetadataType.IsUndeclaredProperty)
+            {
+                WriteODataTypeAnnotation(propertyInfo, isTopLevel);
+            }
+
+            WriteInstanceAnnotation(propertyInfo, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
+
+            ODataStreamPropertyInfo streamInfo = propertyInfo as ODataStreamPropertyInfo;
+            if (streamInfo != null && !(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
+            {
+                Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
+                WriteStreamValue(streamInfo, propertyInfo.Name, metadataBuilder);
+            }
+        }
+
+        /// <summary>
+        /// Test to see if <paramref name="property"/> is an open property or not.
+        /// </summary>
+        /// <param name="property">The property in question.</param>
+        /// <returns>true if the property is an open property; false if it is not, or if openness cannot be determined</returns>
+        private bool IsOpenProperty(ODataPropertyInfo property)
+        {
+            Debug.Assert(property != null, "property != null");
+
+            bool isOpenProperty;
+
+            if (property.SerializationInfo != null)
+            {
+                isOpenProperty = property.SerializationInfo.PropertyKind == ODataPropertyKind.Open;
+            }
+            else
+            {
+                // TODO: (issue #888) this logic results in type annotations not being written for dynamic properties on types that are not
+                // marked as open. Type annotations should always be written for dynamic properties whose type cannot be hueristically
+                // determined. Need to change this.currentPropertyInfo.MetadataType.IsOpenProperty to this.currentPropertyInfo.MetadataType.IsDynamic,
+                // and fix related tests and other logic (this change alone results in writing type even if it's already implied by context).
+                isOpenProperty = (!this.WritingResponse && this.currentPropertyInfo.MetadataType.OwningType == null) // Treat property as dynamic property when writing request and owning type is null
+                || this.currentPropertyInfo.MetadataType.IsOpenProperty;
+            }
+
+            return isOpenProperty;
         }
 
         private void WriteUntypedValue(ODataUntypedValue untypedValue)
@@ -284,13 +307,23 @@ namespace Microsoft.OData.JsonLight
             return;
         }
 
+        private void WriteStreamValue(IODataStreamReferenceInfo streamInfo, string propertyName, ODataResourceMetadataBuilder metadataBuilder)
+        {
+            WriterValidationUtils.ValidateStreamPropertyInfo(streamInfo, currentPropertyInfo.MetadataType.EdmProperty, propertyName, this.WritingResponse);
+            this.WriteStreamInfo(propertyName, streamInfo);
+            if (metadataBuilder != null)
+            {
+                metadataBuilder.MarkStreamPropertyProcessed(propertyName);
+            }
+        }
+
         /// <summary>
         /// Writes instance annotation for property
         /// </summary>
         /// <param name="property">The property to handle.</param>
         /// <param name="isTopLevel">If writing top level property.</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
-        private void WriteInstanceAnnotation(ODataProperty property, bool isTopLevel, bool isUndeclaredProperty)
+        private void WriteInstanceAnnotation(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
         {
             if (property.InstanceAnnotations.Count != 0)
             {
@@ -310,7 +343,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="property">The property to handle.</param>
         /// <param name="isTopLevel">If writing top level property.</param>
-        private void WriteODataTypeAnnotation(ODataProperty property, bool isTopLevel)
+        private void WriteODataTypeAnnotation(ODataPropertyInfo property, bool isTopLevel)
         {
             if (property.TypeAnnotation != null && property.TypeAnnotation.TypeName != null)
             {
@@ -334,37 +367,37 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Writes a stream property.
+        /// Writes stream property information.
         /// </summary>
-        /// <param name="propertyName">The name of the property to write.</param>
-        /// <param name="streamReferenceValue">The stream reference value to be written</param>
-        private void WriteStreamReferenceProperty(string propertyName, ODataStreamReferenceValue streamReferenceValue)
+        /// <param name="propertyName">The name of the stream property to write.</param>
+        /// <param name="streamInfo">The stream reference value to be written</param>
+        private void WriteStreamInfo(string propertyName, IODataStreamReferenceInfo streamInfo)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-            Debug.Assert(streamReferenceValue != null, "streamReferenceValue != null");
+            Debug.Assert(streamInfo != null, "streamReferenceValue != null");
 
-            Uri mediaEditLink = streamReferenceValue.EditLink;
+            Uri mediaEditLink = streamInfo.EditLink;
             if (mediaEditLink != null)
             {
                 this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaEditLink);
                 this.JsonWriter.WriteValue(this.UriToString(mediaEditLink));
             }
 
-            Uri mediaReadLink = streamReferenceValue.ReadLink;
+            Uri mediaReadLink = streamInfo.ReadLink;
             if (mediaReadLink != null)
             {
                 this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaReadLink);
                 this.JsonWriter.WriteValue(this.UriToString(mediaReadLink));
             }
 
-            string mediaContentType = streamReferenceValue.ContentType;
+            string mediaContentType = streamInfo.ContentType;
             if (mediaContentType != null)
             {
                 this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaContentType);
                 this.JsonWriter.WriteValue(mediaContentType);
             }
 
-            string mediaETag = streamReferenceValue.ETag;
+            string mediaETag = streamInfo.ETag;
             if (mediaETag != null)
             {
                 this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaETag);
@@ -377,7 +410,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="property">The property to write out.</param>
         private void WriteNullProperty(
-            ODataProperty property)
+            ODataPropertyInfo property)
         {
             this.WriterValidator.ValidateNullPropertyValue(
                 this.currentPropertyInfo.MetadataType.TypeReference, property.Name,
@@ -386,7 +419,7 @@ namespace Microsoft.OData.JsonLight
             if (this.currentPropertyInfo.IsTopLevel)
             {
                 if (this.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility <
-                    ODataLibraryCompatibility.Version7)
+                    ODataLibraryCompatibility.Version7 && this.JsonLightOutputContext.MessageWriterSettings.Version < ODataVersion.V401)
                 {
                     // The 6.x library used an OData 3.0 protocol element in this case: @odata.null=true
                     this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
@@ -524,6 +557,17 @@ namespace Microsoft.OData.JsonLight
                     this.currentPropertyInfo.TypeNameToWrite = typeNameToWrite;
                 }
             }
+        }
+
+        /// <summary>
+        /// Writes a stream property.
+        /// </summary>
+        /// <param name="streamValue">The stream value to be written</param>
+        /// <param name="isOpenPropertyType">If the property is open.</param>
+        private void WriteStreamProperty(ODataBinaryStreamValue streamValue, bool isOpenPropertyType)
+        {
+            this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
+            this.JsonLightValueSerializer.WriteStreamValue(streamValue);
         }
 
         /// <summary>

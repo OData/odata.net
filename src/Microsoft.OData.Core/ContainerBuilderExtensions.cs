@@ -118,6 +118,17 @@ namespace Microsoft.OData
         /// <returns>The <see cref="IContainerBuilder"/> instance itself.</returns>
         public static IContainerBuilder AddDefaultODataServices(this IContainerBuilder builder)
         {
+            return builder.AddDefaultODataServices(ODataVersion.V4);
+        }
+
+        /// <summary>
+        /// Adds the default OData services to the <see cref="IContainerBuilder"/>.
+        /// </summary>
+        /// <param name="builder">The <see cref="IContainerBuilder"/> to add the services to.</param>
+        /// <param name="odataVersion">ODataVersion for the default services.</param>
+        /// <returns>The <see cref="IContainerBuilder"/> instance itself.</returns>
+        public static IContainerBuilder AddDefaultODataServices(this IContainerBuilder builder, ODataVersion odataVersion)
+        {
             Debug.Assert(builder != null, "builder != null");
 
             builder.AddService<IJsonReaderFactory, DefaultJsonReaderFactory>(ServiceLifetime.Singleton);
@@ -133,7 +144,7 @@ namespace Microsoft.OData
             builder.AddService(ServiceLifetime.Singleton, sp => ODataUriResolver.GetUriResolver(null));
             builder.AddService<ODataUriParserSettings>(ServiceLifetime.Scoped);
             builder.AddService<UriPathParser>(ServiceLifetime.Scoped);
-            builder.AddServicePrototype(new ODataSimplifiedOptions());
+            builder.AddServicePrototype(new ODataSimplifiedOptions(odataVersion));
             builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataSimplifiedOptions>().Clone());
 
             return builder;

@@ -22,13 +22,13 @@ namespace Microsoft.OData
         /// <summary>
         /// The base type for all items in the resource set.
         /// </summary>
-        private IEdmStructuredType itemType;
+        private IEdmType itemType;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="memberType">The type of the resource set, or null.</param>
-        public ResourceSetWithoutExpectedTypeValidator(IEdmStructuredType memberType)
+        public ResourceSetWithoutExpectedTypeValidator(IEdmType memberType)
         {
             this.itemType = memberType;
         }
@@ -36,10 +36,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Validates the type of a resource in a top-level resource set.
         /// </summary>
-        /// <param name="resourceType">The type of the resource.</param>
-        internal void ValidateResource(IEdmStructuredType resourceType)
+        /// <param name="itemType">The type of the resource.</param>
+        internal void ValidateResource(IEdmType itemType)
         {
-            if (resourceType == null)
+            if (this.itemType == null || this.itemType.TypeKind == EdmTypeKind.Untyped)
             {
                 return;
             }
@@ -47,23 +47,31 @@ namespace Microsoft.OData
             // If we don't have a type, store the type of the first item.
             if (this.itemType == null)
             {
-                this.itemType = resourceType;
+                this.itemType = itemType;
             }
 
             // Validate the expected and actual types.
-            if (this.itemType.IsEquivalentTo(resourceType))
+            if (this.itemType.IsEquivalentTo(itemType))
             {
                 return;
             }
 
-            // If the types are not equivalent, make sure they have a common base type.
-            IEdmType commonBaseType = EdmLibraryExtensions.GetCommonBaseType(this.itemType, resourceType);
-            if (commonBaseType == null)
+            IEdmStructuredType structuredType = itemType as IEdmStructuredType;
+            IEdmStructuredType thisStructuredType = this.itemType as IEdmStructuredType;
+
+            if (structuredType == null || thisStructuredType == null)
             {
-                throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(resourceType.FullTypeName(), this.itemType.FullTypeName()));
+                throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
             }
 
-            this.itemType = (IEdmStructuredType)commonBaseType;
+            // If the types are not equivalent, make sure they have a common base type.
+            IEdmType commonBaseType = EdmLibraryExtensions.GetCommonBaseType(thisStructuredType, structuredType);
+            if (commonBaseType == null)
+            {
+                throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
+            }
+
+            this.itemType = (IEdmType)commonBaseType;
         }
     }
 }

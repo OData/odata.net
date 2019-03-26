@@ -11,6 +11,7 @@ namespace Microsoft.OData.JsonLight
     using System.Collections;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
@@ -149,7 +150,8 @@ namespace Microsoft.OData.JsonLight
                 resourceValueTypeReference == null ? null : resourceValueTypeReference.StructuredDefinition(),
                 resourceValue.Properties,
                 true /* isComplexValue */,
-                duplicatePropertyNamesChecker);
+                duplicatePropertyNamesChecker,
+                null);
 
             // End the object scope which represents the resource instance;
             this.JsonWriter.EndObjectScope();
@@ -360,6 +362,24 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.JsonWriter.WriteRawValue(value.RawValue);
+        }
+
+        public virtual void WriteStreamValue(ODataBinaryStreamValue streamValue)
+        {
+            IJsonStreamWriter streamWriter = this.JsonWriter as IJsonStreamWriter;
+            if (streamWriter == null)
+            {
+                // write as a string
+                this.JsonWriter.WritePrimitiveValue(new StreamReader(streamValue.Stream).ReadToEnd());
+            }
+            else
+            {
+                Stream stream = streamWriter.StartStreamValueScope();
+                streamValue.Stream.CopyTo(stream);
+                stream.Flush();
+                stream.Dispose();
+                streamWriter.EndStreamValueScope();
+            }
         }
 
         /// <summary>

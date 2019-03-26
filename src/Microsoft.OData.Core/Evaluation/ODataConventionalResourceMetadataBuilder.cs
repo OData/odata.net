@@ -33,8 +33,14 @@ namespace Microsoft.OData.Evaluation
         /// <summary>The list of nested info that have been processed. Here navigation property and complex will both be marked for convenience.</summary>
         protected readonly HashSet<string> ProcessedNestedResourceInfos;
 
+        /// <summary>The list of stream properties that have been processed.</summary>
+        protected readonly HashSet<string> ProcessedStreamProperties;
+
         /// <summary>The enumerator for unprocessed navigation links.</summary>
         private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNavigationLinks;
+
+        /// <summary>The enumerator for unprocessed streamProperties.</summary>
+        private IEnumerator<string> unprocessedStreamProperties;
 
         /// <summary>The read url.</summary>
         /// <remarks>This is lazily evaluated. It may be retrieved from the resource or computed.</remarks>
@@ -69,6 +75,7 @@ namespace Microsoft.OData.Evaluation
             this.UriBuilder = uriBuilder;
             this.MetadataContext = metadataContext;
             this.ProcessedNestedResourceInfos = new HashSet<string>(StringComparer.Ordinal);
+            this.ProcessedStreamProperties = new HashSet<string>(StringComparer.Ordinal);
             this.resource = resourceMetadataContext.Resource;
         }
 
@@ -389,6 +396,44 @@ namespace Microsoft.OData.Evaluation
             return null;
         }
 
+        /// <summary>
+        /// Marks the given stream property as processed.
+        /// </summary>
+        /// <param name="streamPropertyName">The stream property we've already processed.</param>
+        internal override void MarkStreamPropertyProcessed(string streamPropertyName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(streamPropertyName), "!string.IsNullOrEmpty(streamPropertyName)");
+            Debug.Assert(this.ProcessedStreamProperties != null, "this.processedStreamProperties != null");
+            this.ProcessedStreamProperties.Add(streamPropertyName);
+        }
+
+        /// <summary>
+        /// Returns the next unprocessed stream property or null if there's no more stream properties to process.
+        /// </summary>
+        /// <returns>Returns the next unprocessed stream property or null if there's no more stream properties to process.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
+        internal override ODataProperty GetNextUnprocessedStreamProperty()
+        {
+            if (this.unprocessedStreamProperties == null)
+            {
+                Debug.Assert(this.ResourceMetadataContext != null, "this.resourceMetadataContext != null");
+                this.unprocessedStreamProperties = this.ResourceMetadataContext.SelectedStreamProperties
+                    .Where(p => !this.ProcessedStreamProperties.Contains(p.Key))
+                    .Select(p => p.Key)
+                    .GetEnumerator();
+            }
+
+            if (this.unprocessedStreamProperties.MoveNext())
+            {
+                string propertyName = unprocessedStreamProperties.Current;
+                ODataStreamReferenceValue streamPropertyValue = new ODataStreamReferenceValue();
+                streamPropertyValue.SetMetadataBuilder(this, propertyName);
+                return new ODataProperty { Name = propertyName, Value = streamPropertyValue };
+            }
+
+            return null;
+        }
+
         //// Stream content type and ETag can't be computed from conventions.
 
         /// <summary>
@@ -440,6 +485,40 @@ namespace Microsoft.OData.Evaluation
 
             return hasAssociationLinkUrl ? associationLinkUrl : this.UriBuilder.BuildAssociationLinkUri(readLink, navigationPropertyName);
         }
+
+        /// <summary>
+        /// Gets the edit link of a stream value.
+        /// </summary>
+        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for;
+        /// or null for the default media resource.</param>
+        /// <returns>
+        /// The absolute URI of the edit link for the specified stream property or the default media resource.
+        /// Or null if it is not possible to determine the stream edit link.
+        /// </returns>
+        internal override Uri GetStreamEditLink(string streamPropertyName)
+        {
+            ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
+
+            return this.UriBuilder.BuildStreamEditLinkUri(this.GetEditUrl(), streamPropertyName);
+        }
+
+        /// <summary>
+        /// Gets the read link of a stream value.
+        /// </summary>
+        /// <param name="streamPropertyName">The name of the stream property the read link is computed for;
+        /// or null for the default media resource.</param>
+        /// <returns>
+        /// The absolute URI of the read link for the specified stream property or the default media resource.
+        /// Or null if it is not possible to determine the stream read link.
+        /// </returns>
+        internal override Uri GetStreamReadLink(string streamPropertyName)
+        {
+            ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
+
+            return this.UriBuilder.BuildStreamReadLinkUri(this.GetReadUrl(), streamPropertyName);
+        }
+
+        //// Stream content type and ETag can't be computed from conventions.
 
         /// <summary>
         /// Get the operation target URI for the specified <paramref name="operationName"/>.

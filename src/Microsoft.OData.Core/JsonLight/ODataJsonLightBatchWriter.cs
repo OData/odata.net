@@ -151,7 +151,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
-        public override void BatchOperationContentStreamRequested()
+        public override void StreamRequested()
         {
             // Write any pending data and flush the batch writer to the async buffered stream
             this.StartBatchOperationContent();
@@ -171,7 +171,7 @@ namespace Microsoft.OData.JsonLight
         /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
-        public override Task BatchOperationContentStreamRequestedAsync()
+        public override Task StreamRequestedAsync()
         {
             // Write any pending data and flush the batch writer to the async buffered stream
             this.StartBatchOperationContent();
@@ -186,7 +186,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
         /// </summary>
-        public override void BatchOperationContentStreamDisposed()
+        public override void StreamDisposed()
         {
             Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
 

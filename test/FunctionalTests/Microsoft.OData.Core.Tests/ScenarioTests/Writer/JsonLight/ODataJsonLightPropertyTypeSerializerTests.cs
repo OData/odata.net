@@ -445,7 +445,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 this.entityType,
                 new[] { odataProperty },
                 /*isComplexValue*/ false,
-                new NullDuplicatePropertyNameChecker());
+                new NullDuplicatePropertyNameChecker(),
+                null);
             jsonLightOutputContext.JsonWriter.EndObjectScope();
 
             jsonLightOutputContext.Flush();

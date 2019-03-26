@@ -817,6 +817,33 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                         // we are done reading this entry
                         break;
                     }
+                    else if (reader.State == ODataReaderState.NestedProperty)
+                    {
+                        //reading nested info
+                    }
+                    else if (reader.State == ODataReaderState.Stream)
+                    {
+                        //reading stream info
+                        ODataStreamItem stream = reader.Item as ODataStreamItem;
+                        ODataStreamPropertyInfo streamReference = reader.Item as ODataStreamPropertyInfo;
+                        if(stream.PrimitiveTypeKind != EdmPrimitiveTypeKind.Stream || (streamReference != null && streamReference.ContentType !=null && streamReference.ContentType.StartsWith("application/json")))
+                        {
+                            // read as text
+                            using (System.IO.TextReader textReader = reader.CreateTextReader())
+                            {
+                                textReader.ReadToEnd();
+                            }
+                        }
+                        else
+                        {
+                            // read as stream
+                            using (System.IO.Stream streamReader = reader.CreateReadStream())
+                            {
+                                byte[] buffer = new byte[512];
+                                while(streamReader.Read(buffer,0,512) > 0);
+                            }
+                        }
+                    }
                     else
                     {
                         this.assert.Fail("Unexpected reader state '" + reader.State + "' for reading an entry.");

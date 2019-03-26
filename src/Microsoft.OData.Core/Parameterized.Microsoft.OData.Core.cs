@@ -9,7 +9,6 @@
 
 namespace Microsoft.OData {
     using System;
-    using System.Resources;
 
     /// <summary>
     ///    Strongly-typed and parameterized string resources.
@@ -148,6 +147,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Attempted to write a value for a property {0} whose value has already been written."
+        /// </summary>
+        internal static string ODataWriterCore_PropertyValueAlreadyWritten(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_PropertyValueAlreadyWritten, p0);
+        }
+
+        /// <summary>
         /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a resource set."
         /// </summary>
         internal static string ODataWriterCore_InvalidTransitionFromStart(object p0, object p1) {
@@ -155,7 +162,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a nested resource."
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a property or a nested resource."
         /// </summary>
         internal static string ODataWriterCore_InvalidTransitionFromResource(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromResource, p0, p1);
@@ -229,6 +236,16 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ODataWriterCore_WriteEndCalledInInvalidState(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_WriteEndCalledInInvalidState, p0);
+        }
+
+        /// <summary>
+        /// A string like "ODataWriter.Write or ODataWriter.WriteEnd was called while streaming a value. Stream or TextWriter must be disposed before calling additional methods on ODataWriter."
+        /// </summary>
+        internal static string ODataWriterCore_StreamNotDisposed
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_StreamNotDisposed);
+            }
         }
 
         /// <summary>
@@ -2131,8 +2148,38 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Calling Read or ReadAsync on an ODataReader instance is not allowed in state '{0}'."
+        /// A string like "CreateReadStream was called in an invalid state.CreateReadStream can only be called once in ReaderState.Stream."
         /// </summary>
+        internal static string ODataReaderCore_CreateReadStreamCalledInInvalidState
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+            }
+        }
+
+        /// <summary>
+        /// A string like "CreateTextReader was called in an invalid state. CreateTextReader can only be called once in ReaderState.Stream."
+        /// </summary>
+        internal static string ODataReaderCore_CreateTextReaderCalledInInvalidState
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataReaderCore_CreateTextReaderCalledInInvalidState);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Read called with an open stream or textreader. Please close any open streams or text readers before calling Read."
+        /// </summary>
+        internal static string ODataReaderCore_ReadCalledWithOpenStream
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataReaderCore_ReadCalledWithOpenStream);
+            }
+        }
+        
+        /// <summary>
+                 /// A string like "Calling Read or ReadAsync on an ODataReader instance is not allowed in state '{0}'."
+                 /// </summary>
         internal static string ODataReaderCore_NoReadCallsAllowed(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataReaderCore_NoReadCallsAllowed, p0);
         }
@@ -3591,12 +3638,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A stream property was found in a JSON Light request payload. Stream properties are only supported in responses."
+        /// A string like "A stream property in a request payload cannot contain etag, editLink, or readLink values."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_StreamPropertyInRequest {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StreamPropertyInRequest);
-            }
+        internal static string ODataJsonLightResourceDeserializer_StreamPropertyInRequest(object p0) {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StreamPropertyInRequest, p0);
         }
 
         /// <summary>
@@ -3604,13 +3649,6 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "A stream property '{0}' has a value in the payload. In OData, stream property must not have a value, it must only use property annotations."
-        /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_StreamPropertyWithValue(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StreamPropertyWithValue, p0);
         }
 
         /// <summary>
@@ -4734,6 +4772,15 @@ namespace Microsoft.OData {
         internal static string StringItemShouldBeQuoted(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.StringItemShouldBeQuoted, p0);
         }
+
+        /// <summary>
+        /// Invalid PrimitiveTypeKind {0}. A Stream item must be of type binary or string, or none if unknown."
+        /// </summary>
+        internal static string StreamItemInvalidPrimitiveKind(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.StreamItemInvalidPrimitiveKind, p0);
+        }
+        
 
         /// <summary>
         /// A string like "$apply/aggregate expression '{0}' operation does not support value type '{1}'."
@@ -5956,6 +6003,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Invalid Binary value. The value '{0}' is not a valid Base64 encoded value."
+        /// </summary>
+        internal static string JsonReader_InvalidBinaryFormat(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_InvalidBinaryFormat, p0);
+        }
+
+        /// <summary>
         /// A string like "Invalid JSON. A comma character ',' was expected in scope '{0}'. Every two elements in an array and properties of an object must be separated by commas."
         /// </summary>
         internal static string JsonReader_MissingComma(object p0) {
@@ -5975,6 +6030,48 @@ namespace Microsoft.OData {
         internal static string JsonReader_MaxBufferReached {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_MaxBufferReached);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Cannot access the Value property while streaming a value. Please dispose the StreamReader or TextReader before continuing."
+        /// </summary>
+        internal static string JsonReader_CannotAccessValueInStreamState
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_CannotAccessValueInStreamState);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Cannot call Read() while streaming a value. Please dispose the StreamReader or TextReader before continuing."
+        /// </summary>
+        internal static string JsonReader_CannotCallReadInStreamState
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_CannotCallReadInStreamState);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Cannot create a Stream in the current state. A Stream can only be created for reading a JSON string value when positioned on, and before accessing, the value."
+        /// </summary>
+        internal static string JsonReader_CannotCreateReadStream
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_CannotCreateReadStream);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Cannot create a TextReader in the current state. A TextReader can only be created for reading a JSON string value when positioned on, and before accessing, the value."
+        /// </summary>
+        internal static string JsonReader_CannotCreateTextReader
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_CannotCreateTextReader);
             }
         }
 

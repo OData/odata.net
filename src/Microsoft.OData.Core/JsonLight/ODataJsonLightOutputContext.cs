@@ -25,6 +25,16 @@ namespace Microsoft.OData.JsonLight
     internal sealed class ODataJsonLightOutputContext : ODataOutputContext
     {
         /// <summary>
+        /// An in-memory stream for writing stream properties to non-streaming json writer.
+        /// </summary>
+        internal MemoryStream BinaryValueStream = null;
+
+        /// <summary>
+        /// An in-memory StringWriter for writing string properties to non-streaming json writer.
+        /// </summary>
+        internal StringWriter StringWriter = null;
+
+        /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
         private readonly JsonLightMetadataLevel metadataLevel;
@@ -786,13 +796,27 @@ namespace Microsoft.OData.JsonLight
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).
                     this.messageOutputStream.Dispose();
                 }
+
+                if (this.BinaryValueStream != null)
+                {
+                    this.BinaryValueStream.Flush();
+                    this.BinaryValueStream.Dispose();
+                }
+
+                if (this.StringWriter != null)
+                {
+                    this.StringWriter.Flush();
+                    this.StringWriter.Dispose();
+                }
             }
             finally
             {
                 this.messageOutputStream = null;
                 this.asynchronousOutputStream = null;
+                this.BinaryValueStream = null;
                 this.textWriter = null;
                 this.jsonWriter = null;
+                this.StringWriter = null;
             }
 
             base.Dispose(disposing);
@@ -807,7 +831,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                var jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
+                IJsonWriterFactory jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
                 jsonWriter = jsonWriterFactory.CreateJsonWriter(textWriter, isIeee754Compatible);
                 Debug.Assert(jsonWriter != null, "jsonWriter != null");
             }

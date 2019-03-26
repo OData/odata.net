@@ -63,6 +63,12 @@ namespace Microsoft.OData.JsonLight
                     propertyAnnotationValueReader,
                     (propertyParsingResult, parameterName) =>
                     {
+                        if (this.JsonReader.NodeType == JsonNodeType.Property)
+                        {
+                            // Read over property name
+                            this.JsonReader.Read();
+                        }
+
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:

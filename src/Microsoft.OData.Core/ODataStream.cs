@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataBatchOperationStream.cs" company="Microsoft">
+// <copyright file="ODataStream.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -14,18 +14,19 @@ namespace Microsoft.OData
 
     /// <summary>
     /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync.
-    /// This stream communicates status changes to an IODataBatchOperationListener instance.
+    /// or representing a stream value.
+    /// This stream communicates status changes to an IODataStreamListener instance.
     /// </summary>
-    internal abstract class ODataBatchOperationStream : Stream
+    internal abstract class ODataStream : Stream
     {
         /// <summary>Listener interface to be notified of operation changes.</summary>
-        private IODataBatchOperationListener listener;
+        private IODataStreamListener listener;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
-        internal ODataBatchOperationStream(IODataBatchOperationListener listener)
+        internal ODataStream(IODataStreamListener listener)
         {
             Debug.Assert(listener != null, "listener != null");
 
@@ -55,7 +56,7 @@ namespace Microsoft.OData
                 {
                     // Tell the listener that the stream is being disposed; we expect
                     // that no asynchronous action is triggered by doing so.
-                    this.listener.BatchOperationContentStreamDisposed();
+                    this.listener.StreamDisposed();
                     this.listener = null;
                 }
             }

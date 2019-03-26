@@ -13,6 +13,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Text;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -21,7 +22,7 @@ namespace Microsoft.OData.Json
     /// Writer for the JSON format. http://www.json.org
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This class does not own the underlying stream/writer and thus should never dispose it.")]
-    internal sealed class JsonWriter : IJsonWriter, IDisposable
+    internal sealed class JsonWriter : IJsonStreamWriter, IDisposable
     {
         /// <summary>
         /// Writer to write text into.
@@ -48,6 +49,16 @@ namespace Microsoft.OData.Json
         /// The buffer to help with streaming responses.
         /// </summary>
         private char[] buffer;
+
+        /// <summary>
+        /// Current stream for writing a binary property.
+        /// </summary>
+        private Stream binaryValueStream = null;
+
+        /// <summary>
+        /// Content type of a value being written using TextWriter
+        /// </summary>
+        private string currentContentType;
 
         /// <summary>
         /// Creates a new instance of Json writer.
@@ -98,6 +109,18 @@ namespace Microsoft.OData.Json
         /// Get/sets the character buffer pool.
         /// </summary>
         public ICharArrayPool ArrayPool { get; set; }
+
+        /// <summary>
+        /// Whether the current TextWriter is writing JSON
+        /// </summary>
+        /// <returns></returns>
+        private bool IsWritingJson
+        {
+            get
+            {
+                return String.IsNullOrEmpty(this.currentContentType) || this.currentContentType.StartsWith(MimeConstants.MimeApplicationJson, StringComparison.Ordinal);
+            }
+        }
 
         /// <summary>
         /// Start the padding function scope.
@@ -399,6 +422,79 @@ namespace Microsoft.OData.Json
         public void Flush()
         {
             this.writer.Flush();
+        }
+
+        /// <summary>
+        /// Start the stream property valuescope.
+        /// </summary>
+        /// <returns>The stream to write the property value to</returns>
+        public Stream StartStreamValueScope()
+        {
+            this.WriteValueSeparator();
+            this.writer.Write(JsonConstants.QuoteCharacter);
+            this.writer.Flush();
+
+            this.binaryValueStream = new ODataBinaryStreamWriter(writer, ref buffer, ArrayPool);
+            return this.binaryValueStream;
+        }
+
+        /// <summary>
+        /// End the current stream property value scope.
+        /// </summary>
+        public void EndStreamValueScope()
+        {
+            this.binaryValueStream.Flush();
+            this.binaryValueStream.Dispose();
+            this.binaryValueStream = null;
+            this.writer.Flush();
+            this.writer.Write(JsonConstants.QuoteCharacter);
+        }
+
+        /// <summary>
+        /// Start the TextWriter valuescope.
+        /// </summary>
+        /// <param name="contentType">ContentType of the string being written.</param>
+        /// <returns>The textwriter to write the text property value to</returns>
+        public TextWriter StartTextWriterValueScope(string contentType)
+        {
+            this.WriteValueSeparator();
+            this.currentContentType = contentType;
+            if (!IsWritingJson)
+            {
+                this.writer.Write(JsonConstants.QuoteCharacter);
+                this.writer.Flush();
+                return new ODataJsonTextWriter(writer, ref buffer, this.ArrayPool);
+            }
+
+            this.writer.Flush();
+
+            return this.writer;
+        }
+
+        /// <summary>
+        /// End the TextWriter valuescope.
+        /// </summary>
+        public void EndTextWriterValueScope()
+        {
+            if (!IsWritingJson)
+            {
+                this.writer.Write(JsonConstants.QuoteCharacter);
+            }
+        }
+
+        void IDisposable.Dispose()
+        {
+            if (this.binaryValueStream != null)
+            {
+                try
+                {
+                    this.binaryValueStream.Dispose();
+                }
+                finally
+                {
+                    this.binaryValueStream = null;
+                }
+            }
         }
 
         /// <summary>
