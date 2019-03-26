@@ -215,10 +215,10 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                IEdmStructuredTypeReference resourceTypeReference = this.scopes.Peek().ResourceTypeReference as IEdmStructuredTypeReference;
+                IEdmTypeReference resourceTypeReference = this.scopes.Peek().ResourceTypeReference;
                 Debug.Assert(resourceTypeReference == null || this.inputContext.Model.IsUserModel(), "We can only have structured type if we also have metadata.");
 
-                return this.scopes.Peek().ResourceTypeReference;
+                return resourceTypeReference;
             }
 
             set

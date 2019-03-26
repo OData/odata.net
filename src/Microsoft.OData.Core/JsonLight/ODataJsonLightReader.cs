@@ -911,7 +911,7 @@ namespace Microsoft.OData.JsonLight
                 ? null
                 : this.jsonLightResourceDeserializer.ContextUriParseResult.SelectQueryOption;
 
-            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, this.CurrentResourceTypeReference.AsStructured().StructuredDefinition(), this.jsonLightInputContext.Model);
+            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, (this.CurrentResourceTypeReference !=null) ? this.CurrentResourceTypeReference.AsStructured().StructuredDefinition() : null, this.jsonLightInputContext.Model);
 
             if (this.ReadingResourceSet)
             {
@@ -1858,7 +1858,7 @@ namespace Microsoft.OData.JsonLight
                 else
                 {
                     // null resource
-                    if (this.CurrentResourceTypeReference.IsComplex() || this.CurrentResourceTypeReference.IsUntyped())
+                    if (resourceTypeReference.IsComplex() || resourceTypeReference.IsUntyped())
                     {
                         this.jsonLightResourceDeserializer.MessageReaderSettings.Validator.ValidateNullValue(this.CurrentResourceTypeReference, true, "", null);
                     }
