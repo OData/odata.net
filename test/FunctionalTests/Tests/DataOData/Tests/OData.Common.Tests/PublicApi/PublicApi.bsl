@@ -5505,11 +5505,11 @@ public sealed class Microsoft.OData.ODataSingletonInfo : Microsoft.OData.ODataSe
 }
 
 public sealed class Microsoft.OData.ODataStreamItem : Microsoft.OData.ODataItem {
-	public ODataStreamItem (Microsoft.OData.Edm.EdmPrimitiveTypeKind typeKind)
+	public ODataStreamItem (Microsoft.OData.Edm.EdmPrimitiveTypeKind primitiveTypeKind)
 	public ODataStreamItem (Microsoft.OData.Edm.EdmPrimitiveTypeKind primitiveTypeKind, string contentType)
 
-	string ContentType  { public get; public set; }
-	Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public get; public set; }
+	string ContentType  { public get; }
+	Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public get; }
 }
 
 public sealed class Microsoft.OData.ODataStreamPropertyInfo : Microsoft.OData.ODataPropertyInfo, IODataStreamReferenceInfo {
