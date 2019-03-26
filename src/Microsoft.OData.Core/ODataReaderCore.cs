@@ -194,19 +194,37 @@ namespace Microsoft.OData
         /// <summary>
         /// Returns the expected resource type for the current scope.
         /// </summary>
-        protected IEdmStructuredType CurrentResourceType
+        protected IEdmType CurrentResourceType
+        {
+            get
+            {
+                if (CurrentResourceTypeReference != null)
+                {
+                    return CurrentResourceTypeReference.Definition;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets and Sets the expected resource type reference for the current scope.
+        /// </summary>
+        protected IEdmTypeReference CurrentResourceTypeReference
         {
             get
             {
                 Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                IEdmStructuredType resourceType = this.scopes.Peek().ResourceType as IEdmStructuredType;
-                Debug.Assert(resourceType == null || this.inputContext.Model.IsUserModel(), "We can only have structured type if we also have metadata.");
-                return resourceType;
+                IEdmStructuredTypeReference resourceTypeReference = this.scopes.Peek().ResourceTypeReference as IEdmStructuredTypeReference;
+                Debug.Assert(resourceTypeReference == null || this.inputContext.Model.IsUserModel(), "We can only have structured type if we also have metadata.");
+
+                return this.scopes.Peek().ResourceTypeReference;
             }
 
             set
             {
-                this.scopes.Peek().ResourceType = value;
+                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
+                this.scopes.Peek().ResourceTypeReference = value;
             }
         }
 
@@ -380,7 +398,7 @@ namespace Microsoft.OData
         public override sealed Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
-            return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(new Scope(ODataReaderState.Exception, null, null, null, null)));
+            return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(new Scope(ODataReaderState.Exception, null, null)));
         }
 #endif
 
@@ -731,7 +749,7 @@ namespace Microsoft.OData
                     EdmTypeKind.None,
                     /*expectStructuredType*/ true,
                     /*defaultPrimitivePayloadType*/ null,
-                    this.CurrentResourceType.ToTypeReference(),
+                    this.CurrentResourceTypeReference,
                     resourceTypeNameFromPayload,
                     this.inputContext.Model,
                     () => EdmTypeKind.Entity,
@@ -756,7 +774,7 @@ namespace Microsoft.OData
             }
 
             // Set the current resource type since the type might be derived from the expected one.
-            this.CurrentResourceType = targetResourceType;
+            this.CurrentResourceTypeReference = targetResourceTypeReference;
         }
 
         /// <summary>
@@ -913,7 +931,7 @@ namespace Microsoft.OData
             {
                 if (ExceptionUtils.IsCatchableExceptionType(e))
                 {
-                    this.EnterScope(new Scope(ODataReaderState.Exception, null, null, null, null));
+                    this.EnterScope(new Scope(ODataReaderState.Exception, null, null));
                 }
 
                 throw;
@@ -995,22 +1013,9 @@ namespace Microsoft.OData
             /// </summary>
             /// <param name="state">The reader state of this scope.</param>
             /// <param name="item">The item attached to this scope.</param>
-            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-            /// <param name="expectedResourceType">The expected resource type for the scope.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            /// <remarks>The <paramref name="expectedResourceType"/> has the following meanings for given state:
-            /// Start -               it's the expected base type of the top-level resource or resources in the top-level resource set.
-            /// ResourceSetStart -           it's the expected base type of the resources in the resource set.
-            ///                       note that it might be a more derived type than the base type of the entity set for the resource set.
-            /// EntryStart -          it's the expected base type of the resource. If the resource has no type name specified
-            ///                       this type will be assumed. Otherwise the specified type name must be
-            ///                       the expected type or a more derived type.
-            /// NestedResourceInfoStart - it's the expected base type the entries in the expanded link (either the single resource
-            ///                       or entries in the expanded resource set).
-            /// EntityReferenceLink - it's null, no need for types on entity reference links.
-            /// In all cases the specified type must be an structured type.</remarks>
             [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
-            internal Scope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType expectedResourceType, ODataUri odataUri)
+            internal Scope(ODataReaderState state, ODataItem item, ODataUri odataUri)
             {
                 Debug.Assert(
                     state == ODataReaderState.Exception && item == null ||
@@ -1036,9 +1041,34 @@ namespace Microsoft.OData
 
                 this.state = state;
                 this.item = item;
-                this.ResourceType = expectedResourceType;
-                this.NavigationSource = navigationSource;
                 this.odataUri = odataUri;
+            }
+
+            /// <summary>
+            /// Constructor creating a new reader scope.
+            /// </summary>
+            /// <param name="state">The reader state of this scope.</param>
+            /// <param name="item">The item attached to this scope.</param>
+            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
+            /// <param name="expectedResourceTypeReference">The expected resource type reference for the scope.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
+            /// <remarks>The <paramref name="expectedResourceTypeReference"/> has the following meanings for given state:
+            /// Start -               it's the expected base type reference of the top-level resource or resources in the top-level resource set.
+            /// ResourceSetStart -           it's the expected base type reference of the resources in the resource set.
+            ///                       note that it might be a more derived type than the base type of the entity set for the resource set.
+            /// EntryStart -          it's the expected base type reference of the resource. If the resource has no type name specified
+            ///                       this type will be assumed. Otherwise the specified type name must be
+            ///                       the expected type or a more derived type.
+            /// NestedResourceInfoStart - it's the expected base type reference the entries in the expanded link (either the single resource
+            ///                       or entries in the expanded resource set).
+            /// EntityReferenceLink - it's null, no need for types on entity reference links.
+            /// In all cases the specified type must be an structured type.</remarks>
+            [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
+            internal Scope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmTypeReference expectedResourceTypeReference, ODataUri odataUri)
+                : this(state, item, odataUri)
+            {
+                this.NavigationSource = navigationSource;
+                this.ResourceTypeReference = expectedResourceTypeReference;
             }
 
             /// <summary>
@@ -1083,7 +1113,24 @@ namespace Microsoft.OData
             /// The resource type for this scope. Can be either the expected one if the real one
             /// was not found yet, or the one specified in the payload itself (the real one).
             /// </summary>
-            internal IEdmType ResourceType { get; set; }
+            internal IEdmType ResourceType
+            {
+                get
+                {
+                    if (this.ResourceTypeReference != null)
+                    {
+                        return ResourceTypeReference.Definition;
+                    }
+
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// The resource type reference for this scope. Can be either the expected one if the real one
+            /// was not found yet, or the one specified in the payload itself (the real one).
+            /// </summary>
+            internal IEdmTypeReference ResourceTypeReference { get; set; }
 
             /// <summary>
             /// Validator for resource type.
@@ -1117,7 +1164,7 @@ namespace Microsoft.OData
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedResourceType">The expected resource type for the scope.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            internal StreamScope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType expectedResourceType, ODataUri odataUri)
+            internal StreamScope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmTypeReference expectedResourceType, ODataUri odataUri)
                 : base(state, item, navigationSource, expectedResourceType, odataUri)
             {
                 this.StreamingState = StreamingState.None;
