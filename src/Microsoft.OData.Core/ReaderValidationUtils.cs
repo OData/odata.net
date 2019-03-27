@@ -608,14 +608,14 @@ namespace Microsoft.OData
             {
                 if (updateScope)
                 {
-                    scope.ResourceType = payloadEntityType;
+                    scope.ResourceTypeReference = payloadEntityType.ToTypeReference(true).AsStructured();
                 }
             }
             else if (scope.ResourceType.IsAssignableFrom(payloadEntityType))
             {
                 if (updateScope)
                 {
-                    scope.ResourceType = payloadEntityType;
+                    scope.ResourceTypeReference = payloadEntityType.ToTypeReference(true).AsStructured();
                 }
             }
             else if (!payloadEntityType.IsAssignableFrom(scope.ResourceType))
@@ -1122,6 +1122,13 @@ namespace Microsoft.OData
                 {
                     IEdmComplexTypeReference complexTypeReference = expectedValueTypeReference.AsComplex();
                     if (!complexTypeReference.IsNullable)
+                    {
+                        ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
+                    }
+                }
+                else if (expectedValueTypeReference.IsUntyped())
+                {
+                    if (!expectedValueTypeReference.IsNullable)
                     {
                         ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
                     }

@@ -911,7 +911,7 @@ namespace Microsoft.OData.JsonLight
                 ? null
                 : this.jsonLightResourceDeserializer.ContextUriParseResult.SelectQueryOption;
 
-            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, this.CurrentResourceType, this.jsonLightInputContext.Model);
+            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, (this.CurrentResourceTypeReference !=null) ? this.CurrentResourceTypeReference.AsStructured().StructuredDefinition() : null, this.jsonLightInputContext.Model);
 
             if (this.ReadingResourceSet)
             {
@@ -1698,7 +1698,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.EnterScope(new JsonLightResourceSetScope(resourceSet, this.CurrentNavigationSource,
-                this.CurrentScope.ResourceType, selectedProperties, this.CurrentScope.ODataUri, /*isDelta*/ false));
+                this.CurrentScope.ResourceTypeReference, selectedProperties, this.CurrentScope.ODataUri, /*isDelta*/ false));
         }
 
         /// <summary>
@@ -1776,7 +1776,7 @@ namespace Microsoft.OData.JsonLight
                 // Expanded null resource
                 // The expected type and expected navigation source for an expanded resource are the same as for the nested resource info around it.
                 this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null,
-                    this.CurrentNavigationSource, this.CurrentResourceType, /*propertyAndAnnotationCollector*/null,
+                    this.CurrentNavigationSource, this.CurrentResourceTypeReference, /*propertyAndAnnotationCollector*/null,
                     /*projectedProperties*/null, this.CurrentScope.ODataUri));
             }
             else
@@ -1834,7 +1834,7 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties)
         {
             IEdmNavigationSource source = this.CurrentNavigationSource;
-            IEdmStructuredType resourceType = this.CurrentResourceType;
+            IEdmTypeReference resourceTypeReference = this.CurrentResourceTypeReference;
 
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property,
                 JsonNodeType.EndObject, JsonNodeType.PrimitiveValue);
@@ -1848,7 +1848,7 @@ namespace Microsoft.OData.JsonLight
                     if (this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped)
                     {
                         this.EnterScope(new JsonLightPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
-                            this.CurrentNavigationSource, this.CurrentResourceType, this.CurrentScope.ODataUri));
+                            this.CurrentNavigationSource, this.CurrentResourceTypeReference, this.CurrentScope.ODataUri));
                     }
                     else
                     {
@@ -1858,8 +1858,13 @@ namespace Microsoft.OData.JsonLight
                 else
                 {
                     // null resource
+                    if (resourceTypeReference.IsComplex() || resourceTypeReference.IsUntyped())
+                    {
+                        this.jsonLightResourceDeserializer.MessageReaderSettings.Validator.ValidateNullValue(this.CurrentResourceTypeReference, true, "", null);
+                    }
+
                     this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null,
-                        this.CurrentNavigationSource, this.CurrentResourceType, /*propertyAndAnnotationCollector*/null,
+                        this.CurrentNavigationSource, this.CurrentResourceTypeReference, /*propertyAndAnnotationCollector*/null,
                         /*projectedProperties*/null, this.CurrentScope.ODataUri));
                 }
 
@@ -1898,7 +1903,7 @@ namespace Microsoft.OData.JsonLight
                             IEdmStructuredType parsedType = parseResult.EdmType as IEdmStructuredType;
                             if (parsedType != null)
                             {
-                                resourceType = parsedType;
+                                resourceTypeReference = parsedType.ToTypeReference(true);
                                 source = parseResult.NavigationSource;
                             }
                         }
@@ -1927,7 +1932,7 @@ namespace Microsoft.OData.JsonLight
                 case ODataDeltaKind.None:
                 case ODataDeltaKind.Resource:
                     // Setup the new resource state
-                    this.StartResource(source, resourceType, propertyAndAnnotationCollector, selectedProperties);
+                    this.StartResource(source, resourceTypeReference, propertyAndAnnotationCollector, selectedProperties);
 
                     // Start reading the resource up to the first nested resource info
                     this.StartReadingResource();
@@ -1946,7 +1951,7 @@ namespace Microsoft.OData.JsonLight
                         this.StartDeletedResource(
                             deletedResource,
                             source,
-                            resourceType,
+                            resourceTypeReference,
                             propertyAndAnnotationCollector,
                             selectedProperties,
                             true /*is 4.0 Deleted Resource*/);
@@ -1956,7 +1961,7 @@ namespace Microsoft.OData.JsonLight
                         this.StartDeletedResource(
                             deletedResource,
                             source,
-                            resourceType,
+                            resourceTypeReference,
                             propertyAndAnnotationCollector,
                             selectedProperties);
 
@@ -2009,7 +2014,7 @@ namespace Microsoft.OData.JsonLight
             this.EnterScope(new JsonLightResourceSetScope(
                 deltaResourceSet,
                 this.CurrentNavigationSource,
-                this.CurrentResourceType as IEdmEntityType,
+                this.CurrentResourceTypeReference as IEdmEntityTypeReference,
                 selectedProperties,
                 this.CurrentScope.ODataUri,
                 /*isDelta*/ true));
@@ -2094,7 +2099,7 @@ namespace Microsoft.OData.JsonLight
                         if (primitiveValue != null)
                         {
                             this.EnterScope(new JsonLightPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
-                                this.CurrentNavigationSource, this.CurrentResourceType, this.CurrentScope.ODataUri));
+                                this.CurrentNavigationSource, this.CurrentResourceTypeReference, this.CurrentScope.ODataUri));
                         }
                         else
                         {
@@ -2102,7 +2107,7 @@ namespace Microsoft.OData.JsonLight
                             {
                                 // null primitive
                                 this.EnterScope(new JsonLightPrimitiveScope(new ODataNullValue(),
-                                    this.CurrentNavigationSource, this.CurrentResourceType, this.CurrentScope.ODataUri));
+                                    this.CurrentNavigationSource, this.CurrentResourceTypeReference, this.CurrentScope.ODataUri));
                             }
                             else
                             {
@@ -2173,8 +2178,7 @@ namespace Microsoft.OData.JsonLight
                 this.CurrentJsonLightNestedResourceInfoScope.ReaderNestedResourceInfo;
             if (nestedResourceInfo.HasEntityReferenceLink)
             {
-                this.EnterScope(new Scope(ODataReaderState.EntityReferenceLink,
-                    nestedResourceInfo.ReportEntityReferenceLink(), null, null, this.CurrentScope.ODataUri));
+                this.EnterScope(new Scope(ODataReaderState.EntityReferenceLink, nestedResourceInfo.ReportEntityReferenceLink(), this.CurrentScope.ODataUri));
             }
             else if (nestedResourceInfo.HasValue)
             {
@@ -2213,7 +2217,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
-        private void StartResource(IEdmNavigationSource source, IEdmStructuredType resourceType, PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+        private void StartResource(IEdmNavigationSource source, IEdmTypeReference resourceType, PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             SelectedPropertiesNode selectedProperties)
         {
             this.EnterScope(new JsonLightResourceScope(
@@ -2236,7 +2240,7 @@ namespace Microsoft.OData.JsonLight
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         /// <param name="is40DeletedResource">Whether the current resource being read is a 4.0-style deleted resource.</param>
-        private void StartDeletedResource(ODataDeletedResource deletedResource, IEdmNavigationSource source, IEdmStructuredType resourceType, PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+        private void StartDeletedResource(ODataDeletedResource deletedResource, IEdmNavigationSource source, IEdmTypeReference resourceType, PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             SelectedPropertiesNode selectedProperties, bool is40DeletedResource = false)
         {
             this.EnterScope(new JsonLightDeletedResourceScope(
@@ -2302,7 +2306,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(readerNestedResourceInfo != null, "readerNestedResourceInfo != null");
             ODataNestedResourceInfo nestedResourceInfo = readerNestedResourceInfo.NestedResourceInfo;
             IEdmProperty nestedProperty = readerNestedResourceInfo.NestedProperty;
-            IEdmType targetResourceType = readerNestedResourceInfo.NestedResourceType;
+            IEdmTypeReference targetResourceTypeReference = readerNestedResourceInfo.NestedResourceTypeReference;
 
             Debug.Assert(
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
@@ -2318,19 +2322,19 @@ namespace Microsoft.OData.JsonLight
                 "The navigation property must match the nested resource info.");
 
             // we are at the beginning of a link
-            if (targetResourceType == null && nestedProperty != null)
+            if (targetResourceTypeReference == null && nestedProperty != null)
             {
                 IEdmTypeReference nestedPropertyType = nestedProperty.Type;
-                targetResourceType = nestedPropertyType.IsCollection()
-                    ? nestedPropertyType.AsCollection().ElementType().AsStructured().StructuredDefinition()
-                    : nestedPropertyType.AsStructured().StructuredDefinition();
+                targetResourceTypeReference = nestedPropertyType.IsCollection()
+                    ? nestedPropertyType.AsCollection().ElementType().AsStructured()
+                    : nestedPropertyType.AsStructured();
             }
 
             // Since we don't have the entity metadata builder for the resource read out from a nested payload
             // as stated in ReadAtResourceSetEndImplementationSynchronously(), we cannot access it here which otherwise
             // would lead to an exception.
             if (this.jsonLightInputContext.ReadingResponse && !this.IsReadingNestedPayload
-                && (targetResourceType == null || targetResourceType.IsStructuredOrStructuredCollectionType()))
+                && (targetResourceTypeReference == null || targetResourceTypeReference.Definition.IsStructuredOrStructuredCollectionType()))
             {
                 // Hookup the metadata builder to the nested resource info.
                 // Note that we set the metadata builder even when navigationProperty is null, which is the case when the link is undeclared.
@@ -2405,7 +2409,7 @@ namespace Microsoft.OData.JsonLight
             odataUri.Path = odataPath;
 
             JsonLightNestedResourceInfoScope newScope = new JsonLightNestedResourceInfoScope(readerNestedResourceInfo, navigationSource,
-                targetResourceType, odataUri);
+                targetResourceTypeReference, odataUri);
 
             var derivedTypeConstraints = this.jsonLightInputContext.Model.GetDerivedTypeConstraints(nestedProperty);
             if (derivedTypeConstraints != null)
@@ -2475,7 +2479,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="state">The <see cref="ODataReaderState"/> to use for the new scope.</param>
         private void ReplaceScope(ODataReaderState state)
         {
-            this.ReplaceScope(new Scope(state, this.Item, this.CurrentNavigationSource, this.CurrentResourceType,
+            this.ReplaceScope(new Scope(state, this.Item, this.CurrentNavigationSource, this.CurrentResourceTypeReference,
                 this.CurrentScope.ODataUri));
         }
 
@@ -2528,7 +2532,7 @@ namespace Microsoft.OData.JsonLight
                         ODataReaderState.ResourceEnd,
                         (ODataResource)this.Item,
                         this.CurrentNavigationSource,
-                        this.CurrentResourceType,
+                        this.CurrentResourceTypeReference,
                         this.CurrentResourceState.PropertyAndAnnotationCollector,
                         this.CurrentResourceState.SelectedProperties,
                         this.CurrentScope.ODataUri));
@@ -2540,7 +2544,7 @@ namespace Microsoft.OData.JsonLight
                         ODataReaderState.DeletedResourceEnd,
                         (ODataDeletedResource)this.Item,
                         this.CurrentNavigationSource,
-                        this.CurrentResourceType,
+                        this.CurrentResourceTypeReference,
                         this.CurrentResourceState.PropertyAndAnnotationCollector,
                         this.CurrentResourceState.SelectedProperties,
                         this.CurrentScope.ODataUri));
@@ -2584,7 +2588,7 @@ namespace Microsoft.OData.JsonLight
                             this.jsonLightResourceDeserializer.ContextUriParseResult.EdmType = resourceType;
                         }
 
-                        this.CurrentScope.ResourceType = resourceType;
+                        this.CurrentScope.ResourceTypeReference = resourceType.ToTypeReference(true).AsStructured();
                     }
                 }
             }
@@ -2609,7 +2613,7 @@ namespace Microsoft.OData.JsonLight
             ///   it's the expected base type of the top-level resource or resource set in the top-level resource set.
             /// In all cases the specified type must be a structured type.</remarks>
             internal JsonLightTopLevelScope(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType, ODataUri odataUri)
-                : base(ODataReaderState.Start, /*item*/ null, navigationSource, expectedResourceType, odataUri)
+                : base(ODataReaderState.Start, /*item*/ null, navigationSource, expectedResourceType.ToTypeReference(true), odataUri)
             {
             }
 
@@ -2634,9 +2638,9 @@ namespace Microsoft.OData.JsonLight
             internal JsonLightPrimitiveScope(
                 ODataValue primitiveValue,
                 IEdmNavigationSource navigationSource,
-                IEdmType expectedType,
+                IEdmTypeReference expectedTypeReference,
                 ODataUri odataUri)
-                : base(ODataReaderState.Primitive, primitiveValue, navigationSource, expectedType, odataUri)
+                : base(ODataReaderState.Primitive, primitiveValue, navigationSource, expectedTypeReference, odataUri)
             {
                 Debug.Assert(primitiveValue is ODataPrimitiveValue || primitiveValue is ODataNullValue, "Primitive value scope created with non-primitive value");
             }
@@ -2660,7 +2664,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for this resource scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            /// <remarks>The <paramref name="expectedResourceType"/> has the following meaning
+            /// <remarks>The <paramref name="expectedResourceTypeReference"/> has the following meaning
             ///   it's the expected base type of the resource. If the resource has no type name specified
             ///   this type will be assumed. Otherwise the specified type name must be
             ///   the expected type or a more derived type.
@@ -2669,11 +2673,11 @@ namespace Microsoft.OData.JsonLight
                 ODataReaderState readerState,
                 ODataResourceBase resource,
                 IEdmNavigationSource navigationSource,
-                IEdmStructuredType expectedResourceType,
+                IEdmTypeReference expectedResourceTypeReference,
                 PropertyAndAnnotationCollector propertyAndAnnotationCollector,
                 SelectedPropertiesNode selectedProperties,
                 ODataUri odataUri)
-                : base(readerState, resource, navigationSource, expectedResourceType, odataUri)
+                : base(readerState, resource, navigationSource, expectedResourceTypeReference, odataUri)
             {
                 Debug.Assert(
                     readerState == ODataReaderState.ResourceStart || readerState == ODataReaderState.ResourceEnd ||
@@ -2794,11 +2798,11 @@ namespace Microsoft.OData.JsonLight
             /// <param name="readerState">The reader state of the new scope that is being created.</param>
             /// <param name="resource">The item attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
-            /// <param name="expectedResourceType">The expected type for the scope.</param>
+            /// <param name="expectedResourceTypeReference">The expected type for the scope.</param>
             /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for this resource scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            /// <remarks>The <paramref name="expectedResourceType"/> has the following meaning
+            /// <remarks>The <paramref name="expectedResourceTypeReference"/> has the following meaning
             ///   it's the expected base type of the resource. If the resource has no type name specified
             ///   this type will be assumed. Otherwise the specified type name must be
             ///   the expected type or a more derived type.
@@ -2807,11 +2811,11 @@ namespace Microsoft.OData.JsonLight
                 ODataReaderState readerState,
                 ODataResourceBase resource,
                 IEdmNavigationSource navigationSource,
-                IEdmStructuredType expectedResourceType,
+                IEdmTypeReference expectedResourceTypeReference,
                 PropertyAndAnnotationCollector propertyAndAnnotationCollector,
                 SelectedPropertiesNode selectedProperties,
                 ODataUri odataUri)
-                : base(readerState, resource, navigationSource, expectedResourceType, propertyAndAnnotationCollector, selectedProperties, odataUri)
+                : base(readerState, resource, navigationSource, expectedResourceTypeReference, propertyAndAnnotationCollector, selectedProperties, odataUri)
             {
             }
         }
@@ -2841,7 +2845,7 @@ namespace Microsoft.OData.JsonLight
                 ODataReaderState readerState,
                 ODataDeletedResource resource,
                 IEdmNavigationSource navigationSource,
-                IEdmStructuredType expectedResourceType,
+                IEdmTypeReference expectedResourceType,
                 PropertyAndAnnotationCollector propertyAndAnnotationCollector,
                 SelectedPropertiesNode selectedProperties,
                 ODataUri odataUri,
@@ -2865,16 +2869,16 @@ namespace Microsoft.OData.JsonLight
             /// </summary>
             /// <param name="resourceSet">The item attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-            /// <param name="expectedResourceType">The expected type for the scope.</param>
+            /// <param name="expectedResourceTypeReference">The expected type reference for the scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <param name="isDelta">True of the ResourceSetScope is for a delta resource set</param>
-            /// <remarks>The <paramref name="expectedResourceType"/> has the following meaning
+            /// <remarks>The <paramref name="expectedResourceTypeReference"/> has the following meaning
             ///   it's the expected base type of the entries in the resource set.
             ///   note that it might be a more derived type than the base type of the entity set for the resource set.
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightResourceSetScope(ODataResourceSetBase resourceSet, IEdmNavigationSource navigationSource, IEdmType expectedResourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isDelta)
-                : base(isDelta ? ODataReaderState.DeltaResourceSetStart : ODataReaderState.ResourceSetStart, resourceSet, navigationSource, expectedResourceType, odataUri)
+            internal JsonLightResourceSetScope(ODataResourceSetBase resourceSet, IEdmNavigationSource navigationSource, IEdmTypeReference expectedResourceTypeReference, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isDelta)
+                : base(isDelta ? ODataReaderState.DeltaResourceSetStart : ODataReaderState.ResourceSetStart, resourceSet, navigationSource, expectedResourceTypeReference, odataUri)
             {
                 this.SelectedProperties = selectedProperties;
             }
@@ -2895,11 +2899,11 @@ namespace Microsoft.OData.JsonLight
             /// </summary>
             /// <param name="nestedResourceInfo">The nested resource info attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-            /// <param name="expectedType">The expected type for the scope.</param>
+            /// <param name="expectedTypeReference">The expected type reference for the scope.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            /// <remarks>The <paramref name="expectedType"/> is the expected base type the items in the nested resource info.</remarks>
-            internal JsonLightNestedResourceInfoScope(ODataJsonLightReaderNestedResourceInfo nestedResourceInfo, IEdmNavigationSource navigationSource, IEdmType expectedType, ODataUri odataUri)
-                : base(ODataReaderState.NestedResourceInfoStart, nestedResourceInfo.NestedResourceInfo, navigationSource, expectedType, odataUri)
+            /// <remarks>The <paramref name="expectedTypeReference"/> is the expected base type reference the items in the nested resource info.</remarks>
+            internal JsonLightNestedResourceInfoScope(ODataJsonLightReaderNestedResourceInfo nestedResourceInfo, IEdmNavigationSource navigationSource, IEdmTypeReference expectedTypeReference, ODataUri odataUri)
+                : base(ODataReaderState.NestedResourceInfoStart, nestedResourceInfo.NestedResourceInfo, navigationSource, expectedTypeReference, odataUri)
             {
                 this.ReaderNestedResourceInfo = nestedResourceInfo;
             }
@@ -2923,7 +2927,8 @@ namespace Microsoft.OData.JsonLight
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             internal JsonLightNestedPropertyInfoScope(ODataJsonLightReaderNestedPropertyInfo nestedPropertyInfo, IEdmNavigationSource navigationSource, ODataUri odataUri)
-                : base(ODataReaderState.NestedProperty, nestedPropertyInfo.NestedPropertyInfo, navigationSource, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), odataUri)
+                : base(ODataReaderState.NestedProperty, nestedPropertyInfo.NestedPropertyInfo,
+                      navigationSource, EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Stream, true), odataUri)
             {
                 Debug.Assert(nestedPropertyInfo != null, "JsonLightNestedInfoScope created with a null nestedPropertyInfo");
             }
@@ -2941,7 +2946,8 @@ namespace Microsoft.OData.JsonLight
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             internal JsonLightStreamScope(ODataJsonLightReaderStreamInfo streamInfo, IEdmNavigationSource navigationSource, ODataUri odataUri)
-                : base(ODataReaderState.Stream, new ODataStreamItem(streamInfo.PrimitiveTypeKind, streamInfo.ContentType), navigationSource, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), odataUri)
+                : base(ODataReaderState.Stream, new ODataStreamItem(streamInfo.PrimitiveTypeKind, streamInfo.ContentType),
+                      navigationSource, EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Stream, true), odataUri)
             {
                 Debug.Assert(streamInfo != null, "JsonLightNestedStreamScope created with a null streamInfo");
             }
@@ -2965,7 +2971,7 @@ namespace Microsoft.OData.JsonLight
             ///   or entries in the expanded resource set).
             /// In all cases the specified type must be an entity type.</remarks>
             public JsonLightDeltaLinkScope(ODataReaderState state, ODataDeltaLinkBase link, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
-                : base(state, link, navigationSource, expectedEntityType, odataUri)
+                : base(state, link, navigationSource, expectedEntityType.ToTypeReference(true), odataUri)
             {
                 Debug.Assert(
                     state == ODataReaderState.DeltaLink && link is ODataDeltaLink ||

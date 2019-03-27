@@ -4976,7 +4976,7 @@ public sealed class Microsoft.OData.ODataBatchOperationHeaders : IEnumerable, IE
 }
 
 public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContainerProvider, IODataPayloadUriConverter, IODataRequestMessage, IODataRequestMessageAsync {
-	public const readonly string ContentId = 
+	public const readonly string ContentId =
 
 	System.IServiceProvider Container  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.String]] DependsOnIds  { public get; }
@@ -4992,7 +4992,7 @@ public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContain
 }
 
 public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IContainerProvider, IODataPayloadUriConverter, IODataResponseMessage, IODataResponseMessageAsync {
-	public const readonly string ContentId = 
+	public const readonly string ContentId =
 
 	System.IServiceProvider Container  { public virtual get; }
 	string GroupId  { public get; }
@@ -5505,11 +5505,11 @@ public sealed class Microsoft.OData.ODataSingletonInfo : Microsoft.OData.ODataSe
 }
 
 public sealed class Microsoft.OData.ODataStreamItem : Microsoft.OData.ODataItem {
-	public ODataStreamItem (Microsoft.OData.Edm.EdmPrimitiveTypeKind typeKind)
+	public ODataStreamItem (Microsoft.OData.Edm.EdmPrimitiveTypeKind primitiveTypeKind)
 	public ODataStreamItem (Microsoft.OData.Edm.EdmPrimitiveTypeKind primitiveTypeKind, string contentType)
 
-	string ContentType  { public get; public set; }
-	Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public get; public set; }
+	string ContentType  { public get; }
+	Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public get; }
 }
 
 public sealed class Microsoft.OData.ODataStreamPropertyInfo : Microsoft.OData.ODataPropertyInfo, IODataStreamReferenceInfo {
@@ -8671,4 +8671,3 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.UnaryOperatorToken : 
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 }
-
