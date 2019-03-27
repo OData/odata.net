@@ -461,6 +461,30 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             expandItem1.FilterOption.Should().NotBeNull();
         }
 
+        [Fact]
+        public void BindVirtualPropertiesAfterCollapseReturnsApplyClause()
+        {
+            IEnumerable<QueryToken> tokens =
+                _parser.ParseApply(
+                    "groupby((ID))/aggregate($count as Count)");
+
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(2);
+            GroupByTransformationNode groupby = actual.Transformations.First() as GroupByTransformationNode;
+            groupby.Should().NotBeNull();
+            AggregateTransformationNode aggregate = actual.Transformations.Last() as AggregateTransformationNode;
+            aggregate.Should().NotBeNull();
+            aggregate.AggregateExpressions.Should().HaveCount(1);
+            aggregate.AggregateExpressions.Single().As<AggregateExpression>().Method.ShouldBeEquivalentTo(AggregationMethod.VirtualPropertyCount);
+
+        }
+
         private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
 
         private static SingleValueNode BindMethodReturnsBooleanPrimitive(QueryToken token)
