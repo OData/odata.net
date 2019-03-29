@@ -1,4 +1,4 @@
-﻿<#@ include file="ODataT4CodeGenerator.ttinclude" #>
+<#@ include file="ODataT4CodeGenerator.ttinclude" #>
 <#+
 public static class Configuration
 {
@@ -28,6 +28,16 @@ public static class Configuration
 	// This flag indicates whether to ignore unexpected elements and attributes in the metadata document and generate
 	// the client code if any. The value must be set to true or false.
 	public const bool IgnoreUnexpectedElementsAndAttributes = true;
+
+	// This flag indicates whether to generate an additional Dictionary<string, object> property
+	// to store dynamic properties in open types.  The value must be set to true or false.
+	public const bool GenerateDynamicPropertiesCollection = true;
+
+	// This defines the name of Dictionary<string, object> properties
+	// that store dynamic properties in open types. This property is only applicable if
+	// GenerateDynamicPropertiesCollection is set to true. This value must be
+	// a valid identifier name.
+	public const string DynamicPropertiesCollectionName = "DynamicProperties";
 }
 
 public static class Customization
