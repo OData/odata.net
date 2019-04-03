@@ -605,7 +605,8 @@ public class CodeGenerationContext
                 Debug.Assert(this.EdmModel != null, "this.EdmModel != null");
                 this.modelHasInheritance = this.EdmModel.SchemaElementsAcrossModels()
                             .OfType<IEdmStructuredType>().Any(t => !t.FullTypeName().StartsWith("Org.OData.Authorization.V1") &&
-                             !t.FullTypeName().StartsWith("Org.OData.Capabilities.V1") && t.BaseType != null);
+                             !t.FullTypeName().StartsWith("Org.OData.Capabilities.V1") &&
+                             !t.FullTypeName().StartsWith("Org.OData.Core.V1") && t.BaseType != null);
             }
 
             return this.modelHasInheritance.Value;
