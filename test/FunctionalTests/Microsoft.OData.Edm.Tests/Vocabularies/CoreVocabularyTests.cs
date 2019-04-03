@@ -79,6 +79,32 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Annotation Term=""Core.Description"" String=""The Link term is inspired by the `atom:link` element, see [RFC4287](https://tools.ietf.org/html/rfc4287#section-4.2.7), and the `Link` HTTP header, see [RFC5988](https://tools.ietf.org/html/rfc5988)"" />
   </ComplexType>
+  <ComplexType Name=""ExampleValue"">
+    <Property Name=""Description"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""Description of the example value"" />
+    </Property>
+  </ComplexType>
+  <ComplexType Name=""PrimitiveExampleValue"" BaseType=""Core.ExampleValue"">
+    <Property Name=""Value"" Type=""Edm.PrimitiveType"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Example value for the custom parameter"" />
+    </Property>
+  </ComplexType>
+  <ComplexType Name=""ComplexExampleValue"" BaseType=""Core.ExampleValue"">
+    <Property Name=""Value"" Type=""Edm.ComplexType"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Example value for the custom parameter"" />
+    </Property>
+  </ComplexType>
+  <ComplexType Name=""EntityExampleValue"" BaseType=""Core.ExampleValue"">
+    <NavigationProperty Name=""Value"" Type=""Edm.EntityType"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Example value for the custom parameter"" />
+    </NavigationProperty>
+  </ComplexType>
+  <ComplexType Name=""ExternalExampleValue"" BaseType=""Core.ExampleValue"">
+    <Property Name=""ExternalValue"" Type=""Edm.String"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Url reference to the value in its literal format"" />
+      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+    </Property>
+  </ComplexType>
   <ComplexType Name=""MessageType"">
     <Property Name=""code"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Machine-readable, language-independent message code"" />
@@ -166,6 +192,14 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""Links"" Type=""Collection(Core.Link)"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Link to related information"" />
+  </Term>
+  <Term Name=""Example"" Type=""Core.ExampleValue"" AppliesTo=""EntityType ComplexType TypeDefinition Term Property NavigationProperty Parameter ReturnType"" Nullable=""false"">
+    <Annotation Term=""Core.Description"" String=""Example for an instance of the annotated model element"" />
+    <Annotation Term=""Core.Example"">
+      <Record>
+        <PropertyValue Property=""Description"" String=""The value of Core.Example is a record/object containing the example value and/or annotation examples."" />
+      </Record>
+    </Annotation>
   </Term>
   <Term Name=""Messages"" Type=""Collection(Core.MessageType)"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Instance annotation for warning and info messages"" />
@@ -305,13 +339,18 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         }
 
         [Theory]
-        [InlineData("OptionalParameterType", "DefaultValue")]
-        [InlineData("PropertyRef", "Name|Alias")]
-        [InlineData("AlternateKey", "Key")]
-        [InlineData("MessageType", "code|message|severity|target|details")]
-        [InlineData("Link", "rel|href")]
-        [InlineData("RevisionType", "Version|Kind|Description")]
-        public void TestCoreVocabularyComplexType(string typeName, string properties)
+        [InlineData("OptionalParameterType", "DefaultValue", null)]
+        [InlineData("PropertyRef", "Name|Alias", null)]
+        [InlineData("AlternateKey", "Key", null)]
+        [InlineData("MessageType", "code|message|severity|target|details", null)]
+        [InlineData("Link", "rel|href", null)]
+        [InlineData("RevisionType", "Version|Kind|Description", null)]
+        [InlineData("ExampleValue", "Description", null)]
+        [InlineData("PrimitiveExampleValue", "Value", "ExampleValue")]
+        [InlineData("ComplexExampleValue", "Value", "ExampleValue")]
+        [InlineData("EntityExampleValue", "Value", "ExampleValue")]
+        [InlineData("ExternalExampleValue", "ExternalValue", "ExampleValue")]
+        public void TestCoreVocabularyComplexType(string typeName, string properties, string baseType)
         {
             var schemaType = this.coreVocModel.FindDeclaredType("Org.OData.Core.V1." + typeName);
             Assert.NotNull(schemaType);
@@ -321,11 +360,26 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             Assert.False(complex.IsAbstract);
             Assert.False(complex.IsOpen);
-            Assert.Null(complex.BaseType);
+            if (baseType == null)
+            {
+                Assert.Null(complex.BaseType);
+            }
+            else
+            {
+                Assert.Equal("Org.OData.Core.V1." + baseType, complex.BaseType.FullTypeName());
+            }
 
             Assert.NotEmpty(complex.DeclaredProperties);
             Assert.Equal(properties, string.Join("|", complex.DeclaredProperties.Select(e => e.Name)));
-            Assert.Empty(complex.DeclaredNavigationProperties());
+
+            if (typeName != "EntityExampleValue")
+            {
+                Assert.Empty(complex.DeclaredNavigationProperties());
+            }
+            else
+            {
+                Assert.Equal(properties, string.Join("|", complex.DeclaredNavigationProperties().Select(e => e.Name)));
+            }
         }
 
         [Theory]
@@ -378,6 +432,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         [InlineData("Revisions", "Collection(Org.OData.Core.V1.RevisionType)", null)]
         [InlineData("SchemaVersion", "Edm.String", "Schema Reference")]
         [InlineData("ODataVersions", "Edm.String", "EntityContainer")]
+        [InlineData("Example", "Org.OData.Core.V1.ExampleValue", "EntityType ComplexType TypeDefinition Term Property NavigationProperty Parameter ReturnType")]
         public void TestCoreVocabularyTermType(string termName, string typeName, string appliesTo)
         {
             var termType = this.coreVocModel.FindDeclaredTerm("Org.OData.Core.V1." + termName);
