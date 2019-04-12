@@ -15,11 +15,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     /// </summary>
     internal class EdmModelReferenceElementsVisitor
     {
-        private readonly EdmModelCsdlSchemaWriter schemaWriter;
+        private readonly EdmModelCsdlSchemaXmlWriter schemaWriter;
 
         internal EdmModelReferenceElementsVisitor(IEdmModel model, XmlWriter xmlWriter, Version edmxVersion)
         {
-            this.schemaWriter = new EdmModelCsdlSchemaWriter(model, model.GetNamespaceAliases(), xmlWriter, edmxVersion);
+            this.schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
         }
 
         #region write IEdmModel.References for referenced models.

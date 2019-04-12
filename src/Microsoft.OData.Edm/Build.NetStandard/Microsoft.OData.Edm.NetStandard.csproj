@@ -49,6 +49,24 @@
     </TextStringResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Csdl\Json\IEdmJsonWriter.cs">
+      <Link>Csdl\Json\IEdmJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonConstants.cs">
+      <Link>Csdl\Json\JsonConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\EdmJsonWriter.cs">
+      <Link>Csdl\Json\EdmJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\CsdlWriterSettings.cs">
+      <Link>Csdl\Json\CsdlWriterSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\EdmJsonWriterExtensions.cs">
+      <Link>Csdl\Json\EdmJsonWriterExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\Scope.cs">
+      <Link>Csdl\Json\Scope.cs</Link>
+    </Compile>
     <Compile Include="..\Csdl\CsdlConstants.cs">
       <Link>Csdl\CsdlConstants.cs</Link>
     </Compile>
@@ -66,6 +84,12 @@
     </Compile>
     <Compile Include="..\Csdl\CsdlWriter.cs">
       <Link>Csdl\CsdlWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlJsonWriter.cs">
+      <Link>Csdl\CsdlJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlXmlWriter.cs">
+      <Link>Csdl\CsdlXmlWriter.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\EdmEnumValueParser.cs">
       <Link>Csdl\EdmEnumValueParser.cs</Link>
@@ -569,8 +593,14 @@
     <Compile Include="..\Csdl\SerializationExtensionMethods.cs">
       <Link>Csdl\SerializationExtensionMethods.cs</Link>
     </Compile>
+    <Compile Include="..\Csdl\Serialization\EdmModelCsdlSchemaJsonWriter.cs">
+      <Link>Csdl\Serialization\EdmModelCsdlSchemaJsonWriter.cs</Link>
+    </Compile>
     <Compile Include="..\Csdl\Serialization\EdmModelCsdlSchemaWriter.cs">
       <Link>Csdl\Serialization\EdmModelCsdlSchemaWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Serialization\EdmModelCsdlSchemaXmlWriter.cs">
+      <Link>Csdl\Serialization\EdmModelCsdlSchemaXmlWriter.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Serialization\EdmModelCsdlSerializationVisitor.cs">
       <Link>Csdl\Serialization\EdmModelCsdlSerializationVisitor.cs</Link>

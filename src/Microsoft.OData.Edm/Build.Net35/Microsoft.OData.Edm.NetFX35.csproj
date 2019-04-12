@@ -593,14 +593,38 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelCsdlSchemaJsonWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelCsdlSchemaJsonWriter.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelCsdlSchemaWriter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelCsdlSchemaWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelCsdlSchemaXmlWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelCsdlSchemaXmlWriter.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelCsdlSerializationVisitor.cs">
       <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelCsdlSerializationVisitor.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmSchema.cs">
       <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmSchema.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\IEdmJsonWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\IEdmJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonConstants.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\EdmJsonWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\EdmJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\CsdlWriterSettings.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\CsdlWriterSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\EdmJsonWriterExtensions.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\EdmJsonWriterExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\Scope.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\Scope.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\EdmModelVisitor.cs">
       <Link>Microsoft\OData\Edm\EdmModelVisitor.cs</Link>
@@ -688,6 +712,12 @@
     </Compile>
     <Compile Include="..\Csdl\CsdlReader.cs">
       <Link>Microsoft\OData\Edm\Csdl\CsdlReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlJsonWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlXmlWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlXmlWriter.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\CsdlReaderSettings.cs">
       <Link>Microsoft\OData\Edm\Csdl\CsdlReaderSettings.cs</Link>

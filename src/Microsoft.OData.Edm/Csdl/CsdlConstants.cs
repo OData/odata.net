@@ -238,8 +238,13 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_IncludeAnnotations = "IncludeAnnotations";
         internal const string Element_DataServices = "DataServices";
 
+        internal const string Element_Kind = "Kind";
+
         internal const string OperationReturnExternalTarget = "$ReturnType";
 
+        internal const string Prefix_Dollar = "$";
+        internal const string Prefix_At = "@";
+        internal const char Prefix_Hash = '#';
         #endregion
 
         internal static Dictionary<Version, string[]> SupportedVersions = new Dictionary<Version, string[]>()

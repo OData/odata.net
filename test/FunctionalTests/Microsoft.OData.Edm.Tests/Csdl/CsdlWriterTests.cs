@@ -4,12 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
@@ -19,6 +21,86 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 {
     public class CsdlWriterTests
     {
+        #region Reference
+        [Fact]
+        public void ShouldWriteEdmReference()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmReference reference1 = new EdmReference(new Uri("https://example.com/Org.OData.Authorization.V1.xml"));
+            reference1.AddInclude(new EdmInclude("Auth", "Org.OData.Authorization.V1"));
+            reference1.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.validation", null, null));
+            reference1.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.display", "Tablet", null));
+
+            EdmReference reference2 = new EdmReference(new Uri("https://example.com/Org.OData.Core.V1.xml"));
+            reference2.AddInclude(new EdmInclude("Core", "Org.OData.Core.V1"));
+            reference2.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.hcm", null, "com.example.Sales"));
+            reference2.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.hcm", "Tablet", "com.example.Person"));
+            model.SetEdmReferences(new[] { reference1, reference2 });
+
+            // Act & Assert for XML
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:Reference Uri=\"https://example.com/Org.OData.Authorization.V1.xml\">" +
+                "<edmx:Include Namespace=\"Org.OData.Authorization.V1\" Alias=\"Auth\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.validation\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.display\" Qualifier=\"Tablet\" />" +
+              "</edmx:Reference>" +
+              "<edmx:Reference Uri=\"https://example.com/Org.OData.Core.V1.xml\">" +
+                "<edmx:Include Namespace=\"Org.OData.Core.V1\" Alias=\"Core\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" TargetNamespace=\"com.example.Sales\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" Qualifier=\"Tablet\" TargetNamespace=\"com.example.Person\" />" +
+              "</edmx:Reference>" +
+              "<edmx:DataServices />" +
+            "</edmx:Edmx>", csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$Reference"": {
+    ""https://example.com/Org.OData.Authorization.V1.xml"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""Org.OData.Authorization.V1"",
+          ""$Alias"": ""Auth""
+        }
+      ],
+      ""$IncludeAnnotations"": [
+        {
+          ""$TermNamespace"": ""org.example.validation""
+        },
+        {
+          ""$TermNamespace"": ""org.example.display"",
+          ""$Qualifier"": ""Tablet""
+        }
+      ]
+    },
+    ""https://example.com/Org.OData.Core.V1.xml"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""Org.OData.Core.V1"",
+          ""$Alias"": ""Core""
+        }
+      ],
+      ""$IncludeAnnotations"": [
+        {
+          ""$TermNamespace"": ""org.example.hcm"",
+          ""$TargetNamespace"": ""com.example.Sales""
+        },
+        {
+          ""$TermNamespace"": ""org.example.hcm"",
+          ""$Qualifier"": ""Tablet"",
+          ""$TargetNamespace"": ""com.example.Person""
+        }
+      ]
+    }
+  }
+}", csdlStr);
+        }
+        #endregion
+
         #region Annotation - Computed, OptimisticConcurrency
 
         [Fact]
@@ -501,8 +583,45 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             function.AddParameter(optionalParamWithDefault);
             model.AddElement(function);
             model.AddEntityContainer("test", "Default").AddFunctionImport("TestFunction", function);
+
+            // XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""test.Default"",
+  ""test"": {
+    ""TestFunction"": {
+      ""$Kind"": ""Function"",
+      ""$Parameter"": [
+        {
+          ""$Name"": ""requiredParam""
+        },
+        {
+          ""$Name"": ""optionalParam"",
+          ""@Org.OData.Core.V1.OptionalParameter"": { }
+        },
+        {
+          ""$Name"": ""optionalParamWithDefault"",
+          ""@Org.OData.Core.V1.OptionalParameter"": {
+            ""DefaultValue"": ""Smith""
+          }
+        }
+      ],
+      ""$ReturnType"": { }
+    },
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""TestFunction"": {
+        ""$Kind"": ""FunctionImport"",
+        ""$Function"": ""test.TestFunction""
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
@@ -741,8 +860,31 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 Name = "EntityNavigationProperty"
             });
             model.AddElement(customer);
+
+            // XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""EntityNavigationProperty"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""Edm.EntityType""
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
@@ -769,8 +911,35 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(complexType);
             EdmTerm term = new EdmTerm("NS", "MyTerm", new EdmComplexTypeReference(complexType, true));
             model.AddElement(term);
+
+            // XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""SelectType"": {
+      ""$Kind"": ""ComplexType"",
+      ""DefaultSelect"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.PropertyPath"",
+        ""$Nullable"": true
+      },
+      ""DefaultHidden"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.NavigationPropertyPath""
+      }
+    },
+    ""MyTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""NS.SelectType"",
+      ""$Nullable"": true
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
@@ -1197,8 +1366,47 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
+
+            // XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // JSON
+            string jsonStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Entity"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      }
+    },
+    ""Function"": {
+      ""$Kind"": ""Function"",
+      ""$IsBound"": true,
+      ""$Parameter"": [
+        {
+          ""$Name"": ""entity"",
+          ""$Type"": ""NS.Entity"",
+          ""$Nullable"": true
+        },
+        {
+          ""$Name"": ""path"",
+          ""$Nullable"": true
+        }
+      ],
+      ""$ReturnType"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""@Org.OData.Community.V1.UrlEscapeFunction"": true
+    }
+  }
+}", jsonStr);
         }
 
         [Fact]
@@ -1276,6 +1484,25 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             }
 
             return edmx;
+        }
+
+        private string GetJsonCsdl(IEdmModel model, bool indent = true)
+        {
+            string edmx = string.Empty;
+
+            CsdlWriterSettings settings = new CsdlWriterSettings();
+            settings.Indent = indent;
+
+            using (MemoryStream stream = new MemoryStream())
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                IEnumerable<EdmError> errors;
+                bool ok = CsdlWriter.TryWriteJson(model, writer, settings, out errors);
+                Assert.True(ok);
+
+                stream.Seek(0, SeekOrigin.Begin);
+                return new StreamReader(stream).ReadToEnd();
+            }
         }
     }
 }

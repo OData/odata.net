@@ -7,39 +7,76 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Serialization;
+using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl
 {
     /// <summary>
-    /// Provides CSDL serialization services for EDM models.
+    /// Provides CSDL serialization services (XML & JSON) for EDM models.
     /// </summary>
-    public class CsdlWriter
+    public abstract class CsdlWriter
     {
-        private readonly IEdmModel model;
-        private readonly IEnumerable<EdmSchema> schemas;
-        private readonly XmlWriter writer;
-        private readonly Version edmxVersion;
-        private readonly string edmxNamespace;
-        private readonly CsdlTarget target;
+        internal readonly IEdmModel model;
+        internal readonly IEnumerable<EdmSchema> schemas;
+        internal readonly Version edmxVersion;
 
-        private CsdlWriter(IEdmModel model, IEnumerable<EdmSchema> schemas, XmlWriter writer, Version edmxVersion, CsdlTarget target)
+        /// <summary>
+        /// Initializes a new instance of <see cref="CsdlWriter"/> class.
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="edmxVersion">The Edmx version.</param>
+        protected CsdlWriter(IEdmModel model, Version edmxVersion)
         {
             this.model = model;
-            this.schemas = schemas;
-            this.writer = writer;
+            this.schemas = new EdmModelSchemaSeparationSerializationVisitor(model).GetSchemas();
             this.edmxVersion = edmxVersion;
-            this.target = target;
-
-            Debug.Assert(CsdlConstants.SupportedEdmxVersions.ContainsKey(edmxVersion), "CsdlConstants.SupportedEdmxVersions.ContainsKey(edmxVersion)");
-            this.edmxNamespace = CsdlConstants.SupportedEdmxVersions[edmxVersion];
         }
 
         /// <summary>
-        /// Outputs a CSDL artifact to the provided XmlWriter.
+        /// Outputs a CSDL JSON artifact to the provided <see cref="TextWriter"/>.
+        /// </summary>
+        /// <param name="model">The Edm model to be written.</param>
+        /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
+        /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
+        /// <returns>A value indicating whether serialization was successful.</returns>
+        public static bool TryWriteJson(IEdmModel model, TextWriter writer, out IEnumerable<EdmError> errors)
+        {
+            return TryWriteJson(model, writer, CsdlWriterSettings.Default, out errors);
+        }
+
+        /// <summary>
+        /// Outputs a CSDL JSON artifact to the provided <see cref="TextWriter"/> using the settings.
+        /// </summary>
+        /// <param name="model">The Edm model to be written.</param>
+        /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
+        /// <param name="settings">The CSDL writer settings.</param>
+        /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
+        /// <returns>A value indicating whether serialization was successful.</returns>
+        public static bool TryWriteJson(IEdmModel model, TextWriter writer, CsdlWriterSettings settings, out IEnumerable<EdmError> errors)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(writer, "writer");
+
+            Version edmxVersion;
+            if (!Verify(model, out edmxVersion, out errors))
+            {
+                return false;
+            }
+
+            CsdlWriter csdlWriter = new CsdlJsonWriter(model, writer, settings, edmxVersion);
+            csdlWriter.WriteCsdl();
+
+            errors = Enumerable.Empty<EdmError>();
+            return true;
+        }
+
+        /// <summary>
+        /// Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
         /// </summary>
         /// <param name="model">Model to be written.</param>
         /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
@@ -51,71 +88,17 @@ namespace Microsoft.OData.Edm.Csdl
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writer, "writer");
 
-            errors = model.GetSerializationErrors();
-            if (errors.FirstOrDefault() != null)
+            Version edmxVersion;
+            if (!Verify(model, out edmxVersion, out errors))
             {
                 return false;
             }
 
-            Version edmxVersion = model.GetEdmxVersion();
-
-            if (edmxVersion != null)
-            {
-                if (!CsdlConstants.SupportedEdmxVersions.ContainsKey(edmxVersion))
-                {
-                    errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmxVersion, Edm.Strings.Serializer_UnknownEdmxVersion) };
-                    return false;
-                }
-            }
-            else if (!CsdlConstants.EdmToEdmxVersions.TryGetValue(model.GetEdmVersion() ?? EdmConstants.EdmVersionDefault, out edmxVersion))
-            {
-                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmVersion, Edm.Strings.Serializer_UnknownEdmVersion) };
-                return false;
-            }
-
-            IEnumerable<EdmSchema> schemas = new EdmModelSchemaSeparationSerializationVisitor(model).GetSchemas();
-
-            CsdlWriter edmxWriter = new CsdlWriter(model, schemas, writer, edmxVersion, target);
-            edmxWriter.WriteCsdl();
+            CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, target);
+            csdlWriter.WriteCsdl();
 
             errors = Enumerable.Empty<EdmError>();
             return true;
-        }
-
-        private void WriteCsdl()
-        {
-            switch (this.target)
-            {
-                case CsdlTarget.EntityFramework:
-                    this.WriteEFCsdl();
-                    break;
-                case CsdlTarget.OData:
-                    this.WriteODataCsdl();
-                    break;
-                default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_CsdlTarget(this.target.ToString()));
-            }
-        }
-
-        private void WriteODataCsdl()
-        {
-            this.WriteEdmxElement();
-            this.WriteReferenceElements();
-            this.WriteDataServicesElement();
-            this.WriteSchemas();
-            this.EndElement(); // </DataServices>
-            this.EndElement(); // </Edmx>
-        }
-
-        private void WriteEFCsdl()
-        {
-            this.WriteEdmxElement();
-            this.WriteRuntimeElement();
-            this.WriteConceptualModelsElement();
-            this.WriteSchemas();
-            this.EndElement(); // </ConceptualModels>
-            this.EndElement(); // </Runtime>
-            this.EndElement(); // </Edmx>
         }
 
         private void WriteEdmxElement()
@@ -124,26 +107,32 @@ namespace Microsoft.OData.Edm.Csdl
             this.writer.WriteAttributeString(CsdlConstants.Attribute_Version, GetVersionString(this.edmxVersion));
         }
 
-        private void WriteRuntimeElement()
-        {
-            this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Runtime, this.edmxNamespace);
-        }
+        /// <summary>
+        /// Write CSDL output.
+        /// </summary>
+        protected abstract void WriteCsdl();
 
-        private void WriteConceptualModelsElement()
+        private static bool Verify(IEdmModel model, out Version edmxVersion, out IEnumerable<EdmError> errors)
         {
-            this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
-        }
+            Debug.Assert(model != null);
 
-        private void WriteReferenceElements()
-        {
-            EdmModelReferenceElementsVisitor visitor = new EdmModelReferenceElementsVisitor(this.model, this.writer, this.edmxVersion);
-            visitor.VisitEdmReferences(this.model);
-        }
+            edmxVersion = model.GetEdmxVersion();
 
-        private void WriteDataServicesElement()
-        {
-            this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
-        }
+            errors = model.GetSerializationErrors();
+            if (errors.FirstOrDefault() != null)
+            {
+                return false;
+            }
+
+            if (edmxVersion != null)
+            {
+                if (!CsdlConstants.SupportedEdmxVersions.ContainsKey(edmxVersion))
+                {
+                    errors = new EdmError[]
+                    {
+                        new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmxVersion, Strings.Serializer_UnknownEdmxVersion)
+                    };
+
 
         private void WriteSchemas()
         {
@@ -151,15 +140,23 @@ namespace Microsoft.OData.Edm.Csdl
             EdmModelCsdlSerializationVisitor visitor;
             Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionDefault;
             foreach (EdmSchema schema in this.schemas)
-            {
-                visitor = new EdmModelCsdlSerializationVisitor(this.model, this.writer, edmVersion);
-                visitor.VisitEdmSchema(schema, this.model.GetNamespacePrefixMappings());
-            }
-        }
 
-        private void EndElement()
-        {
-            this.writer.WriteEndElement();
+                    return false;
+                }
+            }
+            else if (!CsdlConstants.EdmToEdmxVersions.TryGetValue(model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest, out edmxVersion))
+
+            {
+                errors = new EdmError[]
+                {
+                    new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmVersion, Strings.Serializer_UnknownEdmVersion)
+                };
+
+                return false;
+            }
+
+            errors = Enumerable.Empty<EdmError>();
+            return true;
         }
 
         // Gets the string form of the EdmVersion.

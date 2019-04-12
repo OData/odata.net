@@ -136,6 +136,8 @@
     <Compile Include="Csdl\SerializationExtensionMethods.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlOperationReturn.cs" />
     <Compile Include="Csdl\CsdlReader.cs" />
+    <Compile Include="Csdl\CsdlJsonWriter.cs" />
+    <Compile Include="Csdl\CsdlXmlWriter.cs" />
     <Compile Include="Csdl\CsdlWriter.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsOperationImport.cs" />
@@ -396,9 +398,17 @@
     <Compile Include="Csdl\Semantics\CsdlSemanticsTemporalTypeReference.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsTypeDefinition.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsTypeExpression.cs" />
+    <Compile Include="Csdl\Serialization\EdmModelCsdlSchemaJsonWriter.cs" />
+    <Compile Include="Csdl\Serialization\EdmModelCsdlSchemaXmlWriter.cs" />
     <Compile Include="Csdl\Serialization\EdmModelCsdlSchemaWriter.cs" />
     <Compile Include="Csdl\Serialization\EdmModelCsdlSerializationVisitor.cs" />
     <Compile Include="Csdl\Serialization\EdmSchema.cs" />
+    <Compile Include="Csdl\Json\IEdmJsonWriter.cs" />
+    <Compile Include="Csdl\Json\JsonConstants.cs" />
+    <Compile Include="Csdl\Json\EdmJsonWriter.cs" />
+    <Compile Include="Csdl\Json\CsdlWriterSettings.cs" />
+    <Compile Include="Csdl\Json\EdmJsonWriterExtensions.cs" />
+    <Compile Include="Csdl\Json\Scope.cs" />
     <Compile Include="EdmModelVisitor.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="Csdl\SchemaWriter.cs" />

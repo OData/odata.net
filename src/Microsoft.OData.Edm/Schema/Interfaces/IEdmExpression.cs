@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm.Vocabularies;
+using System;
 
 namespace Microsoft.OData.Edm
 {
@@ -96,6 +97,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmIsTypeExpression"/>.
         /// </summary>
+       // [Obsolete("IsType is OData V3, use IsOf in ODataV4", true)]
         IsType,
 
         /// <summary>

@@ -311,5 +311,16 @@ namespace Microsoft.OData.Edm.Csdl
         {
             return EdmUtil.FullyQualifiedName(annotation.Target);
         }
+
+        internal static string FullString(this IEdmVocabularyAnnotation annotation)
+        {
+            string target = EdmUtil.FullyQualifiedName(annotation.Target);
+            if (annotation.Qualifier != null)
+            {
+                return target + "#" + annotation.Qualifier;
+            }
+
+            return target;
+        }
     }
 }
