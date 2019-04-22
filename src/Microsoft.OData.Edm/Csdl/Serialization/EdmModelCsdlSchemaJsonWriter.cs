@@ -725,6 +725,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteInlineExpression(IEdmExpression expression)
         {
+            IEdmPathExpression pathExpression = expression as IEdmPathExpression;
             switch (expression.ExpressionKind)
             {
                 case EdmExpressionKind.BinaryConstant:
@@ -749,13 +750,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     WriteIntegerConstantExpressionElement((IEdmIntegerConstantExpression)expression);
                     break;
                 case EdmExpressionKind.Path:
-                    this.jsonWriter.WriteRequiredProperty(CsdlConstants.Attribute_Path, ((IEdmPathExpression)expression).PathSegments, PathAsXml);
+                    WritePathExpressionElement(pathExpression);
                     break;
                 case EdmExpressionKind.PropertyPath:
-                   // this.jsonWriter.WriteRequiredProperty(CsdlConstants.Attribute_PropertyPath, ((IEdmPathExpression)expression).PathSegments, PathAsXml);
+                    WritePropertyPathExpressionElement(pathExpression);
                     break;
                 case EdmExpressionKind.NavigationPropertyPath:
-               //     this.jsonWriter.WriteRequiredProperty(CsdlConstants.Attribute_NavigationPropertyPath, ((IEdmPathExpression)expression).PathSegments, PathAsXml);
+                    WriteNavigationPropertyPathExpressionElement(pathExpression);
                     break;
                 case EdmExpressionKind.StringConstant:
                     WriteStringConstantExpressionElement((IEdmStringConstantExpression)expression);

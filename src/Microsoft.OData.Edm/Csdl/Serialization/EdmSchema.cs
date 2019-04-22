@@ -112,11 +112,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         public void AddVocabularyAnnotation(IEdmVocabularyAnnotation annotation)
         {
             List<IEdmVocabularyAnnotation> annotationList;
-            string fullString = annotation.FullString();
-            if (!this.annotations.TryGetValue(fullString, out annotationList))
+            string targetString = annotation.TargetString();
+            if (!this.annotations.TryGetValue(targetString, out annotationList))
             {
                 annotationList = new List<IEdmVocabularyAnnotation>();
-                this.annotations[fullString] = annotationList;
+                this.annotations[targetString] = annotationList;
             }
 
             annotationList.Add(annotation);

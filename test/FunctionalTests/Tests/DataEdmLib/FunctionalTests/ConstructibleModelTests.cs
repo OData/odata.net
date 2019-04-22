@@ -1068,7 +1068,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNull(bazAction.FindParameter("Barney"), "Not finding Barney");
 
             this.CompareEdmModelToCsdl(
-                model, 
+                model,
 @"<Schema Namespace=""Westwind"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <EntityType Name=""Customer"">
     <Key>
@@ -1076,6 +1076,9 @@ namespace EdmLibTests.FunctionalTests
     </Key>
     <Property Name=""IDC"" Nullable=""false"" Type=""Edm.Int32"" />
   </EntityType>
+  <Function Name=""Barre"">
+    <ReturnType Type=""Edm.String"" Nullable=""false"" />
+  </Function>
   <Function Name=""Foo"">
     <Parameter Name=""Barney"" Nullable=""false"" Type=""Edm.Int32"" />
     <Parameter Name=""Fred"" Nullable=""false"" Type=""Edm.Int32"" />
@@ -1088,17 +1091,14 @@ namespace EdmLibTests.FunctionalTests
     <Parameter Name=""Wilma"" Nullable=""false"" Type=""Edm.Int32"" />
     <ReturnType Type=""Collection(Westwind.Customer)"" Nullable=""false"" />
   </Action>
-  <Function Name=""Barre"">
-    <ReturnType Type=""Edm.String"" Nullable=""false"" />
-  </Function>
-  <Action Name=""Foo"">
-    <Parameter Name=""Fred"" Nullable=""false"" Type=""Edm.Int32"" />
-    <ReturnType Type=""Edm.Int32"" />
-  </Action>
   <Action Name=""baz"">
     <Parameter Name=""Wilma"" Nullable=""false"" Type=""Edm.Int32"" />
     <Parameter Name=""Betty"" Nullable=""false"" Type=""Edm.String"" />
     <ReturnType Type=""Collection(Westwind.Customer)"" Nullable=""false"" />
+  </Action>
+  <Action Name=""Foo"">
+    <Parameter Name=""Fred"" Nullable=""false"" Type=""Edm.Int32"" />
+    <ReturnType Type=""Edm.Int32"" />
   </Action>
   <EntityContainer Name=""Gunk"">
     <EntitySet EntityType=""Westwind.Customer"" Name=""Customers"" />
@@ -1244,13 +1244,13 @@ namespace EdmLibTests.FunctionalTests
     </Key>
     <Property Name=""IDC"" Type=""Edm.Int32"" Nullable=""false"" />
   </EntityType>
-  <Action Name=""Foo"">
-    <ReturnType Type=""Collection(Westwind.Customer)"" Nullable=""false"" />
-  </Action>
   <Function Name=""Foo"" IsBound=""true"" IsComposable=""true"">
     <Parameter Name=""Fred"" Type=""Collection(Westwind.Customer)"" Nullable=""false"" />
     <ReturnType Type=""Collection(Westwind.Customer)"" Nullable=""false"" />
   </Function>
+  <Action Name=""Foo"">
+    <ReturnType Type=""Collection(Westwind.Customer)"" Nullable=""false"" />
+  </Action>
   <EntityContainer Name=""Gunk"">
     <EntitySet Name=""Customers"" EntityType=""Westwind.Customer"" />
     <ActionImport Name=""Foo"" Action=""Westwind.Foo"" />

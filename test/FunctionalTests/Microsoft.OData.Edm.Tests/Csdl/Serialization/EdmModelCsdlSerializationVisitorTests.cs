@@ -1327,7 +1327,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitEdmSchema(schema, null),
-                @"<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm""><Annotations Target=""NS.ComplexType""><Annotation Term=""UI.Thumbnail"" Binary=""4F44617461"" /><Annotation Term=""UI.DisplayName"" Int=""42"" /></Annotations><Annotations Target=""NS.ComplexType""><Annotation Term=""UI.DisplayName"" Qualifier=""Tablet"" Int=""88"" /></Annotations><Annotations Target=""NS.ComplexType/Name""><Annotation Term=""UI.DisplayName"" Qualifier=""Tablet"" Int=""42"" /></Annotations></Schema>");
+                @"<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm""><Annotations Target=""NS.ComplexType""><Annotation Term=""UI.Thumbnail"" Binary=""4F44617461"" /><Annotation Term=""UI.DisplayName"" Int=""42"" /><Annotation Term=""UI.DisplayName"" Qualifier=""Tablet"" Int=""88"" /></Annotations><Annotations Target=""NS.ComplexType/Name""><Annotation Term=""UI.DisplayName"" Qualifier=""Tablet"" Int=""42"" /></Annotations></Schema>");
 
             // Act & Assert for JSON
             VisitAndVerifyJson(v => v.VisitEdmSchema(schema, null), @"{
@@ -1339,14 +1339,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         },
         ""@UI.DisplayName"": {
           ""$Int"": 42
-        }
-      },
-      ""NS.ComplexType#Tablet"": {
+        },
         ""@UI.DisplayName#Tablet"": {
           ""$Int"": 88
         }
       },
-      ""NS.ComplexType/Name#Tablet"": {
+      ""NS.ComplexType/Name"": {
         ""@UI.DisplayName#Tablet"": {
           ""$Int"": 42
         }
@@ -1781,7 +1779,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitVocabularyAnnotation(annotation),
-                @"<Annotation Term=""org.example.display.DisplayName""><LabeledElementReference>CustomerFirstName</LabeledElementReference></Annotation>");
+                @"<Annotation Term=""org.example.display.DisplayName""><LabeledElementReference Name=""CustomerFirstName"" /></Annotation>");
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{

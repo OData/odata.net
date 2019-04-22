@@ -380,8 +380,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 base.ProcessAnnotation(annotation);
             }
 
-            this.schemaWriter.WriteVocabularyAnnotationElementEnd(annotation, isInline);
-           // this.EndElement(annotation);
+            this.EndElement(annotation, t => this.schemaWriter.WriteVocabularyAnnotationElementEnd(annotation, isInline));
         }
 
         #endregion

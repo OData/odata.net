@@ -436,15 +436,6 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""CustomerID"" Type=""Edm.String"" Nullable=""false"" />
     <NavigationProperty Name=""Customer"" Type=""Grumble.Customer"" Nullable=""false"" />
   </EntityType>
-  <Action Name=""GetCustomers"">
-    <Parameter Name=""P1"" Type=""Edm.Int32"" />
-    <Parameter Name=""P2"" Type=""Edm.Int32"" />
-    <Parameter Name=""P3"" Type=""Edm.Int32"" Nullable=""false"" />
-    <ReturnType Type=""Collection(Grumble.Customer)"" />
-  </Action>
-  <Action Name=""GetBestCustomerID"">
-    <ReturnType Type=""Edm.Int32"" />
-  </Action>
   <Function Name=""peopleWhoAreAwesome"" IsBound=""true"" EntitySetPath=""Persons/"" IsComposable=""true"">
     <Parameter Name=""Persons"" Type=""Collection(Grumble.Customer)"" />
     <ReturnType Type=""Collection(Grumble.Customer)"" />
@@ -465,6 +456,15 @@ namespace EdmLibTests.FunctionalTests
     <Parameter Name=""Persons"" Type=""Collection(Grumble.Customer)"" />
     <ReturnType Type=""Collection(Grumble.Customer)"" />
   </Function>
+  <Action Name=""GetCustomers"">
+    <Parameter Name=""P1"" Type=""Edm.Int32"" />
+    <Parameter Name=""P2"" Type=""Edm.Int32"" />
+    <Parameter Name=""P3"" Type=""Edm.Int32"" Nullable=""false"" />
+    <ReturnType Type=""Collection(Grumble.Customer)"" />
+  </Action>
+  <Action Name=""GetBestCustomerID"">
+    <ReturnType Type=""Edm.Int32"" />
+  </Action>
   <EntityContainer Name=""C1"">
     <EntitySet Name=""Customers"" EntityType=""Grumble.Customer"">
       <NavigationPropertyBinding Path=""Orders"" Target=""Orders"" />
@@ -807,6 +807,8 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" />
     <Property Name=""Birthday"" Type=""Edm.DateTimeOffset"" />
   </EntityType>
+  <Term Name=""Age"" Type=""Edm.Int32"" />
+  <Term Name=""Subject"" Type=""foo.Person"" />
   <Function Name=""Func"">
     <Parameter Name=""P1"" Type=""Edm.Int32"" />
     <Parameter Name=""P2"" Type=""Edm.Int32"" />
@@ -828,8 +830,6 @@ namespace EdmLibTests.FunctionalTests
     <Parameter Name=""P3"" Type=""Edm.Int32"" Nullable=""false"" />
     <ReturnType Type=""Collection(Grumble.Customer)"" />
   </Action>
-  <Term Name=""Age"" Type=""Edm.Int32"" />
-  <Term Name=""Subject"" Type=""foo.Person"" />
   <EntityContainer Name=""C1"">
     <EntitySet Name=""People"" EntityType=""foo.Person"" />
     <ActionImport Name=""GetCustomers"" Action=""foo.GetCustomers"" EntitySet=""People"" />

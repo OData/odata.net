@@ -21,6 +21,7 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
+    using Microsoft.OData.Edm.Csdl.Json;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -79,7 +80,8 @@ namespace EdmLibTests.FunctionalTests
                 typeof(IEdmDateConstantExpression),
                 typeof(IEdmTimeOfDayValue),
                 typeof(IEdmTimeOfDayConstantExpression),
-                typeof(IEdmEnumMemberValue)
+                typeof(IEdmEnumMemberValue),
+                typeof(IEdmJsonWriter)
             };
 
             foreach (Type skip in skips)
