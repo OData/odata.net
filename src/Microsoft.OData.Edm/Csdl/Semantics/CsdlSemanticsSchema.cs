@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
@@ -122,13 +122,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public T FindSchemaElement<T>(string name, Func<CsdlSemanticsModel, string, T> modelFinder)
         {
-            string candidateName = ReplaceAlias(name);
-            if (candidateName == null)
-            {
-                candidateName = name;
-            }
-
-            return modelFinder(this.model, candidateName);
+            string namespaceQualifiedName = this.ReplaceAlias(name);
+            return modelFinder(this.model, namespaceQualifiedName);
         }
 
         public string UnresolvedName(string qualifiedName)
@@ -138,7 +133,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 return null;
             }
 
-            return ReplaceAlias(qualifiedName) ?? qualifiedName;
+            return this.ReplaceAlias(qualifiedName);
         }
 
         public IEdmLabeledExpression FindLabeledElement(string label, IEdmEntityType bindingContext)
