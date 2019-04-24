@@ -56,7 +56,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             IEdmType binding = this.schema.FindType(this.reference.FullName);
 
-            return binding ?? new UnresolvedType(this.schema.ReplaceAlias(this.reference.FullName) ?? this.reference.FullName, this.Location);
+            return binding ?? new UnresolvedType(this.schema.ReplaceAlias(this.reference.FullName), this.Location);
         }
     }
 }
