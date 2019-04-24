@@ -76,7 +76,36 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findType, RegistrationHelper.CreateAmbiguousTypeBinding);  // search built-in EdmCoreModel and CoreVocabularyModel.
+            string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
+
+            return FindAcrossModels(model, fullyQualifiedName, findType, RegistrationHelper.CreateAmbiguousTypeBinding);  // search built-in EdmCoreModel and CoreVocabularyModel.
+        }
+
+        /// <summary>
+        /// Replace a possibly alias-qualified name with the full namespace qualified name.
+        /// </summary>
+        /// <param name="model">The model containing the element.</param>
+        /// <param name="name">The alias- or namespace- qualified name of the element.</param>
+        /// <returns>The namespace qualified name of the element.</returns>
+        internal static string ReplaceAlias(this IEdmModel model, string name)
+        {
+            VersioningDictionary<string, string> mappings = model.GetNamespaceAliases();
+            VersioningList<string> list = model.GetUsedNamespacesHavingAlias();
+            int idx = name.IndexOf('.');
+
+            if (list != null && mappings != null && idx > 0)
+            {
+                var typeAlias = name.Substring(0, idx);
+                var ns = list.FirstOrDefault(n =>
+                {
+                    string alias;
+                    return mappings.TryGetValue(n, out alias) && alias == typeAlias;
+                });
+
+                return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}{1}", ns, name.Substring(idx)) : name;
+            }
+
+            return name;
         }
 
         /// <summary>

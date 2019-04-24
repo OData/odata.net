@@ -875,9 +875,45 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         [Fact]
+        public void FindTypeByAliasName()
+        {
+            TestModel.Instance.Model.FindType("TestModelAlias.T1").FullName().Should().Be("TestModelNameSpace.T1");
+        }
+
+        [Fact]
+        public void FindTypeBySinglePartNamespaceQualifiedName()
+        {
+            TestModel.Instance.Model.FindType("TestModelNameSpace.T1").FullName().Should().Be("TestModelNameSpace.T1");
+        }
+
+        [Fact]
+        public void FindTypeByMultiPartAliasQualfiedName()
+        {
+            TestModel.Instance.Model.FindType("MultipartTestModelAlias.E1").FullName().Should().Be("Multi.Part.TestModelNameSpace.E1");
+        }
+
+        [Fact]
+        public void FindUndefinedAliasQualifiedNameReturnsNull()
+        {
+            TestModel.Instance.Model.FindType("MultipartTestModelAlias.T1").Should().BeNull();
+        }
+
+        [Fact]
+        public void FindUndefinedSinglePartNamespaceQualifiedNameReturnsNull()
+        {
+            TestModel.Instance.Model.FindType("TestModelNameSpace.E1").Should().BeNull();
+        }
+
+        [Fact]
+        public void FindUndefinedNamespaceQualifiedNameReturnsNull()
+        {
+            TestModel.Instance.Model.FindType("Multi.Part.TestModelNameSpace.T1").Should().BeNull();
+        }
+
+        [Fact]
         public void FindTypeForUndefinedTypeDoesnotGetIntoInfiniteSearchLoop()
         {
-            // Arrage - create the EdmModel with all vacabulary models
+            // Arrange - create the EdmModel with all vacabulary models
             EdmModel model = new EdmModel();
             Assert.Equal(7, model.ReferencedModels.Count()); // core model + 6 vocabulary models
 
@@ -887,7 +923,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             // Assert
             Assert.Null(unknownType);
 
-            // Arrage - create the EdmModel without vacabulary models
+            // Arrange - create the EdmModel without vacabulary models
             model = new EdmModel(false);
             Assert.Equal(1, model.ReferencedModels.Count()); // We have the core model added by default
 
@@ -902,9 +938,15 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             public static TestModel Instance = new TestModel();
             public const string TestModelNameSpace = "TestModelNameSpace";
+            public const string TestModelAlias = "TestModelAlias";
+            public const string TestModelNameSpace2 = "Multi.Part.TestModelNameSpace";
+            public const string TestModelAlias2 = "MultipartTestModelAlias";
+
             private TestModel()
             {
                 this.Model = new EdmModel();
+                this.Model.SetNamespaceAlias(TestModelNameSpace, TestModelAlias);
+                this.Model.SetNamespaceAlias(TestModelNameSpace2, TestModelAlias2);
 
                 this.T1 = new EdmEntityType(TestModelNameSpace, "T1");
                 EdmStructuralProperty p11 = this.T1.AddStructuralProperty("P11", EdmCoreModel.Instance.GetInt32(false));
@@ -915,6 +957,8 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 EdmStructuralProperty p21 = this.T2.AddStructuralProperty("P21", EdmCoreModel.Instance.GetInt32(false));
                 this.T2.AddKeys(p21);
                 this.Model.AddElement(this.T2);
+
+                this.Model.AddElement(new EdmEnumType(TestModelNameSpace2, "E1"));
 
                 this.functionImport = new EdmFunction(TestModelNameSpace, "Function1", new EdmEntityTypeReference(this.T1, true));
                 this.functionImport.AddParameter("id", EdmCoreModel.Instance.GetInt32(false));
