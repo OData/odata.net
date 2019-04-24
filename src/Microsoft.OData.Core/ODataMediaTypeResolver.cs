@@ -41,41 +41,23 @@ namespace Microsoft.OData
         {
             {
                 ODataPayloadKind.Batch,
-                new List<ODataMediaTypeFormat>
-                {
-                    new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType), ODataFormat.Batch)
-                }
+                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType), ODataFormat.Batch) }
             },
             {
                 ODataPayloadKind.Value,
-                new List<ODataMediaTypeFormat>
-                {
-                    new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType), ODataFormat.RawValue)
-                }
+                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType), ODataFormat.RawValue) }
             },
             {
                 ODataPayloadKind.BinaryValue,
-                new List<ODataMediaTypeFormat>
-                {
-                    new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType), ODataFormat.RawValue)
-                }
+                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType), ODataFormat.RawValue) }
             },
             {
                 ODataPayloadKind.MetadataDocument,
-                new List<ODataMediaTypeFormat>
-                {
-                    new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata)
-                }
+                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata) }
             },
             {
                 ODataPayloadKind.Asynchronous,
-                new List<ODataMediaTypeFormat>
-                {
-                    new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType), ODataFormat.RawValue)
-                }
-            },
-            {
-                ODataPayloadKind.Delta, new List<ODataMediaTypeFormat>()
+                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType), ODataFormat.RawValue) }
             }
         };
 
