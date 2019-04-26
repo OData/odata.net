@@ -8,6 +8,7 @@ namespace Microsoft.OData.JsonLight
 {
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Edm;
+    using System;
 
     /// <summary>
     /// Class responsible for logic specific to the JSON Light no metadata level (indicated by "odata.metadata=none" in the media type).
@@ -18,6 +19,15 @@ namespace Microsoft.OData.JsonLight
     /// </remarks>
     internal sealed class JsonNoMetadataLevel : JsonLightMetadataLevel
     {
+        /// <summary>
+        /// Constructs a new <see cref="JsonNoMetadataLevel"/>.
+        /// </summary>
+        /// <param name="container">Service provider container</param>
+        internal JsonNoMetadataLevel(IServiceProvider container)
+        {
+            this.container = container;
+        }
+
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>

@@ -14,7 +14,7 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonNoMetadataLevelTests
     {
-        private readonly JsonNoMetadataLevel testSubject = new JsonNoMetadataLevel();
+        private readonly JsonNoMetadataLevel testSubject = new JsonNoMetadataLevel(null);
 
         [Fact]
         public void NoMetadataLevelShouldReturnNoMetadataTypeOracleWhenKnobIsSet()

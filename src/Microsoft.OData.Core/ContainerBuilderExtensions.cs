@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Evaluation;
 using Microsoft.OData.Json;
 using Microsoft.OData.UriParser;
 
@@ -146,6 +147,7 @@ namespace Microsoft.OData
             builder.AddService<UriPathParser>(ServiceLifetime.Scoped);
             builder.AddServicePrototype(new ODataSimplifiedOptions(odataVersion));
             builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataSimplifiedOptions>().Clone());
+            builder.AddService<IODataMetadataBuilderFactory, ODataMetadataBuilderFactory>(ServiceLifetime.Singleton);
 
             return builder;
         }

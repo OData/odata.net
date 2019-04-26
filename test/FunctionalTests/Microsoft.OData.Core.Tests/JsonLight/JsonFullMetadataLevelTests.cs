@@ -23,7 +23,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private static readonly EdmEntitySet EntitySet;
         private static readonly EdmEntityType EntityType;
 
-        private readonly JsonFullMetadataLevel testSubject = new JsonFullMetadataLevel(MetadataDocumentUri, Model);
+        private readonly JsonFullMetadataLevel testSubject = new JsonFullMetadataLevel(MetadataDocumentUri, Model, null);
 
         static JsonFullMetadataLevelTests()
         {
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void FullMetadataLevelCreateMetadataBuilderWithoutMetadataDocumentUriShouldThrow()
         {
-            var metadataLevelWithoutMetadataDocumentUri = new JsonFullMetadataLevel(/*metadataDocumentUri*/ null, Model);
+            var metadataLevelWithoutMetadataDocumentUri = new JsonFullMetadataLevel(/*metadataDocumentUri*/ null, Model, null);
 
             Action test = () => metadataLevelWithoutMetadataDocumentUri
                 .CreateResourceMetadataBuilder(

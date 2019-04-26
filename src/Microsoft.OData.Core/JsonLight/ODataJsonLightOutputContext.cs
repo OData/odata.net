@@ -111,7 +111,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             Uri metadataDocumentUri = messageWriterSettings.MetadataDocumentUri;
-            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, metadataDocumentUri, this.Model, this.WritingResponse);
+            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, metadataDocumentUri, this.Model, this.WritingResponse, this.Container);
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
 
@@ -133,7 +133,7 @@ namespace Microsoft.OData.JsonLight
 
             this.textWriter = textWriter;
             this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, true /*isIeee754Compatible*/, messageWriterSettings);
-            this.metadataLevel = new JsonMinimalMetadataLevel();
+            this.metadataLevel = new JsonMinimalMetadataLevel(messageInfo.Container);
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
 

@@ -27,7 +27,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="model">The edm model.</param>
         /// <param name="writingResponse">true if we are writing a response, false otherwise.</param>
         /// <returns>The JSON Light metadata level being written.</returns>
-        internal static JsonLightMetadataLevel Create(ODataMediaType mediaType, Uri metadataDocumentUri, IEdmModel model, bool writingResponse)
+        internal static JsonLightMetadataLevel Create(ODataMediaType mediaType, Uri metadataDocumentUri, IEdmModel model, bool writingResponse, IServiceProvider container = null)
         {
             Debug.Assert(mediaType != null, "mediaType != null");
 
@@ -47,17 +47,17 @@ namespace Microsoft.OData.JsonLight
 
                     if (string.Compare(parameter.Value, MimeConstants.MimeMetadataParameterValueMinimal, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        return new JsonMinimalMetadataLevel();
+                        return new JsonMinimalMetadataLevel(container);
                     }
 
                     if (string.Compare(parameter.Value, MimeConstants.MimeMetadataParameterValueFull, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        return new JsonFullMetadataLevel(metadataDocumentUri, model);
+                        return new JsonFullMetadataLevel(metadataDocumentUri, model, container);
                     }
 
                     if (string.Compare(parameter.Value, MimeConstants.MimeMetadataParameterValueNone, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        return new JsonNoMetadataLevel();
+                        return new JsonNoMetadataLevel(container);
                     }
 
                     Debug.Assert(
@@ -67,14 +67,19 @@ namespace Microsoft.OData.JsonLight
             }
 
             // No "odata.metadata" media type parameter implies minimal metadata.
-            return new JsonMinimalMetadataLevel();
+            return new JsonMinimalMetadataLevel(container);
         }
-
+            
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
         internal abstract JsonLightTypeNameOracle GetTypeNameOracle();
+
+        /// <summary>
+        /// Service provider container for dependency injection.
+        /// </summary>
+        internal IServiceProvider container { get; set; }
 
         /// <summary>
         /// Creates the metadata builder for the given resource. If such a builder is set, asking for payload

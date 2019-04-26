@@ -39,12 +39,13 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="metadataDocumentUri">The metadata document uri from the writer settings.</param>
         /// <param name="model">The Edm model.</param>
-        internal JsonFullMetadataLevel(Uri metadataDocumentUri, IEdmModel model)
+        internal JsonFullMetadataLevel(Uri metadataDocumentUri, IEdmModel model, IServiceProvider container)
         {
             Debug.Assert(model != null, "model != null");
 
             this.metadataDocumentUri = metadataDocumentUri;
             this.model = model;
+            this.container = container;
         }
 
         /// <summary>
@@ -111,15 +112,18 @@ namespace Microsoft.OData.JsonLight
 
             IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualResourceType, metadataContext, selectedProperties);
 
+            IODataMetadataBuilderFactory metadataBuilderFactory = container.GetService<IODataMetadataBuilderFactory>();
+
             // Create ODataConventionalEntityMetadataBuilder if actualResourceType is entity type or typeContext.NavigationSourceKind is not none (complex type would be none) for no model scenario.
             if (actualResourceType != null && actualResourceType.TypeKind == EdmTypeKind.Entity ||
                 actualResourceType == null && typeContext.NavigationSourceKind != EdmNavigationSourceKind.None)
             {
-                return new ODataConventionalEntityMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
+                
+                return metadataBuilderFactory.CreateEntityMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
             }
             else
             {
-                return new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
+                return metadataBuilderFactory.CreateResourceMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
             }
         }
 

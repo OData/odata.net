@@ -835,12 +835,13 @@ namespace Microsoft.OData
 
             if (this.scopeStack.Count > 0)
             {
-                // pop current scope and push into scope stack
+                // pop current scope and push into scope stack - How does this make sense?
                 scopeStack.Push(this.scopeStack.Pop());
             }
 
             while (this.scopeStack.Count > 0)
             {
+                //Shouldn't this be peek? 
                 Scope scope = this.scopeStack.Pop();
                 scopeStack.Push(scope);
 

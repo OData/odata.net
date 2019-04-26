@@ -8,6 +8,7 @@ namespace Microsoft.OData.JsonLight
 {
     using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
+    using System;
 
     /// <summary>
     /// Class responsible for logic specific to the JSON Light minimal metadata level (indicated by "odata.metadata=minimal" in the media type, or lack of an "odata" parameter in a v3 and above request).
@@ -18,6 +19,15 @@ namespace Microsoft.OData.JsonLight
     /// </remarks>
     internal sealed class JsonMinimalMetadataLevel : JsonLightMetadataLevel
     {
+        /// <summary>
+        /// Constructs a new <see cref="JsonMinimalMetadataLevel"/>.
+        /// </summary>
+        /// <param name="container">Service provider container</param>
+        internal JsonMinimalMetadataLevel(IServiceProvider container)
+        {
+            this.container = container;
+        }
+
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>

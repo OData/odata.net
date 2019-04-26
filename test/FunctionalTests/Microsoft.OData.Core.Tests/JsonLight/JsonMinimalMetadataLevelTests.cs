@@ -14,7 +14,7 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonMinimalMetadataLevelTests
     {
-        private readonly JsonMinimalMetadataLevel testSubject = new JsonMinimalMetadataLevel();
+        private readonly JsonMinimalMetadataLevel testSubject = new JsonMinimalMetadataLevel(null);
 
         [Fact]
         public void MinimalMetadataLevelShouldReturnMinimalMetadataTypeOracleWhenKnobIsSet()
