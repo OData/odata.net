@@ -705,8 +705,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
             var container = ContainerBuilderHelper.BuildContainer(null);
-            container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingODataAnnotationWithoutPrefix =
-                enableWritingODataAnnotationWithoutPrefix;
+            container.GetRequiredService<ODataSimplifiedOptions>().SetOmitODataPrefix(
+                enableWritingODataAnnotationWithoutPrefix);
 
             MemoryStream stream = new MemoryStream();
             if (request)

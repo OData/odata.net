@@ -152,6 +152,23 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Returns whether to read odata control information without the odata prefix.
+        /// True for OData 4.01 and greater. Settable for OData 4.0
+        /// </summary>
+        internal bool OptionalODataPrefix
+        {
+            get
+            {
+                if (this.MessageReaderSettings.Version == ODataVersion.V4)
+                {
+                    return this.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix;
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read resources for.</param>

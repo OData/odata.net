@@ -5495,9 +5495,16 @@ public sealed class Microsoft.OData.ODataSimplifiedOptions {
 	bool EnableReadingKeyAsSegment  { public get; public set; }
 	bool EnableReadingODataAnnotationWithoutPrefix  { public get; public set; }
 	bool EnableWritingKeyAsSegment  { public get; public set; }
+	[
+	ObsoleteAttribute(),
+	]
 	bool EnableWritingODataAnnotationWithoutPrefix  { public get; public set; }
 
 	public Microsoft.OData.ODataSimplifiedOptions Clone ()
+	public bool GetOmitODataPrefix ()
+	public bool GetOmitODataPrefix (Microsoft.OData.ODataVersion version)
+	public void SetOmitODataPrefix (bool enabled)
+	public void SetOmitODataPrefix (bool enabled, Microsoft.OData.ODataVersion version)
 }
 
 public sealed class Microsoft.OData.ODataSingletonInfo : Microsoft.OData.ODataServiceDocumentElement {

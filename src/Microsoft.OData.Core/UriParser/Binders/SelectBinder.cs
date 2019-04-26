@@ -28,6 +28,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
         /// <param name="resolver">Resolver for uri parser.</param>
+        /// <param name="state">Binding state for the SelectBinder.</param>
         public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, BindingState state)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "tokenIn");

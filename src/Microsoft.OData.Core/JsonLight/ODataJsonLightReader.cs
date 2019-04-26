@@ -911,7 +911,7 @@ namespace Microsoft.OData.JsonLight
                 ? null
                 : this.jsonLightResourceDeserializer.ContextUriParseResult.SelectQueryOption;
 
-            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, (this.CurrentResourceTypeReference !=null) ? this.CurrentResourceTypeReference.AsStructured().StructuredDefinition() : null, this.jsonLightInputContext.Model);
+            SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, (this.CurrentResourceTypeReference != null) ? this.CurrentResourceTypeReference.AsStructured().StructuredDefinition() : null, this.jsonLightInputContext.Model);
 
             if (this.ReadingResourceSet)
             {
@@ -2633,7 +2633,7 @@ namespace Microsoft.OData.JsonLight
             /// </summary>
             /// <param name="primitiveValue">The item attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
-            /// <param name="expectedType">The expected type for the scope.</param>
+            /// <param name="expectedTypeReference">The expected type reference for the scope.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             internal JsonLightPrimitiveScope(
                 ODataValue primitiveValue,
@@ -2660,7 +2660,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="readerState">The reader state of the new scope that is being created.</param>
             /// <param name="resource">The item attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
-            /// <param name="expectedResourceType">The expected type for the scope.</param>
+            /// <param name="expectedResourceTypeReference">The expected type reference for the scope.</param>
             /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for this resource scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>

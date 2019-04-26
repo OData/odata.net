@@ -2523,7 +2523,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             MemoryStream outputStream = new MemoryStream();
             var container = ContainerBuilderHelper.BuildContainer(null);
-            container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingODataAnnotationWithoutPrefix = enableWritingODataAnnotationWithoutPrefix;
+            container.GetRequiredService<ODataSimplifiedOptions>().SetOmitODataPrefix(enableWritingODataAnnotationWithoutPrefix);
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
 
             message.SetHeader("Content-Type", contentType);

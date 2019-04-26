@@ -43,6 +43,7 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         private LinkedList<ODataEntityReferenceLink> entityReferenceLinks;
 
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to report.</param>
@@ -56,7 +57,7 @@ namespace Microsoft.OData.JsonLight
 
             this.nestedResourceInfo = nestedResourceInfo;
 
-            //ToStructuredType method needs to be called to resolve element type from the collection which AsStructured does not do.
+            // ToStructuredType method needs to be called to resolve element type from the collection which AsStructured does not do.
             NestedResourceTypeReference = (nestedProperty != null) ? nestedProperty.Type.Definition.AsElementType().ToTypeReference(nestedProperty.Type.IsNullable) : null;
             this.hasValue = isExpanded;
         }

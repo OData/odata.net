@@ -149,7 +149,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The property set when entering entity set aggregation context
         /// </summary>
-
         internal bool InEntitySetAggregation { get; set; }
 
         /// <summary>

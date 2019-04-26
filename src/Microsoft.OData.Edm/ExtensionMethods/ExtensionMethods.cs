@@ -69,7 +69,7 @@ namespace Microsoft.OData.Edm
         /// Searches for a type with the given name in this model and all referenced models and returns null if no such type exists.
         /// </summary>
         /// <param name="model">The model to search.</param>
-        /// <param name="qualifiedName">The qualified name of the type being found.</param>
+        /// <param name="qualifiedName">The namespace or alias qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
         public static IEdmSchemaType FindType(this IEdmModel model, string qualifiedName)
         {
