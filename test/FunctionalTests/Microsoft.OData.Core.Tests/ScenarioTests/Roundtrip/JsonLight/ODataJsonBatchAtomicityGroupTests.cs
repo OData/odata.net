@@ -39,6 +39,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             this.userType.AddStructuralProperty("UserPrincipalName", EdmPrimitiveTypeKind.String);
             this.userType.AddStructuralProperty("Surname", EdmPrimitiveTypeKind.String);
             this.userType.AddStructuralProperty("GivenName", EdmPrimitiveTypeKind.String);
+            this.userType.AddStructuralProperty("BirthDate", EdmPrimitiveTypeKind.DateTimeOffset);
             this.edmModel.AddElement(this.userType);
 
             this.defaultContainer = new EdmEntityContainer("NS", "DefaultContainer");
@@ -548,6 +549,49 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             }
         }
 
+        // The .NET Library considers everything up to the first colon to be the scheme,
+        // even when it is in the query string of a relative URL, and throws an error if the scheme is over 1K characters.
+        // So, we escape any colons in the url.
+        [Fact]
+        public void JsonBatchEncodeColonInQueryString()
+        {
+            string requestUrl = @"test/Users?$filter=" +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "BirthDate eq 2020-02-01T12:00:00Z";
+            string batchRequest = @"
+                        {
+                          ""requests"": [
+                            {
+                              ""id"": ""r1"",
+                              ""method"": ""GET"",
+                              ""url"": ""{requestUrl}"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
+                                ""OData-Version"": ""4.0""
+                              }
+                            }
+                          ]
+                        }";
+
+            ODataJsonBatchPayloadTestCase testCase = new ODataJsonBatchPayloadTestCase
+            {
+                Description = "Batch request of Json body and headers in different order.",
+                RequestPayload = batchRequest.Replace("{requestUrl}", requestUrl),
+                RequestMessageDependsOnIdVerifier = null,
+                ContentTypeVerifier =
+                    (message, offset) => { Assert.Equal(new Uri("http://odata.org/" + requestUrl.Replace(":", "%3A")).OriginalString, message.Url.OriginalString); }
+            };
+
+            ServiceProcessBatchRequest(testCase, ODataVersion.V4);
+        }
+
         private void ServiceProcessBatchRequest(ODataJsonBatchPayloadTestCase testCase, ODataVersion version)
         {
             string requestPayload = testCase.RequestPayload;
@@ -557,7 +601,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             requestMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
 
             using (ODataMessageReader messageReader =
-                new ODataMessageReader(requestMessage, new ODataMessageReaderSettings() { MaxProtocolVersion = version }, this.edmModel))
+                new ODataMessageReader(requestMessage, new ODataMessageReaderSettings() { MaxProtocolVersion = version, BaseUri = new Uri("http://odata.org") }, this.edmModel))
             {
                 ODataBatchReader batchReader = messageReader.CreateODataBatchReader();
 
