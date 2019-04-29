@@ -87,7 +87,6 @@ EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter=Th
 EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment=The attribute '{0}' has an invalid value. The path '{1}' has a type cast segment '{2}' that cannot be found in the model.
 EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid=The operation '{0}' has an entity set path and with an invalid return type. The return type is required to be an entity type or a collection of entity type.
 EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable=The operation '{0}' entity set path determined entity type '{1}' is not assignable to the return type '{2}'.
-EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType=The operation '{0}' entity set path was determined to be a collection but the return type is not a collection.
 EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType=The operation '{0}' entity set path was determined to be a reference property but the return type is a collection.
 EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined=An element with the name '{0}' is already defined.
 EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName=The member name '{0}' cannot be used in a type with the same name. Member names cannot be the same as their enclosing type.

@@ -1964,14 +1964,6 @@ namespace Microsoft.OData.Edm.Validation
                        navProp = navProps.LastOrDefault().Key;
                    }
 
-                   if (navProp != null && navProp.TargetMultiplicity() == EdmMultiplicity.Many)
-                   {
-                       if (returnCollectionType == null)
-                       {
-                           context.AddError(operation.Location(), EdmErrorCode.OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType, Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType(operation.Name));
-                       }
-                   }
-
                    if (navProp != null && navProp.TargetMultiplicity() != EdmMultiplicity.Many)
                    {
                        if (returnCollectionType != null)

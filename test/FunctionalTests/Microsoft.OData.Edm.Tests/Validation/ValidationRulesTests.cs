@@ -506,12 +506,10 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmFunction function = new EdmFunction("ns", "GetStuff", new EdmEntityTypeReference(testModelContainer.T2, false), true /*isBound*/, new EdmPathExpression("bindingEntity/ColNav"), false);
             function.AddParameter("bindingEntity", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(testModelContainer.T3, false))));
 
-            ValidateErrorInList(
-                ValidationRules.OperationReturnTypeEntityTypeMustBeValid, 
-                testModelContainer.Model, 
-                function,
-                EdmErrorCode.OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType,
-                Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType(function.Name));
+            ValidateNoError(
+                ValidationRules.OperationReturnTypeEntityTypeMustBeValid,
+                testModelContainer.Model,
+                function);
         }
 
         [Fact]
