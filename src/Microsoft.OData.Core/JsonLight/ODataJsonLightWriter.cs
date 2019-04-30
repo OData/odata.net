@@ -1003,6 +1003,17 @@ namespace Microsoft.OData.JsonLight
                     this.jsonWriter.EndArrayScope();
                 }
             }
+            else
+            {
+                JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
+
+                // If we wrote entity reference links for a collection navigation property but no
+                // resource set afterwards, we have to now close the array of links.
+                if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
+                {
+                    this.jsonWriter.EndArrayScope();
+                }
+            }
         }
 
         /// <summary>
@@ -1014,7 +1025,6 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(parentNestedResourceInfo != null, "parentNestedResourceInfo != null");
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
-            Debug.Assert(!this.jsonLightOutputContext.WritingResponse, "Entity reference links are only supported in request, we should have verified this already.");
 
             // In JSON Light, we can only write entity reference links at the beginning of a navigation link in requests;
             // once we wrote a resource set, entity reference links are not allowed anymore (we require all the entity reference
@@ -1027,8 +1037,17 @@ namespace Microsoft.OData.JsonLight
 
             if (!navigationLinkScope.EntityReferenceLinkWritten)
             {
-                // Write the property annotation for the entity reference link(s)
-                this.odataAnnotationWriter.WritePropertyAnnotationName(parentNestedResourceInfo.Name, ODataAnnotationNames.ODataBind);
+                if (!this.jsonLightOutputContext.WritingResponse &&
+                    (this.Version == null || this.Version < ODataVersion.V401))
+                {
+                    // Write the property annotation for the entity reference link(s)
+                    this.odataAnnotationWriter.WritePropertyAnnotationName(parentNestedResourceInfo.Name, ODataAnnotationNames.ODataBind);
+                }
+                else
+                {
+                    this.jsonWriter.WriteName(parentNestedResourceInfo.Name);
+                }
+
                 Debug.Assert(parentNestedResourceInfo.IsCollection.HasValue, "parentNestedResourceInfo.IsCollection.HasValue");
                 if (parentNestedResourceInfo.IsCollection.Value)
                 {
@@ -1038,8 +1057,35 @@ namespace Microsoft.OData.JsonLight
                 navigationLinkScope.EntityReferenceLinkWritten = true;
             }
 
-            Debug.Assert(entityReferenceLink.Url != null, "The entity reference link Url should have been validated by now.");
-            this.jsonWriter.WriteValue(this.jsonLightResourceSerializer.UriToString(entityReferenceLink.Url));
+            if (!this.jsonLightOutputContext.WritingResponse &&
+                (this.Version == null || this.Version < ODataVersion.V401))
+            {
+                Debug.Assert(entityReferenceLink.Url != null, "The entity reference link Url should have been validated by now.");
+                this.jsonWriter.WriteValue(this.jsonLightResourceSerializer.UriToString(entityReferenceLink.Url));
+            }
+            else
+            {
+                WriteEntityReferenceLinkImplementation(entityReferenceLink);
+            }
+        }
+
+        private void WriteEntityReferenceLinkImplementation(ODataEntityReferenceLink entityReferenceLink)
+        {
+            Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
+
+            WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
+
+            this.jsonWriter.StartObjectScope();
+
+            this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
+
+            Uri id = this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri.MakeRelativeUri(entityReferenceLink.Url);
+
+            this.jsonWriter.WriteValue(id == null ? null : this.jsonLightResourceSerializer.UriToString(id));
+
+            this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(entityReferenceLink.InstanceAnnotations);
+
+            this.jsonWriter.EndObjectScope();
         }
 
         /// <summary>
@@ -1378,7 +1424,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Writes the odata.id annotation for a delta deleted resource.
+        /// Writes the id property for a delta deleted resource.
         /// </summary>
         /// <param name="resource">The resource to write the id for.</param>
         private void WriteDeletedResourceId(ODataDeletedResource resource)
