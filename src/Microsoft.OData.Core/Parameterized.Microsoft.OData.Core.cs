@@ -340,15 +340,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An entity reference link was written into a response. The WriteEntityReferenceLink or WriteEntityReferenceLinkAsync methods can only be used when writing a request."
-        /// </summary>
-        internal static string ODataWriterCore_EntityReferenceLinkInResponse {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_EntityReferenceLinkInResponse);
-            }
-        }
-
-        /// <summary>
         /// A string like "A deferred link was written into a request. In requests, each nested resource info must have a resource set, resource, or entity reference link written into it."
         /// </summary>
         internal static string ODataWriterCore_DeferredLinkInRequest {
