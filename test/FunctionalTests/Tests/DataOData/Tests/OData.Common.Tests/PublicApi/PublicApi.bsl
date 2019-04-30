@@ -2970,6 +2970,16 @@ public sealed class Microsoft.OData.Edm.Csdl.SerializationExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static string SerializeAsJson (Microsoft.OData.Edm.IEdmModel model)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static string SerializeAsXml (Microsoft.OData.Edm.IEdmModel model)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static void SetEdmxVersion (Microsoft.OData.Edm.IEdmModel model, System.Version version)
 
 	[
@@ -4095,12 +4105,9 @@ public interface Microsoft.OData.Edm.Csdl.Json.IEdmJsonWriter {
 }
 
 public class Microsoft.OData.Edm.Csdl.Json.CsdlWriterSettings {
-	public static Microsoft.OData.Edm.Csdl.Json.CsdlWriterSettings Default = Microsoft.OData.Edm.Csdl.Json.CsdlWriterSettings
-
 	public CsdlWriterSettings ()
 
 	bool Indent  { public get; public set; }
-	string IndentPattern  { public get; public set; }
 	bool IsIeee754Compatible  { public get; public set; }
 	System.Func`2[[System.String],[System.String]] PropertyNameFunc  { public get; public set; }
 }

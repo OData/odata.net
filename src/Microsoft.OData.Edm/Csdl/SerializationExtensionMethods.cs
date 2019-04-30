@@ -6,7 +6,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -33,6 +37,62 @@ namespace Microsoft.OData.Edm.Csdl
     /// </summary>
     public static class SerializationExtensionMethods
     {
+        /// <summary>
+        /// Serialize <see cref="IEdmModel"/> to CSDL JSON.
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <returns>null if the model has problem or the CSDL JSON string.</returns>
+        public static string SerializeAsJson(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter sw = new StreamWriter(stream))
+                {
+                    IEnumerable<EdmError> errors;
+                    if (!CsdlWriter.TryWriteJson(model, sw, out errors))
+                    {
+                        // Maybe output each error details?
+                        return null;
+                    }
+
+                    stream.Position = 0;
+                    return new StreamReader(stream).ReadToEnd();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Serialize <see cref="IEdmModel"/> to CSDL XML.
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <returns>null if the model has problem or the CSDL XML string.</returns>
+        public static string SerializeAsXml(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            using (StringWriter sw = new StringWriter(CultureInfo.CurrentCulture))
+            {
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Encoding = Encoding.UTF8;
+
+                using (XmlWriter xw = XmlWriter.Create(sw, settings))
+                {
+                    IEnumerable<EdmError> errors;
+                    if (!CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors))
+                    {
+                        // Maybe output each error details?
+                        return null;
+                    }
+
+                    xw.Flush();
+                }
+
+                return sw.ToString();
+            }
+        }
+
         #region EdmxVersion
 
         /// <summary>

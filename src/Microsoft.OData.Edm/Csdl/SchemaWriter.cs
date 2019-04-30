@@ -20,21 +20,42 @@ namespace Microsoft.OData.Edm.Csdl
     /// </summary>
     public static class SchemaWriter
     {
+        /// <summary>
+        /// Outputs a Schema artifact to the provided <see cref="TextWriter"/>.
+        /// </summary>
+        /// <param name="model">Model to be written.</param>
+        /// <param name="writer">TextWriter the generated Schema will be written to.</param>
+        /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful.</param>
+        /// <returns>A value indicating whether serialization was successful.</returns>
         public static bool TryWriteJson(this IEdmModel model, TextWriter writer, out IEnumerable<EdmError> errors)
         {
-            return model.TryWriteJson(x => writer, CsdlWriterSettings.Default, out errors);
+            return model.TryWriteJson(writer, CsdlWriterSettings.Default, out errors);
         }
 
+        /// <summary>
+        /// Outputs a Schema artifact to the provided <see cref="TextWriter"/> with settings.
+        /// </summary>
+        /// <param name="model">Model to be written.</param>
+        /// <param name="writer">TextWriter the generated Schema will be written to.</param>
+        /// <param name="settings">The setting used in writing.</param>
+        /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful.</param>
+        /// <returns>A value indicating whether serialization was successful.</returns>
         public static bool TryWriteJson(this IEdmModel model, TextWriter writer, CsdlWriterSettings settings, out IEnumerable<EdmError> errors)
         {
-            return model.TryWriteJson(x => writer, settings, out errors);
+            return TryWriteSchema(model, x => writer, settings, true, out errors);
         }
 
+        /// <summary>
+        /// Outputs a Schema artifact to the provided <see cref="TextWriter"/> with settings.
+        /// </summary>
+        /// <param name="model">Model to be written.</param>
+        /// <param name="writerProvider">A delegate that takes in a Schema namespace name and returns an XmlWriter to write the Schema to.</param>
+        /// <param name="settings">The setting used in writing.</param>
+        /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
+        /// <returns>A value indicating whether serialization was successful.</returns>
         public static bool TryWriteJson(this IEdmModel model, Func<string, TextWriter> writerProvider, CsdlWriterSettings settings, out IEnumerable<EdmError> errors)
         {
-            errors = Enumerable.Empty<EdmError>();
-            return true;
-            //return TryWriteSchema(model, writerProvider,  out errors);
+            return TryWriteSchema(model, writerProvider, settings, false, out errors);
         }
 
         /// <summary>
@@ -61,24 +82,8 @@ namespace Microsoft.OData.Edm.Csdl
             return TryWriteSchema(model, writerProvider, false, out errors);
         }
 
-        internal static bool TryWriteSchema(IEdmModel model, Func<string, XmlWriter> writerProvider, bool singleFileExpected, out IEnumerable<EdmError> errors)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(writerProvider, "writerProvider");
-
-            IEnumerable<EdmSchema> schemas;
-            if (!Verify(model, singleFileExpected, out schemas, out errors))
-            {
-                return false;
-            }
-
-            WriteSchemas(model, schemas, writerProvider);
-
-            errors = Enumerable.Empty<EdmError>();
-            return true;
-        }
-
-        internal static bool TryWriteSchema(IEdmModel model, Func<string, TextWriter> writerProvider, CsdlWriterSettings settings, bool singleFileExpected, out IEnumerable<EdmError> errors)
+        internal static bool TryWriteSchema(IEdmModel model, Func<string, TextWriter> writerProvider,
+            CsdlWriterSettings settings, bool singleFileExpected, out IEnumerable<EdmError> errors)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writerProvider, "writerProvider");
@@ -110,6 +115,23 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
+        internal static bool TryWriteSchema(IEdmModel model, Func<string, XmlWriter> writerProvider, bool singleFileExpected, out IEnumerable<EdmError> errors)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(writerProvider, "writerProvider");
+
+            IEnumerable<EdmSchema> schemas;
+            if (!Verify(model, singleFileExpected, out schemas, out errors))
+            {
+                return false;
+            }
+
+            WriteSchemas(model, schemas, writerProvider);
+
+            errors = Enumerable.Empty<EdmError>();
+            return true;
+        }
+
         internal static void WriteSchemas(IEdmModel model, IEnumerable<EdmSchema> schemas, Func<string, TextWriter> writerProvider, CsdlWriterSettings settings)
         {
             EdmModelCsdlSerializationVisitor visitor;
@@ -121,7 +143,10 @@ namespace Microsoft.OData.Edm.Csdl
                 {
                     IEdmJsonWriter jsonWriter = new EdmJsonWriter(writer, settings);
                     visitor = new EdmModelCsdlSerializationVisitor(model, jsonWriter, edmVersion);
+
+                    jsonWriter.StartObjectScope();
                     visitor.VisitEdmSchema(schema, model.GetNamespacePrefixMappings());
+                    jsonWriter.EndObjectScope();
                 }
             }
         }

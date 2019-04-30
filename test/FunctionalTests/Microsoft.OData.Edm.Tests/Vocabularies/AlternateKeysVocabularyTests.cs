@@ -62,6 +62,57 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.False(errors.Any(), "No Errors");
             Assert.True(expectedText == output, "expectedText = output");
         }
+
+        [Fact]
+        public void TestAlternateKeysVocabularyModel_Json()
+        {
+            const string expectedText = @"{
+  ""OData.Community.Keys.V1"": {
+    ""$Alias"": ""Keys"",
+    ""AlternateKey"": {
+      ""$Kind"": ""ComplexType"",
+      ""Key"": {
+        ""$Collection"": true,
+        ""$Type"": ""Keys.PropertyRef"",
+        ""$Nullable"": true,
+        ""@Core.Description"": ""The set of properties that make up this key""
+      }
+    },
+    ""PropertyRef"": {
+      ""$Kind"": ""ComplexType"",
+      ""Name"": {
+        ""$Type"": ""Edm.PropertyPath"",
+        ""$Nullable"": true,
+        ""@Core.Description"": ""A path expression resolving to a primitive property of the entity type itself or to a primitive property of a complex property (recursively) of the entity type. The names of the properties in the path are joined together by forward slashes.""
+      },
+      ""Alias"": {
+        ""$Nullable"": true,
+        ""@Core.Description"": ""A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs""
+      }
+    },
+    ""AlternateKeys"": {
+      ""$Kind"": ""Term"",
+      ""$Collection"": true,
+      ""$Type"": ""Keys.AlternateKey"",
+      ""$AppliesTo"": [
+        ""EntityType""
+      ],
+      ""$Nullable"": true,
+      ""@Core.Description"": ""Communicates available alternate keys""
+    }
+  }
+}";
+
+            IEnumerable<EdmError> errors;
+            using (StringWriter sw = new StringWriter())
+            {
+                Assert.True(model.TryWriteJson(sw, out errors));
+                string output = sw.ToString();
+
+                Assert.False(errors.Any(), "No Errors");
+                Assert.True(expectedText == output, "expectedText = output");
+            }
+        }
     }
 }
 

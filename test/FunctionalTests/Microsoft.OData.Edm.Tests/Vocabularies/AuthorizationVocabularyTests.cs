@@ -157,6 +157,175 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         }
 
         [Fact]
+        public void TestAuthorizationVocabularyModel_Json()
+        {
+            const string expectedText = @"{
+  ""$Version"": ""4.0"",
+  ""$Reference"": {
+    ""https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""Org.OData.Core.V1"",
+          ""$Alias"": ""Core""
+        }
+      ]
+    }
+  },
+  ""Org.OData.Authorization.V1"": {
+    ""$Alias"": ""Auth"",
+    ""SecurityScheme"": {
+      ""$Kind"": ""ComplexType"",
+      ""Authorization"": {
+        ""@Org.OData.Core.V1.Description"": ""The name of a required authorization scheme""
+      },
+      ""RequiredScopes"": {
+        ""$Collection"": true,
+        ""@Org.OData.Core.V1.Description"": ""The names of scopes required from this authorization scheme""
+      }
+    },
+    ""Authorization"": {
+      ""$Kind"": ""ComplexType"",
+      ""$Abstract"": true,
+      ""Name"": {
+        ""@Org.OData.Core.V1.Description"": ""Name that can be used to reference the authorization scheme""
+      },
+      ""Description"": {
+        ""$Nullable"": true,
+        ""@Org.OData.Core.V1.Description"": ""Description of the authorization scheme""
+      },
+      ""@Org.OData.Core.V1.Description"": ""Base type for all Authorization types""
+    },
+    ""OpenIDConnect"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Auth.Authorization"",
+      ""IssuerUrl"": {
+        ""@Org.OData.Core.V1.Description"": ""Issuer location for the OpenID Provider. Configuration information can be obtained by appending `/.well-known/openid-configuration` to this Url."",
+        ""@Org.OData.Core.V1.IsURL"": true
+      }
+    },
+    ""Http"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Auth.Authorization"",
+      ""Scheme"": {
+        ""@Org.OData.Core.V1.Description"": ""HTTP Authorization scheme to be used in the Authorization header, as per RFC7235""
+      },
+      ""BearerFormat"": {
+        ""$Nullable"": true,
+        ""@Org.OData.Core.V1.Description"": ""Format of the bearer token""
+      }
+    },
+    ""OAuthAuthorization"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Auth.Authorization"",
+      ""$Abstract"": true,
+      ""Scopes"": {
+        ""$Collection"": true,
+        ""$Type"": ""Auth.AuthorizationScope"",
+        ""@Org.OData.Core.V1.Description"": ""Available scopes""
+      },
+      ""RefreshUrl"": {
+        ""$Nullable"": true,
+        ""@Org.OData.Core.V1.Description"": ""Refresh Url"",
+        ""@Org.OData.Core.V1.IsURL"": true
+      }
+    },
+    ""OAuth2ClientCredentials"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Auth.OAuthAuthorization"",
+      ""TokenUrl"": {
+        ""@Org.OData.Core.V1.Description"": ""Token Url"",
+        ""@Org.OData.Core.V1.IsURL"": true
+      }
+    },
+    ""OAuth2Implicit"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Auth.OAuthAuthorization"",
+      ""AuthorizationUrl"": {
+        ""@Org.OData.Core.V1.Description"": ""Authorization URL"",
+        ""@Org.OData.Core.V1.IsURL"": true
+      }
+    },
+    ""OAuth2Password"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Auth.OAuthAuthorization"",
+      ""TokenUrl"": {
+        ""@Org.OData.Core.V1.Description"": ""Token Url"",
+        ""@Org.OData.Core.V1.IsURL"": true
+      }
+    },
+    ""OAuth2AuthCode"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Auth.OAuthAuthorization"",
+      ""AuthorizationUrl"": {
+        ""@Org.OData.Core.V1.Description"": ""Authorization URL"",
+        ""@Org.OData.Core.V1.IsURL"": true
+      },
+      ""TokenUrl"": {
+        ""@Org.OData.Core.V1.Description"": ""Token Url"",
+        ""@Org.OData.Core.V1.IsURL"": true
+      }
+    },
+    ""AuthorizationScope"": {
+      ""$Kind"": ""ComplexType"",
+      ""Scope"": {
+        ""@Org.OData.Core.V1.Description"": ""Scope name""
+      },
+      ""Grant"": {
+        ""$Nullable"": true,
+        ""@Org.OData.Core.V1.Description"": ""Identity that has access to the scope or can grant access to the scope.""
+      },
+      ""Description"": {
+        ""@Org.OData.Core.V1.Description"": ""Description of the scope""
+      }
+    },
+    ""ApiKey"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Auth.Authorization"",
+      ""KeyName"": {
+        ""@Org.OData.Core.V1.Description"": ""The name of the header or query parameter""
+      },
+      ""Location"": {
+        ""$Type"": ""Auth.KeyLocation"",
+        ""@Org.OData.Core.V1.Description"": ""Whether the API Key is passed in the header or as a query option""
+      }
+    },
+    ""KeyLocation"": {
+      ""$Kind"": ""EnumType"",
+      ""Header"": 0,
+      ""Header@Org.OData.Core.V1.Description"": ""API Key is passed in the header"",
+      ""QueryOption"": 1,
+      ""QueryOption@Org.OData.Core.V1.Description"": ""API Key is passed as a query option"",
+      ""Cookie"": 2,
+      ""Cookie@Org.OData.Core.V1.Description"": ""API Key is passed as a cookie""
+    },
+    ""SecuritySchemes"": {
+      ""$Kind"": ""Term"",
+      ""$Collection"": true,
+      ""$Type"": ""Auth.SecurityScheme"",
+      ""$AppliesTo"": [
+        ""EntityContainer""
+      ],
+      ""@Org.OData.Core.V1.Description"": ""At least one of the specified security schemes are required to make a request against the service.""
+    },
+    ""Authorizations"": {
+      ""$Kind"": ""Term"",
+      ""$Collection"": true,
+      ""$Type"": ""Auth.Authorization"",
+      ""$AppliesTo"": [
+        ""EntityContainer""
+      ],
+      ""@Org.OData.Core.V1.Description"": ""Lists the methods supported by the service to authorize access""
+    }
+  }
+}";
+
+            string output = this._authorizationModel.SerializeAsJson();
+
+            Assert.NotNull(output);
+            Assert.Equal(expectedText, output);
+        }
+
+        [Fact]
         public void TestAuthorizationVocabularyDependsOnCoreVocabulary()
         {
             var referencedModels = this._authorizationModel.ReferencedModels;
