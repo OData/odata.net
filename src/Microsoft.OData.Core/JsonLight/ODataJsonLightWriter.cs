@@ -984,33 +984,22 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 
+            JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
+
+            // If we wrote entity reference links for a collection navigation property but no
+            // resource set afterwards, we have to now close the array of links.
+            if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
+            {
+                this.jsonWriter.EndArrayScope();
+            }
+
             if (!this.jsonLightOutputContext.WritingResponse)
             {
-                JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
-
-                // If we wrote entity reference links for a collection navigation property but no
-                // resource set afterwards, we have to now close the array of links.
-                if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
-                {
-                    this.jsonWriter.EndArrayScope();
-                }
-
                 // In requests, the nested resource info may have multiple entries in multiple resource sets in it; if we
                 // wrote at least one resource set, close the resulting array here.
                 if (navigationLinkScope.ResourceSetWritten)
                 {
                     Debug.Assert(nestedResourceInfo.IsCollection == null || nestedResourceInfo.IsCollection.Value, "nestedResourceInfo.IsCollection.Value");
-                    this.jsonWriter.EndArrayScope();
-                }
-            }
-            else
-            {
-                JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
-
-                // If we wrote entity reference links for a collection navigation property but no
-                // resource set afterwards, we have to now close the array of links.
-                if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
-                {
                     this.jsonWriter.EndArrayScope();
                 }
             }
