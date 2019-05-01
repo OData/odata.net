@@ -592,6 +592,49 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             ServiceProcessBatchRequest(testCase, ODataVersion.V4);
         }
 
+        // The .NET Library considers everything up to the first colon to be the scheme,
+        // even when it is in the query string of a relative URL, and throws an error if the scheme is over 1K characters.
+        // So, we escape any colons in the url.
+        [Fact]
+        public void JsonBatchDontEncodeColonInAbsoluteQueryString()
+        {
+            string requestUrl = @"http://test/Users?$filter=" +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR Name eq 'Smith' OR " +
+            "BirthDate eq 2020-02-01T12:00:00Z";
+            string batchRequest = @"
+                        {
+                          ""requests"": [
+                            {
+                              ""id"": ""r1"",
+                              ""method"": ""GET"",
+                              ""url"": ""{requestUrl}"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
+                                ""OData-Version"": ""4.0""
+                              }
+                            }
+                          ]
+                        }";
+
+            ODataJsonBatchPayloadTestCase testCase = new ODataJsonBatchPayloadTestCase
+            {
+                Description = "Batch request of Json body and headers in different order.",
+                RequestPayload = batchRequest.Replace("{requestUrl}", requestUrl),
+                RequestMessageDependsOnIdVerifier = null,
+                ContentTypeVerifier =
+                    (message, offset) => { Assert.Equal(requestUrl, message.Url.OriginalString); }
+            };
+
+            ServiceProcessBatchRequest(testCase, ODataVersion.V4);
+        }
+
         private void ServiceProcessBatchRequest(ODataJsonBatchPayloadTestCase testCase, ODataVersion version)
         {
             string requestPayload = testCase.RequestPayload;

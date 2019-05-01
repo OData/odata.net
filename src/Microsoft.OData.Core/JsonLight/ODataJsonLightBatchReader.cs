@@ -169,8 +169,9 @@ namespace Microsoft.OData.JsonLight
             ValidateRequiredProperty(url, ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameUrl);
 
             // escape any colons in the query string portion of the url
-            int queryOptionSeparator = url.IndexOf("?", StringComparison.OrdinalIgnoreCase);
-            if (queryOptionSeparator > 0)
+            int queryOptionSeparator = url.IndexOf('?');
+            int firstColon = url.IndexOf(':');
+            if (queryOptionSeparator > 0 && firstColon > 0 && queryOptionSeparator < firstColon)
             {
                 url = url.Substring(0, queryOptionSeparator) + url.Substring(queryOptionSeparator).Replace(":", "%3A");
             }
