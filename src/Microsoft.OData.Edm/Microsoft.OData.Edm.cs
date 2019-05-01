@@ -149,7 +149,6 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment = "EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment";
         internal const string EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid = "EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid";
         internal const string EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable = "EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable";
-        internal const string EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType = "EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType";
         internal const string EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType = "EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType";
         internal const string EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined = "EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined";
         internal const string EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName = "EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName";
