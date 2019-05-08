@@ -23,7 +23,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
     }
 
     /// <summary>
-    /// Class representing scope information.
+    /// Class representing JSON scope information.
     /// </summary>
     internal sealed class Scope
     {
@@ -37,18 +37,13 @@ namespace Microsoft.OData.Edm.Csdl.Json
         }
 
         /// <summary>
-        /// Gets/Sets the object count for this scope.
-        /// </summary>
-        public int ObjectCount { get; set; }
-
-        /// <summary>
         /// Gets the scope type for this scope.
         /// </summary>
         public ScopeType ScopeType { get; private set; }
 
         /// <summary>
-        /// Gets/Sets the value whether it is in previous array scope.
+        /// Gets/Sets the object count for this scope.
         /// </summary>
-        public bool IsInArray { get; set; } = false;
+        public int ObjectCount { get; set; }
     }
 }

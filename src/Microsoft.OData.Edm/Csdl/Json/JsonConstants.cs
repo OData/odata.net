@@ -79,13 +79,13 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <summary>
         /// Empty object
         /// </summary>
-        /// <remarks>To indicate empty object in YAML.</remarks>
+        /// <remarks>To indicate empty object in JSON.</remarks>
         internal const string EmptyObject = "{ }";
 
         /// <summary>
         /// Empty array
         /// </summary>
-        /// <remarks>To indicate empty array in YAML.</remarks>
+        /// <remarks>To indicate empty array in JSON.</remarks>
         internal const string EmptyArray = "[ ]";
     }
 }

@@ -2881,7 +2881,7 @@ public abstract class Microsoft.OData.Edm.Csdl.CsdlWriter {
 
 	public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.IO.TextWriter writer, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
-	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.IO.TextWriter writer, Microsoft.OData.Edm.Csdl.Json.CsdlWriterSettings settings, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.IO.TextWriter writer, Microsoft.OData.Edm.Csdl.Json.CsdlJsonWriterSettings settings, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	protected abstract void WriteCsdl ()
 }
 
@@ -2910,12 +2910,12 @@ public sealed class Microsoft.OData.Edm.Csdl.SchemaWriter {
 	[
 	ExtensionAttribute(),
 	]
-	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.Func`2[[System.String],[System.IO.TextWriter]] writerProvider, Microsoft.OData.Edm.Csdl.Json.CsdlWriterSettings settings, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.Func`2[[System.String],[System.IO.TextWriter]] writerProvider, Microsoft.OData.Edm.Csdl.Json.CsdlJsonWriterSettings settings, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.IO.TextWriter writer, Microsoft.OData.Edm.Csdl.Json.CsdlWriterSettings settings, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.IO.TextWriter writer, Microsoft.OData.Edm.Csdl.Json.CsdlJsonWriterSettings settings, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 
 	[
 	ExtensionAttribute(),
@@ -4091,7 +4091,6 @@ public interface Microsoft.OData.Edm.Csdl.Json.IEdmJsonWriter {
 	void EndArrayScope ()
 	void EndObjectScope ()
 	void Flush ()
-	bool IsArrayScope ()
 	void StartArrayScope ()
 	void StartObjectScope ()
 	void WriteNull ()
@@ -4104,12 +4103,11 @@ public interface Microsoft.OData.Edm.Csdl.Json.IEdmJsonWriter {
 	void WriteValue (string value)
 }
 
-public class Microsoft.OData.Edm.Csdl.Json.CsdlWriterSettings {
-	public CsdlWriterSettings ()
+public class Microsoft.OData.Edm.Csdl.Json.CsdlJsonWriterSettings {
+	public CsdlJsonWriterSettings ()
 
 	bool Indent  { public get; public set; }
 	bool IsIeee754Compatible  { public get; public set; }
-	System.Func`2[[System.String],[System.String]] PropertyNameFunc  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants {

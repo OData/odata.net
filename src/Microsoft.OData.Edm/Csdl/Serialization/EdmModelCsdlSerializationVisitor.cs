@@ -7,46 +7,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
-using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
     internal sealed class EdmModelCsdlSerializationVisitor : EdmModelVisitor
     {
-        private readonly Version edmVersion;
-  //      private readonly CsdlWriteSettings settings;
         private readonly EdmModelCsdlSchemaWriter schemaWriter;
         private readonly List<IEdmNavigationProperty> navigationProperties = new List<IEdmNavigationProperty>();
         private readonly VersioningDictionary<string, string> namespaceAliasMappings;
-        private bool isXml;
 
-        internal EdmModelCsdlSerializationVisitor(IEdmModel model, XmlWriter xmlWriter, Version edmVersion)
+        internal EdmModelCsdlSerializationVisitor(IEdmModel model, EdmModelCsdlSchemaWriter edmWriter, Version edmVersion)
             : base(model)
         {
-            this.edmVersion = edmVersion;
-            this.schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, this.edmVersion);
-            this.namespaceAliasMappings = this.schemaWriter.NamespaceAliasMappings;
-            this.isXml = true;
-        }
-
-        internal EdmModelCsdlSerializationVisitor(IEdmModel model, IEdmJsonWriter jsonWriter, Version edmVersion)
-            : base(model)
-        {
-            this.edmVersion = edmVersion;
-            this.schemaWriter = new EdmModelCsdlSchemaJsonWriter(model, jsonWriter, this.edmVersion);
-            this.namespaceAliasMappings = this.schemaWriter.NamespaceAliasMappings;
-            this.isXml = false;
-        }
-
-        internal EdmModelCsdlSerializationVisitor(IEdmModel model, EdmModelCsdlSchemaWriter edmWriter, CsdlWriterSettings settings, Version edmVersion)
-            : base(model)
-        {
-            this.edmVersion = edmVersion;
             this.schemaWriter = edmWriter;
             this.namespaceAliasMappings = this.schemaWriter.NamespaceAliasMappings;
-         //   this.settings = settings;
         }
 
         public override void VisitEntityContainerElements(IEnumerable<IEdmEntityContainerElement> elements)
@@ -467,7 +442,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             bool inlineType = IsInlineType(expression.Type);
 
-            if (this.isXml)
+            bool isXml = this.schemaWriter is EdmModelCsdlSchemaXmlWriter;
+            if (isXml)
             {
                 this.BeginElement(expression, (IEdmIsTypeExpression t) => { this.schemaWriter.WriteIsTypeExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
                 if (!inlineType)
@@ -561,7 +537,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             bool inlineType = IsInlineType(expression.Type);
 
-            if (this.isXml)
+            bool isXml = this.schemaWriter is EdmModelCsdlSchemaXmlWriter;
+            if (isXml)
             {
                 this.BeginElement(expression, (IEdmCastExpression t) => { this.schemaWriter.WriteCastExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
                 if (!inlineType)

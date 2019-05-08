@@ -11,8 +11,6 @@ namespace Microsoft.OData.Edm.Csdl.Json
     /// </summary>
     public interface IEdmJsonWriter
     {
-        bool IsArrayScope();
-
         /// <summary>
         /// Start the object scope.
         /// </summary>
@@ -36,7 +34,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <summary>
         /// Write a property name to the current json object.
         /// </summary>
-        /// <param name="name">The name to add.</param>
+        /// <param name="name">The name to write.</param>
         void WritePropertyName(string name);
 
         /// <summary>
@@ -45,39 +43,39 @@ namespace Microsoft.OData.Edm.Csdl.Json
         void WriteNull();
 
         /// <summary>
-        /// Add a long value to the current json scope.
+        /// Write a long value to the current json scope.
         /// </summary>
-        /// <param name="value">The value to add.</param>
+        /// <param name="value">The value to write.</param>
         void WriteValue(long value);
 
         /// <summary>
-        /// Add a value to the current json scope.
+        /// Write a double value to the current json scope.
         /// </summary>
-        /// <param name="value">The value to add.</param>
+        /// <param name="value">The value to write.</param>
         void WriteValue(double value);
 
         /// <summary>
-        /// Add a value to the current json scope.
+        /// Write a decimal value to the current json scope.
         /// </summary>
-        /// <param name="value">The value to add.</param>
+        /// <param name="value">The value to write.</param>
         void WriteValue(decimal value);
 
         /// <summary>
-        /// Add a value to the current json scope.
+        /// Write a string value to the current json scope.
         /// </summary>
-        /// <param name="value">The value to add.</param>
+        /// <param name="value">The value to write.</param>
         void WriteValue(string value);
 
         /// <summary>
-        /// Add a value to the current json scope.
+        /// Write an integer value to the current json scope.
         /// </summary>
-        /// <param name="value">The value to add.</param>
+        /// <param name="value">The value to write.</param>
         void WriteValue(int value);
 
         /// <summary>
-        /// Add a value to the current json scope.
+        /// Write a boolean value to the current json scope.
         /// </summary>
-        /// <param name="value">The value to add.</param>
+        /// <param name="value">The value to write.</param>
         void WriteValue(bool value);
 
         /// <summary>

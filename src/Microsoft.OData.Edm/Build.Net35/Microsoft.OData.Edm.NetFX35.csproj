@@ -617,8 +617,8 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\EdmJsonWriter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Json\EdmJsonWriter.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\CsdlWriterSettings.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Json\CsdlWriterSettings.cs</Link>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\CsdlJsonWriterSettings.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\CsdlJsonWriterSettings.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\EdmJsonWriterExtensions.cs">
       <Link>Microsoft\OData\Edm\Csdl\Json\EdmJsonWriterExtensions.cs</Link>

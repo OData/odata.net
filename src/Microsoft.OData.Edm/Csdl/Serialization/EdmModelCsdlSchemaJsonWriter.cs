@@ -108,7 +108,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Abstract, entityType.IsAbstract, CsdlConstants.Default_Abstract);
 
             // It MAY contain the members $OpenType, The value of $OpenType is one of the Boolean literals true or false. Absence of the member means false.
-            // bool isOpen = IsOpenType(entityType); ?
             this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_OpenType, entityType.IsOpen, CsdlConstants.Default_OpenType);
 
             // It MAY contain the members $HasStream, The value of $HasStream is one of the Boolean literals true or false. Absence of the member means false
@@ -138,7 +137,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Abstract, complexType.IsAbstract, CsdlConstants.Default_Abstract);
 
             // It MAY contain the members $OpenType, The value of $OpenType is one of the Boolean literals true or false. Absence of the member means false.
-            // bool isOpen = IsOpenType(complexType);
             this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_OpenType, complexType.IsOpen, CsdlConstants.Default_OpenType);
         }
 
@@ -1327,25 +1325,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 return sb.ToString();
             }
 
-            return "";
+            return null;
         }
-
-#if false
-        // An entity/complex type derived from an open entity/complex type MUST indicate that it is also open.
-        private static bool IsOpenType(IEdmStructuredType structuredType)
-        {
-            while (structuredType != null)
-            {
-                if (structuredType.IsOpen)
-                {
-                    return true;
-                }
-
-                structuredType = structuredType.BaseType();
-            }
-
-            return false;
-        }
-#endif
     }
 }

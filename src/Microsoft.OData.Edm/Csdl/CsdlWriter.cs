@@ -32,6 +32,9 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="edmxVersion">The Edmx version.</param>
         protected CsdlWriter(IEdmModel model, Version edmxVersion)
         {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(edmxVersion, "edmxVersion");
+
             this.model = model;
             this.schemas = new EdmModelSchemaSeparationSerializationVisitor(model).GetSchemas();
             this.edmxVersion = edmxVersion;
@@ -46,7 +49,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>A value indicating whether serialization was successful.</returns>
         public static bool TryWriteJson(IEdmModel model, TextWriter writer, out IEnumerable<EdmError> errors)
         {
-            return TryWriteJson(model, writer, CsdlWriterSettings.Default, out errors);
+            return TryWriteJson(model, writer, CsdlJsonWriterSettings.Default, out errors);
         }
 
         /// <summary>
@@ -57,7 +60,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="settings">The CSDL writer settings.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteJson(IEdmModel model, TextWriter writer, CsdlWriterSettings settings, out IEnumerable<EdmError> errors)
+        public static bool TryWriteJson(IEdmModel model, TextWriter writer, CsdlJsonWriterSettings settings, out IEnumerable<EdmError> errors)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writer, "writer");

@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 
 namespace Microsoft.OData.Edm.Csdl.Json
@@ -23,7 +24,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <summary>
         /// The text writer.
         /// </summary>
-        private readonly CsdlWriterSettings settings;
+        private readonly CsdlJsonWriterSettings settings;
 
         /// <summary>
         /// Number which specifies the level of indentation.
@@ -31,7 +32,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         private int indentLevel;
 
         /// <summary>
-        /// Scope of the Open API element - object, array, property.
+        /// Scope of the JSON element - object, array, property.
         /// </summary>
         private Stack<Scope> scopes;
 
@@ -39,22 +40,16 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// Initializes a new instance of the <see cref="EdmJsonWriter"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        public EdmJsonWriter(TextWriter textWriter)
-            : this(textWriter, new CsdlWriterSettings())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdmJsonWriter"/> class.
-        /// </summary>
-        /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">The Csdl settings.</param>
-        public EdmJsonWriter(TextWriter textWriter, CsdlWriterSettings settings)
+        public EdmJsonWriter(TextWriter textWriter, CsdlJsonWriterSettings settings)
         {
-            writer = textWriter;
+            EdmUtil.CheckArgumentNull(textWriter, "textWriter");
+            EdmUtil.CheckArgumentNull(settings, "settings");
+
+            this.writer = textWriter;
             this.settings = settings;
-            scopes = new Stack<Scope>();
-            indentLevel = 0;
+            this.scopes = new Stack<Scope>();
+            this.indentLevel = 0;
         }
 
         /// <summary>
@@ -62,15 +57,10 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// </summary>
         public virtual void StartObjectScope()
         {
-            var previousScope = CurrentScope();
-
-            var currentScope = StartScope(ScopeType.Object);
-
-            if (previousScope != null && previousScope.ScopeType == ScopeType.Array)
+            var currentScope = CurrentScope();
+            if (currentScope != null && currentScope.ScopeType == ScopeType.Array)
             {
-                currentScope.IsInArray = true;
-
-                if (previousScope.ObjectCount != 1)
+                if (currentScope.ObjectCount != 0)
                 {
                     this.writer.Write(JsonConstants.ArrayElementSeparator);
                 }
@@ -81,7 +71,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
 
             this.writer.Write(JsonConstants.StartObjectScope);
 
-            IncreaseIndentation();
+            StartScope(ScopeType.Object);
         }
 
         /// <summary>
@@ -110,15 +100,10 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// </summary>
         public virtual void StartArrayScope()
         {
-            var previousScope = CurrentScope();
-
-            var currentScope = StartScope(ScopeType.Array);
-
-            if (previousScope != null && previousScope.ScopeType == ScopeType.Array)
+            var currentScope = CurrentScope();
+            if (currentScope != null && currentScope.ScopeType == ScopeType.Array)
             {
-                currentScope.IsInArray = true;
-
-                if (previousScope.ObjectCount != 1)
+                if (currentScope.ObjectCount != 0)
                 {
                     this.writer.Write(JsonConstants.ArrayElementSeparator);
                 }
@@ -128,7 +113,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
             }
 
             this.writer.Write(JsonConstants.StartArrayScope);
-            IncreaseIndentation();
+            StartScope(ScopeType.Array);
         }
 
         /// <summary>
@@ -158,7 +143,9 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// </summary>
         public virtual void WritePropertyName(string name)
         {
-            VerifyCanWritePropertyName(name);
+            Debug.Assert(!string.IsNullOrEmpty(name), "The name must be specified.");
+            Debug.Assert(this.scopes.Count > 0, "There must be an active scope for name to be written.");
+            Debug.Assert(this.scopes.Peek().ScopeType == ScopeType.Object, "The active scope must be an object scope for name to be written.");
 
             var currentScope = CurrentScope();
             if (currentScope.ObjectCount != 0)
@@ -210,8 +197,15 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <param name="value">The value to add.</param>
         public virtual  void WriteValue(long value)
         {
-            WriteValueSeparator();
-            this.writer.Write(value);
+            if (this.settings.IsIeee754Compatible)
+            {
+                WriteValue(value.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                WriteValueSeparator();
+                this.writer.Write(value);
+            }
         }
 
         /// <summary>
@@ -219,8 +213,15 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// </summary>
         public virtual void WriteValue(decimal value)
         {
-            WriteValueSeparator();
-            this.writer.Write(value);
+            if (this.settings.IsIeee754Compatible)
+            {
+                WriteValue(value.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                WriteValueSeparator();
+                this.writer.Write(value);
+            }
         }
 
         /// <summary>
@@ -346,12 +347,13 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <param name="type">The scope type to start.</param>
         protected Scope StartScope(ScopeType type)
         {
-            if (scopes.Count != 0)
+            if (this.scopes.Count != 0)
             {
                 var currentScope = scopes.Peek();
-
                 currentScope.ObjectCount++;
             }
+
+            IncreaseIndentation();
 
             var scope = new Scope(type);
             scopes.Push(scope);
@@ -361,70 +363,14 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <summary>
         /// End the scope of the given scope type.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type">The scope type to end.</param>
+        /// <returns>The end scope.</returns>
         protected Scope EndScope(ScopeType type)
         {
-            if (scopes.Count == 0)
-            {
-                //throw new OpenApiWriterException(SRResource.ScopeMustBePresentToEnd);
-            }
-
-            if (scopes.Peek().ScopeType != type)
-            {/*
-                throw new OpenApiWriterException(
-                    string.Format(
-                        SRResource.ScopeToEndHasIncorrectType,
-                        type,
-                        Scopes.Peek().Type));*/
-            }
+            Debug.Assert(this.scopes.Count > 0, "No scope to end.");
+            Debug.Assert(scopes.Peek().ScopeType == type, "Ending scope does not match.");
 
             return scopes.Pop();
-        }
-
-        /// <summary>
-        /// Whether the current scope is an array scope.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsArrayScope()
-        {
-            return IsScopeType(ScopeType.Array);
-        }
-
-        private bool IsScopeType(ScopeType type)
-        {
-            if (scopes.Count == 0)
-            {
-                return false;
-            }
-
-            return scopes.Peek().ScopeType == type;
-        }
-
-        /// <summary>
-        /// Verifies whether a property name can be written based on whether
-        /// the property name is a valid string and whether the current scope is an object scope.
-        /// </summary>
-        /// <param name="name">property name</param>
-        protected void VerifyCanWritePropertyName(string name)
-        {
-            if (name == null || name.Length == 0)
-            {
-                //throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            if (this.scopes.Count == 0)
-            {
-                /*
-                throw new OpenApiWriterException(
-                    string.Format(SRResource.ActiveScopeNeededForPropertyNameWriting, name));*/
-            }
-
-            if (this.scopes.Peek().ScopeType != ScopeType.Object)
-            {/*
-                throw new OpenApiWriterException(
-                    string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));*/
-            }
         }
     }
 }

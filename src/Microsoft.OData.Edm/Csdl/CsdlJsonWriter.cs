@@ -19,27 +19,18 @@ namespace Microsoft.OData.Edm.Csdl
     internal class CsdlJsonWriter : CsdlWriter
     {
         private readonly IEdmJsonWriter jsonWriter;
-    //    private readonly EdmJsonWriteSettings settings;
 
         /// <summary>
         /// Initializes a new instance of <see cref="CsdlJsonWriter"/> class.
         /// </summary>
         /// <param name="model">The Edm model.</param>
-        /// <param name="writer">The Edm JSON writer.</param>
-        /// <param name="settings">The Edm JSON write settings.</param>
-        /// <param name="edmxVersion">The Edm version.</param>
-        public CsdlJsonWriter(IEdmModel model, IEdmJsonWriter writer, CsdlWriterSettings settings, Version edmxVersion)
-            : base(model, edmxVersion)
-        {
-            this.jsonWriter = writer;
-           // this.settings = settings;
-        }
-
-        public CsdlJsonWriter(IEdmModel model, TextWriter writer, CsdlWriterSettings settings, Version edmxVersion)
+        /// <param name="writer">The Text writer.</param>
+        /// <param name="settings">The CSDL JSON write settings.</param>
+        /// <param name="edmxVersion">The Edmx version.</param>
+        public CsdlJsonWriter(IEdmModel model, TextWriter writer, CsdlJsonWriterSettings settings, Version edmxVersion)
             : base(model, edmxVersion)
         {
             this.jsonWriter = new EdmJsonWriter(writer, settings);
-            // this.settings = settings;
         }
 
         /// <summary>
@@ -122,7 +113,8 @@ namespace Microsoft.OData.Edm.Csdl
             Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
             foreach (EdmSchema schema in this.schemas)
             {
-                visitor = new EdmModelCsdlSerializationVisitor(this.model, this.jsonWriter, edmVersion);
+                EdmModelCsdlSchemaWriter writer = new EdmModelCsdlSchemaJsonWriter(model, this.jsonWriter, edmVersion);
+                visitor = new EdmModelCsdlSerializationVisitor(this.model, writer, edmVersion);
                 visitor.VisitEdmSchema(schema, this.model.GetNamespacePrefixMappings());
             }
         }

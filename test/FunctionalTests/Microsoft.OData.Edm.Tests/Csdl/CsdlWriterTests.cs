@@ -106,6 +106,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void VerifyAnnotationComputedConcurrency()
         {
+            // Arrange
             var model = new EdmModel();
             var entity = new EdmEntityType("NS1", "Product");
             var entityId = entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
@@ -123,13 +124,82 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.SetOptimisticConcurrencyAnnotation(set1, new IEdmStructuralProperty[] { entityId, timeVer });
             entityContainer.AddElement(set1);
 
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(@"<?xml version=""1.0"" encoding=""utf-16""?><edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx""><edmx:DataServices><Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm""><EntityType Name=""Product""><Key><PropertyRef Name=""Id"" /></Key><Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false""><Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" /></Property><Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" /><Property Name=""UpdatedTime"" Type=""Edm.Date"" Nullable=""false""><Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" /></Property></EntityType><EntityContainer Name=""Container""><EntitySet Name=""Products"" EntityType=""NS1.Product""><Annotation Term=""Org.OData.Core.V1.OptimisticConcurrency""><Collection><PropertyPath>Id</PropertyPath><PropertyPath>UpdatedTime</PropertyPath></Collection></Annotation></EntitySet></EntityContainer></Schema></edmx:DataServices></edmx:Edmx>", csdlStr);
+            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS1\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"Product\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"Id\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\">" +
+                          "<Annotation Term=\"Org.OData.Core.V1.Computed\" Bool=\"true\" />" +
+                        "</Property>" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                        "<Property Name=\"UpdatedTime\" Type=\"Edm.Date\" Nullable=\"false\">" +
+                          "<Annotation Term=\"Org.OData.Core.V1.Computed\" Bool=\"true\" />" +
+                        "</Property>" +
+                      "</EntityType>" +
+                      "<EntityContainer Name=\"Container\">" +
+                        "<EntitySet Name=\"Products\" EntityType=\"NS1.Product\">" +
+                          "<Annotation Term=\"Org.OData.Core.V1.OptimisticConcurrency\">" +
+                            "<Collection>" +
+                              "<PropertyPath>Id</PropertyPath>" +
+                              "<PropertyPath>UpdatedTime</PropertyPath>" +
+                            "</Collection>" +
+                          "</Annotation>" +
+                        "</EntitySet>" +
+                      "</EntityContainer>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>", csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS1.Container"",
+  ""NS1"": {
+    ""Product"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32"",
+        ""@Org.OData.Core.V1.Computed"": true
+      },
+      ""Name"": { },
+      ""UpdatedTime"": {
+        ""$Type"": ""Edm.Date"",
+        ""@Org.OData.Core.V1.Computed"": true
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Products"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""NS1.Product"",
+        ""@Org.OData.Core.V1.OptimisticConcurrency"": [
+          {
+            ""$PropertyPath"": ""Id""
+          },
+          {
+            ""$PropertyPath"": ""UpdatedTime""
+          }
+        ]
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void WriteNavigationPropertyInComplexType()
         {
+            // Arrange
             var model = new EdmModel();
 
             var person = new EdmEntityType("DefaultNs", "Person");
@@ -189,8 +259,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.Validate(out actualErrors);
             Assert.Equal(actualErrors.Count(), 0);
 
+            // Act & Assert for XML
             string actual = GetCsdl(model, CsdlTarget.OData);
-
             string expected =
                 "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                 "<edmx:DataServices>" +
@@ -230,11 +300,90 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "</edmx:Edmx>";
 
             Assert.Equal(expected, actual);
+
+            // Act & Assert for JSON
+            actual = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""DefaultNs.Container"",
+  ""DefaultNs"": {
+    ""Person"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""UserName""
+      ],
+      ""UserName"": { },
+      ""HomeAddress"": {
+        ""$Type"": ""DefaultNs.Address""
+      },
+      ""WorkAddress"": {
+        ""$Type"": ""DefaultNs.Address""
+      },
+      ""Addresses"": {
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.Address""
+      }
+    },
+    ""City"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Name""
+      ],
+      ""Name"": { }
+    },
+    ""CountryOrRegion"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Name""
+      ],
+      ""Name"": { }
+    },
+    ""Address"": {
+      ""$Kind"": ""ComplexType"",
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""City"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""DefaultNs.City""
+      }
+    },
+    ""WorkAddress"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""DefaultNs.Address"",
+      ""CountryOrRegion"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""DefaultNs.CountryOrRegion""
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""People"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""DefaultNs.Person"",
+        ""$NavigationPropertyBinding"": {
+          ""Addresses/City"": ""City"",
+          ""HomeAddress/City"": ""City"",
+          ""WorkAddress/DefaultNs.WorkAddress/CountryOrRegion"": ""CountryOrRegion""
+        }
+      },
+      ""City"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""DefaultNs.City""
+      },
+      ""CountryOrRegion"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""DefaultNs.CountryOrRegion""
+      }
+    }
+  }
+}", actual);
         }
 
         [Fact]
         public void WriteCollectionOfNavigationOnComplex()
         {
+            // Arrange
             var model = new EdmModel();
 
             var entity = new EdmEntityType("DefaultNs", "EntityType");
@@ -270,8 +419,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             entityContainer.AddElement(entites);
             entityContainer.AddElement(navEntities);
 
+            // Act & Assert for XML
             string actual = GetCsdl(model, CsdlTarget.OData);
-
             string expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                               "<edmx:DataServices><Schema Namespace=\"DefaultNs\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                               "<EntityType Name=\"EntityType\">" +
@@ -298,11 +447,63 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                               "</edmx:Edmx>";
 
             Assert.Equal(expected, actual);
+
+            // Act & Assert for JSON
+            actual = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""DefaultNs.Container"",
+  ""DefaultNs"": {
+    ""EntityType"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": { },
+      ""Complex"": {
+        ""$Type"": ""DefaultNs.ComplexType""
+      }
+    },
+    ""NavEntityType"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": { }
+    },
+    ""ComplexType"": {
+      ""$Kind"": ""ComplexType"",
+      ""Prop1"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""CollectionOfNav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.NavEntityType""
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Entities"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""DefaultNs.EntityType"",
+        ""$NavigationPropertyBinding"": {
+          ""Complex/CollectionOfNav"": ""NavEntities""
+        }
+      },
+      ""NavEntities"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""DefaultNs.NavEntityType""
+      }
+    }
+  }
+}", actual);
         }
 
         [Fact]
         public void ContainedUnderComplexTest()
         {
+            // Arrange
             var model = new EdmModel();
 
             var entity = new EdmEntityType("NS", "EntityType");
@@ -348,8 +549,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             entityContainer.AddElement(entites1);
             entityContainer.AddElement(entites2);
 
-            string actual = GetCsdl(model, CsdlTarget.OData);
-
             var entitySet1 = model.EntityContainer.FindEntitySet("Entities1");
             var entitySet2 = model.EntityContainer.FindEntitySet("Entities2");
             var containedEntitySet = entitySet1.FindNavigationTarget(containedUnderComplex,
@@ -357,6 +556,92 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(containedEntitySet.Name, "ContainedUnderComplex");
             var entitySetUnderContained = containedEntitySet.FindNavigationTarget(navUnderContained);
             Assert.Equal(entitySetUnderContained, entitySet2);
+
+            // Act & Assert for XML
+            string actual = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices><Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"EntityType\">" +
+                      "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                      "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "<Property Name=\"Complex\" Type=\"NS.ComplexType\" Nullable=\"false\" />" +
+                    "</EntityType>" +
+                    "<EntityType Name=\"ContainedEntityType\">" +
+                      "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                      "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "<NavigationProperty Name=\"NavUnderContained\" Type=\"Collection(NS.EntityType)\" />" +
+                    "</EntityType>" +
+                    "<ComplexType Name=\"ComplexType\">" +
+                      "<Property Name=\"Prop1\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                      "<NavigationProperty Name=\"ContainedUnderComplex\" Type=\"Collection(NS.ContainedEntityType)\" ContainsTarget=\"true\" />" +
+                    "</ComplexType>" +
+                    "<EntityContainer Name=\"Container\">" +
+                      "<EntitySet Name=\"Entities1\" EntityType=\"NS.EntityType\">" +
+                        "<NavigationPropertyBinding Path=\"Complex/ContainedUnderComplex/NavUnderContained\" Target=\"Entities2\" />" +
+                      "</EntitySet>" +
+                      "<EntitySet Name=\"Entities2\" EntityType=\"NS.EntityType\" />" +
+                    "</EntityContainer>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>", actual);
+
+            // Act & Assert for JSON
+            actual = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Container"",
+  ""NS"": {
+    ""EntityType"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": { },
+      ""Complex"": {
+        ""$Type"": ""NS.ComplexType""
+      }
+    },
+    ""ContainedEntityType"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": { },
+      ""NavUnderContained"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityType""
+      }
+    },
+    ""ComplexType"": {
+      ""$Kind"": ""ComplexType"",
+      ""Prop1"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""ContainedUnderComplex"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.ContainedEntityType"",
+        ""$ContainsTarget"": true
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Entities1"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""NS.EntityType"",
+        ""$NavigationPropertyBinding"": {
+          ""Complex/ContainedUnderComplex/NavUnderContained"": ""Entities2""
+        }
+      },
+      ""Entities2"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""NS.EntityType""
+      }
+    }
+  }
+}", actual);
         }
 
         [Fact]
@@ -426,6 +711,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             });
             entityType1.SetNavigationPropertyPartner(
                 outerNav1B, new EdmPathExpression("OuterNavB"), outerNav2C, new EdmPathExpression("NS.EntityType3/OuterNavC"));
+
+            // Act & Assert for XML
             var str = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(
                 "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
@@ -459,11 +746,92 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                         "</edmx:DataServices>" +
                     "</edmx:Edmx>",
                 str);
+
+            // Act & Assert for JSON
+            str = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""EntityType1"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""ComplexProp"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.ComplexType1""
+      },
+      ""OuterNavA"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType2"",
+        ""$Partner"": ""OuterNavA""
+      },
+      ""OuterNavB"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityType2"",
+        ""$Partner"": ""NS.EntityType3/OuterNavC""
+      }
+    },
+    ""EntityType2"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""ComplexProp"": {
+        ""$Type"": ""NS.ComplexType2""
+      },
+      ""OuterNavA"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType1"",
+        ""$Partner"": ""OuterNavA""
+      },
+      ""OuterNavB"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType1"",
+        ""$Partner"": ""ComplexProp/InnerNav""
+      }
+    },
+    ""EntityType3"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.EntityType2"",
+      ""OuterNavC"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityType1"",
+        ""$Partner"": ""OuterNavB""
+      }
+    },
+    ""ComplexType1"": {
+      ""$Kind"": ""ComplexType"",
+      ""InnerNav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType2""
+      }
+    },
+    ""ComplexType2"": {
+      ""$Kind"": ""ComplexType"",
+      ""InnerNav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType1""
+      }
+    }
+  }
+}", str);
         }
 
         [Fact]
         public void SetNavigationPropertyPartnerTypeHierarchyTest()
         {
+            // Arrange
             var model = new EdmModel();
             var entityTypeA1 = new EdmEntityType("NS", "EntityTypeA1");
             var entityTypeA2 = new EdmEntityType("NS", "EntityTypeA2", entityTypeA1);
@@ -498,6 +866,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             });
             entityTypeA2.SetNavigationPropertyPartner(a1Nav, new EdmPathExpression("A1Nav"), bNav1, new EdmPathExpression("BNav1"));
             entityTypeA2.SetNavigationPropertyPartner(a3Nav, new EdmPathExpression("NS.EntityTypeA3/A3Nav"), bNav2, new EdmPathExpression("BNav2"));
+
+            // Act & Assert for XML
             var str = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(
                 "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
@@ -523,6 +893,62 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</edmx:DataServices>" +
                 "</edmx:Edmx>",
                 str);
+
+            // Act & Assert for JSON
+            str = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""EntityTypeA1"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""A1Nav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityTypeB"",
+        ""$Partner"": ""BNav1""
+      }
+    },
+    ""EntityTypeA2"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.EntityTypeA1""
+    },
+    ""EntityTypeA3"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.EntityTypeA2"",
+      ""A3Nav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityTypeB"",
+        ""$Partner"": ""BNav2""
+      }
+    },
+    ""EntityTypeB"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""BNav1"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityTypeA2"",
+        ""$Partner"": ""A1Nav""
+      },
+      ""BNav2"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityTypeA3"",
+        ""$Partner"": ""NS.EntityTypeA3/A3Nav""
+      }
+    }
+  }
+}", str);
         }
 
         public static void SetComputedAnnotation(EdmModel model, IEdmProperty target)
@@ -546,6 +972,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ShouldWriteInLineOptionalParameters()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -584,11 +1011,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(function);
             model.AddEntityContainer("test", "Default").AddFunctionImport("TestFunction", function);
 
-            // XML
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
 
-            // JSON
+            // Act & Assert for JSON
             csdlStr = GetJsonCsdl(model);
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
@@ -627,6 +1054,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ShouldWriteOutofLineOptionalParameters()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -681,13 +1109,49 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""TestFunction"": {
+      ""$Kind"": ""Function"",
+      ""$Parameter"": [
+        {
+          ""$Name"": ""requiredParam""
+        },
+        {
+          ""$Name"": ""optionalParam""
+        },
+        {
+          ""$Name"": ""optionalParamWithDefault""
+        }
+      ],
+      ""$ReturnType"": { }
+    },
+    ""$Annotations"": {
+      ""NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParam"": {
+        ""@Org.OData.Core.V1.OptionalParameter"": { }
+      },
+      ""NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParamWithDefault"": {
+        ""@Org.OData.Core.V1.OptionalParameter"": {
+          ""$Type"": ""Org.OData.Core.V1.OptionalParameterType"",
+          ""DefaultValue"": ""Smith""
+        }
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void ShouldWriteOutOfLineOptionalParametersOverwriteInLineOptionalParameter()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -726,8 +1190,34 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""TestFunction"": {
+      ""$Kind"": ""Function"",
+      ""$Parameter"": [
+        {
+          ""$Name"": ""optionalParamWithDefault""
+        }
+      ],
+      ""$ReturnType"": { }
+    },
+    ""$Annotations"": {
+      ""NS.TestFunction(Edm.String)/optionalParamWithDefault"": {
+        ""@Org.OData.Core.V1.OptionalParameter"": {
+          ""$Type"": ""Org.OData.Core.V1.OptionalParameterType"",
+          ""DefaultValue"": ""OutofLineValue""
+        }
+      }
+    }
+  }
+}", csdlStr);
         }
 
         #endregion
@@ -735,6 +1225,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ShouldWriteInLineReturnTypeAnnotation()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -754,12 +1245,31 @@ namespace Microsoft.OData.Edm.Tests.Csdl
               "</edmx:DataServices>" +
             "</edmx:Edmx>";
 
+            // Act & Assert for XML
             Assert.Equal(expected, WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.Inline));
+
+            // Act & Assert for JSON
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""TestFunction"": {
+      ""$Kind"": ""Function"",
+      ""$ReturnType"": {
+        ""$Type"": ""Edm.PrimitiveType"",
+        ""@Org.OData.Validation.V1.DerivedTypeConstraint"": [
+          ""Edm.Int32"",
+          ""Edm.Boolean""
+        ]
+      }
+    }
+  }
+}", WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.Inline, xml: false));
         }
 
         [Fact]
         public void ShouldWriteOutofLineReturnTypeAnnotation()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -780,10 +1290,28 @@ namespace Microsoft.OData.Edm.Tests.Csdl
               "</edmx:DataServices>" +
             "</edmx:Edmx>";
 
+            // Act & Assert for XML
             Assert.Equal(expected, WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.OutOfLine));
+
+            // Act & Assert for JSON
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""TestFunction"": {
+      ""$Kind"": ""Function"",
+      ""$ReturnType"": {
+        ""$Type"": ""Edm.PrimitiveType"",
+        ""@Org.OData.Validation.V1.DerivedTypeConstraint"": [
+          ""Edm.Int32"",
+          ""Edm.Boolean""
+        ]
+      }
+    }
+  }
+}", WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.Inline, xml: false));
         }
 
-        private string WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation location)
+        private string WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation location, bool xml = true)
         {
             var primitiveTypeRef = EdmCoreModel.Instance.GetPrimitiveType(false);
             var model = new EdmModel();
@@ -799,12 +1327,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, location);
             model.SetVocabularyAnnotation(annotation);
 
-            return GetCsdl(model, CsdlTarget.OData);
+            return xml ? GetCsdl(model, CsdlTarget.OData) : GetJsonCsdl(model);
         }
 
         [Fact]
         public void ShouldWriteEdmComplexTypeProperty()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -826,13 +1355,37 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
             customer.AddStructuralProperty("ComplexProperty", EdmCoreModel.Instance.GetComplexType(true));
             model.AddElement(customer);
+
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""ComplexProperty"": {
+        ""$Type"": ""Edm.ComplexType"",
+        ""$Nullable"": true
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void ShouldWriteEdmEntityTypeProperty()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -861,11 +1414,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             });
             model.AddElement(customer);
 
-            // XML
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
 
-            // JSON
+            // Act & Assert for JSON
             csdlStr = GetJsonCsdl(model);
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
@@ -890,6 +1443,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ShouldWriteEdmPathTypeProperty()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -912,11 +1466,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             EdmTerm term = new EdmTerm("NS", "MyTerm", new EdmComplexTypeReference(complexType, true));
             model.AddElement(term);
 
-            // XML
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
 
-            // JSON
+            // Act & Assert for JSON
             csdlStr = GetJsonCsdl(model);
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
@@ -945,6 +1499,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void CanWriteEdmSingletonWithEdmEntityTypeButValidationFailed()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -966,13 +1521,31 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.False(model.Validate(out errors));
             Assert.Equal(1, errors.Count());
 
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Default"",
+  ""NS"": {
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""VIP"": {
+        ""$Kind"": ""Singleton"",
+        ""$Type"": ""Edm.EntityType""
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWriteEdmEntitySetWithEdmEntityTypeButValidationFailed()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -994,13 +1567,31 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
 
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Default"",
+  ""NS"": {
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Customers"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""Edm.EntityType""
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWriteEdmEntityTypeWithEdmPrimitiveTypeKeyButValidationFailed()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1023,13 +1614,33 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
             Assert.Equal(1, errors.Count());
+
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.PrimitiveType""
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWriteEdmEntityTypeWithCollectionAbstractTypeButValidationFailed()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1058,13 +1669,43 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
+
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Primitive"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.PrimitiveType"",
+        ""$Nullable"": true
+      },
+      ""Complex"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.ComplexType"",
+        ""$Nullable"": true
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWriteEdmStructuredTypeWithAbstractBaseTypeButValidationFailed()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1084,13 +1725,32 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
+
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""Edm.EntityType""
+    },
+    ""Address"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Edm.ComplexType""
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWriteEdmTypeDefinitionWithEdmPrimitiveTypeButValidationFailed()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1107,13 +1767,28 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
             Assert.Equal(1, errors.Count());
+
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""MyType"": {
+      ""$Kind"": ""TypeDefinition"",
+      ""$UnderlyingType"": ""Edm.PrimitiveType""
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWriteEdmFunctioneWithCollectionAbstractTypeButValidationFailed()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1137,13 +1812,39 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
+
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""GetCustomer"": {
+      ""$Kind"": ""Function"",
+      ""$ReturnType"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.PrimitiveType"",
+        ""$Nullable"": true
+      }
+    },
+    ""GetSomething"": {
+      ""$Kind"": ""Function"",
+      ""$ReturnType"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.ComplexType""
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void ShouldWriteAnnotationForEnumMember()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1196,13 +1897,44 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
 
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Appliance"": {
+      ""$Kind"": ""EnumType"",
+      ""$UnderlyingType"": ""Edm.Int64"",
+      ""$IsFlags"": true,
+      ""Stove"": 1,
+      ""Stove@Org.OData.Core.V1.LongDescription"": ""Stove Inline LongDescription"",
+      ""Washer"": 2,
+      ""Washer@NS.MyTerm"": ""Washer Inline MyTerm Value""
+    },
+    ""MyTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Nullable"": true
+    },
+    ""$Annotations"": {
+      ""NS.Appliance/Stove"": {
+        ""Stove@NS.MyTerm"": ""Stove OutOfLine MyTerm Value""
+      },
+      ""NS.Appliance/Washer"": {
+        ""Washer@Org.OData.Core.V1.LongDescription"": ""Washer OutOfLine LongDescription""
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWritePropertyWithCoreTypeDefinitionAndValidationPassed()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1230,13 +1962,35 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(type);
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
+
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Complex"": {
+      ""$Kind"": ""ComplexType"",
+      ""ModifiedDate"": {
+        ""$Type"": ""Org.OData.Core.V1.LocalDateTime"",
+        ""$Nullable"": true
+      },
+      ""QualifiedName"": {
+        ""$Type"": ""Org.OData.Core.V1.QualifiedTypeName"",
+        ""$Nullable"": true
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWriteNavigationPropertyBindingWithTargetPathOnContainmentOnSingleton()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1326,13 +2080,86 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
+
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            csdlStr = GetJsonCsdl(model);
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Default"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""ContainedOrders"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.Order"",
+        ""$ContainsTarget"": true
+      },
+      ""ContainedOrderLines"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.OrderLine"",
+        ""$ContainsTarget"": true
+      }
+    },
+    ""Order"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""OrderLines"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.OrderLine""
+      }
+    },
+    ""OrderLine"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      }
+    },
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Me"": {
+        ""$Kind"": ""Singleton"",
+        ""$Type"": ""NS.Customer""
+      },
+      ""Customers"": {
+        ""$Kind"": ""EntitySet"",
+        ""$Type"": ""NS.Customer"",
+        ""$NavigationPropertyBinding"": {
+          ""ContainedOrders/OrderLines"": ""Me/ContainedOrderLines""
+        }
+      }
+    }
+  }
+}", csdlStr);
         }
 
         [Fact]
         public void CanWriteUrlEscapeFunction()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -1367,11 +2194,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
 
-            // XML
+            // Act & Assert for XML
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
 
-            // JSON
+            // Act & Assert for JSON
             string jsonStr = GetJsonCsdl(model);
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
@@ -1486,12 +2313,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             return edmx;
         }
 
-        private string GetJsonCsdl(IEdmModel model, bool indent = true)
+        private string GetJsonCsdl(IEdmModel model, bool indent = true, bool isIeee754Compatible = false)
         {
             string edmx = string.Empty;
 
-            CsdlWriterSettings settings = new CsdlWriterSettings();
+            CsdlJsonWriterSettings settings = CsdlJsonWriterSettings.Default;
             settings.Indent = indent;
+            settings.IsIeee754Compatible = isIeee754Compatible;
 
             using (MemoryStream stream = new MemoryStream())
             using (StreamWriter writer = new StreamWriter(stream))

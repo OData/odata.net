@@ -1846,7 +1846,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             Version edmxVersion = model.GetEdmxVersion();
             memStream = new MemoryStream();
             xmlWriter = XmlWriter.Create(memStream, new XmlWriterSettings(){ConformanceLevel = ConformanceLevel.Auto});
-            var visitor = new EdmModelCsdlSerializationVisitor(model, xmlWriter, edmxVersion);
+            var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
+            var visitor = new EdmModelCsdlSerializationVisitor(model, schemaWriter, edmxVersion);
 
             testAction(visitor);
             xmlWriter.Flush();
@@ -1865,10 +1866,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             Version edmxVersion = this.model.GetEdmxVersion();
             memStream = new MemoryStream();
             StreamWriter sw = new StreamWriter(memStream);
-            CsdlWriterSettings settings = new CsdlWriterSettings();
+            CsdlJsonWriterSettings settings = CsdlJsonWriterSettings.Default;
             settings.Indent = indent;
             IEdmJsonWriter jsonWriter = new EdmJsonWriter(sw, settings);
-            var visitor = new EdmModelCsdlSerializationVisitor(this.model, jsonWriter, edmxVersion);
+            var csdlSchemaWriter = new EdmModelCsdlSchemaJsonWriter(this.model, jsonWriter, edmxVersion);
+            var visitor = new EdmModelCsdlSerializationVisitor(this.model, csdlSchemaWriter, edmxVersion);
 
             // Use {} to wrapper the input.
             if (wrapper)

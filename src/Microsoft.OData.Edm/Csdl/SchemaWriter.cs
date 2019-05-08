@@ -29,7 +29,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>A value indicating whether serialization was successful.</returns>
         public static bool TryWriteJson(this IEdmModel model, TextWriter writer, out IEnumerable<EdmError> errors)
         {
-            return model.TryWriteJson(writer, CsdlWriterSettings.Default, out errors);
+            return model.TryWriteJson(writer, CsdlJsonWriterSettings.Default, out errors);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="settings">The setting used in writing.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful.</param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteJson(this IEdmModel model, TextWriter writer, CsdlWriterSettings settings, out IEnumerable<EdmError> errors)
+        public static bool TryWriteJson(this IEdmModel model, TextWriter writer, CsdlJsonWriterSettings settings, out IEnumerable<EdmError> errors)
         {
             return TryWriteSchema(model, x => writer, settings, true, out errors);
         }
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="settings">The setting used in writing.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteJson(this IEdmModel model, Func<string, TextWriter> writerProvider, CsdlWriterSettings settings, out IEnumerable<EdmError> errors)
+        public static bool TryWriteJson(this IEdmModel model, Func<string, TextWriter> writerProvider, CsdlJsonWriterSettings settings, out IEnumerable<EdmError> errors)
         {
             return TryWriteSchema(model, writerProvider, settings, false, out errors);
         }
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         internal static bool TryWriteSchema(IEdmModel model, Func<string, TextWriter> writerProvider,
-            CsdlWriterSettings settings, bool singleFileExpected, out IEnumerable<EdmError> errors)
+            CsdlJsonWriterSettings settings, bool singleFileExpected, out IEnumerable<EdmError> errors)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writerProvider, "writerProvider");
@@ -109,7 +109,8 @@ namespace Microsoft.OData.Edm.Csdl
                 XmlWriter writer = writerProvider(schema.Namespace);
                 if (writer != null)
                 {
-                    visitor = new EdmModelCsdlSerializationVisitor(model, writer, edmVersion);
+                    var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, writer, edmVersion);
+                    visitor = new EdmModelCsdlSerializationVisitor(model, schemaWriter, edmVersion);
                     visitor.VisitEdmSchema(schema, model.GetNamespacePrefixMappings());
                 }
             }
@@ -132,7 +133,7 @@ namespace Microsoft.OData.Edm.Csdl
             return true;
         }
 
-        internal static void WriteSchemas(IEdmModel model, IEnumerable<EdmSchema> schemas, Func<string, TextWriter> writerProvider, CsdlWriterSettings settings)
+        internal static void WriteSchemas(IEdmModel model, IEnumerable<EdmSchema> schemas, Func<string, TextWriter> writerProvider, CsdlJsonWriterSettings settings)
         {
             EdmModelCsdlSerializationVisitor visitor;
             Version edmVersion = model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
@@ -142,7 +143,8 @@ namespace Microsoft.OData.Edm.Csdl
                 if (writer != null)
                 {
                     IEdmJsonWriter jsonWriter = new EdmJsonWriter(writer, settings);
-                    visitor = new EdmModelCsdlSerializationVisitor(model, jsonWriter, edmVersion);
+                    EdmModelCsdlSchemaWriter csdlSchemaWriter = new EdmModelCsdlSchemaJsonWriter(model, jsonWriter, edmVersion);
+                    visitor = new EdmModelCsdlSerializationVisitor(model, csdlSchemaWriter, edmVersion);
 
                     jsonWriter.StartObjectScope();
                     visitor.VisitEdmSchema(schema, model.GetNamespacePrefixMappings());

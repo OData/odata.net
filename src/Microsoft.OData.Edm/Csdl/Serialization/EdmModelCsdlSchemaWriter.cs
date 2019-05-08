@@ -23,6 +23,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="edmVersion">The Edm version.</param>
         internal EdmModelCsdlSchemaWriter(IEdmModel model, Version edmVersion)
         {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(edmVersion, "edmVersion");
+
             EdmVersion = edmVersion;
             Model = model;
             NamespaceAliasMappings = model.GetNamespaceAliases();

@@ -30,6 +30,8 @@ namespace Microsoft.OData.Edm.Csdl
         public CsdlXmlWriter(IEdmModel model, XmlWriter writer, Version edmxVersion, CsdlTarget target)
             : base(model, edmxVersion)
         {
+            EdmUtil.CheckArgumentNull(writer, "writer");
+
             this.writer = writer;
             this.target = target;
 
@@ -110,7 +112,8 @@ namespace Microsoft.OData.Edm.Csdl
             Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
             foreach (EdmSchema schema in this.schemas)
             {
-                visitor = new EdmModelCsdlSerializationVisitor(this.model, this.writer, edmVersion);
+                var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, this.writer, edmVersion);
+                visitor = new EdmModelCsdlSerializationVisitor(this.model, schemaWriter, edmVersion);
                 visitor.VisitEdmSchema(schema, this.model.GetNamespacePrefixMappings());
             }
         }

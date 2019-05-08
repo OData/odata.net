@@ -58,8 +58,8 @@
     <Compile Include="..\Csdl\Json\EdmJsonWriter.cs">
       <Link>Csdl\Json\EdmJsonWriter.cs</Link>
     </Compile>
-    <Compile Include="..\Csdl\Json\CsdlWriterSettings.cs">
-      <Link>Csdl\Json\CsdlWriterSettings.cs</Link>
+    <Compile Include="..\Csdl\Json\CsdlJsonWriterSettings.cs">
+      <Link>Csdl\Json\CsdlJsonWriterSettings.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Json\EdmJsonWriterExtensions.cs">
       <Link>Csdl\Json\EdmJsonWriterExtensions.cs</Link>
