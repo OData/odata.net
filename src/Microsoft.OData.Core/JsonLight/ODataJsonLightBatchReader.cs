@@ -167,6 +167,15 @@ namespace Microsoft.OData.JsonLight
             string url = (string)this.messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameUrl);
             ValidateRequiredProperty(url, ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameUrl);
+
+            // escape any colons in the query string portion of the url
+            int queryOptionSeparator = url.IndexOf('?');
+            int firstColon = url.IndexOf(':');
+            if (queryOptionSeparator > 0 && firstColon > 0 && queryOptionSeparator < firstColon)
+            {
+                url = url.Substring(0, queryOptionSeparator) + url.Substring(queryOptionSeparator).Replace(":", "%3A");
+            }
+
             Uri requestUri = new Uri(url, UriKind.RelativeOrAbsolute);
 
             // Reset the request property cache since all data in cache has been processed.
