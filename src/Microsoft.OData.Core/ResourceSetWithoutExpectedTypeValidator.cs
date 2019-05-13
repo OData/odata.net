@@ -65,6 +65,12 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
             }
 
+            // Make sure the types are in the same inheritance tree
+            if (!(itemType.IsAssignableFrom(this.itemType) || this.itemType.IsAssignableFrom(itemType)))
+            {
+                throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
+            }
+
             this.itemType = (IEdmType)commonBaseType;
         }
     }
