@@ -752,6 +752,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                         "}]}]}");
         }
 
+        #region Entity Reference link
         [Fact]
         public void WritingNestedSingleEntityReferenceLinkInRequest_ODataV4_Works()
         {
@@ -878,7 +879,79 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 "}", payload);
         }
 
-        private string GetEntityReferenceLinksPayload(ODataVersion version, bool request, bool collection)
+        [Fact]
+        public void WritingNestedCollectionEntityReferenceLinksInResponseWithoutNestedResourceSet_Throws()
+        {
+            // Arrange
+            MemoryStream stream = new MemoryStream();
+            ODataWriter writer = GetODataWriterForEntityReferenceLink(ODataVersion.V401, request: false, stream: stream);
+
+            // Act
+            Action test = () =>
+            {
+                writer.WriteStart(new ODataResource { Properties = new[] { new ODataProperty { Name = "CustomerId", Value = 7 } } });
+                writer.WriteStart(new ODataNestedResourceInfo { Name = "BillOrder", IsCollection = false });
+                writer.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(2)") });
+                writer.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(3)") });
+                writer.WriteEnd();
+                writer.WriteEnd();
+            };
+
+            // Assert
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, exception.Message);
+        }
+
+        [Fact]
+        public void WritingNestedCollectionEntityReferenceLinksInResponseWithNextLinks_ODataV40_Works()
+        {
+            // Arrange & Act
+            Func<ODataResourceSet> func = () => new ODataResourceSet
+            {
+                NextPageLink = new Uri("http://nextLink")
+            };
+
+            MemoryStream stream = new MemoryStream();
+            string actual = GetEntityReferenceLinksPayload(ODataVersion.V4, request: false, collection: true, nestedResourceSetFunc: func);
+
+            // Assert
+            Assert.Equal("{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
+                    "\"CustomerId\":7," +
+                    "\"BillOrders@odata.nextLink\":\"http://nextlink/\"," +
+                    "\"BillOrders\":[" +
+                      "{\"@odata.id\":\"Orders(2)\"}," +
+                      "{\"@odata.id\":\"Orders(3)\"}," +
+                      "{\"@odata.id\":\"Orders(4)\"}" +
+                    "]" +
+                  "}", actual);
+        }
+
+        [Fact]
+        public void WritingNestedCollectionEntityReferenceLinksInResponseWithNextLinks_ODataV401_Works()
+        {
+            // Arrange & Act
+            Func<ODataResourceSet> func = () => new ODataResourceSet
+            {
+                NextPageLink = new Uri("http://nextLink")
+            };
+
+            MemoryStream stream = new MemoryStream();
+            string actual = GetEntityReferenceLinksPayload(ODataVersion.V401, request: false, collection: true, nestedResourceSetFunc: func);
+
+            // Assert
+            Assert.Equal("{\"@context\":\"http://svc/$metadata#Customers/$entity\"," +
+                    "\"CustomerId\":7," +
+                    "\"BillOrders@nextLink\":\"http://nextlink/\"," +
+                    "\"BillOrders\":[" +
+                      "{\"@id\":\"Orders(2)\"}," +
+                      "{\"@id\":\"Orders(3)\"}," +
+                      "{\"@id\":\"Orders(4)\"}" +
+                    "]" +
+                  "}", actual);
+        }
+
+        private string GetEntityReferenceLinksPayload(ODataVersion version, bool request, bool collection,
+            Func<ODataResourceSet> nestedResourceSetFunc = null)
         {
             MemoryStream stream = new MemoryStream();
             ODataWriter odataWriter = GetODataWriterForEntityReferenceLink(version, request, stream);
@@ -887,17 +960,30 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             if (collection)
             {
                 odataWriter.WriteStart(new ODataNestedResourceInfo { Name = "BillOrders", IsCollection = true });
+                if (!request)
+                {
+                    // only in response, we should call "WriteStart(ODataResourceSet)".
+                    ODataResourceSet resourceSet = nestedResourceSetFunc == null ? new ODataResourceSet() : nestedResourceSetFunc();
+                    odataWriter.WriteStart(resourceSet);
+                }
+
                 odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(2)") });
                 odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(3)") });
                 odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(4)") });
+
+                if (!request)
+                {
+                    odataWriter.WriteEnd(); // End of ResourceSet
+                }
             }
             else
             {
                 odataWriter.WriteStart(new ODataNestedResourceInfo { Name = "BillOrder", IsCollection = false });
                 odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(8)") });
             }
-            odataWriter.WriteEnd();
-            odataWriter.WriteEnd();
+
+            odataWriter.WriteEnd(); // End of NestedResourceInfo
+            odataWriter.WriteEnd(); // End of ResourceInfo
             odataWriter.Flush();
 
             return Encoding.UTF8.GetString(stream.ToArray());
@@ -955,6 +1041,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             // Act
             return writer.CreateODataResourceWriter(customers);
         }
+        #endregion
 
         [Fact]
         public void WritingResourceNestedPropertyWithEdmAbstractTypeWorks()

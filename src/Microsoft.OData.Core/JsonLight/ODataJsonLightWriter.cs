@@ -988,13 +988,13 @@ namespace Microsoft.OData.JsonLight
 
             // If we wrote entity reference links for a collection navigation property but no
             // resource set afterwards, we have to now close the array of links.
-            if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
-            {
-                this.jsonWriter.EndArrayScope();
-            }
-
             if (!this.jsonLightOutputContext.WritingResponse)
             {
+                if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
+                {
+                    this.jsonWriter.EndArrayScope();
+                }
+
                 // In requests, the nested resource info may have multiple entries in multiple resource sets in it; if we
                 // wrote at least one resource set, close the resulting array here.
                 if (navigationLinkScope.ResourceSetWritten)
@@ -1018,32 +1018,51 @@ namespace Microsoft.OData.JsonLight
             // In JSON Light, we can only write entity reference links at the beginning of a navigation link in requests;
             // once we wrote a resource set, entity reference links are not allowed anymore (we require all the entity reference
             // link to come first because of the grouping in the JSON Light wire format).
-            JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
-            if (navigationLinkScope.ResourceSetWritten)
+            JsonLightNestedResourceInfoScope nestedResourceScope = this.CurrentScope as JsonLightNestedResourceInfoScope;
+            if (nestedResourceScope == null)
+            {
+                nestedResourceScope = this.ParentNestedResourceInfoScope as JsonLightNestedResourceInfoScope;
+            }
+
+            if (nestedResourceScope.ResourceSetWritten)
             {
                 throw new ODataException(Strings.ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest);
             }
 
-            if (!navigationLinkScope.EntityReferenceLinkWritten)
+            if (!nestedResourceScope.EntityReferenceLinkWritten)
             {
-                if (!this.jsonLightOutputContext.WritingResponse &&
-                    (this.Version == null || this.Version < ODataVersion.V401))
+                // In request
+                if (!this.jsonLightOutputContext.WritingResponse)
                 {
-                    // Write the property annotation for the entity reference link(s)
-                    this.odataAnnotationWriter.WritePropertyAnnotationName(parentNestedResourceInfo.Name, ODataAnnotationNames.ODataBind);
+                    if (this.Version == null || this.Version < ODataVersion.V401)
+                    {
+                        // Write the property annotation for the entity reference link(s)
+                        this.odataAnnotationWriter.WritePropertyAnnotationName(parentNestedResourceInfo.Name, ODataAnnotationNames.ODataBind);
+                    }
+                    else
+                    {
+                        this.jsonWriter.WriteName(parentNestedResourceInfo.Name);
+                    }
+
+                    Debug.Assert(parentNestedResourceInfo.IsCollection.HasValue, "parentNestedResourceInfo.IsCollection.HasValue");
+                    if (parentNestedResourceInfo.IsCollection.Value)
+                    {
+                        // write [ for the collection
+                        this.jsonWriter.StartArrayScope();
+                    }
                 }
-                else
+                else // In response
                 {
-                    this.jsonWriter.WriteName(parentNestedResourceInfo.Name);
+                    Debug.Assert(parentNestedResourceInfo.IsCollection.HasValue, "parentNestedResourceInfo.IsCollection.HasValue");
+                    if (!parentNestedResourceInfo.IsCollection.Value)
+                    {
+                        // Write the property name for single-nested resource,
+                        // for the collection nested resource, it's write at top level when writing ODataResourceSet
+                        this.jsonWriter.WriteName(parentNestedResourceInfo.Name);
+                    }
                 }
 
-                Debug.Assert(parentNestedResourceInfo.IsCollection.HasValue, "parentNestedResourceInfo.IsCollection.HasValue");
-                if (parentNestedResourceInfo.IsCollection.Value)
-                {
-                    this.jsonWriter.StartArrayScope();
-                }
-
-                navigationLinkScope.EntityReferenceLinkWritten = true;
+                nestedResourceScope.EntityReferenceLinkWritten = true;
             }
 
             if (!this.jsonLightOutputContext.WritingResponse &&
