@@ -1800,7 +1800,7 @@ namespace Microsoft.OData
 
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.EntityReferenceLink, null);
             Debug.Assert(
-                this.CurrentScope.Item is ODataNestedResourceInfo,
+                this.CurrentScope.Item is ODataNestedResourceInfo || this.ParentNestedResourceInfoScope.Item is ODataNestedResourceInfo,
                 "The CheckForNestedResourceInfoWithContent should have verified that entity reference link can only be written inside a nested resource info.");
 
             if (!this.SkipWriting)
@@ -1808,7 +1808,16 @@ namespace Microsoft.OData
                 this.InterceptException(() =>
                 {
                     WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
-                    this.WriteEntityReferenceInNavigationLinkContent((ODataNestedResourceInfo)this.CurrentScope.Item, entityReferenceLink);
+
+                    ODataNestedResourceInfo nestedInfo = this.CurrentScope.Item as ODataNestedResourceInfo;
+                    if (nestedInfo == null)
+                    {
+                        NestedResourceInfoScope nestedResourceInfoScope = this.ParentNestedResourceInfoScope;
+                        Debug.Assert(nestedResourceInfoScope != null);
+                        nestedInfo = (ODataNestedResourceInfo)nestedResourceInfoScope.Item;
+                    }
+
+                    this.WriteEntityReferenceInNavigationLinkContent(nestedInfo, entityReferenceLink);
                 });
             }
         }
@@ -1970,7 +1979,12 @@ namespace Microsoft.OData
             {
                 if (contentPayloadKind == ODataPayloadKind.EntityReferenceLink)
                 {
-                    this.ThrowODataException(Strings.ODataWriterCore_EntityReferenceLinkWithoutNavigationLink, null);
+                    Scope parenScope = this.ParentNestedResourceInfoScope;
+                    Debug.Assert(parenScope != null);
+                    if (parenScope.State != WriterState.NestedResourceInfo && parenScope.State != WriterState.NestedResourceInfoWithContent)
+                    {
+                        this.ThrowODataException(Strings.ODataWriterCore_EntityReferenceLinkWithoutNavigationLink, null);
+                    }
                 }
             }
         }
