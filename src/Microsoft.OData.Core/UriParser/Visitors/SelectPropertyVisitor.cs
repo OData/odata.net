@@ -56,7 +56,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
         /// <param name="resolver">Resolver for uri parser.</param>
-        public SelectPropertyVisitor(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, BindingState state)
+        /// <param name="state">The binding state of the visitor.</param>        public SelectPropertyVisitor(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver, BindingState state)
         {
             this.model = model;
             this.edmType = edmType;

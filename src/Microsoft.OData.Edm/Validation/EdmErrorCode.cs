@@ -1381,6 +1381,6 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// The non-composable escape bound function should not declare more than one.
         /// </summary>
-        EntityNoncomposableBoundEscapeFunctionMustBeLessOne= 390
+        EntityNoncomposableBoundEscapeFunctionMustBeLessOne = 390
     }
 }

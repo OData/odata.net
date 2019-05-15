@@ -106,7 +106,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private IEnumerable<EndPathToken> GetGroupByPaths(IEnumerable<GroupByPropertyNode> nodes, EndPathToken token)
         {
-            foreach(var node in nodes)
+            foreach (var node in nodes)
             {
                 var nodeToken = new EndPathToken(node.Name, token);
                 if (node.ChildTransformations == null || !node.ChildTransformations.Any())
@@ -115,7 +115,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
                 else
                 {
-                    foreach(var child in GetGroupByPaths(node.ChildTransformations, nodeToken))
+                    foreach (var child in GetGroupByPaths(node.ChildTransformations, nodeToken))
                     {
                         yield return child;
                     }
