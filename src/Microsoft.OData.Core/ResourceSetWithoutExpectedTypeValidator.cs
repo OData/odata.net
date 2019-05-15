@@ -44,12 +44,6 @@ namespace Microsoft.OData
                 return;
             }
 
-            // If we don't have a type, store the type of the first item.
-            if (this.itemType == null)
-            {
-                this.itemType = itemType;
-            }
-
             // Validate the expected and actual types.
             if (this.itemType.IsEquivalentTo(itemType))
             {

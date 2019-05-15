@@ -39,7 +39,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            return this.Identifier.Equals(otherPath.Identifier) 
+            return this.Identifier.Equals(otherPath.Identifier)
                 && (this.NextToken == null && otherPath.NextToken == null
                     || this.NextToken.Equals(otherPath.NextToken));
         }

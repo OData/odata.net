@@ -254,6 +254,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                     }
                 }
             }
+
             var newProperties = new HashSet<EndPathToken>(((GroupByToken)token).Properties);
 
             TransformationNode aggregate = null;

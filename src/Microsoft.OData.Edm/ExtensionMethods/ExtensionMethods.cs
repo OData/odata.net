@@ -82,33 +82,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Replace a possibly alias-qualified name with the full namespace qualified name.
-        /// </summary>
-        /// <param name="model">The model containing the element.</param>
-        /// <param name="name">The alias- or namespace- qualified name of the element.</param>
-        /// <returns>The namespace qualified name of the element.</returns>
-        internal static string ReplaceAlias(this IEdmModel model, string name)
-        {
-            VersioningDictionary<string, string> mappings = model.GetNamespaceAliases();
-            VersioningList<string> list = model.GetUsedNamespacesHavingAlias();
-            int idx = name.IndexOf('.');
-
-            if (list != null && mappings != null && idx > 0)
-            {
-                var typeAlias = name.Substring(0, idx);
-                var ns = list.FirstOrDefault(n =>
-                {
-                    string alias;
-                    return mappings.TryGetValue(n, out alias) && alias == typeAlias;
-                });
-
-                return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}{1}", ns, name.Substring(idx)) : name;
-            }
-
-            return name;
-        }
-
-        /// <summary>
         /// Searches for bound operations based on the binding type, returns an empty enumerable if no operation exists.
         /// </summary>
         /// <param name="model">The model to search.</param>
@@ -2671,6 +2644,33 @@ namespace Microsoft.OData.Edm
             // the partner must be on an entity type. Will remove this limitation once we are OK to make breaking changes
             // on IEdmNavigationProperty.
             return navigationProperty.Partner == null ? null : new EdmPathExpression(navigationProperty.Partner.Name);
+        }
+
+        /// <summary>
+        /// Replace a possibly alias-qualified name with the full namespace qualified name.
+        /// </summary>
+        /// <param name="model">The model containing the element.</param>
+        /// <param name="name">The alias- or namespace- qualified name of the element.</param>
+        /// <returns>The namespace qualified name of the element.</returns>
+        internal static string ReplaceAlias(this IEdmModel model, string name)
+        {
+            VersioningDictionary<string, string> mappings = model.GetNamespaceAliases();
+            VersioningList<string> list = model.GetUsedNamespacesHavingAlias();
+            int idx = name.IndexOf('.');
+
+            if (list != null && mappings != null && idx > 0)
+            {
+                var typeAlias = name.Substring(0, idx);
+                var ns = list.FirstOrDefault(n =>
+                {
+                    string alias;
+                    return mappings.TryGetValue(n, out alias) && alias == typeAlias;
+                });
+
+                return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}{1}", ns, name.Substring(idx)) : name;
+            }
+
+            return name;
         }
 
         #region methods for finding elements in CsdlSemanticsModel
