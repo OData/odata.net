@@ -80,6 +80,7 @@ namespace Microsoft.OData.UriParser
                 for (int i = numberOfSegmentsToSkip; i < uriSegments.Length; i++)
                 {
                     string segment = uriSegments[i];
+
                     // Skip the empty segment or the "/" segment
                     if (segment.Length == 0 || segment == "/")
                     {
@@ -110,7 +111,7 @@ namespace Microsoft.OData.UriParser
                         else
                         {
                             string value = String.Join("/", uriSegments, escapedStart, i - escapedStart + 1);
-                            segments.Add(":" + value.Substring(0, value.Length - 1));// because the last one has "::", remove one.
+                            segments.Add(":" + value.Substring(0, value.Length - 1)); // because the last one has "::", remove one.
                             escapedStart = i + 1;
                         }
                     }
@@ -121,7 +122,7 @@ namespace Microsoft.OData.UriParser
                         {
                             if (segment != ":")
                             {
-                                segments.Add(segment.Substring(0, segment.Length - 1));// remove the last ':'
+                                segments.Add(segment.Substring(0, segment.Length - 1)); // remove the last ':'
                             }
 
                             escapedStart = i + 1;

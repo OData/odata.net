@@ -1037,7 +1037,7 @@ namespace Microsoft.OData.Edm.Validation
                         }
                     }
 
-                    if (composableEscapeFunctions.Count() > 1 )
+                    if (composableEscapeFunctions.Count() > 1)
                     {
                         string escapeFunctionString = String.Join(",", composableEscapeFunctions.Select(c => c.Name).ToArray());
                         context.AddError(

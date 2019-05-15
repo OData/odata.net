@@ -495,7 +495,7 @@ namespace Microsoft.OData.UriParser
             if (computeClause != null)
             {
                 var computedProperties = new HashSet<EndPathToken>(computeClause.ComputedItems.Select(i => new EndPathToken(i.Alias, null)));
-                if(state.AggregatedPropertyNames == null)
+                if (state.AggregatedPropertyNames == null)
                 {
                     state.AggregatedPropertyNames = computedProperties;
                 }
