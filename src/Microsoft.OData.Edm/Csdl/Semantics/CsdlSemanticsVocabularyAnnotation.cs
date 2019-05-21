@@ -195,16 +195,33 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new UnresolvedEntitySet(targetSegments[1], container, this.Location);
                     }
 
-                    IEdmStructuredType type = this.schema.FindType(targetSegments[0]) as IEdmStructuredType;
+                    IEdmSchemaType type = this.schema.FindType(targetSegments[0]);
                     if (type != null)
                     {
-                        IEdmProperty property = type.FindProperty(targetSegments[1]);
-                        if (property != null)
+                        IEdmStructuredType structuredType;
+                        IEdmEnumType enumType;
+                        if ((structuredType = type as IEdmStructuredType) != null)
                         {
-                            return property;
-                        }
+                            IEdmProperty property = structuredType.FindProperty(targetSegments[1]);
+                            if (property != null)
+                            {
+                                return property;
+                            }
 
-                        return new UnresolvedProperty(type, targetSegments[1], this.Location);
+                            return new UnresolvedProperty(structuredType, targetSegments[1], this.Location);
+                        }
+                        else if ((enumType = type as IEdmEnumType) != null)
+                        {
+                            foreach(IEdmEnumMember member in enumType.Members)
+                            {
+                                if (String.Equals(member.Name, targetSegments[1], StringComparison.OrdinalIgnoreCase))
+                                {
+                                    return member;
+                                }
+                            }
+
+                            return new UnresolvedEnumMember(targetSegments[1], enumType, this.Location);
+                        }
                     }
 
                     IEdmOperation operation = this.FindParameterizedOperation(targetSegments[0], this.Schema.FindOperations, this.CreateAmbiguousOperation);

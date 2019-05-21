@@ -738,6 +738,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEdmModel model = GetEdmModel(types: types);
             Assert.NotNull(model);
 
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors), String.Format("Errors in validating model. {0}", String.Concat(errors.Select(e => e.ErrorMessage))));
+
             var color = model.SchemaElements.OfType<IEdmEnumType>().FirstOrDefault(c => c.Name == "Color");
             Assert.NotNull(color);
 
