@@ -58,20 +58,11 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
             }
 
-            // If the types are not equivalent, make sure they have a common base type.
-            IEdmType commonBaseType = EdmLibraryExtensions.GetCommonBaseType(thisStructuredType, structuredType);
-            if (commonBaseType == null)
+            // Make sure the resource types is same or derived type of expected type
+            if (!this.itemType.IsAssignableFrom(itemType))
             {
                 throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
             }
-
-            // Make sure the types are in the same inheritance tree
-            if (!(itemType.IsAssignableFrom(this.itemType) || this.itemType.IsAssignableFrom(itemType)))
-            {
-                throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
-            }
-
-            this.itemType = (IEdmType)commonBaseType;
         }
     }
 }

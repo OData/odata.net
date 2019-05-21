@@ -751,8 +751,8 @@ namespace Microsoft.OData.Tests
             {
                 ODataWriter writer = messageWriter.CreateODataResourceSetWriter(directoryObjects, directoryObject); // entityset
                 writer.WriteStart(new ODataResourceSet());
-                writer.WriteStart(group);
-                writer.WriteEnd();
+                    writer.WriteStart(group);
+                    writer.WriteEnd();
                 writer.WriteEnd();
             };
 
@@ -791,6 +791,35 @@ namespace Microsoft.OData.Tests
             Action test = () => GetWriterOutput(model, writeAction);
             var exception = Assert.Throws<ODataException>(test);
             Assert.Equal(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("microsoft.graph.contact", "microsoft.graph.directoryObject"), exception.Message);
+        }
+
+        [Fact]
+        public void WritingResourceWithBaseTypeWhileExpectedTypeIsSubTypeThrows()
+        {
+            // Arrange
+            var model = GetGraphModel();
+            var groups = model.EntityContainer.FindEntitySet("groups");
+            var group = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "group");
+
+            ODataResource directoryObject = new ODataResource
+            {
+                TypeName = "microsoft.graph.directoryObject",
+                Properties = new[] { new ODataProperty { Name = "id", Value = "abc" } }
+            };
+
+            Action<ODataMessageWriter> writeAction = (messageWriter) =>
+            {
+                ODataWriter writer = messageWriter.CreateODataResourceSetWriter(groups, group); // entityset
+                writer.WriteStart(new ODataResourceSet());
+                    writer.WriteStart(directoryObject);
+                    writer.WriteEnd();
+                writer.WriteEnd();
+            };
+
+            // Act & Assert
+            Action test = () => GetWriterOutput(model, writeAction);
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("microsoft.graph.directoryObject", "microsoft.graph.group"), exception.Message);
         }
 
         private static IEdmModel GetGraphModel()
