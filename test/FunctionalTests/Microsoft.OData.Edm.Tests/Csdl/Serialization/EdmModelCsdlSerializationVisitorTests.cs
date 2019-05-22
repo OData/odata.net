@@ -1334,20 +1334,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
   ""NS"": {
     ""$Annotations"": {
       ""NS.ComplexType"": {
-        ""@UI.Thumbnail"": {
-          ""$Binary"": ""T0RhdGE""
-        },
-        ""@UI.DisplayName"": {
-          ""$Int"": 42
-        },
-        ""@UI.DisplayName#Tablet"": {
-          ""$Int"": 88
-        }
+        ""@UI.Thumbnail"": ""T0RhdGE"",
+        ""@UI.DisplayName"": 42,
+        ""@UI.DisplayName#Tablet"": 88
       },
       ""NS.ComplexType/Name"": {
-        ""@UI.DisplayName#Tablet"": {
-          ""$Int"": 42
-        }
+        ""@UI.DisplayName#Tablet"": 42
       }
     }
   }
@@ -1371,9 +1363,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
-  ""@UI.Thumbnail"": {
-    ""$Binary"": ""T0RhdGE""
-  }
+  ""@UI.Thumbnail"": ""T0RhdGE""
 }");
         }
 
@@ -1411,9 +1401,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
-  ""@vCard.birthDay"": {
-    ""$Date"": ""2019-04-05""
-  }
+  ""@vCard.birthDay"": ""2019-04-05""
 }");
         }
 
@@ -1432,9 +1420,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
-  ""@UI.LastUpdated"": {
-    ""$DateTimeOffset"": ""2019-04-05T13:53:41Z""
-  }
+  ""@UI.LastUpdated"": ""2019-04-05T13:53:41Z""
 }");
         }
 
@@ -1453,9 +1439,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
-  ""@UI.Width"": {
-    ""$Decimal"": 3.1415926
-  }
+  ""@UI.Width"": 3.1415926
 }");
         }
 
@@ -1474,9 +1458,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
-  ""@Task.Duration"": {
-    ""$Duration"": ""PT2H3M4S""
-  }
+  ""@Task.Duration"": ""PT2H3M4S""
 }");
         }
 
@@ -1538,9 +1520,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
-  ""@UI.Id"": {
-    ""$Guid"": ""21ec2020-3aea-1069-a2dd-08002b30309d""
-  }
+  ""@UI.Id"": ""21ec2020-3aea-1069-a2dd-08002b30309d""
 }");
         }
 
@@ -1559,9 +1539,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
-  ""@An.Int"": {
-    ""$Int"": 42
-  }
+  ""@An.Int"": 42
 }");
         }
 
@@ -1580,9 +1558,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
-  ""@UI.EndTime"": {
-    ""$TimeOfDay"": ""00:21:45.0040000""
-  }
+  ""@UI.EndTime"": ""00:21:45.0040000""
 }");
         }
 

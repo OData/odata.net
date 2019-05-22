@@ -93,11 +93,12 @@ namespace Microsoft.OData.Edm.Csdl
 
                     WriteIncludeAnnotations(reference.IncludeAnnotations);
 
-                    // End of each reference docuement.
+                    // The reference object MAY contain annotations, so far it's not supported.
+                    // End of each reference document.
                     this.jsonWriter.EndObjectScope();
                 }
 
-                // End of $Reference, The reference object MAY contain annotations, so far it's not supported.
+                // End of $Reference
                 this.jsonWriter.EndObjectScope();
             }
         }
@@ -147,7 +148,7 @@ namespace Microsoft.OData.Edm.Csdl
                 this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Alias, include.Alias);
 
                 // The include object MAY contain annotations.
-                // So far, it's not supported in ODL. skip it.
+                // So far, it's not supported in ODL.
 
                 this.jsonWriter.EndObjectScope();
             }

@@ -111,8 +111,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_OpenType, entityType.IsOpen, CsdlConstants.Default_OpenType);
 
             // It MAY contain the members $HasStream, The value of $HasStream is one of the Boolean literals true or false. Absence of the member means false
-            bool writeHasStream = IsMediaEntityType(entityType);
-            this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_HasStream, writeHasStream, CsdlConstants.Default_HasStream);
+            this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_HasStream, entityType.HasStream, CsdlConstants.Default_HasStream);
         }
 
         /// <summary>
@@ -353,11 +352,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="reference">The Edm type reference.</param>
         internal override void WriteNullableAttribute(IEdmTypeReference reference)
         {
-            if (reference.IsNullable)
-            {
-                // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
-                this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Nullable, reference.IsNullable);
-            }
+            // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
+            // Noted that the CsdlConstants.Default_Nullable is set as true.
+            this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Nullable, reference.IsNullable, !CsdlConstants.Default_Nullable);
         }
 
         internal override void WriteTypeDefinitionAttributes(IEdmTypeDefinitionReference reference)
@@ -389,8 +386,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override void WriteBinaryTypeAttributes(IEdmBinaryTypeReference reference)
         {
             // CSDL XML defines a symbolic value max that is only allowed in OData 4.0 responses.
-            // This symbolic value is not allowed in CDSL JSON documents at all. 
-            this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_MaxLength, reference.MaxLength, EdmValueWriter.IntAsXml);
+            // This symbolic value is not allowed in CDSL JSON documents at all.
+            // So, 'IsUnbounded' is skipped in CSDL JSON.
+            this.jsonWriter.WriteOptionalProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_MaxLength, reference.MaxLength);
         }
 
         internal override void WriteDecimalTypeAttributes(IEdmDecimalTypeReference reference)
@@ -456,21 +454,16 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteSchemaOperationsHeader<T>(KeyValuePair<string, IList<T>> operation)
         {
+            // An operation is represented as a member of the schema object whose name is the unqualified name of the operation.
             this.jsonWriter.WritePropertyName(operation.Key);
 
-            // Need to double check with Mike about the format.
-            if (operation.Value.Count() > 1)
-            {
-                this.jsonWriter.StartArrayScope();
-            }
+            // Whose value is an array
+            this.jsonWriter.StartArrayScope();
         }
 
         internal override void WriteSchemaOperationsEnd<T>(KeyValuePair<string, IList<T>> operation)
         {
-            if (operation.Value.Count() > 1)
-            {
-                this.jsonWriter.EndArrayScope();
-            }
+            this.jsonWriter.EndArrayScope();
         }
 
         internal override void WriteActionElementHeader(IEdmAction action)
@@ -507,7 +500,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (operation.EntitySetPath != null)
             {
-                this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_EntitySetPath, operation.EntitySetPath.PathSegments, PathAsXml);
+                this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_EntitySetPath, operation.EntitySetPath.Path);
             }
         }
 
@@ -682,7 +675,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 elementType = collectionReference.ElementType();
             }
 
-            // Absence of the $Type member means the type is Edm.String. Does it mean to omit the type for Collection(Edm.String)?
+            // Absence of the $Type member means the type is Edm.String.
+            // Does it mean to omit the type for Collection(Edm.String)? No, $Collection is used to identify whether it's collection of not.
             if (elementType.FullName() != defaultTypeName)
             {
                 string typeName = this.SerializationName((IEdmSchemaElement)elementType.Definition);
@@ -845,17 +839,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteBinaryConstantExpressionElement(IEdmBinaryConstantExpression expression)
         {
-            // Binary expressions are represented as an object with a single member $Binary
-            // whose value is a string containing the base64url-encoded binary value.
-            this.jsonWriter.StartObjectScope();
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Binary, (IEdmBinaryConstantExpression)expression, BinaryToString);
-            this.jsonWriter.EndObjectScope();
+            // Binary expressions are represented as a string containing the base64url-encoded binary value.
+            this.jsonWriter.WriteValue(BinaryToString(expression));
         }
 
         internal override void WriteBooleanConstantExpressionElement(IEdmBooleanConstantExpression expression)
         {
             // Boolean expressions are represented as the literals true or false.
-            this.jsonWriter.WriteValue(((IEdmBooleanConstantExpression)expression).Value);
+            this.jsonWriter.WriteValue(expression.Value);
         }
 
         internal override void WriteNullConstantExpressionElement(IEdmNullExpression expression)
@@ -869,38 +860,27 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteDateConstantExpressionElement(IEdmDateConstantExpression expression)
         {
-            // Date expressions are represented as an object with a single member $Date
-            // whose value is a string containing the date value.
-            this.jsonWriter.StartObjectScope();
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, (d) => d.ToString());
-            this.jsonWriter.EndObjectScope();
+            // Date expressions are represented as a string containing the date value.
+            this.jsonWriter.WriteValue(expression.Value.ToString());
         }
 
         internal override void WriteDateTimeOffsetConstantExpressionElement(IEdmDateTimeOffsetConstantExpression expression)
         {
-            // Datetimestamp expressions are represented as an object with a single member $DateTimeOffset
-            // whose value is a string containing the timestamp value.
-            this.jsonWriter.StartObjectScope();
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_DateTimeOffset, ((IEdmDateTimeOffsetConstantExpression)expression).Value, EdmValueWriter.DateTimeOffsetAsXml);
-            this.jsonWriter.EndObjectScope();
+            // Datetimestamp expressions are represented as a string containing the timestamp value.
+            this.jsonWriter.WriteValue(EdmValueWriter.DateTimeOffsetAsXml(expression.Value));
         }
 
         internal override void WriteDurationConstantExpressionElement(IEdmDurationConstantExpression expression)
         {
-            // Duration expressions are represented as an object with a single member $Duration
-            // whose value is a string containing the duration value.
-            this.jsonWriter.StartObjectScope();
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Duration, expression.Value, EdmValueWriter.DurationAsXml);
-            this.jsonWriter.EndObjectScope();
+            // Duration expressions are represented as a string containing the duration value.
+            this.jsonWriter.WriteValue(EdmValueWriter.DurationAsXml(expression.Value));
         }
 
         internal override void WriteDecimalConstantExpressionElement(IEdmDecimalConstantExpression expression)
         {
-            // Decimal expressions are represented as an object with a single member $Decimal whose value is either a number or a string.
+            // Decimal expressions are represented as either a number or a string.
             // The special values INF, -INF, or NaN are represented as strings. so far, that's not supported.
-            this.jsonWriter.StartObjectScope();
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Decimal, expression.Value);
-            this.jsonWriter.EndObjectScope();
+            this.jsonWriter.WriteValue(expression.Value);
         }
 
         internal override void WriteFloatingConstantExpressionElement(IEdmFloatingConstantExpression expression)
@@ -909,7 +889,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteValue(expression.Value);
 
             // or as an object with a single member $Float whose value is a string containing one of the special values
-            // the special values are not supported now.
+            // the special values (INF, -INF, or NaN) are not supported now.
         }
 
         internal override void WriteFunctionApplicationElementHeader(IEdmApplyExpression expression)
@@ -938,20 +918,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteGuidConstantExpressionElement(IEdmGuidConstantExpression expression)
         {
-            // Guid expressions are represented as an object with a single member $Guid
-            // whose value is a string containing the guid value.
-            this.jsonWriter.StartObjectScope();
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Guid, expression.Value, EdmValueWriter.GuidAsXml);
-            this.jsonWriter.EndObjectScope();
+            // Guid expressions are represented as a string containing the guid value.
+            this.jsonWriter.WriteValue(EdmValueWriter.GuidAsXml(expression.Value));
         }
 
         internal override void WriteIntegerConstantExpressionElement(IEdmIntegerConstantExpression expression)
         {
-            // Integer expressions are represented as an object with a single member $Int
-            // whose value is a either a number or a string.Values are represented as numbers or strings depending on the media type parameter IEEE754Compatible.
-            this.jsonWriter.StartObjectScope();
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Int, expression.Value);
-            this.jsonWriter.EndObjectScope();
+            // Integer expressions are represented as a numbers or strings depending on the media type parameter IEEE754Compatible.
+            this.jsonWriter.WriteValue(expression.Value);
         }
 
         internal override void WritePathExpressionElement(IEdmPathExpression expression)
@@ -1043,11 +1017,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteTimeOfDayConstantExpressionElement(IEdmTimeOfDayConstantExpression expression)
         {
-            // Time-of-day expressions are represented as an object with a single member $TimeOfDay
-            // whose value is a string containing the time-of-day value.
-            this.jsonWriter.StartObjectScope();
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_TimeOfDay, expression.Value, EdmValueWriter.TimeOfDayAsXml);
-            this.jsonWriter.EndObjectScope();
+            // Time-of-day expressions are represented as a string containing the time-of-day value.
+            this.jsonWriter.WriteValue(EdmValueWriter.TimeOfDayAsXml(expression.Value));
         }
 
         internal override void WriteIsTypeExpressionElementHeader(IEdmIsTypeExpression expression, bool inlineType)
@@ -1217,22 +1188,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         private string TypeDefinitionAsJson(IEdmSchemaType type)
         {
             return this.SerializationName(type);
-        }
-
-        // An entity type derived from a media entity type MUST indicate that it is also a media entity type.
-        private static bool IsMediaEntityType(IEdmEntityType entityType)
-        {
-            while (entityType != null)
-            {
-                if (entityType.HasStream)
-                {
-                    return true;
-                }
-
-                entityType = entityType.BaseEntityType();
-            }
-
-            return false;
         }
 
         private static string AnnotationToString(IEdmVocabularyAnnotation annotation)

@@ -1021,25 +1021,27 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   ""$Version"": ""4.0"",
   ""$EntityContainer"": ""test.Default"",
   ""test"": {
-    ""TestFunction"": {
-      ""$Kind"": ""Function"",
-      ""$Parameter"": [
-        {
-          ""$Name"": ""requiredParam""
-        },
-        {
-          ""$Name"": ""optionalParam"",
-          ""@Org.OData.Core.V1.OptionalParameter"": { }
-        },
-        {
-          ""$Name"": ""optionalParamWithDefault"",
-          ""@Org.OData.Core.V1.OptionalParameter"": {
-            ""DefaultValue"": ""Smith""
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""requiredParam""
+          },
+          {
+            ""$Name"": ""optionalParam"",
+            ""@Org.OData.Core.V1.OptionalParameter"": { }
+          },
+          {
+            ""$Name"": ""optionalParamWithDefault"",
+            ""@Org.OData.Core.V1.OptionalParameter"": {
+              ""DefaultValue"": ""Smith""
+            }
           }
-        }
-      ],
-      ""$ReturnType"": { }
-    },
+        ],
+        ""$ReturnType"": { }
+      }
+    ],
     ""Default"": {
       ""$Kind"": ""EntityContainer"",
       ""TestFunction"": {
@@ -1118,21 +1120,23 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
   ""NS"": {
-    ""TestFunction"": {
-      ""$Kind"": ""Function"",
-      ""$Parameter"": [
-        {
-          ""$Name"": ""requiredParam""
-        },
-        {
-          ""$Name"": ""optionalParam""
-        },
-        {
-          ""$Name"": ""optionalParamWithDefault""
-        }
-      ],
-      ""$ReturnType"": { }
-    },
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""requiredParam""
+          },
+          {
+            ""$Name"": ""optionalParam""
+          },
+          {
+            ""$Name"": ""optionalParamWithDefault""
+          }
+        ],
+        ""$ReturnType"": { }
+      }
+    ],
     ""$Annotations"": {
       ""NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParam"": {
         ""@Org.OData.Core.V1.OptionalParameter"": { }
@@ -1199,15 +1203,17 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
   ""NS"": {
-    ""TestFunction"": {
-      ""$Kind"": ""Function"",
-      ""$Parameter"": [
-        {
-          ""$Name"": ""optionalParamWithDefault""
-        }
-      ],
-      ""$ReturnType"": { }
-    },
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""optionalParamWithDefault""
+          }
+        ],
+        ""$ReturnType"": { }
+      }
+    ],
     ""$Annotations"": {
       ""NS.TestFunction(Edm.String)/optionalParamWithDefault"": {
         ""@Org.OData.Core.V1.OptionalParameter"": {
@@ -1252,16 +1258,18 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
   ""NS"": {
-    ""TestFunction"": {
-      ""$Kind"": ""Function"",
-      ""$ReturnType"": {
-        ""$Type"": ""Edm.PrimitiveType"",
-        ""@Org.OData.Validation.V1.DerivedTypeConstraint"": [
-          ""Edm.Int32"",
-          ""Edm.Boolean""
-        ]
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$ReturnType"": {
+          ""$Type"": ""Edm.PrimitiveType"",
+          ""@Org.OData.Validation.V1.DerivedTypeConstraint"": [
+            ""Edm.Int32"",
+            ""Edm.Boolean""
+          ]
+        }
       }
-    }
+    ]
   }
 }", WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.Inline, xml: false));
         }
@@ -1297,16 +1305,18 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
   ""NS"": {
-    ""TestFunction"": {
-      ""$Kind"": ""Function"",
-      ""$ReturnType"": {
-        ""$Type"": ""Edm.PrimitiveType"",
-        ""@Org.OData.Validation.V1.DerivedTypeConstraint"": [
-          ""Edm.Int32"",
-          ""Edm.Boolean""
-        ]
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$ReturnType"": {
+          ""$Type"": ""Edm.PrimitiveType"",
+          ""@Org.OData.Validation.V1.DerivedTypeConstraint"": [
+            ""Edm.Int32"",
+            ""Edm.Boolean""
+          ]
+        }
       }
-    }
+    ]
   }
 }", WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.Inline, xml: false));
         }
@@ -1822,21 +1832,25 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(@"{
   ""$Version"": ""4.0"",
   ""NS"": {
-    ""GetCustomer"": {
-      ""$Kind"": ""Function"",
-      ""$ReturnType"": {
-        ""$Collection"": true,
-        ""$Type"": ""Edm.PrimitiveType"",
-        ""$Nullable"": true
+    ""GetCustomer"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$ReturnType"": {
+          ""$Collection"": true,
+          ""$Type"": ""Edm.PrimitiveType"",
+          ""$Nullable"": true
+        }
       }
-    },
-    ""GetSomething"": {
-      ""$Kind"": ""Function"",
-      ""$ReturnType"": {
-        ""$Collection"": true,
-        ""$Type"": ""Edm.ComplexType""
+    ],
+    ""GetSomething"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$ReturnType"": {
+          ""$Collection"": true,
+          ""$Type"": ""Edm.ComplexType""
+        }
       }
-    }
+    ]
   }
 }", csdlStr);
         }
@@ -2212,26 +2226,28 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         ""$Type"": ""Edm.Int32""
       }
     },
-    ""Function"": {
-      ""$Kind"": ""Function"",
-      ""$IsBound"": true,
-      ""$Parameter"": [
-        {
-          ""$Name"": ""entity"",
-          ""$Type"": ""NS.Entity"",
+    ""Function"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$IsBound"": true,
+        ""$Parameter"": [
+          {
+            ""$Name"": ""entity"",
+            ""$Type"": ""NS.Entity"",
+            ""$Nullable"": true
+          },
+          {
+            ""$Name"": ""path"",
+            ""$Nullable"": true
+          }
+        ],
+        ""$ReturnType"": {
+          ""$Type"": ""Edm.Int32"",
           ""$Nullable"": true
         },
-        {
-          ""$Name"": ""path"",
-          ""$Nullable"": true
-        }
-      ],
-      ""$ReturnType"": {
-        ""$Type"": ""Edm.Int32"",
-        ""$Nullable"": true
-      },
-      ""@Org.OData.Community.V1.UrlEscapeFunction"": true
-    }
+        ""@Org.OData.Community.V1.UrlEscapeFunction"": true
+      }
+    ]
   }
 }", jsonStr);
         }
