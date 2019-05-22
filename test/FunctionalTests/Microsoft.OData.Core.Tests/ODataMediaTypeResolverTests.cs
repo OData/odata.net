@@ -67,9 +67,7 @@ namespace Microsoft.OData.Tests
             // individual property
             JsonMediaTypes,
             // delta
-            new ODataMediaTypeFormat[]
-            {
-            },
+            JsonMediaTypes,
             // async
             new ODataMediaTypeFormat[]
             {

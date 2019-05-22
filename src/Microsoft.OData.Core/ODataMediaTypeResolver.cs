@@ -31,6 +31,7 @@ namespace Microsoft.OData
             ODataPayloadKind.ServiceDocument,
             ODataPayloadKind.Error,
             ODataPayloadKind.Parameter,
+            ODataPayloadKind.Delta,
             ODataPayloadKind.IndividualProperty
         };
 
