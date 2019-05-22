@@ -112,7 +112,9 @@ namespace Microsoft.OData.Edm
         {
             // ODataLib requires to register signatures for custom uri functions in static class
             // If we generate multiple models that use the same enum we will have different object refs
-            return thisType.FullName() == otherType.FullName();
+            return thisType.FullName() == otherType.FullName() 
+                && thisType.UnderlyingType.IsEquivalentTo(otherType.UnderlyingType)
+                && thisType.IsFlags == otherType.IsFlags;
         }
 
         private static bool IsEquivalentTo(this IEdmSchemaType thisType, IEdmSchemaType otherType)
