@@ -102,6 +102,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.PropertyValueBindingValueIsCorrectType,
                 ValidationRules.EnumMustHaveIntegerUnderlyingType,
                 ValidationRules.AnnotationInaccessibleTerm,
+                ValidationRules.VocabularyAnnotationTargetAllowedApplyToElement,
                 ValidationRules.ElementDirectValueAnnotationFullNameMustBeUnique,
                 ValidationRules.VocabularyAnnotationInaccessibleTarget,
                 ValidationRules.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet,

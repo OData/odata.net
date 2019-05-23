@@ -28,7 +28,6 @@ namespace Microsoft.OData.Edm
         /// </summary>
         Term,
 
-
         /// <summary>
         /// Represents a schema element implementing <see cref="IEdmAction"/>.
         /// </summary>
