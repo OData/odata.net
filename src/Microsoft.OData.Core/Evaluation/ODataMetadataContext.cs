@@ -243,7 +243,15 @@ namespace Microsoft.OData.Evaluation
             // Only apply the conventional template builder on response. On a request we would only report what's on the wire.
             if (resourceState.MetadataBuilder == null)
             {
-                IODataMetadataBuilderFactory metadataBuilderFactory = this.metadataLevel.container.GetService<IODataMetadataBuilderFactory>();
+                IODataMetadataBuilderFactory metadataBuilderFactory = null;
+                if (this.metadataLevel != null && this.metadataLevel.container != null)
+                {
+                    metadataBuilderFactory = this.metadataLevel.container.GetService<IODataMetadataBuilderFactory>();
+                }
+                else
+                {
+                    metadataBuilderFactory = new ODataMetadataBuilderFactory();;
+                }
                 ODataResourceBase resource = resourceState.Resource;
                 if (this.isResponse && !isDelta)
                 {

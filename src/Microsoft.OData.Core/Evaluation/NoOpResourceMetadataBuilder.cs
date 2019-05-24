@@ -13,7 +13,7 @@ namespace Microsoft.OData.Evaluation
     /// <summary>
     /// Implementation of the metadata builder which only returns values which were explicitly set (never computing or modifying them).
     /// </summary>
-    internal sealed class NoOpResourceMetadataBuilder : ODataResourceMetadataBuilder
+    internal class NoOpResourceMetadataBuilder : ODataResourceMetadataBuilder
     {
         /// <summary>
         /// The resource whose payload metadata is being queried.

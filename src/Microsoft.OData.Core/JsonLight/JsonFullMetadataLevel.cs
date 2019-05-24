@@ -112,13 +112,12 @@ namespace Microsoft.OData.JsonLight
 
             IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualResourceType, metadataContext, selectedProperties);
 
-            IODataMetadataBuilderFactory metadataBuilderFactory = container.GetService<IODataMetadataBuilderFactory>();
+            IODataMetadataBuilderFactory metadataBuilderFactory = container != null? container.GetService<IODataMetadataBuilderFactory>() : new ODataMetadataBuilderFactory();
 
             // Create ODataConventionalEntityMetadataBuilder if actualResourceType is entity type or typeContext.NavigationSourceKind is not none (complex type would be none) for no model scenario.
             if (actualResourceType != null && actualResourceType.TypeKind == EdmTypeKind.Entity ||
                 actualResourceType == null && typeContext.NavigationSourceKind != EdmNavigationSourceKind.None)
             {
-                
                 return metadataBuilderFactory.CreateEntityMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
             }
             else

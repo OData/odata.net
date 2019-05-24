@@ -22,7 +22,7 @@ namespace Microsoft.OData.Evaluation
     /// <summary>
     /// Implementation of OData entity metadata builder based on OData protocol conventions.
     /// </summary>
-    internal sealed class ODataConventionalEntityMetadataBuilder : ODataConventionalResourceMetadataBuilder
+    internal class ODataConventionalEntityMetadataBuilder : ODataConventionalResourceMetadataBuilder
     {
         /// <summary>The edit link.</summary>
         /// <remarks>This is lazily evaluated. It may be retrieved from the resource or computed.</remarks>
