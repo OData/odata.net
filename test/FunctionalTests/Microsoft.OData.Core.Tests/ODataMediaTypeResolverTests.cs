@@ -67,9 +67,7 @@ namespace Microsoft.OData.Tests
             // individual property
             JsonMediaTypes,
             // delta
-            new ODataMediaTypeFormat[]
-            {
-            },
+            JsonMediaTypes,
             // async
             new ODataMediaTypeFormat[]
             {
@@ -128,7 +126,6 @@ namespace Microsoft.OData.Tests
 
                 var expected = MediaTypeCollection[(int)payloadKind];
                 var actual = resolver.GetMediaTypeFormats(payloadKind);
-                Console.WriteLine(payloadKind);
                 actual.ShouldBeEquivalentTo(expected);
             }
         }
@@ -148,7 +145,6 @@ namespace Microsoft.OData.Tests
                 expected.Insert(0, MyFormat.MediaTypeWithFormatA);
 
                 var actual = resolver.GetMediaTypeFormats(payloadKind);
-                Console.WriteLine(payloadKind);
                 actual.ShouldBeEquivalentTo(expected);
             }
         }
@@ -179,7 +175,6 @@ namespace Microsoft.OData.Tests
                 ODataPayloadKind selectedPayloadKind;
                 ODataFormat actual = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { payloadKind }, resolver, out mediaType, out encoding, out selectedPayloadKind);
 
-                Console.WriteLine(payloadKind);
                 actual.ShouldBeEquivalentTo(MyFormat.Instance);
                 mediaType.ShouldBeEquivalentTo(expectedMediaType);
                 encoding.ShouldBeEquivalentTo(payloadKind == ODataPayloadKind.BinaryValue ? null : Encoding.UTF8);
