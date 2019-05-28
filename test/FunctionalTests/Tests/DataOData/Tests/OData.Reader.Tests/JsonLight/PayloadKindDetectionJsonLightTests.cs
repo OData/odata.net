@@ -35,7 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
         /// <summary>Reusable constant of an entry detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> entryDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Resource);
+            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Resource, ODataPayloadKind.Delta);
 
         /// <summary>Reusable constant of a feed detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> feedDetectionResult =

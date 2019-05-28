@@ -58,7 +58,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Max size to cache match info.
         /// </summary>
-        private const int MatchInfoCacheMaxSize = 1024;
+        private const int MatchInfoCacheMaxSize = 256;
 
         /// <summary>
         /// Concurrent cache to cache match info.
@@ -897,7 +897,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Class representing key of match info cache.
         /// </summary>
-        private sealed class MatchInfoCacheKey
+        private sealed class MatchInfoCacheKey : IEquatable<MatchInfoCacheKey>
         {
             /// <summary>
             /// Constructor.
@@ -934,11 +934,29 @@ namespace Microsoft.OData
             /// <returns>true if obj is equal to this instance; otherwise, false.</returns>
             public override bool Equals(object obj)
             {
-                MatchInfoCacheKey cacheKey = obj as MatchInfoCacheKey;
-                return cacheKey != null &&
-                    this.MediaTypeResolver == cacheKey.MediaTypeResolver &&
-                    this.PayloadKind == cacheKey.PayloadKind &&
-                    this.ContentTypeName == cacheKey.ContentTypeName;
+                return this.Equals(obj as MatchInfoCacheKey);
+            }
+
+            /// <summary>
+            /// Returns a value indicating whether this instance is equal to a specified <see cref="MatchInfoCacheKey"/>.
+            /// </summary>
+            /// <param name="other">An object to compare with this instance.</param>
+            /// <returns>true if obj is equal to this instance; otherwise, false.</returns>
+            public bool Equals(MatchInfoCacheKey other)
+            {
+                if (ReferenceEquals(other, null))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return this.MediaTypeResolver == other.MediaTypeResolver &&
+                    this.PayloadKind == other.PayloadKind &&
+                    this.ContentTypeName == other.ContentTypeName;
             }
 
             /// <summary>
