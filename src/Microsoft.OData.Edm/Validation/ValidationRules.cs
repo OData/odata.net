@@ -2541,13 +2541,39 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that a vocabulary annotations target can be allowed in the AppliesTo of the term.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly ValidationRule<IEdmVocabularyAnnotation> VocabularyAnnotationTargetAllowedApplyToElement =
+            new ValidationRule<IEdmVocabularyAnnotation>(
+                (context, annotation) =>
+                {
+                    IEdmTerm term = annotation.Term;
+                    if (term.AppliesTo == null)
+                    {
+                        return;
+                    }
+
+                    var hash = new HashSet<string>(term.AppliesTo.Split(' ').Select(e => e.Trim()));
+                    string symbolicString = annotation.Target.GetSymbolicString();
+                    if (hash.Contains(symbolicString))
+                    {
+                        return;
+                    }
+
+                    context.AddError(
+                        annotation.Location(),
+                        EdmErrorCode.AnnotationApplyToNotAllowedAnnotatable,
+                        Strings.EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable(EdmUtil.FullyQualifiedName(annotation.Target), term.AppliesTo, term.FullName()));
+                });
         #endregion
 
         #region IEdmPropertyValueBinding
 
-        /// <summary>
-        /// Validates that the value of a property value binding is the correct type.
-        /// </summary>
+                /// <summary>
+                /// Validates that the value of a property value binding is the correct type.
+                /// </summary>
         public static readonly ValidationRule<IEdmPropertyValueBinding> PropertyValueBindingValueIsCorrectType =
             new ValidationRule<IEdmPropertyValueBinding>(
                 (context, binding) =>

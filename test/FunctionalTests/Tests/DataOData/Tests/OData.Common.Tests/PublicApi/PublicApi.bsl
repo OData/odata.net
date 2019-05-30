@@ -1601,6 +1601,11 @@ public sealed class Microsoft.OData.Edm.EdmUtil {
 	[
 	ExtensionAttribute(),
 	]
+	public static string GetSymbolicString (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable annotatedElement)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static void SetMimeType (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmOperation annotatableOperation, string mimeType)
 
 	[
@@ -3001,6 +3006,7 @@ public sealed class Microsoft.OData.Edm.Csdl.CsdlReaderSettings {
 public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	AllNavigationPropertiesMustBeMapped = 346
 	AlreadyDefined = 19
+	AnnotationApplyToNotAllowedAnnotatable = 400
 	BadAmbiguousElementBinding = 224
 	BadCyclicComplex = 227
 	BadCyclicEntity = 229
@@ -3391,6 +3397,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable]] VocabularyAnnotatableNoDuplicateAnnotations = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotationAssertCorrectExpressionType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotationInaccessibleTarget = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotationTargetAllowedApplyToElement = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]
 }
 
 public class Microsoft.OData.Edm.Validation.EdmError {

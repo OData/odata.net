@@ -1073,6 +1073,13 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The target '{0}' of the annotation is not allowed in the AppliesTo '{1}' of the term '{2}'."."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "An element already has a direct annotation with the namespace '{0}' and name '{1}'."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique(object p0, object p1) {

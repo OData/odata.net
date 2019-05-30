@@ -24,7 +24,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
             var validationRules = new Dictionary<object, string>();
             var items = typeof(ValidationRules).GetFields().Where(f =>
                 f.Name != "NavigationPropertyEntityMustNotIndirectlyContainItself" &&
-                f.Name != "EntityTypeKeyMissingOnEntityType")
+                f.Name != "EntityTypeKeyMissingOnEntityType" &&
+                f.Name != "VocabularyAnnotationTargetAllowedApplyToElement")
                 .Select(f=> new KeyValuePair<object, string>(f.GetValue(null), f.Name));
             foreach (var item in items)
             {
