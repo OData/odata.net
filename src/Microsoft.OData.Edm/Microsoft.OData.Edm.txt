@@ -148,6 +148,7 @@ EdmModel_Validator_Semantic_TypeAnnotationHasExtraProperties=They type of the ty
 EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType=The underlying type of '{0}' is not valid. The underlying type of an enum type must be an integral type. 
 EdmModel_Validator_Semantic_InaccessibleTerm=The term '{0}' could not be found from the model being validated.
 EdmModel_Validator_Semantic_InaccessibleTarget=The target '{0}' could not be found from the model being validated.
+EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable=The target '{0}' of the annotation is not allowed in the AppliesTo '{1}' of the term '{2}'.".
 EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique=An element already has a direct annotation with the namespace '{0}' and name '{1}'.
 EdmModel_Validator_Semantic_NoEntitySetsFoundForType=The association set '{0}' cannot assume an entity set for the role '{2}' because there are no entity sets for the role type '{1}'.
 EdmModel_Validator_Semantic_CannotInferEntitySetWithMultipleSetsPerType=The association set '{0}' must specify an entity set for the role '{2}' because there are multiple entity sets for the role type '{1}'.
