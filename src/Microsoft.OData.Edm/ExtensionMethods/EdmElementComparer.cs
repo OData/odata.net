@@ -46,8 +46,9 @@ namespace Microsoft.OData.Edm
                     return ((IEdmPrimitiveType)thisType).IsEquivalentTo((IEdmPrimitiveType)otherType);
                 case EdmTypeKind.Complex:
                 case EdmTypeKind.Entity:
-                case EdmTypeKind.Enum:
                     return ((IEdmSchemaType)thisType).IsEquivalentTo((IEdmSchemaType)otherType);
+                case EdmTypeKind.Enum:
+                    return ((IEdmEnumType)thisType).IsEquivalentTo((IEdmEnumType)otherType);
                 case EdmTypeKind.Collection:
                     return ((IEdmCollectionType)thisType).IsEquivalentTo((IEdmCollectionType)otherType);
                 case EdmTypeKind.EntityReference:
@@ -105,6 +106,15 @@ namespace Microsoft.OData.Edm
             // See "src\Web\Client\System\Data\Services\Client\Serialization\PrimitiveType.cs:CreateEdmPrimitiveType()" for more info.
             return thisType.PrimitiveKind == otherType.PrimitiveKind &&
                    thisType.FullName() == otherType.FullName();
+        }
+
+        private static bool IsEquivalentTo(this IEdmEnumType thisType, IEdmEnumType otherType)
+        {
+            // ODataLib requires to register signatures for custom uri functions in static class
+            // If we generate multiple models that use the same enum we will have different object refs
+            return thisType.FullName() == otherType.FullName() 
+                && thisType.UnderlyingType.IsEquivalentTo(otherType.UnderlyingType)
+                && thisType.IsFlags == otherType.IsFlags;
         }
 
         private static bool IsEquivalentTo(this IEdmSchemaType thisType, IEdmSchemaType otherType)

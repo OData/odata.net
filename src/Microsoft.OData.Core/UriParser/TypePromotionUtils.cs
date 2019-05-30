@@ -521,6 +521,11 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
+            if (targetReference.IsEnum() && sourceReference.IsString())
+            {
+                return true;
+            }
+
             IEdmPrimitiveTypeReference sourcePrimitiveTypeReference = sourceReference.AsPrimitiveOrNull();
             IEdmPrimitiveTypeReference targetPrimitiveTypeReference = targetReference.AsPrimitiveOrNull();
 
@@ -801,7 +806,7 @@ namespace Microsoft.OData.UriParser
         private static bool CanPromoteNodeTo(SingleValueNode sourceNodeOrNull, IEdmTypeReference sourceType, IEdmTypeReference targetType)
         {
             Debug.Assert(targetType != null, "targetType != null");
-            Debug.Assert(targetType.IsODataPrimitiveTypeKind(), "Type promotion only supported for primitive types.");
+            Debug.Assert(targetType.IsODataPrimitiveTypeKind() || targetType.IsODataEnumTypeKind(), "Type promotion only supported for primitive or enum types.");
 
             if (sourceType == null)
             {

@@ -567,7 +567,7 @@ namespace EdmLibTests.FunctionalTests
             this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmEnumType("NS", "Baseline", null, true));
 
             Assert.IsTrue(baseline.IsEquivalentTo(baseline), "Is the same.");
-            Assert.IsFalse(baseline.IsEquivalentTo(match), "Same but different obj refs");
+            Assert.IsTrue(baseline.IsEquivalentTo(match), "Same but different obj refs");
             Assert.IsFalse(baseline.IsEquivalentTo(differentNamespace), "Different namespace.");
             Assert.IsFalse(baseline.IsEquivalentTo(differentName), "Different name.");
             Assert.IsFalse(baseline.IsEquivalentTo(differentPrimitiveType), "Different primitive type.");
