@@ -670,6 +670,34 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
         }
 
+        [Fact]
+        public void ParseWithCustomFunction_EnumParameter()
+        {
+            try
+            {
+                var enumType = new EdmEnumType("Fully.Qualified.Namespace", "NonFlagShape", EdmPrimitiveTypeKind.SByte, false);
+                enumType.AddMember("Rectangle", new EdmEnumMemberValue(1));
+                enumType.AddMember("Triangle", new EdmEnumMemberValue(2));
+                enumType.AddMember("foursquare", new EdmEnumMemberValue(3));
+                var enumTypeRef = new EdmEnumTypeReference(enumType, false);
+
+                FunctionSignatureWithReturnType signature =
+                    new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), enumTypeRef);
+
+                CustomUriFunctions.AddCustomUriFunction("enumFunc", signature);
+
+                var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=enumFunc('Rectangle')");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                var enumFuncWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("enumFunc").And.Parameters.ToList();
+                enumFuncWithArgs[0].ShouldBeEnumNode(new ODataEnumValue("Rectangle", enumType.FullName));
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("enumFunc").Should().BeTrue();
+            }
+        }
+
         #endregion
 
         #region Private Methods

@@ -247,6 +247,24 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             a.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
         }
 
+        [Fact]
+        public void TypePromoteEnumArguments()
+        {
+            var enumType = new EdmEnumType("MyNS", "MyName", false);
+            enumType.AddMember("MyValue", new EdmEnumMemberValue(0));
+            var enumTypeRef = new EdmEnumTypeReference(enumType, false);
+            
+            FunctionSignatureWithReturnType signature =
+                new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), enumTypeRef);
+
+            List<QueryNode> nodes = new List<QueryNode>()
+                                        {
+                                            new ConstantNode("MyValue", "MyNS.MyName'MyValue'", enumTypeRef),
+                                        };
+            FunctionCallBinder.TypePromoteArguments(signature, nodes);
+            AssertSignatureTypesMatchArguments(signature, nodes);
+        }
+
         //EnsureArgumentsAreSingleValue Tests
         [Fact]
         public void EnsureArgumentsAreSingleValue()
@@ -1329,6 +1347,36 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 resultUriFunctionSignatures.Should().NotBeNull();
                 resultUriFunctionSignatures.Length.Should().Be(1);
                 resultUriFunctionSignatures.All(x => x == customFunctionSignature).Should().BeTrue();
+            }
+            finally
+            {
+                // Clean from CustomFunctions cache
+                CustomUriFunctions.RemoveCustomUriFunction(CUSTOM_FUNCTION_NAME);
+            }
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void GetUriFunction_CanBindEnumArgument(bool explicitEnum)
+        {
+            const string CUSTOM_FUNCTION_NAME = "myCustomFunction";
+
+            try
+            {
+                var enumType = new EdmEnumType("MyNS", "MyName", false);
+                enumType.AddMember("MyValue", new EdmEnumMemberValue(0));
+                var enumTypeRef = new EdmEnumTypeReference(enumType, false);
+
+                FunctionSignatureWithReturnType customFunctionSignature =
+                    new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), enumTypeRef);
+
+                CustomUriFunctions.AddCustomUriFunction(CUSTOM_FUNCTION_NAME, customFunctionSignature);
+
+                var arguments = explicitEnum ? new List<QueryToken>() { new LiteralToken("MyValue", "MyNS.MyName'MyValue'", enumTypeRef) }
+                                             : new List<QueryToken>() { new LiteralToken("MyValue") };
+                var token = new FunctionCallToken(CUSTOM_FUNCTION_NAME, arguments);
+                var result = functionCallBinder.BindFunctionCall(token);
             }
             finally
             {
