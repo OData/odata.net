@@ -56,7 +56,7 @@ namespace Microsoft.OData.UriParser
                 Debug.Assert(argumentNodes[i] is SingleValueNode, "We should have already verified that all arguments are single values.");
                 SingleValueNode argumentNode = (SingleValueNode)argumentNodes[i];
                 IEdmTypeReference signatureArgumentType = signature.ArgumentTypes[i];
-                Debug.Assert(signatureArgumentType.IsODataPrimitiveTypeKind(), "Only primitive types should be able to get here.");
+                Debug.Assert(signatureArgumentType.IsODataPrimitiveTypeKind() || signatureArgumentType.IsODataEnumTypeKind(), "Only primitive or enum types should be able to get here.");
                 argumentNodes[i] = MetadataBindingUtils.ConvertToTypeIfNeeded(argumentNode, signatureArgumentType);
             }
         }
