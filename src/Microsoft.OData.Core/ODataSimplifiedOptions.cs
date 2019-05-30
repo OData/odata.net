@@ -47,7 +47,7 @@ namespace Microsoft.OData
             else
             {
                 this.EnableReadingODataAnnotationWithoutPrefix = true;
-                this.enableWritingODataAnnotationWithoutPrefix = omitODataPrefix;
+                this.enableWritingODataAnnotationWithoutPrefix = this.omitODataPrefix;
             }
         }
 
