@@ -172,8 +172,10 @@ namespace Microsoft.OData.Metadata
                 throw new ODataException(Strings.MetadataUtils_CalculateBindableOperationsForType(bindingType.FullTypeName()), exc);
             }
 
+            operations.EnsureOperationsBoundWithBindingParameter();
+
             List<IEdmOperation> operationsFound = new List<IEdmOperation>();
-            foreach (IEdmOperation operation in operations.EnsureOperationsBoundWithBindingParameter())
+            foreach (IEdmOperation operation in operations)
             {
                 IEdmOperationParameter bindingParameter = operation.Parameters.FirstOrDefault();
                 IEdmType resolvedBindingType = edmTypeResolver.GetParameterType(bindingParameter).Definition;

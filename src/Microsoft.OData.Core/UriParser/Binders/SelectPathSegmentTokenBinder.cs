@@ -177,7 +177,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            possibleFunctions = possibleFunctions.EnsureOperationsBoundWithBindingParameter().ToList();
+            possibleFunctions.EnsureOperationsBoundWithBindingParameter();
 
             // Only filter if there is more than one and its needed.
             if (possibleFunctions.Count > 1)

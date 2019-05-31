@@ -156,7 +156,7 @@ namespace Microsoft.OData.Edm
         {
             foreach (IEnumerable<IEdmOperation> operations in this.functionDictionary.Values.Distinct())
             {
-                foreach (IEdmOperation operation in operations.Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType)))
+                foreach (IEdmOperation operation in operations.Where(o => o.HasEquivalentBindingType(bindingType)))
                 {
                     yield return operation;
                 }
@@ -173,7 +173,25 @@ namespace Microsoft.OData.Edm
         /// </returns>
         public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
         {
-            return this.FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
+            var enumerable = this.FindDeclaredOperations(qualifiedName);
+            var operations = enumerable as IList<IEdmOperation>;
+            if (operations != null)
+            {
+                IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
+                for (int i = 0; i < operations.Count(); i++)
+                {
+                    if (operations[i].HasEquivalentBindingType(bindingType))
+                    {
+                        matchedOperation.Add(operations[i]);
+                    }
+                }
+
+                return matchedOperation;
+            }
+            else
+            {
+                return enumerable.Where(o => o.HasEquivalentBindingType(bindingType));
+            }
         }
 
         /// <summary>
