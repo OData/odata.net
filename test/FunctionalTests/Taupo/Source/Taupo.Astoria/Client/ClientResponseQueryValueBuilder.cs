@@ -403,6 +403,21 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         }
 
         /// <summary>
+        /// Builds an instance of QueryScalarValue from an primitiveValue instance.
+        /// </summary>
+        /// <param name="value">The primitiveValue instance</param>
+        /// <param name="type">The QueryEntityType of the primitive</param>
+        /// <returns>The converted scalar value.</returns>
+        private QueryScalarValue BuildFromPrimitive(PrimitiveValue value, QueryEntityType type)
+        {
+            // Helpful for debugging purposes to understand when things fail, on which entity they fail on
+            this.Logger.WriteLine(LogLevel.Trace, "Build From Primitive Instance with value: {0}", value.ClrValue);
+
+            // convert to query value
+            return (QueryScalarValue)this.PayloadElementToQueryValueConverter.Convert(value, type);
+        }
+
+        /// <summary>
         /// Builds an instance of QueryCollectionValue from an entity set instance.
         /// </summary>
         /// <param name="entitySetInstance">The entity set instance.</param>
@@ -412,11 +427,21 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         private QueryCollectionValue BuildFromEntitySetInstance(EntitySetInstance entitySetInstance, QueryEntityType elementType, IEnumerable<XmlBaseAnnotation> xmlBaseAnnotations)
         {
             ExceptionUtilities.CheckArgumentNotNull(elementType, "elementType");
-            var entities = new List<QueryStructuralValue>();
+            var entities = new List<QueryValue>();
+            QueryValue value;
 
-            foreach (var entityInstance in entitySetInstance)
+            foreach (var instance in entitySetInstance)
             {
-                var value = this.BuildFromEntityInstance(entityInstance, elementType, xmlBaseAnnotations.Concat(entityInstance.Annotations.OfType<XmlBaseAnnotation>()));
+                EntityInstance entity = instance as EntityInstance;
+                if (entity != null)
+                {
+                    value = this.BuildFromEntityInstance(entity, elementType, xmlBaseAnnotations.Concat(entity.Annotations.OfType<XmlBaseAnnotation>()));
+                }
+                else
+                {
+                    value = this.BuildFromPrimitive((PrimitiveValue)instance, elementType);
+                }
+
                 entities.Add(value);
             }
 

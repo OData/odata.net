@@ -172,6 +172,29 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
                 },
+                new PayloadReaderTestDescriptor(this.Settings)
+                {
+                    DebugDescription = "Feed with primitive item in feed property value.",
+                    PayloadElement = PayloadBuilder.EntitySet()
+                        .JsonRepresentation("{" +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1 ]" +
+                            "}"),
+                    PayloadEdmModel = model,
+                    ExpectedResultPayloadElement = (ReaderTestConfiguration t) => { return PayloadBuilder.EntitySet().Append(new PrimitiveValue("Edm.Int32", 1)); },
+                },
+                new PayloadReaderTestDescriptor(this.Settings)
+                {
+                    DebugDescription = "Feed with array item in feed property value.",
+                    PayloadElement = PayloadBuilder.EntitySet()
+                        .JsonRepresentation("{" +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Untyped\"," +
+                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ [ 1 ] ]" +
+                            "}")
+                        .ExpectedEntityType(EdmCoreModel.Instance.GetUntyped()),
+                    ExpectedResultPayloadElement = (ReaderTestConfiguration t) => { return PayloadBuilder.EntitySet().Append(new ODataPayloadElement[] {PayloadBuilder.EntitySet().Append(new PrimitiveValue("Edm.Int32",1)) }); },
+                    PayloadEdmModel = model,
+                },
                 #endregion Test cases
             };
 
@@ -192,7 +215,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
-//        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct error behavior for invalid feeds in Json Light.")]
+        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct error behavior for invalid feeds in Json Light.")]
         public void FeedReaderErrorTest()
         {
             IEdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -240,30 +263,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart", "StartObject")
-                },
-                //new PayloadReaderTestDescriptor(this.Settings)
-                //{
-                //    DebugDescription = "Feed with primitive item in feed property value.",
-                //    PayloadElement = PayloadBuilder.EntitySet()
-                //        .JsonRepresentation("{" +
-                //            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                //            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1 ]" +
-                //            "}")
-                //        .ExpectedEntityType(cityType, citiesEntitySet),
-                //    PayloadEdmModel = model,
-                //    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet", "PrimitiveValue")
-                //},
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    DebugDescription = "Feed with array item in feed property value.",
-                    PayloadElement = PayloadBuilder.EntitySet()
-                        .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ [] ]" +
-                            "}")
-                        .ExpectedEntityType(cityType, citiesEntitySet),
-                    PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet", "StartArray")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {

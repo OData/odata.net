@@ -38,7 +38,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// </summary>
         /// <param name="feed">The <see cref="ODataResourceSet"/> to get the entries for.</param>
         /// <returns>A list of entries or null if none were found.</returns>
-        public static IList<ODataResource> Entries(this ODataResourceSet resourceCollection)
+        public static IList<ODataItem> Entries(this ODataResourceSet resourceCollection)
         {
             ExceptionUtilities.CheckArgumentNotNull(resourceCollection, "feed");
             return resourceCollection.GetAnnotation<ODataFeedEntriesObjectModelAnnotation>();

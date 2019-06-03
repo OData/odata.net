@@ -284,18 +284,22 @@ namespace Microsoft.Test.Taupo.Astoria
 
                 if (feedInstance.Count != 0)
                 {
-                    var entityInstance = feedInstance.SingleOrDefault();
-                    ExceptionUtilities.CheckObjectNotNull(entityInstance, "Payload did not contain a single entity instance");
-
-                    var baseAddressAnnotation = feedInstance.Annotations.OfType<XmlBaseAnnotation>().SingleOrDefault();
-
-                    foreach (var streamProperty in streamPropertiesToUpdate)
+                    var instance = feedInstance.SingleOrDefault();
+                    EntityInstance entityInstance = instance as EntityInstance;
+                    if (entityInstance != null)
                     {
-                        var streamPropertyType = streamProperty.PropertyType as AstoriaQueryStreamType;
-                        ExceptionUtilities.CheckObjectNotNull(streamPropertyType, "PropertyType is not an AstoriaQueryStreamType!", streamProperty.PropertyType);
+                        ExceptionUtilities.CheckObjectNotNull(entityInstance, "Payload did not contain a single entity instance");
 
-                        var streamData = this.GenerateStreamData(entityInstance, baseAddressAnnotation, streamProperty);
-                        this.streamsToUpdate.Add(streamData);
+                        var baseAddressAnnotation = feedInstance.Annotations.OfType<XmlBaseAnnotation>().SingleOrDefault();
+
+                        foreach (var streamProperty in streamPropertiesToUpdate)
+                        {
+                            var streamPropertyType = streamProperty.PropertyType as AstoriaQueryStreamType;
+                            ExceptionUtilities.CheckObjectNotNull(streamPropertyType, "PropertyType is not an AstoriaQueryStreamType!", streamProperty.PropertyType);
+
+                            var streamData = this.GenerateStreamData(entityInstance, baseAddressAnnotation, streamProperty);
+                            this.streamsToUpdate.Add(streamData);
+                        }
                     }
                 }
 

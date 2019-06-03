@@ -186,7 +186,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return;
             }
 
-            if (objectModelItem == null || objectModelItem.GetType().IsValueType || objectModelItem is string ||
+            if (objectModelItem == null || objectModelItem is ODataPrimitiveValue || objectModelItem.GetType().IsValueType || objectModelItem is string ||
                 objectModelItem is byte[] || objectModelItem is ISpatial)
             {
                 this.VisitPrimitiveValue(objectModelItem);

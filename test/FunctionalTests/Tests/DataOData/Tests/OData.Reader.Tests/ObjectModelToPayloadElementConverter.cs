@@ -139,10 +139,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 }
 
                 // now check for the entries annotation on the feed
-                IEnumerable<ODataResource> entries = resourceCollection.Entries();
+                IEnumerable<ODataItem> entries = resourceCollection.Entries();
                 if (entries != null)
                 {
-                    foreach (ODataResource entry in entries)
+                    foreach (ODataItem entry in entries)
                     {
                         entitySet.Add(this.Visit(entry));
                     }
@@ -615,6 +615,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 }
                 else
                 {
+                    ODataPrimitiveValue odataPrimitiveValue = primitiveValue as ODataPrimitiveValue;
+                    if (odataPrimitiveValue != null)
+                    {
+                        primitiveValue = odataPrimitiveValue.Value;
+                    }
+
                     return new PrimitiveValue(EntityModelUtils.GetPrimitiveEdmType(primitiveValue.GetType()).FullEdmName(), primitiveValue);
                 }
             }

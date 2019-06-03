@@ -100,7 +100,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             this.Read(lazyReader);
         }
         
-        private void WriteEntry(ODataWriter writer, Lazy<ODataReader> lazyReader, ODataResource entry)
+        private void WriteEntry(ODataWriter writer, Lazy<ODataReader> lazyReader, ODataItem entry)
         {
             this.WriteStart(writer, entry);
             var annotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
