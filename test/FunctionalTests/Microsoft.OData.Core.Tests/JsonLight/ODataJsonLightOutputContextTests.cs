@@ -345,6 +345,28 @@ namespace Microsoft.OData.Tests.JsonLight
         #endregion async
         #endregion WriteEntityReferenceLinks
 
+        #region WriteODataPrefix
+
+        [Theory]
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        public void ShouldDefaultToWritingPrefix40(bool isResponse)
+        {
+            var outputContext = CreateJsonLightOutputContext(new MemoryStream(), isResponse);
+            outputContext.OmitODataPrefix.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        public void ShouldDefaultToOmitPrefix401(bool isResponse)
+        {
+            var outputContext = CreateJsonLightOutputContext(new MemoryStream(), isResponse, true, false, ODataVersion.V401);
+            outputContext.OmitODataPrefix.Should().BeTrue();
+        }
+
+        #endregion
+
         private static void WriteAndValidate(
             Action<ODataJsonLightOutputContext> test,
             string expectedPayload,
@@ -369,7 +391,8 @@ namespace Microsoft.OData.Tests.JsonLight
             MemoryStream stream,
             bool writingResponse = true,
             bool synchronous = true,
-            bool use6x = false)
+            bool use6x = false,
+            ODataVersion version = ODataVersion.V4)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -381,7 +404,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 Model = EdmCoreModel.Instance
             };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = version };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
             
