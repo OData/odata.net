@@ -731,5 +731,142 @@ namespace Microsoft.OData.Tests
             valueAnnotationOnProperty.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(valueAnnotationOnProperty);
         }
+
+        #region Serialize invalid type resource
+        [Fact]
+        public void WritingResourceWithTypeInHeritanceTreeWithResourceSetTypeSuccessed()
+        {
+            // Arrange
+            var model = GetGraphModel();
+            var directoryObjects = model.EntityContainer.FindEntitySet("directoryObjects");
+            var directoryObject = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "directoryObject");
+
+            ODataResource group = new ODataResource
+            {
+                TypeName = "microsoft.graph.group",
+                Properties = new[] { new ODataProperty { Name = "id", Value = "abc" }, new ODataProperty { Name = "displayName", Value = "xyz" } }
+            };
+
+            Action<ODataMessageWriter> writeAction = (messageWriter) =>
+            {
+                ODataWriter writer = messageWriter.CreateODataResourceSetWriter(directoryObjects, directoryObject); // entityset
+                writer.WriteStart(new ODataResourceSet());
+                    writer.WriteStart(group);
+                    writer.WriteEnd();
+                writer.WriteEnd();
+            };
+
+            // Act
+            string actual = GetWriterOutput(model, writeAction);
+
+            // Assert
+            Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata#directoryObjects\",\"value\":[{\"@odata.type\":\"#microsoft.graph.group\",\"id\":\"abc\",\"displayName\":\"xyz\"}]}",
+                actual);
+        }
+
+        [Fact]
+        public void WritingResourceWithTypeNotInHeritanceTreeWithResourceSetTypeThrows()
+        {
+            // Arrange
+            var model = GetGraphModel();
+            var directoryObjects = model.EntityContainer.FindEntitySet("directoryObjects");
+            var directoryObject = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "directoryObject");
+
+            ODataResource contact = new ODataResource
+            {
+                TypeName = "microsoft.graph.contact",
+                Properties = new[] { new ODataProperty { Name = "id", Value = "abc" }, new ODataProperty { Name = "displayName", Value = "xyz" } } /*open type*/
+            };
+
+            Action<ODataMessageWriter> writeAction = (messageWriter) =>
+            {
+                ODataWriter writer = messageWriter.CreateODataResourceSetWriter(directoryObjects, directoryObject); // entityset
+                writer.WriteStart(new ODataResourceSet());
+                    writer.WriteStart(contact);
+                    writer.WriteEnd();
+                writer.WriteEnd();
+            };
+
+            // Act & Assert
+            Action test = () => GetWriterOutput(model, writeAction);
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("microsoft.graph.contact", "microsoft.graph.directoryObject"), exception.Message);
+        }
+
+        [Fact]
+        public void WritingResourceWithBaseTypeWhileExpectedTypeIsSubTypeThrows()
+        {
+            // Arrange
+            var model = GetGraphModel();
+            var groups = model.EntityContainer.FindEntitySet("groups");
+            var group = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "group");
+
+            ODataResource directoryObject = new ODataResource
+            {
+                TypeName = "microsoft.graph.directoryObject",
+                Properties = new[] { new ODataProperty { Name = "id", Value = "abc" } }
+            };
+
+            Action<ODataMessageWriter> writeAction = (messageWriter) =>
+            {
+                ODataWriter writer = messageWriter.CreateODataResourceSetWriter(groups, group); // entityset
+                writer.WriteStart(new ODataResourceSet());
+                    writer.WriteStart(directoryObject);
+                    writer.WriteEnd();
+                writer.WriteEnd();
+            };
+
+            // Act & Assert
+            Action test = () => GetWriterOutput(model, writeAction);
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("microsoft.graph.directoryObject", "microsoft.graph.group"), exception.Message);
+        }
+
+        private static IEdmModel GetGraphModel()
+        {
+            /*
+            contact and directoyObject have the same common base type as "entity" as below.
+                              entity
+                           /          \
+                   directoryObject outlookItem
+                       /                \
+                   group              contact
+            */
+            var model = new EdmModel();
+
+            var entity = new EdmEntityType("microsoft.graph", "entity", null, true, false);
+            entity.AddKeys(entity.AddStructuralProperty("id", EdmCoreModel.Instance.GetString(false)));
+            model.AddElement(entity);
+
+            var directoryObject = new EdmEntityType("microsoft.graph", "directoryObject", entity, false, true);
+            model.AddElement(directoryObject);
+
+            var outlookItem = new EdmEntityType("microsoft.graph", "outlookItem", entity, true, false);
+            model.AddElement(outlookItem);
+
+            var group = new EdmEntityType("microsoft.graph", "group", directoryObject, false, true);
+            var navigation = group.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "members",
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Target = directoryObject
+            });
+            model.AddElement(group);
+
+            var contact = new EdmEntityType("microsoft.graph", "contact", outlookItem, false, true);
+            contact.AddStructuralProperty("displayName", EdmPrimitiveTypeKind.String);
+            model.AddElement(contact);
+
+            var entityContainer = new EdmEntityContainer("microsoft.graph", "default");
+            var directoryObjects = new EdmEntitySet(entityContainer, "directoryObjects", directoryObject);
+            var groups = new EdmEntitySet(entityContainer, "groups", group);
+            entityContainer.AddElement(directoryObjects);
+            entityContainer.AddElement(groups);
+            model.AddElement(entityContainer);
+            groups.AddNavigationTarget(navigation, directoryObjects);
+
+            return model;
+        }
+        #endregion
     }
 }
