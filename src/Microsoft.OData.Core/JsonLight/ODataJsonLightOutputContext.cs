@@ -185,6 +185,17 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Returns whether to write control information without the odata prefix.
+        /// </summary>
+        internal bool OmitODataPrefix
+        {
+            get
+            {
+                return this.ODataSimplifiedOptions.GetOmitODataPrefix(this.MessageWriterSettings.Version ?? ODataVersion.V4);
+            }
+        }
+
+        /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <returns>The created writer.</returns>
@@ -213,7 +224,6 @@ namespace Microsoft.OData.JsonLight
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false));
         }
 #endif
-
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a delta resource set.

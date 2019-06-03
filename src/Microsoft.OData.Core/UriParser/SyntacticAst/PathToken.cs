@@ -53,6 +53,7 @@ namespace Microsoft.OData.UriParser
             {
                 identifierHashCode = Combine(identifierHashCode, this.NextToken.GetHashCode());
             }
+
             return identifierHashCode;
         }
 

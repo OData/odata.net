@@ -157,6 +157,7 @@
     <Compile Include="..\JsonLight\ODataJsonLightUtilsTests.cs" />
     <Compile Include="..\JsonLight\ODataJsonLightValidationUtilsTests.cs" />
     <Compile Include="..\JsonLight\ODataJsonLightValueSerializerTests.cs" />
+    <Compile Include="..\JsonLight\ODataSimplifiedOptionsTests.cs" />
     <Compile Include="..\JsonLight\PayloadValueConverters.cs" />
     <Compile Include="..\JsonLight\ReorderingJsonReaderTests.cs" />
     <Compile Include="..\JsonLight\TestEntityMetadataBuilder.cs" />
