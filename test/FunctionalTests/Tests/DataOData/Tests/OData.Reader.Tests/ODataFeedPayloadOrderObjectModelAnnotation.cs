@@ -49,9 +49,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// Adds an item representing an entry in the feed.
         /// </summary>
-        public void AddEntry(ODataResource entry)
+        public void AddEntry(ODataItem entry)
         {
-            this.AddItem("Entry_" + entry.Id);
+            ODataResource resource = entry as ODataResource;
+            this.AddItem("Entry_" + resource == null ? ((ODataPrimitiveValue)entry).Value.ToString() : resource.Id.ToString());
         }
 
         /// <summary>

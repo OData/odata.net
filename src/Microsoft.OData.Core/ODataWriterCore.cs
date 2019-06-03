@@ -958,7 +958,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Create a stream to write a binary value to.
+        /// Create a stream to write a binary value.
         /// </summary>
         /// <returns>A stream for writing the binary value.</returns>
         protected virtual Stream StartBinaryStream()
@@ -975,16 +975,16 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Create a TextWriter to write a tring value to.
+        /// Create a TextWriter to write a string value.
         /// </summary>
-        /// <returns>A TextWriter for writing the text value.</returns>
+        /// <returns>A TextWriter for writing the string value.</returns>
         protected virtual TextWriter StartTextWriter()
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Finish writing a stream.
+        /// Finish writing a string value.
         /// </summary>
         protected virtual void EndTextWriter()
         {
@@ -2678,7 +2678,7 @@ namespace Microsoft.OData
                     scope = this.CreateResourceSetScope((ODataResourceSet)item, navigationSource, itemType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
                     if (this.outputContext.Model.IsUserModel())
                     {
-                        Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a delta resource set that is not a ResourceSetBaseScope");
+                        Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a resource set that is not a ResourceSetBaseScope");
                         ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(itemType);
                     }
 

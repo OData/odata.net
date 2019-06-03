@@ -829,7 +829,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                 var contentType = streamJsonObject.Properties.SingleOrDefault(a => a.Name.Equals(ContentTypeFieldName));
                 if (contentType != null)
                 {
-                    nsi.SourceLinkContentType = nsi.EditLinkContentType = (string)((JsonPrimitiveValue)contentType.Value).Value;
+                    nsi.EditLinkContentType = nsi.SourceLinkContentType = (string)((JsonPrimitiveValue)contentType.Value).Value;
                 }
 
                 elem = nsi;
