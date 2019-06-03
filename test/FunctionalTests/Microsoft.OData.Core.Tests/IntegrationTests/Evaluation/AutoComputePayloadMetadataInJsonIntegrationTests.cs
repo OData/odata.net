@@ -753,6 +753,210 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         }
 
         [Fact]
+        public void WritingNestedSingleEntityReferenceLinkInRequest_ODataV4_Works()
+        {
+            // Arrange & Act
+            string payload = GetEntityReferenceLinksPayload(ODataVersion.V4, request: true, collection: false);
+
+            // Assert
+            Assert.Equal("{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
+                "\"CustomerId\":7," +
+                "\"BillOrder@odata.bind\":\"http://svc/Orders(8)\"" +
+              "}", payload);
+        }
+
+        [Fact]
+        public void WritingNestedSingleEntityReferenceLinkInResponse_ODataV4_Works()
+        {
+            // Arrange & Act
+            string payload = GetEntityReferenceLinksPayload(ODataVersion.V4, request: false, collection: false);
+
+            // Assert
+            Assert.Equal("{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
+                "\"CustomerId\":7," +
+                "\"BillOrder\":{" +
+                    "\"@odata.id\":\"Orders(8)\"" +
+                  "}" +
+                "}", payload);
+        }
+
+        [Fact]
+        public void WritingNestedSingleEntityReferenceLinkInRequest_ODataV401_Works()
+        {
+            // Arrange & Act
+            string payload = GetEntityReferenceLinksPayload(ODataVersion.V401, request: true, collection: false);
+
+            // Assert
+            Assert.Equal("{\"@context\":\"http://svc/$metadata#Customers/$entity\"," +
+                "\"CustomerId\":7," +
+                "\"BillOrder\":{" +
+                    "\"@id\":\"Orders(8)\"" +
+                  "}" +
+                "}", payload);
+        }
+
+        [Fact]
+        public void WritingNestedSingleEntityReferenceLinkInResponse_ODataV401_Works()
+        {
+            // Arrange & Act
+            string payload = GetEntityReferenceLinksPayload(ODataVersion.V401, request: false, collection: false);
+
+            // Assert
+            Assert.Equal("{\"@context\":\"http://svc/$metadata#Customers/$entity\"," +
+                "\"CustomerId\":7," +
+                "\"BillOrder\":{" +
+                    "\"@id\":\"Orders(8)\"" +
+                  "}" +
+                "}", payload);
+        }
+
+        [Fact]
+        public void WritingNestedCollectionEntityReferenceLinksInRequest_ODataV4_Works()
+        {
+            // Arrange & Act
+            string payload = GetEntityReferenceLinksPayload(ODataVersion.V4, request: true, collection: true);
+
+            // Assert
+            Assert.Equal("{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
+                "\"CustomerId\":7," +
+                "\"BillOrders@odata.bind\":[" +
+                  "\"http://svc/Orders(2)\"," +
+                  "\"http://svc/Orders(3)\"," +
+                  "\"http://svc/Orders(4)\"" +
+                "]" +
+              "}", payload);
+        }
+
+        [Fact]
+        public void WritingNestedCollectionEntityReferenceLinksInResponse_ODataV4_Works()
+        {
+            // Arrange & Act
+            string payload = GetEntityReferenceLinksPayload(ODataVersion.V4, request: false, collection: true);
+
+            // Assert
+            Assert.Equal("{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
+                "\"CustomerId\":7," +
+                "\"BillOrders\":[" +
+                    "{\"@odata.id\":\"Orders(2)\"}," +
+                    "{\"@odata.id\":\"Orders(3)\"}," +
+                    "{\"@odata.id\":\"Orders(4)\"}" +
+                  "]" +
+                "}", payload);
+        }
+
+        [Fact]
+        public void WritingNestedCollectionEntityReferenceLinksInRequest_ODataV401_Works()
+        {
+            // Arrange & Act
+            string payload = GetEntityReferenceLinksPayload(ODataVersion.V401, request: true, collection: true);
+
+            // Assert
+            Assert.Equal("{\"@context\":\"http://svc/$metadata#Customers/$entity\"," +
+                "\"CustomerId\":7," +
+                "\"BillOrders\":[" +
+                    "{\"@id\":\"Orders(2)\"}," +
+                    "{\"@id\":\"Orders(3)\"}," +
+                    "{\"@id\":\"Orders(4)\"}" +
+                  "]" +
+                "}", payload);
+        }
+
+        [Fact]
+        public void WritingNestedCollectionEntityReferenceLinksInResponse_ODataV401_Works()
+        {
+            // Arrange & Act
+            string payload = GetEntityReferenceLinksPayload(ODataVersion.V401, request: false, collection: true);
+
+            // Assert
+            Assert.Equal("{\"@context\":\"http://svc/$metadata#Customers/$entity\"," +
+                "\"CustomerId\":7," +
+                "\"BillOrders\":[" +
+                    "{\"@id\":\"Orders(2)\"}," +
+                    "{\"@id\":\"Orders(3)\"}," +
+                    "{\"@id\":\"Orders(4)\"}" +
+                  "]" +
+                "}", payload);
+        }
+
+        private string GetEntityReferenceLinksPayload(ODataVersion version, bool request, bool collection)
+        {
+            MemoryStream stream = new MemoryStream();
+            ODataWriter odataWriter = GetODataWriterForEntityReferenceLink(version, request, stream);
+
+            odataWriter.WriteStart(new ODataResource { Properties = new[] { new ODataProperty { Name = "CustomerId", Value = 7 } } });
+            if (collection)
+            {
+                odataWriter.WriteStart(new ODataNestedResourceInfo { Name = "BillOrders", IsCollection = true });
+                odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(2)") });
+                odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(3)") });
+                odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(4)") });
+            }
+            else
+            {
+                odataWriter.WriteStart(new ODataNestedResourceInfo { Name = "BillOrder", IsCollection = false });
+                odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://svc/Orders(8)") });
+            }
+            odataWriter.WriteEnd();
+            odataWriter.WriteEnd();
+            odataWriter.Flush();
+
+            return Encoding.UTF8.GetString(stream.ToArray());
+        }
+
+        private ODataWriter GetODataWriterForEntityReferenceLink(ODataVersion version, bool request, MemoryStream stream)
+        {
+            // Arrange - Edm model
+            var model = new EdmModel();
+            var customer = new EdmEntityType("NS", "Customer");
+            customer.AddKeys(customer.AddStructuralProperty("CustomerId", EdmPrimitiveTypeKind.Int32));
+            model.AddElement(customer);
+
+            var order = new EdmEntityType("NS", "Order");
+            order.AddKeys(order.AddStructuralProperty("OrderId", EdmPrimitiveTypeKind.Int32));
+            model.AddElement(order);
+            customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "BillOrder",
+                Target = order,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "BillOrders",
+                Target = order,
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+
+            var container = new EdmEntityContainer("NS", "Container");
+            var customers = container.AddEntitySet("Customers", customer);
+            model.AddElement(container);
+
+            var message = new InMemoryMessage { Stream = stream };
+            var settings = new ODataMessageWriterSettings
+            {
+                ODataUri = new ODataUri
+                {
+                    ServiceRoot = new Uri("http://svc/")
+                },
+                Version = version
+            };
+
+            ODataMessageWriter writer;
+            if (request)
+            {
+                writer = new ODataMessageWriter((IODataRequestMessage)message, settings, model);
+            }
+            else
+            {
+                writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+            }
+
+            // Act
+            return writer.CreateODataResourceWriter(customers);
+        }
+
+        [Fact]
         public void WritingResourceNestedPropertyWithEdmAbstractTypeWorks()
         {
             EdmEntitySet entitySet;

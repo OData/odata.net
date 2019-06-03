@@ -462,6 +462,16 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.True(TypePromotionUtils.CanConvertTo(null, primitiveType, stringType));
         }
 
+
+        [Fact]
+        public void EnumTypesOfSameFullNameAndStructureCanConvertToEachOther()
+        {
+            var enumType1 = new EdmEnumTypeReference(new EdmEnumType("MyNS", "MyName", false), false);
+            var enumType2 = new EdmEnumTypeReference(new EdmEnumType("MyNS", "MyName", false), false);
+            Assert.True(TypePromotionUtils.CanConvertTo(null, enumType1, enumType2));
+            Assert.True(TypePromotionUtils.CanConvertTo(null, enumType2, enumType1));
+        }
+
         [Fact]
         public void DefaultTypeFacetsPromotionRulesTest()
         {

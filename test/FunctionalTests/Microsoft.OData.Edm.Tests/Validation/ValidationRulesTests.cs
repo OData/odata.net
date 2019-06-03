@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
@@ -506,12 +507,10 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmFunction function = new EdmFunction("ns", "GetStuff", new EdmEntityTypeReference(testModelContainer.T2, false), true /*isBound*/, new EdmPathExpression("bindingEntity/ColNav"), false);
             function.AddParameter("bindingEntity", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(testModelContainer.T3, false))));
 
-            ValidateErrorInList(
-                ValidationRules.OperationReturnTypeEntityTypeMustBeValid, 
-                testModelContainer.Model, 
-                function,
-                EdmErrorCode.OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType,
-                Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType(function.Name));
+            ValidateNoError(
+                ValidationRules.OperationReturnTypeEntityTypeMustBeValid,
+                testModelContainer.Model,
+                function);
         }
 
         [Fact]
@@ -1399,6 +1398,27 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 singleton,
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
                 Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "singleton", "Me"));
+        }
+
+        [Fact]
+        public void TargetOfAnAnnotationIsNotAllowedInAppliesToOfTheTermShouldError()
+        {
+            EdmModel model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "Entity");
+            model.AddElement(entityType);
+
+            // <Term Name="ResourcePath" Type="Edm.String" AppliesTo="EntitySet Singleton ActionImport FunctionImport">
+            var term = model.FindTerm("Org.OData.Core.V1.ResourcePath");
+            var annotation = new EdmVocabularyAnnotation(entityType, term, new EdmStringConstant("4.0 4.01"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            ValidateError(
+                ValidationRules.VocabularyAnnotationTargetAllowedApplyToElement,
+                annotation,
+                EdmErrorCode.AnnotationApplyToNotAllowedAnnotatable,
+                Strings.EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable("NS.Entity",
+                "EntitySet Singleton ActionImport FunctionImport", "Org.OData.Core.V1.ResourcePath"));
         }
 
         private static void ValidateNoError<T>(ValidationRule<T> validationRule, IEdmModel model, T item) where T : IEdmElement

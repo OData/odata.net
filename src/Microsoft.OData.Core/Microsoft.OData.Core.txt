@@ -55,7 +55,6 @@ ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter=Cannot write a 
 ODataWriterCore_SyncCallOnAsyncWriter=A synchronous operation was called on an asynchronous writer. Calls on a writer instance must be either all synchronous or all asynchronous.
 ODataWriterCore_AsyncCallOnSyncWriter=An asynchronous operation was called on a synchronous writer. Calls on a writer instance must be either all synchronous or all asynchronous.
 ODataWriterCore_EntityReferenceLinkWithoutNavigationLink=An entity reference link was written without a surrounding navigation link. The WriteEntityReferenceLink or WriteEntityReferenceLinkAsync methods can only be used when writing the content of a navigation link.
-ODataWriterCore_EntityReferenceLinkInResponse=An entity reference link was written into a response. The WriteEntityReferenceLink or WriteEntityReferenceLinkAsync methods can only be used when writing a request.
 ODataWriterCore_DeferredLinkInRequest=A deferred link was written into a request. In requests, each nested resource info must have a resource set, resource, or entity reference link written into it.
 ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent=More than one item was written into the content of a nested resource. In OData, a nested resource can only contain more than one item in its content when ODataNestedResourceInfo.IsCollection set to true, and the writer is writing a request.
 ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet=The ODataResourceSet.DeltaLink property must be null for expanded resource sets. Delta link is not supported on expanded resource sets.
@@ -557,7 +556,7 @@ ODataJsonLightResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSe
 ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet=A property with name '{0}' was found when reading a top-level resource set. No properties other than the resource set property with name '{1}' are allowed.
 ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType=A property '{0}' which only has property annotations in the payload but no property value is declared to be of type '{1}'. In OData, only navigation properties and named streams can be represented as properties without values.
 ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue=A property '{0}' which only has property annotations in the payload but no property value is an open property. In OData, open property must be represented as a property with value.
-ODataJsonLightResourceDeserializer_StreamPropertyInRequest=A stream property was found in a JSON Light request payload. Stream properties are only supported in responses.
+ODataJsonLightResourceDeserializer_StreamPropertyInRequest=A stream property {0} was found in a JSON Light request payload. Stream properties are only supported in responses.
 ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation=The stream property '{0}' has a property annotation '{1}'. Stream property can only have the 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaEtag' and 'odata.mediaContentType' property annotations.
 ODataJsonLightResourceDeserializer_StreamPropertyWithValue=A stream property '{0}' has a value in the payload. In OData, stream property must not have a value, it must only use property annotations.
 ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Deferred navigation links can only have the 'odata.navigationLink' and 'odata.associationLink' property annotations.
@@ -953,8 +952,8 @@ JsonReader_InvalidPropertyNameOrUnexpectedComma=Invalid JSON. The property name 
 JsonReader_MaxBufferReached=Cannot increase the JSON reader buffer to hold the input JSON which has very long token.
 JsonReader_CannotAccessValueInStreamState=Cannot access the Value property while streaming a value. Please dispose the StreamReader or TextReader before continuing.
 JsonReader_CannotCallReadInStreamState=Cannot call Read while streaming a value. Please dispose the StreamReader or TextReader before continuing.
-JsonReader_CannotCallCreateReadStream=Cannot create a Stream in the current state. A Stream can only be created for reading a JSON string value when positioned on, and before accessing, the value.
-JsonReader_CannotCallCreateTextReader=Cannot create a TextReader in the current state. A TextReader can only be created for reading a JSON string value when positioned on, and before accessing, the value.
+JsonReader_CannotCreateReadStream=Cannot create a Stream in the current state. A Stream can only be created for reading a JSON string value when positioned on, and before accessing, the value.
+JsonReader_CannotCreateTextReader=Cannot create a TextReader in the current state. A TextReader can only be created for reading a JSON string value when positioned on, and before accessing, the value.
 
 JsonReaderExtensions_UnexpectedNodeDetected=An unexpected '{1}' node was found when reading from the JSON reader. A '{0}' node was expected.
 JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName=An unexpected '{1}' node was found for property named '{2}' when reading from the JSON reader. A '{0}' node was expected.

@@ -143,6 +143,11 @@ namespace Microsoft.OData.UriParser
             SingleValueNode singleValueParent = parent as SingleValueNode;
             if (singleValueParent != null)
             {
+                if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
+                {
+                    return new CountVirtualPropertyNode();
+                }
+
                 if (state.IsCollapsed && !IsAggregatedProperty(endPathToken))
                 {
                     throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(endPathToken.Identifier));
@@ -163,11 +168,6 @@ namespace Microsoft.OData.UriParser
                 if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
                 {
                     return boundFunction;
-                }
-
-                if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
-                {
-                    return new CountVirtualPropertyNode();
                 }
 
                 return GeneratePropertyAccessQueryForOpenType(endPathToken, singleValueParent);

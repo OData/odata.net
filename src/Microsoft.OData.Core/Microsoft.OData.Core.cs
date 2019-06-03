@@ -85,7 +85,6 @@ namespace Microsoft.OData {
         internal const string ODataWriter_RelativeUriUsedWithoutBaseUriSpecified = "ODataWriter_RelativeUriUsedWithoutBaseUriSpecified";
         internal const string ODataWriter_StreamPropertiesMustBePropertiesOfODataResource = "ODataWriter_StreamPropertiesMustBePropertiesOfODataResource";
         internal const string ODataWriterCore_InvalidStateTransition = "ODataWriterCore_InvalidStateTransition";
-        internal const string ODataWriterCore_PropertyValueAlreadyWritten = "ODataWriterCore_PropertyValueAlreadyWritten";
         internal const string ODataWriterCore_InvalidTransitionFromStart = "ODataWriterCore_InvalidTransitionFromStart";
         internal const string ODataWriterCore_InvalidTransitionFromResource = "ODataWriterCore_InvalidTransitionFromResource";
         internal const string ODataWriterCore_InvalidTransitionFrom40DeletedResource = "ODataWriterCore_InvalidTransitionFrom40DeletedResource";
@@ -110,7 +109,6 @@ namespace Microsoft.OData {
         internal const string ODataWriterCore_SyncCallOnAsyncWriter = "ODataWriterCore_SyncCallOnAsyncWriter";
         internal const string ODataWriterCore_AsyncCallOnSyncWriter = "ODataWriterCore_AsyncCallOnSyncWriter";
         internal const string ODataWriterCore_EntityReferenceLinkWithoutNavigationLink = "ODataWriterCore_EntityReferenceLinkWithoutNavigationLink";
-        internal const string ODataWriterCore_EntityReferenceLinkInResponse = "ODataWriterCore_EntityReferenceLinkInResponse";
         internal const string ODataWriterCore_DeferredLinkInRequest = "ODataWriterCore_DeferredLinkInRequest";
         internal const string ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent = "ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent";
         internal const string ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet = "ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet";
@@ -339,9 +337,10 @@ namespace Microsoft.OData {
         internal const string ODataReaderCore_AsyncCallOnSyncReader = "ODataReaderCore_AsyncCallOnSyncReader";
         internal const string ODataReaderCore_ReadOrReadAsyncCalledInInvalidState = "ODataReaderCore_ReadOrReadAsyncCalledInInvalidState";
         internal const string ODataReaderCore_CreateReadStreamCalledInInvalidState = "ODataReaderCore_CreateReadStreamCalledInInvalidState";
-        internal const string ODataReaderCore_CreateTextReaderCalledInInvalidState = "ODataReaderCore_CreateReadTextReaderCalledInInvalidState";
+        internal const string ODataReaderCore_CreateTextReaderCalledInInvalidState = "ODataReaderCore_CreateTextReaderCalledInInvalidState";
         internal const string ODataReaderCore_ReadCalledWithOpenStream = "ODataReaderCore_ReadCalledWithOpenStream";
         internal const string ODataReaderCore_NoReadCallsAllowed = "ODataReaderCore_NoReadCallsAllowed";
+        internal const string ODataWriterCore_PropertyValueAlreadyWritten = "ODataWriterCore_PropertyValueAlreadyWritten";
         internal const string ODataJsonReader_CannotReadResourcesOfResourceSet = "ODataJsonReader_CannotReadResourcesOfResourceSet";
         internal const string ODataJsonReaderUtils_CannotConvertInt32 = "ODataJsonReaderUtils_CannotConvertInt32";
         internal const string ODataJsonReaderUtils_CannotConvertDouble = "ODataJsonReaderUtils_CannotConvertDouble";

@@ -55,7 +55,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         }
 
         /// <summary>
-        /// Constroctur
+        /// Constructor
         /// </summary>
         /// <param name="mainCsdlModel">The main raw CsdlModel.</param>
         /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
@@ -335,25 +335,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return ret;
         }
 
-        public string ReplaceAlias(string name)
-        {
-            var mappings = this.GetNamespaceAliases();
-            var list = this.GetUsedNamespacesHavingAlias();
-
-            if (list != null && mappings != null && name.Contains("."))
-            {
-                var typeAlias = name.Split('.').First();
-                var ns = list.FirstOrDefault(n =>
-                {
-                    string alias;
-                    return mappings.TryGetValue(n, out alias) && alias == typeAlias;
-                });
-                return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}.{1}", ns, name.Substring(typeAlias.Length + 1)) : null;
-            }
-
-            return null;
-        }
-
         internal void AddToReferencedModels(IEnumerable<IEdmModel> models)
         {
             foreach (var edmModel in models)
@@ -609,12 +590,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 foreach (CsdlAnnotations schemaOutOfLineAnnotations in schema.OutOfLineAnnotations)
                 {
-                    string target = schemaOutOfLineAnnotations.Target;
-                    string replaced = this.ReplaceAlias(target);
-                    if (replaced != null)
-                    {
-                        target = replaced;
-                    }
+                    string target = this.ReplaceAlias(schemaOutOfLineAnnotations.Target);
 
                     List<CsdlSemanticsAnnotations> annotations;
                     if (!this.outOfLineAnnotations.TryGetValue(target, out annotations))

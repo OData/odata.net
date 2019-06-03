@@ -606,13 +606,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The operation '{0}' entity set path was determined to be a collection but the return type is not a collection."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType, p0);
-        }
-
-        /// <summary>
         /// A string like "The operation '{0}' entity set path was determined to be a reference property but the return type is a collection."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType(object p0) {
@@ -1077,6 +1070,13 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string EdmModel_Validator_Semantic_InaccessibleTarget(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InaccessibleTarget, p0);
+        }
+
+        /// <summary>
+        /// A string like "The target '{0}' of the annotation is not allowed in the AppliesTo '{1}' of the term '{2}'."."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable, p0, p1, p2);
         }
 
         /// <summary>

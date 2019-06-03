@@ -1798,11 +1798,6 @@ namespace Microsoft.OData
         {
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
 
-            if (this.outputContext.WritingResponse)
-            {
-                this.ThrowODataException(Strings.ODataWriterCore_EntityReferenceLinkInResponse, null);
-            }
-
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.EntityReferenceLink, null);
             Debug.Assert(
                 this.CurrentScope.Item is ODataNestedResourceInfo,
@@ -1941,8 +1936,8 @@ namespace Microsoft.OData
                 if (currentScope.State == WriterState.NestedResourceInfoWithContent)
                 {
                     // If we are already in the NestedResourceInfoWithContent state, it means the caller is trying to write two items
-                    // into the nested resource info content. This is only allowed for collection navigation property in request.
-                    if (this.outputContext.WritingResponse || currentNestedResourceInfo.IsCollection != true)
+                    // into the nested resource info content. This is only allowed for collection navigation property in request/response.
+                    if (currentNestedResourceInfo.IsCollection != true)
                     {
                         this.ThrowODataException(Strings.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, currentNestedResourceInfo);
                     }
@@ -2685,12 +2680,6 @@ namespace Microsoft.OData
                     {
                         Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a delta resource set that is not a ResourceSetBaseScope");
                         ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(itemType);
-                    }
-
-                    if (this.outputContext.Model.IsUserModel())
-                    {
-                        Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a delta resource set that is not a ResourceSetBaseScope");
-                        ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(resourceType);
                     }
 
                     break;
