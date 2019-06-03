@@ -219,9 +219,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             writer.WriteEnd();
         }
 
-        private void WriteEntry(ODataWriter writer, ODataResource entry)
+        private void WriteEntry(ODataWriter writer, ODataItem entry)
         {
-            writer.WriteStart(entry);
+            ODataResource resource = entry as ODataResource;
+            if (resource != null)
+            {
+                writer.WriteStart(resource);
+            }
+            else
+            {
+                writer.WritePrimitive((ODataPrimitiveValue)entry);
+            }
+
             var annotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
             ODataNestedResourceInfo navLink = null;
             if (annotation != null)

@@ -400,7 +400,7 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         protected override Task<bool> ReadAtPrimitiveImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtEntityReferenceLinkSynchronously);
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtPrimitiveSynchronously);
         }
 #endif
         #endregion Primitive
@@ -1012,7 +1012,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput ||
-                (this.ParentScope != null && this.ParentScope.ResourceType.TypeKind == EdmTypeKind.Untyped &&
+                (this.ParentScope != null && (this.ParentScope.ResourceType == null || this.ParentScope.ResourceType.TypeKind == EdmTypeKind.Untyped) &&
                     (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue ||
                     this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
                     this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||

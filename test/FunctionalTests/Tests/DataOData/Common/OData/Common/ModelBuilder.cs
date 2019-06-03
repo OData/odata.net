@@ -535,7 +535,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 Debug.Assert(feed != null, "feed != null");
                 if (feed.Count > 0)
                 {
-                    return model.EntityTypes().Single(et => et.TestFullName() == feed.First().FullTypeName);
+                    return model.EntityTypes().Single(et => et.TestFullName() == ((TypedValue)feed.First()).FullTypeName);
                 }
                 else
                 {
