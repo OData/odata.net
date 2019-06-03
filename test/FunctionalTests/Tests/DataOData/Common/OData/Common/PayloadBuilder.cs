@@ -329,16 +329,9 @@ namespace Microsoft.Test.Taupo.OData.Common
                 SourceLink = readLink,
                 EditLink = editLink,
                 ETag = etag,
+                EditLinkContentType = contentType,
+                SourceLinkContentType = contentType,
             };
-
-            if (editLink != null)
-            {
-                namedStream.EditLinkContentType = contentType;
-            }
-            else
-            {
-                namedStream.SourceLinkContentType = contentType;
-            }
 
             return namedStream;
         }
@@ -520,7 +513,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="nextLink">NextLink for the entity set instance</param>
         /// <param name="inlineCount">InlineCount for the entity set instance</param>
         /// <returns>a new entity set instance</returns>
-        public static EntitySetInstance EntitySet(IEnumerable<EntityInstance> entries, string nextLink = null, int? inlineCount = null)
+        public static EntitySetInstance EntitySet(IEnumerable<ODataPayloadElement> entries, string nextLink = null, int? inlineCount = null)
         {
             return PayloadBuilder.EntitySet(nextLink, inlineCount).Append(entries);
         }
@@ -569,7 +562,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="entitySet">The <see cref="EntitySetInstance"/> to add the <paramref name="entries"/> to.</param>
         /// <param name="entries">The entries to append to the <paramref name="entitySet"/>.</param>
         /// <returns>The <paramref name="entitySet" /> with all the <paramref name="entries" /> added.</returns>
-        public static EntitySetInstance Append(this EntitySetInstance entitySet, IEnumerable<EntityInstance> entries)
+        public static EntitySetInstance Append(this EntitySetInstance entitySet, IEnumerable<ODataPayloadElement> entries)
         {
             ExceptionUtilities.CheckArgumentNotNull(entitySet, "entitySet");
 
@@ -582,7 +575,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="entitySet">The <see cref="EntitySetInstance"/> to add the <paramref name="entries"/> to.</param>
         /// <param name="entries">The entries to append to the <paramref name="entitySet"/>.</param>
         /// <returns>The <paramref name="entitySet" /> with all the <paramref name="entries" /> added.</returns>
-        public static EntitySetInstance Append(this EntitySetInstance entitySet, params EntityInstance[] entries)
+        public static EntitySetInstance Append(this EntitySetInstance entitySet, params ODataPayloadElement[] entries)
         {
             ExceptionUtilities.CheckArgumentNotNull(entitySet, "entitySet");
 
@@ -595,7 +588,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="entitySet">The <see cref="EntitySetInstance"/> to prepend the <paramref name="entries"/> to.</param>
         /// <param name="entries">The entries to prepend to the <paramref name="entitySet"/>.</param>
         /// <returns>The <paramref name="entitySet" /> with all the <paramref name="entries" /> prepended.</returns>
-        public static EntitySetInstance Prepend(this EntitySetInstance entitySet, IEnumerable<EntityInstance> entries)
+        public static EntitySetInstance Prepend(this EntitySetInstance entitySet, IEnumerable<ODataPayloadElement> entries)
         {
             ExceptionUtilities.CheckArgumentNotNull(entitySet, "entitySet");
 
@@ -608,7 +601,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="entitySet">The <see cref="EntitySetInstance"/> to prepend the <paramref name="entries"/> to.</param>
         /// <param name="entries">The entries to prepend to the <paramref name="entitySet"/>.</param>
         /// <returns>The <paramref name="entitySet" /> with all the <paramref name="entries" /> prepended.</returns>
-        public static EntitySetInstance Prepend(this EntitySetInstance entitySet, params EntityInstance[] entries)
+        public static EntitySetInstance Prepend(this EntitySetInstance entitySet, params ODataPayloadElement[] entries)
         {
             ExceptionUtilities.CheckArgumentNotNull(entitySet, "entitySet");
 
@@ -621,7 +614,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="entitySet">The <see cref="EntitySetInstance"/> to insert the <paramref name="entries"/> into.</param>
         /// <param name="entries">The entries to insert into the <paramref name="entitySet"/>.</param>
         /// <returns>The <paramref name="entitySet" /> with all the <paramref name="entries" /> inserted.</returns>
-        public static EntitySetInstance InsertAt(this EntitySetInstance entitySet, int position, IEnumerable<EntityInstance> entries)
+        public static EntitySetInstance InsertAt(this EntitySetInstance entitySet, int position, IEnumerable<ODataPayloadElement> entries)
         {
             ExceptionUtilities.CheckArgumentNotNull(entitySet, "entitySet");
             ExceptionUtilities.Assert(position >= 0, "position >= 0");
@@ -636,7 +629,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="entitySet">The <see cref="EntitySetInstance"/> to insert the <paramref name="entries"/> into.</param>
         /// <param name="entries">The entries to insert into the <paramref name="entitySet"/>.</param>
         /// <returns>The <paramref name="entitySet" /> with all the <paramref name="entries" /> inserted.</returns>
-        public static EntitySetInstance InsertAt(this EntitySetInstance entitySet, int position, params EntityInstance[] entries)
+        public static EntitySetInstance InsertAt(this EntitySetInstance entitySet, int position, params ODataPayloadElement[] entries)
         {
             ExceptionUtilities.CheckArgumentNotNull(entitySet, "entitySet");
             ExceptionUtilities.Assert(position >= 0, "position >= 0");

@@ -532,6 +532,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public ExpectedException ExpectedException { get; set; }
 
         /// <summary>
+        /// Whether the test descriptor is expected to fail on request.
+        /// </summary>
+        public bool InvalidOnRequest { get; set; }
+
+        /// <summary>
         /// Optional URL resolver to put on the message.
         /// </summary>
         public IODataPayloadUriConverter UrlResolver { get; set; }

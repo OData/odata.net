@@ -132,7 +132,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return this.VisitBatch(batch);
             }
 
-            if (objectModelItem == null || objectModelItem.GetType().IsValueType || objectModelItem is string ||
+            if (objectModelItem == null || objectModelItem is ODataPrimitiveValue || objectModelItem.GetType().IsValueType || objectModelItem is string ||
                 objectModelItem is byte[] || objectModelItem is ISpatial)
             {
                 return this.VisitPrimitiveValue(objectModelItem);

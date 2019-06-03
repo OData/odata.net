@@ -197,14 +197,14 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                     using (this.Assert.WithMessage("Complex multi-value did not match expectation"))
                     {
                         var expandedLink = (ExpandedLink)observed;
-                        this.CompareList<ComplexInstance, EntityInstance>(expected, expandedLink.ExpandedElement as EntitySetInstance);
+                        this.CompareList<ComplexInstance, ODataPayloadElement>(expected, expandedLink.ExpandedElement as EntitySetInstance);
                     }
                 }
                 else if (observed.ElementType == ODataPayloadElementType.EntitySetInstance)
                 {
                     using (this.Assert.WithMessage("Complex multi-value did not match expectation"))
                     {
-                        this.CompareList<ComplexInstance, EntityInstance>(expected, (EntitySetInstance)observed);
+                        this.CompareList<ComplexInstance, ODataPayloadElement>(expected, (EntitySetInstance)observed);
                     }
                 }
                 else

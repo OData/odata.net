@@ -660,13 +660,15 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                if (this.parsedSegments.Last().TargetKind != RequestTargetKind.Resource)
+                ODataPathSegment lastSegment = this.parsedSegments.Last();
+                if (lastSegment.TargetKind != RequestTargetKind.Resource)
                 {
                     throw ExceptionUtil.CreateBadRequestError(
-                        ODataErrorStrings.PathParser_EntityReferenceNotSupported(this.parsedSegments.Last().Identifier));
+                        ODataErrorStrings.PathParser_EntityReferenceNotSupported(lastSegment.Identifier));
                 }
 
                 ReferenceSegment referenceSegment = new ReferenceSegment(lastNavigationSource);
+                referenceSegment.SingleResult = lastSegment.SingleResult;
                 this.parsedSegments.Add(referenceSegment);
             }
 
