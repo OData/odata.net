@@ -403,11 +403,11 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         }
 
         /// <summary>
-        /// Builds an instance of QueryPrimitiveValue from an primitiveValue instance.
+        /// Builds an instance of QueryScalarValue from an primitiveValue instance.
         /// </summary>
         /// <param name="value">The primitiveValue instance</param>
-        /// <param name="type">The QueryEntityType of the entity</param>
-        /// <returns>The converted structural value of entity instance.</returns>
+        /// <param name="type">The QueryEntityType of the primitive</param>
+        /// <returns>The converted scalar value.</returns>
         private QueryScalarValue BuildFromPrimitive(PrimitiveValue value, QueryEntityType type)
         {
             // Helpful for debugging purposes to understand when things fail, on which entity they fail on
