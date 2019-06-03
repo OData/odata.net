@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -152,15 +151,15 @@ namespace Microsoft.OData.Metadata
         /// <param name="model">The model to search for operations.</param>
         /// <param name="edmTypeResolver">The edm type resolver to get the parameter type.</param>
         /// <returns>An enumeration of operations that are always bindable to the given type.</returns>
-        internal static IEdmOperation[] CalculateBindableOperationsForType(IEdmType bindingType, IEdmModel model, EdmTypeResolver edmTypeResolver)
+        internal static IList<IEdmOperation> CalculateBindableOperationsForType(IEdmType bindingType, IEdmModel model, EdmTypeResolver edmTypeResolver)
         {
             Debug.Assert(model != null, "model != null");
             Debug.Assert(edmTypeResolver != null, "edmTypeResolver != null");
 
-            List<IEdmOperation> operations = null;
+            IEnumerable<IEdmOperation> operations = null;
             try
             {
-                operations = model.FindBoundOperations(bindingType).ToList();
+                operations = model.FindBoundOperations(bindingType);
             }
             catch (Exception exc)
             {
@@ -172,11 +171,19 @@ namespace Microsoft.OData.Metadata
                 throw new ODataException(Strings.MetadataUtils_CalculateBindableOperationsForType(bindingType.FullTypeName()), exc);
             }
 
-            operations.EnsureOperationsBoundWithBindingParameter();
-
             List<IEdmOperation> operationsFound = new List<IEdmOperation>();
             foreach (IEdmOperation operation in operations)
             {
+                if (!operation.IsBound)
+                {
+                    throw new ODataException(Strings.EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
+                }
+
+                if (operation.Parameters.FirstOrDefault() == null)
+                {
+                    throw new ODataException(Strings.EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
+                }
+
                 IEdmOperationParameter bindingParameter = operation.Parameters.FirstOrDefault();
                 IEdmType resolvedBindingType = edmTypeResolver.GetParameterType(bindingParameter).Definition;
                 if (resolvedBindingType.IsAssignableFrom(bindingType))
@@ -185,7 +192,7 @@ namespace Microsoft.OData.Metadata
                 }
             }
 
-            return operationsFound.ToArray();
+            return operationsFound;
         }
 
         /// <summary>

@@ -173,12 +173,12 @@ namespace Microsoft.OData.Edm
         /// </returns>
         public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
         {
-            var enumerable = this.FindDeclaredOperations(qualifiedName);
-            var operations = enumerable as IList<IEdmOperation>;
+            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredOperations(qualifiedName);
+            IList<IEdmOperation> operations = enumerable as IList<IEdmOperation>;
             if (operations != null)
             {
                 IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
-                for (int i = 0; i < operations.Count(); i++)
+                for (int i = 0; i < operations.Count; i++)
                 {
                     if (operations[i].HasEquivalentBindingType(bindingType))
                     {

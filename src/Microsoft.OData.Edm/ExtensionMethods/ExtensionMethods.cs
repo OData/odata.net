@@ -2824,7 +2824,6 @@ namespace Microsoft.OData.Edm
             {
                 return false;
             }
-            Debug.Assert(parameter != null, "Should never be null");
 
             bool foundRelativePath = true;
 
@@ -3134,21 +3133,21 @@ namespace Microsoft.OData.Edm
             return entitySet != null;
         }
 
-        internal static bool HasAny<T>(this IEnumerable<T> enumerable)
+        internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T: class
         {
             IList<T> list = enumerable as IList<T>;
             if (list != null)
             {
-                return list.Count() > 0;
+                return list.Count > 0;
             }
 
             T[] array = enumerable as T[];
             if (array != null)
             {
-                return array.Count() > 0;
+                return array.Length > 0;
             }
 
-            return enumerable.Any();
+            return enumerable.FirstOrDefault() != null;
         }
 
         /// <summary>

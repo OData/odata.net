@@ -31,7 +31,7 @@ namespace Microsoft.OData.UriParser
         internal static bool ResolveOperationImportFromList(string identifier, IList<string> parameterNames, IEdmModel model, out IEdmOperationImport matchingOperationImport, ODataUriResolver resolver)
         {
             IEnumerable<IEdmOperationImport> candidateMatchingOperationImports = null;
-            IList<IEdmActionImport> foundActionImportsWhenLookingForFunctions = new List<IEdmActionImport>();
+            IList<IEdmOperationImport> foundActionImportsWhenLookingForFunctions = new List<IEdmOperationImport>();
 
             try
             {
@@ -92,7 +92,7 @@ namespace Microsoft.OData.UriParser
                 candidateMatchingOperationImports = candidateMatchingOperationImports.Where(operationImport => operationImport.Operation.Parameters.Count() == 0);
             }
 
-            if (candidateMatchingOperationImports.Count() == 0)
+            if (!candidateMatchingOperationImports.HasAny())
             {
                 matchingOperationImport = null;
                 return false;
@@ -165,7 +165,7 @@ namespace Microsoft.OData.UriParser
             }
 
             IList<IEdmOperation> foundActionsWhenLookingForFunctions = new List<IEdmOperation>();
-            int parameterNamesCount = parameterNames.Count();
+            bool hasParameters = parameterNames.Count() > 0;
 
             if (bindingType != null)
             {
@@ -173,7 +173,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // If the number of parameters > 0 then this has to be a function as actions can't have parameters on the uri only in the payload. Filter further by parameters in this case, otherwise don't.
-            if (parameterNamesCount > 0)
+            if (hasParameters)
             {
                 // can only be a function as only functions have parameters on the uri.
                 candidateMatchingOperations = candidateMatchingOperations.RemoveActions(out foundActionsWhenLookingForFunctions)
@@ -212,7 +212,7 @@ namespace Microsoft.OData.UriParser
                     }
                 }
 
-                if (parameterNames.Count() != 0)
+                if (hasParameters)
                 {
                     throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
                 }
@@ -239,6 +239,23 @@ namespace Microsoft.OData.UriParser
 
             matchingOperation = candidateMatchingOperations.SingleOrDefault();
             return matchingOperation != null;
+        }
+
+        internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T : class
+        {
+            IList<T> list = enumerable as IList<T>;
+            if (list != null)
+            {
+                return list.Count > 0;
+            }
+
+            T[] array = enumerable as T[];
+            if (array != null)
+            {
+                return array.Length > 0;
+            }
+
+            return enumerable.FirstOrDefault() != null;
         }
     }
 }

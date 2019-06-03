@@ -202,12 +202,18 @@ namespace Microsoft.OData.Metadata
             int currentInheritanceLevelsFromBase = int.MaxValue;
             foreach (IEdmOperation operation in operations)
             {
-                if (!operation.IsBound || !operation.Parameters.Any())
+                if (!operation.IsBound)
                 {
                     continue;
                 }
 
-                IEdmType operationBindingType = operation.Parameters.First().Type.Definition;
+                IEdmOperationParameter parameter = operation.Parameters.FirstOrDefault();
+                if (parameter == null)
+                {
+                    continue;
+                }
+
+                IEdmType operationBindingType = parameter.Type.Definition;
                 IEdmStructuredType operationBindingStructuralType = operationBindingType as IEdmStructuredType;
 
                 if (operationBindingType.TypeKind == EdmTypeKind.Collection)
@@ -454,11 +460,11 @@ namespace Microsoft.OData.Metadata
             {
                 if (item.IsAction())
                 {
-                    actionItems.Add((IEdmAction)item);
+                    actionItems.Add(item);
                 }
                 else
                 {
-                    functions.Add((IEdmFunction)item);
+                    functions.Add(item);
                 }
             }
 
@@ -471,20 +477,20 @@ namespace Microsoft.OData.Metadata
         /// <param name="source">The source.</param>
         /// <param name="actionImportItems">The action import items.</param>
         /// <returns>Only the function imports from the operation Import sequence.</returns>
-        internal static IEnumerable<IEdmOperationImport> RemoveActionImports(this IEnumerable<IEdmOperationImport> source, out IList<IEdmActionImport> actionImportItems)
+        internal static IEnumerable<IEdmOperationImport> RemoveActionImports(this IEnumerable<IEdmOperationImport> source, out IList<IEdmOperationImport> actionImportItems)
         {
             List<IEdmOperationImport> functions = new List<IEdmOperationImport>();
 
-            actionImportItems = new List<IEdmActionImport>();
+            actionImportItems = new List<IEdmOperationImport>();
             foreach (var item in source)
             {
                 if (item.IsActionImport())
                 {
-                    actionImportItems.Add((IEdmActionImport)item);
+                    actionImportItems.Add(item);
                 }
                 else
                 {
-                    functions.Add((IEdmFunctionImport)item);
+                    functions.Add(item);
                 }
             }
 
