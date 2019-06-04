@@ -173,8 +173,8 @@ namespace Microsoft.OData.Tests.Metadata
             functionOverload2.AddParameter("foo", EdmCoreModel.Instance.GetSingle(false));
             functionOverload2.AddParameter("foo2", EdmCoreModel.Instance.GetSingle(false));
 
-            var functions = new EdmFunction[] { function, functionOverload1, functionOverload2 };
-            var resolvedFunction = functions.FilterFunctionsByParameterNames(new string[] { "foo" });
+            var functions = new EdmOperation[] { function, functionOverload1, functionOverload2 };
+            var resolvedFunction = functions.FilterOperationsByParameterNames(new string[] { "foo" }, false);
             resolvedFunction.First().Should().BeSameAs(functionOverload1);
         }
 
@@ -185,10 +185,10 @@ namespace Microsoft.OData.Tests.Metadata
             function.AddParameter("param1", EdmCoreModel.Instance.GetString(true));
             var function1 = new EdmFunction("d.s", "function1", EdmCoreModel.Instance.GetSingle(false));
             function1.AddParameter("param1", EdmCoreModel.Instance.GetString(true));
-            var functions = new EdmFunction[] { function, function1 };
+            var functions = new EdmOperation[] { function, function1 };
 
-            var selectedFunctions = functions.FilterFunctionsByParameterNames(new string[] { "param1" }).ToList();
-            selectedFunctions.Count.Should().Be(2);
+            var selectedFunctions = functions.FilterOperationsByParameterNames(new string[] { "param1" }, false);
+            selectedFunctions.Count().Should().Be(2);
         }
 
         #endregion
