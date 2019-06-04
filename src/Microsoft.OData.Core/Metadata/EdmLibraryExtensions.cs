@@ -136,27 +136,27 @@ namespace Microsoft.OData.Metadata
 #if !ODATA_SERVICE && !ODATA_CLIENT
 
         /// <summary>
-        /// Filters functions by the parameter names.
+        /// Filters operations by the parameter names.
         /// </summary>
-        /// <param name="functionImports">The operation imports.</param>
+        /// <param name="operationImports">The operation imports.</param>
         /// <param name="parameterNames">The parameter names.</param>
         /// <param name="caseInsensitive">Whether to support case insensitive.</param>
         /// <returns>Return the operation imports that match the parameter names.</returns>
-        internal static IEnumerable<IEdmFunctionImport> FilterFunctionsByParameterNames(this IEnumerable<IEdmFunctionImport> functionImports, IEnumerable<string> parameterNames, bool caseInsensitive)
+        internal static IEnumerable<IEdmOperationImport> FilterOperationsByParameterNames(this IEnumerable<IEdmOperationImport> operationImports, IEnumerable<string> parameterNames, bool caseInsensitive)
         {
-            Debug.Assert(functionImports != null, "functionImports");
+            Debug.Assert(operationImports != null, "operationImports");
             Debug.Assert(parameterNames != null, "parameterNames");
 
             IList<string> parameterNameList = parameterNames.ToList();
 
-            foreach (IEdmFunctionImport functionImport in functionImports)
+            foreach (IEdmOperationImport operationImport in operationImports)
             {
-                if (!ParametersSatisfyFunction(functionImport.Operation, parameterNameList, caseInsensitive))
+                if (!ParametersSatisfyFunction(operationImport.Operation, parameterNameList, caseInsensitive))
                 {
                     continue;
                 }
 
-                yield return functionImport;
+                yield return operationImport;
             }
         }
 
@@ -202,12 +202,18 @@ namespace Microsoft.OData.Metadata
             int currentInheritanceLevelsFromBase = int.MaxValue;
             foreach (IEdmOperation operation in operations)
             {
-                if (!operation.IsBound || !operation.Parameters.Any())
+                if (!operation.IsBound)
                 {
                     continue;
                 }
 
-                IEdmType operationBindingType = operation.Parameters.First().Type.Definition;
+                IEdmOperationParameter parameter = operation.Parameters.FirstOrDefault();
+                if (parameter == null)
+                {
+                    continue;
+                }
+
+                IEdmType operationBindingType = parameter.Type.Definition;
                 IEdmStructuredType operationBindingStructuralType = operationBindingType as IEdmStructuredType;
 
                 if (operationBindingType.TypeKind == EdmTypeKind.Collection)
@@ -305,8 +311,7 @@ namespace Microsoft.OData.Metadata
         /// Ensures that operations are bound and have a binding parameter, other wise throws an exception.
         /// </summary>
         /// <param name="operations">The operations.</param>
-        /// <returns>Bound Operations with binding parameters.</returns>
-        internal static IEnumerable<IEdmOperation> EnsureOperationsBoundWithBindingParameter(this IEnumerable<IEdmOperation> operations)
+        internal static void EnsureOperationsBoundWithBindingParameter(this IEnumerable<IEdmOperation> operations)
         {
             foreach (IEdmOperation operation in operations)
             {
@@ -315,12 +320,10 @@ namespace Microsoft.OData.Metadata
                     throw new ODataException(ErrorStrings.EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
                 }
 
-                if (!operation.Parameters.Any())
+                if (operation.Parameters.FirstOrDefault() == null)
                 {
                     throw new ODataException(ErrorStrings.EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
                 }
-
-                yield return operation;
             }
         }
 
@@ -448,20 +451,20 @@ namespace Microsoft.OData.Metadata
         /// <param name="source">The source.</param>
         /// <param name="actionItems">The action items.</param>
         /// <returns>Only the functions from the operation sequence.</returns>
-        internal static IEnumerable<IEdmFunction> RemoveActions(this IEnumerable<IEdmOperation> source, out IList<IEdmAction> actionItems)
+        internal static IEnumerable<IEdmOperation> RemoveActions(this IEnumerable<IEdmOperation> source, out IList<IEdmOperation> actionItems)
         {
-            List<IEdmFunction> functions = new List<IEdmFunction>();
+            List<IEdmOperation> functions = new List<IEdmOperation>();
 
-            actionItems = new List<IEdmAction>();
+            actionItems = new List<IEdmOperation>();
             foreach (var item in source)
             {
                 if (item.IsAction())
                 {
-                    actionItems.Add((IEdmAction)item);
+                    actionItems.Add(item);
                 }
                 else
                 {
-                    functions.Add((IEdmFunction)item);
+                    functions.Add(item);
                 }
             }
 
@@ -474,20 +477,20 @@ namespace Microsoft.OData.Metadata
         /// <param name="source">The source.</param>
         /// <param name="actionImportItems">The action import items.</param>
         /// <returns>Only the function imports from the operation Import sequence.</returns>
-        internal static IEnumerable<IEdmFunctionImport> RemoveActionImports(this IEnumerable<IEdmOperationImport> source, out IList<IEdmActionImport> actionImportItems)
+        internal static IEnumerable<IEdmOperationImport> RemoveActionImports(this IEnumerable<IEdmOperationImport> source, out IList<IEdmOperationImport> actionImportItems)
         {
-            List<IEdmFunctionImport> functions = new List<IEdmFunctionImport>();
+            List<IEdmOperationImport> functions = new List<IEdmOperationImport>();
 
-            actionImportItems = new List<IEdmActionImport>();
+            actionImportItems = new List<IEdmOperationImport>();
             foreach (var item in source)
             {
                 if (item.IsActionImport())
                 {
-                    actionImportItems.Add((IEdmActionImport)item);
+                    actionImportItems.Add(item);
                 }
                 else
                 {
-                    functions.Add((IEdmFunctionImport)item);
+                    functions.Add(item);
                 }
             }
 

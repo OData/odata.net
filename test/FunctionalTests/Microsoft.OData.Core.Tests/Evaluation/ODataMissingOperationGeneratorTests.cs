@@ -145,7 +145,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public Func<IEdmModel> GetModelFunc { get; set; }
         public Func<Uri> GetMetadataDocumentUriFunc { get; set; }
         public Func<Uri> GetServiceBaseUriFunc { get; set; }
-        public Func<IEdmType, IEdmOperation[]> GetBindableOperationsForTypeFunc { get; set; }
+        public Func<IEdmType, IList<IEdmOperation>> GetBindableOperationsForTypeFunc { get; set; }
         public Func<ODataResourceBase, ODataResourceMetadataBuilder> GetEntityMetadataBuilderFunc { get; set; }
         public Func<IEdmStructuredType, bool> OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc { get; set; }
 
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Tests.Evaluation
             throw new NotImplementedException();
         }
 
-        public IEdmOperation[] GetBindableOperationsForType(IEdmType bindingType)
+        public IEnumerable<IEdmOperation> GetBindableOperationsForType(IEdmType bindingType)
         {
             if (this.GetBindableOperationsForTypeFunc != null)
             {
