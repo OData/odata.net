@@ -1203,6 +1203,21 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(expected, csdlStr);
         }
 
+        [Theory]
+        [InlineData("4.0")]
+        [InlineData("4.01")]
+        public void ValidateEdmxVersions(string odataVersion)
+        {
+            string xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>";
+
+            // Specify the model
+            EdmModel edmModel = new EdmModel(false);
+            edmModel.SetEdmVersion(odataVersion == "4.0" ? EdmConstants.EdmVersion4 : EdmConstants.EdmVersion401);
+
+            // Validate the CSDL for the specified version
+            Assert.Equal(GetCsdl(edmModel, CsdlTarget.OData), xml);
+        }
+
         private string GetCsdl(IEdmModel model, CsdlTarget target)
         {
             string edmx = string.Empty;

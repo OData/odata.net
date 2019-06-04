@@ -335,6 +335,11 @@ namespace Microsoft.OData.Edm.Csdl
                     model = tmp;
                     Debug.Assert(edmxVersion != null, "edmxVersion != null");
                     model.SetEdmxVersion(edmxVersion);
+                    Version edmVersion;
+                    if (CsdlConstants.EdmxToEdmVersions.TryGetValue(edmxVersion, out edmVersion))
+                    {
+                        model.SetEdmVersion(edmVersion);
+                    }
                 }
                 else
                 {
@@ -448,7 +453,7 @@ namespace Microsoft.OData.Edm.Csdl
                     return false;
                 }
 
-                this.ParseEdmxElement(csdlVersion);
+                csdlVersion = this.ParseEdmxElement(csdlVersion);
                 IEnumerable<EdmError> err;
                 if (!this.csdlParser.GetResult(out csdlModel, out err))
                 {
@@ -529,19 +534,21 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
-        private void ParseEdmxElement(Version edmxVersion)
+        private Version ParseEdmxElement(Version edmxVersion)
         {
             Debug.Assert(this.reader.LocalName == CsdlConstants.Element_Edmx, "this.reader.LocalName == CsdlConstants.Element_Edmx");
             Debug.Assert(edmxVersion != null, "edmxVersion != null");
 
             string edmxVersionString = this.GetAttributeValue(null, CsdlConstants.Attribute_Version);
-            Version edmxVersionFromAttribute;
-            if (edmxVersionString != null && (!TryParseVersion(edmxVersionString, out edmxVersionFromAttribute) || edmxVersionFromAttribute != edmxVersion))
+            Version edmxVersionFromAttribute = null;
+            if (edmxVersionString != null && (!TryParseVersion(edmxVersionString, out edmxVersionFromAttribute) || edmxVersionFromAttribute.Major != edmxVersion.Major))
             {
                 this.RaiseError(EdmErrorCode.InvalidVersionNumber, Edm.Strings.EdmxParser_EdmxVersionMismatch);
             }
 
             this.ParseElement(CsdlConstants.Element_Edmx, this.edmxParserLookup);
+
+            return edmxVersionFromAttribute ?? edmxVersion;
         }
 
         private string GetAttributeValue(string namespaceUri, string localName)
