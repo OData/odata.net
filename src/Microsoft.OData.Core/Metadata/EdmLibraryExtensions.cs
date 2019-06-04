@@ -266,22 +266,6 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Given a list of possible operations and a list of parameter names, filter operations that exactly matches
-        /// the parameter names. If more than one function matches, throw.
-        /// </summary>
-        /// <remarks>
-        /// Binding parameters will be ignored in this method. Only non-binding parameters are matched.
-        /// </remarks>
-        /// <param name="functions">The list of functions to search.</param>
-        /// <param name="parameters">The list of non-binding parameter names to match.</param>
-        /// <param name="caseInsensitive">Whether case insensitive.</param>
-        /// <returns>All operation imports matches the parameter names exactly or an empty enumerable.</returns>
-        internal static IEnumerable<IEdmFunction> FilterFunctionsByParameterNames(this IEnumerable<IEdmFunction> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
-        {
-            return functions.Cast<IEdmOperation>().FilterOperationsByParameterNames(parameters, caseInsensitive).Cast<IEdmFunction>();
-        }
-
-        /// <summary>
         /// Filters the operations by parameter names.
         /// </summary>
         /// <param name="operations">The operations.</param>
