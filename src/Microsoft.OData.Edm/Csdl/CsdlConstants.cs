@@ -17,19 +17,24 @@ namespace Microsoft.OData.Edm.Csdl
     {
         #region Public Constants
 
-        #region Old EDMX namespaces
+        #region EDMX Versions
 
         /// <summary>
-        /// Version 4.0 of EDMX. Corresponds to EDMX namespace "http://docs.oasis-open.org/odata/ns/edmx".
+        /// Version 4.0 of EDMX, defined in EDMX namespace "http://docs.oasis-open.org/odata/ns/edmx".
         /// </summary>
         public static readonly Version EdmxVersion4 = EdmConstants.EdmVersion4;
+
+        /// <summary>
+        /// Version 4.01 of EDMX, defined in EDMX namespace "http://docs.oasis-open.org/odata/ns/edmx".
+        /// </summary>
+        public static readonly Version EdmxVersion401 = EdmConstants.EdmVersion401;
 
         #endregion
 
         /// <summary>
         /// The current latest version of EDMX.
         /// </summary>
-        public static readonly Version EdmxVersionLatest = EdmxVersion4;
+        public static readonly Version EdmxVersionLatest = EdmxVersion401;
 
         #endregion
 
@@ -239,18 +244,28 @@ namespace Microsoft.OData.Edm.Csdl
         internal static Dictionary<Version, string[]> SupportedVersions = new Dictionary<Version, string[]>()
         {
             { EdmConstants.EdmVersion4, new string[] { EdmOasisNamespace } },
+            { EdmConstants.EdmVersion401, new string[] { EdmOasisNamespace } },
         };
 
         internal static Dictionary<Version, string> SupportedEdmxVersions = new Dictionary<Version, string>
         {
-            { EdmxVersion4, EdmxOasisNamespace }
+            { EdmxVersion4, EdmxOasisNamespace },
+            { EdmxVersion401, EdmxOasisNamespace },
         };
 
-        internal static Dictionary<string, Version> SupportedEdmxNamespaces = SupportedEdmxVersions.ToDictionary(v => v.Value, v => v.Key);
+        // Maps a namespace to a default EdmxVersion.
+        // Note that there may be multiple namespaces mapped to the same EdmxVersion.
+        internal static Dictionary<string, Version> SupportedEdmxNamespaces = new Dictionary<string, Version>
+        {
+            { EdmxOasisNamespace, EdmxVersion4 },
+        };
 
         internal static Dictionary<Version, Version> EdmToEdmxVersions = new Dictionary<Version, Version>
         {
-            { EdmConstants.EdmVersion4, EdmxVersion4 }
+            { EdmConstants.EdmVersion4, EdmxVersion4 },
+            { EdmConstants.EdmVersion401, EdmxVersion401 },
         };
+
+        internal static Dictionary<Version, Version> EdmxToEdmVersions = EdmToEdmxVersions.ToDictionary(v => v.Value, v=> v.Key);
     }
 }

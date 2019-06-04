@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Csdl
                     return false;
                 }
             }
-            else if (!CsdlConstants.EdmToEdmxVersions.TryGetValue(model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest, out edmxVersion))
+            else if (!CsdlConstants.EdmToEdmxVersions.TryGetValue(model.GetEdmVersion() ?? EdmConstants.EdmVersionDefault, out edmxVersion))
             {
                 errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmVersion, Edm.Strings.Serializer_UnknownEdmVersion) };
                 return false;
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Edm.Csdl
         private void WriteEdmxElement()
         {
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Edmx, this.edmxNamespace);
-            this.writer.WriteAttributeString(CsdlConstants.Attribute_Version, this.edmxVersion.ToString());
+            this.writer.WriteAttributeString(CsdlConstants.Attribute_Version, GetVersionString(this.edmxVersion));
         }
 
         private void WriteRuntimeElement()
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Edm.Csdl
         {
             // TODO: for referenced model - write alias as is, instead of writing its namespace.
             EdmModelCsdlSerializationVisitor visitor;
-            Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
+            Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionDefault;
             foreach (EdmSchema schema in this.schemas)
             {
                 visitor = new EdmModelCsdlSerializationVisitor(this.model, this.writer, edmVersion);
@@ -160,6 +160,18 @@ namespace Microsoft.OData.Edm.Csdl
         private void EndElement()
         {
             this.writer.WriteEndElement();
+        }
+
+        // Gets the string form of the EdmVersion.
+        // Note that Version 4.01 needs two digits of minor version precision.
+        private static string GetVersionString(Version version)
+        {
+            if (version == EdmConstants.EdmVersion401)
+            {
+                return EdmConstants.EdmVersion401String;
+            }
+
+            return version.ToString();
         }
     }
 }

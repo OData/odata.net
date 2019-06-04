@@ -75,7 +75,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal static void WriteSchemas(IEdmModel model, IEnumerable<EdmSchema> schemas, Func<string, XmlWriter> writerProvider)
         {
             EdmModelCsdlSerializationVisitor visitor;
-            Version edmVersion = model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
+            Version edmVersion = model.GetEdmVersion() ?? EdmConstants.EdmVersionDefault;
             foreach (EdmSchema schema in schemas)
             {
                 XmlWriter writer = writerProvider(schema.Namespace);

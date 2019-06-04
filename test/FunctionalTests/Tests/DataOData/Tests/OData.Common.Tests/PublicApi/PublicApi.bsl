@@ -1221,7 +1221,9 @@ public abstract class Microsoft.OData.Edm.EdmTypeReference : Microsoft.OData.Edm
 
 public sealed class Microsoft.OData.Edm.EdmConstants {
 	public static readonly System.Version EdmVersion4 = 4.0
-	public static readonly System.Version EdmVersionLatest = 4.0
+	public static readonly System.Version EdmVersion401 = 4.1
+	public static System.Version EdmVersionDefault = 4.0
+	public static readonly System.Version EdmVersionLatest = 4.1
 }
 
 [
@@ -2861,7 +2863,8 @@ public enum Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocatio
 
 public sealed class Microsoft.OData.Edm.Csdl.CsdlConstants {
 	public static readonly System.Version EdmxVersion4 = 4.0
-	public static readonly System.Version EdmxVersionLatest = 4.0
+	public static readonly System.Version EdmxVersion401 = 4.1
+	public static readonly System.Version EdmxVersionLatest = 4.1
 }
 
 public sealed class Microsoft.OData.Edm.Csdl.SchemaReader {
