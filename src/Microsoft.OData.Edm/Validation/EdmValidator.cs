@@ -17,14 +17,14 @@ namespace Microsoft.OData.Edm.Validation
     {
         /// <summary>
         /// Validate the <see cref="IEdmModel"/> and all of its properties using the current version of the model.
-        /// If the model has no version, <see cref="EdmConstants.EdmVersionLatest"/> is used.
+        /// If the model has no version, <see cref="EdmConstants.EdmVersionDefault"/> is used.
         /// </summary>
         /// <param name="root">The root of the model to be validated.</param>
         /// <param name="errors">Errors encountered while validating the model.</param>
         /// <returns>True if model is valid, otherwise false.</returns>
         public static bool Validate(this IEdmModel root, out IEnumerable<EdmError> errors)
         {
-            return Validate(root, root.GetEdmVersion() ?? EdmConstants.EdmVersionLatest, out errors);
+            return Validate(root, root.GetEdmVersion() ?? EdmConstants.EdmVersionDefault, out errors);
         }
 
         /// <summary>
