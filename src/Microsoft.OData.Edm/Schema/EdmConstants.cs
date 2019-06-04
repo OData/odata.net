@@ -14,14 +14,26 @@ namespace Microsoft.OData.Edm
     public static class EdmConstants
     {
         /// <summary>
-        /// Version 4.0 of EDM. Corresponds to CSDL namespace "http://docs.oasis-open.org/odata/ns/edmx".
+        /// Version 4.0 of EDM, defined in CSDL namespace "http://docs.oasis-open.org/odata/ns/edmx".
         /// </summary>
         public static readonly Version EdmVersion4 = new Version(4, 0);
 
         /// <summary>
+        /// Version 4.01 of EDM, defined in CSDL namespace "http://docs.oasis-open.org/odata/ns/edmx".
+        /// </summary>
+        public static readonly Version EdmVersion401 = new Version(4, 1);
+
+        /// <summary>
         /// The current latest version of EDM.
         /// </summary>
-        public static readonly Version EdmVersionLatest = EdmVersion4;
+        public static readonly Version EdmVersionLatest = EdmVersion401;
+
+        /// <summary>
+        /// The default version of EDM to use if none is specified.
+        /// </summary>
+        public static Version EdmVersionDefault = EdmVersion4;
+
+        internal const string EdmVersion401String = "4.01";
 
         internal const string EdmNamespace = "Edm";
         internal const string TransientNamespace = "Transient";

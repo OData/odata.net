@@ -972,7 +972,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ParsingBaseAndDerivedTypeWithSameAnnotationWorksButValidationSuccessful()
         {
-            string annotations =@"
+            string annotations = @"
             <Annotations Target=""NS.Base"">
                 <Annotation Term=""Org.OData.Core.V1.Description"" String=""Base description"" />
             </Annotations>
@@ -1010,7 +1010,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var edmType = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Derived");
             Assert.NotNull(edmType);
             var descriptions = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(edmType, CoreVocabularyModel.DescriptionTerm);
-            Assert.Equal(new [] { "Derived description 1", "Derived description 2" },
+            Assert.Equal(new[] { "Derived description 1", "Derived description 2" },
                 descriptions.Select(d => d.Value as IEdmStringConstantExpression).Select(e => e.Value));
 
             IEnumerable<EdmError> errors;
@@ -1076,6 +1076,25 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             Assert.Equal(EdmTypeKind.TypeDefinition, property.Type.TypeKind());
             Assert.Equal("Org.OData.Core.V1.LocalDateTime", property.Type.FullName());
+        }
+
+        [Theory]
+        [InlineData("4.0")]
+        [InlineData("4.01")]
+        public void ValidateEdmxVersions(string odataVersion)
+        {
+            string xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>";
+
+            var stringReader = new System.IO.StringReader(xml);
+            var xmlReader = System.Xml.XmlReader.Create(stringReader);
+
+            IEdmModel edmModel = null;
+            IEnumerable<EdmError> edmErrors;
+
+            // Read in the CSDL and verify the version
+            CsdlReader.TryParse(xmlReader, out edmModel, out edmErrors);
+            Assert.Equal(edmErrors.Count(), 0);
+            Assert.Equal(edmModel.GetEdmVersion(), odataVersion == "4.0" ? EdmConstants.EdmVersion4 : EdmConstants.EdmVersion401);
         }
     }
 }
