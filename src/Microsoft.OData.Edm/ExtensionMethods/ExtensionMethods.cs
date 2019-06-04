@@ -2460,14 +2460,18 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(operation, "operation");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
 
-            if (!operation.IsBound || !operation.Parameters.Any())
+            if (!operation.IsBound)
             {
                 return false;
             }
 
-            IEdmOperationParameter parameter = operation.Parameters.First();
-            IEdmType parameterType = parameter.Type.Definition;
+            IEdmOperationParameter parameter = operation.Parameters.FirstOrDefault();
+            if (parameter == null)
+            {
+                return false;
+            }
 
+            IEdmType parameterType = parameter.Type.Definition;
             if (parameterType.TypeKind != bindingType.TypeKind)
             {
                 return false;
@@ -2815,7 +2819,8 @@ namespace Microsoft.OData.Edm
             }
 
             // If there is no parameter then this will fail in BoundOperationMustHaveParameters rule so skip validating this here.
-            if (!parameters.Any())
+            parameter = parameters.FirstOrDefault();
+            if (parameter == null)
             {
                 return false;
             }
@@ -2823,8 +2828,6 @@ namespace Microsoft.OData.Edm
             bool foundRelativePath = true;
 
             string bindingParameterName = pathItems.First();
-            parameter = parameters.FirstOrDefault();
-            Debug.Assert(parameter != null, "Should never be null");
             if (parameter.Name != bindingParameterName)
             {
                 foundErrors.Add(
@@ -3130,6 +3133,23 @@ namespace Microsoft.OData.Edm
             return entitySet != null;
         }
 
+        internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T: class
+        {
+            IList<T> list = enumerable as IList<T>;
+            if (list != null)
+            {
+                return list.Count > 0;
+            }
+
+            T[] array = enumerable as T[];
+            if (array != null)
+            {
+                return array.Length > 0;
+            }
+
+            return enumerable.FirstOrDefault() != null;
+        }
+
         /// <summary>
         /// Gets the declared alternate keys of the most defined entity with a declared key present.
         /// </summary>
@@ -3269,7 +3289,7 @@ namespace Microsoft.OData.Edm
 
             T ret = finderFunc(container, simpleName);
             IEnumerable<IEdmOperationImport> operations = ret as IEnumerable<IEdmOperationImport>;
-            if (ret == null || operations != null && !operations.Any())
+            if (ret == null || operations != null && !operations.HasAny())
             {
                 // for CsdlSemanticsEntityContainer, try searching .Extends container :
                 // (after IEdmModel has public Extends property, don't need to check CsdlSemanticsEntityContainer)
@@ -3310,7 +3330,7 @@ namespace Microsoft.OData.Edm
             if (visited.Add(baseType))
             {
                 IEnumerable<IEdmStructuredType> candidates = model.FindDirectlyDerivedTypes(baseType);
-                if (candidates != null && candidates.Any())
+                if (candidates != null && candidates.HasAny())
                 {
                     foreach (IEdmStructuredType derivedType in candidates)
                     {
@@ -3322,7 +3342,7 @@ namespace Microsoft.OData.Edm
                 foreach (IEdmModel referenced in model.ReferencedModels)
                 {
                     candidates = referenced.FindDirectlyDerivedTypes(baseType);
-                    if (candidates != null && candidates.Any())
+                    if (candidates != null && candidates.HasAny())
                     {
                         foreach (IEdmStructuredType derivedType in candidates)
                         {

@@ -52,7 +52,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="bindingType">The binding type in question.</param>
         /// <returns>The list of operations that are always bindable to a type.</returns>
-        IEdmOperation[] GetBindableOperationsForType(IEdmType bindingType);
+        IEnumerable<IEdmOperation> GetBindableOperationsForType(IEdmType bindingType);
 
         /// <summary>
         /// Determines whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Cache of operations that are bindable to entity types.
         /// </summary>
-        private readonly Dictionary<IEdmType, IEdmOperation[]> bindableOperationsCache;
+        private readonly Dictionary<IEdmType, IList<IEdmOperation>> bindableOperationsCache;
 
         /// <summary>
         /// true if we are reading or writing a response payload, false otherwise.
@@ -151,7 +151,7 @@ namespace Microsoft.OData.Evaluation
             this.edmTypeResolver = edmTypeResolver;
             this.model = model;
             this.metadataDocumentUri = metadataDocumentUri;
-            this.bindableOperationsCache = new Dictionary<IEdmType, IEdmOperation[]>(ReferenceEqualityComparer<IEdmType>.Instance);
+            this.bindableOperationsCache = new Dictionary<IEdmType, IList<IEdmOperation>>(ReferenceEqualityComparer<IEdmType>.Instance);
             this.odataUri = odataUri;
         }
 
@@ -303,13 +303,13 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="bindingType">The binding type in question.</param>
         /// <returns>The list of operations that are always bindable to a type.</returns>
-        public IEdmOperation[] GetBindableOperationsForType(IEdmType bindingType)
+        public IEnumerable<IEdmOperation> GetBindableOperationsForType(IEdmType bindingType)
         {
             Debug.Assert(bindingType != null, "bindingType != null");
             Debug.Assert(this.bindableOperationsCache != null, "this.bindableOperationsCache != null");
             Debug.Assert(this.isResponse, "this.readingResponse");
 
-            IEdmOperation[] bindableOperations;
+            IList<IEdmOperation> bindableOperations;
             if (!this.bindableOperationsCache.TryGetValue(bindingType, out bindableOperations))
             {
                 bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, this.edmTypeResolver);

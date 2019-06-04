@@ -501,8 +501,7 @@ namespace Microsoft.OData.Evaluation
                     {
                         bool mustBeContainerQualified = this.metadataContext.OperationsBoundToStructuredTypeMustBeContainerQualified(this.actualResourceType);
                         this.selectedBindableOperations = this.metadataContext.GetBindableOperationsForType(this.actualResourceType)
-                            .Where(operation => this.selectedProperties.IsOperationSelected(this.actualResourceType, operation, mustBeContainerQualified))
-                            .ToArray();
+                            .Where(operation => this.selectedProperties.IsOperationSelected(this.actualResourceType, operation, mustBeContainerQualified));
                     }
 
                     return this.selectedBindableOperations;
