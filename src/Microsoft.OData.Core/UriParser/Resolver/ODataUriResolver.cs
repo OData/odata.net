@@ -87,7 +87,7 @@ namespace Microsoft.OData.UriParser
         public virtual IEdmNavigationSource ResolveNavigationSource(IEdmModel model, string identifier)
         {
             IEdmNavigationSource navSource = model.FindDeclaredNavigationSource(identifier);
-            if (navSource != null | !EnableCaseInsensitive)
+            if (navSource != null || !EnableCaseInsensitive)
             {
                 return navSource;
             }
@@ -118,7 +118,7 @@ namespace Microsoft.OData.UriParser
         public virtual IEdmProperty ResolveProperty(IEdmStructuredType type, string propertyName)
         {
             IEdmProperty property = type.FindProperty(propertyName);
-            if (property != null | !EnableCaseInsensitive)
+            if (property != null || !EnableCaseInsensitive)
             {
                 return property;
             }
@@ -144,7 +144,7 @@ namespace Microsoft.OData.UriParser
         public virtual IEdmTerm ResolveTerm(IEdmModel model, string termName)
         {
             IEdmTerm term = model.FindTerm(termName);
-            if (term != null | !EnableCaseInsensitive)
+            if (term != null || !EnableCaseInsensitive)
             {
                 return term;
             }
@@ -168,7 +168,7 @@ namespace Microsoft.OData.UriParser
         public virtual IEdmSchemaType ResolveType(IEdmModel model, string typeName)
         {
             IEdmSchemaType type = model.FindType(typeName);
-            if (type != null | !EnableCaseInsensitive)
+            if (type != null || !EnableCaseInsensitive)
             {
                 return type;
             }
@@ -197,11 +197,22 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            return FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true)
-                .Where(operation =>
-                    operation.IsBound
-                    && operation.Parameters.Any()
-                    && operation.HasEquivalentBindingType(bindingType));
+            IList<IEdmOperation> operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
+            if (operations != null && operations.Count() > 0)
+            {
+                IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
+                for (int i = 0; i < operations.Count(); i++)
+                {
+                    if (operations[i].HasEquivalentBindingType(bindingType))
+                    {
+                        matchedOperation.Add(operations[i]);
+                    }
+                }
+
+                return matchedOperation;
+            }
+
+            return Enumerable.Empty<IEdmOperation>();
         }
 
         /// <summary>
@@ -218,8 +229,22 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            return FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true)
-                .Where(operation => !operation.IsBound);
+            IList<IEdmOperation> operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
+            if (operations != null && operations.Count() > 0)
+            {
+                IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
+                for (int i = 0; i < operations.Count(); i++)
+                {
+                    if (!operations[i].IsBound)
+                    {
+                        matchedOperation.Add(operations[i]);
+                    }
+                }
+
+                return matchedOperation;
+            }
+
+            return Enumerable.Empty<IEdmOperation>();
         }
 
         /// <summary>
