@@ -96,7 +96,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="processSubResult">The method to deal with sub expand result.</param>
         /// <param name="combineSelectAndExpand">The method to combine select and expand result lists.</param>
         /// <param name="result">The result of the traversing.</param>
-        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, out T result)
+        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, out T result) where T: class
         {
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
             List<T> expandList = new List<T>();
@@ -111,8 +111,13 @@ namespace Microsoft.OData.UriParser
                         out subResult);
                 }
 
-                var expandItem = processSubResult(currentExpandClause, subResult);
+                // TODO: That's PoC we need to handle bunch of cases.
+                if (expandSelectItem.ApplyOption != null)
+                {
+                    subResult = expandSelectItem.ApplyOption.GetContextUri().Trim('(',')') as T;
+                }
 
+                var expandItem = processSubResult(currentExpandClause, subResult);
                 if (expandItem != null)
                 {
                     expandList.Add(expandItem);

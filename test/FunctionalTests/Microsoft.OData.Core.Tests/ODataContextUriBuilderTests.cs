@@ -105,6 +105,17 @@ namespace Microsoft.OData.Tests
                 this.CreateFeedContextUri(selectClause, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectClause));
             }
         }
+
+        [Fact]
+        public void FeedContextUriWithExpandApply()
+        {
+            string expectClause = "Districts($apply=aggregate($count as Count))";
+            foreach (ODataVersion version in Versions)
+            {
+                this.CreateFeedContextUri(null, expectClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, "Districts(Count)"));
+            }
+        }
+
         [Fact]
         public void FeedContextUriWithApplyAggreagate()
         {
