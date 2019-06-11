@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void NextTokenSetCorrectly()
         {
             DummyPathSegmentToken token = new DummyPathSegmentToken(new SystemToken("bob", null));
-            token.NextToken.ShouldBeSystemToken("bob").And.NextToken.Should().BeNull();
+            token.NextToken.ShouldBeSystemToken("bob").NextToken.Should().BeNull();
         }
     }
 }

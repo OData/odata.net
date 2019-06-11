@@ -22,8 +22,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             SelectToken selectToken = new SelectToken(new NonSystemToken[]{endPath});
             SelectToken normalizedToken = SelectTreeNormalizer.NormalizeSelectTree(selectToken);
             normalizedToken.Properties.Single().ShouldBeNonSystemToken("1")
-                           .And.NextToken.ShouldBeNonSystemToken("2")
-                           .And.NextToken.ShouldBeNonSystemToken("3");
+                           .NextToken.ShouldBeNonSystemToken("2")
+                           .NextToken.ShouldBeNonSystemToken("3");
         }
 
         [Fact]
@@ -37,11 +37,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             List<PathSegmentToken> tokens = normalizedToken.Properties.ToList();
             tokens.Should().HaveCount(2);
             tokens.ElementAt(0).ShouldBeNonSystemToken("1")
-                  .And.NextToken.ShouldBeNonSystemToken("2")
-                  .And.NextToken.ShouldBeNonSystemToken("3");
+                  .NextToken.ShouldBeNonSystemToken("2")
+                  .NextToken.ShouldBeNonSystemToken("3");
             tokens.ElementAt(1).ShouldBeNonSystemToken("4")
-                  .And.NextToken.ShouldBeNonSystemToken("5")
-                  .And.NextToken.ShouldBeNonSystemToken("6");
+                  .NextToken.ShouldBeNonSystemToken("5")
+                  .NextToken.ShouldBeNonSystemToken("6");
         }
     }
 }

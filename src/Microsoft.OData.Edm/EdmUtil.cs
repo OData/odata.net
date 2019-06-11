@@ -139,7 +139,7 @@ namespace Microsoft.OData.Edm
             IEdmExpression expression = annotatedElement as IEdmExpression;
             if (expression != null)
             {
-                switch(expression.ExpressionKind)
+                switch (expression.ExpressionKind)
                 {
                     case EdmExpressionKind.FunctionApplication:
                         return "Apply";

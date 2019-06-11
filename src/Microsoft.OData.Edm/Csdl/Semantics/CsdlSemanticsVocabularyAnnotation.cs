@@ -212,7 +212,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         }
                         else if ((enumType = type as IEdmEnumType) != null)
                         {
-                            foreach(IEdmEnumMember member in enumType.Members)
+                            foreach (IEdmEnumMember member in enumType.Members)
                             {
                                 if (String.Equals(member.Name, targetSegments[1], StringComparison.OrdinalIgnoreCase))
                                 {
