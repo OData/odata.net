@@ -1386,5 +1386,6 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// The vocabulary annotation applies to not allowed annotatable element.
         /// </summary>
-        AnnotationApplyToNotAllowedAnnotatable = 400,    }
+        AnnotationApplyToNotAllowedAnnotatable = 400,
+    }
 }

@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             PathReverser pathReverser = new PathReverser();
             PathSegmentToken nonReversedPath = new NonSystemToken("2", null, new NonSystemToken("1", null, null));
             PathSegmentToken reversedPath = nonReversedPath.Accept(pathReverser);
-            reversedPath.ShouldBeNonSystemToken("1").And.NextToken.ShouldBeNonSystemToken("2");
+            reversedPath.ShouldBeNonSystemToken("1").NextToken.ShouldBeNonSystemToken("2");
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             PathReverser pathReverser = new PathReverser();
             PathSegmentToken nonReversedPath = new NonSystemToken("*", null, new NonSystemToken("1", null, null));
             PathSegmentToken reversedPath = nonReversedPath.Accept(pathReverser);
-            reversedPath.ShouldBeNonSystemToken("1").And.NextToken.ShouldBeNonSystemToken("*");
+            reversedPath.ShouldBeNonSystemToken("1").NextToken.ShouldBeNonSystemToken("*");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             PathReverser pathReverser = new PathReverser();
             PathSegmentToken nonReversedPath = new NonSystemToken("1", null, new NonSystemToken("Fully.Qualified.Namespace", null, null));
             PathSegmentToken reversedPath = nonReversedPath.Accept(pathReverser);
-            reversedPath.ShouldBeNonSystemToken("Fully.Qualified.Namespace").And.NextToken.ShouldBeNonSystemToken("1");
+            reversedPath.ShouldBeNonSystemToken("Fully.Qualified.Namespace").NextToken.ShouldBeNonSystemToken("1");
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             PathReverser pathReverser = new PathReverser();
             PathSegmentToken nonReversedPath = new NonSystemToken("1", null, null);
             PathSegmentToken reversedPath = nonReversedPath.Accept(pathReverser);
-            reversedPath.ShouldBeNonSystemToken("1").And.NextToken.Should().BeNull();
+            reversedPath.ShouldBeNonSystemToken("1").NextToken.Should().BeNull();
         }
 
         [Fact]
@@ -61,9 +61,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             NonSystemToken endPath = new NonSystemToken("4", null, new NonSystemToken("3", null, new NonSystemToken("2", null, new NonSystemToken("1", null, null))));
             PathSegmentToken reversedPath = endPath.Accept(pathReverser);
             reversedPath.ShouldBeNonSystemToken("1")
-                .And.NextToken.ShouldBeNonSystemToken("2")
-                .And.NextToken.ShouldBeNonSystemToken("3")
-                .And.NextToken.ShouldBeNonSystemToken("4");
+                .NextToken.ShouldBeNonSystemToken("2")
+                .NextToken.ShouldBeNonSystemToken("3")
+                .NextToken.ShouldBeNonSystemToken("4");
         }
     }
 }

@@ -266,6 +266,6 @@ namespace Microsoft.OData.Edm.Csdl
             { EdmConstants.EdmVersion401, EdmxVersion401 },
         };
 
-        internal static Dictionary<Version, Version> EdmxToEdmVersions = EdmToEdmxVersions.ToDictionary(v => v.Value, v=> v.Key);
+        internal static Dictionary<Version, Version> EdmxToEdmVersions = EdmToEdmxVersions.ToDictionary(v => v.Value, v => v.Key);
     }
 }

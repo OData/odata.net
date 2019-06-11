@@ -3133,7 +3133,7 @@ namespace Microsoft.OData.Edm
             return entitySet != null;
         }
 
-        internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T: class
+        internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T : class
         {
             IList<T> list = enumerable as IList<T>;
             if (list != null)

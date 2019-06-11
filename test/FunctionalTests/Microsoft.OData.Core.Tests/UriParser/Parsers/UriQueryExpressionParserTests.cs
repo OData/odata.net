@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Repro for: Syntactic parser assumes any token which matches the name of a previously used range variable is also a range variable, even after the scope has been exited
             QueryToken tree = this.testSubject.ParseFilter("Things/any(o:true) and o");
-            tree.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And).And.Right.ShouldBeEndPathToken("o");
+            tree.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And).Right.ShouldBeEndPathToken("o");
         }
 
         [Fact]
@@ -78,8 +78,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             this.testSubject.ParseFilter("fq.ns.container.function(arg=1)")
                 .ShouldBeFunctionCallToken("fq.ns.container.function")
-                .And.ShouldHaveParameter("arg")
-                .And.ValueToken.ShouldBeLiteralQueryToken(1);
+                .ShouldHaveParameter("arg")
+                .ValueToken.ShouldBeLiteralQueryToken(1);
         }
 
         [Fact]

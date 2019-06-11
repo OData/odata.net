@@ -1051,8 +1051,9 @@ namespace Microsoft.OData.JsonLight
                         this.jsonWriter.StartArrayScope();
                     }
                 }
-                else // In response
+                else
                 {
+                    // In response
                     Debug.Assert(parentNestedResourceInfo.IsCollection.HasValue, "parentNestedResourceInfo.IsCollection.HasValue");
                     if (!parentNestedResourceInfo.IsCollection.Value)
                     {
@@ -1075,25 +1076,6 @@ namespace Microsoft.OData.JsonLight
             {
                 WriteEntityReferenceLinkImplementation(entityReferenceLink);
             }
-        }
-
-        private void WriteEntityReferenceLinkImplementation(ODataEntityReferenceLink entityReferenceLink)
-        {
-            Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
-
-            WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
-
-            this.jsonWriter.StartObjectScope();
-
-            this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
-
-            Uri id = this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri.MakeRelativeUri(entityReferenceLink.Url);
-
-            this.jsonWriter.WriteValue(id == null ? null : this.jsonLightResourceSerializer.UriToString(id));
-
-            this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(entityReferenceLink.InstanceAnnotations);
-
-            this.jsonWriter.EndObjectScope();
         }
 
         /// <summary>
@@ -1241,6 +1223,29 @@ namespace Microsoft.OData.JsonLight
         protected override NestedResourceInfoScope CreateNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             return new JsonLightNestedResourceInfoScope(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
+        }
+
+        /// <summary>
+        /// Write the entity reference link.
+        /// </summary>
+        /// <param name="entityReferenceLink">The OData entity reference link.</param>
+        private void WriteEntityReferenceLinkImplementation(ODataEntityReferenceLink entityReferenceLink)
+        {
+            Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
+
+            WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
+
+            this.jsonWriter.StartObjectScope();
+
+            this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
+
+            Uri id = this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri.MakeRelativeUri(entityReferenceLink.Url);
+
+            this.jsonWriter.WriteValue(id == null ? null : this.jsonLightResourceSerializer.UriToString(id));
+
+            this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(entityReferenceLink.InstanceAnnotations);
+
+            this.jsonWriter.EndObjectScope();
         }
 
         /// <summary>
