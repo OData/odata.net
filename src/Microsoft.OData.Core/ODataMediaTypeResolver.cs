@@ -36,29 +36,34 @@ namespace Microsoft.OData
         };
 
         /// <summary>
+        /// MediaTypeResolver without atom support
+        /// </summary>
+        private static readonly ODataMediaTypeResolver MediaTypeResolver = new ODataMediaTypeResolver();
+
+        /// <summary>
         /// The special map of payload kind and supported media type.
         /// </summary>
         private static IDictionary<ODataPayloadKind, IEnumerable<ODataMediaTypeFormat>> SpecialMediaTypeFormat = new Dictionary<ODataPayloadKind, IEnumerable<ODataMediaTypeFormat>>
         {
             {
                 ODataPayloadKind.Batch,
-                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType), ODataFormat.Batch) }
+                new[] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType), ODataFormat.Batch) }
             },
             {
                 ODataPayloadKind.Value,
-                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType), ODataFormat.RawValue) }
+                new[] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType), ODataFormat.RawValue) }
             },
             {
                 ODataPayloadKind.BinaryValue,
-                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType), ODataFormat.RawValue) }
+                new[] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType), ODataFormat.RawValue) }
             },
             {
                 ODataPayloadKind.MetadataDocument,
-                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata) }
+                new[] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata) }
             },
             {
                 ODataPayloadKind.Asynchronous,
-                new [] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType), ODataFormat.RawValue) }
+                new[] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType), ODataFormat.RawValue) }
             }
         };
 
@@ -66,11 +71,6 @@ namespace Microsoft.OData
         /// Array of supported media types and formats for JSON related payload kind.
         /// </summary>
         private static IEnumerable<ODataMediaTypeFormat> JsonMediaTypeFormats = SetJsonLightMediaTypes();
-
-        /// <summary>
-        /// MediaTypeResolver without atom support
-        /// </summary>
-        private static readonly ODataMediaTypeResolver MediaTypeResolver = new ODataMediaTypeResolver();
 
         /// <summary>
         /// Gets the supported media types and formats for the given payload kind.
@@ -118,16 +118,16 @@ namespace Microsoft.OData
             return new List<ODataMediaTypeFormat>
             {
                 // minimal
-                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal , streamTrue, ieeeFalse }), ODataFormat.Json),
-                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal , streamTrue, ieeeTrue }), ODataFormat.Json),
-                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal , streamTrue }), ODataFormat.Json),
+                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal, streamTrue, ieeeFalse }), ODataFormat.Json),
+                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal, streamTrue, ieeeTrue }), ODataFormat.Json),
+                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal, streamTrue }), ODataFormat.Json),
 
-                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal , streamFalse, ieeeFalse }), ODataFormat.Json),
-                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal , streamFalse, ieeeTrue }), ODataFormat.Json),
-                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal , streamFalse }), ODataFormat.Json),
+                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal, streamFalse, ieeeFalse }), ODataFormat.Json),
+                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal, streamFalse, ieeeTrue }), ODataFormat.Json),
+                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal, streamFalse }), ODataFormat.Json),
 
-                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal , ieeeFalse }), ODataFormat.Json),
-                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal , ieeeTrue }), ODataFormat.Json),
+                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal, ieeeFalse }), ODataFormat.Json),
+                new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal, ieeeTrue }), ODataFormat.Json),
                 new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, new[] { minimal }), ODataFormat.Json),
 
                 // full

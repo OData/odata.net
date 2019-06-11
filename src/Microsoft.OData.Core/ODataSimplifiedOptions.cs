@@ -85,7 +85,8 @@ namespace Microsoft.OData
         /// The option is applied during serialization.
         /// </summary>
         [Obsolete("Deprecated. Use Get/SetOmitODataPrefix()")]
-        public bool EnableWritingODataAnnotationWithoutPrefix {
+        public bool EnableWritingODataAnnotationWithoutPrefix
+        {
             get
             {
                 return this.enableWritingODataAnnotationWithoutPrefix;

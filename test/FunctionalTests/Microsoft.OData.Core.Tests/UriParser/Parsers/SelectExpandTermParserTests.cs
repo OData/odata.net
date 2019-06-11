@@ -22,21 +22,21 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void OneTermBecomesPropertyAccessTokenInSelect()
         {
             var result = ParseSelectTerm("foo");
-            result.ShouldBeNonSystemToken("foo").And.NextToken.Should().BeNull();
+            result.ShouldBeNonSystemToken("foo").NextToken.Should().BeNull();
         }
 
         [Fact]
         public void WhitespaceShouldBeTrimmedInSelect()
         {
             var result = ParseSelectTerm("  foo ");
-            result.ShouldBeNonSystemToken("foo").And.NextToken.Should().BeNull();
+            result.ShouldBeNonSystemToken("foo").NextToken.Should().BeNull();
         }
 
         [Fact]
         public void TermWithSlashCreatesParentNonRootSegmentTokenInSelect()
         {
             var result = ParseSelectTerm("navprop/foo");
-            result.ShouldBeNonSystemToken("foo").And.NextToken.ShouldBeNonSystemToken("navprop");
+            result.ShouldBeNonSystemToken("foo").NextToken.ShouldBeNonSystemToken("navprop");
         }
 
         [Fact]
@@ -44,11 +44,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var result = ParseSelectTerm("one/two/three/four/five/foo");
             result.ShouldBeNonSystemToken("foo")
-                  .And.NextToken.ShouldBeNonSystemToken("five")
-                  .And.NextToken.ShouldBeNonSystemToken("four")
-                  .And.NextToken.ShouldBeNonSystemToken("three")
-                  .And.NextToken.ShouldBeNonSystemToken("two")
-                  .And.NextToken.ShouldBeNonSystemToken("one");
+                  .NextToken.ShouldBeNonSystemToken("five")
+                  .NextToken.ShouldBeNonSystemToken("four")
+                  .NextToken.ShouldBeNonSystemToken("three")
+                  .NextToken.ShouldBeNonSystemToken("two")
+                  .NextToken.ShouldBeNonSystemToken("one");
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var result = ParseSelectTerm("navprop/*");
             result.ShouldBeNonSystemToken("*")
-                 .And.NextToken.ShouldBeNonSystemToken("navprop");
+                 .NextToken.ShouldBeNonSystemToken("navprop");
         }
 
         [Fact]
@@ -169,18 +169,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void TermWithSlashCreatesParentNonRootSegmentTokenInExpand()
         {
             var result = this.ParseExpandTerm("navprop/foo");
-            result.ShouldBeNonSystemToken("foo").And.NextToken.ShouldBeNonSystemToken("navprop");
+            result.ShouldBeNonSystemToken("foo").NextToken.ShouldBeNonSystemToken("navprop");
         }
 
         [Fact]
         public void TermWithManySlashesCreatesManyNonRootSegmentTokensInExpand()
         {
             var result = this.ParseExpandTerm("one/two/three/four/five/foo");
-            result.ShouldBeNonSystemToken("foo").And.NextToken.ShouldBeNonSystemToken("five")
-                  .And.NextToken.ShouldBeNonSystemToken("four")
-                  .And.NextToken.ShouldBeNonSystemToken("three")
-                  .And.NextToken.ShouldBeNonSystemToken("two")
-                  .And.NextToken.ShouldBeNonSystemToken("one");
+            result.ShouldBeNonSystemToken("foo").NextToken.ShouldBeNonSystemToken("five")
+                  .NextToken.ShouldBeNonSystemToken("four")
+                  .NextToken.ShouldBeNonSystemToken("three")
+                  .NextToken.ShouldBeNonSystemToken("two")
+                  .NextToken.ShouldBeNonSystemToken("one");
         }
 
         [Fact]
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void StarWithRefIsOkInExpand()
         {
             var result = this.ParseExpandTerm("*/$ref");
-            result.ShouldBeNonSystemToken("$ref").And.NextToken.ShouldBeNonSystemToken("*");
+            result.ShouldBeNonSystemToken("$ref").NextToken.ShouldBeNonSystemToken("*");
         }
 
         [Fact]
@@ -283,7 +283,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void TrailingSlashShouldBeIgnoredInExpand()
         {
             var result = this.ParseExpandTerm("path/to/a/navprop/");
-            result.ShouldBeNonSystemToken("navprop").And.NextToken.Should().NotBeNull();
+            result.ShouldBeNonSystemToken("navprop").NextToken.Should().NotBeNull();
         }
 
         [Fact]

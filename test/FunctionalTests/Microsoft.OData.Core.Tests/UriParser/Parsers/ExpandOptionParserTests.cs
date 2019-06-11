@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NestedFilterWithExpressionIsAllowed()
         {
             var result = this.ParseExpandOptions("($filter=1 eq 2)");
-            BinaryOperatorToken binaryOperatorToken = result.FilterOption.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Equal).And;
+            BinaryOperatorToken binaryOperatorToken = result.FilterOption.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Equal);
             binaryOperatorToken.Left.ShouldBeLiteralQueryToken(1);
             binaryOperatorToken.Right.ShouldBeLiteralQueryToken(2);
         }
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ComputeExpressionToken computeExpressionToken = result.ComputeOption.Expressions.Single();
             computeExpressionToken.Alias.Should().Equals("TotalPrice");
 
-            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply).And;
+            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply);
             binaryOperatorToken.Left.ShouldBeEndPathToken("Price");
             binaryOperatorToken.Right.ShouldBeEndPathToken("Qty");
         }
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ComputeExpressionToken computeExpressionToken = result.ComputeOption.Expressions.Single();
             computeExpressionToken.Alias.Should().Equals("TotalPrice");
 
-            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply).And;
+            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply);
             binaryOperatorToken.Left.ShouldBeEndPathToken("Price");
             binaryOperatorToken.Right.ShouldBeEndPathToken("Qty");
 
@@ -184,9 +184,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ComputeToken compute = token as ComputeToken;
             ComputeExpressionToken computeExpressionToken = compute.Expressions.Single();
             computeExpressionToken.Alias.Should().Equals("Tax");
-            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply).And;
+            BinaryOperatorToken binaryOperatorToken = computeExpressionToken.Expression.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Multiply);
             binaryOperatorToken.Left.ShouldBeEndPathToken("Amount");
-            EndPathToken right = binaryOperatorToken.Right.ShouldBeEndPathToken("TaxRate").And;
+            EndPathToken right = binaryOperatorToken.Right.ShouldBeEndPathToken("TaxRate");
             right.NextToken.Should().NotBeNull();
             right.NextToken.ShouldBeInnerPathToken("Product");
         }
@@ -203,11 +203,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             GroupByToken groupBy = token as GroupByToken;
             groupBy.Properties.Should().HaveCount(2);
             QueryToken queryToken = groupBy.Properties.ElementAt(0);
-            EndPathToken pathToken = queryToken.ShouldBeEndPathToken("CountryRegion").And;
+            EndPathToken pathToken = queryToken.ShouldBeEndPathToken("CountryRegion");
             pathToken.NextToken.ShouldBeInnerPathToken("Customer");
 
             queryToken = groupBy.Properties.ElementAt(1);
-            pathToken = queryToken.ShouldBeEndPathToken("Name").And;
+            pathToken = queryToken.ShouldBeEndPathToken("Name");
             pathToken.NextToken.ShouldBeInnerPathToken("Product");
 
             groupBy.Child.Should().NotBeNull();

@@ -58,7 +58,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var tokenizer = this.GetIdentifierTokenizerWithRealFunctionParser("*");
             RangeVariableToken fakeToken = new RangeVariableToken(ExpressionConstants.It);
             QueryToken result = tokenizer.ParseMemberAccess(fakeToken);
-            result.ShouldBeStarToken().And.NextToken.Should().BeSameAs(fakeToken);
+            result.ShouldBeStarToken().NextToken.Should().BeSameAs(fakeToken);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var tokenizer = this.GetIdentifierTokenizerWithRealFunctionParser("stuff");
             RangeVariableToken rangeVariableToken = new RangeVariableToken(ExpressionConstants.It);
             QueryToken result = tokenizer.ParseMemberAccess(rangeVariableToken);
-            result.ShouldBeEndPathToken("stuff").And.NextToken.As<RangeVariableToken>().Name.Should().Be(ExpressionConstants.It);
+            result.ShouldBeEndPathToken("stuff").NextToken.As<RangeVariableToken>().Name.Should().Be(ExpressionConstants.It);
         }
 
         // ParseStarMemberAccess

@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken result;
             bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
             success.Should().BeTrue();
-            result.ShouldBeFunctionCallToken("geo.distance").And.Arguments.Should().BeEmpty();
+            result.ShouldBeFunctionCallToken("geo.distance").Arguments.Should().BeEmpty();
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken result;
             bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
             success.Should().BeTrue();
-            result.ShouldBeFunctionCallToken("one.two.three.four.five.six").And.Arguments.Should().BeEmpty();
+            result.ShouldBeFunctionCallToken("one.two.three.four.five.six").Arguments.Should().BeEmpty();
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken result;
             bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
             success.Should().BeTrue();
-            result.ShouldBeFunctionCallToken("func").And.Arguments.Should().BeEmpty();
+            result.ShouldBeFunctionCallToken("func").Arguments.Should().BeEmpty();
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken result;
             bool success = tokenizer.TryParseIdentifierAsFunction(parent, out result);
             success.Should().BeTrue();
-            result.ShouldBeFunctionCallToken("func").And.Source.Should().BeSameAs(parent);
+            result.ShouldBeFunctionCallToken("func").Source.Should().BeSameAs(parent);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken result;
             bool success = tokenizer.TryParseIdentifierAsFunction(parent, out result);
             success.Should().BeTrue();
-            FunctionCallToken functionCallToken = result.ShouldBeFunctionCallToken("func").And;
+            FunctionCallToken functionCallToken = result.ShouldBeFunctionCallToken("func");
             functionCallToken.Source.Should().BeSameAs(parent);
             functionCallToken.Arguments.Should().HaveCount(1);
         }
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
             success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("func")
-                  .And.Arguments.Should().HaveCount(1);
+                  .Arguments.Should().HaveCount(1);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
             success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("func")
-                  .And.Arguments.Should().HaveCount(2);
+                  .Arguments.Should().HaveCount(2);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
             success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("func")
-                  .And.Arguments.Should().HaveCount(2);
+                  .Arguments.Should().HaveCount(2);
         }
 
         [Fact]
