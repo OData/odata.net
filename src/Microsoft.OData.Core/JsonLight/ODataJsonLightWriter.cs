@@ -1280,7 +1280,8 @@ namespace Microsoft.OData.JsonLight
                 selectedProperties,
                 this.jsonLightOutputContext.WritingResponse,
                 this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
-                uri);
+                uri,
+                this.jsonLightOutputContext.MessageWriterSettings);
 
             if (builder != null)
             {

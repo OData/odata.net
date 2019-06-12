@@ -49,6 +49,7 @@
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="EdmExtensionMethods.cs" />
     <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
+    <Compile Include="Evaluation\ODataMetadataSelector.cs" />
     <Compile Include="JsonLight\ODataJsonLightReaderNestedPropertyInfo.cs" />
     <Compile Include="JsonLight\ODataJsonLightReaderNestedInfo.cs" />
     <Compile Include="JsonLight\ODataJsonLightReaderNestedStreamInfo.cs" />
