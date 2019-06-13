@@ -460,7 +460,6 @@
     <Compile Include="UriParser\ODataUriParserSettings.cs" />
     <Compile Include="UriParser\OrderByDirection.cs" />
     <Compile Include="UriParser\Parsers\ExpandDepthAndCountValidator.cs" />
-    <Compile Include="UriParser\Parsers\ExpandOptionParser.cs" />
     <Compile Include="UriParser\Parsers\FunctionCallParser.cs" />
     <Compile Include="UriParser\Parsers\FunctionOverloadResolver.cs" />
     <Compile Include="UriParser\Parsers\FunctionParameterParser.cs" />
@@ -476,6 +475,7 @@
     <Compile Include="UriParser\Parsers\SegmentArgumentParser.cs" />
     <Compile Include="UriParser\Parsers\SegmentKeyHandler.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandParser.cs" />
+    <Compile Include="UriParser\Parsers\SelectExpandOptionParser.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandSyntacticParser.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandTermParser.cs" />
     <Compile Include="UriParser\Parsers\UriParserHelper.cs" />
@@ -580,6 +580,8 @@
     <Compile Include="UriParser\SyntacticAst\PathToken.cs" />
     <Compile Include="UriParser\SyntacticAst\QueryToken.cs" />
     <Compile Include="UriParser\SyntacticAst\RangeVariableToken.cs" />
+    <Compile Include="UriParser\SyntacticAst\SelectExpandTermToken.cs" />
+    <Compile Include="UriParser\SyntacticAst\SelectTermToken.cs" />
     <Compile Include="UriParser\SyntacticAst\SelectToken.cs" />
     <Compile Include="UriParser\SyntacticAst\StarToken.cs" />
     <Compile Include="UriParser\SyntacticAst\StringLiteralToken.cs" />

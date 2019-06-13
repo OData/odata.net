@@ -18,14 +18,14 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="selectClause">the raw select string</param>
         /// <param name="expandClause">the raw expand string</param>
-        /// <param name="parentEntityType">the parent entity type for expand option</param>
+        /// <param name="parentStructuredType">the parent entity type for expand option</param>
         /// <param name="configuration">the OData URI parser configuration</param>
         /// <param name="expandTree">the resulting expand AST</param>
         /// <param name="selectTree">the resulting select AST</param>
         public static void Parse(
             string selectClause,
             string expandClause,
-            IEdmStructuredType parentEntityType,
+            IEdmStructuredType parentStructuredType,
             ODataUriParserConfiguration configuration,
             out ExpandToken expandTree,
             out SelectToken selectTree)
@@ -39,7 +39,7 @@ namespace Microsoft.OData.UriParser
             SelectExpandParser expandParser = new SelectExpandParser(
                 configuration.Resolver,
                 expandClause,
-                parentEntityType,
+                parentStructuredType,
                 configuration.Settings.SelectExpandLimit,
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier,
                 configuration.EnableNoDollarQueryOptions)

@@ -85,17 +85,17 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             //$expand=1($filter=filter, $orderby=orderby, $top=top, $skip=skip;)
             ExpandToken expand = new ExpandToken(
-                                    new ExpandTermToken[] { 
+                                    new ExpandTermToken[] {
                                         new ExpandTermToken(
-                                            new NonSystemToken("1", null, null), 
-                                            new LiteralToken("filter"), 
-                                            new OrderByToken []{ new OrderByToken(new LiteralToken("orderby"), OrderByDirection.Descending)}, 
-                                            1, 
-                                            2, 
+                                            new NonSystemToken("1", null, null),
+                                            new LiteralToken("filter"),
+                                            new OrderByToken []{ new OrderByToken(new LiteralToken("orderby"), OrderByDirection.Descending)},
+                                            1,
+                                            2,
                                             false,
                                             3,
-                                            new StringLiteralToken("searchme"), 
-                                            new SelectToken(null), 
+                                            new StringLiteralToken("searchme"),
+                                            new SelectToken(properties: null),
                                             new ExpandToken(null))
                                     }
                                 );
