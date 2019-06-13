@@ -131,6 +131,13 @@ namespace Microsoft.OData.UriParser
         T Visit(SelectToken tokenIn);
 
         /// <summary>
+        /// Visits an SelectTermToken
+        /// </summary>
+        /// <param name="tokenIn">The SelectTermToken to visit</param>
+        /// <returns>A QueryNode bound to this SelectTermToken</returns>
+        T Visit(SelectTermToken tokenIn);
+
+        /// <summary>
         /// Visits a StarToken
         /// </summary>
         /// <param name="tokenIn">The StarToken to bind</param>

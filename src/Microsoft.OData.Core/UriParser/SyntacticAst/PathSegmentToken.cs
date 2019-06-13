@@ -13,30 +13,21 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a segment in a path.
     /// </summary>
-    ///
     public abstract class PathSegmentToken
     {
-        /// <summary>
-        /// the next token in the path
-        /// </summary>
-        private PathSegmentToken nextToken;
-
         /// <summary>
         /// build this segment token using the next token
         /// </summary>
         /// <param name="nextToken">the next token in the path</param>
         protected PathSegmentToken(PathSegmentToken nextToken)
         {
-            this.nextToken = nextToken;
+            NextToken = nextToken;
         }
 
         /// <summary>
         /// Get the NextToken in the path
         /// </summary>
-        public PathSegmentToken NextToken
-        {
-            get { return this.nextToken; }
-        }
+        public PathSegmentToken NextToken { get; private set; }
 
         /// <summary>
         /// The name of the property to access.
@@ -74,7 +65,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="nextTokenIn">the next token to set.</param>
         internal void SetNextToken(PathSegmentToken nextTokenIn)
         {
-            this.nextToken = nextTokenIn;
+            NextToken = nextTokenIn;
         }
     }
 }

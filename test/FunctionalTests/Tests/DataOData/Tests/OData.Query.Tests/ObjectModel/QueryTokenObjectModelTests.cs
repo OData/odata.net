@@ -98,7 +98,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.ObjectModel
         [TestMethod, Variation(Description = "Test the default values of a select query option.")]
         public void SelectQueryTokenDefaultTest()
         {
-            SelectToken select = new SelectToken(null);
+            SelectToken select = new SelectToken(properties: null);
             this.Assert.AreEqual(QueryTokenKind.Select, select.Kind, "The InternalKind property has an unexpected value.");
             this.Assert.IsTrue(select.Properties != null && select.Properties.Count() == 0, "The Properties property should NOT be null but is empty.");
         }

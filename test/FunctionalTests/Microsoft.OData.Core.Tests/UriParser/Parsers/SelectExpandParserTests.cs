@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -27,68 +26,86 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void SelectParsesEachTermOnce()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("foo,bar,thing,prop,yoda", ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseSelect();
-            results.Properties.Count().Should().Be(5);
+
+            // Act
+            SelectToken selectToken = parser.ParseSelect();
+
+            // Assert
+            Assert.Equal(5, selectToken.Properties.Count());
+            Assert.Equal(5, selectToken.SelectTerms.Count());
         }
 
-        [Fact]
-        public void NullSelectBecomesEmptyList()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("         ")]
+        public void NullOrEmptyOrWhiteSpaceSelectBecomesEmptyList(string clauseToParse)
         {
-            SelectExpandParser parser = new SelectExpandParser(null, ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseSelect();
-            results.Properties.Should().NotBeNull();
-            results.Properties.Should().BeEmpty();
-        }
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(clauseToParse, ODataUriParserSettings.DefaultSelectExpandLimit);
 
-        [Fact]
-        public void EmptySelectStringBecomesEmptyList()
-        {
-            SelectExpandParser parser = new SelectExpandParser("", ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseSelect();
-            results.Properties.Should().NotBeNull();
-            results.Properties.Should().BeEmpty();
-        }
+            // Act
+            SelectToken selectToken = parser.ParseSelect();
 
-        [Fact]
-        public void JustSpaceSelectStringBecomesEmptyList()
-        {
-            SelectExpandParser parser = new SelectExpandParser("         ", ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseSelect();
-            results.Properties.Should().NotBeNull();
-            results.Properties.Should().BeEmpty();
+            // Assert
+            Assert.NotNull(selectToken.Properties);
+            Assert.Empty(selectToken.Properties);
+            Assert.NotNull(selectToken.SelectTerms);
+            Assert.Empty(selectToken.SelectTerms);
         }
 
         [Fact]
         public void EmptySelectTermShouldThrow()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("one,,two", ODataUriParserSettings.DefaultSelectExpandLimit);
-            Action parse = () => parser.ParseSelect();
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionToken_IdentifierExpected("4"));
+
+            // Act
+            Action test = () => parser.ParseSelect();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.ExpressionToken_IdentifierExpected("4"));
         }
 
         [Fact]
         public void MaxRecursionDepthIsEnforcedInSelect()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("stuff/stuff/stuff/stuff", 3);
-            Action parse = () => parser.ParseSelect();
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+
+            // Act
+            Action test = () => parser.ParseSelect();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void SemicolonOnlyAllowedInParensInSelect()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("one;two", 3);
-            Action parse = () => parser.ParseSelect();
-            parse.ShouldThrow<ODataException>("one;two is not valid in a $select or $expand expression.");
+
+            // Act
+            Action test = () => parser.ParseSelect();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter(";", 3, "one;two"));
         }
 
         [Fact]
         public void WhitespaceInMiddleOfSegmentShouldThrowInSelect()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("what happens here/foo", 3);
-            Action parse = () => parser.ParseSelect();
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_TermIsNotValid("what happens here/foo"));
+
+            // Act
+            Action test = () => parser.ParseSelect();
+
+            // Assert
+            test.Throws<ODataException>(Strings.UriSelectParser_TermIsNotValid("what happens here/foo"));
         }
 
         #endregion
@@ -97,103 +114,264 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ExpandParsesEachTermOnce()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("foo,bar,thing,prop,yoda", ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseExpand();
-            results.ExpandTerms.Count().Should().Be(5);
+
+            // Act
+            ExpandToken expandToken = parser.ParseExpand();
+
+            // Assert
+            Assert.Equal(5, expandToken.ExpandTerms.Count());
         }
 
-        [Fact]
-        public void NullExpandBecomesEmptyList()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("      ")]
+        public void NullOrEmptyOrWhitespaceExpandBecomesEmptyList(string clauseToParse)
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser(null, ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseExpand();
-            results.ExpandTerms.Should().NotBeNull();
-            results.ExpandTerms.Should().BeEmpty();
-        }
 
-        [Fact]
-        public void EmptyExpandStringBecomesEmptyList()
-        {
-            SelectExpandParser parser = new SelectExpandParser("", ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseExpand();
-            results.ExpandTerms.Should().NotBeNull();
-            results.ExpandTerms.Should().BeEmpty();
-        }
+            // Act
+            ExpandToken expandToken = parser.ParseExpand();
 
-        [Fact]
-        public void JustSpaceExpandStringBecomesEmptyList()
-        {
-            SelectExpandParser parser = new SelectExpandParser("         ", ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseExpand();
-            results.ExpandTerms.Should().NotBeNull();
-            results.ExpandTerms.Should().BeEmpty();
+            // Assert
+            Assert.NotNull(expandToken.ExpandTerms);
+            Assert.Empty(expandToken.ExpandTerms);
         }
 
         [Fact]
         public void EmptyExpandTermShouldThrow()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("one,,two", ODataUriParserSettings.DefaultSelectExpandLimit);
-            Action parse = () => parser.ParseExpand();
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionToken_IdentifierExpected("4"));
+
+            // Act
+            Action test = () => parser.ParseExpand();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.ExpressionToken_IdentifierExpected("4"));
         }
 
         [Fact]
         public void NestedOptionsOnMultipleExpansionsIsOk()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("one($filter=true), two($filter=false)", ODataUriParserSettings.DefaultSelectExpandLimit);
-            var results = parser.ParseExpand();
-            results.ExpandTerms.Should().HaveCount(2);
-            results.ExpandTerms.First().FilterOption.Should().NotBeNull();
-            results.ExpandTerms.Last().FilterOption.Should().NotBeNull();
+
+            // Act
+            ExpandToken expandToken = parser.ParseExpand();
+
+            // Assert
+            Assert.NotNull(expandToken);
+            Assert.NotNull(expandToken.ExpandTerms);
+            Assert.Equal(2, expandToken.ExpandTerms.Count());
+            Assert.NotNull(expandToken.ExpandTerms.First().FilterOption);
+            Assert.NotNull(expandToken.ExpandTerms.Last().FilterOption);
         }
 
         [Fact]
         public void NestedOptionsWithoutClosingParenthesisShouldThrow()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("one($filter=true", ODataUriParserSettings.DefaultSelectExpandLimit);
-            Action parse = () => parser.ParseExpand();
-            // TODO: Make this error message make sense for parenthetical expressions. Either generalize it or refactor code.
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+
+            // Act
+            Action test = () => parser.ParseExpand();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
         }
 
         [Fact]
         public void NestedOptionsWithExtraCloseParenShouldThrow()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("one($filter=true)), two", ODataUriParserSettings.DefaultSelectExpandLimit);
-            Action parse = () => parser.ParseExpand();
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_TermIsNotValid("one($filter=true)), two"));
+
+            // Act
+            Action test = () => parser.ParseExpand();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid("one($filter=true)), two"));
         }
 
         [Fact]
         public void OpenCloseParensAfterNavPropShouldThrow()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("NavProp()", ODataUriParserSettings.DefaultSelectExpandLimit);
-            Action parse = () => parser.ParseExpand();
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_MissingExpandOption("NavProp"));
+
+            // Act
+            Action test = () => parser.ParseExpand();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.UriParser_MissingExpandOption("NavProp"));
         }
 
         [Fact]
         public void MaxRecursionDepthIsEnforcedInExpand()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("stuff/stuff/stuff/stuff", 3);
-            Action parse = () => parser.ParseExpand();
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+
+            // Act
+            Action test = () => parser.ParseExpand();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void SemicolonOnlyAllowedInParensInExpand()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("one;two", 3);
-            Action parse = () => parser.ParseExpand();
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_InvalidCharacter(";", 3, "one;two"));
+
+            // Act
+            Action test = () => parser.ParseExpand();
+
+            // Assert
+            test.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter(";", 3, "one;two"));
         }
 
         [Fact]
         public void WhitespaceInMiddleOfSegmentShouldThrowInExpand()
         {
+            // Arrange
             SelectExpandParser parser = new SelectExpandParser("what happens here/foo", 3);
-            Action parse = () => parser.ParseExpand();
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_TermIsNotValid("what happens here/foo"));
+
+            // Act
+            Action test = () => parser.ParseExpand();
+
+            // Assert
+            test.Throws<ODataException>(Strings.UriSelectParser_TermIsNotValid("what happens here/foo"));
+        }
+
+        [Fact]
+        public void ParseNestedFilterInSelectWorks()
+        {
+            // Arrange & Act
+            SelectToken selectToken = ParseSelectClause("Address($filter=true)");
+
+            // Assert
+            Assert.NotNull(selectToken);
+            SelectTermToken selectTermToken = Assert.Single(selectToken.SelectTerms);
+            selectTermToken.PathToProperty.ShouldBeNonSystemToken("Address");
+            Assert.NotNull(selectTermToken.FilterOption);
+            selectTermToken.FilterOption.ShouldBeLiteralQueryToken(true);
+        }
+
+        [Fact]
+        public void ParseNestedTopAndSkipInSelectWorks()
+        {
+            // Arrange & Act
+            SelectToken selectToken = ParseSelectClause("Address($top=2;$skip=4)");
+
+            // Assert
+            Assert.NotNull(selectToken);
+            SelectTermToken selectTermToken = Assert.Single(selectToken.SelectTerms);
+            selectTermToken.PathToProperty.ShouldBeNonSystemToken("Address");
+            Assert.NotNull(selectTermToken.TopOption);
+            Assert.Equal(2, selectTermToken.TopOption);
+
+            Assert.NotNull(selectTermToken.SkipOption);
+            Assert.Equal(4, selectTermToken.SkipOption);
+        }
+
+        [Fact]
+        public void ParseNestedOrderByAndSearchInSelectWorks()
+        {
+            // Arrange & Act
+            SelectToken selectToken = ParseSelectClause("Address($orderby=abc;$search=xyz)");
+
+            // Assert
+            Assert.NotNull(selectToken);
+            SelectTermToken selectTermToken = Assert.Single(selectToken.SelectTerms);
+            selectTermToken.PathToProperty.ShouldBeNonSystemToken("Address");
+            Assert.NotNull(selectTermToken.OrderByOptions);
+            OrderByToken orderBy = Assert.Single(selectTermToken.OrderByOptions);
+            orderBy.Expression.ShouldBeEndPathToken("abc");
+
+            Assert.NotNull(selectTermToken.SearchOption);
+            selectTermToken.SearchOption.ShouldBeStringLiteralToken("xyz");
+        }
+
+        [Fact]
+        public void ParseNestedSelectAndExpandInSelectWorks()
+        {
+            // Arrange & Act
+            SelectToken selectToken = ParseSelectClause("Address($select=abc;$expand=xyz)");
+
+            // Assert
+            Assert.NotNull(selectToken);
+            SelectTermToken selectTermToken = Assert.Single(selectToken.SelectTerms);
+            selectTermToken.PathToProperty.ShouldBeNonSystemToken("Address");
+
+            Assert.NotNull(selectTermToken.SelectOption);
+            SelectTermToken nestedSelectTermToken = Assert.Single(selectTermToken.SelectOption.SelectTerms);
+            nestedSelectTermToken.PathToProperty.ShouldBeNonSystemToken("abc");
+
+            Assert.NotNull(selectTermToken.ExpandOption);
+            ExpandTermToken nestedExpandTermToken = Assert.Single(selectTermToken.ExpandOption.ExpandTerms);
+            nestedExpandTermToken.PathToProperty.ShouldBeNonSystemToken("xyz");
+        }
+
+        [Fact]
+        public void ParseDeepNestedSelectAndExpandInSelectWorks()
+        {
+            // Arrange & Act
+            SelectToken selectToken = ParseSelectClause("Address($select=one($expand=two)),City($expand=three($select=four))");
+
+            // Assert
+            Assert.NotNull(selectToken);
+            SelectTermToken[] selectTermTokens = selectToken.SelectTerms.ToArray();
+            Assert.Equal(2, selectTermTokens.Length);
+
+            // #1 Depth 0
+            selectTermTokens[0].PathToProperty.ShouldBeNonSystemToken("Address");
+
+            // #1 Depth 1
+            Assert.NotNull(selectTermTokens[0].SelectOption);
+            SelectTermToken nestedSelectToken = Assert.Single(selectTermTokens[0].SelectOption.SelectTerms);
+            nestedSelectToken.PathToProperty.ShouldBeNonSystemToken("one");
+
+            // #1 Depth 2
+            Assert.NotNull(nestedSelectToken.ExpandOption);
+            ExpandTermToken nestedExpandTermToken = Assert.Single(nestedSelectToken.ExpandOption.ExpandTerms);
+            nestedExpandTermToken.PathToProperty.ShouldBeNonSystemToken("two");
+
+            // #2 Depth 0
+            selectTermTokens[1].PathToProperty.ShouldBeNonSystemToken("City");
+
+            // #2 Depth 1
+            Assert.NotNull(selectTermTokens[1].ExpandOption);
+            nestedExpandTermToken = Assert.Single(selectTermTokens[1].ExpandOption.ExpandTerms);
+            nestedExpandTermToken.PathToProperty.ShouldBeNonSystemToken("three");
+
+            // #2 Depth 2
+            Assert.NotNull(nestedExpandTermToken.SelectOption);
+            nestedSelectToken = Assert.Single(nestedExpandTermToken.SelectOption.SelectTerms);
+            nestedSelectToken.PathToProperty.ShouldBeNonSystemToken("four");
+        }
+
+        private SelectToken ParseSelectClause(string select)
+        {
+            ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(EdmCoreModel.Instance)
+            {
+                Settings = { PathLimit = 10, FilterLimit = 10, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
+            };
+
+            SelectExpandParser expandParser = new SelectExpandParser(select, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            {
+                MaxPathDepth = configuration.Settings.PathLimit,
+                MaxFilterDepth = configuration.Settings.FilterLimit,
+                MaxOrderByDepth = configuration.Settings.OrderByLimit,
+                MaxSearchDepth = configuration.Settings.SearchLimit
+            };
+
+            return expandParser.ParseSelect();
         }
         #endregion
 
@@ -201,68 +379,157 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ParseStarInExpand()
         {
-            var results = this.StarExpandTesting("*", "Persons");
-            results.ExpandTerms.Should().HaveCount(1);
+            // Arrange & Act
+            ExpandToken expandToken = this.StarExpandTesting("*", "Persons");
+
+            // Assert
+            ExpandTermToken innerExpandTerm = Assert.Single(expandToken.ExpandTerms);
+            innerExpandTerm.PathToNavigationProp.ShouldBeNonSystemToken("Friend");
+            Assert.Null(innerExpandTerm.PathToNavigationProp.NextToken);
         }
 
         [Fact]
         public void ParseStarWithRefInExpand()
         {
-            var results = this.StarExpandTesting("*/$ref", "Persons");
-            results.ExpandTerms.Should().HaveCount(1);
+            // Arrange & Act
+            ExpandToken expandToken = this.StarExpandTesting("*/$ref", "Persons");
+
+            // Assert
+            ExpandTermToken innerExpandTerm = Assert.Single(expandToken.ExpandTerms);
+            innerExpandTerm.PathToNavigationProp.ShouldBeNonSystemToken("$ref");
+            Assert.NotNull(innerExpandTerm.PathToNavigationProp.NextToken);
+            innerExpandTerm.PathToNavigationProp.NextToken.ShouldBeNonSystemToken("Friend");
         }
 
         [Fact]
         public void ParseStarWithEntitySetInExpand()
         {
-            var results = this.StarExpandTesting("*/$ref,CityHall", "Cities");
-            results.ExpandTerms.Should().HaveCount(3);
-            results.ExpandTerms.First().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("CityHall");
-            results.ExpandTerms.Last().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("$ref");
+            // Arrange & Act
+            ExpandToken expandToken = this.StarExpandTesting("*/$ref,CityHall", "Cities");
+
+            // Assert
+            Assert.NotNull(expandToken);
+            Assert.NotNull(expandToken.ExpandTerms);
+
+            ExpandTermToken[] expandTermTokens = expandToken.ExpandTerms.ToArray();
+            Assert.Equal(3, expandTermTokens.Length);
+
+            // #1
+            expandTermTokens[0].PathToNavigationProp.ShouldBeNonSystemToken("CityHall");
+            Assert.Null(expandTermTokens[0].PathToNavigationProp.NextToken);
+
+            // #2,  DOL/$ref
+            expandTermTokens[1].PathToNavigationProp.ShouldBeNonSystemToken("$ref");
+            Assert.NotNull(expandTermTokens[1].PathToNavigationProp.NextToken);
+            expandTermTokens[1].PathToNavigationProp.NextToken.ShouldBeNonSystemToken("DOL");
+            Assert.Null(expandTermTokens[1].PathToNavigationProp.NextToken.NextToken);
+
+            // #3  PoliceStation/$ref
+            expandTermTokens[2].PathToNavigationProp.ShouldBeNonSystemToken("$ref");
+            Assert.NotNull(expandTermTokens[2].PathToNavigationProp.NextToken);
+            expandTermTokens[2].PathToNavigationProp.NextToken.ShouldBeNonSystemToken("PoliceStation");
+            Assert.Null(expandTermTokens[2].PathToNavigationProp.NextToken.NextToken);
         }
 
         [Fact]
         public void ParseStarWithMultipleEntitySetInExpand()
         {
-            var results = this.StarExpandTesting("CityHall($levels=2),*/$ref,PoliceStation($select=Id, Address)", "Cities");
-            results.ExpandTerms.Should().HaveCount(3);
-            results.ExpandTerms.First().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("CityHall");
-            results.ExpandTerms.Last().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("$ref");
+            // Arrange & Act
+            ExpandToken expandToken = this.StarExpandTesting("CityHall($levels=2),*/$ref,PoliceStation($select=Id, Address)", "Cities");
+
+            // Assert
+            Assert.NotNull(expandToken);
+            Assert.NotNull(expandToken.ExpandTerms);
+
+            ExpandTermToken[] expandTermTokens = expandToken.ExpandTerms.ToArray();
+            Assert.Equal(3, expandTermTokens.Length);
+
+            // #1
+            expandTermTokens[0].PathToNavigationProp.ShouldBeNonSystemToken("CityHall");
+            Assert.Null(expandTermTokens[0].PathToNavigationProp.NextToken);
+            Assert.NotNull(expandTermTokens[0].LevelsOption);
+            Assert.Equal(2, expandTermTokens[0].LevelsOption);
+
+            // #2
+            expandTermTokens[1].PathToNavigationProp.ShouldBeNonSystemToken("PoliceStation");
+            Assert.Null(expandTermTokens[1].PathToNavigationProp.NextToken);
+            Assert.NotNull(expandTermTokens[1].SelectOption);
+            Assert.Equal(2, expandTermTokens[1].SelectOption.SelectTerms.Count());
+            expandTermTokens[1].SelectOption.SelectTerms.First().PathToProperty.ShouldBeNonSystemToken("Id");
+            expandTermTokens[1].SelectOption.SelectTerms.Last().PathToProperty.ShouldBeNonSystemToken("Address");
+
+            // #3
+            expandTermTokens[2].PathToNavigationProp.ShouldBeNonSystemToken("$ref");
+            Assert.NotNull(expandTermTokens[2].PathToNavigationProp.NextToken);
+            expandTermTokens[2].PathToNavigationProp.NextToken.ShouldBeNonSystemToken("DOL");
+            Assert.Null(expandTermTokens[2].PathToNavigationProp.NextToken.NextToken);
         }
 
         [Fact]
         public void NestedStarExpand()
         {
-            var results = this.StarExpandTesting("Friend($expand=*)", "Persons");
-            results.ExpandTerms.Should().HaveCount(1);
+            // Arrange & Act
+            ExpandToken expandToken = this.StarExpandTesting("Friend($expand=*)", "Persons");
+
+            // Assert
+            Assert.NotNull(expandToken);
+            ExpandTermToken expandTermToken = Assert.Single(expandToken.ExpandTerms);
+
+            // Depth 0
+            expandTermToken.PathToNavigationProp.ShouldBeNonSystemToken("Friend");
+            Assert.Null(expandTermToken.PathToNavigationProp.NextToken);
+
+            // Depth 1
+            Assert.NotNull(expandTermToken.ExpandOption);
+            ExpandTermToken nestedExpandTermToken = Assert.Single(expandTermToken.ExpandOption.ExpandTerms);
+            nestedExpandTermToken.PathToNavigationProp.ShouldBeNonSystemToken("Friend");
+            Assert.Null(nestedExpandTermToken.PathToNavigationProp.NextToken);
         }
 
         [Fact]
         public void ParseStarWithOptions()
         {
-            var results = this.StarExpandTesting("*($levels=2)", "Persons");
-            results.ExpandTerms.Should().HaveCount(1);
+            // Arrange & Act
+            ExpandToken expandToken = this.StarExpandTesting("*($levels=2)", "Persons");
+
+            // Assert
+            Assert.NotNull(expandToken);
+            ExpandTermToken expandTermToken = Assert.Single(expandToken.ExpandTerms);
+
+            expandTermToken.PathToNavigationProp.ShouldBeNonSystemToken("Friend");
+            Assert.Null(expandTermToken.PathToNavigationProp.NextToken);
+            Assert.NotNull(expandTermToken.LevelsOption);
+            Assert.Equal(2, expandTermToken.LevelsOption);
         }
 
         [Fact]
         public void ParseStarInvalidWithOptions()
         {
-            Action action = () => this.StarExpandTesting("*($select=*)", "Persons");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriExpandParser_TermIsNotValidForStar("($select=*)"));
+            // Arrange & Act
+            Action test = () => this.StarExpandTesting("*($select=*)", "Persons");
+
+            // Assert
+            test.Throws<ODataException>(Strings.UriExpandParser_TermIsNotValidForStar("($select=*)"));
         }
 
         [Fact]
         public void ParseStarRefWithInvalidOptions()
         {
-            Action action = () => this.StarExpandTesting("*/$ref($levels=2)", "Persons");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriExpandParser_TermIsNotValidForStarRef("($levels=2)"));
+            // Arrange & Act
+            Action test = () => this.StarExpandTesting("*/$ref($levels=2)", "Persons");
+
+            // Assert
+            test.Throws<ODataException>(Strings.UriExpandParser_TermIsNotValidForStarRef("($levels=2)"));
         }
 
         [Fact]
         public void ParseMultipleStarInExpand()
         {
-            Action action = () => this.StarExpandTesting("*, Friend, */$ref", "Persons");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriExpandParser_TermWithMultipleStarNotAllowed("*, Friend, */$ref"));
+            // Arrange & Act
+            Action test = () => this.StarExpandTesting("*, Friend, */$ref", "Persons");
+
+            // Assert
+            test.Throws<ODataException>(Strings.UriExpandParser_TermWithMultipleStarNotAllowed("*, Friend, */$ref"));
         }
 
         private ExpandToken StarExpandTesting(string expand, String entitySetType)
@@ -273,6 +540,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             {
                 Settings = { PathLimit = 10, FilterLimit = 10, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
             };
+
             var parentEntityType = configuration.Resolver.ResolveNavigationSource(model, entitySetType).EntityType();
             SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, parentEntityType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
@@ -281,13 +549,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 MaxOrderByDepth = configuration.Settings.OrderByLimit,
                 MaxSearchDepth = configuration.Settings.SearchLimit
             };
+
             return expandParser.ParseExpand();
         }
 
         [Fact]
         public void ParentEntityTypeIsNullForExpandStar()
         {
-            var expand = "*";
+            // Arrange
+            string expand = "*";
 
             ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(EdmCoreModel.Instance)
             {
@@ -302,8 +572,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 MaxSearchDepth = configuration.Settings.SearchLimit
             };
 
-            Action action = () => expandParser.ParseExpand();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriExpandParser_ParentEntityIsNull(""));
+            Action test = () => expandParser.ParseExpand();
+
+            // Assert
+            test.Throws<ODataException>(Strings.UriExpandParser_ParentEntityIsNull(""));
         }
         #endregion
 
@@ -311,45 +583,50 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void PathLimitTest()
         {
+            // Arrange & Act & Assert
             this.LimitationTest("d1/d2", null);
-            Action action = () => this.LimitationTest("d1/d2/d3", null);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_TooDeep);
+            Action test = () => this.LimitationTest("d1/d2/d3", null);
+            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
 
             this.LimitationTest(null, "d1/d2");
-            action = () => this.LimitationTest(null,"d1/d2/d3");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_TooDeep);
+            test = () => this.LimitationTest(null,"d1/d2/d3");
+            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void FilterLimitTest()
         {
+            // Arrange & Act & Assert
             this.LimitationTest(null, "d1($filter=a or b and c)");
-            Action action = () => this.LimitationTest(null, "d1($filter=(a or b) and c)");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_TooDeep);
+            Action test = () => this.LimitationTest(null, "d1($filter=(a or b) and c)");
+            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void OrderByLimitTest()
         {
+            // Arrange & Act & Assert
             this.LimitationTest(null, "d1($orderby=a or b and c)");
-            Action action = () => this.LimitationTest(null, "d1($orderby=(a or b) and c)");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_TooDeep);
+            Action test = () => this.LimitationTest(null, "d1($orderby=(a or b) and c)");
+            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void SearchLimitTest()
         {
+            // Arrange & Act & Assert
             this.LimitationTest(null, "d1($search=a OR b AND c)");
-            Action action = () => this.LimitationTest(null, "d1($search=(a OR b) AND c)");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_TooDeep);
+            Action test = () => this.LimitationTest(null, "d1($search=(a OR b) AND c)");
+            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void ExpandLimitTest()
         {
+            // Arrange & Act & Assert
             this.LimitationTest(null, "d1($expand=d2($expand=d3($expand=d4($expand=d5))))");
-            Action action = () => this.LimitationTest(null, "d1($expand=d2($expand=d3($expand=d4($expand=d5($expand=d6)))))");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_TooDeep);
+            Action test = () => this.LimitationTest(null, "d1($expand=d2($expand=d3($expand=d4($expand=d5($expand=d6)))))");
+            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
         }
 
         private void LimitationTest(string select, string expand)
@@ -360,6 +637,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             {
                 Settings = { PathLimit = 2, FilterLimit = 7, OrderByLimit = 7, SearchLimit = 7, SelectExpandLimit = 5 }
             };
+
             SelectExpandSyntacticParser.Parse(select, expand, null , configuration, out expandTree, out selectTree);
         }
         #endregion

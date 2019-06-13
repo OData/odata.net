@@ -75,6 +75,8 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\PathToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\PathToken.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryToken.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\RangeVariableToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\RangeVariableToken.cs" />
+    <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\SelectExpandTermToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\SelectExpandTermToken.cs" />
+    <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\SelectTermToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\SelectTermToken.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\SelectToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\SelectToken.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\StarToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\StarToken.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\SystemToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\SystemToken.cs" />
