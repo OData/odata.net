@@ -31,8 +31,8 @@ namespace Microsoft.OData.UriParser
         {
             ExpandToken unifiedSelectExpandToken = SelectExpandSyntacticUnifier.Combine(expandToken, selectToken);
 
-            ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            ExpandToken normalizedSelectExpandToken = expandTreeNormalizer.NormalizeExpandTree(unifiedSelectExpandToken);
+      //      ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
+            ExpandToken normalizedSelectExpandToken = ExpandTreeNormalizer.NormalizeExpandTree(unifiedSelectExpandToken);
 
             SelectExpandBinder selectExpandBinder = new SelectExpandBinder(configuration, odataPathInfo, state);
             SelectExpandClause clause = selectExpandBinder.Bind(normalizedSelectExpandToken);

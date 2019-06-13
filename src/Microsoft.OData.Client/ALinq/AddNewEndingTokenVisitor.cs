@@ -47,7 +47,7 @@ namespace Microsoft.OData.Client
             {
                 if (newTokenToAdd != null)
                 {
-                    tokenIn.SetNextToken(newTokenToAdd);
+                    tokenIn.NextToken = newTokenToAdd;
                 }
             }
             else

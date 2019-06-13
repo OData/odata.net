@@ -11,6 +11,51 @@ using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.UriParser
 {
+    internal sealed class SelectExpandTreeNormalizer
+    {
+        public static ExpandToken NormalizeExpandTree(ExpandToken expand)
+        {
+            foreach (ExpandTermToken term in expand.ExpandTerms)
+            {
+                NormalizePath(term);
+            }
+
+            // to normalize a select token we just need to invert its paths, so that
+            // we match the ordering on an ExpandToken.
+            return expand;
+        }
+
+        public static SelectToken NormalizeSelectTree(SelectToken select)
+        {
+            foreach (SelectTermToken term in select.SelectTerms)
+            {
+                NormalizePath(term);
+            }
+
+            // to normalize a select token we just need to invert its paths, so that
+            // we match the ordering on an ExpandToken.
+            return select;
+        }
+
+        public static SelectExpandTermToken NormalizePath(SelectExpandTermToken token)
+        {
+            token.PathToProperty = token.PathToProperty.Reverse();
+
+            // we also need to call the select token normalizer for this level to reverse the select paths
+            if (token.SelectOption != null)
+            {
+                token.SelectOption = NormalizeSelectTree(token.SelectOption);
+            }
+
+            if (token.ExpandOption != null)
+            {
+                token.ExpandOption = NormalizeExpandTree(token.ExpandOption);
+            }
+
+            return token;
+        }
+    }
+
     /// <summary>
     /// Translator from the old expand syntax tree to the new Expand Option syntax tree
     /// </summary>
@@ -21,12 +66,12 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="treeToNormalize">the tree to normalize</param>
         /// <returns>a new tree, in the new ExpandOption syntax</returns>
-        public ExpandToken NormalizeExpandTree(ExpandToken treeToNormalize)
+        public static ExpandToken NormalizeExpandTree(ExpandToken treeToNormalize)
         {
             // To normalize the expand tree we need to
             // 1) invert the path tree on each of its expand term tokens
             // 2) combine terms that start with the path tree
-            ExpandToken invertedPathTree = this.NormalizePaths(treeToNormalize);
+            ExpandToken invertedPathTree = NormalizePaths(treeToNormalize);
 
             return CombineTerms(invertedPathTree);
         }
@@ -37,37 +82,26 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="treeToInvert">the tree to invert paths on</param>
         /// <returns>a new tree with all of its paths inverted</returns>
-        public ExpandToken NormalizePaths(ExpandToken treeToInvert)
+        public static ExpandToken NormalizePaths(ExpandToken treeToInvert)
         {
             // iterate through each expand term token, and reverse the tree in its path property
-            List<ExpandTermToken> updatedTerms = new List<ExpandTermToken>();
             foreach (ExpandTermToken term in treeToInvert.ExpandTerms)
             {
-                PathReverser pathReverser = new PathReverser();
-                PathSegmentToken reversedPath = term.PathToNavigationProp.Accept(pathReverser);
+                term.PathToProperty = term.PathToNavigationProp.Reverse();
 
                 // we also need to call the select token normalizer for this level to reverse the select paths
-                SelectToken newSelectToken = term.SelectOption;
                 if (term.SelectOption != null)
                 {
-                    newSelectToken = SelectTreeNormalizer.NormalizeSelectTree(term.SelectOption);
+                    term.SelectOption = SelectTreeNormalizer.NormalizeSelectTree(term.SelectOption);
                 }
 
-                ExpandToken subExpandTree;
                 if (term.ExpandOption != null)
                 {
-                    subExpandTree = this.NormalizePaths(term.ExpandOption);
+                    term.ExpandOption = NormalizePaths(term.ExpandOption);
                 }
-                else
-                {
-                    subExpandTree = null;
-                }
-
-                ExpandTermToken newTerm = new ExpandTermToken(reversedPath, term.FilterOption, term.OrderByOptions, term.TopOption, term.SkipOption, term.CountQueryOption, term.LevelsOption, term.SearchOption, newSelectToken, subExpandTree, term.ComputeOption, term.ApplyOptions);
-                updatedTerms.Add(newTerm);
             }
 
-            return new ExpandToken(updatedTerms);
+            return treeToInvert;
         }
 
         /// <summary>
@@ -75,7 +109,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="treeToCollapse">the tree to collapse</param>
         /// <returns>A new tree with all redundant terms collapsed.</returns>
-        public ExpandToken CombineTerms(ExpandToken treeToCollapse)
+        public static ExpandToken CombineTerms(ExpandToken treeToCollapse)
         {
             var combinedTerms = new Dictionary<PathSegmentToken, ExpandTermToken>(new PathSegmentTokenEqualityComparer());
             foreach (ExpandTermToken termToken in treeToCollapse.ExpandTerms)
@@ -111,7 +145,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="existingToken">the exisiting (already expanded) token</param>
         /// <param name="newToken">the new (already expanded) token</param>
         /// <returns>the combined token, or, if the two are mutually exclusive, the same tokens</returns>
-        public ExpandTermToken CombineTerms(ExpandTermToken existingToken, ExpandTermToken newToken)
+        public static ExpandTermToken CombineTerms(ExpandTermToken existingToken, ExpandTermToken newToken)
         {
             Debug.Assert(new PathSegmentTokenEqualityComparer().Equals(existingToken.PathToNavigationProp, newToken.PathToNavigationProp), "Paths should be equal.");
 
@@ -133,12 +167,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Combine the child nodes of twoExpandTermTokens into one list of tokens
+        /// Combine the child nodes of two ExpandTermTokens into one list of tokens
         /// </summary>
-        /// <param name="existingToken">the existing token to to</param>
+        /// <param name="existingToken">the existing token</param>
         /// <param name="newToken">the new token containing terms to add</param>
         /// <returns>a combined list of the all child nodes of the two tokens.</returns>
-        public IEnumerable<ExpandTermToken> CombineChildNodes(ExpandTermToken existingToken, ExpandTermToken newToken)
+        public static IEnumerable<ExpandTermToken> CombineChildNodes(ExpandTermToken existingToken, ExpandTermToken newToken)
         {
             if (existingToken.ExpandOption == null && newToken.ExpandOption == null)
             {
@@ -159,12 +193,64 @@ namespace Microsoft.OData.UriParser
             return childNodes.Values;
         }
 
+        public static IEnumerable<SelectTermToken> CombineChildNodes(SelectTermToken existingToken, SelectTermToken newToken)
+        {
+            if (existingToken.ExpandOption == null && newToken.ExpandOption == null)
+            {
+                return new List<SelectTermToken>();
+            }
+
+            var childNodes = new Dictionary<PathSegmentToken, SelectTermToken>(new PathSegmentTokenEqualityComparer());
+            if (existingToken.ExpandOption != null)
+            {
+                AddChildOptionsToDictionary(existingToken, childNodes);
+            }
+
+            if (newToken.ExpandOption != null)
+            {
+                AddChildOptionsToDictionary(newToken, childNodes);
+            }
+
+            return childNodes.Values;
+        }
+
         /// <summary>
         /// Add child options to a new dictionary
         /// </summary>
         /// <param name="newToken">the token with child nodes to add to the dictionary</param>
         /// <param name="combinedTerms">dictionary to add child nodes to</param>
-        private void AddChildOptionsToDictionary(ExpandTermToken newToken, Dictionary<PathSegmentToken, ExpandTermToken> combinedTerms)
+        private static void AddChildOptionsToDictionary(SelectTermToken newToken, Dictionary<PathSegmentToken, SelectTermToken> combinedTerms)
+        {
+            foreach (SelectTermToken expandedTerm in newToken.SelectOption.SelectTerms)
+            {
+                AddOrCombine(combinedTerms, expandedTerm);
+            }
+        }
+
+        /// <summary>
+        /// Adds the expand token to the dictionary or combines it with an existing  or combines it with another existing token with an equivalent path.
+        /// </summary>
+        /// <param name="combinedTerms">The combined terms dictionary.</param>
+        /// <param name="expandedTerm">The expanded term to add or combine.</param>
+        private static void AddOrCombine(IDictionary<PathSegmentToken, SelectTermToken> combinedTerms, SelectTermToken expandedTerm)
+        {
+            SelectTermToken existingTerm;
+            if (combinedTerms.TryGetValue(expandedTerm.PathToProperty, out existingTerm))
+            {
+               // combinedTerms[expandedTerm.PathToProperty] = CombineTerms(expandedTerm, existingTerm);
+            }
+            else
+            {
+                combinedTerms.Add(expandedTerm.PathToProperty, expandedTerm);
+            }
+        }
+
+        /// <summary>
+        /// Add child options to a new dictionary
+        /// </summary>
+        /// <param name="newToken">the token with child nodes to add to the dictionary</param>
+        /// <param name="combinedTerms">dictionary to add child nodes to</param>
+        private static void AddChildOptionsToDictionary(ExpandTermToken newToken, Dictionary<PathSegmentToken, ExpandTermToken> combinedTerms)
         {
             foreach (ExpandTermToken expandedTerm in newToken.ExpandOption.ExpandTerms)
             {
@@ -177,7 +263,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="combinedTerms">The combined terms dictionary.</param>
         /// <param name="expandedTerm">The expanded term to add or combine.</param>
-        private void AddOrCombine(IDictionary<PathSegmentToken, ExpandTermToken> combinedTerms, ExpandTermToken expandedTerm)
+        private static void AddOrCombine(IDictionary<PathSegmentToken, ExpandTermToken> combinedTerms, ExpandTermToken expandedTerm)
         {
             ExpandTermToken existingTerm;
             if (combinedTerms.TryGetValue(expandedTerm.PathToNavigationProp, out existingTerm))

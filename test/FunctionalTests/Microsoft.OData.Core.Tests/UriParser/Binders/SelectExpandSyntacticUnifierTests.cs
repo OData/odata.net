@@ -5,11 +5,8 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -18,22 +15,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void NewTopLevelExpandTokenReferencesDollarIt()
         {
-            ExpandToken originalExpand = new ExpandToken(
-                new List<ExpandTermToken>()
-                {
-                    new ExpandTermToken(new NonSystemToken("MyDog", /*namedValues*/null, /*nextToken*/null), /*SelectOption*/null, /*ExpandOption*/null)
-                });
-            SelectToken originalSelect = new SelectToken(
-                new List<PathSegmentToken>()
-                {
-                    new NonSystemToken("Name", /*namedValues*/null, /*nextToken*/null)
-                });
-            ExpandToken unifiedExpand = SelectExpandSyntacticUnifier.Combine(originalExpand, originalSelect);
-            unifiedExpand.ExpandTerms.Single().ShouldBeExpandTermToken(ExpressionConstants.It, true);
-        }
-        [Fact]
-        public void SelectClauseIsAddedAsNewTopLevelExpandToken()
-        {
+            // Arrange
             ExpandToken originalExpand = new ExpandToken(
                 new List<ExpandTermToken>()
                 {
@@ -45,13 +27,42 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                     new NonSystemToken("Name", /*namedValues*/null, /*nextToken*/null)
                 });
 
+            // Act
             ExpandToken unifiedExpand = SelectExpandSyntacticUnifier.Combine(originalExpand, originalSelect);
-            unifiedExpand.ExpandTerms.Single().As<ExpandTermToken>().SelectOption.ShouldBeSelectToken(new string[] {"Name"});
+
+            // Assert
+            ExpandTermToken subExpand = Assert.Single(unifiedExpand.ExpandTerms);
+            subExpand.ShouldBeExpandTermToken(ExpressionConstants.It, true);
+        }
+
+        [Fact]
+        public void SelectClauseIsAddedAsNewTopLevelExpandToken()
+        {
+            // Arrange
+            ExpandToken originalExpand = new ExpandToken(
+                new List<ExpandTermToken>()
+                {
+                    new ExpandTermToken(new NonSystemToken("MyDog", /*namedValues*/null, /*nextToken*/null), /*SelectOption*/null, /*ExpandOption*/null)
+                });
+            SelectToken originalSelect = new SelectToken(
+                new List<PathSegmentToken>()
+                {
+                    new NonSystemToken("Name", /*namedValues*/null, /*nextToken*/null)
+                });
+
+            // Act
+            ExpandToken unifiedExpand = SelectExpandSyntacticUnifier.Combine(originalExpand, originalSelect);
+
+            // Arrange
+            ExpandTermToken subExpand = Assert.Single(unifiedExpand.ExpandTerms);
+            Assert.NotNull(subExpand.SelectOption);
+            subExpand.SelectOption.ShouldBeSelectToken(new string[] {"Name"});
         }
 
         [Fact]
         public void OriginalExpandTokenIsUnChanged()
         {
+            // Arrange
             ExpandToken originalExpand = new ExpandToken(
                 new List<ExpandTermToken>()
                 {
@@ -62,46 +73,69 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 {
                     new NonSystemToken("Name", /*namedValues*/null, /*nextToken*/null)
                 });
+
+            // Act
             ExpandToken unifiedExpand = SelectExpandSyntacticUnifier.Combine(originalExpand, originalSelect);
-            var subExpand = unifiedExpand.ExpandTerms.Single().As<ExpandTermToken>().ExpandOption;
-            subExpand.ExpandTerms.Single().ShouldBeExpandTermToken("MyDog", false);
+
+            // Arrange
+            ExpandTermToken subExpand = Assert.Single(unifiedExpand.ExpandTerms);
+            Assert.NotNull(subExpand.ExpandOption);
+            ExpandTermToken subSubExpand = Assert.Single(subExpand.ExpandOption.ExpandTerms);
+            subSubExpand.ShouldBeExpandTermToken("MyDog", false);
         }
 
         [Fact]
         public void NullOriginalSelectTokenIsReflectedInNewTopLevelExpandToken()
         {
+            // Arrange
             ExpandToken originalExpand = new ExpandToken(
                 new List<ExpandTermToken>()
                 {
                     new ExpandTermToken(new NonSystemToken("MyDog", /*namedValues*/null, /*nextToken*/null), /*SelectOption*/null, /*ExpandOption*/null)
                 });
             SelectToken originalSelect = null;
+
+            // Act
             ExpandToken unifiedExpand = SelectExpandSyntacticUnifier.Combine(originalExpand, originalSelect);
-            unifiedExpand.ExpandTerms.Single().SelectOption.Should().BeNull();
+
+            // Arrange
+            ExpandTermToken subExpand = Assert.Single(unifiedExpand.ExpandTerms);
+            Assert.Null(subExpand.SelectOption);
         }
 
         [Fact]
         public void NullOriginalExpandTokenIsReflectedInNewTopLevelExpandToken()
         {
+            // Arrange
             ExpandToken originalExpand = null;
             SelectToken originalSelect = new SelectToken(
                 new List<PathSegmentToken>()
                 {
                     new NonSystemToken("Name", /*namedValues*/null, /*nextToken*/null)
                 });
+
+            // Act
             ExpandToken unifiedExpand = SelectExpandSyntacticUnifier.Combine(originalExpand, originalSelect);
-            unifiedExpand.ExpandTerms.Single().As<ExpandTermToken>().ExpandOption.Should().BeNull();
+
+            // Assert
+            ExpandTermToken subExpand = Assert.Single(unifiedExpand.ExpandTerms);
+            Assert.Null(subExpand.ExpandOption);
         }
 
         [Fact]
         public void OriginalSelectAndExpandAreBothNull()
         {
+            // Arrange
             ExpandToken originalExpand = null;
             SelectToken originalSelect = null;
+
+            // Act
             ExpandToken unifiedExpand = SelectExpandSyntacticUnifier.Combine(originalExpand, originalSelect);
-            var subExpand = unifiedExpand.ExpandTerms.Single().As<ExpandTermToken>();
-            subExpand.ExpandOption.Should().BeNull();
-            subExpand.SelectOption.Should().BeNull();
+
+            // Assert
+            ExpandTermToken subExpand = Assert.Single(unifiedExpand.ExpandTerms);
+            Assert.Null(subExpand.ExpandOption);
+            Assert.Null(subExpand.SelectOption);
         }
     }
 }

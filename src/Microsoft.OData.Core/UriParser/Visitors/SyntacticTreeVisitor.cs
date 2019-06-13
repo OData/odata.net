@@ -220,6 +220,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Visits an SelectTermToken
+        /// </summary>
+        /// <param name="tokenIn">The SelectTermToken to visit</param>
+        /// <returns>A QueryNode bound to this SelectTermToken</returns>
+        public virtual T Visit(SelectTermToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Visits a StarToken
         /// </summary>
         /// <param name="tokenIn">The StarToken to bind</param>

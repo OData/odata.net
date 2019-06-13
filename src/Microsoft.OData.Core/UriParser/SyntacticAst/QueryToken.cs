@@ -25,9 +25,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Empty list of arguments.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2105:ArrayFieldsShouldNotBeReadOnly",
-            Justification = "Modeled after Type.EmptyTypes")] public static readonly QueryToken[] EmptyTokens =
-                new QueryToken[0];
+        [SuppressMessage("Microsoft.Security", "CA2105:ArrayFieldsShouldNotBeReadOnly", Justification = "Modeled after Type.EmptyTypes")]
+        public static readonly QueryToken[] EmptyTokens = new QueryToken[0];
 
         /// <summary>
         /// The kind of the query token.

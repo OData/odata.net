@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                        null /*selectOption*/,
                                                                        innerExpand)});
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            ExpandToken normalizedExpand = expandTreeNormalizer.NormalizeExpandTree(expand);
+            ExpandToken normalizedExpand = ExpandTreeNormalizer.NormalizeExpandTree(expand);
             normalizedExpand.ExpandTerms.Single().ShouldBeExpandTermToken("1", true)
                 .ExpandOption.ExpandTerms.Single().ShouldBeExpandTermToken("2", true)
                 .ExpandOption.Should().BeNull();
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // $expand=1(name=value)/2
             ExpandToken expand = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(new NonSystemToken("1", new NamedValue[] { new NamedValue("name", new LiteralToken("value")) }, null)) });
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            ExpandToken normalizedExpand = expandTreeNormalizer.NormalizeExpandTree(expand);
+            ExpandToken normalizedExpand = ExpandTreeNormalizer.NormalizeExpandTree(expand);
             normalizedExpand.ExpandTerms.Single().ShouldBeExpandTermToken("1", true)
                 .PathToNavigationProp.As<NonSystemToken>().NamedValues.Single().ShouldBeNamedValue("name", "value");
             normalizedExpand.ExpandTerms.Single().ExpandOption.Should().BeNull();
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // $expand=stuff
             ExpandToken expand = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(new NonSystemToken("stuff", null, null)) });
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            ExpandToken combinedExpand = expandTreeNormalizer.CombineTerms(expand);
+            ExpandToken combinedExpand = ExpandTreeNormalizer.CombineTerms(expand);
             combinedExpand.ExpandTerms.Single().ShouldBeExpandTermToken("stuff", false);
         }
 
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             expandTerms.Add(new ExpandTermToken(new NonSystemToken("1", /*namedValues*/null, /*nextToken*/null), /*SelectToken*/null, new ExpandToken(new List<ExpandTermToken>() { new ExpandTermToken(token3) })));
             ExpandToken expand = new ExpandToken(expandTerms);
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            ExpandToken combinedExpand = expandTreeNormalizer.CombineTerms(expand);
+            ExpandToken combinedExpand = ExpandTreeNormalizer.CombineTerms(expand);
             combinedExpand.ExpandTerms.Single().ShouldBeExpandTermToken("1", true);
             combinedExpand.ExpandTerms.ElementAt(0).ExpandOption.ExpandTerms.Should().Contain(t => t.PathToNavigationProp == token2);
             combinedExpand.ExpandTerms.ElementAt(0).ExpandOption.ExpandTerms.Should().Contain(t => t.PathToNavigationProp == token3);
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // $expand=1/2
             ExpandToken expand = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(new NonSystemToken("2", null, new NonSystemToken("1", null, null))) });
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            ExpandToken invertedPaths = expandTreeNormalizer.NormalizePaths(expand);
+            ExpandToken invertedPaths = ExpandTreeNormalizer.NormalizePaths(expand);
             invertedPaths.ExpandTerms.Single().ShouldBeExpandTermToken("1", false)
                 .PathToNavigationProp.NextToken.ShouldBeNonSystemToken("2");
         }
@@ -85,22 +85,22 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             //$expand=1($filter=filter, $orderby=orderby, $top=top, $skip=skip;)
             ExpandToken expand = new ExpandToken(
-                                    new ExpandTermToken[] { 
+                                    new ExpandTermToken[] {
                                         new ExpandTermToken(
-                                            new NonSystemToken("1", null, null), 
-                                            new LiteralToken("filter"), 
-                                            new OrderByToken []{ new OrderByToken(new LiteralToken("orderby"), OrderByDirection.Descending)}, 
-                                            1, 
-                                            2, 
+                                            new NonSystemToken("1", null, null),
+                                            new LiteralToken("filter"),
+                                            new OrderByToken []{ new OrderByToken(new LiteralToken("orderby"), OrderByDirection.Descending)},
+                                            1,
+                                            2,
                                             false,
                                             3,
-                                            new StringLiteralToken("searchme"), 
-                                            new SelectToken(null), 
+                                            new StringLiteralToken("searchme"),
+                                            new SelectToken(properties: null),
                                             new ExpandToken(null))
                                     }
                                 );
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            ExpandToken invertedPaths = expandTreeNormalizer.NormalizePaths(expand);
+            ExpandToken invertedPaths = ExpandTreeNormalizer.NormalizePaths(expand);
             var invertedToken = invertedPaths.ExpandTerms.Single();
             invertedToken.ShouldBeExpandTermToken("1", true);
             invertedToken.FilterOption.ShouldBeLiteralQueryToken("filter");
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                    null /*selectOption*/,
                                                                    innerExpand);
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            var addedToken = expandTreeNormalizer.CombineTerms(outerExpandToken, outerExpandToken);
+            var addedToken = ExpandTreeNormalizer.CombineTerms(outerExpandToken, outerExpandToken);
             addedToken.ShouldBeExpandTermToken("1", true).ExpandOption.ExpandTerms.Single().ShouldBeExpandTermToken("2", true);
         }
 
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                               null /*selectOption*/,
                                                               innerExpand2);
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            var addedToken = expandTreeNormalizer.CombineTerms(outerToken1, outerToken2);
+            var addedToken = ExpandTreeNormalizer.CombineTerms(outerToken1, outerToken2);
             addedToken.ShouldBeExpandTermToken("1", true).ExpandOption.ExpandTerms.Should().Contain(innerExpandTerm2).And.Contain(innerExpandTerm1);
         }
 
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                    null /*selectOption*/,
                                                                     new ExpandToken(new ExpandTermToken[] { innerExpandTerm2 }));
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            var addedToken = expandTreeNormalizer.CombineTerms(outerExpandTerm1, outerExpandTerm2);
+            var addedToken = ExpandTreeNormalizer.CombineTerms(outerExpandTerm1, outerExpandTerm2);
             var expandTerms = addedToken.ShouldBeExpandTermToken("1", true)
                 .ExpandOption.ExpandTerms.Single().ShouldBeExpandTermToken("2", true)
                 .ExpandOption.ExpandTerms;
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                    null /*selectOption*/,
                                                                    new ExpandToken(new ExpandTermToken[] { innerExpandTerm3 }));
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            var addedToken = expandTreeNormalizer.CombineTerms(outerExpandTerm1, outerExpandTerm2);
+            var addedToken = ExpandTreeNormalizer.CombineTerms(outerExpandTerm1, outerExpandTerm2);
             addedToken.ShouldBeExpandTermToken("1", true).ExpandOption.ExpandTerms.Should().Contain(innerExpandTerm2);
             ExpandTermToken twoToken = addedToken.ExpandOption.ExpandTerms.FirstOrDefault(x => x.PathToNavigationProp.Identifier == "2");
             twoToken.ShouldBeExpandTermToken("2", true);
@@ -212,8 +212,21 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // $expand=1
             ExpandTermToken expandTerm = new ExpandTermToken(new NonSystemToken("1", null, null));
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            IEnumerable<ExpandTermToken> combinedChildren = expandTreeNormalizer.CombineChildNodes(expandTerm, expandTerm);
+            IEnumerable<ExpandTermToken> combinedChildren = ExpandTreeNormalizer.CombineChildNodes(expandTerm, expandTerm);
             combinedChildren.Count().Should().Be(0);
+        }
+
+        [Fact]
+        public void CombineChildNodesWorksForSingleEmptyNode2()
+        {
+            // $select=1($expand=2;), 1
+            SelectToken innerSelect = new SelectToken(new SelectTermToken[] { new SelectTermToken(new NonSystemToken("2", null, null)) });
+            SelectTermToken outerExpandTerm1 = new SelectTermToken(new NonSystemToken("1", null, null),
+                                                                   innerSelect, null);
+            SelectTermToken outerExpandTerm2 = new SelectTermToken(new NonSystemToken("1", null, null));
+            ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
+           // IEnumerable<ExpandTermToken> combinedChildren = ExpandTreeNormalizer.CombineChildNodes(outerExpandTerm1, outerExpandTerm2);
+           // combinedChildren.Single().ShouldBeExpandTermToken("2", false);
         }
 
         [Fact]
@@ -226,7 +239,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                    innerExpand);
             ExpandTermToken outerExpandTerm2 = new ExpandTermToken(new NonSystemToken("1", null, null));
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            IEnumerable<ExpandTermToken> combinedChildren = expandTreeNormalizer.CombineChildNodes(outerExpandTerm1, outerExpandTerm2);
+            IEnumerable<ExpandTermToken> combinedChildren = ExpandTreeNormalizer.CombineChildNodes(outerExpandTerm1, outerExpandTerm2);
             combinedChildren.Single().ShouldBeExpandTermToken("2", false);
         }
 
@@ -245,7 +258,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                    null /*selectOption*/,
                                                                    innerExpand2);
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            IEnumerable<ExpandTermToken> combinedChildren = expandTreeNormalizer.CombineChildNodes(outerExpandTerm1, outerExpandTerm2);
+            IEnumerable<ExpandTermToken> combinedChildren = ExpandTreeNormalizer.CombineChildNodes(outerExpandTerm1, outerExpandTerm2);
             combinedChildren.Should().Contain(innerExpandTerm1).And.Contain(innerExpandTerm2);
         }
     }

@@ -18,7 +18,6 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a System token such as $count
     /// </summary>
-    ///
     public sealed class SystemToken : PathSegmentToken
     {
         /// <summary>

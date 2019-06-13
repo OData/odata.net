@@ -5192,6 +5192,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Missing select option on property '{0}'. If a parenthesis expression follows a selected property, then at least one query option must be provided."
+        /// </summary>
+        internal static string UriParser_MissingSelectOption(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_MissingSelectOption, p0);
+        }
+
+        /// <summary>
         /// A string like "Parameter 'relativeUri' must be a relative Uri if serviceRoot is not specified."
         /// </summary>
         internal static string UriParser_RelativeUriMustBeRelative {

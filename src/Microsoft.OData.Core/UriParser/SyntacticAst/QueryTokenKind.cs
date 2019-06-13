@@ -150,5 +150,10 @@ namespace Microsoft.OData.UriParser
         /// In operator.
         /// </summary>
         In = 30,
+
+        /// <summary>
+        /// SelectTerm Token
+        /// </summary>
+        SelectTerm = 31
     }
 }

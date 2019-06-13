@@ -13,6 +13,7 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
 
     using System.Collections.Generic;
+    using System.Linq;
 
     #endregion Namespaces
 
@@ -22,18 +23,30 @@ namespace Microsoft.OData.UriParser
     public sealed class SelectToken : QueryToken
     {
         /// <summary>
-        /// The properties according to which to select the results.
+        /// The properties according to which to select in the results.
         /// </summary>
-        private readonly IEnumerable<PathSegmentToken> properties;
+        private readonly IEnumerable<SelectTermToken> selectTerms;
 
         /// <summary>
-        /// Create a SelectToken given the property-accesses of the select query.
+        /// Create a <see cref="SelectToken"/> given the property-accesses of the select query.
         /// </summary>
         /// <param name="properties">The properties according to which to select the results.</param>
         public SelectToken(IEnumerable<PathSegmentToken> properties)
         {
-            this.properties = properties != null ? new ReadOnlyEnumerableForUriParser<PathSegmentToken>(properties)
-                                                 : new ReadOnlyEnumerableForUriParser<PathSegmentToken>(new List<PathSegmentToken>());
+            this.selectTerms = properties != null ?
+                new ReadOnlyEnumerableForUriParser<SelectTermToken>(properties.Select(e => new SelectTermToken(e)).ToList()) : // ToList() is necessary here to truncate the linq
+                new ReadOnlyEnumerableForUriParser<SelectTermToken>(new SelectTermToken[0]);
+        }
+
+        /// <summary>
+        /// Create a <see cref="SelectToken"/> given the property-accesses of the select query.
+        /// </summary>
+        /// <param name="selectTerms">The select term tokes according to which to select the results.</param>
+        public SelectToken(IEnumerable<SelectTermToken> selectTerms)
+        {
+            this.selectTerms = selectTerms != null ?
+                new ReadOnlyEnumerableForUriParser<SelectTermToken>(selectTerms) :
+                new ReadOnlyEnumerableForUriParser<SelectTermToken>(new SelectTermToken[0]);
         }
 
         /// <summary>
@@ -49,7 +62,18 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public IEnumerable<PathSegmentToken> Properties
         {
-            get { return this.properties; }
+            get
+            {
+                return this.selectTerms.Select(e => e.PathToProperty);
+            }
+        }
+
+        /// <summary>
+        /// The properties according to which to select in the results.
+        /// </summary>
+        public IEnumerable<SelectTermToken> SelectTerms
+        {
+            get { return this.selectTerms; }
         }
 
         /// <summary>

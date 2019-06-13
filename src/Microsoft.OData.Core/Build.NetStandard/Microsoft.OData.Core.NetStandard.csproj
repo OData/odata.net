@@ -1253,8 +1253,8 @@
     <Compile Include="..\UriParser\Parsers\ExpandDepthAndCountValidator.cs">
       <Link>UriParser\Parsers\ExpandDepthAndCountValidator.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\ExpandOptionParser.cs">
-      <Link>UriParser\Parsers\ExpandOptionParser.cs</Link>
+    <Compile Include="..\UriParser\Parsers\SelectExpandOptionParser.cs">
+      <Link>UriParser\Parsers\SelectExpandOptionParser.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Parsers\FunctionCallParser.cs">
       <Link>UriParser\Parsers\FunctionCallParser.cs</Link>
@@ -1687,6 +1687,12 @@
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\RangeVariableToken.cs">
       <Link>UriParser\SyntacticAst\RangeVariableToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\SelectExpandTermToken.cs">
+      <Link>UriParser\SyntacticAst\SelectExpandTermToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\SelectTermToken.cs">
+      <Link>UriParser\SyntacticAst\SelectTermToken.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\SelectToken.cs">
       <Link>UriParser\SyntacticAst\SelectToken.cs</Link>

@@ -4,10 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
-using ODataErrorStrings = Microsoft.OData.Strings;
-
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
@@ -22,13 +18,25 @@ namespace Microsoft.OData.UriParser
         /// <returns>Normalized SelectToken</returns>
         public static SelectToken NormalizeSelectTree(SelectToken treeToNormalize)
         {
-            PathReverser pathReverser = new PathReverser();
-            List<PathSegmentToken> invertedPaths = (from property in treeToNormalize.Properties
-                                                    select property.Accept(pathReverser)).ToList();
+            foreach (SelectTermToken term in treeToNormalize.SelectTerms)
+            {
+                term.PathToProperty = term.PathToProperty.Reverse();
+
+                // we also need to call the select token normalizer for this level to reverse the select paths
+                if (term.SelectOption != null)
+                {
+                    term.SelectOption = NormalizeSelectTree(term.SelectOption);
+                }
+
+                if (term.ExpandOption != null)
+                {
+                  //  term.ExpandOption = NormalizePaths(term.ExpandOption);
+                }
+            }
 
             // to normalize a select token we just need to invert its paths, so that
             // we match the ordering on an ExpandToken.
-            return new SelectToken(invertedPaths);
+            return treeToNormalize;
         }
     }
 }

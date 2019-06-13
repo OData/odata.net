@@ -47,7 +47,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                previous.SetNextToken(null);
+                previous.NextToken = null;
                 return;
             }
         }

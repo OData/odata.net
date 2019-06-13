@@ -129,7 +129,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         public void SelectNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitSelectToken = () => visitor.Visit(new SelectToken(null));
+            Action visitSelectToken = () => visitor.Visit(new SelectToken(properties: null));
             visitSelectToken.ShouldThrow<NotImplementedException>();
         }
 
