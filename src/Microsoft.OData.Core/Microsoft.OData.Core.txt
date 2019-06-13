@@ -808,6 +808,7 @@ UriSelectParser_InvalidCountOption=Count option must be a boolean value, it is s
 UriSelectParser_InvalidLevelsOption=Levels option must be a non-negative integer or 'max', it is set to '{0}' instead.
 UriSelectParser_SystemTokenInSelectExpand=Found system token '{0}' in select or expand clause '{1}'.
 UriParser_MissingExpandOption=Missing expand option on navigation property '{0}'. If a parenthesis expression follows an expanded navigation property, then at least one expand option must be provided.
+UriParser_MissingSelectOption=Missing select option on property '{0}'. If a parenthesis expression follows a selected property, then at least one query option must be provided.
 UriParser_RelativeUriMustBeRelative=Parameter 'relativeUri' must be a relative Uri if serviceRoot is not specified.
 UriParser_NeedServiceRootForThisOverload=A service root URI must be provided to the ODataUriParser in order to use this method.
 UriParser_UriMustBeAbsolute=The URI '{0}' must be an absolute URI.

@@ -242,8 +242,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CallingAFunctionIsNotRecognizedInSelect()
         {
-            Action parse = () => ParseSingleSelectForPerson("HasDog(inOffice=true)");
-            parse.ShouldThrow<ODataException>().Where(e => e.Message.Contains("HasDog(inOffice=true)"));
+            Action test = () => ParseSingleSelectForPerson("HasDog(inOffice=true)");
+            test.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid("(inOffice=true)"));
         }
 
         [Fact]

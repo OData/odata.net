@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ExpandOptionParser.cs" company="Microsoft">
+// <copyright file="SelectExpandOptionParser.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace Microsoft.OData.UriParser
     /// Delegates to other parsing code as needed. I.E., when a nested $filter comes along, this will
     /// fire up the filter parsing code to figure that out. That code won't even know that it came from a nested location.
     /// </summary>
-    internal sealed class ExpandOptionParser
+    internal sealed class SelectExpandOptionParser
     {
         /// <summary>
         /// The URI resolver which will resolve different kinds of Uri parsing context
@@ -25,9 +25,9 @@ namespace Microsoft.OData.UriParser
         private readonly ODataUriResolver resolver;
 
         /// <summary>
-        /// The parent entity type for expand option in case expand option is star, get all parent navigation properties
+        /// The parent structured type for select/expand option in case expand option is star, get all parent navigation properties
         /// </summary>
-        private readonly IEdmStructuredType parentEntityType;
+        private readonly IEdmStructuredType parentStructuredType;
 
         /// <summary>
         /// Max recursion depth. As we recurse, each new instance of this class will have this lowered by 1.
@@ -56,7 +56,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
-        internal ExpandOptionParser(
+        internal SelectExpandOptionParser(
             int maxRecursionDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
             bool enableNoDollarQueryOptions = false)
@@ -70,20 +70,20 @@ namespace Microsoft.OData.UriParser
         /// Creates an instance of this class to parse options.
         /// </summary>
         /// <param name="resolver">The URI resolver which will resolve different kinds of Uri parsing context</param>
-        /// <param name="parentEntityType">The parent entity type for expand option</param>
+        /// <param name="parentStructuredType">The parent structured type for expand option</param>
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
-        internal ExpandOptionParser(
+        internal SelectExpandOptionParser(
             ODataUriResolver resolver,
-            IEdmStructuredType parentEntityType,
+            IEdmStructuredType parentStructuredType,
             int maxRecursionDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
             bool enableNoDollarQueryOptions = false)
             : this(maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
         {
             this.resolver = resolver;
-            this.parentEntityType = parentEntityType;
+            this.parentStructuredType = parentStructuredType;
         }
 
         /// <summary>
@@ -102,7 +102,109 @@ namespace Microsoft.OData.UriParser
         internal int MaxSearchDepth { get; set; }
 
         /// <summary>
-        /// Building off of a PathSegmentToken, continue parsing any expand options (nested $filter, $expand, etc)
+        /// Building off a PathSegmentToken, continue parsing any select options (nested $filter, $expand, etc)
+        /// to build up an SelectTermToken which fully represents the tree that makes up this select term.
+        /// </summary>
+        /// <param name="pathToken">The PathSegmentToken representing the parsed select path whose options we are now parsing.</param>
+        /// <param name="optionsText">A string of the text between the parenthesis after a select option.</param>
+        /// <returns>The select term token based on the path token, and all available select options.</returns>
+        internal SelectTermToken BuildSelectTermToken(PathSegmentToken pathToken, string optionsText)
+        {
+            // Setup a new lexer for parsing the optionsText
+            this.lexer = new ExpressionLexer(optionsText ?? "", true /*moveToFirstToken*/, true /*useSemicolonDelimiter*/);
+
+            QueryToken filterOption = null;
+            IEnumerable<OrderByToken> orderByOptions = null;
+            long? topOption = null;
+            long? skipOption = null;
+            bool? countOption = null;
+            QueryToken searchOption = null;
+            SelectToken selectOption = null;
+            ExpandToken expandOption = null;
+            ComputeToken computeOption = null;
+
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
+            {
+                // advance past the '('
+                this.lexer.NextToken();
+
+                // Check for (), which is not allowed.
+                if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
+                {
+                    throw new ODataException(ODataErrorStrings.UriParser_MissingSelectOption(pathToken.Identifier));
+                }
+
+                // Look for all the supported query options
+                while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+                {
+                    string text = this.enableCaseInsensitiveBuiltinIdentifier
+                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text;
+
+                    // Prepend '$' prefix if needed.
+                    if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
+                    {
+                        text = string.Format(CultureInfo.InvariantCulture, "{0}{1}", UriQueryConstants.DollarSign, text);
+                    }
+
+                    switch (text)
+                    {
+                        case ExpressionConstants.QueryOptionFilter: // inner $filter
+                            filterOption = ParseInnerFilter();
+                            break;
+
+                        case ExpressionConstants.QueryOptionOrderby: // inner $orderby
+                            orderByOptions = ParseInnerOrderBy();
+                            break;
+
+                        case ExpressionConstants.QueryOptionTop: // inner $top
+                            topOption = ParseInnerTop();
+                            break;
+
+                        case ExpressionConstants.QueryOptionSkip: // innner $skip
+                            skipOption = ParseInnerSkip();
+                            break;
+
+                        case ExpressionConstants.QueryOptionCount: // inner $count
+                            countOption = ParseInnerCount();
+                            break;
+
+                        case ExpressionConstants.QueryOptionSearch: // inner $search
+                            searchOption = ParseInnerSearch();
+                            break;
+
+                        case ExpressionConstants.QueryOptionSelect: // inner $select
+                            selectOption = ParseInnerSelect(pathToken);
+                            break;
+
+                        case ExpressionConstants.QueryOptionExpand: // inner $expand
+                            expandOption = ParseInnerExpand(pathToken);
+                            break;
+
+                        case ExpressionConstants.QueryOptionCompute: // inner $compute
+                            computeOption = ParseInnerCompute();
+                            break;
+
+                        default:
+                            throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                    }
+                }
+
+                // Move past the ')'
+                this.lexer.NextToken();
+            }
+
+            // Either there was no '(' at all or we just read past the ')' so we should be at the end
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.End)
+            {
+                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+            }
+
+            return new SelectTermToken(pathToken, filterOption, orderByOptions, topOption, skipOption, countOption, searchOption, selectOption, expandOption, computeOption);
+        }
+
+        /// <summary>
+        /// Building of a PathSegmentToken, continue parsing any expand options (nested $filter, $expand, etc)
         /// to build up an ExpandTermToken which fully represents the tree that makes up this expand term.
         /// </summary>
         /// <param name="pathToken">The PathSegmentToken representing the parsed expand path whose options we are now parsing.</param>
@@ -157,170 +259,49 @@ namespace Microsoft.OData.UriParser
 
                     switch (text)
                     {
-                        case ExpressionConstants.QueryOptionFilter:
-                            {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string filterText = this.ReadQueryOption();
+                        case ExpressionConstants.QueryOptionFilter: // inner $filter
+                            filterOption = ParseInnerFilter();
+                            break;
 
-                                UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.MaxFilterDepth, enableCaseInsensitiveBuiltinIdentifier);
-                                filterOption = filterParser.ParseFilter(filterText);
-                                break;
-                            }
+                        case ExpressionConstants.QueryOptionOrderby: // inner $orderby
+                            orderByOptions = ParseInnerOrderBy();
+                            break;
 
-                        case ExpressionConstants.QueryOptionOrderby:
-                            {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string orderByText = this.ReadQueryOption();
+                        case ExpressionConstants.QueryOptionTop: // inner $top
+                            topOption = ParseInnerTop();
+                            break;
 
-                                UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
-                                orderByOptions = orderbyParser.ParseOrderBy(orderByText);
-                                break;
-                            }
+                        case ExpressionConstants.QueryOptionSkip: // innner $skip
+                            skipOption = ParseInnerSkip();
+                            break;
 
-                        case ExpressionConstants.QueryOptionTop:
-                            {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string topText = this.ReadQueryOption();
+                        case ExpressionConstants.QueryOptionCount: // inner $count
+                            countOption = ParseInnerCount();
+                            break;
 
-                                // TryParse requires a non-nullable non-negative long.
-                                long top;
-                                if (!long.TryParse(topText, out top) || top < 0)
-                                {
-                                    throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidTopOption(topText));
-                                }
+                        case ExpressionConstants.QueryOptionSearch: // inner $search
+                            searchOption = ParseInnerSearch();
+                            break;
 
-                                topOption = top;
-                                break;
-                            }
+                        case ExpressionConstants.QueryOptionLevels: // inner $level
+                            levelsOption = ParseInnerLevel();
+                            break;
 
-                        case ExpressionConstants.QueryOptionSkip:
-                            {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string skipText = this.ReadQueryOption();
+                        case ExpressionConstants.QueryOptionSelect: // inner $select
+                            selectOption = ParseInnerSelect(pathToken);
+                            break;
 
-                                // TryParse requires a non-nullable non-negative long.
-                                long skip;
-                                if (!long.TryParse(skipText, out skip) || skip < 0)
-                                {
-                                    throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidSkipOption(skipText));
-                                }
+                        case ExpressionConstants.QueryOptionExpand: // inner $expand
+                            expandOption = ParseInnerExpand(pathToken);
+                            break;
 
-                                skipOption = skip;
-                                break;
-                            }
+                        case ExpressionConstants.QueryOptionCompute: // inner $compute
+                            computeOption = ParseInnerCompute();
+                            break;
 
-                        case ExpressionConstants.QueryOptionCount:
-                            {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string countText = this.ReadQueryOption();
-                                switch (countText)
-                                {
-                                    case ExpressionConstants.KeywordTrue:
-                                        {
-                                            countOption = true;
-                                            break;
-                                        }
-
-                                    case ExpressionConstants.KeywordFalse:
-                                        {
-                                            countOption = false;
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-                                            throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidCountOption(countText));
-                                        }
-                                }
-
-                                break;
-                            }
-
-                        case ExpressionConstants.QueryOptionLevels:
-                            {
-                                levelsOption = ResolveLevelOption();
-                                break;
-                            }
-
-                        case ExpressionConstants.QueryOptionSearch:
-                            {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string searchText = this.ReadQueryOption();
-
-                                SearchParser searchParser = new SearchParser(this.MaxSearchDepth);
-                                searchOption = searchParser.ParseSearch(searchText);
-
-                                break;
-                            }
-
-                        case ExpressionConstants.QueryOptionSelect:
-                            {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string selectText = this.ReadQueryOption();
-
-                                SelectExpandParser innerSelectParser = new SelectExpandParser(selectText, this.maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier);
-                                selectOption = innerSelectParser.ParseSelect();
-                                break;
-                            }
-
-                        case ExpressionConstants.QueryOptionCompute:
-                            {
-                                this.lexer.NextToken();
-                                string computeText = this.ReadQueryOption();
-
-                                UriQueryExpressionParser computeParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
-                                computeOption = computeParser.ParseCompute(computeText);
-                                break;
-                            }
-
-                        case ExpressionConstants.QueryOptionApply: // nested $apply
-                            {
-                                this.lexer.NextToken();
-                                string applyText = this.ReadQueryOption();
-
-                                UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
-                                applyOptions = applyParser.ParseApply(applyText);
-                                break;
-                            }
-
-                        case ExpressionConstants.QueryOptionExpand:
-                            {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string expandText = this.ReadQueryOption();
-
-                                // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
-                                IEdmStructuredType targetEntityType = null;
-                                if (this.resolver != null && this.parentEntityType != null)
-                                {
-                                    var parentProperty = this.resolver.ResolveProperty(parentEntityType, pathToken.Identifier) as IEdmNavigationProperty;
-
-                                    // it is a navigation property, need to find the type.
-                                    // Like $expand=Friends($expand=Trips($expand=*)), when expandText becomes "Trips($expand=*)",
-                                    // find navigation property Trips of Friends, then get Entity type of Trips.
-                                    if (parentProperty != null)
-                                    {
-                                        targetEntityType = parentProperty.ToEntityType();
-                                    }
-                                }
-
-                                SelectExpandParser innerExpandParser = new SelectExpandParser(
-                                    resolver,
-                                    expandText,
-                                    targetEntityType,
-                                    this.maxRecursionDepth - 1,
-                                    this.enableCaseInsensitiveBuiltinIdentifier,
-                                    this.enableNoDollarQueryOptions);
-                                expandOption = innerExpandParser.ParseExpand();
-                                break;
-                            }
+                        case ExpressionConstants.QueryOptionApply: // inner $apply
+                            applyOptions = ParseInnerApply();
+                            break;
 
                         default:
                             {
@@ -398,7 +379,7 @@ namespace Microsoft.OData.UriParser
                             {
                                 if (!isRefExpand)
                                 {
-                                    levelsOption = ResolveLevelOption();
+                                    levelsOption = ParseInnerLevel();
                                 }
                                 else
                                 {
@@ -427,7 +408,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
-            var entityType = parentEntityType as IEdmEntityType;
+            var entityType = this.parentStructuredType as IEdmEntityType;
             if (entityType == null)
             {
                 throw new ODataException(ODataErrorStrings.UriExpandParser_ParentEntityIsNull(this.lexer.ExpressionText));
@@ -457,10 +438,187 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Parse the filter option in the select/expand option text.
+        /// </summary>
+        /// <returns>The filter option for select/expand</returns>
+        private QueryToken ParseInnerFilter()
+        {
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string filterText = this.ReadQueryOption();
+
+            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.MaxFilterDepth, enableCaseInsensitiveBuiltinIdentifier);
+            return filterParser.ParseFilter(filterText);
+        }
+
+        /// <summary>
+        /// Parse the orderby option in the select/expand option text.
+        /// </summary>
+        /// <returns>The orderby option for select/expand</returns>
+        private IEnumerable<OrderByToken> ParseInnerOrderBy()
+        {
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string orderByText = this.ReadQueryOption();
+
+            UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
+            return orderbyParser.ParseOrderBy(orderByText);
+        }
+
+        /// <summary>
+        /// Parse the top option in the select/expand option text.
+        /// </summary>
+        /// <returns>The top option for select/expand</returns>
+        private long? ParseInnerTop()
+        {
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string topText = this.ReadQueryOption();
+
+            // TryParse requires a non-nullable non-negative long.
+            long top;
+            if (!long.TryParse(topText, out top) || top < 0)
+            {
+                throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidTopOption(topText));
+            }
+
+            return top;
+        }
+
+        /// <summary>
+        /// Parse the skip option in the select/expand option text.
+        /// </summary>
+        /// <returns>The skip option for select/expand</returns>
+        private long? ParseInnerSkip()
+        {
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string skipText = this.ReadQueryOption();
+
+            // TryParse requires a non-nullable non-negative long.
+            long skip;
+            if (!long.TryParse(skipText, out skip) || skip < 0)
+            {
+                throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidSkipOption(skipText));
+            }
+
+            return skip;
+        }
+
+        /// <summary>
+        /// Parse the count option in the select/expand option text.
+        /// </summary>
+        /// <returns>The count option for select/expand</returns>
+        private bool? ParseInnerCount()
+        {
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string countText = this.ReadQueryOption();
+            switch (countText)
+            {
+                case ExpressionConstants.KeywordTrue:
+                    return true;
+
+                case ExpressionConstants.KeywordFalse:
+                    return false;
+
+                default:
+                    throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidCountOption(countText));
+            }
+        }
+
+        /// <summary>
+        /// Parse the search option in the select/expand option text.
+        /// </summary>
+        /// <returns>The search option for select/expand</returns>
+        private QueryToken ParseInnerSearch()
+        {
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string searchText = this.ReadQueryOption();
+
+            SearchParser searchParser = new SearchParser(this.MaxSearchDepth);
+            return searchParser.ParseSearch(searchText);
+        }
+
+        /// <summary>
+        /// Parse the select option in the select/expand option text.
+        /// </summary>
+        /// <param name="pathToken">The path segment token</param>
+        /// <returns>The select option for select/expand</returns>
+        private SelectToken ParseInnerSelect(PathSegmentToken pathToken)
+        {
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string selectText = this.ReadQueryOption();
+
+            IEdmStructuredType targetStructuredType = null;
+            if (this.resolver != null && this.parentStructuredType != null)
+            {
+                var parentProperty = this.resolver.ResolveProperty(parentStructuredType, pathToken.Identifier);
+
+                // It is a property, need to find the type.
+                // or for select query like: $select=Address($expand=City)
+                if (parentProperty != null)
+                {
+                    targetStructuredType = parentProperty.Type.ToStructuredType();
+                }
+            }
+
+            SelectExpandParser innerSelectParser = new SelectExpandParser(
+                resolver,
+                selectText,
+                targetStructuredType,
+                this.maxRecursionDepth - 1,
+                this.enableCaseInsensitiveBuiltinIdentifier,
+                this.enableNoDollarQueryOptions);
+
+            return innerSelectParser.ParseSelect();
+        }
+
+        /// <summary>
+        /// Parse the expand option in the select/expand option text.
+        /// </summary>
+        /// <param name="pathToken">The path segment token</param>
+        /// <returns>The expand option for select/expand</returns>
+        private ExpandToken ParseInnerExpand(PathSegmentToken pathToken)
+        {
+            // advance to the equal sign
+            this.lexer.NextToken();
+
+            string expandText = this.ReadQueryOption();
+
+            IEdmStructuredType targetStructuredType = null;
+            if (this.resolver != null && this.parentStructuredType != null)
+            {
+                var parentProperty = this.resolver.ResolveProperty(parentStructuredType, pathToken.Identifier);
+
+                // it is a property, need to find the type.
+                // Like $expand=Friends($expand=Trips($expand=*)), when expandText becomes "Trips($expand=*)",
+                // find navigation property Trips of Friends, then get Entity type of Trips.
+                // or for select query like: $select=Address($expand=City)
+                if (parentProperty != null)
+                {
+                    targetStructuredType = parentProperty.Type.ToStructuredType();
+                }
+            }
+
+            SelectExpandParser innerExpandParser = new SelectExpandParser(
+                resolver,
+                expandText,
+                targetStructuredType,
+                this.maxRecursionDepth - 1,
+                this.enableCaseInsensitiveBuiltinIdentifier,
+                this.enableNoDollarQueryOptions);
+
+            return innerExpandParser.ParseExpand();
+        }
+
+        /// <summary>
         /// Parse the level option in the expand option text.
         /// </summary>
         /// <returns>The level option for expand in long type</returns>
-        private long? ResolveLevelOption()
+        private long? ParseInnerLevel()
         {
             long? levelsOption = null;
 
@@ -486,6 +644,32 @@ namespace Microsoft.OData.UriParser
             }
 
             return levelsOption;
+        }
+
+        /// <summary>
+        /// Parse the compute option in the expand option text.
+        /// </summary>
+        /// <returns>The compute option for expand</returns>
+        private ComputeToken ParseInnerCompute()
+        {
+            this.lexer.NextToken();
+            string computeText = this.ReadQueryOption();
+
+            UriQueryExpressionParser computeParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
+            return computeParser.ParseCompute(computeText);
+        }
+
+        /// <summary>
+        /// Parse the apply option in the expand option text.
+        /// </summary>
+        /// <returns>The apply option for expand</returns>
+        private IEnumerable<QueryToken> ParseInnerApply()
+        {
+            this.lexer.NextToken();
+            string applyText = this.ReadQueryOption();
+
+            UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
+            return applyParser.ParseApply(applyText);
         }
 
         /// <summary>
