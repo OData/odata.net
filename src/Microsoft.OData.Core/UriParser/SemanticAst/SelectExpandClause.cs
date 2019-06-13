@@ -113,7 +113,6 @@ namespace Microsoft.OData.UriParser
             this.allSelected = newValue;
         }
 
-
         /// <summary>
         /// is this selection item a structural or navigation property selection item.
         /// </summary>

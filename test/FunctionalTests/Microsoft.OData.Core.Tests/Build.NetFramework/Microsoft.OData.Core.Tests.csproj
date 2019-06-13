@@ -93,6 +93,7 @@
     <Compile Include="..\AnnotationFilterPatternTests.cs" />
     <Compile Include="..\AnnotationFilterTests.cs" />
     <Compile Include="..\ArgumentValidationUtils.cs" />
+    <Compile Include="..\AssertExtensions.cs" />
     <Compile Include="..\BufferUtilsTests.cs" />
     <Compile Include="..\IntegrationTests\Reader\JsonLight\UriParameterReaderIntegrationTests.cs" />
     <Compile Include="..\IntegrationTests\Writer\JsonLight\ODataJsonLightWriterComplexIntegrationTests.cs" />
@@ -335,7 +336,6 @@
     <Compile Include="..\UriParser\ModelBuildingHelpers.cs" />
     <Compile Include="..\UriParser\ODataValueAssertions.cs" />
     <Compile Include="..\UriParser\Parsers\ExpandDepthAndCountValidatorTests.cs" />
-    <Compile Include="..\UriParser\Parsers\ExpandOptionParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\FunctionCallParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\FunctionOverloadResolverTests.cs" />
     <Compile Include="..\UriParser\Binders\KeyBinderTests.cs" />
@@ -353,6 +353,7 @@
     <Compile Include="..\UriParser\Parsers\PathReverserTests.cs" />
     <Compile Include="..\UriParser\Parsers\SearchParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\SegmentKeyHandlerTests.cs" />
+    <Compile Include="..\UriParser\Parsers\SelectExpandOptionParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\SelectExpandParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\SelectExpandTermParserTests.cs" />
     <Compile Include="..\UriParser\Parsers\CustomUriLiteralParserTests.cs" />
@@ -418,6 +419,7 @@
     <Compile Include="..\UriParser\SyntacticAst\InnerPathTokenTests.cs" />
     <Compile Include="..\UriParser\SyntacticAst\NonSystemTokenTests.cs" />
     <Compile Include="..\UriParser\SyntacticAst\PathSegmentTokenTests.cs" />
+    <Compile Include="..\UriParser\SyntacticAst\SelectTermTokenTests.cs" />
     <Compile Include="..\UriParser\SyntacticAst\StarTokenTests.cs" />
     <Compile Include="..\UriParser\SyntacticAst\SystemTokenTests.cs" />
     <Compile Include="..\UriParser\TokenAssertions.cs" />
