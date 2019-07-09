@@ -453,6 +453,8 @@
     <Compile Include="..\WriterUtilsTests.cs" />
     <Compile Include="..\ScenarioTests\Streaming\ODataJsonLightStreamReadingTests.cs" />
     <Compile Include="..\ScenarioTests\Streaming\ODataJsonLightStreamWritingTests.cs" />
+    <Compile Include="TestMetadataSelector.cs" />
+    <Compile Include="ODataMetadataSelectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

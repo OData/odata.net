@@ -58,7 +58,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Gets the edit link of the entity.
         /// </summary>
-        /// <returns>
+        /// <return>
         /// The absolute URI of the edit link for the entity.
         /// Or null if it is not possible to determine the edit link.
         /// </returns>

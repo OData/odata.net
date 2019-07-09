@@ -483,7 +483,7 @@ namespace Microsoft.OData.Evaluation
                         if (this.metadataSelector != null)
                         {
                             this.selectedNavigationProperties =
-                                this.metadataSelector.SelectNavigationProperties(this.selectedNavigationProperties);
+                                this.metadataSelector.SelectNavigationProperties(this.actualResourceType, this.selectedNavigationProperties);
                         }
                     }
 
@@ -505,7 +505,7 @@ namespace Microsoft.OData.Evaluation
                         if (metadataSelector != null)
                         {
                             this.selectedStreamProperties = this.metadataSelector
-                                .SelectStreamProperties(this.selectedStreamProperties.Values).ToDictionary(v => v.Name);
+                                .SelectStreamProperties(this.actualResourceType, this.selectedStreamProperties.Values).ToDictionary(v => v.Name);
                         }
                     }
 
@@ -528,7 +528,7 @@ namespace Microsoft.OData.Evaluation
                         if (this.metadataSelector != null)
                         {
                             this.selectedBindableOperations =
-                                this.metadataSelector.SelectBindableOperations(this.selectedBindableOperations);
+                                this.metadataSelector.SelectBindableOperations(this.actualResourceType, this.selectedBindableOperations);
                         }
                     }
 
