@@ -1437,8 +1437,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             path.Count.Should().Be(2);
             var keyInfo = path.Last().As<KeySegment>().Keys.Single();
             keyInfo.Key.Should().Be("PetCategorysColorPattern");
-            keyInfo.Value.As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
-            keyInfo.Value.As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
+            keyInfo.Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
+            keyInfo.Value.As<ODataEnumValue>().Value.Should().Be("22");
         }
         #endregion
 

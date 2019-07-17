@@ -210,8 +210,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 {
                     var keyInfo = path.LastSegment.As<KeySegment>().Keys.Single();
                     keyInfo.Key.Should().Be("color");
-                    keyInfo.Value.As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
-                    keyInfo.Value.As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("2");
+                    keyInfo.Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
+                    keyInfo.Value.As<ODataEnumValue>().Value.Should().Be("2");
                 },
                 Strings.RequestUriProcessor_SyntaxError);
         }
@@ -230,8 +230,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 {
                     var keyInfo = path.LastSegment.As<KeySegment>().Keys.Single();
                     keyInfo.Key.Should().Be("color");
-                    keyInfo.Value.As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
-                    keyInfo.Value.As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("2");
+                    keyInfo.Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
+                    keyInfo.Value.As<ODataEnumValue>().Value.Should().Be("2");
                 },
                 Strings.RequestUriProcessor_SyntaxError);
         }
@@ -249,8 +249,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     keyList.Count.Should().Be(2);
                     var keyInfo = keyList[0];
                     keyInfo.Key.Should().Be("color");
-                    keyInfo.Value.As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
-                    keyInfo.Value.As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("2");
+                    keyInfo.Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
+                    keyInfo.Value.As<ODataEnumValue>().Value.Should().Be("2");
                     var keyInfo1 = keyList[1];
                     keyInfo1.Key.Should().Be("id");
                     keyInfo1.Value.Should().Be(1);
