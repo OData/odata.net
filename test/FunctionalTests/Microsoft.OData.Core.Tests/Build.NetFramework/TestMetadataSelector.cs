@@ -10,11 +10,8 @@ namespace Microsoft.OData.Evaluation
 {
     public class TestMetadataSelector : ODataMetadataSelector
     {
-        private IEdmModel model;
-
-        public TestMetadataSelector(IEdmModel model)
+        public TestMetadataSelector()
         {
-            this.model = model;
         }
 
         public string PropertyToOmit;
@@ -39,7 +36,7 @@ namespace Microsoft.OData.Evaluation
         public override  IEnumerable<IEdmOperation> SelectBindableOperations(IEdmStructuredType type, IEnumerable<IEdmOperation> bindableOperations)
         {
             //Omit all actions
-            return bindableOperations.Where(f => f.SchemaElementKind != EdmSchemaElementKind.Action);
+            return bindableOperations.Where(f => f.Name == "HasHat");
         }
 
         public override IEnumerable<IEdmStructuralProperty> SelectStreamProperties(IEdmStructuredType type, IEnumerable<IEdmStructuralProperty> selectedStreamProperties)

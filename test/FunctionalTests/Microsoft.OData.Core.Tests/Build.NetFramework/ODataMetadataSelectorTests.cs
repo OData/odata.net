@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         static ODataMetadataSelectorTests()
         {
-            MetadataDocumentUri = new Uri("http://host/service.svc/$metadata", UriKind.Absolute);
+            MetadataDocumentUri = new Uri("http://submodel1/", UriKind.Absolute);
 
             GenerateModel();
             
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private static void GenerateModel()
         {
-            Model = HardCodedTestModel.GetEdmModel();
+            Model = HardCodedTestModel.TestModel;
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var resource = new ODataResource();
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
-            settings.MetadataSelector = new TestMetadataSelector(Model);
+            settings.MetadataSelector = new TestMetadataSelector();
 
             ODataResourceMetadataBuilder resourceMetadataBuilder = fullMetadataLevel.CreateResourceMetadataBuilder(
                 resource,
@@ -105,15 +105,16 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*settings*/ settings);
 
             fullMetadataLevel.InjectMetadataBuilder(resource, resourceMetadataBuilder);
-            var function = new ODataFunction { Metadata = new Uri(MetadataDocumentUri, "#function1") };
-            var action = new ODataAction { Metadata = new Uri(MetadataDocumentUri, "#function2") };
+            var function = new ODataFunction { Metadata = new Uri(MetadataDocumentUri, "#function1"), };
+            var action = new ODataAction { Metadata = new Uri(MetadataDocumentUri, "#action2") };
 
             resource.AddFunction(function);
             resource.AddAction(action);
 
             resource.MetadataBuilder.Should().BeSameAs(resourceMetadataBuilder);
-
-            Assert.True(resource.Functions.Count() == 1);
+            
+            //metadataselector only allows for two HasHat functions to be written as metadata
+            Assert.True(resource.Functions.Count() == 3);
             Assert.True(resource.Actions.Count() == 1);
         }
 
@@ -125,7 +126,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var resource = new ODataResource();
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
-            TestMetadataSelector selector = new TestMetadataSelector(Model);
+            TestMetadataSelector selector = new TestMetadataSelector();
             selector.PropertyToOmit = navProperty;
             settings.MetadataSelector = selector;
             ODataResourceMetadataBuilder resourceMetadataBuilder = fullMetadataLevel.CreateResourceMetadataBuilder(
@@ -158,7 +159,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var resource = new ODataResource();
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
 
-            TestMetadataSelector selector = new TestMetadataSelector(Model);
+            TestMetadataSelector selector = new TestMetadataSelector();
             selector.NavigationPropertyToAdd = new List<IEdmNavigationProperty>{(IEdmNavigationProperty)HardCodedTestModel.GetPersonType().FindProperty("MyFriendsDogs") };
 
             settings.MetadataSelector = selector;
@@ -193,7 +194,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var resource = new ODataResource();
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
 
-            TestMetadataSelector selector = new TestMetadataSelector(Model);
+            TestMetadataSelector selector = new TestMetadataSelector();
             selector.PropertyToOmit = streamPropertyNameToOmit;
             settings.MetadataSelector = selector;
             ODataResourceMetadataBuilder resourceMetadataBuilder = fullMetadataLevel.CreateResourceMetadataBuilder(
