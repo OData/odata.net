@@ -389,6 +389,9 @@ namespace Microsoft.OData.Evaluation
             /// </summary>
             private readonly SelectedPropertiesNode selectedProperties;
 
+            /// <summary>
+            /// The metadata selector
+            /// </summary>
             private readonly ODataMetadataSelector metadataSelector;
 
             /// <summary>
