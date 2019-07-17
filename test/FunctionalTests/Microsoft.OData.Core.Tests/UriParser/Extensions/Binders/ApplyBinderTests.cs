@@ -150,9 +150,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWitGroupByWithNavigationShouldReturnApplyClause()
         {
-            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/City))");
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/Color))");
 
-            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindMethodReturnsPersonDogNameNavigation, _bindingState);
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindMethodReturnsPersonDogColorNavigation, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
@@ -165,20 +165,62 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
             groupBy.GroupingProperties.Should().NotBeNull();
             groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
 
             List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
             GroupByPropertyNode dogNode = groupingProperties[0];
-            dogNode.Expression.Should().BeNull();
             dogNode.Name.Should().Be("MyDog");
+            dogNode.Expression.Should().BeNull();
             dogNode.ChildTransformations.Should().HaveCount(1);
 
-            GroupByPropertyNode nameNode = dogNode.ChildTransformations[0];
+            GroupByPropertyNode colorNode = dogNode.ChildTransformations[0];
+            colorNode.Name.Should().Be("Color");
+            colorNode.Expression.Should().BeSameAs(FakeBindMethods.FakePersonDogColorNode);
+            colorNode.ChildTransformations.Should().HaveCount(0);
+        }
 
-            dogNode.Name.Should().Be("MyDog");
+        [Fact]
+        public void BindApplyWitGroupByWithDeepNavigationShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/FastestOwner/MyFavoritePainting/Value))");
 
-            nameNode.Expression.Should().BeSameAs(FakeBindMethods.FakePersonDogNameNode);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
 
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
             groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode dogNode = groupingProperties[0];
+            dogNode.Name.Should().Be("MyDog");
+            dogNode.Expression.Should().BeNull();
+            dogNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode ownerNode = dogNode.ChildTransformations[0];
+            ownerNode.Name.Should().Be("FastestOwner");
+            ownerNode.Expression.Should().BeNull();
+            ownerNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode paintingNode = ownerNode.ChildTransformations[0];
+            paintingNode.Name.Should().Be("MyFavoritePainting");
+            paintingNode.Expression.Should().BeNull();
+            paintingNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode valueNode = paintingNode.ChildTransformations[0];
+            valueNode.Name.Should().Be("Value");
+            valueNode.Expression.Should().NotBeNull();
+            valueNode.ChildTransformations.Should().BeEmpty();
         }
 
         [Fact]
@@ -417,7 +459,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             expandItem.Should().NotBeNull();
             expandItem.NavigationSource.Name.ShouldBeEquivalentTo("Paintings");
             expandItem.FilterOption.Should().NotBeNull();
-            
+
             GroupByTransformationNode groupBy = actual.Transformations.Last() as GroupByTransformationNode;
             groupBy.Should().NotBeNull();
             groupBy.GroupingProperties.Should().HaveCount(1);
