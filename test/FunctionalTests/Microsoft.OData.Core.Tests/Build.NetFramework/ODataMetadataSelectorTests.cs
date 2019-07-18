@@ -219,8 +219,5 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.True(count == expectedCount);
         }
-
-
-
     }
 }
