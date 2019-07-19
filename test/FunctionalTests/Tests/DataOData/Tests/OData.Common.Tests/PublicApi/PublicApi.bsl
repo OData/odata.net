@@ -5402,6 +5402,7 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.ODataLibraryCompatibility LibraryCompatibility  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
+	Microsoft.OData.Evaluation.ODataMetadataSelector MetadataSelector  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
@@ -5593,6 +5594,14 @@ public sealed class Microsoft.OData.ODataUrlKeyDelimiter {
 public interface Microsoft.OData.Buffers.ICharArrayPool {
 	char[] Rent (int minSize)
 	void Return (char[] array)
+}
+
+public abstract class Microsoft.OData.Evaluation.ODataMetadataSelector {
+	protected ODataMetadataSelector ()
+
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] SelectBindableOperations (Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] bindableOperations)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] SelectNavigationProperties (Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] navigationProperties)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] SelectStreamProperties (Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] selectedStreamProperties)
 }
 
 public enum Microsoft.OData.Json.JsonNodeType : int {
