@@ -60,7 +60,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             }
 
             this.readerSettingsV401 = new ODataMessageReaderSettings();
-            readerSettingsV401.MaxProtocolVersion = ODataVersion.V401;
+            readerSettingsV401.Version = ODataVersion.V401;
 
             this.writerSettingsV401 = new ODataMessageWriterSettings();
             writerSettingsV401.Version = ODataVersion.V401;
@@ -644,7 +644,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             requestMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
 
             using (ODataMessageReader messageReader =
-                new ODataMessageReader(requestMessage, new ODataMessageReaderSettings() { MaxProtocolVersion = version, BaseUri = new Uri("http://odata.org") }, this.edmModel))
+                new ODataMessageReader(requestMessage, new ODataMessageReaderSettings() { Version = version, BaseUri = new Uri("http://odata.org") }, this.edmModel))
             {
                 ODataBatchReader batchReader = messageReader.CreateODataBatchReader();
 
@@ -696,7 +696,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             MemoryStream responseStream = new MemoryStream();
 
             using (ODataMessageReader messageReader =
-                new ODataMessageReader(requestMessage, new ODataMessageReaderSettings() {MaxProtocolVersion = version}, this.edmModel))
+                new ODataMessageReader(requestMessage, new ODataMessageReaderSettings() {Version = version}, this.edmModel))
             {
 
                 IODataResponseMessage responseMessage = new InMemoryMessage { Stream = responseStream };
