@@ -172,13 +172,20 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             this.defaultContainer.AddElement(this.singleton);
         }
 
-        [Theory]
-        [InlineData(ODataVersion.V4)]
-        [InlineData(ODataVersion.V401)]
-        public void MultipartBatchTestDuplicateContentIdsV4(ODataVersion version)
+        [Fact]
+        public void MultipartBatchTestDuplicateContentIdsV4()
         {
-            Assert.True(ReadBatch(RequestPayloadVerifyDuplicateContentId, version), 
+            Assert.True(ReadBatch(RequestPayloadVerifyDuplicateContentId, ODataVersion.V4), 
                 "Error reading a Multi-part Batch Payload with duplicate ContentIds outside a changeset.");
+        }
+
+        [Fact]
+        public void MultipartBatchTestDuplicateContentIdsFailsV401()
+        {
+            ODataException ode = Assert.Throws<ODataException>(
+                 () => ReadBatch(RequestPayloadVerifyDuplicateContentId, ODataVersion.V401));
+            Assert.True(ode.Message.Contains(
+                 "The content ID '1' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01."));
         }
 
         private bool ReadBatch(string requestPayload, ODataVersion version)
