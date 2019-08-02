@@ -166,6 +166,14 @@ namespace Microsoft.OData
                 this.innerStream.Flush();
             }
 
+#if PORTABLELIB
+            /// <inheritdoc />
+            public override Task FlushAsync(CancellationToken cancellationToken)
+            {
+                return this.innerStream.FlushAsync(cancellationToken);
+            }
+#endif
+
             /// <summary>
             /// Reads data from the stream.
             /// </summary>
