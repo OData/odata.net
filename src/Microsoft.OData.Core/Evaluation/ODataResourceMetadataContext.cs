@@ -128,6 +128,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="actualResourceType">The structured type of the resource.</param>
         /// <param name="metadataContext">The metadata context to use.</param>
         /// <param name="selectedProperties">The selected properties.</param>
+        /// <param name="metadataSelector">Informs the metadata builder which properties, functions, actions, links to omit.</param>
         /// <returns>A new instance of <see cref="ODataResourceMetadataContext"/>.</returns>
         internal static ODataResourceMetadataContext Create(
             ODataResourceBase resource,
@@ -136,7 +137,7 @@ namespace Microsoft.OData.Evaluation
             IEdmStructuredType actualResourceType,
             IODataMetadataContext metadataContext,
             SelectedPropertiesNode selectedProperties,
-            ODataMetadataSelector metadataSelector = null)
+            ODataMetadataSelector metadataSelector)
         {
             if (serializationInfo != null)
             {

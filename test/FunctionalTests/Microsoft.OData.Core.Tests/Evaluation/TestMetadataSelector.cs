@@ -16,26 +16,27 @@ namespace Microsoft.OData.Evaluation
 
         public string PropertyToOmit;
 
-        public IEnumerable<IEdmNavigationProperty> NavigationPropertyToAdd;
+        public IEnumerable<IEdmNavigationProperty> NavigationPropertyToReturn;
 
         /// <summary>
         /// Determines which navigation links should be selected.
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="type">Type of the structured resource.</param>
         /// <param name="navigationProperties"></param>
-        /// <returns></returns>
+        /// <returns>Selected navigation properties.</returns>
         public override IEnumerable<IEdmNavigationProperty> SelectNavigationProperties(IEdmStructuredType type, IEnumerable<IEdmNavigationProperty> navigationProperties)
         {
-            if (NavigationPropertyToAdd != null)
+            if (NavigationPropertyToReturn != null)
             {
-                return NavigationPropertyToAdd;
+                return NavigationPropertyToReturn;
             }
+
             return navigationProperties.Where(s => s.Name != PropertyToOmit);
         }
 
         public override  IEnumerable<IEdmOperation> SelectBindableOperations(IEdmStructuredType type, IEnumerable<IEdmOperation> bindableOperations)
         {
-            //Omit all actions
+            //Return operations only named HasHat
             return bindableOperations.Where(f => f.Name == "HasHat");
         }
 

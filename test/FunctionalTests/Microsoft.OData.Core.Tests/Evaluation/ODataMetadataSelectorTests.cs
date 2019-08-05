@@ -33,7 +33,6 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private const string EntitySetName = "People";
         private const string EntityTypeName = "Fully.Qualified.Namespace.Person";
-        private const string DerivedEntitySetName = "Manager";
         private const string DerivedEntityTypeName = "Fully.Qualified.Namespace.Manager";
         private const string DogEntitySetName = "Dog";
         private const string DogEntityTypeName = "Fully.Qualified.Namespace.Dog";
@@ -62,7 +61,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             managerTypeContext = new TestFeedAndEntryTypeContext
             {
-                NavigationSourceName = DerivedEntitySetName,
+                NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = DerivedEntityTypeName,
                 ExpectedResourceTypeName = DerivedEntityTypeName,
                 IsMediaLinkEntry = false,
@@ -121,7 +120,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Theory]
         [InlineData("MyDog", 7)]
         [InlineData("MyFriendsDogs", 7)]
-        [InlineData("Doesn't Exist", 8)]
+        [InlineData("DoesNotExist", 8)]
         public void OmitNavigationProperties(string navProperty, int expected)
         {
             var resource = new ODataResource();
@@ -154,13 +153,13 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void AddNavigationLinkWithFullMetadata()
+        public void ReturnSpecifiedNavigationLinkWithFullMetadata()
         {
             var resource = new ODataResource();
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
 
             TestMetadataSelector selector = new TestMetadataSelector();
-            selector.NavigationPropertyToAdd = new List<IEdmNavigationProperty>{(IEdmNavigationProperty)HardCodedTestModel.GetPersonType().FindProperty("MyFriendsDogs") };
+            selector.NavigationPropertyToReturn = new List<IEdmNavigationProperty>{(IEdmNavigationProperty)HardCodedTestModel.GetPersonType().FindProperty("MyFriendsDogs") };
 
             settings.MetadataSelector = selector;
             ODataResourceMetadataBuilder resourceMetadataBuilder = fullMetadataLevel.CreateResourceMetadataBuilder(
