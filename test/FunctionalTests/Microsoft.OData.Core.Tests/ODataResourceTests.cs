@@ -37,7 +37,7 @@ namespace Microsoft.OData.Tests
             var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
             var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
             var metadataContext = new TestMetadataContext();
-            var entryMetadataContext = ODataResourceMetadataContext.Create(this.odataEntryWithFullBuilder, typeContext, serializationInfo, null, metadataContext, new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree));
+            var entryMetadataContext = ODataResourceMetadataContext.Create(this.odataEntryWithFullBuilder, typeContext, serializationInfo, null, metadataContext, new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree), null);
             this.odataEntryWithFullBuilder.MetadataBuilder =
                 new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext,
                     new ODataConventionalUriBuilder(new Uri("http://service/", UriKind.Absolute),
