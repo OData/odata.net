@@ -33,7 +33,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree),
                 /*isResponse*/ true,
                 /*keyAsSegment*/ false,
-                /*requestUri*/ null).Should().BeNull();
+                /*requestUri*/ null,
+                 /*settings*/null).Should().BeNull();
         }
 
         [Fact]

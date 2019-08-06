@@ -128,6 +128,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="actualResourceType">The structured type of the resource.</param>
         /// <param name="metadataContext">The metadata context to use.</param>
         /// <param name="selectedProperties">The selected properties.</param>
+        /// <param name="metadataSelector">Informs the metadata builder which properties, functions, actions, links to omit.</param>
         /// <returns>A new instance of <see cref="ODataResourceMetadataContext"/>.</returns>
         internal static ODataResourceMetadataContext Create(
             ODataResourceBase resource,
@@ -135,14 +136,15 @@ namespace Microsoft.OData.Evaluation
             ODataResourceSerializationInfo serializationInfo,
             IEdmStructuredType actualResourceType,
             IODataMetadataContext metadataContext,
-            SelectedPropertiesNode selectedProperties)
+            SelectedPropertiesNode selectedProperties,
+            ODataMetadataSelector metadataSelector)
         {
             if (serializationInfo != null)
             {
                 return new ODataResourceMetadataContextWithoutModel(resource, typeContext, serializationInfo);
             }
 
-            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualResourceType, metadataContext, selectedProperties);
+            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualResourceType, metadataContext, selectedProperties, metadataSelector);
         }
 
         /// <summary>
@@ -389,6 +391,11 @@ namespace Microsoft.OData.Evaluation
             private readonly SelectedPropertiesNode selectedProperties;
 
             /// <summary>
+            /// The metadata selector
+            /// </summary>
+            private readonly ODataMetadataSelector metadataSelector;
+
+            /// <summary>
             /// Constructs an instance of <see cref="ODataResourceMetadataContextWithModel"/>.
             /// </summary>
             /// <param name="resource">The resource instance.</param>
@@ -396,7 +403,7 @@ namespace Microsoft.OData.Evaluation
             /// <param name="actualResourceType">The structured type of the resource.</param>
             /// <param name="metadataContext">The metadata context to use.</param>
             /// <param name="selectedProperties">The selected properties.</param>
-            internal ODataResourceMetadataContextWithModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, IEdmStructuredType actualResourceType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties)
+            internal ODataResourceMetadataContextWithModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, IEdmStructuredType actualResourceType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties, ODataMetadataSelector metadataSelector)
                 : base(resource, typeContext)
             {
                 Debug.Assert(actualResourceType != null, "actualResourceType != null");
@@ -406,6 +413,7 @@ namespace Microsoft.OData.Evaluation
                 this.actualResourceType = actualResourceType;
                 this.metadataContext = metadataContext;
                 this.selectedProperties = selectedProperties;
+                this.metadataSelector = metadataSelector;
             }
 
             /// <summary>
@@ -473,8 +481,17 @@ namespace Microsoft.OData.Evaluation
             {
                 get
                 {
-                    return this.selectedNavigationProperties
-                        ?? (this.selectedNavigationProperties = this.selectedProperties.GetSelectedNavigationProperties(this.actualResourceType));
+                    if (this.selectedNavigationProperties == null)
+                    {
+                        this.selectedNavigationProperties = this.selectedProperties.GetSelectedNavigationProperties(this.actualResourceType);
+                        if (this.metadataSelector != null)
+                        {
+                            this.selectedNavigationProperties =
+                                this.metadataSelector.SelectNavigationProperties(this.actualResourceType, this.selectedNavigationProperties);
+                        }
+                    }
+
+                    return this.selectedNavigationProperties;
                 }
             }
 
@@ -485,8 +502,18 @@ namespace Microsoft.OData.Evaluation
             {
                 get
                 {
-                    return this.selectedStreamProperties
-                        ?? (this.selectedStreamProperties = this.selectedProperties.GetSelectedStreamProperties(this.actualResourceType as IEdmEntityType));
+                    if (this.selectedStreamProperties == null)
+                    {
+                        this.selectedStreamProperties = this.selectedProperties.GetSelectedStreamProperties(this.actualResourceType as IEdmEntityType);
+
+                        if (metadataSelector != null)
+                        {
+                            this.selectedStreamProperties = this.metadataSelector
+                                .SelectStreamProperties(this.actualResourceType, this.selectedStreamProperties.Values).ToDictionary(v => v.Name);
+                        }
+                    }
+
+                    return this.selectedStreamProperties;
                 }
             }
 
@@ -502,6 +529,11 @@ namespace Microsoft.OData.Evaluation
                         bool mustBeContainerQualified = this.metadataContext.OperationsBoundToStructuredTypeMustBeContainerQualified(this.actualResourceType);
                         this.selectedBindableOperations = this.metadataContext.GetBindableOperationsForType(this.actualResourceType)
                             .Where(operation => this.selectedProperties.IsOperationSelected(this.actualResourceType, operation, mustBeContainerQualified));
+                        if (this.metadataSelector != null)
+                        {
+                            this.selectedBindableOperations =
+                                this.metadataSelector.SelectBindableOperations(this.actualResourceType, this.selectedBindableOperations);
+                        }
                     }
 
                     return this.selectedBindableOperations;
