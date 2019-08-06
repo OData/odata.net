@@ -85,6 +85,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isResponse">true if the resource metadata builder to create should be for a response payload; false for a request.</param>
         /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.</param>
         /// <param name="odataUri">The OData Uri.</param>
+        /// <param name="settings">OData message writer settings.</param>
         /// <returns>The created metadata builder.</returns>
         internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
             ODataResourceBase resource,
@@ -94,7 +95,8 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties,
             bool isResponse,
             bool keyAsSegment,
-            ODataUri odataUri)
+            ODataUri odataUri,
+            ODataMessageWriterSettings settings)
         {
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(typeContext != null, "typeContext != null");
@@ -109,7 +111,7 @@ namespace Microsoft.OData.JsonLight
             ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri,
                 keyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
 
-            IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualResourceType, metadataContext, selectedProperties);
+            IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualResourceType, metadataContext, selectedProperties, settings != null ? settings.MetadataSelector : null);
 
             // Create ODataConventionalEntityMetadataBuilder if actualResourceType is entity type or typeContext.NavigationSourceKind is not none (complex type would be none) for no model scenario.
             if (actualResourceType != null && actualResourceType.TypeKind == EdmTypeKind.Entity ||

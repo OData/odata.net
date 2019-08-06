@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Evaluation;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -173,6 +175,11 @@ namespace Microsoft.OData
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
         /// <returns>The OData protocol version to be used for writing payloads.</returns>
         public ODataVersion? Version { get; set; }
+
+        /// <summary>
+        /// Informs the metadata builder which properties, functions, actions, links to omit. 
+        /// </summary>
+        public ODataMetadataSelector MetadataSelector { get; set; }
 
         /// <summary>
         /// Gets the validator corresponding to the validation settings.
