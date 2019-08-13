@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -30,17 +32,44 @@ namespace Microsoft.OData
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with exception object.</summary>
         /// <param name="exception">The <see cref="T:System.Exception" /> used to create the inner error.</param>
         public ODataInnerError(Exception exception)
+            : this(exception, "internalexception")
+        {
+
+        }
+
+        public ODataInnerError(Exception exception, string nestedObjectName)
         {
             ExceptionUtils.CheckArgumentNotNull(exception, "exception");
 
-            this.Message = exception.Message ?? string.Empty;
-            this.TypeName = exception.GetType().FullName;
-            this.StackTrace = exception.StackTrace;
-
             if (exception.InnerException != null)
             {
-                this.InnerError = new ODataInnerError(exception.InnerException);
+                this.InnerError = new ODataInnerError(exception.InnerException, nestedObjectName);
             }
+
+            Properties = new Dictionary<string, string>();
+            Properties.Add("message", exception.Message ?? string.Empty);
+            Properties.Add("type", exception.GetType().FullName ?? string.Empty);
+            Properties.Add("stacktrace", exception.Message ?? string.Empty);
+        }
+
+        public ODataInnerError(IDictionary<string, string> properties, string nestedObjectName, ODataInnerError nestedObject)
+        {
+            Properties = properties;
+            this.NestedObjectName = nestedObjectName;
+        }
+
+        /// <summary>
+        /// Nested object's name
+        /// </summary>
+        internal string NestedObjectName;
+
+        /// <summary>
+        /// Properties to be written for the inner error.
+        /// </summary>
+        public IDictionary<string, string> Properties
+        {
+            get;
+            set;
         }
 
         /// <summary>Gets or sets the error message.</summary>

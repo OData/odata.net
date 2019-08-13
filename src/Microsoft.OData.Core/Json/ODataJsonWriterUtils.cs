@@ -224,26 +224,39 @@ namespace Microsoft.OData.Json
             jsonWriter.WriteName(innerErrorPropertyName);
             jsonWriter.StartObjectScope();
 
-            //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
-            ////       to stay compatible with Astoria.
-
-            // "message": "<message>"
-            jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorMessageName);
-            jsonWriter.WriteValue(innerError.Message ?? string.Empty);
-
-            // "type": "<typename">
-            jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorTypeNameName);
-            jsonWriter.WriteValue(innerError.TypeName ?? string.Empty);
-
-            // "stacktrace": "<stacktrace>"
-            jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorStackTraceName);
-            jsonWriter.WriteValue(innerError.StackTrace ?? string.Empty);
-
-            if (innerError.InnerError != null)
+            if (innerError.Properties != null)
             {
-                // "internalexception": { <nested inner error> }
-                WriteInnerError(jsonWriter, innerError.InnerError, JsonConstants.ODataErrorInnerErrorInnerErrorName, recursionDepth, maxInnerErrorDepth);
+                foreach (KeyValuePair<string, string> pair in innerError.Properties)
+                {
+                    jsonWriter.WriteName(pair.Key);
+                    jsonWriter.WriteValue(pair.Value);
+                }
             }
+            else
+            {
+                //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
+                ////       to stay compatible with Astoria.
+
+                // "message": "<message>"
+                jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorMessageName);
+                jsonWriter.WriteValue(innerError.Message ?? string.Empty);
+
+                // "type": "<typename">
+                jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorTypeNameName);
+                jsonWriter.WriteValue(innerError.TypeName ?? string.Empty);
+
+                // "stacktrace": "<stacktrace>"
+                jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorStackTraceName);
+                jsonWriter.WriteValue(innerError.StackTrace ?? string.Empty);
+
+                if (innerError.InnerError != null)
+                {
+                    // "internalexception": { <nested inner error> }
+                    WriteInnerError(jsonWriter, innerError.InnerError, innerError.NestedObjectName, recursionDepth, maxInnerErrorDepth);
+                }
+
+            }
+
 
             // }
             jsonWriter.EndObjectScope();
