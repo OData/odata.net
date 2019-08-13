@@ -98,7 +98,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </ComplexType>
   <ComplexType Name=""NavigationRestrictionsType"">
     <Property Name=""Navigability"" Type=""Capabilities.NavigationType"">
-      <Annotation Term=""Core.Description"" String=""Supported Navigability"" />
+      <Annotation Term=""Core.Description"" String=""Default navigability for all navigation properties of the annotation target. Individual navigation properties can override this value via `RestrictedProperties/Navigability`."" />
     </Property>
     <Property Name=""RestrictedProperties"" Type=""Collection(Capabilities.NavigationPropertyRestriction)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""List of navigation properties with restrictions"" />
@@ -109,10 +109,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""Navigation properties can be navigated"" />
     </Property>
     <Property Name=""Navigability"" Type=""Capabilities.NavigationType"">
-      <Annotation Term=""Core.Description"" String=""Navigation properties can be navigated to this level"" />
+      <Annotation Term=""Core.Description"" String=""Supported navigability of this navigation property."" />
     </Property>
     <Property Name=""FilterFunctions"" Type=""Collection(Edm.String)"" Nullable=""false"">
-      <Annotation Term=""Core.Description"" String=""List of functions and operators supported in filter expressions. If null, all functions and operators may be attempted."" />
+      <Annotation Term=""Core.Description"" String=""List of functions and operators supported in filter expressions."" />
+      <Annotation Term=""Core.LongDescription"" String=""If not specified, null, or empty, all functions and operators may be attempted."" />
     </Property>
     <Property Name=""FilterRestrictions"" Type=""Capabilities.FilterRestrictionsType"">
       <Annotation Term=""Core.Description"" String=""Restrictions on filter expressions"" />
@@ -160,6 +161,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <ComplexType Name=""SelectSupportType"">
     <Property Name=""Supported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supports $select"" />
+    </Property>
+    <Property Name=""InstanceAnnotationsSupported"" Type=""Edm.Boolean"" DefaultValue=""false"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Supports instance annotations in $select list"" />
     </Property>
     <Property Name=""Expandable"" Type=""Edm.Boolean"" DefaultValue=""false"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""$expand within $select is supported"" />
@@ -266,6 +270,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""Expandable"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""$expand is supported"" />
     </Property>
+    <Property Name=""StreamsExpandable"" Type=""Edm.Boolean"" DefaultValue=""false"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""$expand is supported for stream properties and media resources"" />
+    </Property>
     <Property Name=""NonExpandableProperties"" Type=""Collection(Edm.NavigationPropertyPath)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""These properties cannot be used in expand expressions"" />
     </Property>
@@ -294,22 +301,33 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""MaxLevels"" Type=""Edm.Int32"" DefaultValue=""-1"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""The maximum number of navigation properties that can be traversed when addressing the collection to insert into. A value of -1 indicates there is no restriction."" />
     </Property>
-    <Property Name=""Permission"" Type=""Capabilities.PermissionType"">
-      <Annotation Term=""Core.Description"" String=""Required scopes to perform the insert"" />
+    <Property Name=""TypecastSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Entities of a specific derived type can be created by specifying a type-cast segment"" />
+    </Property>
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+      <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to perform the insert."" />
     </Property>
     <Property Name=""QueryOptions"" Type=""Capabilities.ModificationQueryOptionsType"">
       <Annotation Term=""Core.Description"" String=""Support for query options with insert requests"" />
     </Property>
-    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom headers"" />
     </Property>
-    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom query options"" />
+    </Property>
+    <Property Name=""Description"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""A brief description of the request"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
+    </Property>
+    <Property Name=""LongDescription"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""A lengthy description of the request"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""PermissionType"">
-    <Property Name=""Scheme"" Type=""Auth.SecurityScheme"" Nullable=""false"">
-      <Annotation Term=""Core.Description"" String=""Auth flow scheme name"" />
+    <Property Name=""SchemeName"" Type=""Auth.SchemeName"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Authorization flow scheme name"" />
     </Property>
     <Property Name=""Scopes"" Type=""Collection(Capabilities.ScopeType)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""List of scopes that can provide access to the resource"" />
@@ -336,23 +354,43 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""Updatable"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Entities can be updated"" />
     </Property>
+    <Property Name=""Upsertable"" Type=""Edm.Boolean"" DefaultValue=""false"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Entities can be upserted"" />
+    </Property>
+    <Property Name=""DeltaUpdateSupported"" Type=""Edm.Boolean"" DefaultValue=""false"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Entities can be inserted, updated, and deleted via a PATCH request with a delta payload"" />
+    </Property>
+    <Property Name=""FilterSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Members of collections can be updated via a PATCH request with a `/$filter(...)/$each` segment"" />
+    </Property>
+    <Property Name=""TypecastSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Members of collections can be updated via a PATCH request with a type-cast segment and a `/$each` segment"" />
+    </Property>
     <Property Name=""NonUpdatableNavigationProperties"" Type=""Collection(Edm.NavigationPropertyPath)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""These navigation properties do not allow rebinding"" />
     </Property>
     <Property Name=""MaxLevels"" Type=""Edm.Int32"" DefaultValue=""-1"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""The maximum number of navigation properties that can be traversed when addressing the collection or entity to update. A value of -1 indicates there is no restriction."" />
     </Property>
-    <Property Name=""Permission"" Type=""Capabilities.PermissionType"">
-      <Annotation Term=""Core.Description"" String=""Required scopes to perform update"" />
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+      <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to perform the update."" />
     </Property>
     <Property Name=""QueryOptions"" Type=""Capabilities.ModificationQueryOptionsType"">
       <Annotation Term=""Core.Description"" String=""Support for query options with update requests"" />
     </Property>
-    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom headers"" />
     </Property>
-    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom query options"" />
+    </Property>
+    <Property Name=""Description"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""A brief description of the request"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
+    </Property>
+    <Property Name=""LongDescription"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""A lengthy description of the request"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""DeepUpdateSupportType"">
@@ -373,14 +411,28 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""MaxLevels"" Type=""Edm.Int32"" DefaultValue=""-1"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""The maximum number of navigation properties that can be traversed when addressing the collection to delete from or the entity to delete. A value of -1 indicates there is no restriction."" />
     </Property>
-    <Property Name=""Permission"" Type=""Capabilities.PermissionType"">
-      <Annotation Term=""Core.Description"" String=""Required scopes to perform delete"" />
+    <Property Name=""FilterSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Members of collections can be updated via a PATCH request with a `/$filter(...)/$each` segment"" />
     </Property>
-    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""TypecastSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Members of collections can be updated via a PATCH request with a type-cast segment and a `/$each` segment"" />
+    </Property>
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+      <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to perform the delete."" />
+    </Property>
+    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom headers"" />
     </Property>
-    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom query options"" />
+    </Property>
+    <Property Name=""Description"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""A brief description of the request"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
+    </Property>
+    <Property Name=""LongDescription"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""A lengthy description of the request"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""CollectionPropertyRestrictionsType"">
@@ -388,7 +440,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""Restricted Collection-valued property"" />
     </Property>
     <Property Name=""FilterFunctions"" Type=""Collection(Edm.String)"" Nullable=""false"">
-      <Annotation Term=""Core.Description"" String=""List of functions and operators supported in filter expressions. If null, all functions and operators may be attempted"" />
+      <Annotation Term=""Core.Description"" String=""List of functions and operators supported in filter expressions."" />
+      <Annotation Term=""Core.LongDescription"" String=""If not specified, null, or empty, all functions and operators may be attempted."" />
     </Property>
     <Property Name=""FilterRestrictions"" Type=""Capabilities.FilterRestrictionsType"">
       <Annotation Term=""Core.Description"" String=""Restrictions on filter expressions"" />
@@ -409,7 +462,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""Support for $select"" />
     </Property>
     <Property Name=""Insertable"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
-      <Annotation Term=""Core.Description"" String=""This collection supports positional inserts"" />
+      <Annotation Term=""Core.Description"" String=""Members can be inserted into this collection"" />
+      <Annotation Term=""Core.LongDescription"" String=""If additionally annotated with [Core.PositionalInsert](Org.OData.Core.V1.md#PositionalInsert), members can be inserted at a specific position"" />
     </Property>
     <Property Name=""Updatable"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Members of this ordered collection can be updated by ordinal"" />
@@ -418,14 +472,17 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""Members of this ordered collection can be deleted by ordinal"" />
     </Property>
   </ComplexType>
-  <ComplexType Name=""OperationRestriction"">
-    <Property Name=""Permission"" Type=""Capabilities.PermissionType"">
-      <Annotation Term=""Core.Description"" String=""List of required scopes to invoke an action or function"" />
+  <ComplexType Name=""OperationRestrictionsType"">
+    <Property Name=""FilterSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
+      <Annotation Term=""Core.Description"" String=""Bound action or function can be invoked on a collection-valued binding parameter path with a `/$filter(...)` segment"" />
     </Property>
-    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+      <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to invoke an action or function"" />
+    </Property>
+    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom headers"" />
     </Property>
-    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom query options"" />
     </Property>
   </ComplexType>
@@ -453,14 +510,22 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""Readable"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Entities can be retrieved"" />
     </Property>
-    <Property Name=""Permission"" Type=""Capabilities.PermissionType"">
-      <Annotation Term=""Core.Description"" String=""List of required scopes to invoke an action or function"" />
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+      <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to read."" />
     </Property>
-    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom headers"" />
     </Property>
-    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"">
+    <Property Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Supported or required custom query options"" />
+    </Property>
+    <Property Name=""Description"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""A brief description of the request"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
+    </Property>
+    <Property Name=""LongDescription"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""A lengthy description of the request"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""ReadByKeyRestrictionsType"" BaseType=""Capabilities.ReadRestrictionsBase"">
@@ -587,6 +652,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""SkipSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntitySet"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Supports $skip"" />
   </Term>
+  <Term Name=""ComputeSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntitySet"" Nullable=""false"">
+    <Annotation Term=""Core.Description"" String=""Supports $compute"" />
+  </Term>
   <Term Name=""SelectSupport"" Type=""Capabilities.SelectSupportType"" AppliesTo=""EntityContainer EntitySet Singleton"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Support for $select and nested query options within $select"" />
   </Term>
@@ -597,7 +665,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""Batch Support for the service"" />
   </Term>
   <Term Name=""FilterFunctions"" Type=""Collection(Edm.String)"" AppliesTo=""EntityContainer EntitySet"" Nullable=""false"">
-    <Annotation Term=""Core.Description"" String=""List of functions and operators supported in $filter"" />
+    <Annotation Term=""Core.Description"" String=""List of functions and operators supported in filter expressions."" />
+    <Annotation Term=""Core.LongDescription"" String=""If not specified, null, or empty, all functions and operators may be attempted."" />
   </Term>
   <Term Name=""FilterRestrictions"" Type=""Capabilities.FilterRestrictionsType"" AppliesTo=""EntitySet"">
     <Annotation Term=""Core.Description"" String=""Restrictions on filter expressions"" />
@@ -614,6 +683,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""KeyAsSegmentSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Supports [key-as-segment convention](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_KeyasSegmentConvention) for addressing entities within a collection"" />
   </Term>
+  <Term Name=""QuerySegmentSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"" Nullable=""false"">
+    <Annotation Term=""Core.Description"" String=""Supports [passing query options in the request body](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_PassingQueryOptionsintheRequestBody)"" />
+  </Term>
   <Term Name=""InsertRestrictions"" Type=""Capabilities.InsertRestrictionsType"" AppliesTo=""EntitySet"">
     <Annotation Term=""Core.Description"" String=""Restrictions on insert operations"" />
   </Term>
@@ -626,13 +698,13 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""DeepUpdateSupport"" Type=""Capabilities.DeepUpdateSupportType"" AppliesTo=""EntityContainer EntitySet"">
     <Annotation Term=""Core.Description"" String=""Deep Update Support of the annotated resource (the whole service, an entity set, or a collection-valued resource)"" />
   </Term>
-  <Term Name=""DeleteRestrictions"" Type=""Capabilities.DeleteRestrictionsType"" AppliesTo=""EntitySet"">
+  <Term Name=""DeleteRestrictions"" Type=""Capabilities.DeleteRestrictionsType"" AppliesTo=""EntitySet Singleton"">
     <Annotation Term=""Core.Description"" String=""Restrictions on delete operations"" />
   </Term>
   <Term Name=""CollectionPropertyRestrictions"" Type=""Collection(Capabilities.CollectionPropertyRestrictionsType)"" AppliesTo=""EntitySet Singleton"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Describes restrictions on operations applied to collection-valued structural properties"" />
   </Term>
-  <Term Name=""OperationRestrictions"" Type=""Collection(Capabilities.OperationRestriction)"" AppliesTo=""Action Function"" Nullable=""false"">
+  <Term Name=""OperationRestrictions"" Type=""Capabilities.OperationRestrictionsType"" AppliesTo=""Action Function"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Restrictions for function or action operation"" />
   </Term>
   <Term Name=""AnnotationValuesInQuerySupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"" Nullable=""false"">
@@ -641,8 +713,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""ModificationQueryOptions"" Type=""Capabilities.ModificationQueryOptionsType"" AppliesTo=""EntityContainer Action ActionImport"">
     <Annotation Term=""Core.Description"" String=""Support for query options with modification requests (insert, update, action invocation)"" />
   </Term>
-  <Term Name=""ReadRestrictions"" Type=""Capabilities.ReadRestrictionsType"" AppliesTo=""EntitySet Singleton FunctionImport"">
-    <Annotation Term=""Core.Description"" String=""Restrictions for retrieving a collection of entities, retrieving a singleton instance, invoking a function"" />
+  <Term Name=""ReadRestrictions"" Type=""Capabilities.ReadRestrictionsType"" AppliesTo=""EntitySet Singleton"">
+    <Annotation Term=""Core.Description"" String=""Restrictions for retrieving a collection of entities, retrieving a singleton instance."" />
   </Term>
   <Term Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" AppliesTo=""EntityContainer"">
     <Annotation Term=""Core.Description"" String=""Custom headers that are supported/required for the annotated resource"" />
@@ -698,27 +770,26 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.True(referencedModels.Contains(AuthorizationVocabularyModel.Instance));
         }
 
-        [Fact]
-        public void TestCapabilitiesVocabularyReferenceCoreVocabularyTypesAndTerms()
+        [Theory]
+        [InlineData("AsynchronousRequestsSupported")]
+        [InlineData("BatchContinueOnErrorSupported")]
+        public void TestCapabilitiesVocabularyReferenceCoreVocabularyTypesAndTerms(string termName)
         {
-            foreach (string name in new[] { "AsynchronousRequestsSupported", "BatchContinueOnErrorSupported" })
-            {
-                var term = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1." + name);
-                Assert.NotNull(term);
+            var term = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1." + termName);
+            Assert.NotNull(term);
 
-                // Core.Tag
-                Assert.NotNull(term.Type);
+            // Core.Tag
+            Assert.NotNull(term.Type);
 
-                Assert.Equal(EdmTypeKind.TypeDefinition, term.Type.Definition.TypeKind);
-                Assert.Equal("Org.OData.Core.V1.Tag", term.Type.Definition.FullTypeName());
+            Assert.Equal(EdmTypeKind.TypeDefinition, term.Type.Definition.TypeKind);
+            Assert.Equal("Org.OData.Core.V1.Tag", term.Type.Definition.FullTypeName());
 
-                // Core.Description
-                var annotations = this.capVocModel.FindDeclaredVocabularyAnnotations(term).ToList();
-                Assert.Equal(1, annotations.Count());
-                var description = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsTerm && a.Term.Name == "Description");
-                Assert.NotNull(description);
-                Assert.Equal("Org.OData.Core.V1", description.Term.Namespace);
-            }
+            // Core.Description
+            var annotations = this.capVocModel.FindDeclaredVocabularyAnnotations(term).ToList();
+            Assert.Equal(1, annotations.Count());
+            var description = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsTerm && a.Term.Name == "Description");
+            Assert.NotNull(description);
+            Assert.Equal("Org.OData.Core.V1", description.Term.Namespace);
         }
 
         [Fact]
@@ -952,6 +1023,66 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             p = complexType.FindProperty("MaxLevels");
             Assert.NotNull(p);
             Assert.Equal("Edm.Int32", p.Type.FullName());
+        }
+
+        [Theory]
+        [InlineData("InsertRestrictionsType", true, true)]
+        [InlineData("UpdateRestrictionsType", true, true)]
+        [InlineData("DeleteRestrictionsType", false, true)]
+        [InlineData("OperationRestrictionsType", false, false)]
+        [InlineData("ReadRestrictionsBase", false, true)]
+        public void TestCapabilitiesVocabularyComplexTypeWithPermissions(string typeName, bool hasQueryOptions, bool hasDescription)
+        {
+            var capType = this.capVocModel.FindDeclaredType("Org.OData.Capabilities.V1." + typeName);
+            Assert.NotNull(capType);
+
+            IEdmComplexType capComplexType = capType as IEdmComplexType;
+            Assert.NotNull(capComplexType);
+
+            var permissions = capComplexType.FindProperty("Permissions");
+            Assert.NotNull(permissions);
+            Assert.Equal("Collection(Org.OData.Capabilities.V1.PermissionType)", permissions.Type.FullName());
+
+            var queryOptions = capComplexType.FindProperty("QueryOptions");
+            if (hasQueryOptions)
+            {
+                Assert.NotNull(queryOptions);
+                Assert.Equal("Org.OData.Capabilities.V1.ModificationQueryOptionsType", queryOptions.Type.FullName());
+            }
+            else
+            {
+                Assert.Null(queryOptions);
+            }
+
+            var customHeaders = capComplexType.FindProperty("CustomHeaders");
+            Assert.NotNull(customHeaders);
+            Assert.Equal("Collection(Org.OData.Capabilities.V1.CustomParameter)", customHeaders.Type.FullName());
+
+            var customQueryOptions = capComplexType.FindProperty("CustomQueryOptions");
+            Assert.NotNull(customQueryOptions);
+            Assert.Equal("Collection(Org.OData.Capabilities.V1.CustomParameter)", customQueryOptions.Type.FullName());
+
+            var description = capComplexType.FindProperty("Description");
+            if (hasDescription)
+            {
+                Assert.NotNull(description);
+                Assert.Equal("Edm.String", description.Type.FullName());
+            }
+            else
+            {
+                Assert.Null(description);
+            }
+
+            var longDescription = capComplexType.FindProperty("LongDescription");
+            if (hasDescription)
+            {
+                Assert.NotNull(longDescription);
+                Assert.Equal("Edm.String", longDescription.Type.FullName());
+            }
+            else
+            {
+                Assert.Null(longDescription);
+            }
         }
 
         [Fact]
