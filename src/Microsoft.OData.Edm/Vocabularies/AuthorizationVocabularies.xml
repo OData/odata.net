@@ -70,7 +70,7 @@
       </Term>
 
       <ComplexType Name="SecurityScheme">
-        <Property Name="Authorization" Type="Edm.String" Nullable="false">
+        <Property Name="Authorization" Type="Auth.SchemeName" Nullable="false">
           <Annotation Term="Core.Description" String="The name of a required authorization scheme" />
         </Property>
         <Property Name="RequiredScopes" Type="Collection(Edm.String)" Nullable="false">
@@ -183,6 +183,10 @@
           <Annotation Term="Core.Description" String="API Key is passed as a cookie" />
         </Member>
       </EnumType>
+
+      <TypeDefinition Name="SchemeName" UnderlyingType="Edm.String">
+          <Annotation Term="Core.Description" String="The name of the authorization scheme." />
+      </TypeDefinition>
 
     </Schema>
   </edmx:DataServices>
