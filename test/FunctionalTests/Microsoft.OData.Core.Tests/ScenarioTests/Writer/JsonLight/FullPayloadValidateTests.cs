@@ -975,7 +975,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             string applyClause = "compute(ID mul 2 as idMul2,length(Name) as nameLenght)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, contianedEntitySet, EntityType, null, null, resourcePath, applyClause);
 
-            result.Should().StartWith("{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedCollectionNavProp(idMul2,nameLenght)");
+            result.Should().StartWith("{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedCollectionNavProp");
         }
 
         #region Help Methods
