@@ -333,7 +333,24 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                 default:
-                    // skip any unsupported properties in the inner error
+                    if (this.MessageReaderSettings.EnableExtendingInnerError)
+                    {
+                        if (propertyName == JsonConstants.ODataErrorInnerErrorName)
+                        {
+                            innerError.InnerError = this.ReadInnerError(recursionDepth);
+                            break;
+                        }
+
+                        if (innerError.Properties == null)
+                        {
+                            innerError.Properties = new Dictionary<string, string>();
+                        }
+
+                        innerError.Properties.Add(propertyName, this.JsonReader.ReadStringValue(propertyName));
+
+                        break;
+                    }
+
                     this.JsonReader.SkipValue();
                     break;
             }
