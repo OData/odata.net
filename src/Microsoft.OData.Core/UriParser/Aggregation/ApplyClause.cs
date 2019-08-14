@@ -146,14 +146,12 @@ namespace Microsoft.OData.UriParser.Aggregation
                     : CreateAggregatePropertiesUriSegment(aggregateExpressions);
             }
 
-            if (computeExpressions != null)
+            if (computeExpressions != null && !string.IsNullOrEmpty(result) /* don't add compute if only compute() is present */)
             {
                 string computeProperties = string.Join(",", computeExpressions.Select(e => e.Alias).ToArray());
                 if (!string.IsNullOrEmpty(computeProperties))
                 {
-                    result = string.IsNullOrEmpty(result)
-                        ? computeProperties
-                        : string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, computeProperties);
+                    result = string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, computeProperties);
                 }
             }
 

@@ -280,14 +280,13 @@ namespace Microsoft.OData
         {
             if (odataUri != null)
             {
-                // TODO: Figure out how to deal with $select after $apply
-                if (odataUri.Apply != null)
+                if (odataUri.SelectAndExpand != null)
                 {
-                    return CreateApplyUriSegment(odataUri.Apply);
+                    return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand);
                 }
                 else
                 {
-                    return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand);
+                    return CreateApplyUriSegment(odataUri.Apply);
                 }
             }
 
