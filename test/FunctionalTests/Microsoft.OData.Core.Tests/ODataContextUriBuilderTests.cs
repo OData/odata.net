@@ -190,6 +190,16 @@ namespace Microsoft.OData.Tests
             }
         }
 
+        [Fact]
+        public void FeedContextUriWithApplyExpand()
+        {
+            string applyClause = "expand(Districts, filter(true))";
+            foreach (ODataVersion version in Versions)
+            {
+                this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities");
+            }
+        }
+
 
         [Fact]
         public void FeedContextUriWithApplyCompute()
