@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser.Aggregation
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -128,11 +129,20 @@ namespace Microsoft.OData.UriParser.Aggregation
             IEnumerable<AggregateExpressionBase> aggregateExpressions,
             IEnumerable<ComputeExpression> computeExpressions)
         {
+            Func<GroupByPropertyNode, string> func = (prop) =>
+           {
+               var children = CreatePropertiesUriSegment(prop.ChildTransformations, null, null);
+
+               return string.IsNullOrEmpty(children)
+                      ? prop.Name
+                      : prop.Name + ODataConstants.ContextUriProjectionStart + children + ODataConstants.ContextUriProjectionEnd;
+           };
+
             string result = string.Empty;
             if (groupByPropertyNodes != null)
             {
                 var groupByPropertyArray =
-                    groupByPropertyNodes.Select(prop => prop.Name + CreatePropertiesUriSegment(prop.ChildTransformations, null, null))
+                    groupByPropertyNodes.Select(prop => func(prop))
                         .ToArray();
                 result = string.Join(",", groupByPropertyArray);
                 result = aggregateExpressions == null
@@ -155,9 +165,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
             }
 
-            return string.IsNullOrEmpty(result)
-                ? result
-                : ODataConstants.ContextUriProjectionStart + result + ODataConstants.ContextUriProjectionEnd;
+            return result;
         }
 
         private static string CreateAggregatePropertiesUriSegment(IEnumerable<AggregateExpressionBase> aggregateExpressions)

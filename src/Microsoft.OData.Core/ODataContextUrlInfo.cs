@@ -373,7 +373,11 @@ namespace Microsoft.OData
         {
             if (applyClause != null)
             {
-                return applyClause.GetContextUri();
+                string contextUri = applyClause.GetContextUri();
+                if (!string.IsNullOrEmpty(contextUri))
+                {
+                    return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
+                }
             }
 
             return string.Empty;

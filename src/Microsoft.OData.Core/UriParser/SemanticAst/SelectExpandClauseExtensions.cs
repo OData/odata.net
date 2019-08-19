@@ -114,7 +114,7 @@ namespace Microsoft.OData.UriParser
                 // TODO: That's PoC we need to handle bunch of cases.
                 if (expandSelectItem.ApplyOption != null)
                 {
-                    subResult = expandSelectItem.ApplyOption.GetContextUri().Trim('(',')') as T;
+                    subResult = expandSelectItem.ApplyOption.GetContextUri() as T;
                 }
 
                 var expandItem = processSubResult(currentExpandClause, subResult);
