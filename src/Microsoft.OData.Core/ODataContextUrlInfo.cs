@@ -394,7 +394,7 @@ namespace Microsoft.OData
             if (selectExpandClause != null)
             {
                 string contextUri;
-                selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out contextUri);
+                selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, ProcessApply, out contextUri);
                 if (!string.IsNullOrEmpty(contextUri))
                 {
                     return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
@@ -402,6 +402,16 @@ namespace Microsoft.OData
             }
 
             return string.Empty;
+        }
+
+        private static string ProcessApply(ApplyClause applyClause)
+        {
+            if (applyClause != null)
+            {
+                return applyClause.GetContextUri();
+            }
+
+            return null;
         }
 
         /// <summary>Process sub expand node, contact with subexpand result</summary>
