@@ -31,8 +31,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="countQueryOption">the query count option for this select or expand term</param>
         /// <param name="searchOption">the search option for this select or expand term</param>
         /// <param name="selectOption">the select option for this select or expand term</param>
-        /// <param name="expandOption">the expand option for this select or expand term</param>
-        /// <param name="computeOption">the compute option for this select or expand term.</param>
+        /// <param name="computeOption">the compute option for this select or expand term</param>
         protected SelectExpandTermToken(
             PathSegmentToken pathToProperty,
             QueryToken filterOption,
@@ -42,7 +41,6 @@ namespace Microsoft.OData.UriParser
             bool? countQueryOption,
             QueryToken searchOption,
             SelectToken selectOption,
-            ExpandToken expandOption,
             ComputeToken computeOption)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToProperty, "property");
@@ -55,7 +53,6 @@ namespace Microsoft.OData.UriParser
             CountQueryOption = countQueryOption;
             SearchOption = searchOption;
             SelectOption = selectOption;
-            ExpandOption = expandOption;
             ComputeOption = computeOption;
         }
 
@@ -98,11 +95,6 @@ namespace Microsoft.OData.UriParser
         /// Gets the select option for this select or expand term.
         /// </summary>
         public SelectToken SelectOption { get; private set; }
-
-        /// <summary>
-        /// Gets the expand option for this select or expand term.
-        /// </summary>
-        public ExpandToken ExpandOption { get; private set; }
 
         /// <summary>
         /// Gets the compute option for this select or expand term.

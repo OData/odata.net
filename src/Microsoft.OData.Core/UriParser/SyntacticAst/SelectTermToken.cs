@@ -24,7 +24,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="pathToProperty">the path to the property for this select term</param>
         public SelectTermToken(PathSegmentToken pathToProperty)
-            : this(pathToProperty, null, null)
+            : this(pathToProperty, null)
         {
         }
 
@@ -33,9 +33,8 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="pathToProperty">the path to the property for this select term</param>
         /// <param name="selectOption">the sub select for this token</param>
-        /// <param name="expandOption">the sub expand for this token</param>
-        public SelectTermToken(PathSegmentToken pathToProperty, SelectToken selectOption, ExpandToken expandOption)
-            : this(pathToProperty, null, null, null, null, null, null, selectOption, expandOption, null)
+        public SelectTermToken(PathSegmentToken pathToProperty, SelectToken selectOption)
+            : this(pathToProperty, null, null, null, null, null, null, selectOption, null)
         {
         }
 
@@ -50,10 +49,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="countQueryOption">the query count option for this select term</param>
         /// <param name="searchOption">the search option for this select term</param>
         /// <param name="selectOption">the select option for this select term</param>
-        /// <param name="expandOption">the expand option for this select term</param>
         public SelectTermToken(PathSegmentToken pathToProperty,
-            QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, QueryToken searchOption, SelectToken selectOption, ExpandToken expandOption, ComputeToken computeOption)
-            : base(pathToProperty, filterOption, orderByOptions, topOption, skipOption, countQueryOption, searchOption, selectOption, expandOption, computeOption)
+            QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, QueryToken searchOption, SelectToken selectOption, ComputeToken computeOption)
+            : base(pathToProperty, filterOption, orderByOptions, topOption, skipOption, countQueryOption, searchOption, selectOption, computeOption)
         {
         }
 
