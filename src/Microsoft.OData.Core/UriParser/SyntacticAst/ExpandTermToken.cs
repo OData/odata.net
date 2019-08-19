@@ -116,8 +116,9 @@ namespace Microsoft.OData.UriParser
             ExpandToken expandOption,
             ComputeToken computeOption,
             IEnumerable<QueryToken> applyOptions)
-            : base(pathToNavigationProp, filterOption, orderByOptions, topOption, skipOption, countQueryOption, searchOption, selectOption, expandOption, computeOption)
+            : base(pathToNavigationProp, filterOption, orderByOptions, topOption, skipOption, countQueryOption, searchOption, selectOption, computeOption)
         {
+            ExpandOption = expandOption;
             LevelsOption = levelsOption;
             ApplyOptions = applyOptions;
         }
@@ -132,6 +133,11 @@ namespace Microsoft.OData.UriParser
                 return PathToProperty;
             }
         }
+
+        /// <summary>
+        /// Gets the expand option for this select or expand term.
+        /// </summary>
+        public ExpandToken ExpandOption { get; private set; }
 
         /// <summary>
         /// Gets the levels option for this expand term.

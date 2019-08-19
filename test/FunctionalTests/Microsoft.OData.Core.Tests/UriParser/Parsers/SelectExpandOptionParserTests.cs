@@ -51,7 +51,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Null(selectTerm.CountQueryOption);
             Assert.Null(selectTerm.SearchOption);
             Assert.Null(selectTerm.SelectOption);
-            Assert.Null(selectTerm.ExpandOption);
         }
 
         [Theory]
@@ -183,42 +182,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void NestedExpandInSelectIsAllowed()
-        {
-            // Arrange & Act
-            SelectTermToken selectTerm = this.ParseSelectOptions("($expand=two)");
-
-            // Assert
-            Assert.NotNull(selectTerm);
-            Assert.NotNull(selectTerm.ExpandOption);
-            ExpandTermToken two = Assert.Single(selectTerm.ExpandOption.ExpandTerms);
-            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
-        }
-
-        [Theory]
-        [InlineData("($expand=two($expand=three))")]
-        [InlineData("($expand=two($expand=three;);)")] // Deep nested expands with semicolon
-        public void DeepNestedExpandsInSelectAreAllowed(string optionsText)
-        {
-            // Arrange & Act
-            SelectTermToken selectTerm = this.ParseSelectOptions(optionsText);
-
-            // Assert
-            Assert.NotNull(selectTerm);
-            Assert.NotNull(selectTerm.ExpandOption);
-
-            ExpandTermToken two = Assert.Single(selectTerm.ExpandOption.ExpandTerms);
-            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
-
-            ExpandTermToken three = Assert.Single(two.ExpandOption.ExpandTerms);
-            three.PathToNavigationProp.ShouldBeNonSystemToken("three");
-        }
-
-        [Fact]
         public void AllNestedQueryOptionsInSelectAreAllowed()
         {
             // Arrange & Act
-            SelectTermToken selectTerm = this.ParseSelectOptions("($select=one($select=subone);$filter=true;$count=true;$top=1;$skip=2;$expand=two($expand=three))");
+            SelectTermToken selectTerm = this.ParseSelectOptions("($select=one($select=subone);$filter=true;$count=true;$top=1;$skip=2)");
 
             // Assert
             Assert.NotNull(selectTerm);
@@ -246,14 +213,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // $skip
             Assert.NotNull(selectTerm.SkipOption);
             Assert.Equal(2, selectTerm.SkipOption);
-
-            // $expand
-            Assert.NotNull(selectTerm.ExpandOption);
-            ExpandTermToken two = Assert.Single(selectTerm.ExpandOption.ExpandTerms);
-            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
-
-            ExpandTermToken three = Assert.Single(two.ExpandOption.ExpandTerms);
-            three.PathToNavigationProp.ShouldBeNonSystemToken("three");
         }
 
         [Fact]
