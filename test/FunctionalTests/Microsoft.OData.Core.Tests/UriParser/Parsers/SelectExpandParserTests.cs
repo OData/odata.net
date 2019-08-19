@@ -299,10 +299,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseNestedSelectAndExpandInSelectWorks()
+        public void ParseNestedSelectInSelectWorks()
         {
             // Arrange & Act
-            SelectToken selectToken = ParseSelectClause("Address($select=abc;$expand=xyz)");
+            SelectToken selectToken = ParseSelectClause("Address($select=abc,xyz)");
 
             // Assert
             Assert.NotNull(selectToken);
@@ -310,19 +310,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             selectTermToken.PathToProperty.ShouldBeNonSystemToken("Address");
 
             Assert.NotNull(selectTermToken.SelectOption);
-            SelectTermToken nestedSelectTermToken = Assert.Single(selectTermToken.SelectOption.SelectTerms);
+            Assert.Equal(2, selectTermToken.SelectOption.SelectTerms.Count());
+            SelectTermToken nestedSelectTermToken = selectTermToken.SelectOption.SelectTerms.First();
             nestedSelectTermToken.PathToProperty.ShouldBeNonSystemToken("abc");
 
-            Assert.NotNull(selectTermToken.ExpandOption);
-            ExpandTermToken nestedExpandTermToken = Assert.Single(selectTermToken.ExpandOption.ExpandTerms);
-            nestedExpandTermToken.PathToProperty.ShouldBeNonSystemToken("xyz");
+            nestedSelectTermToken = selectTermToken.SelectOption.SelectTerms.Last();
+            nestedSelectTermToken.PathToProperty.ShouldBeNonSystemToken("xyz");
         }
 
         [Fact]
-        public void ParseDeepNestedSelectAndExpandInSelectWorks()
+        public void ParseDeepNestedSelectInSelectWorks()
         {
             // Arrange & Act
-            SelectToken selectToken = ParseSelectClause("Address($select=one($expand=two)),City($expand=three($select=four))");
+            SelectToken selectToken = ParseSelectClause("Address($select=one($select=two)),City($select=three($select=four))");
 
             // Assert
             Assert.NotNull(selectToken);
@@ -338,21 +338,21 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             nestedSelectToken.PathToProperty.ShouldBeNonSystemToken("one");
 
             // #1 Depth 2
-            Assert.NotNull(nestedSelectToken.ExpandOption);
-            ExpandTermToken nestedExpandTermToken = Assert.Single(nestedSelectToken.ExpandOption.ExpandTerms);
-            nestedExpandTermToken.PathToProperty.ShouldBeNonSystemToken("two");
+            Assert.NotNull(nestedSelectToken.SelectOption);
+            nestedSelectToken = Assert.Single(nestedSelectToken.SelectOption.SelectTerms);
+            nestedSelectToken.PathToProperty.ShouldBeNonSystemToken("two");
 
             // #2 Depth 0
             selectTermTokens[1].PathToProperty.ShouldBeNonSystemToken("City");
 
             // #2 Depth 1
-            Assert.NotNull(selectTermTokens[1].ExpandOption);
-            nestedExpandTermToken = Assert.Single(selectTermTokens[1].ExpandOption.ExpandTerms);
-            nestedExpandTermToken.PathToProperty.ShouldBeNonSystemToken("three");
+            Assert.NotNull(selectTermTokens[1].SelectOption);
+            nestedSelectToken = Assert.Single(selectTermTokens[1].SelectOption.SelectTerms);
+            nestedSelectToken.PathToProperty.ShouldBeNonSystemToken("three");
 
             // #2 Depth 2
-            Assert.NotNull(nestedExpandTermToken.SelectOption);
-            nestedSelectToken = Assert.Single(nestedExpandTermToken.SelectOption.SelectTerms);
+            Assert.NotNull(nestedSelectToken.SelectOption);
+            nestedSelectToken = Assert.Single(nestedSelectToken.SelectOption.SelectTerms);
             nestedSelectToken.PathToProperty.ShouldBeNonSystemToken("four");
         }
 
