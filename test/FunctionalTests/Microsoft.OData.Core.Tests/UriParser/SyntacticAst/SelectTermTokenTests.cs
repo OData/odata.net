@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void PropertyCannotBeNullInFullConstructor()
         {
             // Arrange & Act
-            Action test = () => new SelectTermToken(null, null, null, null, null, null, null, null, null, null);
+            Action test = () => new SelectTermToken(null, null, null, null, null, null, null, null, null);
 
             // Assert
             Assert.Throws<ArgumentNullException>("property", test);
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         {
             // Arrange & Act
             SelectTermToken selectTermToken = new SelectTermToken(new NonSystemToken("stuff", null, null),
-                null, null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null, null, null);
 
             // Assert
             Assert.Null(selectTermToken.FilterOption);
@@ -47,7 +47,6 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
             Assert.Null(selectTermToken.CountQueryOption);
             Assert.Null(selectTermToken.SearchOption);
             Assert.Null(selectTermToken.SelectOption);
-            Assert.Null(selectTermToken.ExpandOption);
         }
 
         [Fact]
@@ -55,7 +54,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         {
             // Arrange & Act
             SelectTermToken selectTermToken1 = new SelectTermToken(new NonSystemToken("stuff", null, null));
-            SelectTermToken selectTermToken2 = new SelectTermToken(new NonSystemToken("stuff", null, null), null, null);
+            SelectTermToken selectTermToken2 = new SelectTermToken(new NonSystemToken("stuff", null, null), null);
 
             // Assert
             Assert.NotNull(selectTermToken1.PathToProperty);
@@ -73,7 +72,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
             // Arrange & Act
             QueryToken filter = new LiteralToken(21);
             SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null),
-                filter, null, null, null, null, null, null, null, null);
+                filter, null, null, null, null, null, null, null);
 
             // Assert
             Assert.NotNull(selectTerm.FilterOption);
@@ -88,7 +87,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
             // Arrange & Act
             OrderByToken orderBy = new OrderByToken(new LiteralToken(42), OrderByDirection.Descending);
             SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null),
-                null, new OrderByToken[] { orderBy }, null, null, null, null, null,null, null);
+                null, new OrderByToken[] { orderBy }, null, null, null, null, null, null);
 
             // Assert
             Assert.NotNull(selectTerm.OrderByOptions);
@@ -107,7 +106,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
             // Arrange & Act
             long top = 42;
             SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null),
-                null, null, top, null, null, null, null, null, null);
+                null, null, top, null, null, null, null, null);
 
             // Assert
             Assert.NotNull(selectTerm.TopOption);
@@ -120,7 +119,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
             // Arrange & Act
             long skip = 42;
             SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null),
-                null, null, null, skip, null, null, null, null, null);
+                null, null, null, skip, null, null, null, null);
 
             // Assert
             Assert.NotNull(selectTerm.SkipOption);
@@ -132,7 +131,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         {
             // Arrange & Act
             SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null),
-                null, null, null, null, false, null, null, null, null);
+                null, null, null, null, false, null, null, null);
 
             // Assert
             Assert.NotNull(selectTerm.CountQueryOption);
@@ -144,7 +143,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         {
             // Arrange & Act
             SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null),
-                null, null, null, null, null, new StringLiteralToken("searchMe"), null, null, null);
+                null, null, null, null, null, new StringLiteralToken("searchMe"), null, null);
 
             // Assert
             Assert.NotNull(selectTerm.SearchOption);
@@ -157,30 +156,13 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         {
             // Arrange & Act
             SelectToken select = new SelectToken(new PathSegmentToken[] { new NonSystemToken("abc", null, null) });
-            SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null), select, null);
+            SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null), select);
 
             // Assert
             Assert.NotNull(selectTerm.SelectOption);
             PathSegmentToken token = Assert.Single(selectTerm.SelectOption.Properties);
             NonSystemToken nonSystemToken = Assert.IsType<NonSystemToken>(token);
             Assert.Equal("abc", nonSystemToken.Identifier);
-        }
-
-        [Fact]
-        public void InnerExpandSetCorrectly()
-        {
-            // Arrange & Act
-            ExpandTermToken innerExpandTerm = new ExpandTermToken(new NonSystemToken("abc", null, null), null, null);
-
-            ExpandToken expand = new ExpandToken(new[] { innerExpandTerm });
-
-            SelectTermToken selectTerm = new SelectTermToken(new NonSystemToken("stuff", null, null), null, expand);
-
-            // Assert
-            Assert.NotNull(selectTerm.ExpandOption);
-            ExpandTermToken token = Assert.Single(selectTerm.ExpandOption.ExpandTerms);
-            ReferenceEquals(token.PathToNavigationProp, token.PathToProperty);
-            Assert.Equal("abc", token.PathToProperty.Identifier);
         }
 
         [Fact]
@@ -196,7 +178,6 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
                                                              null /*countQueryOption*/,
                                                              null /*searchOption*/,
                                                              null /*selectOption*/,
-                                                             null /*expandOption*/,
                                                              compute);
 
             // Assert
