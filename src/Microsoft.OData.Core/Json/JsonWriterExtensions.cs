@@ -181,7 +181,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="propertyValue">value to write.</param>
-        private static void WriteJsonValue(this IJsonWriter jsonWriter, object propertyValue)
+        internal static void WriteJsonValue(this IJsonWriter jsonWriter, object propertyValue)
         {
             if (propertyValue == null)
             {

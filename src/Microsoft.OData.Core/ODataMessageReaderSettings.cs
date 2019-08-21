@@ -144,12 +144,6 @@ namespace Microsoft.OData
         /// </summary>
         public bool EnableCharactersCheck { get; set; }
 
-
-        /// <summary>
-        /// Flag to control reading InnerError of ODataError as an open type. 
-        /// </summary>
-        public bool EnableExtendingInnerError { get; set; }
-
         /// <summary>
         /// Gets or sets the maximum OData protocol version the reader should accept and understand.
         /// </summary>

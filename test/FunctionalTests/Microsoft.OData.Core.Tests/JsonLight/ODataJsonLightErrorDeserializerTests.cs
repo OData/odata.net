@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
+using System.Collections.Generic;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -112,6 +113,29 @@ namespace Microsoft.OData.Tests.JsonLight
             var property = Assert.Single(value.Properties);
             Assert.Equal("Sample", property.Name);
             Assert.Equal("sample value", property.Value);
+        }
+
+        [Fact]
+        public void ReadTopLevelErrorWithInnerError()
+        {
+            // Arrange
+            const string payload =
+                "{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"message\":\"\",\"type\":\"\",\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObjet\":\"{\"kanish\":\"newProperty\"}\",\"type\":\"\"}}}}";
+            
+            var context = GetInputContext(payload, GetEdmModel());
+            var deserializer = new ODataJsonLightErrorDeserializer(context);
+
+            // Act
+            var error = deserializer.ReadTopLevelError();
+
+            // Assert
+            Assert.Equal("any target", error.Target);
+            Assert.Equal(1, error.Details.Count);
+            var detail = error.Details.Single();
+            Assert.Equal("500", detail.ErrorCode);
+            Assert.Equal("any target", detail.Target);
+            Assert.Equal("any msg", detail.Message);
+            Assert.True(error.InnerError.InnerError.Properties.ContainsKey("MyNewObject"));
         }
 
         private ODataJsonLightInputContext GetInputContext(string payload, IEdmModel model = null)

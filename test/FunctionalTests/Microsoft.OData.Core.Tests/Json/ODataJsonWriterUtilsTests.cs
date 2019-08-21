@@ -4,7 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
 using Microsoft.OData.Json;
 using Xunit;
@@ -91,5 +94,36 @@ namespace Microsoft.OData.Tests.Json
             result.Should().Be(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target""," +
                 @"""details"":[{""code"":""500"",""target"":""any target"",""message"":""any msg""}]}}");
         }
+
+
+        [Fact]
+        public void WriteError_InnerErrorWithDetails()
+        {
+            IDictionary<string, ODataValue> properties = new Dictionary<string, ODataValue>();
+            properties.Add("stacktrace", "NormalString".ToODataValue());
+            //properties.Add("MyNewObject", new Animal() {Name = "G-Raph"}.ToODataValue());
+            var error = new ODataError
+            {
+                Target = "any target",
+                Details =
+                    new[] { new ODataErrorDetail { ErrorCode = "500", Target = "any target", Message = "any msg" } },
+                InnerError = new ODataInnerError(properties, "innererror", new ODataInnerError(properties, "nested", null))
+            };
+
+            ODataJsonWriterUtils.WriteError(
+                jsonWriter,
+                enumerable => { },
+                error,
+                includeDebugInformation: true,
+                maxInnerErrorDepth: 5,
+                writingJsonLight: false);
+            var result = stringWriter.GetStringBuilder().ToString();
+            result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"message\":\"\",\"type\":\"\",\"innererror\":{\"stacktrace\":\"NormalString\",\"message\":\"\",\"type\":\"\"}}}}");
+        }
+    }
+
+    public class Animal
+    {
+        public string Name;
     }
 }
