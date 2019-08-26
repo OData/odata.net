@@ -284,7 +284,7 @@ namespace Microsoft.OData
                 {
                     return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand);
                 }
-                else
+                else if (odataUri.Apply != null)
                 {
                     return CreateApplyUriSegment(odataUri.Apply);
                 }
