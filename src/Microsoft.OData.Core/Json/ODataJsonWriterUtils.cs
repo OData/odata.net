@@ -28,6 +28,7 @@ namespace Microsoft.OData.Json
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
+        /// <param name="skipNullProperties">if set, stacktrace, type, and message will not be written if they are empty strings on ODataInnerError.</param>
         internal static void WriteError(IJsonWriter jsonWriter,
             Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, ODataError error,
             bool includeDebugInformation, int maxInnerErrorDepth, bool writingJsonLight, bool skipNullProperties)
@@ -100,6 +101,7 @@ namespace Microsoft.OData.Json
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
+        /// <param name="skipNullProperties">if set, stacktrace, type, and message will not be written if they are empty strings on ODataInnerError.</param>
         private static void WriteError(IJsonWriter jsonWriter, string code, string message, string target,
             IEnumerable<ODataErrorDetail> details,
             ODataInnerError innerError,
@@ -214,6 +216,8 @@ namespace Microsoft.OData.Json
         /// <param name="innerErrorPropertyName">The property name for the inner error property.</param>
         /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        /// <param name="skipNullProperties">if set, stacktrace, type, and message will not be written if they are empty strings on ODataInnerError.</param>
+
         private static void WriteInnerError(IJsonWriter jsonWriter, ODataInnerError innerError, string innerErrorPropertyName, int recursionDepth, int maxInnerErrorDepth, bool skipNullProperties)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
