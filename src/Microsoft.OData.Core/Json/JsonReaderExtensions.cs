@@ -7,10 +7,12 @@
 namespace Microsoft.OData.Json
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Text;
+
 
     /// <summary>
     /// Extension methods for the JSON reader.
@@ -313,6 +315,40 @@ namespace Microsoft.OData.Json
             {
                 RawValue = builder.ToString(),
             };
+        }
+
+        internal static ODataValue ReadODataValue(this IJsonReader jsonReader)
+        {
+            if (jsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            {
+                object primitiveValue = jsonReader.ReadPrimitiveValue();
+
+                return primitiveValue.ToODataValue();
+            }
+            else if (jsonReader.NodeType == JsonNodeType.StartObject)
+            {
+                jsonReader.ReadStartObject();
+                ODataResourceValue resourceValue = new ODataResourceValue();
+                IList<ODataProperty> propertyList = new List<ODataProperty>();
+
+                while (jsonReader.NodeType != JsonNodeType.EndObject)
+                {
+                    ODataProperty property = new ODataProperty();
+                    property.Name = jsonReader.ReadPropertyName();
+                    property.Value = jsonReader.ReadODataValue();
+                    propertyList.Add(property);
+                }
+
+                resourceValue.Properties = propertyList;
+
+                jsonReader.ReadEndObject();
+
+                return resourceValue;
+            }
+            else
+            {
+                return jsonReader.ReadAsUntypedOrNullValue();
+            }
         }
 
         /// <summary>

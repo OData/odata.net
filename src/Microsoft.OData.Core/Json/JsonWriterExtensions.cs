@@ -8,13 +8,12 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
-    using System.Diagnostics;
-    using System.Collections.Generic;
     using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-    using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
     #endregion Namespaces
 
     /// <summary>
@@ -205,6 +204,43 @@ namespace Microsoft.OData.Json
                     jsonWriter.WriteJsonArrayValue(arrayValue);
                 }
             }
+        }
+
+        /// <summary>
+        /// Writes the json value (primitive, IDictionary or IEnumerable) to the underlying json writer.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
+        /// <param name="propertyValue">value to write.</param>
+        internal static void WriteODataValue(this IJsonWriter jsonWriter, ODataValue odataValue)
+        {
+            if (odataValue == null)
+            {
+                jsonWriter.WriteValue((string)null);
+                return;
+            }
+
+            object objectValue = odataValue.FromODataValue();
+            if (EdmLibraryExtensions.IsPrimitiveType(objectValue.GetType()))
+            {
+                jsonWriter.WritePrimitiveValue(objectValue);
+                return;
+            }
+
+            ODataResourceValue resourceValue = odataValue as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                jsonWriter.StartObjectScope();
+
+                foreach (ODataProperty property in resourceValue.Properties)
+                {
+                    jsonWriter.WriteName(property.Name);
+                    jsonWriter.WriteODataValue(property.ODataValue);
+                }
+
+                jsonWriter.EndObjectScope();
+            }
+
+            return;
         }
     }
 }

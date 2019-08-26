@@ -36,13 +36,18 @@ namespace Microsoft.OData
 
         }
 
-        public ODataInnerError(Exception exception, string nestedObjectName)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with exception object.
+        /// </summary>
+        /// <param name="exception">The <see cref="T:System.Exception" /> used to create the inner error.</param>
+        /// <param name="nestedInnerErrorName">The name of the field for the nested inner error object inside inner error.</param>
+        public ODataInnerError(Exception exception, string nestedInnerErrorName)
         {
             ExceptionUtils.CheckArgumentNotNull(exception, "exception");
 
             if (exception.InnerException != null)
             {
-                this.InnerError = new ODataInnerError(exception.InnerException, nestedObjectName);
+                this.InnerError = new ODataInnerError(exception.InnerException, nestedInnerErrorName);
             }
 
             Properties = new Dictionary<string, ODataValue>();
@@ -51,10 +56,16 @@ namespace Microsoft.OData
             Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, exception.StackTrace.ToODataValue() ?? string.Empty.ToODataValue());
         }
 
-        public ODataInnerError(IDictionary<string, ODataValue> properties, string nestedObjectName, ODataInnerError nestedObject)
+        /// <summary>
+        ///  Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with a dictionary of property names and corresponding ODataValues.
+        /// </summary>
+        /// <param name="properties">Dictionary of string keys with ODataValue as value. Key string indicates the property name where as the value of the property is encapsulated in ODataValue.</param>
+        /// <param name="nestedInnerErrorName">The name of the field for the nested inner error object inside inner error.</param>
+        /// <param name="nestedObject">Nested inner error object.</param>
+        public ODataInnerError(IDictionary<string, ODataValue> properties, string nestedInnerErrorName, ODataInnerError nestedObject)
         {
             Properties = properties;
-            this.NestedObjectName = nestedObjectName;
+            this.NestedObjectName = nestedInnerErrorName;
             InnerError = nestedObject;
         }
 

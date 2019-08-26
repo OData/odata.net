@@ -116,26 +116,62 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void ReadTopLevelErrorWithInnerError()
+        public void ReadExtendedInnerError()
         {
             // Arrange
             const string payload =
-                "{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"message\":\"\",\"type\":\"\",\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObjet\":\"{\"kanish\":\"newProperty\"}\",\"type\":\"\"}}}}";
-            
+                    "{\"error\":{" +
+                        "\"code\":\"\",\"message\":\"\"," +
+                        "\"target\":\"any target\"," +
+                        "\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}]," +
+                        "\"innererror\":{" +
+                            "\"stacktrace\":\"NormalString\"," +
+                            "\"message\":\"\"," +
+                            "\"type\":\"\"," +
+                            "\"innererror\":{" +
+                                    "\"stacktrace\":\"InnerError\"," +
+                                    "\"MyNewObject\":{" +
+                                        "\"StringProperty\":\"newProperty\"," +
+                                        "\"IntProperty\": 1," +
+                                        "\"BooleanProperty\": true," +
+                                        "\"type\":\"\"" +
+                                     "}" +
+                                 "}" +
+                            "}" +
+                       "}}";
+                    
             var context = GetInputContext(payload, GetEdmModel());
             var deserializer = new ODataJsonLightErrorDeserializer(context);
 
             // Act
             var error = deserializer.ReadTopLevelError();
 
-            // Assert
+            // Assert Top Level properties
             Assert.Equal("any target", error.Target);
             Assert.Equal(1, error.Details.Count);
             var detail = error.Details.Single();
             Assert.Equal("500", detail.ErrorCode);
             Assert.Equal("any target", detail.Target);
             Assert.Equal("any msg", detail.Message);
+
+            //Assert Inner Error properties
+            Assert.NotNull(error.InnerError);
             Assert.True(error.InnerError.InnerError.Properties.ContainsKey("MyNewObject"));
+            Assert.IsType<ODataResourceValue>(error.InnerError.InnerError.Properties["MyNewObject"]);
+            ODataResourceValue nestedObject = error.InnerError.InnerError.Properties["MyNewObject"] as ODataResourceValue;
+
+            Assert.Equal(nestedObject.Properties.Count(), 4);
+            Assert.Equal(nestedObject.Properties.ElementAt(0).Name, "StringProperty");
+            Assert.Equal(nestedObject.Properties.ElementAt(0).Value, "newProperty");
+
+            Assert.Equal(nestedObject.Properties.ElementAt(1).Name, "IntProperty");
+            Assert.Equal(nestedObject.Properties.ElementAt(1).Value, 1);
+
+            Assert.Equal(nestedObject.Properties.ElementAt(2).Name, "BooleanProperty");
+            Assert.Equal(nestedObject.Properties.ElementAt(2).Value, true);
+
+            Assert.Equal(nestedObject.Properties.ElementAt(3).Name, "type");
+            Assert.Equal(nestedObject.Properties.ElementAt(3).Value, "");
         }
 
         private ODataJsonLightInputContext GetInputContext(string payload, IEdmModel model = null)

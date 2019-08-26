@@ -345,7 +345,7 @@ namespace Microsoft.OData.JsonLight
                         innerError.Properties = new Dictionary<string, ODataValue>();
                     }
 
-                    innerError.Properties.Add(propertyName, this.JsonReader.ReadAsUntypedOrNullValue());
+                    innerError.Properties.Add(propertyName, this.JsonReader.ReadODataValue());
                     break;
             }
         }
