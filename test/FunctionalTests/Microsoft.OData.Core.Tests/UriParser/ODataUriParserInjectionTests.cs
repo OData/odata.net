@@ -264,9 +264,9 @@ namespace Microsoft.OData.Tests.UriParser
             var expandClause = uriParser.ParseSelectAndExpand();
             var items = expandClause.SelectedItems;
             items.First().ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>()
-                .And.PathToNavigationProperty.Single().ShouldBeNavigationPropertySegment(thumbnailsNavProp);
+                .PathToNavigationProperty.Single().ShouldBeNavigationPropertySegment(thumbnailsNavProp);
             items.Last().ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>()
-                .And.SelectAndExpand.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new PropertySegment(sizeProp)));
+                .SelectAndExpand.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new PropertySegment(sizeProp)));
         }
 
         [Fact]

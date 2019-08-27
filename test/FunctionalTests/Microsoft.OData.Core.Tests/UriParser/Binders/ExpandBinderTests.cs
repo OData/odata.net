@@ -74,7 +74,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             ExpandTermToken expandTermToken = new ExpandTermToken(new NonSystemToken("MyDog", null, null));
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { expandTermToken });
             var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).And.SelectAndExpand.AllSelected.Should().BeTrue();
+            item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).SelectAndExpand.AllSelected.Should().BeTrue();
         }
 
         // $expand=MyDog($expand=MyPeople;)
@@ -86,10 +86,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                   new ExpandToken(new ExpandTermToken[] { innerExpandTerm }));
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { outerExpandTerm });
             var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            var subSelectExpand = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).And.SelectAndExpand;
+            var subSelectExpand = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).SelectAndExpand;
             subSelectExpand.AllSelected.Should().BeTrue();
             subSelectExpand.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp())
-                .And.SelectAndExpand.AllSelected.Should().BeTrue();
+                .SelectAndExpand.AllSelected.Should().BeTrue();
         }
 
         // $select=<foo>&$expand=MyDog($select=Color;$expand=MyPeople;)
@@ -108,10 +108,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var subExpand =
                 item.SelectedItems.First()
                     .ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp())
-                    .And.SelectAndExpand;
+                    .SelectAndExpand;
             subExpand.AllSelected.Should().BeFalse();
             subExpand.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp())
-                .And.SelectAndExpand.AllSelected.Should().BeTrue();
+                .SelectAndExpand.AllSelected.Should().BeTrue();
             subExpand.SelectedItems.Last(x => x is PathSelectItem).ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
         }
 
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var myDogSelection =
                 item.SelectedItems.First()
                     .ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp())
-                    .And.SelectAndExpand;
+                    .SelectAndExpand;
             myDogSelection.AllSelected.Should().BeTrue(); // the inner expansion is all by default for the option-mode binder, as expected for this test.
             myDogSelection.SelectedItems.Should().BeEmpty();
         }
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                       new NonSystemToken("MyDog", null, null)))
                 });
             var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            var myDogExpansion = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).And.SelectAndExpand;
+            var myDogExpansion = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).SelectAndExpand;
             myDogExpansion.SelectedItems.Should().BeEmpty();
             myDogExpansion.AllSelected.Should().BeTrue();
         }
@@ -176,9 +176,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                   new ExpandToken(new ExpandTermToken[] { innerExpandTerm }));
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { outerExpandTerm });
             var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            var myDogExpandItem = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).And;
+            var myDogExpandItem = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
             myDogExpandItem.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
-            var myPeopleExpandItem = myDogExpandItem.SelectAndExpand.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp()).And;
+            var myPeopleExpandItem = myDogExpandItem.SelectAndExpand.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp());
             myPeopleExpandItem.NavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
             myPeopleExpandItem.SelectAndExpand.SelectedItems.Should().BeEmpty();
         }

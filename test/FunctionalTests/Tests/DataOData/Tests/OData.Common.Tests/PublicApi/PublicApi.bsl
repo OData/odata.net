@@ -6014,11 +6014,10 @@ public abstract class Microsoft.OData.UriParser.RangeVariable {
 }
 
 public abstract class Microsoft.OData.UriParser.SelectExpandTermToken : Microsoft.OData.UriParser.QueryToken {
-	protected SelectExpandTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.UriParser.QueryToken searchOption, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ExpandToken expandOption, Microsoft.OData.UriParser.ComputeToken computeOption)
+	protected SelectExpandTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.UriParser.QueryToken searchOption, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ComputeToken computeOption)
 
 	Microsoft.OData.UriParser.ComputeToken ComputeOption  { public get; }
 	System.Nullable`1[[System.Boolean]] CountQueryOption  { public get; }
-	Microsoft.OData.UriParser.ExpandToken ExpandOption  { public get; }
 	Microsoft.OData.UriParser.QueryToken FilterOption  { public get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OrderByToken]] OrderByOptions  { public get; }
 	Microsoft.OData.UriParser.PathSegmentToken PathToProperty  { public get; }
@@ -6614,6 +6613,7 @@ public sealed class Microsoft.OData.UriParser.ExpandTermToken : Microsoft.OData.
 	public ExpandTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.UriParser.QueryToken searchOption, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ExpandToken expandOption, Microsoft.OData.UriParser.ComputeToken computeOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryToken]] applyOptions)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryToken]] ApplyOptions  { public get; }
+	Microsoft.OData.UriParser.ExpandToken ExpandOption  { public get; }
 	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
 	System.Nullable`1[[System.Int64]] LevelsOption  { public get; }
 	Microsoft.OData.UriParser.PathSegmentToken PathToNavigationProp  { public get; }
@@ -7036,8 +7036,8 @@ public sealed class Microsoft.OData.UriParser.SelectExpandClause {
 
 public sealed class Microsoft.OData.UriParser.SelectTermToken : Microsoft.OData.UriParser.SelectExpandTermToken {
 	public SelectTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToProperty)
-	public SelectTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ExpandToken expandOption)
-	public SelectTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.UriParser.QueryToken searchOption, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ExpandToken expandOption, Microsoft.OData.UriParser.ComputeToken computeOption)
+	public SelectTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.UriParser.SelectToken selectOption)
+	public SelectTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.UriParser.QueryToken searchOption, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ComputeToken computeOption)
 
 	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
 
@@ -8431,11 +8431,10 @@ public abstract class Microsoft.OData.Client.ALinq.UriParser.QueryToken {
 }
 
 public abstract class Microsoft.OData.Client.ALinq.UriParser.SelectExpandTermToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
-	protected SelectExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption)
+	protected SelectExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption)
 
 	Microsoft.OData.Client.ALinq.UriParser.ComputeToken ComputeOption  { public get; }
 	System.Nullable`1[[System.Boolean]] CountQueryOption  { public get; }
-	Microsoft.OData.Client.ALinq.UriParser.ExpandToken ExpandOption  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.QueryToken FilterOption  { public get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] OrderByOptions  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken PathToProperty  { public get; }
@@ -8568,6 +8567,7 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken : Mic
 	public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.QueryToken]] applyOptions)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.QueryToken]] ApplyOptions  { public get; }
+	Microsoft.OData.Client.ALinq.UriParser.ExpandToken ExpandOption  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
 	System.Nullable`1[[System.Int64]] LevelsOption  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken PathToNavigationProp  { public get; }
@@ -8689,8 +8689,8 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken : 
 
 public sealed class Microsoft.OData.Client.ALinq.UriParser.SelectTermToken : Microsoft.OData.Client.ALinq.UriParser.SelectExpandTermToken {
 	public SelectTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty)
-	public SelectTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption)
-	public SelectTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption)
+	public SelectTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption)
+	public SelectTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption)
 
 	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
 

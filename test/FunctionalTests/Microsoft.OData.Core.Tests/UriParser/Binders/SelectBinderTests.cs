@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var result = binder.Bind(selectToken);
             result.SelectedItems.Last().ShouldBePathSelectionItem(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonNameProp())));
             result.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp())
-                  .And.SelectAndExpand.SelectedItems.Should().BeEmpty();
+                  .SelectAndExpand.SelectedItems.Should().BeEmpty();
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var result = binder.Bind(selectToken);
             result.AllSelected.Should().BeTrue();
             result.SelectedItems.Single().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp())
-                  .And.SelectAndExpand.AllSelected.Should().BeTrue();
+                  .SelectAndExpand.AllSelected.Should().BeTrue();
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver, null);
             var selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("MyDog", null, null) });
             var result = binder.Bind(selectToken);
-            result.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).And.SelectAndExpand.AllSelected.Should().BeFalse();
+            result.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).SelectAndExpand.AllSelected.Should().BeFalse();
             result.SelectedItems.Single(x => x is PathSelectItem).ShouldBePathSelectionItem(new ODataPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), HardCodedTestModel.GetPeopleSet())));
         }
 
