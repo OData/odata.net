@@ -29,9 +29,6 @@ namespace Microsoft.OData
         /// <summary>True if the writer was created for synchronous operation; false for asynchronous.</summary>
         private readonly bool synchronous;
 
-        /// <summary>The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
-        private readonly ODataBatchPayloadUriConverter payloadUriConverter;
-
         /// <summary>The dependency injection container to get related services.</summary>
         private readonly IServiceProvider container;
 
@@ -55,6 +52,9 @@ namespace Microsoft.OData
         /// in the same changeset or other changesets.
         /// </summary>
         private string contentIdToAddOnNextRead;
+
+        /// <summary>The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
+        internal readonly ODataBatchPayloadUriConverter payloadUriConverter;
 
         /// <summary>
         /// Constructor.
@@ -512,7 +512,7 @@ namespace Microsoft.OData
                     this.IncreaseBatchSize();
 
                     this.State = this.ReadAtChangesetStartImplementation();
-                    if (this.inputContext.MessageReaderSettings.MaxProtocolVersion <= ODataVersion.V4)
+                    if (this.inputContext.MessageReaderSettings.Version <= ODataVersion.V4)
                     {
                         this.payloadUriConverter.Reset();
                     }
