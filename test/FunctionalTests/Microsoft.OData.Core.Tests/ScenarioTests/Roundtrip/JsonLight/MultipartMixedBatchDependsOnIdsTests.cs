@@ -133,6 +133,29 @@ Content-Type: application/json;odata.metadata=none
 --batch_cb48b61f-511b-48e6-b00a-77c847badfb9--
 ";
 
+        private const string RequestPayloadVerifyDuplicateContentId = @"--batch_cb48b61f-511b-48e6-b00a-77c847badfb9
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+PUT http://odata.org/test/MySingleton HTTP/1.1
+Content-Type: application/json;odata.metadata=minimal;IEEE754Compatible=false;charset=utf-8
+Accept: application/json;odata.metadata=full
+
+{""@odata.type"":""#NS.Web"",""WebId"":1}
+--batch_cb48b61f-511b-48e6-b00a-77c847badfb9
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+PATCH http://odata.org/test/MySingleton HTTP/1.1
+OData-Version: 4.0
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+
+{""@odata.type"":""#NS.Web"",""WebId"":9}
+--batch_cb48b61f-511b-48e6-b00a-77c847badfb9
+";
+
         public MultipartMixedBatchDependsOnIdsTests()
         {
             this.userModel = new EdmModel();
@@ -147,6 +170,51 @@ Content-Type: application/json;odata.metadata=none
 
             this.singleton = new EdmSingleton(defaultContainer, "MySingleton", this.webType);
             this.defaultContainer.AddElement(this.singleton);
+        }
+
+        [Fact]
+        public void MultipartBatchTestDuplicateContentIdsV4()
+        {
+            Assert.True(ReadBatch(RequestPayloadVerifyDuplicateContentId, ODataVersion.V4), 
+                "Error reading a Multi-part Batch Payload with duplicate ContentIds outside a changeset.");
+        }
+
+        [Fact]
+        public void MultipartBatchTestDuplicateContentIdsFailsV401()
+        {
+            ODataException ode = Assert.Throws<ODataException>(
+                 () => ReadBatch(RequestPayloadVerifyDuplicateContentId, ODataVersion.V401));
+            Assert.True(ode.Message.Contains(
+                 "The content ID '1' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01."));
+        }
+
+        private bool ReadBatch(string requestPayload, ODataVersion version)
+        {
+            IODataRequestMessage requestMessage = new InMemoryMessage()
+            {
+                Stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(requestPayload))
+            };
+
+            requestMessage.SetHeader("Content-Type", batchContentTypeMultipartMime);
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { Version = version };
+
+            using (ODataMessageReader messageReader = new ODataMessageReader(requestMessage, settings, this.userModel))
+            {
+                ODataBatchReader batchReader = messageReader.CreateODataBatchReader();
+                while (batchReader.Read())
+                {
+                    switch (batchReader.State)
+                    {
+                        case ODataBatchReaderState.Operation:
+                            // Encountered an operation (either top-level or in a change set)
+                            ODataBatchOperationRequestMessage operationMessage =
+                                batchReader.CreateOperationRequestMessage();
+                            break;
+                    }
+                }
+            }
+
+            return true;
         }
 
         [Fact]
@@ -220,7 +288,7 @@ Content-Type: application/json;odata.metadata=none
             };
 
             requestMessage.SetHeader("Content-Type", batchContentTypeMultipartMime);
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { MaxProtocolVersion = maxVersion };
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { Version = maxVersion };
 
             using (ODataMessageReader messageReader = new ODataMessageReader(requestMessage, settings, this.userModel))
             {
