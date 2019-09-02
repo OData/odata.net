@@ -180,9 +180,43 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
+        public void BindApplyWitGroupByWithComplexShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/City))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode addressNode = groupingProperties[0];
+            addressNode.Name.Should().Be("MyAddress");
+            addressNode.Expression.Should().BeNull();
+            addressNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode cityNode = addressNode.ChildTransformations[0];
+            cityNode.Name.Should().Be("City");
+            cityNode.Expression.Should().NotBeNull();
+            cityNode.ChildTransformations.Should().BeEmpty();
+        }
+
+        [Fact]
         public void BindApplyWitGroupByWithDeepNavigationShouldReturnApplyClause()
         {
-            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/FastestOwner/MyFavoritePainting/Value))");
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/FastestOwner/FirstName))");
 
             MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
 
@@ -212,15 +246,313 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             ownerNode.Expression.Should().BeNull();
             ownerNode.ChildTransformations.Should().HaveCount(1);
 
-            GroupByPropertyNode paintingNode = ownerNode.ChildTransformations[0];
+            GroupByPropertyNode nameNode = ownerNode.ChildTransformations[0];
+            nameNode.Name.Should().Be("FirstName");
+            nameNode.Expression.Should().NotBeNull();
+            nameNode.ChildTransformations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BindApplyWitGroupByWithDeepComplexShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/NextHome/City))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode addressNode = groupingProperties[0];
+            addressNode.Name.Should().Be("MyAddress");
+            addressNode.Expression.Should().BeNull();
+            addressNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode nextHomeNode = addressNode.ChildTransformations[0];
+            nextHomeNode.Name.Should().Be("NextHome");
+            nextHomeNode.Expression.Should().BeNull();
+            nextHomeNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode cityNode = nextHomeNode.ChildTransformations[0];
+            cityNode.Name.Should().Be("City");
+            cityNode.Expression.Should().NotBeNull();
+            cityNode.ChildTransformations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BindApplyWitGroupByWithNavigationAndComplexShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyFavoritePainting/ArtistAddress/City))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode paintingNode = groupingProperties[0];
             paintingNode.Name.Should().Be("MyFavoritePainting");
             paintingNode.Expression.Should().BeNull();
             paintingNode.ChildTransformations.Should().HaveCount(1);
 
-            GroupByPropertyNode valueNode = paintingNode.ChildTransformations[0];
-            valueNode.Name.Should().Be("Value");
-            valueNode.Expression.Should().NotBeNull();
-            valueNode.ChildTransformations.Should().BeEmpty();
+            GroupByPropertyNode artistAddressNode = paintingNode.ChildTransformations[0];
+            artistAddressNode.Name.Should().Be("ArtistAddress");
+            artistAddressNode.Expression.Should().BeNull();
+            artistAddressNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode cityNode = artistAddressNode.ChildTransformations[0];
+            cityNode.Name.Should().Be("City");
+            cityNode.Expression.Should().NotBeNull();
+            cityNode.ChildTransformations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BindApplyWitGroupByWithComplexAndNavigationShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/PostBoxPainting/Artist))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode addressNode = groupingProperties[0];
+            addressNode.Name.Should().Be("MyAddress");
+            addressNode.Expression.Should().BeNull();
+            addressNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode postBoxPaintingNode = addressNode.ChildTransformations[0];
+            postBoxPaintingNode.Name.Should().Be("PostBoxPainting");
+            postBoxPaintingNode.Expression.Should().BeNull();
+            postBoxPaintingNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode artistNode = postBoxPaintingNode.ChildTransformations[0];
+            artistNode.Name.Should().Be("Artist");
+            artistNode.Expression.Should().NotBeNull();
+            artistNode.ChildTransformations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BindApplyWitGroupByWithDeepNavigationAndComplexShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/LionWhoAteMe/LionHeartbeat/Frequency))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode dogNode = groupingProperties[0];
+            dogNode.Name.Should().Be("MyDog");
+            dogNode.Expression.Should().BeNull();
+            dogNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode lionNode = dogNode.ChildTransformations[0];
+            lionNode.Name.Should().Be("LionWhoAteMe");
+            lionNode.Expression.Should().BeNull();
+            lionNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode heartBeatNode = lionNode.ChildTransformations[0];
+            heartBeatNode.Name.Should().Be("LionHeartbeat");
+            heartBeatNode.Expression.Should().BeNull();
+            heartBeatNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode frequencyNode = heartBeatNode.ChildTransformations[0];
+            frequencyNode.Name.Should().Be("Frequency");
+            frequencyNode.Expression.Should().NotBeNull();
+            frequencyNode.ChildTransformations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BindApplyWitGroupByWithDeepComplexAndNavigationShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/NextHome/PostBoxPainting/Artist))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode addressNode = groupingProperties[0];
+            addressNode.Name.Should().Be("MyAddress");
+            addressNode.Expression.Should().BeNull();
+            addressNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode nextHomeNode = addressNode.ChildTransformations[0];
+            nextHomeNode.Name.Should().Be("NextHome");
+            nextHomeNode.Expression.Should().BeNull();
+            nextHomeNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode postBoxPaintingNode = nextHomeNode.ChildTransformations[0];
+            postBoxPaintingNode.Name.Should().Be("PostBoxPainting");
+            postBoxPaintingNode.Expression.Should().BeNull();
+            postBoxPaintingNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode artistNode = postBoxPaintingNode.ChildTransformations[0];
+            artistNode.Name.Should().Be("Artist");
+            artistNode.Expression.Should().NotBeNull();
+            artistNode.ChildTransformations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BindApplyWitGroupByWithComplexAndDeepNavigationAndComplexShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/PostBoxPainting/Owner/MyAddress/City))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode addressNode = groupingProperties[0];
+            addressNode.Name.Should().Be("MyAddress");
+            addressNode.Expression.Should().BeNull();
+            addressNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode postBoxPaintingNode = addressNode.ChildTransformations[0];
+            postBoxPaintingNode.Name.Should().Be("PostBoxPainting");
+            postBoxPaintingNode.Expression.Should().BeNull();
+            postBoxPaintingNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode ownerNode = postBoxPaintingNode.ChildTransformations[0];
+            ownerNode.Name.Should().Be("Owner");
+            ownerNode.Expression.Should().BeNull();
+            ownerNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode ownerAddressNode = ownerNode.ChildTransformations[0];
+            ownerAddressNode.Name.Should().Be("MyAddress");
+            ownerAddressNode.Expression.Should().BeNull();
+            ownerAddressNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode cityNode = ownerAddressNode.ChildTransformations[0];
+            cityNode.Name.Should().Be("City");
+            cityNode.Expression.Should().NotBeNull();
+            cityNode.ChildTransformations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BindApplyWitGroupByWithNavigationAndDeepComplexAndNavigationShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyFavoritePainting/ArtistAddress/NextHome/PostBoxPainting/Artist))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+            groupBy.ChildTransformations.Should().BeNull();
+
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode favoritePaintingNode = groupingProperties[0];
+            favoritePaintingNode.Name.Should().Be("MyFavoritePainting");
+            favoritePaintingNode.Expression.Should().BeNull();
+            favoritePaintingNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode artistAddressNode = favoritePaintingNode.ChildTransformations[0];
+            artistAddressNode.Name.Should().Be("ArtistAddress");
+            artistAddressNode.Expression.Should().BeNull();
+            artistAddressNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode nextHomeNode = artistAddressNode.ChildTransformations[0];
+            nextHomeNode.Name.Should().Be("NextHome");
+            nextHomeNode.Expression.Should().BeNull();
+            nextHomeNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode postBoxPaintingNode = nextHomeNode.ChildTransformations[0];
+            postBoxPaintingNode.Name.Should().Be("PostBoxPainting");
+            postBoxPaintingNode.Expression.Should().BeNull();
+            postBoxPaintingNode.ChildTransformations.Should().HaveCount(1);
+
+            GroupByPropertyNode artistNode = postBoxPaintingNode.ChildTransformations[0];
+            artistNode.Name.Should().Be("Artist");
+            artistNode.Expression.Should().NotBeNull();
+            artistNode.ChildTransformations.Should().BeEmpty();
         }
 
         [Fact]
