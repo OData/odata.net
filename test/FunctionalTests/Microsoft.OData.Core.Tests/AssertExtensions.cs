@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -36,6 +38,23 @@ namespace Microsoft.OData.Tests
         {
             T exception = Assert.ThrowsAny<T>(testCode);
             Assert.Equal(errorMessage, exception.Message);
+        }
+
+        /// <summary>
+        /// Verifies that the exact enumerable has the same order and items.
+        /// </summary>
+        /// <typeparam name="T">The type of the element.</typeparam>
+        /// <param name="enumerable">The test enumerable.</param>
+        /// <param name="expectedElements">The expected elements.</param>
+        public static void ContainExactly<T>(this IEnumerable<T> enumerable, T[] expectedElements)
+        {
+            Assert.Equal(enumerable.Count(), expectedElements.Length);
+
+            int index = 0;
+            foreach (var item in enumerable)
+            {
+                Assert.Equal(item, expectedElements[index++]);
+            }
         }
     }
 }

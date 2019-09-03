@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -18,50 +17,50 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TargetEdmEntitySetIsEntitySet()
         {
             EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            segment.TargetEdmNavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), segment.TargetEdmNavigationSource);
         }
 
         [Fact]
         public void TargetEdmTypeIsTypeOfEntitySet()
         {
             EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            segment.TargetEdmType.Should().BeSameAs(HardCodedTestModel.GetPeopleSet().EntityType());
+            Assert.Same(HardCodedTestModel.GetPeopleSet().EntityType(), segment.TargetEdmType);
         }
 
         [Fact]
         public void TargetKindIsResource()
         {
             EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            segment.TargetKind.Should().Be(RequestTargetKind.Resource);
+            Assert.Equal(RequestTargetKind.Resource, segment.TargetKind);
         }
 
         [Fact]
         public void SingleResultIsFalse()
         {
             EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            segment.SingleResult.Should().BeFalse();
+            Assert.False(segment.SingleResult);
         }
 
         [Fact]
         public void EntitySetCannotBeNull()
         {
             Action createWithNullEntitySet = () => new EntitySetSegment(null);
-            createWithNullEntitySet.ShouldThrow<Exception>(Error.ArgumentNull("identifier").ToString());
+            Assert.Throws<ArgumentNullException>("entitySet", createWithNullEntitySet);
         }
 
         [Fact]
         public void EntitySetSetCorrectly()
         {
             EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            segment.EntitySet.Name.Should().Be(HardCodedTestModel.GetPeopleSet().Name);
+            Assert.Equal(HardCodedTestModel.GetPeopleSet().Name, segment.EntitySet.Name);
         }
 
         [Fact]
         public void TypeComuptedCorrecretly()
         {
             EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            segment.EdmType.Should().BeOfType<EdmCollectionType>();
-            segment.EdmType.As<EdmCollectionType>().ShouldBeEquivalentTo<IEdmType>(new EdmCollectionType(new EdmEntityTypeReference(HardCodedTestModel.GetPersonType(), false)));
+            EdmCollectionType collectionType = Assert.IsType<EdmCollectionType>(segment.EdmType);
+            Assert.True(collectionType.IsEquivalentTo(new EdmCollectionType(new EdmEntityTypeReference(HardCodedTestModel.GetPersonType(), false))));
         }
 
         [Fact]
@@ -69,7 +68,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntitySetSegment segment1 = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
             EntitySetSegment segment2 = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            segment1.Equals(segment2).Should().BeTrue();
+            Assert.True(segment1.Equals(segment2));
         }
 
         [Fact]
@@ -78,8 +77,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             EntitySetSegment segment1 = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
             EntitySetSegment segment2 = new EntitySetSegment(HardCodedTestModel.GetDogsSet());
             BatchSegment segment3 = BatchSegment.Instance;
-            segment1.Equals(segment2).Should().BeFalse();
-            segment1.Equals(segment3).Should().BeFalse();
+            Assert.False(segment1.Equals(segment2));
+            Assert.False(segment1.Equals(segment3));
         }
     }
 }
