@@ -332,6 +332,11 @@ namespace Microsoft.OData.UriParser
         /// <returns>An expand term token based on the path token, and all available expand options.</returns>
         private List<ExpandTermToken> BuildStarExpandTermToken(PathSegmentToken pathToken)
         {
+            if (this.parentStructuredType == null)
+            {
+                throw new ODataException(ODataErrorStrings.UriExpandParser_ParentStructuredTypeIsNull(this.lexer.ExpressionText));
+            }
+
             List<ExpandTermToken> expandTermTokenList = new List<ExpandTermToken>();
             long? levelsOption = null;
             bool isRefExpand = (pathToken.Identifier == UriQueryConstants.RefSegment);
@@ -402,14 +407,7 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
             }
 
-            // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
-            var entityType = this.parentStructuredType as IEdmEntityType;
-            if (entityType == null)
-            {
-                throw new ODataException(ODataErrorStrings.UriExpandParser_ParentEntityIsNull(this.lexer.ExpressionText));
-            }
-
-            foreach (var navigationProperty in entityType.NavigationProperties())
+            foreach (var navigationProperty in this.parentStructuredType.NavigationProperties())
             {
                 var tmpPathToken = default(PathSegmentToken);
 
