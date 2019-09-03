@@ -11,6 +11,7 @@ using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -19,48 +20,48 @@ namespace Microsoft.OData.Tests.UriParser
     /// </summary>
     internal static class SegmentAssertions
     {
-        public static AndConstraint<CountSegment> ShouldBeCountSegment(this ODataPathSegment segment)
+        public static CountSegment ShouldBeCountSegment(this ODataPathSegment segment)
         {
-            segment.Should().BeOfType<CountSegment>();
-            return new AndConstraint<CountSegment>(segment.As<CountSegment>());
+            Assert.NotNull(segment);
+            return Assert.IsType<CountSegment>(segment);
         }
 
-        public static AndConstraint<FilterSegment> ShouldBeFilterSegment(this ODataPathSegment segment)
+        public static FilterSegment ShouldBeFilterSegment(this ODataPathSegment segment)
         {
-            segment.Should().BeOfType<FilterSegment>();
-            return new AndConstraint<FilterSegment>(segment.As<FilterSegment>());
+            Assert.NotNull(segment);
+            return Assert.IsType<FilterSegment>(segment);
         }
 
-        public static AndConstraint<EachSegment> ShouldBeEachSegment(this ODataPathSegment segment)
+        public static EachSegment ShouldBeEachSegment(this ODataPathSegment segment)
         {
-            segment.Should().BeOfType<EachSegment>();
-            return new AndConstraint<EachSegment>(segment.As<EachSegment>());
+            Assert.NotNull(segment);
+            return Assert.IsType<EachSegment>(segment);
         }
 
-        public static AndConstraint<BatchSegment> ShouldBeBatchSegment(this ODataPathSegment segment)
+        public static BatchSegment ShouldBeBatchSegment(this ODataPathSegment segment)
         {
-            segment.Should().BeOfType<BatchSegment>();
-            return new AndConstraint<BatchSegment>(segment.As<BatchSegment>());
+            Assert.NotNull(segment);
+            return Assert.IsType<BatchSegment>(segment);
         }
 
-        public static AndConstraint<NavigationPropertyLinkSegment> ShouldBeNavigationPropertyLinkSegment(this ODataPathSegment segment, IEdmNavigationProperty navigationProperty)
+        public static NavigationPropertyLinkSegment ShouldBeNavigationPropertyLinkSegment(this ODataPathSegment segment, IEdmNavigationProperty navigationProperty)
         {
-            segment.Should().BeOfType<NavigationPropertyLinkSegment>();
-            NavigationPropertyLinkSegment navigationPropertyLinkSegment = segment.As<NavigationPropertyLinkSegment>();
-            navigationPropertyLinkSegment.NavigationProperty.Should().Be(navigationProperty);
-            return new AndConstraint<NavigationPropertyLinkSegment>(navigationPropertyLinkSegment);
+            Assert.NotNull(segment);
+            NavigationPropertyLinkSegment navigationPropertyLinkSegment = Assert.IsType<NavigationPropertyLinkSegment>(segment);
+            Assert.Same(navigationProperty, navigationPropertyLinkSegment.NavigationProperty);
+            return navigationPropertyLinkSegment;
         }
 
-        public static AndConstraint<MetadataSegment> ShouldBeMetadataSegment(this ODataPathSegment segment)
+        public static MetadataSegment ShouldBeMetadataSegment(this ODataPathSegment segment)
         {
-            segment.Should().BeOfType<MetadataSegment>();
-            return new AndConstraint<MetadataSegment>(segment.As<MetadataSegment>());
+            Assert.NotNull(segment);
+            return Assert.IsType<MetadataSegment>(segment);
         }
 
-        public static AndConstraint<ValueSegment> ShouldBeValueSegment(this ODataPathSegment segment)
+        public static ValueSegment ShouldBeValueSegment(this ODataPathSegment segment)
         {
-            segment.Should().BeOfType<ValueSegment>();
-            return new AndConstraint<ValueSegment>(segment.As<ValueSegment>());
+            Assert.NotNull(segment);
+            return Assert.IsType<ValueSegment>(segment);
         }
 
         public static AndConstraint<TypeSegment> ShouldBeTypeSegment(this ODataPathSegment segment, IEdmType type)
@@ -144,37 +145,37 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<BatchReferenceSegment>(batchReferenceSegment);
         }
 
-        public static AndConstraint<EntitySetSegment> ShouldBeEntitySetSegment(this ODataPathSegment segment, IEdmEntitySet entitySet)
+        public static EntitySetSegment ShouldBeEntitySetSegment(this ODataPathSegment segment, IEdmEntitySet entitySet)
         {
-            segment.Should().BeOfType<EntitySetSegment>();
-            EntitySetSegment entitySetSegment = segment.As<EntitySetSegment>();
-            entitySetSegment.EntitySet.Should().BeSameAs(entitySet);
-            return new AndConstraint<EntitySetSegment>(entitySetSegment);
+            Assert.NotNull(segment);
+            EntitySetSegment entitySetSegment = Assert.IsType<EntitySetSegment>(segment);
+            Assert.Same(entitySet, entitySetSegment.EntitySet);
+            return entitySetSegment;
         }
 
-        public static AndConstraint<SingletonSegment> ShouldBeSingletonSegment(this ODataPathSegment segment, IEdmSingleton singleton)
+        public static SingletonSegment ShouldBeSingletonSegment(this ODataPathSegment segment, IEdmSingleton singleton)
         {
-            segment.Should().BeOfType<SingletonSegment>();
-            SingletonSegment singletonSegment = segment.As<SingletonSegment>();
-            singletonSegment.Singleton.Should().BeSameAs(singleton);
-            return new AndConstraint<SingletonSegment>(singletonSegment);
+            Assert.NotNull(segment);
+            SingletonSegment singletonSegment = Assert.IsType<SingletonSegment>(segment);
+            Assert.Same(singleton, singletonSegment.Singleton);
+            return singletonSegment;
         }
 
-        public static AndConstraint<KeySegment> ShouldBeKeySegment(this ODataPathSegment segment, params KeyValuePair<string, object>[] keys)
+        public static KeySegment ShouldBeKeySegment(this ODataPathSegment segment, params KeyValuePair<string, object>[] keys)
         {
-            segment.Should().BeOfType<KeySegment>();
-            KeySegment entitySetSegment = segment.As<KeySegment>();
-            entitySetSegment.Keys.Should().ContainExactly(keys);
-            return new AndConstraint<KeySegment>(entitySetSegment);
+            Assert.NotNull(segment);
+            KeySegment keySegment = Assert.IsType<KeySegment>(segment);
+            keySegment.Keys.ContainExactly(keys);
+            return keySegment;
         }
 
-        public static AndConstraint<KeySegment> ShouldBeSimpleKeySegment(this ODataPathSegment segment, object value)
+        public static KeySegment ShouldBeSimpleKeySegment(this ODataPathSegment segment, object value)
         {
-            segment.Should().BeOfType<KeySegment>();
-            KeySegment entitySetSegment = segment.As<KeySegment>();
-            entitySetSegment.Keys.Count().Should().Be(1);
-            entitySetSegment.Keys.Single().Value.Should().Be(value);
-            return new AndConstraint<KeySegment>(entitySetSegment);
+            Assert.NotNull(segment);
+            KeySegment keySegment = Assert.IsType<KeySegment>(segment);
+            var key = Assert.Single(keySegment.Keys);
+            Assert.Equal(value, key.Value);
+            return keySegment;
         }
 
         public static AndConstraint<OperationSegment> ShouldHaveParameterCount(this OperationSegment segment, int count)

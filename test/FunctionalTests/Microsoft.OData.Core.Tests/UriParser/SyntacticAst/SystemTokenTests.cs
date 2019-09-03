@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -17,21 +16,21 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void IdentifierCannotBeNull()
         {
             Action createWithNullIdentifier = () => new SystemToken(null, null);
-            createWithNullIdentifier.ShouldThrow<Exception>(Error.ArgumentNull("identifier").ToString());
+            Assert.Throws<ArgumentNullException>("identifier", createWithNullIdentifier);
         }
 
         [Fact]
         public void IdentifierSetCorrectly()
         {
             SystemToken token = new SystemToken("stuff", null);
-            token.Identifier.Should().Be("stuff");
+            Assert.Equal("stuff", token.Identifier);
         }
 
         [Fact]
         public void IsNamespaceOrContainerQualifiedIsFalse()
         {
             SystemToken token = new SystemToken("more stuff", null);
-            token.IsNamespaceOrContainerQualified().Should().BeFalse();
+            Assert.False(token.IsNamespaceOrContainerQualified());
         }
     }
 }
