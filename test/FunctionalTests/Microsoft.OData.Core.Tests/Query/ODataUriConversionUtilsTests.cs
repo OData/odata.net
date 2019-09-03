@@ -4,53 +4,28 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
-using Microsoft.OData.UriParser;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Query
 {
     public class ODataUriConvesionUtilsTests
     {
-        [Fact]
-        public void DoubleLiteralShouldNotHaveDecimalPointForScientificNotation()
+        [Theory]
+        [InlineData(1e+100, "1E+100")]
+        [InlineData(-1e+100, "-1E+100")]
+        [InlineData(1e-100, "1E-100")]
+        [InlineData(-1e-100, "-1E-100")]
+        [InlineData(double.PositiveInfinity, "INF")]
+        [InlineData(double.NegativeInfinity, "-INF")]
+        [InlineData(double.NaN, "NaN")]
+        [InlineData(12.345, "12.345")]
+        [InlineData(-12.345, "-12.345")]
+        [InlineData(100D, "100.0")] // DoubleLiteralShouldHaveDecimalPointForWholeNumber
+        [InlineData(-100D, "-100.0")] // DoubleLiteralShouldHaveDecimalPointForWholeNumber
+        public void ConvertToUriPrimitiveLiteralUsingPrimitiveValueWorks(object value, string expect)
         {
-            PrimitiveLiteral(1e+100).Should().Be("1E+100");
-            PrimitiveLiteral(-1e+100).Should().Be("-1E+100");
-            PrimitiveLiteral(1e-100).Should().Be("1E-100");
-            PrimitiveLiteral(-1e-100).Should().Be("-1E-100");
-        }
-
-        [Fact]
-        public void DoubleLiteralShouldNotHaveDecimalPointOrTypeMarkerForInfinity()
-        {
-            PrimitiveLiteral(double.PositiveInfinity).Should().Be("INF");
-            PrimitiveLiteral(double.NegativeInfinity).Should().Be("-INF");
-        }
-
-        [Fact]
-        public void DoubleLiteralShouldNotHaveDecimalPointOrTypeMarkerForNaN()
-        {
-            PrimitiveLiteral(double.NaN).Should().Be("NaN");
-        }
-
-        [Fact]
-        public void DoubleLiteralShouldHaveExactlyOneDecimalPointForRealNumber()
-        {
-            PrimitiveLiteral(12.345).Should().Be("12.345");
-            PrimitiveLiteral(-12.345).Should().Be("-12.345");
-        }
-
-        [Fact]
-        public void DoubleLiteralShouldHaveDecimalPointForWholeNumber()
-        {
-            PrimitiveLiteral(100D).Should().Be("100.0");
-            PrimitiveLiteral(-100D).Should().Be("-100.0");
-        }
-
-        private static string PrimitiveLiteral(object value)
-        {
-            return ODataUriConversionUtils.ConvertToUriPrimitiveLiteral(value, ODataVersion.V4);
+            string actual = ODataUriConversionUtils.ConvertToUriPrimitiveLiteral(value, ODataVersion.V4);
+            Assert.Equal(expect, actual);
         }
     }
 }

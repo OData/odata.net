@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -15,19 +14,19 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void IdentifierIsCount()
         {
-            CountSegment.Instance.Identifier.Should().Be(UriQueryConstants.CountSegment);
+            Assert.Equal(UriQueryConstants.CountSegment, CountSegment.Instance.Identifier);
         }
 
         [Fact]
         public void SingleResultIsTrue()
         {
-            CountSegment.Instance.SingleResult.Should().BeTrue();
+            Assert.True(CountSegment.Instance.SingleResult);
         }
 
         [Fact]
         public void TargetKindIsPrimitive()
         {
-            CountSegment.Instance.TargetKind.Should().Be(RequestTargetKind.PrimitiveValue);
+            Assert.Equal(RequestTargetKind.PrimitiveValue, CountSegment.Instance.TargetKind);
         }
 
         [Fact]
@@ -35,7 +34,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             CountSegment segment1 = CountSegment.Instance;
             CountSegment segment2 = CountSegment.Instance;
-            segment1.Equals(segment2).Should().BeTrue();
+            Assert.Same(segment1, segment2);
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             CountSegment segment1 = CountSegment.Instance;
             BatchSegment segment2 = BatchSegment.Instance;
-            segment1.Equals(segment2).Should().BeFalse();
+            Assert.NotSame(segment1, segment2);
         }
     }
 }

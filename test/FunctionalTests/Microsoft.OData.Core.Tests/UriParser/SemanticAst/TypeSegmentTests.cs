@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -18,14 +17,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TargetTypeCannotBeNull()
         {
             Action createWithNullTargetType = () => new TypeSegment(null, null);
-            createWithNullTargetType.ShouldThrow<Exception>(Error.ArgumentNull("identifier").ToString());
+            Assert.Throws<ArgumentNullException>("actualType", createWithNullTargetType);
         }
 
         [Fact]
         public void TargetEdmTypeIsTargetType()
         {
             TypeSegment typeSegment = new TypeSegment(HardCodedTestModel.GetPersonType(), null);
-            typeSegment.TargetEdmType.Should().BeSameAs(HardCodedTestModel.GetPersonType());
+            Assert.Same(HardCodedTestModel.GetPersonType(), typeSegment.TargetEdmType);
         }
 
         [Fact]
@@ -33,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             IEdmType type = ModelBuildingHelpers.BuildValidEntityType();
             TypeSegment segment = new TypeSegment(type, null);
-            segment.EdmType.Should().BeSameAs(type);
+            Assert.Same(type, segment.EdmType);
         }
 
         [Fact]
@@ -42,14 +41,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var set = ModelBuildingHelpers.BuildValidEntitySet();
             IEdmType type = set.EntityType();
             TypeSegment segment = new TypeSegment(type, set);
-            segment.NavigationSource.Should().BeSameAs(set);
+            Assert.Same(set, segment.NavigationSource);
         }
 
         [Fact]
         public void TypeMustBeRelatedToSet()
         {
             Action create = () => new TypeSegment(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetDogsSet());
-            create.ShouldThrow<ODataException>().WithMessage(Strings.PathParser_TypeMustBeRelatedToSet(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetDogType(), "TypeSegments"));
+            create.Throws<ODataException>(Strings.PathParser_TypeMustBeRelatedToSet(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetDogType(), "TypeSegments"));
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             TypeSegment typeSegment1 = new TypeSegment(HardCodedTestModel.GetPersonType(), null);
             TypeSegment typeSegment2 = new TypeSegment(HardCodedTestModel.GetPersonType(), null);
-            typeSegment1.Equals(typeSegment2).Should().BeTrue();
+            Assert.True(typeSegment1.Equals(typeSegment2));
         }
 
         [Fact]
@@ -66,16 +65,16 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             TypeSegment typeSegment1 = new TypeSegment(HardCodedTestModel.GetPersonType(), null);
             TypeSegment typeSegment2 = new TypeSegment(HardCodedTestModel.GetDogType(), null);
             BatchSegment batchSegment = BatchSegment.Instance;
-            typeSegment1.Equals(typeSegment2).Should().BeFalse();
-            typeSegment1.Equals(batchSegment).Should().BeFalse();
+            Assert.False(typeSegment1.Equals(typeSegment2));
+            Assert.False(typeSegment1.Equals(batchSegment));
         }
 
         [Fact]
         public void CreateTypeSegmentWithExpectType()
         {
             TypeSegment typeSegment = new TypeSegment(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetEmployeeType(), null);
-            typeSegment.EdmType.Should().BeSameAs(HardCodedTestModel.GetPersonType());
-            typeSegment.TargetEdmType.Should().BeSameAs(HardCodedTestModel.GetEmployeeType());
+            Assert.Same(HardCodedTestModel.GetPersonType(), typeSegment.EdmType);
+            Assert.Same(HardCodedTestModel.GetEmployeeType(), typeSegment.TargetEdmType);
         }
     }
 }

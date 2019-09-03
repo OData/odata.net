@@ -136,7 +136,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var path = PathFunctionalTestsUtil.RunParsePath("GetCoolPeople(1)");
             path.FirstSegment.Should().BeOfType<OperationImportSegment>();
             path.LastSegment.ShouldBeSimpleKeySegment(1)
-                .And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+                .NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SimpleKeyLookup()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Dogs(1)");
-            path.LastSegment.ShouldBeSimpleKeySegment(1).And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
+            path.LastSegment.ShouldBeSimpleKeySegment(1).NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
@@ -681,7 +681,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Dogs(1)/MyPeople(2)");
             path.LastSegment.ShouldBeSimpleKeySegment(2)
-                .And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+                .NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
             path.NavigationSource().Should().Be(HardCodedTestModel.GetPeopleSet());
         }
 
