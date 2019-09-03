@@ -5129,10 +5129,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot get parent entity type for term '{0}' to auto populate all navigation properties."
+        /// A string like "Cannot get parent structured type for term '{0}' to auto populate all navigation properties."
         /// </summary>
-        internal static string UriExpandParser_ParentEntityIsNull(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriExpandParser_ParentEntityIsNull, p0);
+        internal static string UriExpandParser_ParentStructuredTypeIsNull(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriExpandParser_ParentStructuredTypeIsNull, p0);
         }
 
         /// <summary>
