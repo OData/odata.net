@@ -23,9 +23,9 @@ namespace Microsoft.OData.UriParser
         private readonly ODataUriResolver resolver;
 
         /// <summary>
-        /// The parent entity type for expand option in case expand option is star, get all parent entity navigation properties, it is an IEdmStructuredType.
+        /// The parent structured type for expand option in case expand option is star, get all parent structured navigation properties, it is an IEdmStructuredType.
         /// </summary>
-        private readonly IEdmStructuredType parentEntityType;
+        private readonly IEdmStructuredType parentStructuredType;
 
         /// <summary>
         /// The maximum allowable recursive depth.
@@ -93,21 +93,21 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="resolver">the URI resolver which will resolve different kinds of Uri parsing context</param>
         /// <param name="clauseToParse">the clause to parse</param>
-        /// <param name="parentEntityType">the parent entity type for expand option</param>
+        /// <param name="parentStructuredType">the parent structured type for expand option</param>
         /// <param name="maxRecursiveDepth">max recursive depth</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
         public SelectExpandParser(
             ODataUriResolver resolver,
             string clauseToParse,
-            IEdmStructuredType parentEntityType,
+            IEdmStructuredType parentStructuredType,
             int maxRecursiveDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
             bool enableNoDollarQueryOptions = false)
             : this(clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
         {
             this.resolver = resolver;
-            this.parentEntityType = parentEntityType;
+            this.parentStructuredType = parentStructuredType;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Microsoft.OData.UriParser
                 {
                     this.selectExpandOptionParser = new SelectExpandOptionParser(
                         this.resolver,
-                        this.parentEntityType,
+                        this.parentStructuredType,
                         this.maxRecursiveDepth,
                         this.enableCaseInsensitiveBuiltinIdentifier,
                         this.enableNoDollarQueryOptions)

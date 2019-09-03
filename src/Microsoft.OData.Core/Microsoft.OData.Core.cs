@@ -736,7 +736,7 @@ namespace Microsoft.OData {
         internal const string ExpandTreeNormalizer_NonPathInPropertyChain = "ExpandTreeNormalizer_NonPathInPropertyChain";
         internal const string UriExpandParser_TermIsNotValidForStar = "UriExpandParser_TermIsNotValidForStar";
         internal const string UriExpandParser_TermIsNotValidForStarRef = "UriExpandParser_TermIsNotValidForStarRef";
-        internal const string UriExpandParser_ParentEntityIsNull = "UriExpandParser_ParentEntityIsNull";
+        internal const string UriExpandParser_ParentStructuredTypeIsNull = "UriExpandParser_ParentStructuredTypeIsNull";
         internal const string UriExpandParser_TermWithMultipleStarNotAllowed = "UriExpandParser_TermWithMultipleStarNotAllowed";
         internal const string UriSelectParser_TermIsNotValid = "UriSelectParser_TermIsNotValid";
         internal const string UriSelectParser_InvalidTopOption = "UriSelectParser_InvalidTopOption";
