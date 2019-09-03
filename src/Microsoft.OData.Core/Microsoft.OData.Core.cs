@@ -709,10 +709,11 @@ namespace Microsoft.OData {
         internal const string Binder_IsNotValidEnumConstant = "Binder_IsNotValidEnumConstant";
         internal const string BatchReferenceSegment_InvalidContentID = "BatchReferenceSegment_InvalidContentID";
         internal const string SelectExpandBinder_UnknownPropertyType = "SelectExpandBinder_UnknownPropertyType";
+        internal const string SelectExpandBinder_InvalidIdentifierAfterWildcard = "SelectExpandBinder_InvalidIdentifierAfterWildcard";
+        internal const string SelectExpandBinder_InvalidQueryOptionNestedSelection = "SelectExpandBinder_InvalidQueryOptionNestedSelection";
+        internal const string SelectExpandBinder_SystemTokenInSelect = "SelectExpandBinder_SystemTokenInSelect";
         internal const string SelectionItemBinder_NoExpandForSelectedProperty = "SelectionItemBinder_NoExpandForSelectedProperty";
         internal const string SelectExpandPathBinder_FollowNonTypeSegment = "SelectExpandPathBinder_FollowNonTypeSegment";
-        internal const string SelectPropertyVisitor_SystemTokenInSelect = "SelectPropertyVisitor_SystemTokenInSelect";
-        internal const string SelectPropertyVisitor_DisparateTypeSegmentsInSelectExpand = "SelectPropertyVisitor_DisparateTypeSegmentsInSelectExpand";
         internal const string SelectBinder_MultiLevelPathInSelect = "SelectBinder_MultiLevelPathInSelect";
         internal const string ExpandItemBinder_TraversingANonNormalizedTree = "ExpandItemBinder_TraversingANonNormalizedTree";
         internal const string ExpandItemBinder_CannotFindType = "ExpandItemBinder_CannotFindType";
@@ -734,6 +735,7 @@ namespace Microsoft.OData {
         internal const string Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum = "Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum";
         internal const string Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType = "Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType";
         internal const string ExpandTreeNormalizer_NonPathInPropertyChain = "ExpandTreeNormalizer_NonPathInPropertyChain";
+        internal const string SelectTreeNormalizer_MultipleQueryOptionsFound = "SelectTreeNormalizer_MultipleQueryOptionsFound";
         internal const string UriExpandParser_TermIsNotValidForStar = "UriExpandParser_TermIsNotValidForStar";
         internal const string UriExpandParser_TermIsNotValidForStarRef = "UriExpandParser_TermIsNotValidForStarRef";
         internal const string UriExpandParser_ParentStructuredTypeIsNull = "UriExpandParser_ParentStructuredTypeIsNull";

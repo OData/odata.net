@@ -101,6 +101,59 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
+        public void NamespaceQualifiedWithWildcardResultsNamespaceQualifiedWildcardSelectItem()
+        {
+            // Arrange
+            SelectItem selectItem;
+            PathSegmentToken pathSegment = new NonSystemToken("Fully.Qualified.Namespace.*", null, null);
+
+            // Act
+            var result = SelectPathSegmentTokenBinder.TryBindAsWildcard(pathSegment, HardCodedTestModel.TestModel, out selectItem);
+
+            // Assert
+            Assert.True(result);
+            Assert.NotNull(selectItem);
+            NamespaceQualifiedWildcardSelectItem namesapceQualifiedSelectItem = Assert.IsType<NamespaceQualifiedWildcardSelectItem>(selectItem);
+            Assert.NotNull(namesapceQualifiedSelectItem);
+            Assert.Equal("Fully.Qualified.Namespace", namesapceQualifiedSelectItem.Namespace);
+        }
+
+        [Fact]
+        public void WithWildcardResultsWildcardSelectItem()
+        {
+            // Arrange
+            SelectItem selectItem;
+            PathSegmentToken pathSegment = new NonSystemToken("*", null, null);
+
+            // Act
+            var result = SelectPathSegmentTokenBinder.TryBindAsWildcard(pathSegment, HardCodedTestModel.TestModel, out selectItem);
+
+            // Assert
+            Assert.True(result);
+            Assert.NotNull(selectItem);
+            Assert.IsType<WildcardSelectItem>(selectItem);
+        }
+
+        [Theory]
+        [InlineData("Unknown.Namespace.*")]
+        [InlineData("abc.*")]
+        [InlineData("abc")]
+        [InlineData("Shoe")]
+        public void NotWildcardAndNotNamespaceQualifiedWildcardResultsWildcardSelectItem(string identifier)
+        {
+            // Arrange
+            SelectItem selectItem;
+            PathSegmentToken pathSegment = new NonSystemToken(identifier, null, null);
+
+            // Act
+            var result = SelectPathSegmentTokenBinder.TryBindAsWildcard(pathSegment, HardCodedTestModel.TestModel, out selectItem);
+
+            // Assert
+            Assert.False(result);
+            Assert.Null(selectItem);
+        }
+
+        [Fact]
         public void QualifiedNameShouldTreatAsDynamicPropertyInOpenType()
         {
             var segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("A.B", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetOpenEmployeeType(), DefaultUriResolver);
@@ -148,7 +201,6 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action visit = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Walk", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType(), DefaultUriResolver);
             visit.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetDogType(), "Walk"));
         }
-
 
         [Fact]
         public void ValidateThrowInFindOperationsByBindingParameterTypeHierarchyExceptionDoesNotSurface()

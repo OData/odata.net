@@ -104,9 +104,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="orderByOption">An Orderby clause for this expand (can be null)</param>
         /// <param name="topOption">A top clause for this expand (can be null)</param>
         /// <param name="skipOption">A skip clause for this expand (can be null)</param>
-        /// <param name="countOption">An query count clause for this expand (can be null)</param>
-        /// <param name="searchOption">An levels clause for this expand (can be null)</param>
-        /// <param name="levelsOption">An levels clause for this expand (can be null)</param>
+        /// <param name="countOption">A query count clause for this expand (can be null)</param>
+        /// <param name="searchOption">A search clause for this expand (can be null)</param>
+        /// <param name="levelsOption">A levels clause for this expand (can be null)</param>
         /// <param name="computeOption">A compute clause for this expand (can be null)</param>
         /// <param name="applyOption">An apply clause for this expand (can be null)</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>

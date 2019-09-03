@@ -765,12 +765,12 @@ Binder_IsNotValidEnumConstant=The string '{0}' is not a valid enumeration type c
 BatchReferenceSegment_InvalidContentID=Invalid content-id '{0}' for batch reference segment.
 
 SelectExpandBinder_UnknownPropertyType=Property '{0}' is of an unrecognized EdmPropertyKind.
+SelectExpandBinder_InvalidIdentifierAfterWildcard=It's not allowed to append '{0}' after wildcard.
+SelectExpandBinder_InvalidQueryOptionNestedSelection=It's not allowed to nest query options within '{0}' selection.
+SelectExpandBinder_SystemTokenInSelect=Found a system token, '{0}', while parsing a select clause.
 SelectionItemBinder_NoExpandForSelectedProperty=Only properties specified in $expand can be traversed in $select query options. Selected item was '{0}'.
 
 SelectExpandPathBinder_FollowNonTypeSegment=Trying to follow type segments on a segment that isn't a type. Segment was '{0}'.
-
-SelectPropertyVisitor_SystemTokenInSelect=Found a system token, '{0}', while parsing a select clause.
-SelectPropertyVisitor_DisparateTypeSegmentsInSelectExpand=Any selection that is expanded must have the same type qualifier on both selection and expansion.
 
 SelectBinder_MultiLevelPathInSelect=Found a path with multiple navigation properties or a bad complex property path in a select clause. Please reword your query such that each level of select or expand only contains either TypeSegments or Properties.
 
@@ -796,6 +796,7 @@ Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An inst
 Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType=An instance of InNode can only be created where the item types of the right operand '{0}' and the left operand '{1}' can be compared.
 
 ExpandTreeNormalizer_NonPathInPropertyChain=Found a segment that isn't a path while parsing the path within a select or expand query option.
+SelectTreeNormalizer_MultipleQueryOptionsFound=Found mutliple '{0}' query options at one $select.
 
 UriExpandParser_TermIsNotValidForStar=Term '{0}' is not valid in a $expand expression, as only $level option is allowed when the expanded navigation property is star.
 UriExpandParser_TermIsNotValidForStarRef=Term '{0}' is not valid in a $expand expression, no option is allowed when the expanded navigation property is */$ref.

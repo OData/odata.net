@@ -24,7 +24,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
     public class SelectExpandFunctionalTests
     {
         #region $select with no $expand
-
         [Fact]
         public void SelectSingleDeclaredPropertySucceeds()
         {
@@ -1288,14 +1287,171 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectAndExpandShouldFailOnSelectComplexPropertiesWithWrongTypeCast()
         {
             Action parse = () => RunParseSelectExpand("Name,MyAddress/Fully.Qualified.Namespace.OpenAddress/HomeNO,MyDog", "MyDog($select=Color)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+
+            parse.Throws<ODataException>(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
         }
 
         // TODO: Tests cases with query options
 
         #endregion
 
-        #region "$select and generated properties"
+        #region $select with nested query options
+        [Fact]
+        public void SelectWithNestedFilterWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "PreviousAddresses($filter=Street eq 'abc')"}
+                });
+
+            // Act
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectClause);
+            Assert.False(selectClause.AllSelected);
+            var pathSelectItem = Assert.IsType<PathSelectItem>(Assert.Single(selectClause.SelectedItems));
+            pathSelectItem.SelectedPath.Equals(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp())));
+
+            Assert.NotNull(pathSelectItem.FilterOption);
+            pathSelectItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+        }
+
+        [Fact]
+        public void SelectWithNestedTopSkipAndCountWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "PreviousAddresses($top=4;$skip=2;$count=true)"}
+                });
+
+            // Act
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectClause);
+            Assert.False(selectClause.AllSelected);
+            var pathSelectItem = Assert.IsType<PathSelectItem>(Assert.Single(selectClause.SelectedItems));
+            pathSelectItem.SelectedPath.Equals(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp())));
+
+            Assert.NotNull(pathSelectItem.TopOption);
+            Assert.Equal(4, pathSelectItem.TopOption);
+
+            Assert.NotNull(pathSelectItem.TopOption);
+            Assert.Equal(2, pathSelectItem.SkipOption);
+        }
+
+        [Fact]
+        public void SelectWithNestedSelectWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "MyAddress($select=City,MyNeighbors($count=true))"}
+                });
+
+            // Act
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectClause);
+            Assert.False(selectClause.AllSelected);
+            var pathSelectItem = Assert.IsType<PathSelectItem>(Assert.Single(selectClause.SelectedItems));
+            pathSelectItem.SelectedPath.Equals(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonAddressProp())));
+
+            SelectExpandClause subLevelSelect = pathSelectItem.SelectAndExpand;
+            Assert.NotNull(subLevelSelect);
+            Assert.False(subLevelSelect.AllSelected);
+            Assert.Equal(2, subLevelSelect.SelectedItems.Count()); // City & MyNeighbors
+
+            // City
+            PathSelectItem subLevelPathSelect = Assert.IsType<PathSelectItem>(subLevelSelect.SelectedItems.First());
+            subLevelPathSelect.SelectedPath.Equals(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetAddressCityProperty())));
+            Assert.Null(subLevelPathSelect.CountOption);
+
+            // MyNeighbors
+            subLevelPathSelect = Assert.IsType<PathSelectItem>(subLevelSelect.SelectedItems.Last());
+            subLevelPathSelect.SelectedPath.Equals(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetAddressMyNeighborsProperty())));
+            Assert.NotNull(subLevelPathSelect.CountOption);
+            Assert.True(subLevelPathSelect.CountOption);
+        }
+
+        [Fact]
+        public void SelectWithNestedWildcardWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "PreviousAddresses($select=*)"}
+                });
+
+            // Act
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectClause);
+            Assert.False(selectClause.AllSelected);
+            var pathSelectItem = Assert.IsType<PathSelectItem>(Assert.Single(selectClause.SelectedItems));
+            pathSelectItem.SelectedPath.Equals(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp())));
+
+            SelectExpandClause subLevelSelect = pathSelectItem.SelectAndExpand;
+            Assert.NotNull(subLevelSelect);
+            Assert.False(subLevelSelect.AllSelected); // it's false not matter we select "*"
+            Assert.IsType<WildcardSelectItem>(Assert.Single(subLevelSelect.SelectedItems));
+        }
+
+        [Fact]
+        public void SelectWithNestedSelectGeneratedPropertiesWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "PreviousAddresses($compute=tolower(Street) as lowStreet;$select=City,lowStreet)"}
+                });
+
+            // Act
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectClause);
+            Assert.False(selectClause.AllSelected);
+            var pathSelectItem = Assert.IsType<PathSelectItem>(Assert.Single(selectClause.SelectedItems));
+
+            // $compute
+            ComputeClause subCompute = pathSelectItem.ComputeOption;
+            Assert.NotNull(subCompute);
+            ComputeExpression computeExpr = Assert.Single(subCompute.ComputedItems);
+            Assert.Equal("lowStreet", computeExpr.Alias);
+            var functionCall = Assert.IsType<SingleValueFunctionCallNode>(computeExpr.Expression);
+            Assert.Equal("tolower", functionCall.Name);
+            Assert.Empty(functionCall.Functions);
+
+            // $select
+            SelectExpandClause subLevelSelect = pathSelectItem.SelectAndExpand;
+            Assert.NotNull(subLevelSelect);
+            Assert.False(subLevelSelect.AllSelected);
+            Assert.Equal(2, subLevelSelect.SelectedItems.Count());
+
+            var items = subLevelSelect.SelectedItems.ToArray();
+            items[0].ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetAddressCityProperty())));
+            items[1].ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("lowStreet")));
+        }
+
+        #endregion
+
+        #region $select and generated properties
         [Fact]
         public void DollarComputedPropertyTreatedAsOpenPropertyInSelect()
         {
@@ -1450,6 +1606,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         #endregion
+
         #region Test Running Helpers
 
         private static SelectExpandClause RunParseSelectExpand(string select, string expand, IEdmStructuredType type, IEdmEntitySet enitytSet)
@@ -1496,14 +1653,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var selectionItem = result.SelectedItems.Single();
 
             AssertSelectString(expectedSelect ?? select, result);
-            ConvertExpandToString(result).Should().BeEmpty();
+            Assert.True(String.IsNullOrEmpty(ConvertExpandToString(result)));
 
             var publicSelectItem = result.SelectedItems.Single();
             publicSelectItem.Should().BeSameAs(selectionItem);
 
             if (!String.IsNullOrEmpty(select))
             {
-                result.AllSelected.Should().BeFalse();
+                Assert.False(result.AllSelected);
             }
 
             return selectionItem;
@@ -1522,7 +1679,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             AssertSelectString("", result);
             AssertExpandString(expectedExpand ?? expand, result);
 
-            result.AllSelected.Should().BeTrue();
+            Assert.True(result.AllSelected);
 
             return expandedSelectionItem;
         }
@@ -1534,14 +1691,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             string expectedExpand = expand ?? string.Empty;
             expectedExpand = string.Join(",", expectedExpand.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(TrimSpacesAroundSlash).Distinct());
-            ConvertExpandToString(result).Should().Be(expectedExpand);
+            Assert.Equal(expectedExpand, ConvertExpandToString(result));
         }
 
         private static void AssertSelectString(string select, SelectExpandClause result)
         {
             string expectedSelect = select ?? string.Empty;
             expectedSelect = string.Join(",", expectedSelect.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(TrimSpacesAroundSlash).Distinct());
-            ConvertSelectToString(result).Should().Be(expectedSelect);
+            Assert.Equal(expectedSelect, ConvertSelectToString(result));
         }
 
         // TODO: Need V4 String Builder

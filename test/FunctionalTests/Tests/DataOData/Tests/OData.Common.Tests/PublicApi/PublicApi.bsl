@@ -6622,6 +6622,7 @@ public sealed class Microsoft.OData.UriParser.ExpandTermToken : Microsoft.OData.
 }
 
 public sealed class Microsoft.OData.UriParser.ExpandToken : Microsoft.OData.UriParser.QueryToken {
+	public ExpandToken (Microsoft.OData.UriParser.ExpandTermToken[] expandTerms)
 	public ExpandToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ExpandTermToken]] expandTerms)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ExpandTermToken]] ExpandTerms  { public get; }
@@ -6941,8 +6942,18 @@ public sealed class Microsoft.OData.UriParser.ParseDynamicPathSegment : System.M
 
 public sealed class Microsoft.OData.UriParser.PathSelectItem : Microsoft.OData.UriParser.SelectItem {
 	public PathSelectItem (Microsoft.OData.UriParser.ODataSelectPath selectedPath)
+	public PathSelectItem (Microsoft.OData.UriParser.ODataSelectPath selectedPath, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.SelectExpandClause selectAndExpand, Microsoft.OData.UriParser.FilterClause filterOption, Microsoft.OData.UriParser.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.UriParser.SearchClause searchOption, Microsoft.OData.UriParser.ComputeClause computeOption)
 
+	Microsoft.OData.UriParser.ComputeClause ComputeOption  { public get; }
+	System.Nullable`1[[System.Boolean]] CountOption  { public get; }
+	Microsoft.OData.UriParser.FilterClause FilterOption  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+	Microsoft.OData.UriParser.OrderByClause OrderByOption  { public get; }
+	Microsoft.OData.UriParser.SearchClause SearchOption  { public get; }
+	Microsoft.OData.UriParser.SelectExpandClause SelectAndExpand  { public get; }
 	Microsoft.OData.UriParser.ODataSelectPath SelectedPath  { public get; }
+	System.Nullable`1[[System.Int64]] SkipOption  { public get; }
+	System.Nullable`1[[System.Int64]] TopOption  { public get; }
 
 	public virtual void HandleWith (Microsoft.OData.UriParser.SelectItemHandler handler)
 	public virtual T TranslateWith (SelectItemTranslator`1 translator)
@@ -8577,6 +8588,7 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken : Mic
 }
 
 public sealed class Microsoft.OData.Client.ALinq.UriParser.ExpandToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+	public ExpandToken (Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken[] expandTerms)
 	public ExpandToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken]] expandTerms)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken]] ExpandTerms  { public get; }
