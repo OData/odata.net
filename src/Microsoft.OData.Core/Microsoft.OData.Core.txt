@@ -799,7 +799,7 @@ ExpandTreeNormalizer_NonPathInPropertyChain=Found a segment that isn't a path wh
 
 UriExpandParser_TermIsNotValidForStar=Term '{0}' is not valid in a $expand expression, as only $level option is allowed when the expanded navigation property is star.
 UriExpandParser_TermIsNotValidForStarRef=Term '{0}' is not valid in a $expand expression, no option is allowed when the expanded navigation property is */$ref.
-UriExpandParser_ParentEntityIsNull=Cannot get parent entity type for term '{0}' to auto populate all navigation properties.
+UriExpandParser_ParentStructuredTypeIsNull=Cannot get parent structured type for term '{0}' to auto populate all navigation properties.
 UriExpandParser_TermWithMultipleStarNotAllowed=Term '{0}' is not valid in a $expand expression as multiple stars are not allowed.
 UriSelectParser_TermIsNotValid=Term '{0}' is not valid in a $select or $expand expression.
 UriSelectParser_InvalidTopOption=Top option must be a non-negative integer, it is set to '{0}' instead.
