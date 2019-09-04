@@ -1,0 +1,238 @@
+---
+options:
+- enabled: false
+  definition:
+    id: a9db38f9-9fdc-478c-b0f9-464221e58316
+  inputs:
+    workItemType: Bug
+    assignToRequestor: 'false'
+    additionalFields: "{}"
+- enabled: false
+  definition:
+    id: 5d58cc01-7c75-450c-be18-a388ddb129ec
+  inputs:
+    branchFilters: '["+refs/heads/*"]'
+    additionalFields: "{}"
+triggers:
+- branchFilters:
+  - "+master"
+  pathFilters: []
+  batchChanges: false
+  maxConcurrentBuildsPerBranch: 1
+  pollingInterval: 0
+  triggerType: 2
+- branchFilters:
+  - "+master"
+  forks:
+    enabled: false
+    allowSecrets: false
+  pathFilters: []
+  requireCommentsForNonTeamMembersOnly: false
+  isCommentRequiredForPullRequest: false
+  triggerType: 64
+variables:
+  BuildConfiguration:
+    value: release
+    allowOverride: true
+  BuildPlatform:
+    value: any cpu
+  ProductBinPath:
+    value: "$(Build.SourcesDirectory)\\bin\\AnyCPU\\$(BuildConfiguration)\\Product"
+  skipComponentGovernanceDetection:
+    value: 'true'
+  system.debug:
+    value: 'false'
+  TestBinPath:
+    value: "$(Build.SourcesDirectory)\\bin\\AnyCPU\\$(BuildConfiguration)\\Test\\Desktop\\"
+  TestBinPathNetCore:
+    value: "$(Build.SourcesDirectory)\\bin\\AnyCPU\\$(BuildConfiguration)\\Test\\.NETPortable\\v5.0"
+  TestBuildConfiguration:
+    value: release
+  TestBuildPlatform:
+    value: x86
+demands:
+- VisualStudio_14.0
+- VisualStudio_15.0
+- Agent.Name -equals ODataBuild26
+retentionRules:
+- branches:
+  - "+refs/heads/*"
+  artifacts: []
+  artifactTypesToDelete:
+  - FilePath
+  - SymbolStore
+  daysToKeep: 10
+  minimumToKeep: 1
+  deleteBuildRecord: true
+  deleteTestResults: true
+properties: {}
+tags: []
+_links:
+  self:
+    href: https://identitydivision.visualstudio.com/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/_apis/build/Definitions/422?revision=8
+  web:
+    href: https://identitydivision.visualstudio.com/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/_build/definition?definitionId=422
+  editor:
+    href: https://identitydivision.visualstudio.com/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/_build/designer?id=422&_a=edit-build-definition
+  badge:
+    href: https://identitydivision.visualstudio.com/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/_apis/build/status/422
+buildNumberFormat: ODataNet_master_Rolling_$(date:yyyyMMdd)$(rev:.r)
+jobAuthorizationScope: 1
+jobTimeoutInMinutes: 240
+jobCancelTimeoutInMinutes: 5
+badgeEnabled: true
+process:
+  phases:
+  - steps:
+    - environment: {}
+      enabled: true
+      continueOnError: true
+      alwaysRun: true
+      displayName: 'PoliCheck-ODL-master (out-of-band-installed) '
+      timeoutInMinutes: 0
+      condition: succeededOrFailed()
+      refName: ODataPoliCheckODLmasteroutofbandinstalled7
+      task:
+        id: 401b942e-246c-4f54-b2bc-30689749fab6
+        versionSpec: 1.*
+        definitionType: metaTask
+      inputs: {}
+    - environment: {}
+      enabled: true
+      continueOnError: true
+      alwaysRun: true
+      displayName: OData.net.master - Build
+      timeoutInMinutes: 0
+      condition: succeededOrFailed()
+      refName: ODatanetmasterBuild_1
+      task:
+        id: 25dca49f-c209-41f7-b8d4-92757db45ec2
+        versionSpec: 1.*
+        definitionType: metaTask
+      inputs:
+        BuildPlatform: "$(BuildPlatform)"
+        BuildConfiguration: "$(BuildConfiguration)"
+    - environment: {}
+      enabled: true
+      continueOnError: true
+      alwaysRun: true
+      displayName: OData.Net.master - Test
+      timeoutInMinutes: 0
+      condition: succeededOrFailed()
+      refName: ODatanetmasterTest_2
+      task:
+        id: 6a2fff10-bf3c-449e-a759-e5e9b3d11f37
+        versionSpec: 1.*
+        definitionType: metaTask
+      inputs:
+        TestBinPath: "$(TestBinPath)"
+        TestBuildConfiguration: "$(TestBuildConfiguration)"
+        TestBuildPlatform: "$(TestBuildPlatform)"
+    - environment: {}
+      enabled: true
+      continueOnError: true
+      alwaysRun: true
+      displayName: OData.net-master - Security Tools
+      timeoutInMinutes: 0
+      condition: succeededOrFailed()
+      refName: ODatanetmasterSecurityTools6
+      task:
+        id: 152edfff-0c50-42fc-9e6a-c6f46d1271b1
+        versionSpec: 1.*
+        definitionType: metaTask
+      inputs:
+        blobAccountName: "$(blobAccountName)"
+        blobContainerName: "$(blobContainerName)"
+        connectionBlobSas: "$(connectionBlobSas)"
+        connectionServiceBusSas: "$(connectionServiceBusSas)"
+        ProductBinPath: "$(ProductBinPath)"
+        serviceBusUriWithQueue: "$(serviceBusUriWithQueue)"
+    name: Phase 1
+    refName: Phase_1
+    condition: succeeded()
+    target:
+      executionOptions:
+        type: 0
+      allowScriptsAuthAccessOption: false
+      type: 1
+    jobAuthorizationScope: 1
+    jobCancelTimeoutInMinutes: 1
+  type: 1
+repository:
+  properties:
+    apiUrl: https://api.github.com/repos/OData/odata.net
+    branchesUrl: https://api.github.com/repos/OData/odata.net/branches
+    cloneUrl: https://github.com/OData/odata.net.git
+    connectedServiceId: eee8f327-aceb-4ae6-b610-10684105220f
+    defaultBranch: master
+    fullName: OData/odata.net
+    hasAdminPermissions: 'True'
+    isFork: 'False'
+    isPrivate: 'False'
+    lastUpdated: 08/29/2019 21:59:24
+    manageUrl: https://github.com/OData/odata.net
+    nodeId: MDEwOlJlcG9zaXRvcnkyMzMwODMzOA==
+    ownerId: '916520'
+    orgName: OData
+    refsUrl: https://api.github.com/repos/OData/odata.net/git/refs
+    safeRepository: OData/odata.net
+    shortName: odata.net
+    ownerAvatarUrl: https://avatars1.githubusercontent.com/u/916520?v=4
+    archived: 'False'
+    externalId: '23308338'
+    ownerIsAUser: 'False'
+    checkoutNestedSubmodules: 'false'
+    cleanOptions: '3'
+    fetchDepth: '0'
+    gitLfsSupport: 'false'
+    reportBuildStatus: 'true'
+    skipSyncSource: 'false'
+    labelSourcesFormat: "$(build.buildNumber)"
+    labelSources: '0'
+  id: OData/odata.net
+  type: GitHub
+  name: OData/odata.net
+  url: https://github.com/OData/odata.net.git
+  defaultBranch: master
+  clean: 'true'
+  checkoutSubmodules: false
+processParameters: {}
+quality: 1
+authoredBy:
+  displayName: Sam Xu
+  url: https://vssps.dev.azure.com/e/Microsoft/_apis/Identities/01ffe5cf-b936-402c-8bbd-8064d8bf513b
+  _links:
+    avatar:
+      href: https://identitydivision.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.OTMxYWU2NjQtNDY2OC03M2ZhLTk3ZDYtYWRmMTIxNWE3ZDQz
+  id: 01ffe5cf-b936-402c-8bbd-8064d8bf513b
+  uniqueName: saxu@microsoft.com
+  imageUrl: https://identitydivision.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.OTMxYWU2NjQtNDY2OC03M2ZhLTk3ZDYtYWRmMTIxNWE3ZDQz
+  descriptor: aad.OTMxYWU2NjQtNDY2OC03M2ZhLTk3ZDYtYWRmMTIxNWE3ZDQz
+drafts: []
+queue:
+  _links:
+    self:
+      href: https://identitydivision.visualstudio.com/_apis/build/Queues/159
+  id: 159
+  name: OData
+  url: https://identitydivision.visualstudio.com/_apis/build/Queues/159
+  pool:
+    id: 9
+    name: OData
+id: 422
+name: OData.net-master - Rolling
+url: https://identitydivision.visualstudio.com/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/_apis/build/Definitions/422?revision=8
+uri: vstfs:///Build/Definition/422
+path: "\\OData.net"
+type: 2
+queueStatus: 0
+revision: 8
+createdDate: '2019-08-30T16:43:26.933Z'
+project:
+  id: 2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd
+  name: OData
+  url: https://identitydivision.visualstudio.com/_apis/projects/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd
+  state: 1
+  revision: 937
+  visibility: 1
+  lastUpdateTime: '2019-02-28T17:43:55.010Z'
