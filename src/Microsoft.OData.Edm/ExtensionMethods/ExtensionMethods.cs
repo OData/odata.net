@@ -1261,7 +1261,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Creates and adds a new instance of the EdmTerm class from a primitive type.
+        /// Creates and adds a new instance of the <see cref="EdmTerm"/> class from a primitive type.
         /// </summary>
         /// <param name="model">The EdmModel.</param>
         /// <param name="namespaceName">Namespace of the term.</param>
@@ -1276,7 +1276,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Creates and adds a new instance of the EdmTerm class from a type reference.
+        /// Creates and adds a new instance of the <see cref="EdmTerm"/> class from a type reference.
         /// </summary>
         /// <param name="model">The EdmModel.</param>
         /// <param name="namespaceName">Namespace of the term.</param>
