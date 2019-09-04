@@ -139,17 +139,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmModel edmModel = GetEntitySetEdmModel(""); /*without Derived type constraint*/
 
             IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
-            IEdmEntityType targetType = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == typeCastName);
+            IEdmEntityType castType = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == typeCastName);
             IEdmType collectionCustomerType = new EdmCollectionType(new EdmEntityTypeReference(customer, true));
+            IEdmType collectionCastType = new EdmCollectionType(new EdmEntityTypeReference(castType, true));
             ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
 
             // ~/Customers/NS.Customer
             var path = pathParser.ParsePath(new[] { "Customers", "NS." + typeCastName });
-            path[1].ShouldBeTypeSegment(collectionCustomerType, targetType);
+            path[1].ShouldBeTypeSegment(collectionCustomerType, collectionCastType);
 
             // ~/Customers(1)/NS.Customer
             path = pathParser.ParsePath(new[] { "Customers(1)", "NS." + typeCastName });
-            path[2].ShouldBeTypeSegment(customer, targetType);
+            path[2].ShouldBeTypeSegment(customer, castType);
         }
 
         [Theory]
@@ -169,21 +170,23 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmEntityType vipCustomer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "VipCustomer");
             IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
             IEdmType collectionCustomerType = new EdmCollectionType(new EdmEntityTypeReference(customer, true));
+            IEdmType collectionVipCustomerType = new EdmCollectionType(new EdmEntityTypeReference(vipCustomer, true));
 
             int index = 1;
             foreach (string segment in new[] { "Customers", "Customers(1)" })
             {
                 IEdmType actualType = index == 1 ? collectionCustomerType : customer;
+                IEdmType expectVipCustomerType = index == 1 ? collectionVipCustomerType : vipCustomer;
 
                 ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
 
                 // verify the positive type cast on itself:  ~/Customers/NS.Customer
                 var path = pathParser.ParsePath(new[] { segment, "NS.Customer" });
-                path[index].ShouldBeTypeSegment(actualType, customer);
+                path[index].ShouldBeTypeSegment(actualType, actualType);
 
                 // verify the positive type cast:  ~/Customers/NS.VipCustomer
                 path = pathParser.ParsePath(new[] { segment, "NS.VipCustomer" });
-                path[index].ShouldBeTypeSegment(actualType, vipCustomer);
+                path[index].ShouldBeTypeSegment(actualType, expectVipCustomerType);
 
                 // verify the negative type cast: ~/Customers/NS.NormalCustomer
                 Action parsePath = () => pathParser.ParsePath(new[] { segment, "NS.NormalCustomer" });
@@ -242,6 +245,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
             IEdmProperty property = customer.DeclaredProperties.First(c => c.Name == propertyName);
             IEdmType expectType = edmModel.FindDeclaredType(typeCast);
+            if (property.Type.IsCollection())
+            {
+                expectType = new EdmCollectionType(new EdmComplexTypeReference(expectType as IEdmComplexType, true));
+            }
             Assert.NotNull(expectType);
 
             // ~/Customers(1)/{propertyName}/{typeCast}
@@ -266,20 +273,22 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmComplexType address = edmModel.SchemaElements.OfType<IEdmComplexType>().First(c => c.Name == "Address");
             IEdmComplexType usAddress = edmModel.SchemaElements.OfType<IEdmComplexType>().First(c => c.Name == "UsAddress");
             IEdmType collectionAddressType = new EdmCollectionType(new EdmComplexTypeReference(address, true));
+            IEdmType collectionUsAddressType = new EdmCollectionType(new EdmComplexTypeReference(usAddress, true));
 
             int index = 1;
             foreach (string segment in new[] { "Address", "Locations" })
             {
                 IEdmType actualType = index == 1 ? address : collectionAddressType;
+                IEdmType expectUsAddressType = index == 1 ? usAddress : collectionUsAddressType;
 
                 // verify the positive type cast on itself
                 ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
                 var path = pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.Address" });
-                path[3].ShouldBeTypeSegment(actualType, address);
+                path[3].ShouldBeTypeSegment(actualType, actualType);
 
                 // verify the positive type cast
                 path = pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.UsAddress" });
-                path[3].ShouldBeTypeSegment(actualType, usAddress);
+                path[3].ShouldBeTypeSegment(actualType, expectUsAddressType);
 
                 // verify the negative type cast
                 Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.CnAddress" });
@@ -349,15 +358,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmNavigationProperty property = customer.NavigationProperties().First(c => c.Name == propertyName);
             IEdmType collectionCustomerType = new EdmCollectionType(new EdmEntityTypeReference(customer, true));
 
-            IEdmType expectType = edmModel.FindDeclaredType(typeCast);
-            Assert.NotNull(expectType);
+            IEdmType castType = edmModel.FindDeclaredType(typeCast);
+            Assert.NotNull(castType);
 
             int index = key != null ? 4 : 3;
             IEdmType actualType = propertyName == "SubCustomers" && key == null ? collectionCustomerType : customer;
+            IEdmType expectedType = propertyName == "SubCustomers" && key == null ?
+                new EdmCollectionType(new EdmEntityTypeReference(castType as IEdmEntityType, true)) : castType;
 
             // ~/Customers(1)/{propertyName}/{typeCast}
             var path = pathParser.ParsePath(new[] { "Customers(1)", propertyName + key, typeCast });
-            path[index].ShouldBeTypeSegment(actualType, expectType);
+            path[index].ShouldBeTypeSegment(actualType, expectedType);
         }
 
         [Theory]
@@ -377,20 +388,22 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
             IEdmEntityType vipCustomer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "VipCustomer");
             IEdmType collectionCustomerType = new EdmCollectionType(new EdmEntityTypeReference(customer, true));
+            IEdmType collectionVipCustomerType = new EdmCollectionType(new EdmEntityTypeReference(vipCustomer, true));
 
             int index = 1;
             foreach (string segment in new[] { "DirectReport", "SubCustomers" })
             {
                 IEdmType actualType = index == 1 ? customer : collectionCustomerType;
+                IEdmType expectedVipCustomerType = index == 1 ? vipCustomer : collectionVipCustomerType;
 
                 // verify the positive type cast on itself
                 ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
                 var path = pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.Customer" });
-                path[3].ShouldBeTypeSegment(actualType, customer);
+                path[3].ShouldBeTypeSegment(actualType, actualType);
 
                 // verify the positive type cast
                 path = pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.VipCustomer" });
-                path[3].ShouldBeTypeSegment(actualType, vipCustomer);
+                path[3].ShouldBeTypeSegment(actualType, expectedVipCustomerType);
 
                 // verify the negative type cast
                 Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.NormalCustomer" });
@@ -569,13 +582,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmModel edmModel = GetOperationEdmModel(""); // without derived type constraint
 
             IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
-            IEdmEntityType targetType = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == typeCastName);
+            IEdmEntityType castType = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == typeCastName);
             IEdmType collectionCustomerType = new EdmCollectionType(new EdmEntityTypeReference(customer, true));
+            IEdmType collectionExpectedType = new EdmCollectionType(new EdmEntityTypeReference(castType, true));
             ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
 
             // verify the positive type cast on itself: ~/Customers/NS.Customer/NS.Image()
             var path = pathParser.ParsePath(new[] { "Customers", "NS." + typeCastName, "NS.Image()" });
-            path[1].ShouldBeTypeSegment(collectionCustomerType, targetType);
+            path[1].ShouldBeTypeSegment(collectionCustomerType, collectionExpectedType);
         }
 
         [Theory]
@@ -595,16 +609,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
             IEdmEntityType vipCustomer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "VipCustomer");
             IEdmType collectionCustomerType = new EdmCollectionType(new EdmEntityTypeReference(customer, true));
+            IEdmType collectionVipCustomerType = new EdmCollectionType(new EdmEntityTypeReference(vipCustomer, true));
 
             ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
 
             // verify the positive type cast on itself: ~/Customers/NS.Customer/NS.Image()
             var path = pathParser.ParsePath(new[] { "Customers", "NS.Customer", "NS.Image()" });
-            path[1].ShouldBeTypeSegment(collectionCustomerType, customer);
+            path[1].ShouldBeTypeSegment(collectionCustomerType, collectionCustomerType);
 
             // verify the positive type cast: ~/Customers(1)/NS.VipCustomer/NS.Image()
             path = pathParser.ParsePath(new[] { "Customers", "NS.VipCustomer", "NS.Image()" });
-            path[1].ShouldBeTypeSegment(collectionCustomerType, vipCustomer);
+            path[1].ShouldBeTypeSegment(collectionCustomerType, collectionVipCustomerType);
 
             // verify the negative type cast: ~/Customers(1)/NS.NormalCustomer/NS.Image()
             Action parsePath = () => pathParser.ParsePath(new[] { "Customers", "NS.NormalCustomer", "NS.Image()" });
