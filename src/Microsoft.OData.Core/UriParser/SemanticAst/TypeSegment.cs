@@ -24,6 +24,11 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmType edmType;
 
         /// <summary>
+        /// The expected edm type of this type segment.
+        /// </summary>
+        private readonly IEdmType expectedType;
+
+        /// <summary>
         /// The navigation source containing the entities that we are casting.
         /// </summary>
         private readonly IEdmNavigationSource navigationSource;
@@ -56,6 +61,8 @@ namespace Microsoft.OData.UriParser
             this.edmType = actualType;
             this.navigationSource = navigationSource;
 
+            this.expectedType = expectedType;
+
             this.TargetEdmType = expectedType;
             this.TargetEdmNavigationSource = navigationSource;
 
@@ -72,6 +79,15 @@ namespace Microsoft.OData.UriParser
         public override IEdmType EdmType
         {
             get { return this.edmType; }
+        }
+
+        /// <summary>
+        /// Gets the expected <see cref="IEdmType"/> of this <see cref="TypeSegment"/>.
+        /// The type is reflected from model and same as the EdmType of previous segment.
+        /// </summary>
+        public IEdmType ExpectedType
+        {
+            get { return this.expectedType; }
         }
 
         /// <summary>
