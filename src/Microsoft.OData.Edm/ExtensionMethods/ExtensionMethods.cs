@@ -1261,13 +1261,14 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Creates and adds a new instance of the Microsoft.OData.Edm.Vocabularies.EdmTerm class with a primitive type.
+        /// Creates and adds a new instance of the EdmTerm class from a primitive type.
         /// </summary>
         /// <param name="model">The EdmModel.</param>
         /// <param name="namespaceName">Namespace of the term.</param>
+        /// <param name="name">The name of the newly created term</param>
         /// <param name="type">The primitive type of the term.</param>
         /// <returns>The created term.</returns>
-        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, EdmPrimitiveTypeKind type)
+        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, string name, EdmPrimitiveTypeKind type)
         {
             var term = new EdmTerm(namespaceName, name, type);
             model.AddElement(term);
@@ -1275,13 +1276,14 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Creates and adds a new instance of the Microsoft.OData.Edm.Vocabularies.EdmTerm class.
+        /// Creates and adds a new instance of the EdmTerm class from a type reference.
         /// </summary>
         /// <param name="model">The EdmModel.</param>
         /// <param name="namespaceName">Namespace of the term.</param>
-        /// <param name="name">The type of the term.</param>
+        /// <param name="name">The name of the newly created term</param>
+        /// <param name="type">The type of the term.</param>
         /// <returns>The created term.</returns>
-        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, IEdmTypeReference type)
+        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, string name, IEdmTypeReference type)
         {
             var term = new EdmTerm(namespaceName, name, type);
             model.AddElement(term);
