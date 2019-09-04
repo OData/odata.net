@@ -269,7 +269,7 @@ namespace Microsoft.OData.Json
             if (innerError.InnerError != null)
             {
                 // "internalexception": { <nested inner error> }
-                WriteInnerError(jsonWriter, innerError.InnerError, string.IsNullOrWhiteSpace(innerError.NestedObjectName) ? JsonConstants.ODataErrorInnerErrorInnerErrorName : innerError.NestedObjectName, recursionDepth, maxInnerErrorDepth, skipNullProperties);
+                WriteInnerError(jsonWriter, innerError.InnerError, string.IsNullOrEmpty(innerError.NestedObjectName) ? JsonConstants.ODataErrorInnerErrorInnerErrorName : innerError.NestedObjectName, recursionDepth, maxInnerErrorDepth, skipNullProperties);
             }
 
             // }
