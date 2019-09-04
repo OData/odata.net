@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TargetEdmTypeIsTargetType()
         {
             TypeSegment typeSegment = new TypeSegment(HardCodedTestModel.GetPersonType(), null);
-            Assert.Same(HardCodedTestModel.GetPersonType(), typeSegment.TargetEdmType);
+            Assert.Same(HardCodedTestModel.GetPersonType(), typeSegment.ExpectedType);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             TypeSegment typeSegment = new TypeSegment(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetEmployeeType(), null);
             Assert.Same(HardCodedTestModel.GetPersonType(), typeSegment.EdmType);
-            Assert.Same(HardCodedTestModel.GetEmployeeType(), typeSegment.TargetEdmType);
+            Assert.Same(HardCodedTestModel.GetEmployeeType(), typeSegment.ExpectedType);
         }
     }
 }
