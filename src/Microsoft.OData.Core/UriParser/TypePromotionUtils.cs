@@ -493,6 +493,12 @@ namespace Microsoft.OData.UriParser
                 return true;
             }
 
+			// We must support conversion from/to untyped.
+			if (sourceReference.IsUntyped() || targetReference.IsUntyped())
+			{
+				return true;
+			}
+
             if (targetReference.IsODataComplexTypeKind() || targetReference.IsODataEntityTypeKind())
             {
                 // https://github.com/OData/odata.net/issues/1395
