@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.UriParser
             segment.Should().BeOfType<TypeSegment>();
             TypeSegment typeSegment = segment.As<TypeSegment>();
             typeSegment.EdmType.ShouldBeEquivalentTo(actualType);
-            typeSegment.TargetEdmType.ShouldBeEquivalentTo(expectType);
+            typeSegment.ExpectedType.ShouldBeEquivalentTo(expectType);
             return new AndConstraint<TypeSegment>(typeSegment);
         }
 

@@ -7182,6 +7182,7 @@ public sealed class Microsoft.OData.UriParser.TypeSegment : Microsoft.OData.UriP
 	public TypeSegment (Microsoft.OData.Edm.IEdmType actualType, Microsoft.OData.Edm.IEdmType expectedType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmType ExpectedType  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
 
 	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
