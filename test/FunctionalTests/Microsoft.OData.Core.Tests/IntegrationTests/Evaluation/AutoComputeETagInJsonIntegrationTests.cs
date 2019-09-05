@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -196,7 +195,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             };
 
             Action action = () => GetWriterOutputForContentTypeAndKnobValue(entry, model, peopleSet, personType);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.EdmValueUtils_PropertyDoesntExist("MyNs.Person", "NameName"));
+            action.Throws<ODataException>(ErrorStrings.EdmValueUtils_PropertyDoesntExist("MyNs.Person", "NameName"));
         }
 
         private string GetWriterOutputForContentTypeAndKnobValue(ODataResource entry, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType)

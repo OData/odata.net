@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -71,14 +70,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
+            test.Throws<ODataException>(Strings.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
         }
 
         [Fact]
         public void AsyncBatchJsonLightTestWithInvalidBatchContentThrowsException()
         {
             Action test = () => AsyncBatchJsonLightTestFromSpecExample85(null);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.JsonReader_InvalidNumberFormat("--"));
+            test.Throws<ODataException>(Strings.JsonReader_InvalidNumberFormat("--"));
         }
 
         [Fact]
@@ -88,7 +87,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 BatchPayloadUriOption.AbsoluteUri,
                 batchContentTypeApplicationJson,
                 SkipBatchWriterStep.BatchStarted);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_InvalidTransitionFromStart);
+            test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromStart);
         }
 
         [Fact]
@@ -106,7 +105,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
                 Action test = () => batchWriter.CreateOperationRequestMessage(
                     "POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_InvalidTransitionFromStart);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromStart);
             }
         }
 
@@ -117,7 +116,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 BatchPayloadUriOption.AbsoluteUri,
                 batchContentTypeApplicationJson,
                 SkipBatchWriterStep.ChangesetCompleted);
-            test.ShouldThrow<ODataException>().Where(e => e.Message.StartsWith("An invalid HTTP method"));
+
+            ODataException exception = Assert.Throws<ODataException>(test);
+            Assert.StartsWith("An invalid HTTP method", exception.Message);
         }
 
         [Fact]
@@ -142,7 +143,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
                 // Attempt to start another change set before ending the current one.
                 Action test = () => batchWriter.WriteStartChangeset();
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
             }
         }
 
@@ -162,7 +163,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteStartChangeset();
 
                 Action test = () => batchWriter.WriteEndBatch();
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet);
             }
         }
 
@@ -181,7 +182,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteStartBatch();
 
                 Action test = () => batchWriter.WriteEndChangeset();
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
             }
         }
 
@@ -200,7 +201,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteStartBatch();
 
                 Action test = () => batchWriter.WriteStartBatch();
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_InvalidTransitionFromBatchStarted);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromBatchStarted);
             }
         }
 
@@ -220,7 +221,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteStartChangeset();
 
                 Action test = () => batchWriter.WriteStartChangeset();
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
             }
         }
 
@@ -240,7 +241,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteStartChangeset();
 
                 Action test = () => batchWriter.WriteEndBatch();
-                test.ShouldThrow<ODataException>().Where(e => e.Message.StartsWith("An invalid method call on ODataBatchWriter was detected. You cannot call"));
+                ODataException exception = Assert.Throws<ODataException>(test);
+                Assert.StartsWith("An invalid method call on ODataBatchWriter was detected. You cannot call", exception.Message);
             }
         }
 
@@ -272,7 +274,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 }
 
                 Action test = () => batchWriter.WriteStartBatch();
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed);
             }
         }
 
@@ -293,7 +295,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteEndChangeset();
 
                 Action test = () => batchWriter.WriteStartBatch();
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted);
             }
         }
 
@@ -315,7 +317,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteEndBatch();
 
                 Action test = () => batchWriter.WriteEndBatch();
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_InvalidTransitionFromBatchCompleted);
+                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromBatchCompleted);
             }
         }
 
@@ -345,7 +347,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     "POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
 
                 Action test = () => batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), "2", payloadUriOption);
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_MaxBatchSizeExceeded(maxPartsPerBatch));
+                test.Throws<ODataException>(Strings.ODataBatchWriter_MaxBatchSizeExceeded(maxPartsPerBatch));
             }
         }
 
@@ -377,7 +379,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     "POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
 
                 Action test = () => batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), "2", payloadUriOption);
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_MaxChangeSetSizeExceeded(maxOperationsPerChangeset));
+                test.Throws<ODataException>(Strings.ODataBatchWriter_MaxChangeSetSizeExceeded(maxOperationsPerChangeset));
             }
         }
         #endregion
@@ -396,8 +398,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.ShouldThrow<ODataException>().WithMessage(
-                Strings.ODataBatchReaderStream_InvalidHeaderSpecified("--changeset_4faeec78-01a5-40c4-863e-9915be75db31--"));
+            test.Throws<ODataException>(Strings.ODataBatchReaderStream_InvalidHeaderSpecified("--changeset_4faeec78-01a5-40c4-863e-9915be75db31--"));
         }
 
         [Fact]
@@ -417,8 +418,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.ShouldThrow<ODataException>().WithMessage(
-                Strings.ODataBatchReaderStream_InvalidRequestLine("POSThttp://service/CustomersHTTP/1.1"));
+            test.Throws<ODataException>(Strings.ODataBatchReaderStream_InvalidRequestLine("POSThttp://service/CustomersHTTP/1.1"));
         }
 
         [Fact]
@@ -437,7 +437,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchReaderStream_InvalidRequestLine("OData-Version: 4.0"));
+            test.Throws<ODataException>(Strings.ODataBatchReaderStream_InvalidRequestLine("OData-Version: 4.0"));
         }
 
         [Fact]
@@ -457,8 +457,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.ShouldThrow<ODataException>().WithMessage(
-                Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified("HTTPLOL/1.1", ODataConstants.HttpVersionInBatching));
+            test.Throws<ODataException>(Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified("HTTPLOL/1.1", ODataConstants.HttpVersionInBatching));
         }
 
         [Fact]
@@ -478,8 +477,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.ShouldThrow<ODataException>().WithMessage(
-                Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest("GET"));
+            test.Throws<ODataException>(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest("GET"));
         }
 
         [Fact]
@@ -501,7 +499,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
             var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
             Action test = () => this.ClientReadAsyncBatchResponse(responsePayload, batchContentTypeMultipartMixed);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
 
         [Fact]
@@ -521,7 +519,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
             var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
             Action test = () => this.ClientReadAsyncBatchResponse(responsePayload, batchContentTypeMultipartMixed);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
 
         [Fact]
@@ -541,7 +539,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     {
                     }
                 };
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchReader_NoMessageWasCreatedForOperation);
+                test.Throws<ODataException>(Strings.ODataBatchReader_NoMessageWasCreatedForOperation);
             }
         }
 
@@ -585,7 +583,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         }
                     }
                 };
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchReader_MaxBatchSizeExceeded(maxPartsPerBatch));
+                test.Throws<ODataException>(Strings.ODataBatchReader_MaxBatchSizeExceeded(maxPartsPerBatch));
             }
         }
 
@@ -629,7 +627,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         }
                     }
                 };
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchReader_MaxChangeSetSizeExceeded(maxOperationsPerChangeset));
+                test.Throws<ODataException>(Strings.ODataBatchReader_MaxChangeSetSizeExceeded(maxOperationsPerChangeset));
             }
         }
         #endregion
@@ -656,7 +654,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchReader_RequestPropertyMissing("METHOD"));
+            test.Throws<ODataException>(Strings.ODataBatchReader_RequestPropertyMissing("METHOD"));
         }
 
         [Fact]
@@ -678,7 +676,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchReader_RequestPropertyMissing("URL"));
+            test.Throws<ODataException>(Strings.ODataBatchReader_RequestPropertyMissing("URL"));
         }
 
         [Fact]
@@ -697,7 +695,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
 
         [Fact]
@@ -719,7 +717,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
 
         [Fact]
@@ -849,7 +847,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
 
         [Fact]
@@ -900,7 +898,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
 
         [Fact]
@@ -951,7 +949,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
 
         [Fact]
@@ -1002,7 +1000,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
         #endregion
         #endregion
@@ -1056,10 +1054,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 #else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
 #endif
-            Assert.True(payloadString.Contains("GET Customers('ALFKI') HTTP/1.1") &&
-                payloadString.Contains("POST Customers HTTP/1.1") &&
-                payloadString.Contains("PATCH Customers('ALFKI') HTTP/1.1") &&
-                payloadString.Contains("GET Products HTTP/1.1"));
+            Assert.Contains("GET Customers('ALFKI') HTTP/1.1", payloadString);
+            Assert.Contains("POST Customers HTTP/1.1", payloadString);
+            Assert.Contains("PATCH Customers('ALFKI') HTTP/1.1", payloadString);
+            Assert.Contains("GET Products HTTP/1.1", payloadString);
 
             var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
             this.ClientReadAsyncBatchResponse(responsePayload, batchContentTypeMultipartMixed);

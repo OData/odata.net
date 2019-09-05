@@ -17,6 +17,16 @@ namespace Microsoft.OData.Tests
     internal static class AssertExtensions
     {
         /// <summary>
+        /// Verifies that the test code does not throw.
+        /// </summary>
+        /// <param name="testCode">A delegate to the code to be tested</param>
+        public static void DoesNotThrow(this Action testCode)
+        {
+            Exception ex = Record.Exception(testCode);
+            Assert.Null(ex);
+        }
+
+        /// <summary>
         /// Verifies that the exact exception calling the test code action is thrown.
         /// </summary>
         /// <typeparam name="T">The type of the exception expected to be thrown</typeparam>

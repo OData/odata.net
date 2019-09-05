@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
@@ -20,42 +19,42 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         public void ExpressionCannotBeNull()
         {
             Action action = () => new AggregateExpressionToken(null, AggregationMethod.Sum, "Alias");
-            action.ShouldThrow<Exception>(Error.ArgumentNull("expression").ToString());
+            Assert.Throws<ArgumentNullException>("expression", action);
         }
 
         [Fact]
         public void AliasCannotBeNull()
         {
             Action action = () => new AggregateExpressionToken(expressionToken, AggregationMethod.Sum, null);
-            action.ShouldThrow<Exception>(Error.ArgumentNull("alias").ToString());
+            Assert.Throws<ArgumentNullException>("alias", action);
         }
 
         [Fact]
         public void ExpressionSetCorrectly()
         {
             AggregateExpressionToken token = new AggregateExpressionToken(expressionToken, AggregationMethod.Sum, "Alias");
-            token.Expression.Should().Be(expressionToken);
+            Assert.Same(expressionToken, token.Expression);
         }
 
         [Fact]
         public void WithMethodSetCorrectly()
         {
             AggregateExpressionToken token = new AggregateExpressionToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
-            token.Method.Should().Be(AggregationMethod.CountDistinct);
+            Assert.Equal(AggregationMethod.CountDistinct, token.Method);
         }
 
         [Fact]
         public void AliasSetCorrectly()
         {
             AggregateExpressionToken token = new AggregateExpressionToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
-            token.Alias.Should().BeEquivalentTo("Alias");
+            Assert.Equal("Alias", token.Alias);
         }
 
         [Fact]
         public void KindIsSetCorrectly()
         {
             AggregateExpressionToken token = new AggregateExpressionToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
-            token.Kind.Should().Be(QueryTokenKind.AggregateExpression);
+            Assert.Equal(QueryTokenKind.AggregateExpression, token.Kind);
         }
     }
 }
