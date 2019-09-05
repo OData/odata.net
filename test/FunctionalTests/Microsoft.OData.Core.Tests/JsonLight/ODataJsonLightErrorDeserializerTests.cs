@@ -136,7 +136,7 @@ namespace Microsoft.OData.Tests.JsonLight
                                         "\"IntProperty\": 1," +
                                         "\"BooleanProperty\": true," +
                                         "\"type\":\"\"," +
-                                        "\"NestedNull\":\"null\"" + 
+                                        "\"NestedNull\":null" + 
                                      "}" +
                                  "}" +
                             "}" +
