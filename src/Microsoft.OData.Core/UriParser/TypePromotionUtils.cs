@@ -493,20 +493,20 @@ namespace Microsoft.OData.UriParser
                 return true;
             }
 
-			// We must support conversion from/to untyped.
-			if (sourceReference.IsUntyped() || targetReference.IsUntyped())
-			{
-				return true;
-			}
+            // We must support conversion from/to untyped.
+            if (sourceReference.IsUntyped() || targetReference.IsUntyped())
+            {
+                return true;
+            }
 
             if (targetReference.IsODataComplexTypeKind() || targetReference.IsODataEntityTypeKind())
             {
-                // https://github.com/OData/odata.net/issues/1395
                 // Both targetReference and sourceReference are cast to IEdmStructuredType,
                 // therefore we must check both types
                 if (!sourceReference.IsODataComplexTypeKind() && !sourceReference.IsODataEntityTypeKind())
+                {
                     return false;
-
+                }
                 // for structured types, use IsAssignableFrom
                 return EdmLibraryExtensions.IsAssignableFrom(
                     (IEdmStructuredType)targetReference.Definition,
