@@ -95,8 +95,8 @@ namespace Microsoft.OData.UriParser
         /// <typeparam name="T">Type of the sub processing result for expand items.</typeparam>
         /// <param name="selectExpandClause">The select expand clause for evaluation.</param>
         /// <param name="processSubResult">The method to deal with sub expand result.</param>
-        /// <param name="combineSelectAndExpand">The method to deal with apply result.</param>
-        /// <param name="processApply">The method to combine select and expand result lists.</param>
+        /// <param name="combineSelectAndExpand">The method to combine select and expand result lists.</param>
+        /// <param name="processApply">The method to deal with apply result.</param>
         /// <param name="result">The result of the traversing.</param>
         internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, Func<ApplyClause, T> processApply, out T result)
         {
@@ -112,7 +112,6 @@ namespace Microsoft.OData.UriParser
                     Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, processApply, out subResult);
                 }
 
-                // TODO: That's PoC we need to handle bunch of cases.
                 if (expandSelectItem.ApplyOption != null && processApply != null)
                 {
                     subResult = processApply(expandSelectItem.ApplyOption);
