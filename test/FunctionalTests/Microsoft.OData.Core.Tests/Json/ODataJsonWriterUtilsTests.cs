@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.Json
 
 
         [Fact]
-        public void WriteError_InnerErrorWithNestedInnerError()
+        public void WriteError_InnerErrorWithNestedNullValue()
         {
             IDictionary<string, ODataValue> properties = new Dictionary<string, ODataValue>();
             properties.Add("stacktrace", "NormalString".ToODataValue());
@@ -118,16 +118,16 @@ namespace Microsoft.OData.Tests.Json
                 maxInnerErrorDepth: 5,
                 writingJsonLight: false);
              var result = stringWriter.GetStringBuilder().ToString();
-             result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"}}}}}");
+             //result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"internalexception\":{\"nested\":null}}}}}");
+             result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"internalexception\":{\"nested\":null}}}}");
         }
 
         [Fact]
-        public void WriteError_InnerError()
+        public void WriteError_InnerErrorWithNestedProperties()
         {
             IDictionary<string, ODataValue> properties = new Dictionary<string, ODataValue>();
             properties.Add("stacktrace", "NormalString".ToODataValue());
             properties.Add("MyNewObject", new ODataResourceValue() { TypeName = "ComplexValue", Properties = new List<ODataProperty>() { new ODataProperty() { Name = "NestedResourcePropertyName", Value = "NestedPropertyValue" } } });
-            //properties.Add("innererror", new ODataResourceValue() { Properties = new ODataProperty[] { new ODataProperty() { Name = "nested", }, } });
 
             var error = new ODataError
             {
@@ -147,5 +147,28 @@ namespace Microsoft.OData.Tests.Json
             var result = stringWriter.GetStringBuilder().ToString();
             result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"internalexception\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"}}}}}");
         }
+
+        [Fact]
+        public void WriteError_InnerErrorWithEmptyStringProperties()
+        {
+            var error = new ODataError
+            {
+                Target = "any target",
+                Details =
+                    new[] { new ODataErrorDetail { ErrorCode = "500", Target = "any target", Message = "any msg" } },
+                InnerError = new ODataInnerError() { Message = "The other properties on the inner error object should serialize as empty strings because of using this constructor."}
+            };
+
+            ODataJsonWriterUtils.WriteError(
+                jsonWriter,
+                enumerable => { },
+                error,
+                includeDebugInformation: true,
+                maxInnerErrorDepth: 5,
+                writingJsonLight: false);
+            var result = stringWriter.GetStringBuilder().ToString();
+            result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"message\":\"The other properties on the inner error object should serialize as empty strings because of using this constructor.\",\"type\":\"\",\"stacktrace\":\"\"}}}");
+        }
+
     }
 }

@@ -235,6 +235,12 @@ namespace Microsoft.OData.Json
                 }
             }
 
+            if (innerError.InnerError != null)
+            {
+                // "internalexception": { <nested inner error> }
+                WriteInnerError(jsonWriter, innerError.InnerError, JsonConstants.ODataErrorInnerErrorInnerErrorName, recursionDepth, maxInnerErrorDepth);
+            }
+
             // }
             jsonWriter.EndObjectScope();
         }

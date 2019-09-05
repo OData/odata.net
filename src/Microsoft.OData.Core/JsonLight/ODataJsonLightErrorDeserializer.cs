@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Linq;
-
 namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
@@ -316,7 +314,6 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         private void ReadPropertyValueInInnerError(int recursionDepth, ODataInnerError innerError, string propertyName)
         {
-
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorInnerErrorMessageName:
@@ -332,10 +329,6 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                 case JsonConstants.ODataErrorInnerErrorInnerErrorName:
-                    innerError.InnerError = this.ReadInnerError(recursionDepth);
-                    break;
-
-                case JsonConstants.ODataErrorInnerErrorName:
                     innerError.InnerError = this.ReadInnerError(recursionDepth);
                     break;
 

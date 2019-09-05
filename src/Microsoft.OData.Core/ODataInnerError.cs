@@ -72,7 +72,7 @@ namespace Microsoft.OData
         /// Creates an instance of ODataInnerError with an empty property bag.
         /// </summary>
         /// <returns>returns an instance of ODataInnerError with empty property bag.</returns>
-        public static ODataInnerError Create()
+        public static ODataInnerError CreateEmptyInnerError()
         {
             return new ODataInnerError(new Dictionary<string, ODataValue>());
         }
@@ -114,8 +114,8 @@ namespace Microsoft.OData
         /// <returns>The nested implementation specific debugging information.</returns>
         public ODataInnerError InnerError
         {
-            get { return GetInnerError(JsonConstants.ODataErrorInnerErrorInnerErrorName); }
-            set { SetInnerError(JsonConstants.ODataErrorInnerErrorInnerErrorName, value); }
+            get;
+            set;
         }
 
         /// <summary>
@@ -150,77 +150,6 @@ namespace Microsoft.OData
         private void SetStringValue(string propertyKey, string value)
         {
             Properties[propertyKey] = value.ToODataValue();
-        }
-
-        private void SetInnerError(string innerInnerErrorName, ODataInnerError error)
-        {
-            ODataResourceValue innerError = ConvertInnerErrorToODataValue(error);
-            Properties[innerInnerErrorName] = innerError;
-            return;
-        }
-
-        private ODataInnerError GetInnerError(string innerInnerErrorName)
-        {
-            if (!Properties.ContainsKey(innerInnerErrorName))
-            {
-                return null;
-            }
-
-            ODataResourceValue value = Properties[innerInnerErrorName] as ODataResourceValue;
-            return ConvertODataValueToInnerError(value);
-        }
-
-        private ODataInnerError ConvertODataValueToInnerError(ODataResourceValue value)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            ODataInnerError innerError = Create();
-
-            foreach (ODataProperty property in value.Properties)
-            {
-                if (property.Name == JsonConstants.ODataErrorInnerErrorInnerErrorName)
-                {
-                    innerError.InnerError = ConvertODataValueToInnerError(property.ODataValue as ODataResourceValue);
-                }
-                else
-                {
-                    innerError.Properties.Add(property.Name, property.ODataValue);
-                }
-            }
-
-            return innerError;
-        }
-
-        private ODataResourceValue ConvertInnerErrorToODataValue(ODataInnerError error)
-        {
-            if (error == null)
-            {
-                return null;
-            }
-
-            ODataResourceValue errorValue = new ODataResourceValue();
-            IList<ODataProperty> plist = new List<ODataProperty>();
-
-            if (error.InnerError != null)
-            {
-                ODataResourceValue innerResourceValue = ConvertInnerErrorToODataValue(error.InnerError);
-                plist.Add(new ODataProperty() {Name = JsonConstants.ODataErrorInnerErrorInnerErrorName, Value = innerResourceValue});
-            }
-
-            foreach (KeyValuePair<string, ODataValue> keyValuePair in error.Properties)
-            {
-                if (keyValuePair.Key != JsonConstants.ODataErrorInnerErrorInnerErrorName)
-                {
-                    plist.Add(new ODataProperty() { Name = keyValuePair.Key, Value = keyValuePair.Value });
-                }
-            }
-
-            errorValue.Properties = plist;
-
-            return errorValue;
         }
     }
 }

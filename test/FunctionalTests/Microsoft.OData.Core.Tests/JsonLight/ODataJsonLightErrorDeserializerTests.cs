@@ -10,6 +10,7 @@ using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
 using System.Collections.Generic;
+using FluentAssertions;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -134,7 +135,8 @@ namespace Microsoft.OData.Tests.JsonLight
                                         "\"StringProperty\":\"newProperty\"," +
                                         "\"IntProperty\": 1," +
                                         "\"BooleanProperty\": true," +
-                                        "\"type\":\"\"" +
+                                        "\"type\":\"\"," +
+                                        "\"NestedNull\":\"null\"" + 
                                      "}" +
                                  "}" +
                             "}" +
@@ -156,22 +158,26 @@ namespace Microsoft.OData.Tests.JsonLight
 
             //Assert Inner Error properties
             Assert.NotNull(error.InnerError);
-            Assert.True(error.InnerError.InnerError.Properties.ContainsKey("MyNewObject"));
-            Assert.IsType<ODataResourceValue>(error.InnerError.InnerError.Properties["MyNewObject"]);
-            ODataResourceValue nestedObject = error.InnerError.InnerError.Properties["MyNewObject"] as ODataResourceValue;
+            Assert.True(error.InnerError.Properties.ContainsKey("innererror"));
+            Assert.NotNull(error.InnerError.Properties["innererror"].As<ODataResourceValue>().Properties.FirstOrDefault(p =>p.Name == "MyNewObject").ODataValue.As<ODataResourceValue>());
+            ODataResourceValue nestedInnerObject = error.InnerError.Properties["innererror"] as ODataResourceValue;
+            ODataResourceValue nestedMyNewObject    = nestedInnerObject.Properties.FirstOrDefault(p => p.Name == "MyNewObject").ODataValue as ODataResourceValue;
 
-            Assert.Equal(nestedObject.Properties.Count(), 4);
-            Assert.Equal(nestedObject.Properties.ElementAt(0).Name, "StringProperty");
-            Assert.Equal(nestedObject.Properties.ElementAt(0).Value, "newProperty");
+            Assert.Equal(nestedMyNewObject.Properties.Count(), 5);
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(0).Name, "StringProperty");
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(0).Value, "newProperty");
 
-            Assert.Equal(nestedObject.Properties.ElementAt(1).Name, "IntProperty");
-            Assert.Equal(nestedObject.Properties.ElementAt(1).Value, 1);
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(1).Name, "IntProperty");
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(1).Value, 1);
 
-            Assert.Equal(nestedObject.Properties.ElementAt(2).Name, "BooleanProperty");
-            Assert.Equal(nestedObject.Properties.ElementAt(2).Value, true);
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(2).Name, "BooleanProperty");
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(2).Value, true);
 
-            Assert.Equal(nestedObject.Properties.ElementAt(3).Name, "type");
-            Assert.Equal(nestedObject.Properties.ElementAt(3).Value, "");
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(3).Name, "type");
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(3).Value, "");
+
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(4).Name, "NestedNull");
+            Assert.Equal(nestedMyNewObject.Properties.ElementAt(4).Value, null);
         }
 
         private ODataJsonLightInputContext GetInputContext(string payload, IEdmModel model = null)

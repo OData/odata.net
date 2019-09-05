@@ -5173,12 +5173,16 @@ DebuggerDisplayAttribute(),
 ]
 public sealed class Microsoft.OData.ODataInnerError {
 	public ODataInnerError ()
+	public ODataInnerError (System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.ODataValue]] properties)
 	public ODataInnerError (System.Exception exception)
 
 	Microsoft.OData.ODataInnerError InnerError  { public get; public set; }
 	string Message  { public get; public set; }
+	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.ODataValue]] Properties  { public get; }
 	string StackTrace  { public get; public set; }
 	string TypeName  { public get; public set; }
+
+	public static Microsoft.OData.ODataInnerError CreateEmptyInnerError ()
 }
 
 public sealed class Microsoft.OData.ODataInstanceAnnotation : Microsoft.OData.ODataAnnotatable {
