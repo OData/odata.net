@@ -30,9 +30,9 @@ namespace Microsoft.OData
 
             //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
             ////       to stay compatible with Astoria.
-            Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, string.Empty.ToODataValue());
-            Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, string.Empty.ToODataValue());
-            Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, string.Empty.ToODataValue());
+            Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, new ODataNullValue());
+            Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataNullValue());
+            Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataNullValue());
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with exception object.</summary>
@@ -50,9 +50,9 @@ namespace Microsoft.OData
 
             //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
             ////       to stay compatible with Astoria.
-            Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, exception.Message.ToODataValue() ?? string.Empty.ToODataValue());
-            Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, exception.GetType().FullName.ToODataValue() ?? string.Empty.ToODataValue());
-            Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, exception.StackTrace.ToODataValue() ?? string.Empty.ToODataValue());
+            Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, exception.Message.ToODataValue() ?? new ODataNullValue());
+            Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, exception.GetType().FullName.ToODataValue() ?? new ODataNullValue());
+            Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, exception.StackTrace.ToODataValue() ?? new ODataNullValue());
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Microsoft.OData
         {
             if (Properties.ContainsKey(propertyKey))
             {
-                return Properties[propertyKey].FromODataValue().ToString();
+                return Properties[propertyKey].FromODataValue()?.ToString();
             }
 
             return string.Empty;
@@ -149,7 +149,26 @@ namespace Microsoft.OData
 
         private void SetStringValue(string propertyKey, string value)
         {
+            if (!Properties.ContainsKey(propertyKey))
+            {
+                if (value == null)
+                {
+                    Properties.Add(propertyKey, new ODataNullValue());
+                    return;
+                }
+
+                Properties.Add(propertyKey, value.ToODataValue());
+                return;
+            }
+
+            if (value == null)
+            {
+                Properties.Add(propertyKey, new ODataNullValue());
+                return;
+            }
+
             Properties[propertyKey] = value.ToODataValue();
+            return;
         }
     }
 }
