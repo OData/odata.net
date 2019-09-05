@@ -231,7 +231,19 @@ namespace Microsoft.OData.Json
                 foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
                 {
                     jsonWriter.WriteName(pair.Key);
-                    jsonWriter.WriteODataValue(pair.Value);
+
+                    if ((pair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
+                        pair.Key == JsonConstants.ODataErrorInnerErrorStackTraceName ||
+                        pair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName) &&
+                        pair.Value is ODataNullValue)
+                    {
+                        // Write empty string for null values in stacktrace, type and message properties of inner error. 
+                        jsonWriter.WriteJsonValue(string.Empty);
+                    }
+                    else
+                    {
+                        jsonWriter.WriteODataValue(pair.Value);
+                    }
                 }
             }
 
