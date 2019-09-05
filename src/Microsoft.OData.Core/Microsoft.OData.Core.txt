@@ -704,6 +704,7 @@ SelectionItemBinder_NonNavigationPathToken=Inner or start path segments must be 
 
 MetadataBinder_UnsupportedQueryTokenKind=An unsupported query token kind '{0}' was found.
 MetadataBinder_PropertyNotDeclared=Could not find a property named '{1}' on type '{0}'.
+MetadataBinder_InvalidIdentifierInQueryOption=Can not resolve the segment identifier '{0}' in query option.
 MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue=Property '{0}' is not declared on type '{1}' or is not a key property. Only key properties can be used in key lookups.
 MetadataBinder_QualifiedFunctionNameWithParametersNotDeclared=Could not find a function named '{0}' with parameters '{1}'.
 MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties=An unnamed key value was used in a key lookup on a type '{0}' which has more than one key property. Unnamed key value can only be used on a type with one key property.

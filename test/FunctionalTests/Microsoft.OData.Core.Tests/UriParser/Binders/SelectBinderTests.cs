@@ -192,6 +192,22 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
+        public void InvlidIdentifierInSelectionThrows()
+        {
+            // Arrange
+            SelectToken selectToken = new SelectToken(new SelectTermToken[]
+            {
+                new SelectTermToken(new NonSystemToken("Dotted.Name", null, null))
+            });
+
+            // Act
+            Action test = () => BinderForPerson.Bind(null, selectToken);
+
+            // Assert
+            test.Throws<ODataException>(Strings.MetadataBinder_InvalidIdentifierInQueryOption("Dotted.Name"));
+        }
+
+        [Fact]
         public void AllSelectedIsSetIfSelectIsEmpty()
         {
             // Arrange & Act

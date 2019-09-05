@@ -587,6 +587,13 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
             }
 
+            // Later, we can consider to create a "DynamicOperationSegment" to handle this.
+            // But now, Let's throw exception.
+            if (lastSegment == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_InvalidIdentifierInQueryOption(tokenIn.Identifier));
+            }
+
             // navigation property is not allowed to append sub path in the selection.
             NavigationPropertySegment navPropSegment = pathSoFar.LastOrDefault() as NavigationPropertySegment;
             if (navPropSegment != null && tokenIn.NextToken != null)

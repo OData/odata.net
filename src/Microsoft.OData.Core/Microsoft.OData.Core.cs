@@ -654,6 +654,7 @@ namespace Microsoft.OData {
         internal const string SelectionItemBinder_NonNavigationPathToken = "SelectionItemBinder_NonNavigationPathToken";
         internal const string MetadataBinder_UnsupportedQueryTokenKind = "MetadataBinder_UnsupportedQueryTokenKind";
         internal const string MetadataBinder_PropertyNotDeclared = "MetadataBinder_PropertyNotDeclared";
+        internal const string MetadataBinder_InvalidIdentifierInQueryOption = "MetadataBinder_InvalidIdentifierInQueryOption";
         internal const string MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue = "MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue";
         internal const string MetadataBinder_QualifiedFunctionNameWithParametersNotDeclared = "MetadataBinder_QualifiedFunctionNameWithParametersNotDeclared";
         internal const string MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties = "MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties";
