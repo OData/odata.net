@@ -135,11 +135,6 @@ namespace Microsoft.OData
         public string JsonPCallback { get; set; }
 
         /// <summary>
-        /// Gets or sets a flag that determines if empty string values should be written for properties on ODataInnerError.
-        /// </summary>
-        public bool SkipNullPropertiesInError { get; set; }
-
-        /// <summary>
         /// Get/sets the character buffer pool.
         /// </summary>
         public ICharArrayPool ArrayPool { get; set; }

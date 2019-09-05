@@ -26,31 +26,30 @@ namespace Microsoft.OData
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with default values.</summary>
         public ODataInnerError()
         {
+            Properties = new Dictionary<string, ODataValue>();
+
+            //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
+            ////       to stay compatible with Astoria.
+            Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, string.Empty.ToODataValue());
+            Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, string.Empty.ToODataValue());
+            Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, string.Empty.ToODataValue());
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with exception object.</summary>
         /// <param name="exception">The <see cref="T:System.Exception" /> used to create the inner error.</param>
         public ODataInnerError(Exception exception)
-            : this(exception, null)
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with exception object.
-        /// </summary>
-        /// <param name="exception">The <see cref="T:System.Exception" /> used to create the inner error.</param>
-        /// <param name="nestedInnerErrorName">The name of the field for the nested inner error object inside inner error.</param>
-        public ODataInnerError(Exception exception, string nestedInnerErrorName)
         {
             ExceptionUtils.CheckArgumentNotNull(exception, "exception");
 
             if (exception.InnerException != null)
             {
-                this.InnerError = new ODataInnerError(exception.InnerException, nestedInnerErrorName);
+                this.InnerError = new ODataInnerError(exception.InnerException);
             }
 
             Properties = new Dictionary<string, ODataValue>();
+
+            //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
+            ////       to stay compatible with Astoria.
             Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, exception.Message.ToODataValue() ?? string.Empty.ToODataValue());
             Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, exception.GetType().FullName.ToODataValue() ?? string.Empty.ToODataValue());
             Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, exception.StackTrace.ToODataValue() ?? string.Empty.ToODataValue());
@@ -62,17 +61,21 @@ namespace Microsoft.OData
         /// <param name="properties">Dictionary of string keys with ODataValue as value. Key string indicates the property name where as the value of the property is encapsulated in ODataValue.</param>
         /// <param name="nestedInnerErrorName">The name of the field for the nested inner error object inside inner error.</param>
         /// <param name="nestedObject">Nested inner error object.</param>
-        public ODataInnerError(IDictionary<string, ODataValue> properties, string nestedInnerErrorName, ODataInnerError nestedObject)
+        public ODataInnerError(IDictionary<string, ODataValue> properties)
         {
+            ExceptionUtils.CheckArgumentNotNull(properties, "properties");
+
             Properties = properties;
-            this.NestedObjectName = nestedInnerErrorName;
-            InnerError = nestedObject;
         }
 
         /// <summary>
-        /// Nested object's name
+        /// Creates an instance of ODataInnerError with an empty property bag.
         /// </summary>
-        internal string NestedObjectName;
+        /// <returns>returns an instance of ODataInnerError with empty property bag.</returns>
+        public static ODataInnerError Create()
+        {
+            return new ODataInnerError(new Dictionary<string, ODataValue>());
+        }
 
         /// <summary>
         /// Properties to be written for the inner error.
@@ -80,14 +83,14 @@ namespace Microsoft.OData
         public IDictionary<string, ODataValue> Properties
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>Gets or sets the error message.</summary>
         /// <returns>The error message.</returns>
         public string Message
         {
-            get { return LookUpStringValue(JsonConstants.ODataErrorInnerErrorMessageName); }
+            get { return GetStringValue(JsonConstants.ODataErrorInnerErrorMessageName); }
             set { SetStringValue(JsonConstants.ODataErrorInnerErrorMessageName, value); }
         }
 
@@ -95,7 +98,7 @@ namespace Microsoft.OData
         /// <returns>The type name of this error.</returns>
         public string TypeName
         {
-            get { return LookUpStringValue(JsonConstants.ODataErrorInnerErrorTypeNameName); }
+            get { return GetStringValue(JsonConstants.ODataErrorInnerErrorTypeNameName); }
             set { SetStringValue(JsonConstants.ODataErrorInnerErrorTypeNameName, value); }
         }
 
@@ -103,7 +106,7 @@ namespace Microsoft.OData
         /// <returns>The stack trace for this error.</returns>
         public string StackTrace
         {
-            get { return LookUpStringValue(JsonConstants.ODataErrorInnerErrorStackTraceName); }
+            get { return GetStringValue(JsonConstants.ODataErrorInnerErrorStackTraceName); }
             set { SetStringValue(JsonConstants.ODataErrorInnerErrorStackTraceName, value); }
         }
 
@@ -111,8 +114,8 @@ namespace Microsoft.OData
         /// <returns>The nested implementation specific debugging information.</returns>
         public ODataInnerError InnerError
         {
-            get;
-            set;
+            get { return GetInnerError(JsonConstants.ODataErrorInnerErrorInnerErrorName); }
+            set { SetInnerError(JsonConstants.ODataErrorInnerErrorInnerErrorName, value); }
         }
 
         /// <summary>
@@ -134,33 +137,90 @@ namespace Microsoft.OData
                 this.InnerError == null ? "{}" : this.InnerError.ToJson());
         }
 
-        private string LookUpStringValue(string v)
+        private string GetStringValue(string propertyKey)
         {
-            if (Properties == null)
+            if (Properties.ContainsKey(propertyKey))
             {
-                return string.Empty;
-            }
-
-            foreach (KeyValuePair<string, ODataValue> pair in Properties)
-            {
-                if (pair.Key == v)
-                {
-                    string value = (string)pair.Value.FromODataValue();
-                    return value;
-                }
+                return Properties[propertyKey].FromODataValue().ToString();
             }
 
             return string.Empty;
         }
 
-        private void SetStringValue(string v, string value)
+        private void SetStringValue(string propertyKey, string value)
         {
-            if (Properties == null)
+            Properties[propertyKey] = value.ToODataValue();
+        }
+
+        private void SetInnerError(string innerInnerErrorName, ODataInnerError error)
+        {
+            ODataResourceValue innerError = ConvertInnerErrorToODataValue(error);
+            Properties[innerInnerErrorName] = innerError;
+            return;
+        }
+
+        private ODataInnerError GetInnerError(string innerInnerErrorName)
+        {
+            if (!Properties.ContainsKey(innerInnerErrorName))
             {
-                Properties = new Dictionary<string, ODataValue>();
+                return null;
             }
 
-            Properties[v] = value.ToODataValue();
+            ODataResourceValue value = Properties[innerInnerErrorName] as ODataResourceValue;
+            return ConvertODataValueToInnerError(value);
+        }
+
+        private ODataInnerError ConvertODataValueToInnerError(ODataResourceValue value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            ODataInnerError innerError = Create();
+
+            foreach (ODataProperty property in value.Properties)
+            {
+                if (property.Name == JsonConstants.ODataErrorInnerErrorInnerErrorName)
+                {
+                    innerError.InnerError = ConvertODataValueToInnerError(property.ODataValue as ODataResourceValue);
+                }
+                else
+                {
+                    innerError.Properties.Add(property.Name, property.ODataValue);
+                }
+            }
+
+            return innerError;
+        }
+
+        private ODataResourceValue ConvertInnerErrorToODataValue(ODataInnerError error)
+        {
+            if (error == null)
+            {
+                return null;
+            }
+
+            ODataResourceValue errorValue = new ODataResourceValue();
+            IList<ODataProperty> plist = new List<ODataProperty>();
+
+            if (error.InnerError != null)
+            {
+                ODataResourceValue innerResourceValue = ConvertInnerErrorToODataValue(error.InnerError);
+                plist.Add(new ODataProperty() {Name = JsonConstants.ODataErrorInnerErrorInnerErrorName, Value = innerResourceValue});
+            }
+
+            foreach (KeyValuePair<string, ODataValue> keyValuePair in error.Properties)
+            {
+                if (keyValuePair.Key != JsonConstants.ODataErrorInnerErrorInnerErrorName)
+                {
+                    plist.Add(new ODataProperty() { Name = keyValuePair.Key, Value = keyValuePair.Value });
+                }
+            }
+
+            errorValue.Properties = plist;
+
+            return errorValue;
         }
     }
 }

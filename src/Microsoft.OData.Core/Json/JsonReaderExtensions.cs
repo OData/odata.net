@@ -13,7 +13,6 @@ namespace Microsoft.OData.Json
     using System.IO;
     using System.Text;
 
-
     /// <summary>
     /// Extension methods for the JSON reader.
     /// </summary>

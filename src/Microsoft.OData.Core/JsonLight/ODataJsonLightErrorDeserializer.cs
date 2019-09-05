@@ -340,11 +340,6 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                 default:
-                    if (innerError.Properties == null)
-                    {
-                        innerError.Properties = new Dictionary<string, ODataValue>();
-                    }
-
                     innerError.Properties.Add(propertyName, this.JsonReader.ReadODataValue());
                     break;
             }

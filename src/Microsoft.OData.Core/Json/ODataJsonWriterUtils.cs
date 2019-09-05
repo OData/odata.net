@@ -28,10 +28,9 @@ namespace Microsoft.OData.Json
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
-        /// <param name="skipNullProperties">if set, stacktrace, type, and message will not be written if they are empty strings on ODataInnerError.</param>
         internal static void WriteError(IJsonWriter jsonWriter,
             Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, ODataError error,
-            bool includeDebugInformation, int maxInnerErrorDepth, bool writingJsonLight, bool skipNullProperties)
+            bool includeDebugInformation, int maxInnerErrorDepth, bool writingJsonLight)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(error != null, "error != null");
@@ -51,8 +50,7 @@ namespace Microsoft.OData.Json
                 error.GetInstanceAnnotations(),
                 writeInstanceAnnotationsDelegate,
                 maxInnerErrorDepth,
-                writingJsonLight,
-                skipNullProperties);
+                writingJsonLight);
         }
 
         /// <summary>
@@ -101,13 +99,12 @@ namespace Microsoft.OData.Json
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
-        /// <param name="skipNullProperties">if set, stacktrace, type, and message will not be written if they are empty strings on ODataInnerError.</param>
         private static void WriteError(IJsonWriter jsonWriter, string code, string message, string target,
             IEnumerable<ODataErrorDetail> details,
             ODataInnerError innerError,
             IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
             Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, int maxInnerErrorDepth,
-            bool writingJsonLight, bool skipNullProperties)
+            bool writingJsonLight)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(code != null, "code != null");
@@ -155,7 +152,7 @@ namespace Microsoft.OData.Json
 
             if (innerError != null)
             {
-                WriteInnerError(jsonWriter, innerError, JsonConstants.ODataErrorInnerErrorName, /* recursionDepth */ 0, maxInnerErrorDepth, skipNullProperties);
+                WriteInnerError(jsonWriter, innerError, JsonConstants.ODataErrorInnerErrorName, /* recursionDepth */ 0, maxInnerErrorDepth);
             }
 
             if (writingJsonLight)
@@ -218,7 +215,7 @@ namespace Microsoft.OData.Json
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="skipNullProperties">if set, stacktrace, type, and message will not be written if they are empty strings on ODataInnerError.</param>
 
-        private static void WriteInnerError(IJsonWriter jsonWriter, ODataInnerError innerError, string innerErrorPropertyName, int recursionDepth, int maxInnerErrorDepth, bool skipNullProperties)
+        private static void WriteInnerError(IJsonWriter jsonWriter, ODataInnerError innerError, string innerErrorPropertyName, int recursionDepth, int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(innerErrorPropertyName != null, "innerErrorPropertyName != null");
@@ -236,40 +233,6 @@ namespace Microsoft.OData.Json
                     jsonWriter.WriteName(pair.Key);
                     jsonWriter.WriteODataValue(pair.Value);
                 }
-            }
-
-            if (!skipNullProperties)
-            {
-                //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
-                ////       to stay compatible with Astoria.
-
-                if (innerError.Properties != null && !innerError.Properties.ContainsKey(JsonConstants.ODataErrorInnerErrorMessageName))
-                {
-                    // "message": "<message>"
-                    jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorMessageName);
-                    jsonWriter.WriteValue(innerError.Message ?? string.Empty);
-                }
-
-                if (innerError.Properties != null && !innerError.Properties.ContainsKey(JsonConstants.ODataErrorInnerErrorStackTraceName))
-                {
-                    // "stacktrace": "<stacktrace>"
-                    jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorStackTraceName);
-                    jsonWriter.WriteValue(innerError.StackTrace ?? string.Empty);
-
-                }
-
-                if (innerError.Properties != null && !innerError.Properties.ContainsKey(JsonConstants.ODataErrorInnerErrorTypeNameName))
-                {
-                    // "type": "<typename">
-                    jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorTypeNameName);
-                    jsonWriter.WriteValue(innerError.TypeName ?? string.Empty);
-                }
-            }
-
-            if (innerError.InnerError != null)
-            {
-                // "internalexception": { <nested inner error> }
-                WriteInnerError(jsonWriter, innerError.InnerError, string.IsNullOrEmpty(innerError.NestedObjectName) ? JsonConstants.ODataErrorInnerErrorInnerErrorName : innerError.NestedObjectName, recursionDepth, maxInnerErrorDepth, skipNullProperties);
             }
 
             // }

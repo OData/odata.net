@@ -947,7 +947,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             JsonLightInstanceAnnotationWriter instanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(this), this.TypeNameOracle);
-            ODataJsonWriterUtils.WriteError(this.JsonWriter, instanceAnnotationWriter.WriteInstanceAnnotationsForError, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth, /*writingJsonLight*/ true, this.MessageWriterSettings.SkipNullPropertiesInError);
+            ODataJsonWriterUtils.WriteError(this.JsonWriter, instanceAnnotationWriter.WriteInstanceAnnotationsForError, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth, /*writingJsonLight*/ true);
         }
 
         /// <summary>

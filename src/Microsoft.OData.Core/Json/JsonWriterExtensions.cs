@@ -213,7 +213,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyValue">value to write.</param>
         internal static void WriteODataValue(this IJsonWriter jsonWriter, ODataValue odataValue)
         {
-            if (odataValue == null)
+            if (odataValue == null || odataValue is ODataNullValue)
             {
                 jsonWriter.WriteValue((string)null);
                 return;

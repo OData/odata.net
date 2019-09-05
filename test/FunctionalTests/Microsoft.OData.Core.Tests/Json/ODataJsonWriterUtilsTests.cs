@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
 using Microsoft.OData.Json;
 using Xunit;
@@ -89,8 +87,7 @@ namespace Microsoft.OData.Tests.Json
                 error,
                 includeDebugInformation: false,
                 maxInnerErrorDepth: 0,
-                writingJsonLight: false,
-                skipNullProperties:false);
+                writingJsonLight: false);
             var result = stringWriter.GetStringBuilder().ToString();
             result.Should().Be(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target""," +
                 @"""details"":[{""code"":""500"",""target"":""any target"",""message"":""any msg""}]}}");
@@ -98,17 +95,19 @@ namespace Microsoft.OData.Tests.Json
 
 
         [Fact]
-        public void WriteError_InnerErrorWithDetails()
+        public void WriteError_InnerErrorWithNestedInnerError()
         {
             IDictionary<string, ODataValue> properties = new Dictionary<string, ODataValue>();
             properties.Add("stacktrace", "NormalString".ToODataValue());
             properties.Add("MyNewObject", new ODataResourceValue(){TypeName = "ComplexValue", Properties = new List<ODataProperty>(){ new ODataProperty(){ Name = "NestedResourcePropertyName", Value = "NestedPropertyValue"}}});
+            IDictionary<string, ODataValue> nestedDict = new Dictionary<string, ODataValue>();
+            nestedDict.Add("nested", null);
             var error = new ODataError
             {
                 Target = "any target",
                 Details =
                     new[] { new ODataErrorDetail { ErrorCode = "500", Target = "any target", Message = "any msg" } },
-                InnerError = new ODataInnerError(properties, "innererror", new ODataInnerError(properties, "nested", null))
+                InnerError = new ODataInnerError(properties) { InnerError = new ODataInnerError(nestedDict)}
             };
 
             ODataJsonWriterUtils.WriteError(
@@ -117,15 +116,36 @@ namespace Microsoft.OData.Tests.Json
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5,
-                writingJsonLight: false,
-                skipNullProperties: false);
-            var result = stringWriter.GetStringBuilder().ToString();
-            result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"message\":\"\",\"type\":\"\",\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"message\":\"\",\"type\":\"\"}}}}");
+                writingJsonLight: false);
+             var result = stringWriter.GetStringBuilder().ToString();
+             result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"}}}}}");
         }
-    }
 
-    public class Animal
-    {
-        public string Name { get; set; }
+        [Fact]
+        public void WriteError_InnerError()
+        {
+            IDictionary<string, ODataValue> properties = new Dictionary<string, ODataValue>();
+            properties.Add("stacktrace", "NormalString".ToODataValue());
+            properties.Add("MyNewObject", new ODataResourceValue() { TypeName = "ComplexValue", Properties = new List<ODataProperty>() { new ODataProperty() { Name = "NestedResourcePropertyName", Value = "NestedPropertyValue" } } });
+            //properties.Add("innererror", new ODataResourceValue() { Properties = new ODataProperty[] { new ODataProperty() { Name = "nested", }, } });
+
+            var error = new ODataError
+            {
+                Target = "any target",
+                Details =
+                    new[] { new ODataErrorDetail { ErrorCode = "500", Target = "any target", Message = "any msg" } },
+                InnerError = new ODataInnerError(properties) { InnerError = new ODataInnerError(properties) }
+            };
+
+            ODataJsonWriterUtils.WriteError(
+                jsonWriter,
+                enumerable => { },
+                error,
+                includeDebugInformation: true,
+                maxInnerErrorDepth: 5,
+                writingJsonLight: false);
+            var result = stringWriter.GetStringBuilder().ToString();
+            result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"internalexception\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"}}}}}");
+        }
     }
 }
