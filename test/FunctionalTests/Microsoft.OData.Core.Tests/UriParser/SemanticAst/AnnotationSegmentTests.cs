@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -19,21 +18,21 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void AnnotationCannotBeNull()
         {
             Action createWithNullProperty = () => new AnnotationSegment(null);
-            createWithNullProperty.ShouldThrow<Exception>(Error.ArgumentNull("property").ToString());
+            Assert.Throws<ArgumentNullException>("term", createWithNullProperty);
         }
 
         [Fact]
         public void IdentifierSetToAnnotationName()
         {
             AnnotationSegment annotationSegment = new AnnotationSegment(HardCodedTestModel.GetPrimitiveAnnotationTerm());
-            annotationSegment.Term.FullName().Should().Be(HardCodedTestModel.GetPrimitiveAnnotationTerm().FullName());
+            Assert.Equal(HardCodedTestModel.GetPrimitiveAnnotationTerm().FullName(), annotationSegment.Term.FullName());
         }
         
         [Fact]
         public void TargetEdmTypeIsAnnotationTypeDefinition()
         {
             AnnotationSegment annotationSegment = new AnnotationSegment(HardCodedTestModel.GetPrimitiveAnnotationTerm());
-            annotationSegment.TargetEdmType.Should().BeSameAs(HardCodedTestModel.GetPrimitiveAnnotationTerm().Type.Definition);
+            Assert.Same(HardCodedTestModel.GetPrimitiveAnnotationTerm().Type.Definition, annotationSegment.TargetEdmType);
         }
 
         [Fact]
@@ -41,7 +40,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             IEdmTerm term = HardCodedTestModel.GetPrimitiveAnnotationTerm();
             AnnotationSegment segment = new AnnotationSegment(term);
-            segment.Term.Should().Be(term);
+            Assert.Same(term, segment.Term);
         }
 
         [Fact]
@@ -49,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             AnnotationSegment annotationSegment1 = new AnnotationSegment(HardCodedTestModel.GetPrimitiveAnnotationTerm());
             AnnotationSegment annotationSegment2 = new AnnotationSegment(HardCodedTestModel.GetPrimitiveAnnotationTerm());
-            annotationSegment1.Equals(annotationSegment2).Should().BeTrue();
+            Assert.True(annotationSegment1.Equals(annotationSegment2));
         }
 
         [Fact]
@@ -58,8 +57,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             AnnotationSegment annotationSegment1 = new AnnotationSegment(HardCodedTestModel.GetPrimitiveAnnotationTerm());
             AnnotationSegment annotationSegment2 = new AnnotationSegment(HardCodedTestModel.GetComplexAnnotationTerm());
             BatchSegment batchSegment = BatchSegment.Instance;
-            annotationSegment1.Equals(annotationSegment2).Should().BeFalse();
-            annotationSegment1.Equals(batchSegment).Should().BeFalse();
+            Assert.False(annotationSegment1.Equals(annotationSegment2));
+            Assert.False(annotationSegment1.Equals(batchSegment));
         }
     }
 }

@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
@@ -21,21 +20,21 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         public void StatementsCannotBeNull()
         {
             Action action = () => new AggregateToken(null);
-            action.ShouldThrow<Exception>(Error.ArgumentNull("statements").ToString());
+            Assert.Throws<ArgumentNullException>("expressions", action);
         }
 
         [Fact]
         public void StatementsSetCorrectly()
         {
             AggregateToken token = new AggregateToken(statements);
-            ((object)token.AggregateExpressions).Should().Be(statements);
+            Assert.Same(statements, token.AggregateExpressions);
         }
 
         [Fact]
         public void KindIsSetCorrectly()
         {
             AggregateToken token = new AggregateToken(statements);
-            token.Kind.Should().Be(QueryTokenKind.Aggregate);
+            Assert.Equal(QueryTokenKind.Aggregate, token.Kind);
         }
     }
 }

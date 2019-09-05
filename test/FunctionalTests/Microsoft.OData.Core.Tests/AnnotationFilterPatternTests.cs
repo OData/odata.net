@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -16,177 +15,185 @@ namespace Microsoft.OData.Tests
         public void CreatePatternShouldThrowOnNullPattern()
         {
             Action test = () => AnnotationFilterPattern.Create(null);
-            test.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(test);
         }
 
         [Fact]
         public void CreatePatternShouldThrowOnEmptyPattern()
         {
             Action test = () => AnnotationFilterPattern.Create("");
-            test.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(test);
         }
 
         [Fact]
         public void CreateWithStarShouldReturnIncludeAllPattern()
         {
-            AnnotationFilterPattern.Create("*").As<object>().Should().BeSameAs(AnnotationFilterPattern.IncludeAllPattern);            
+            Assert.Same(AnnotationFilterPattern.IncludeAllPattern, AnnotationFilterPattern.Create("*"));
         }
 
         [Fact]
         public void IncludeAllPatternShouldNotBeExcludePattern()
         {
-            AnnotationFilterPattern.IncludeAllPattern.IsExclude.Should().BeFalse();
+            Assert.False(AnnotationFilterPattern.IncludeAllPattern.IsExclude);
         }
 
         [Fact]
         public void IncludeAllPatternShouldMatchArbitraryInstanceAnnotation()
         {
-            AnnotationFilterPattern.IncludeAllPattern.Matches("any.any").Should().BeTrue();
+            Assert.True(AnnotationFilterPattern.IncludeAllPattern.Matches("any.any"));
         }
 
         [Fact]
         public void CreateWithMinusStartShouldReturnExcludeAllPattern()
         {
-            AnnotationFilterPattern.Create("-*").As<object>().Should().BeSameAs(AnnotationFilterPattern.ExcludeAllPattern);
+            Assert.Same(AnnotationFilterPattern.ExcludeAllPattern, AnnotationFilterPattern.Create("-*"));
         }
 
         [Fact]
         public void ExcludeAllPatternShouldBeTrue()
         {
-            AnnotationFilterPattern.ExcludeAllPattern.IsExclude.Should().BeTrue();
+            Assert.True(AnnotationFilterPattern.ExcludeAllPattern.IsExclude);
         }
 
         [Fact]
         public void ExcludeAllPatternShouldMatchArbitraryInstanceAnnotation()
         {
-            AnnotationFilterPattern.ExcludeAllPattern.Matches("any.any").Should().BeTrue();
+            Assert.True(AnnotationFilterPattern.ExcludeAllPattern.Matches("any.any"));
         }
 
-        [Fact]
-        public void InvalidPatternMissingDotShouldThrow()
+        [Theory]
+        [InlineData("name")]
+        [InlineData("-name")]
+        public void InvalidPatternMissingDotShouldThrow(string pattern)
         {
-            foreach (string pattern in new[] { "name", "-name" })
-            {
-                Action test = () => AnnotationFilterPattern.Create(pattern);
-                test.ShouldThrow<ArgumentException>().WithMessage(Strings.AnnotationFilterPattern_InvalidPatternMissingDot(pattern));
-            }
+            Action test = () => AnnotationFilterPattern.Create(pattern);
+            test.Throws<ArgumentException>(Strings.AnnotationFilterPattern_InvalidPatternMissingDot(pattern));
         }
 
-        [Fact]
-        public void InvalidPatternEmptySegmentShouldThrow()
+        [Theory]
+        [InlineData("namespace.")]
+        [InlineData(".name")]
+        [InlineData("-namespace.")]
+        [InlineData("-.name")]
+        [InlineData("-.")]
+        [InlineData("-.*")]
+        public void InvalidPatternEmptySegmentShouldThrow(string pattern)
         {
-            foreach (string pattern in new[] { "namespace.", ".name", ".", "-namespace.", "-.name", "-.", "-.*" })
-            {
-                Action test = () => AnnotationFilterPattern.Create(pattern);
-                test.ShouldThrow<ArgumentException>().WithMessage(Strings.AnnotationFilterPattern_InvalidPatternEmptySegment(pattern));
-            }
+            Action test = () => AnnotationFilterPattern.Create(pattern);
+            test.Throws<ArgumentException>(Strings.AnnotationFilterPattern_InvalidPatternEmptySegment(pattern));
         }
 
-        [Fact]
-        public void InvalidPatternWildCardInSegmentShouldThrow()
+        [Theory]
+        [InlineData("namespace*.name")]
+        [InlineData("namespace.*name")]
+        [InlineData("namespce.foo*bar")]
+        [InlineData("-namespace*.name")]
+        [InlineData("-namespace.*name")]
+        [InlineData("-namespce.foo*bar")]
+        public void InvalidPatternWildCardInSegmentShouldThrow(string pattern)
         {
-            foreach (string pattern in new[] { "namespace*.name", "namespace.*name", "namespce.foo*bar", "-namespace*.name", "-namespace.*name", "-namespce.foo*bar" })
-            {
-                Action test = () => AnnotationFilterPattern.Create(pattern);
-                test.ShouldThrow<ArgumentException>().WithMessage(Strings.AnnotationFilterPattern_InvalidPatternWildCardInSegment(pattern));
-            }
+            Action test = () => AnnotationFilterPattern.Create(pattern);
+            test.Throws<ArgumentException>(Strings.AnnotationFilterPattern_InvalidPatternWildCardInSegment(pattern));
         }
 
-        [Fact]
-        public void InvalidPatternWildCardNotInLastSegmentShouldThrow()
+        [Theory]
+        [InlineData("namespace.*.name")]
+        [InlineData("*.name")]
+        [InlineData("*.namespce.name")]
+        [InlineData("-namespace.*.name")]
+        [InlineData("-*.name")]
+        [InlineData("-*.namespce.name")]
+        public void InvalidPatternWildCardNotInLastSegmentShouldThrow(string pattern)
         {
-            foreach (string pattern in new[] { "namespace.*.name", "*.name", "*.namespce.name", "-namespace.*.name", "-*.name", "-*.namespce.name" })
-            {
-                Action test = () => AnnotationFilterPattern.Create(pattern);
-                test.ShouldThrow<ArgumentException>().WithMessage(Strings.AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment(pattern));
-            }
+            Action test = () => AnnotationFilterPattern.Create(pattern);
+            test.Throws<ArgumentException>(Strings.AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment(pattern));
         }
 
         [Fact]
         public void CreateIncludeStartsWithFilterShouldPass()
         {
             AnnotationFilterPattern startsWithPattern = AnnotationFilterPattern.Create("namespace.*");
-            startsWithPattern.IsExclude.Should().BeFalse();
-            startsWithPattern.Matches("any.any").Should().BeFalse();
-            startsWithPattern.Matches("namespace.any").Should().BeTrue();
+            Assert.False(startsWithPattern.IsExclude);
+            Assert.False(startsWithPattern.Matches("any.any"));
+            Assert.True(startsWithPattern.Matches("namespace.any"));
         }
 
         [Fact]
         public void CreateExcludeStartsWithFilterShouldPass()
         {
             AnnotationFilterPattern startsWithPattern = AnnotationFilterPattern.Create("-namespace.*");
-            startsWithPattern.IsExclude.Should().BeTrue();
-            startsWithPattern.Matches("any.any").Should().BeFalse();
-            startsWithPattern.Matches("namespace.any").Should().BeTrue();
+            Assert.True(startsWithPattern.IsExclude);
+            Assert.False(startsWithPattern.Matches("any.any"));
+            Assert.True(startsWithPattern.Matches("namespace.any"));
         }
 
         [Fact]
         public void CreateIncludeExactMatchFilterShouldPass()
         {
             AnnotationFilterPattern exactMatchPattern = AnnotationFilterPattern.Create("namespace.name");
-            exactMatchPattern.IsExclude.Should().BeFalse();
-            exactMatchPattern.Matches("any.any").Should().BeFalse();
-            exactMatchPattern.Matches("namespace.name").Should().BeTrue();
+            Assert.False(exactMatchPattern.IsExclude);
+            Assert.False(exactMatchPattern.Matches("any.any"));
+            Assert.True(exactMatchPattern.Matches("namespace.name"));
         }
 
         [Fact]
         public void CreateExcludeExactMatchFilterShouldPass()
         {
             AnnotationFilterPattern exactMatchPattern = AnnotationFilterPattern.Create("-namespace.name");
-            exactMatchPattern.IsExclude.Should().BeTrue();
-            exactMatchPattern.Matches("any.any").Should().BeFalse();
-            exactMatchPattern.Matches("namespace.name").Should().BeTrue();
+            Assert.True(exactMatchPattern.IsExclude);
+            Assert.False(exactMatchPattern.Matches("any.any"));
+            Assert.True(exactMatchPattern.Matches("namespace.name"));
         }
 
         [Fact]
         public void ExcludeShouldHaveHigherPriorityThanIncludeIfThePatternsHaveTheSamePriority()
         {
-            AnnotationFilterPattern.Create("-*").CompareTo(AnnotationFilterPattern.Create("*")).Should().Be(-1);
-            AnnotationFilterPattern.Create("-ns.*").CompareTo(AnnotationFilterPattern.Create("ns.*")).Should().Be(-1);
-            AnnotationFilterPattern.Create("-ns.name").CompareTo(AnnotationFilterPattern.Create("ns.name")).Should().Be(-1);
-            AnnotationFilterPattern.Create("-ns.*").CompareTo(AnnotationFilterPattern.Create("ns1.*")).Should().Be(-1);
-            AnnotationFilterPattern.Create("-ns.sub1.*").CompareTo(AnnotationFilterPattern.Create("ns.sub2.*")).Should().Be(-1);
+            Assert.Equal(-1, AnnotationFilterPattern.Create("-*").CompareTo(AnnotationFilterPattern.Create("*")));
+            Assert.Equal(-1, AnnotationFilterPattern.Create("-ns.*").CompareTo(AnnotationFilterPattern.Create("ns.*")));
+            Assert.Equal(-1, AnnotationFilterPattern.Create("-ns.name").CompareTo(AnnotationFilterPattern.Create("ns.name")));
+            Assert.Equal(-1, AnnotationFilterPattern.Create("-ns.*").CompareTo(AnnotationFilterPattern.Create("ns1.*")));
+            Assert.Equal(-1, AnnotationFilterPattern.Create("-ns.sub1.*").CompareTo(AnnotationFilterPattern.Create("ns.sub2.*")));
         }
 
         [Fact]
         public void IdenticalPatternsShouldBeOfSamePriority()
         {
-            AnnotationFilterPattern.Create("*").CompareTo(AnnotationFilterPattern.Create("*")).Should().Be(0);
-            AnnotationFilterPattern.Create("ns.*").CompareTo(AnnotationFilterPattern.Create("ns.*")).Should().Be(0);
-            AnnotationFilterPattern.Create("ns.name").CompareTo(AnnotationFilterPattern.Create("ns.name")).Should().Be(0);
-            AnnotationFilterPattern.Create("-*").CompareTo(AnnotationFilterPattern.Create("-*")).Should().Be(0);
-            AnnotationFilterPattern.Create("-ns.*").CompareTo(AnnotationFilterPattern.Create("-ns.*")).Should().Be(0);
-            AnnotationFilterPattern.Create("-ns.name").CompareTo(AnnotationFilterPattern.Create("-ns.name")).Should().Be(0);
+            Assert.Equal(0, AnnotationFilterPattern.Create("*").CompareTo(AnnotationFilterPattern.Create("*")));
+            Assert.Equal(0, AnnotationFilterPattern.Create("ns.*").CompareTo(AnnotationFilterPattern.Create("ns.*")));
+            Assert.Equal(0, AnnotationFilterPattern.Create("ns.name").CompareTo(AnnotationFilterPattern.Create("ns.name")));
+            Assert.Equal(0, AnnotationFilterPattern.Create("-*").CompareTo(AnnotationFilterPattern.Create("-*")));
+            Assert.Equal(0, AnnotationFilterPattern.Create("-ns.*").CompareTo(AnnotationFilterPattern.Create("-ns.*")));
+            Assert.Equal(0, AnnotationFilterPattern.Create("-ns.name").CompareTo(AnnotationFilterPattern.Create("-ns.name")));
         }
 
         [Fact]
         public void WildCardShouldHaveLowerPriorityThanNoneWildCard()
         {
-            AnnotationFilterPattern.Create("*").CompareTo(AnnotationFilterPattern.Create("foo.*")).Should().Be(1);
-            AnnotationFilterPattern.Create("-ns.*").CompareTo(AnnotationFilterPattern.Create("*")).Should().Be(-1);
+            Assert.Equal(1, AnnotationFilterPattern.Create("*").CompareTo(AnnotationFilterPattern.Create("foo.*")));
+            Assert.Equal(-1, AnnotationFilterPattern.Create("-ns.*").CompareTo(AnnotationFilterPattern.Create("*")));
         }
 
         [Fact]
         public void IfPattern1StartsWithPattern2Pattern1ShouldBeGivenHigherPriorityThanPattern2()
         {
-            AnnotationFilterPattern.Create("ns.name").CompareTo(AnnotationFilterPattern.Create("ns.*")).Should().Be(-1);
-            AnnotationFilterPattern.Create("ns.sub1.*").CompareTo(AnnotationFilterPattern.Create("ns.sub")).Should().Be(-1);
+            Assert.Equal(-1, AnnotationFilterPattern.Create("ns.name").CompareTo(AnnotationFilterPattern.Create("ns.*")));
+            Assert.Equal(-1, AnnotationFilterPattern.Create("ns.sub1.*").CompareTo(AnnotationFilterPattern.Create("ns.sub")));
         }
 
         [Fact]
         public void IfPattern2StartsWithPattern1Pattern2ShouldBeGivenHigherPriorityThanPattern1()
         {
-            AnnotationFilterPattern.Create("ns.*").CompareTo(AnnotationFilterPattern.Create("ns.name")).Should().Be(1);
-            AnnotationFilterPattern.Create("ns.sub").CompareTo(AnnotationFilterPattern.Create("ns.sub1.*")).Should().Be(1);
+            Assert.Equal(1, AnnotationFilterPattern.Create("ns.*").CompareTo(AnnotationFilterPattern.Create("ns.name")));
+            Assert.Equal(1, AnnotationFilterPattern.Create("ns.sub").CompareTo(AnnotationFilterPattern.Create("ns.sub1.*")));
         }
 
         [Fact]
         public void PatternsUnderDifferentNamespacesShouldBeOfSamePriority()
         {
-            AnnotationFilterPattern.Create("ns.*").CompareTo(AnnotationFilterPattern.Create("ns1.*")).Should().Be(0);
-            AnnotationFilterPattern.Create("ns.sub1.name").CompareTo(AnnotationFilterPattern.Create("ns.sub2.name")).Should().Be(0);
-            AnnotationFilterPattern.Create("ns.sub1.*").CompareTo(AnnotationFilterPattern.Create("ns.sub12.*")).Should().Be(0);
-            AnnotationFilterPattern.Create("ns1.name").CompareTo(AnnotationFilterPattern.Create("ns2.name")).Should().Be(0);
+            Assert.Equal(0, AnnotationFilterPattern.Create("ns.*").CompareTo(AnnotationFilterPattern.Create("ns1.*")));
+            Assert.Equal(0, AnnotationFilterPattern.Create("ns.sub1.name").CompareTo(AnnotationFilterPattern.Create("ns.sub2.name")));
+            Assert.Equal(0, AnnotationFilterPattern.Create("ns.sub1.*").CompareTo(AnnotationFilterPattern.Create("ns.sub12.*")));
+            Assert.Equal(0, AnnotationFilterPattern.Create("ns1.name").CompareTo(AnnotationFilterPattern.Create("ns2.name")));
         }
 
         [Fact]
@@ -199,11 +206,11 @@ namespace Microsoft.OData.Tests
             AnnotationFilterPattern pattern5 = AnnotationFilterPattern.Create("-ns.name");
             AnnotationFilterPattern[] patternsToSort = new[] {pattern1, pattern2, pattern3, pattern4, pattern5};
             AnnotationFilterPattern.Sort(patternsToSort);
-            patternsToSort[0].Should().Be(pattern5);
-            patternsToSort[1].Should().Be(pattern4);
-            patternsToSort[2].Should().Be(pattern3);
-            patternsToSort[3].Should().Be(pattern2);
-            patternsToSort[4].Should().Be(pattern1);
+            Assert.Equal(pattern5, patternsToSort[0]);
+            Assert.Equal(pattern4, patternsToSort[1]);
+            Assert.Equal(pattern3, patternsToSort[2]);
+            Assert.Equal(pattern2, patternsToSort[3]);
+            Assert.Equal(pattern1, patternsToSort[4]);
         }
     }
 }

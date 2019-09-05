@@ -66,7 +66,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
         private void VerifyStringEmptyArgumentValidation(Action<string> action, string argumentName)
         {
-            action.ShouldThrowOnEmptyStringArgument(argumentName);
+            action.ShouldThrowOnEmptyStringArgument<ArgumentException>(argumentName);
         }
 
         private void VerifyBaseUriAndStringNullOrEmptyArgumentValidation(Action<Uri, string> action, string argumentName)
