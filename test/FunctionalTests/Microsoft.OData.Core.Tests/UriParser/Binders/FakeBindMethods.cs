@@ -19,20 +19,20 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         private static readonly ResourceRangeVariable PaintingEntityRangeVariable = new ResourceRangeVariable("A_PAINTING", HardCodedTestModel.GetPaintingTypeReference(), HardCodedTestModel.GetPaintingsSet());
         private static readonly ResourceRangeVariable LionsEntityRangeVariable = new ResourceRangeVariable("A_LION", HardCodedTestModel.GetLionTypeReference(), HardCodedTestModel.GetLionSet());
         private const int KeyBinderConstantValue = 0xBAD;
-        
+
         public static readonly ConstantNode KeyBinderConstantToken = new ConstantNode(KeyBinderConstantValue);
-        
-        public static readonly ResourceRangeVariableReferenceNode FakeDogNode = 
+
+        public static readonly ResourceRangeVariableReferenceNode FakeDogNode =
             new ResourceRangeVariableReferenceNode(DogsEntityRangeVariable.Name, DogsEntityRangeVariable);
 
-        public static readonly ResourceRangeVariableReferenceNode FakePersonNode = 
+        public static readonly ResourceRangeVariableReferenceNode FakePersonNode =
             new ResourceRangeVariableReferenceNode(PeopleEntityRangeVariable.Name, PeopleEntityRangeVariable);
 
         public static readonly ResourceRangeVariableReferenceNode FakePaintingNode =
             new ResourceRangeVariableReferenceNode(PaintingEntityRangeVariable.Name, PaintingEntityRangeVariable);
 
-        public static readonly SingleResourceNode FakeLionNode = 
-            new ResourceRangeVariableReferenceNode(LionsEntityRangeVariable.Name, LionsEntityRangeVariable);        
+        public static readonly SingleResourceNode FakeLionNode =
+            new ResourceRangeVariableReferenceNode(LionsEntityRangeVariable.Name, LionsEntityRangeVariable);
 
         public static readonly SingleValueNode FakeSinglePrimitive =
             new ConstantNode("A_STRING");
@@ -52,9 +52,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public static readonly SingleComplexNode FakeSingleComplexProperty =
             new SingleComplexNode(FakePersonNode, HardCodedTestModel.GetPersonAddressProp());
 
-        public static readonly SingleValuePropertyAccessNode FakePersonDogNameNode =
+        public static readonly SingleValuePropertyAccessNode FakePersonDogColorNode =
             new SingleValuePropertyAccessNode(
-                new SingleNavigationNode(FakePersonNode, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog")),HardCodedTestModel.GetAddressCityProperty());
+                new SingleNavigationNode(FakePersonNode, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog")), HardCodedTestModel.GetDogColorProp());
 
 
         public static readonly CollectionComplexNode FakeCollectionComplexProperty =
@@ -120,9 +120,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return FakeSingleComplexProperty;
         }
 
-        public static SingleValuePropertyAccessNode BindMethodReturnsPersonDogNameNavigation(QueryToken queryToken)
+        public static SingleValuePropertyAccessNode BindMethodReturnsPersonDogColorNavigation(QueryToken queryToken)
         {
-            return FakePersonDogNameNode;
+            return FakePersonDogColorNode;
         }
 
         public static CollectionComplexNode BindCollectionComplex(QueryToken queryToken)
