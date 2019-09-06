@@ -177,7 +177,7 @@ namespace Microsoft.OData
         public ODataVersion? Version { get; set; }
 
         /// <summary>
-        /// Informs the metadata builder which properties, functions, actions, links to omit. 
+        /// Informs the metadata builder which properties, functions, actions, links to omit.
         /// </summary>
         public ODataMetadataSelector MetadataSelector { get; set; }
 

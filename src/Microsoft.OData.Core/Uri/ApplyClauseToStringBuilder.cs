@@ -210,17 +210,7 @@ namespace Microsoft.OData
                     query.Append(ExpressionConstants.SymbolOpenParen);
                 }
 
-                if (node.Expression != null)
-                {
-                    AppendExpression(node.Expression);
-                }
-
-                bool appendCommaChild = false;
-                foreach (GroupByPropertyNode childNode in node.ChildTransformations)
-                {
-                    appendCommaChild = AppendComma(appendCommaChild);
-                    AppendExpression(childNode.Expression);
-                }
+                Translate(node);
             }
 
             if (appendComma)
@@ -232,6 +222,21 @@ namespace Microsoft.OData
             {
                 AppendComma(true);
                 Translate(transformation.ChildTransformations);
+            }
+        }
+
+        private void Translate(GroupByPropertyNode node)
+        {
+            if (node.Expression != null)
+            {
+                AppendExpression(node.Expression);
+            }
+
+            bool appendCommaChild = false;
+            foreach (GroupByPropertyNode childNode in node.ChildTransformations)
+            {
+                appendCommaChild = AppendComma(appendCommaChild);
+                Translate(childNode);
             }
         }
 

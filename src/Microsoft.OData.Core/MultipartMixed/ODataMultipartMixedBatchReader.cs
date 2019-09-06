@@ -93,9 +93,9 @@ namespace Microsoft.OData.MultipartMixed
             }
             else if (this.InputContext.MessageReaderSettings.Version <= ODataVersion.V4)
             {
-                // For backward compatibility, don't enforce uniqueness of Content-ID 
+                // For backward compatibility, don't enforce uniqueness of Content-ID
                 // in MultipartMixed outside of a changeset
-                this.payloadUriConverter.Reset();
+                this.PayloadUriConverter.Reset();
             }
 
             ODataBatchOperationRequestMessage requestMessage = BuildOperationRequestMessage(
