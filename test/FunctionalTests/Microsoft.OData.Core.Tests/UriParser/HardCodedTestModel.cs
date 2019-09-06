@@ -318,6 +318,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             var FullyQualifiedNamespacePainting_ID = FullyQualifiedNamespacePainting.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
             FullyQualifiedNamespacePainting.AddStructuralProperty("Artist", EdmCoreModel.Instance.GetString(true));
+            FullyQualifiedNamespacePainting.AddStructuralProperty("ArtistAddress", FullyQualifiedNamespaceAddressTypeReference);
             FullyQualifiedNamespacePainting.AddStructuralProperty("Value", EdmCoreModel.Instance.GetDecimal(true));
             FullyQualifiedNamespacePainting.AddStructuralProperty("Colors", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
             FullyQualifiedNamespacePainting.AddKeys(new IEdmStructuralProperty[] { FullyQualifiedNamespacePainting_ID, });
@@ -335,6 +336,7 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceAddress.AddStructuralProperty("City", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespaceAddress.AddStructuralProperty("NextHome", FullyQualifiedNamespaceAddressTypeReference);
             FullyQualifiedNamespaceAddress.AddStructuralProperty("MyNeighbors", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
+            FullyQualifiedNamespaceAddress.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "PostBoxPainting", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = FullyQualifiedNamespacePainting });
             model.AddElement(FullyQualifiedNamespaceAddress);
 
             FullyQualifiedNamespaceHomeAddress.AddStructuralProperty("HomeNO", EdmCoreModel.Instance.GetString(true));
@@ -1105,6 +1107,7 @@ namespace Microsoft.OData.Tests.UriParser
         </Key>
         <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Artist"" Type=""Edm.String"" />
+        <Property Name=""ArtistAddress"" Type=""Fully.Qualified.Namespace.Address"" />
         <Property Name=""Value"" Type=""Edm.Decimal"" />
         <Property Name=""Colors"" Type=""Collection(Edm.String)"" />
         <NavigationProperty Name=""Owner"" Type=""Fully.Qualified.Namespace.Person"" />
@@ -1123,6 +1126,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""City"" Type=""Edm.String"" />
         <Property Name=""NextHome"" Type=""Fully.Qualified.Namespace.Address"" />
         <Property Name=""MyNeighbors"" Type=""Collection(Edm.String)"" />
+        <NavigationProperty Name=""PostBoxPainting"" Type=""Fully.Qualified.Namespace.Painting"" />
       </ComplexType>
       <ComplexType Name=""HomeAddress"" BaseType=""Fully.Qualified.Namespace.Address"">
         <Property Name=""HomeNO"" Type=""Edm.String"" />
