@@ -163,7 +163,7 @@ namespace Microsoft.OData
 
             if (value == null)
             {
-                Properties.Add(propertyKey, new ODataNullValue());
+                Properties[propertyKey] = new ODataNullValue();
                 return;
             }
 
