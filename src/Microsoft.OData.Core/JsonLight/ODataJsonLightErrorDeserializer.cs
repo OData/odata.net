@@ -333,7 +333,15 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                 default:
-                    innerError.Properties.Add(propertyName, this.JsonReader.ReadODataValue());
+                    if (!innerError.Properties.ContainsKey(propertyName))
+                    {
+                        innerError.Properties.Add(propertyName, this.JsonReader.ReadODataValue());
+                    }
+                    else
+                    {
+                        innerError.Properties[propertyName] = this.JsonReader.ReadODataValue();
+                    }
+
                     break;
             }
         }
