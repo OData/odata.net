@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -21,15 +20,15 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void SourceCannotBeNull()
         {
             Action createWithNullSource = () => new ConvertNode(null, EdmCoreModel.Instance.GetInt32(true));
-            createWithNullSource.ShouldThrow<Exception>(Error.ArgumentNull("source").ToString());
+            Assert.Throws<ArgumentNullException>("source", createWithNullSource);
         }
-        
+
         [Fact]
         public void TypeReferenceCannotBeNull()
         {
             ConstantNode source = new ConstantNode(1);
             Action createWithNullTargetType = () => new ConvertNode(source, null);
-            createWithNullTargetType.ShouldThrow<Exception>(Error.ArgumentNull("typeReference").ToString());
+            Assert.Throws<ArgumentNullException>("typeReference", createWithNullTargetType);
         }
 
         [Fact]
@@ -37,7 +36,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ConstantNode source = new ConstantNode(1);
             ConvertNode convertNode = new ConvertNode(source, source.TypeReference);
-            convertNode.Source.As<ConstantNode>().Value.As<int>().Should().Be(1);
+
+            ConstantNode conNode = Assert.IsType<ConstantNode>(convertNode.Source);
+            Assert.Equal(1, Assert.IsType<int>(conNode.Value));
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ConstantNode source = new ConstantNode(1);
             ConvertNode convertNode = new ConvertNode(source, EdmCoreModel.Instance.GetInt64(true));
-            convertNode.TypeReference.FullName().Should().Be("Edm.Int64");
+            Assert.Equal("Edm.Int64", convertNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -53,7 +54,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ConstantNode source = new ConstantNode(1);
             ConvertNode convertNode = new ConvertNode(source, EdmCoreModel.Instance.GetInt64(true));
-            convertNode.InternalKind.Should().Be(InternalQueryNodeKind.Convert);
+            Assert.Equal(InternalQueryNodeKind.Convert, convertNode.InternalKind);
         }
     }
 }

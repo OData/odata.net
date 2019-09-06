@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -44,9 +43,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Or).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(false);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(true);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Or);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(false);
+            binaryNode.Right.ShouldBeConstantQueryNode(true);
         }
 
         [Fact]
@@ -58,9 +58,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(false);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeSingleValueFunctionCallQueryNode("func");
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(false);
+            binaryNode.Right.ShouldBeSingleValueFunctionCallQueryNode("func");
         }
 
         [Fact]
@@ -72,9 +73,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean);
+            binaryNode.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean);
         }
 
         [Fact]
@@ -88,16 +90,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
 
-            binaryNode.TypeReference.IsNullable.Should().BeTrue();
+            Assert.True(binaryNode.TypeReference.IsNullable);
 
-            var left = binaryNode.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean).And;
-            left.TypeReference.IsNullable.Should().BeTrue();
+            var left = binaryNode.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean);
+            Assert.True(left.TypeReference.IsNullable);
             left.Source.ShouldBeConstantQueryNode<object>(null);
 
-            var right = binaryNode.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean).And;
-            right.TypeReference.IsNullable.Should().BeTrue();
+            var right = binaryNode.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean);
+            Assert.True(right.TypeReference.IsNullable);
             right.Source.ShouldBeSingleValueFunctionCallQueryNode(FuncName);
         }
 
@@ -111,9 +113,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
 
-            binaryNode.TypeReference.Should().BeNull();
+            Assert.Null(binaryNode.TypeReference);
             binaryNode.Left.ShouldBeConstantQueryNode<object>(null);
             binaryNode.Right.ShouldBeConstantQueryNode<object>(null);
         }
@@ -129,16 +131,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
 
-            binaryNode.TypeReference.IsNullable.Should().BeTrue();
+            Assert.True(binaryNode.TypeReference.IsNullable);
 
-            var left = binaryNode.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean).And;
-            left.TypeReference.IsNullable.Should().BeTrue();
+            var left = binaryNode.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean);
+            Assert.True(left.TypeReference.IsNullable);
             left.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
 
-            var right = binaryNode.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean).And;
-            right.TypeReference.IsNullable.Should().BeTrue();
+            var right = binaryNode.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean);
+            Assert.True(right.TypeReference.IsNullable);
             right.Source.ShouldBeSingleValueFunctionCallQueryNode(FuncName);
         }
 
@@ -152,9 +154,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
 
-            binaryNode.TypeReference.Should().BeNull();
+            Assert.Null(binaryNode.TypeReference);
             binaryNode.Left.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
             binaryNode.Right.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName + "1");
         }
@@ -169,9 +171,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
 
-            binaryNode.TypeReference.Should().BeNull();
+            Assert.Null(binaryNode.TypeReference);
             binaryNode.Left.ShouldBeConstantQueryNode<object>(null);
             binaryNode.Right.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
         }
@@ -185,9 +187,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(2.5);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(2d);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(2.5);
+            binaryNode.Right.ShouldBeConstantQueryNode(2d);
         }
 
         [Fact]
@@ -199,9 +202,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode("something");
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode("something else");
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode("something");
+            binaryNode.Right.ShouldBeConstantQueryNode("something else");
         }
 
         [Fact]
@@ -213,9 +217,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode("something");
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode("something else");
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode("something");
+            binaryNode.Right.ShouldBeConstantQueryNode("something else");
         }
 
         [Fact]
@@ -227,9 +232,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(99d);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(99.1);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(99d);
+            binaryNode.Right.ShouldBeConstantQueryNode(99.1);
         }
 
         [Fact]
@@ -241,9 +247,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThan).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(55);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(66);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThan);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(55);
+            binaryNode.Right.ShouldBeConstantQueryNode(66);
         }
 
         [Fact]
@@ -255,9 +262,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Boolean);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(new Guid());
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(new Guid(1, 2, 3, new byte[8]));
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(new Guid());
+            binaryNode.Right.ShouldBeConstantQueryNode(new Guid(1, 2, 3, new byte[8]));
         }
 
         [Fact]
@@ -269,9 +277,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Int32);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(1);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(2);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add);
+            Assert.Equal(EdmPrimitiveTypeKind.Int32, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(1);
+            binaryNode.Right.ShouldBeConstantQueryNode(2);
         }
 
         [Fact]
@@ -283,9 +292,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Double);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(99d);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(99.1);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract);
+            Assert.Equal(EdmPrimitiveTypeKind.Double, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(99d);
+            binaryNode.Right.ShouldBeConstantQueryNode(99.1);
         }
 
         [Fact]
@@ -297,9 +307,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Double);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(double.NaN);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Double);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply);
+            Assert.Equal(EdmPrimitiveTypeKind.Double, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(double.NaN);
+            binaryNode.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Double);
         }
 
         [Fact]
@@ -311,9 +322,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Int32);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(0);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(0);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide);
+            Assert.Equal(EdmPrimitiveTypeKind.Int32, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(0);
+            binaryNode.Right.ShouldBeConstantQueryNode(0);
         }
 
         [Fact]
@@ -325,9 +337,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var resultNode = this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Modulo).And.TypeReference.PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Double);
-            resultNode.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(-9.9);
-            resultNode.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(-100.9);
+            var binaryNode = resultNode.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Modulo);
+            Assert.Equal(EdmPrimitiveTypeKind.Double, binaryNode.TypeReference.PrimitiveKind());
+            binaryNode.Left.ShouldBeConstantQueryNode(-9.9);
+            binaryNode.Right.ShouldBeConstantQueryNode(-100.9);
         }
 
         [Fact]
@@ -339,8 +352,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.And, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_BinaryOperatorOperandNotSingleValue("And")));
+            bind.Throws<ODataException>(Strings.MetadataBinder_BinaryOperatorOperandNotSingleValue("And"));
         }
 
         [Fact]
@@ -352,8 +364,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorToken = new BinaryOperatorToken(BinaryOperatorKind.Equal, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_BinaryOperatorOperandNotSingleValue("Equal")));
+            bind.Throws<ODataException>(Strings.MetadataBinder_BinaryOperatorOperandNotSingleValue("Equal"));
         }
 
         [Fact]
@@ -364,8 +375,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorToken = new BinaryOperatorToken(BinaryOperatorKind.GreaterThan, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_IncompatibleOperandsError("Edm.Boolean", "Edm.Int32", BinaryOperatorKind.GreaterThan)));
+            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.Boolean", "Edm.Int32", BinaryOperatorKind.GreaterThan));
         }
 
         [Fact]
@@ -376,8 +386,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.And, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_IncompatibleOperandsError("Edm.DateTimeOffset", "<null>", BinaryOperatorKind.And)));
+            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.DateTimeOffset", "<null>", BinaryOperatorKind.And));
         }
 
         [Fact]
@@ -388,8 +397,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.And, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_IncompatibleOperandsError("Edm.DateTimeOffset", "<null>", BinaryOperatorKind.And)));
+            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.DateTimeOffset", "<null>", BinaryOperatorKind.And));
         }
 
         [Fact]
@@ -400,8 +408,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.Multiply, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_IncompatibleOperandsError("Edm.Int32", "Edm.String", BinaryOperatorKind.Multiply)));
+            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.Int32", "Edm.String", BinaryOperatorKind.Multiply));
         }
 
         [Fact]
@@ -412,8 +419,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.Equal, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_IncompatibleOperandsError("Edm.Boolean", "Edm.Int32", BinaryOperatorKind.Equal)));
+            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.Boolean", "Edm.Int32", BinaryOperatorKind.Equal));
         }
 
         /// <summary>

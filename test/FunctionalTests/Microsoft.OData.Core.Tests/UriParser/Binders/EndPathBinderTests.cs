@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var result = this.propertyBinder.BindEndPath(token);
 
             result.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonShoeProp()).
-                And.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
+                Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var result = this.propertyBinder.BindEndPath(token);
 
             result.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp()).
-                And.Source.ShouldBeResourceRangeVariableReferenceNode("a");
+                Source.ShouldBeResourceRangeVariableReferenceNode("a");
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var result = this.propertyBinder.BindEndPath(token);
 
             result.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonShoeProp()).
-                And.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
+                Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
         }
 
         [Fact]

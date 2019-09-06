@@ -33,7 +33,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)) };
 
             var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            results.ShouldBeKeyLookupQueryNode().And.KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
+            results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue("ID", new LiteralToken(123)) };
 
             var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            results.ShouldBeKeyLookupQueryNode().And.KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
+            results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue("ID1", new LiteralToken(123)), new NamedValue("ID2", new LiteralToken(456)) };
 
             var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            results.ShouldBeKeyLookupQueryNode().And.KeyPropertyValues.Count().Should().Be(2);
+            results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Count().Should().Be(2);
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue("ID", new LiteralToken(123)) };
 
             var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            results.ShouldBeKeyLookupQueryNode().And.KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
+            results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
         }
 
         // TODO: Clearly CollectionNode is too broad for BindKeyValues. Consider change the object model and/or the paramter type for BindKeyValues.

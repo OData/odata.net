@@ -1,6 +1,11 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="CustomUriLiteralParserUnitTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -42,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addNullCustomUriLiteralParser = () =>
                 CustomUriLiteralParsers.AddCustomUriLiteralParser(null);
 
-            addNullCustomUriLiteralParser.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("customUriLiteralParser", addNullCustomUriLiteralParser);
         }
 
         [Fact]
@@ -51,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addNullCustomUriLiteralParserAndNullParser = () =>
                 CustomUriLiteralParsers.AddCustomUriLiteralParser(null, null);
 
-            addNullCustomUriLiteralParserAndNullParser.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("edmTypeReference", addNullCustomUriLiteralParserAndNullParser);
         }
 
         [Fact]
@@ -62,7 +67,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addNullCustomUriLiteralParser = () =>
                 CustomUriLiteralParsers.AddCustomUriLiteralParser(typeReference, null);
 
-            addNullCustomUriLiteralParser.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("customUriLiteralParser", addNullCustomUriLiteralParser);
         }
 
         [Fact]
@@ -74,7 +79,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addCustomUriLiteralParserWithNullEdmType = () =>
                 CustomUriLiteralParsers.AddCustomUriLiteralParser(null, customBooleanUriTypePraser);
 
-            addCustomUriLiteralParserWithNullEdmType.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("edmTypeReference", addCustomUriLiteralParserWithNullEdmType);
         }
 
         [Fact]
@@ -93,7 +98,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             finally
             {
                 // Clean up from cache
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -117,8 +122,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             finally
             {
                 // Clean up from cache
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser));
             }
         }
 
@@ -137,12 +142,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action addCustomUriLiteralParser = () =>
                     CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
-                addCustomUriLiteralParser.ShouldThrow<ODataException>().
-                    WithMessage(Strings.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
+                addCustomUriLiteralParser.Throws<ODataException>(Strings.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -162,7 +166,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -187,8 +191,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser));
             }
         }
 
@@ -207,12 +211,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action addCustomUriLiteralParser = () =>
                     CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-                addCustomUriLiteralParser.ShouldThrow<ODataException>().
-                    WithMessage(Strings.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists(booleanTypeReference.FullName()));
+                addCustomUriLiteralParser.Throws<ODataException>(Strings.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists(booleanTypeReference.FullName()));
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -238,7 +241,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntAndBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntAndBooleanUriTypePraser));
             }
         }
 
@@ -262,7 +265,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -286,7 +289,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -314,8 +317,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser));
             }
         }
 
@@ -338,7 +341,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action removeNullCustomUriLiteralParser = () =>
                 CustomUriLiteralParsers.RemoveCustomUriLiteralParser(null);
 
-            removeNullCustomUriLiteralParser.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("customUriLiteralParser", removeNullCustomUriLiteralParser);
         }
 
         [Fact]
@@ -348,7 +351,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             bool isRemoveSucceeded = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser);
 
             // Assert
-            isRemoveSucceeded.Should().BeFalse();
+            Assert.False(isRemoveSucceeded);
         }
 
         [Fact]
@@ -359,7 +362,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
             bool isRemoved = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser);
-            isRemoved.Should().BeTrue();
+            Assert.True(isRemoved);
 
             this.NoParsesForNonConvetionalBooleanValue();
         }
@@ -374,7 +377,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
             bool isRemoved = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser);
-            isRemoved.Should().BeTrue();
+            Assert.True(isRemoved);
 
             this.NoParsesForNonConvetionalBooleanValue();
         }
@@ -393,7 +396,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
             bool isRemoved = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser);
-            isRemoved.Should().BeTrue();
+            Assert.True(isRemoved);
 
             this.NoParsesForNonConvetionalBooleanValue();
         }
@@ -414,7 +417,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             CustomUriLiteralParsers.AddCustomUriLiteralParser(intTypeReference, customIntBooleanUriTypePraser);
 
             bool isRemoved = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser);
-            isRemoved.Should().BeTrue();
+            Assert.True(isRemoved);
 
             this.NoParsesForNonConvetionalBooleanValue();
             this.NoParsesForNonConvetionalIntValue();
@@ -449,12 +452,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
 
                 // Assert
-                exception.Should().BeNull();
-                output.ShouldBeEquivalentTo(true);
+                Assert.Null(exception);
+                Assert.Equal(true, output);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -473,18 +476,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
 
                 // Assert
-                output.Should().BeNull();
+                Assert.Null(output);
 
                 Action action = () =>
                 {
                     throw exception;
                 };
 
-                action.ShouldThrow<UriLiteralParsingException>();
+                Assert.Throws<UriLiteralParsingException>(action);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -501,18 +504,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
 
                 // Assert
-                output.Should().BeNull();
+                Assert.Null(output);
 
                 Action action = () =>
                 {
                     throw exception;
                 };
 
-                action.ShouldThrow<UriLiteralParsingException>();
+                Assert.Throws<UriLiteralParsingException>(action);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -530,12 +533,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
                 // Assert
-                exception.Should().BeNull();
-                output.ShouldBeEquivalentTo(true);
+                Assert.Null(exception);
+                Assert.Equal(true, output);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -553,18 +556,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, booleanTypeReference, out exception);
 
                 // Assert
-                output.Should().BeNull();
+                Assert.Null(output);
 
                 Action action = () =>
                 {
                     throw exception;
                 };
 
-                action.ShouldThrow<UriLiteralParsingException>();
+                Assert.Throws<UriLiteralParsingException>(action);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -582,18 +585,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, booleanTypeReference, out exception);
 
                 // Assert
-                output.Should().BeNull();
+                Assert.Null(output);
 
                 Action action = () =>
                 {
                     throw exception;
                 };
 
-                action.ShouldThrow<UriLiteralParsingException>();
+                Assert.Throws<UriLiteralParsingException>(action);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -611,12 +614,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetString(true), out exception);
 
                 // Assert
-                output.Should().BeNull();
-                exception.Should().BeNull();
+                Assert.Null(output);
+                Assert.Null(exception);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
             }
         }
 
@@ -629,8 +632,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
             // Assert
-            output.Should().BeNull();
-            exception.Should().BeNull();
+            Assert.Null(output);
+            Assert.Null(exception);
         }
 
         [Fact]
@@ -654,13 +657,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALUE_TRUE_VALID, booleanTypeReference, out exception);
 
                 // Assert
-                output.Should().Be(true);
-                exception.Should().BeNull();
+                Assert.Equal(true, output);
+                Assert.Null(exception);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser));
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser));
             }
         }
 
@@ -681,11 +684,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                    .And.Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
+                    .Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -702,11 +705,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                    .And.Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
+                    .Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -725,12 +728,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action parseUriAction = () =>
                     parser.ParseFilter();
 
-                parseUriAction.ShouldThrow<ODataException>().
-                    WithInnerException<UriLiteralParsingException>();
+                ODataException exception = Assert.Throws<ODataException>(parseUriAction);
+                Assert.IsType<UriLiteralParsingException>(exception.InnerException);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -749,12 +752,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action parseUriAction = () =>
                     parser.ParseFilter();
 
-                parseUriAction.ShouldThrow<ODataException>().
-                    WithInnerException<UriLiteralParsingException>();
+                ODataException exception = Assert.Throws<ODataException>(parseUriAction);
+                Assert.IsType<UriLiteralParsingException>(exception.InnerException);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -777,12 +780,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action parseUriAction = () =>
                     parser.ParseFilter();
 
-                parseUriAction.ShouldThrow<ODataException>().
-                    WithInnerException<UriLiteralParsingException>();
+                ODataException exception = Assert.Throws<ODataException>(parseUriAction);
+                Assert.IsType<UriLiteralParsingException>(exception.InnerException);
             }
             finally
             {
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
+                Assert.True(CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -809,12 +812,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=LionHeartbeat eq {0}'55.9'", HEARTBEAT_LITERAL_PREFIX));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
-                HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue =
-                  (parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConvertQueryNode(heartbeatTypeReference).And.Source as ConstantNode).
-                  Value.As<HeatBeatCustomUriLiteralParser.HeatBeat>();
+                HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue = Assert.IsType<HeatBeatCustomUriLiteralParser.HeatBeat>(
+                  (parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConvertQueryNode(heartbeatTypeReference).Source as ConstantNode).Value);
 
-                heartbeatValue.Should().NotBeNull();
-                heartbeatValue.Frequency.Should().Be(55.9);
+                Assert.NotNull(heartbeatValue);
+                Assert.Equal(55.9, heartbeatValue.Frequency);
             }
             finally
             {
@@ -839,7 +841,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                    .And.Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
+                    .Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
             }
             finally
             {
@@ -864,7 +866,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                    .And.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetBoolean(true)).And.Source.ShouldBeConstantQueryNode(true);
+                    .Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetBoolean(true)).Source.ShouldBeConstantQueryNode(true);
             }
             finally
             {
@@ -888,7 +890,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                    .And.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetBoolean(true)).And.Source.ShouldBeConstantQueryNode(true);
+                    .Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetBoolean(true)).Source.ShouldBeConstantQueryNode(true);
             }
             finally
             {
@@ -915,7 +917,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                    .And.Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
+                    .Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
             }
             finally
             {
@@ -943,8 +945,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
             // Assert
-            exception.Should().BeNull();
-            output.ShouldBeEquivalentTo(true);
+            Assert.Null(exception);
+            Assert.Equal(true, output);
         }
 
         /// <summary>
@@ -963,8 +965,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_INT_VALID_VALUE, Int32TypeReference, out exception);
 
             // Assert
-            exception.Should().BeNull();
-            output.ShouldBeEquivalentTo(55);
+            Assert.Null(exception);
+            Assert.Equal(55, output);
         }
 
         /// <summary>
@@ -979,8 +981,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
             // Assert
-            exception.Should().BeNull();
-            output.Should().BeNull();
+            Assert.Null(exception);
+            Assert.Null(output);
         }
 
         /// <summary>
@@ -995,8 +997,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_INT_VALID_VALUE, Int32TypeReference, out exception);
 
             // Assert
-            exception.Should().BeNull();
-            output.Should().BeNull();
+            Assert.Null(exception);
+            Assert.Null(output);
         }
 
         #endregion
@@ -1191,7 +1193,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             static HeatBeatCustomUriLiteralParser()
             {
-                HeartbeatComplexType = new EdmComplexTypeReference(HardCodedTestModel.GetHeatbeatComplexType(), false);
+                HeartbeatComplexType = new EdmComplexTypeReference(HardCodedTestModel.GetHeatbeatComplexType(), true);
             }
 
             public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)

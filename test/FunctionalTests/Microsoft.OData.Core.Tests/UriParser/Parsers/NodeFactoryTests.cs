@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var nodeToIterationOver = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             var resultNode = NodeFactory.CreateParameterNode("a", nodeToIterationOver);
             resultNode.ShouldBeResourceRangeVariable(HardCodedTestModel.GetPersonTypeReference())
-                .And.CollectionResourceNode.NavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
+                .CollectionResourceNode.NavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var type = EdmCoreModel.Instance.GetString(false);
             var resultNode = NodeFactory.CreateImplicitRangeVariable(type, null);
-            resultNode.ShouldBeNonentityRangeVariable(ExpressionConstants.It).And.TypeReference.Should().Be(type);
+            resultNode.ShouldBeNonentityRangeVariable(ExpressionConstants.It).TypeReference.Should().Be(type);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CreateImplicitParameterNodeFromNonEntityCollectionShouldCreateNonResourceRangeVariableReferenceNode()
         {
             var resultNode = NodeFactory.CreateImplicitRangeVariable(new ODataPath(new[] {new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp())}));
-            resultNode.ShouldBeResourceRangeVariable(ExpressionConstants.It).And.TypeReference.Definition.Should().Be(HardCodedTestModel.GetAddressType());
+            resultNode.ShouldBeResourceRangeVariable(ExpressionConstants.It).TypeReference.Definition.Should().Be(HardCodedTestModel.GetAddressType());
             resultNode.Name.Should().Be(ExpressionConstants.It);
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             SingleValueNode expression = new ConstantNode(true);
             RangeVariable rangeVariable = new ResourceRangeVariable("bob", HardCodedTestModel.GetPersonTypeReference(), parent);
             var resultNode = NodeFactory.CreateLambdaNode(bindingState, parent, expression, rangeVariable, QueryTokenKind.Any);
-            var node = resultNode.ShouldBeAnyQueryNode().And;
+            var node = resultNode.ShouldBeAnyQueryNode();
             node.Body.Should().BeSameAs(expression);
             node.Source.Should().BeSameAs(parent);
         }
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             RangeVariable rangeVariable = new ResourceRangeVariable("bob", HardCodedTestModel.GetPersonTypeReference(), parent);
             var resultNode = NodeFactory.CreateLambdaNode(bindingState, parent, expression, rangeVariable, QueryTokenKind.All);
 
-            var node = resultNode.ShouldBeAllQueryNode().And;
+            var node = resultNode.ShouldBeAllQueryNode();
             node.Body.Should().BeSameAs(expression);
             node.Source.Should().BeSameAs(parent);
         }

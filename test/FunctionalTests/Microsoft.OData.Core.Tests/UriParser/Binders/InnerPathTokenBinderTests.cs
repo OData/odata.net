@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             var result = binder.BindInnerPathSegment(token);
             result.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetDogMyPeopleNavProp()).
-                And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet().FindNavigationTarget(HardCodedTestModel.GetDogMyPeopleNavProp()));
+                NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet().FindNavigationTarget(HardCodedTestModel.GetDogMyPeopleNavProp()));
         }
 
         [Fact]

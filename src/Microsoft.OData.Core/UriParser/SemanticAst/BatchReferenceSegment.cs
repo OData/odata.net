@@ -44,7 +44,7 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="ODataException">Throws if the contentID is not in the right format.</exception>
         public BatchReferenceSegment(string contentId, IEdmType edmType, IEdmEntitySetBase entitySet)
         {
-            ExceptionUtils.CheckArgumentNotNull(edmType, "resultingType");
+            ExceptionUtils.CheckArgumentNotNull(edmType, "edmType");
             ExceptionUtils.CheckArgumentNotNull(contentId, "contentId");
             if (!ODataPathParser.ContentIdRegex.IsMatch(contentId))
             {

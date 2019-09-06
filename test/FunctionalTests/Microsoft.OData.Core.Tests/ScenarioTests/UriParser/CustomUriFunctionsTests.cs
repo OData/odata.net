@@ -1,15 +1,16 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
-using Xunit;
-using FluentAssertions;
+﻿//---------------------------------------------------------------------
+// <copyright file="CustomUriFunctionsTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.UriParser;
+using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -40,7 +41,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action addNullFunctionAction = () =>
                 CustomUriFunctions.AddCustomUriFunction("my.MyNullCustomFunction", null);
 
-            addNullFunctionAction.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("functionSignature", addNullFunctionAction);
         }
 
         [Fact]
@@ -52,7 +53,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action addNullFunctionNameAction = () =>
                 CustomUriFunctions.AddCustomUriFunction(null, customFunctionSignature);
 
-            addNullFunctionNameAction.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("functionName", addNullFunctionNameAction);
         }
 
         [Fact]
@@ -64,7 +65,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action addCustomFunctionSignature = () =>
                 CustomUriFunctions.AddCustomUriFunction(string.Empty, customFunctionSignature);
 
-            addCustomFunctionSignature.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("functionName", addCustomFunctionSignature);
         }
 
         [Fact]
@@ -77,7 +78,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 CustomUriFunctions.AddCustomUriFunction("my.customFunctionWithNoReturnType",
                                                         customFunctionSignatureWithNullReturnType);
 
-            addCustomFunctionSignature.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("functionSignatureWithReturnType must contain a return type", addCustomFunctionSignature);
         }
 
         #endregion
@@ -93,8 +94,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                                                             GEO_DISTANCE_BUILTIN_FUNCTION_SIGNATURE);
 
                 // Assert
-                addCustomFunction.ShouldThrow<ODataException>().
-                    WithMessage(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(BUILT_IN_GEODISTANCE_FUNCTION_NAME));
+                addCustomFunction.Throws<ODataException>(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(BUILT_IN_GEODISTANCE_FUNCTION_NAME));
             }
             finally
             {
@@ -119,9 +119,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     this.GetCustomFunctionSignaturesOrNull(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
 
                 // Assert
-                resultFunctionSignaturesWithReturnType.Should().NotBeNull();
-                resultFunctionSignaturesWithReturnType.Length.Should().Be(1);
-                resultFunctionSignaturesWithReturnType[0].Should().Be(customFunctionSignature);
+                Assert.NotNull(resultFunctionSignaturesWithReturnType);
+                Assert.Equal(1, resultFunctionSignaturesWithReturnType.Length);
+                Assert.Same(customFunctionSignature, resultFunctionSignaturesWithReturnType[0]);
             }
             finally
             {
@@ -148,8 +148,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Assert
-                addCustomFunction.ShouldThrow<ODataException>().
-                    WithMessage(Strings.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(customFunctionName));
+                addCustomFunction.Throws<ODataException>(Strings.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(customFunctionName));
             }
             finally
             {
@@ -175,8 +174,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Asserts
-                addCustomFunction.ShouldThrow<ODataException>().
-                    WithMessage(Strings.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(customFunctionName));
+                addCustomFunction.Throws<ODataException>(Strings.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(customFunctionName));
             }
             finally
             {
@@ -201,8 +199,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 FunctionSignatureWithReturnType[] customFunctionSignatures =
                     GetCustomFunctionSignaturesOrNull(customFunctionName);
 
-                customFunctionSignatures.Length.Should().Be(1);
-                customFunctionSignatures[0].Should().BeSameAs(newCustomFunctionSignature);
+                Assert.Equal(1, customFunctionSignatures.Length);
+                Assert.Same(newCustomFunctionSignature, customFunctionSignatures[0]);
             }
             finally
             {
@@ -227,8 +225,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 FunctionSignatureWithReturnType[] customFunctionSignatures =
                     GetCustomFunctionSignaturesOrNull(customFunctionName);
 
-                customFunctionSignatures.Length.Should().Be(1);
-                customFunctionSignatures[0].Should().BeSameAs(newCustomFunctionSignature);
+                Assert.Equal(1, customFunctionSignatures.Length);
+                Assert.Same(newCustomFunctionSignature, customFunctionSignatures[0]);
             }
             finally
             {
@@ -260,12 +258,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     GetCustomFunctionSignaturesOrNull(customFunctionName).
                         All(x => x.Equals(existingCustomFunctionSignature) || x.Equals(newCustomFunctionSignature));
 
-                areSiganturesAdded.Should().BeTrue();
+                Assert.True(areSiganturesAdded);
             }
             finally
             {
                 // Clean both signatures from CustomUriFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(customFunctionName));
             }
         }
 
@@ -285,7 +283,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 CustomUriFunctions.RemoveCustomUriFunction(null);
 
             // Assert
-            removeFunction.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("functionName", removeFunction);
         }
 
         [Fact]
@@ -296,7 +294,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 CustomUriFunctions.RemoveCustomUriFunction(string.Empty);
 
             // Assert
-            removeFunction.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("functionName", removeFunction);
         }
 
         [Fact]
@@ -307,7 +305,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 CustomUriFunctions.RemoveCustomUriFunction("FunctionName", null);
 
             // Assert
-            removeFunction.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("functionSignature", removeFunction);
         }
 
         [Fact]
@@ -321,7 +319,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 CustomUriFunctions.RemoveCustomUriFunction("FunctionName", existingCustomFunctionSignature);
 
             // Assert
-            removeFunction.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("functionSignatureWithReturnType must contain a return type", removeFunction);
         }
 
         #endregion
@@ -337,16 +335,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
             CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
-            GetCustomFunctionSignaturesOrNull(customFunctionName)[0].
-                Equals(existingCustomFunctionSignature).
-                Should().BeTrue();
+            Assert.True(GetCustomFunctionSignaturesOrNull(customFunctionName)[0].Equals(existingCustomFunctionSignature));
 
             // Test
             bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
 
             // Assert
-            isRemoveSucceeded.Should().BeTrue();
-            GetCustomFunctionSignaturesOrNull(customFunctionName).Should().BeNull();
+            Assert.True(isRemoveSucceeded);
+            Assert.Null(GetCustomFunctionSignaturesOrNull(customFunctionName));
         }
 
 
@@ -360,7 +356,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
 
             // Assert
-            isRemoveSucceeded.Should().BeFalse();
+            Assert.False(isRemoveSucceeded);
         }
 
         // Remove signature, function name doesn't exist
@@ -375,7 +371,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, customFunctionSignature);
 
             // Assert
-            isRemoveSucceeded.Should().BeFalse();
+            Assert.False(isRemoveSucceeded);
         }
 
         // Remove signature, function name exists, signature doesn't
@@ -391,7 +387,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                         new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
                 CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
-                GetCustomFunctionSignaturesOrNull(customFunctionName)[0].Equals(existingCustomFunctionSignature).Should().BeTrue();
+                Assert.True(GetCustomFunctionSignaturesOrNull(customFunctionName)[0].Equals(existingCustomFunctionSignature));
 
                 // Function with different siganture
                 FunctionSignatureWithReturnType customFunctionSignatureToRemove =
@@ -403,7 +399,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, customFunctionSignatureToRemove);
 
                 // Assert
-                isRemoveSucceeded.Should().BeFalse();
+                Assert.False(isRemoveSucceeded);
             }
             finally
             {
@@ -426,15 +422,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                         new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
                 CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
-                GetCustomFunctionSignaturesOrNull(customFunctionName)[0].Equals(existingCustomFunctionSignature).Should().BeTrue();
+                Assert.True(GetCustomFunctionSignaturesOrNull(customFunctionName)[0].Equals(existingCustomFunctionSignature));
 
                 // Test
                 bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 // Assert
-                isRemoveSucceeded.Should().BeTrue();
+                Assert.True(isRemoveSucceeded);
 
-                GetCustomFunctionSignaturesOrNull(customFunctionName).Should().BeNull();
+                Assert.Null(GetCustomFunctionSignaturesOrNull(customFunctionName));
             }
             finally
             {
@@ -460,20 +456,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignatureTwo);
 
                 // Validate that the two overloads as
-                GetCustomFunctionSignaturesOrNull(customFunctionName).
+                Assert.True(GetCustomFunctionSignaturesOrNull(customFunctionName).
                     All(funcSignature => funcSignature.Equals(existingCustomFunctionSignature) ||
-                                            funcSignature.Equals(existingCustomFunctionSignatureTwo)).
-                        Should().BeTrue();
+                                            funcSignature.Equals(existingCustomFunctionSignatureTwo)));
 
                 // Remove the first overload, second overload should not be removed
                 bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 // Assert
-                isRemoveSucceeded.Should().BeTrue();
+                Assert.True(isRemoveSucceeded);
 
                 FunctionSignatureWithReturnType[] overloads = GetCustomFunctionSignaturesOrNull(customFunctionName);
-                overloads.Length.Should().Be(1);
-                overloads[0].Should().Be(existingCustomFunctionSignatureTwo);
+                Assert.Equal(1, overloads.Length);
+                Assert.Same(existingCustomFunctionSignatureTwo, overloads[0]);
             }
             finally
             {
@@ -500,13 +495,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mystringfunction(Name, 'BlaBla')");
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
-                var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("mystringfunction").And.Parameters.ToList();
+                var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("mystringfunction").Parameters.ToList();
                 startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
                 startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
             }
             finally
             {
-                CustomUriFunctions.RemoveCustomUriFunction("mystringfunction").Should().BeTrue();
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("mystringfunction"));
             }
         }
 
@@ -527,13 +522,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 parser.Resolver.EnableCaseInsensitive = true;
 
                 var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("myFirstMixedCasestringfunction")
-                    .And.Parameters.ToList();
+                    .Parameters.ToList();
                 startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
                 startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
             }
             finally
             {
-                CustomUriFunctions.RemoveCustomUriFunction("myFirstMixedCasestringfunction").Should().BeTrue();
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("myFirstMixedCasestringfunction"));
             }
         }
 
@@ -563,15 +558,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     parser.Resolver.EnableCaseInsensitive = true;
 
                     var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode(functionName)
-                        .And.Parameters.ToList();
+                        .Parameters.ToList();
                     startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
                     startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
                 }
             }
             finally
             {
-                CustomUriFunctions.RemoveCustomUriFunction(lowerCaseName).Should().BeTrue();
-                CustomUriFunctions.RemoveCustomUriFunction(upperCaseName).Should().BeTrue();
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(lowerCaseName));
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(upperCaseName));
             }
         }
 
@@ -601,12 +596,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 parser.Resolver.EnableCaseInsensitive = true;
 
                 Action action = () => parser.ParseFilter();
-                action.ShouldThrow<ODataException>();
+                Assert.Throws<ODataException>(action);
             }
             finally
             {
-                CustomUriFunctions.RemoveCustomUriFunction(lowerCaseName).Should().BeTrue();
-                CustomUriFunctions.RemoveCustomUriFunction(upperCaseName).Should().BeTrue();
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(lowerCaseName));
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(upperCaseName));
             }
         }
 
@@ -639,7 +634,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             finally
             {
-                CustomUriFunctions.RemoveCustomUriFunction("myMixedCasestringfunction").Should().BeTrue();
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("myMixedCasestringfunction"));
             }
 
             Assert.True(exceptionThrown, "Exception should be thrown trying to parse mixed-case uri function when case-insensitive is disabled.");
@@ -660,13 +655,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=startswith(Name, 66)");
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
-                var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith").And.Parameters.ToList();
+                var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith").Parameters.ToList();
                 startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
                 startsWithArgs[1].ShouldBeConstantQueryNode(66);
             }
             finally
             {
-                CustomUriFunctions.RemoveCustomUriFunction("startswith").Should().BeTrue();
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("startswith"));
             }
         }
 
@@ -689,12 +684,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=enumFunc('Rectangle')");
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
-                var enumFuncWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("enumFunc").And.Parameters.ToList();
-                enumFuncWithArgs[0].ShouldBeEnumNode(new ODataEnumValue("Rectangle", enumType.FullName));
+                var enumFuncWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("enumFunc").Parameters.ToList();
+                enumFuncWithArgs[0].ShouldBeEnumNode(enumType, "Rectangle");
             }
             finally
             {
-                CustomUriFunctions.RemoveCustomUriFunction("enumFunc").Should().BeTrue();
+                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("enumFunc"));
             }
         }
 

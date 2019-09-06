@@ -6,9 +6,10 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
+using Xunit;
+using System.Collections.Generic;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -18,391 +19,384 @@ namespace Microsoft.OData.Tests.UriParser
     /// </summary>
     internal static class NodeAssertions
     {
-        public static AndConstraint<SingleValueNode> ShouldBeSingleValueNode(this SingleValueNode actual, SingleValueNode expected)
+        public static ConstantNode ShouldBeConstantQueryNode<TValue>(this QueryNode node, TValue expectedValue)
         {
-            actual.TypeReference.Should().BeSameAs(expected.TypeReference);
-            return new AndConstraint<SingleValueNode>(actual);
-        }
-
-        public static AndConstraint<ConstantNode> ShouldBeConstantQueryNode<TValue>(this QueryNode token, TValue expectedValue)
-        {
-            token.Should().BeOfType<ConstantNode>();
-            var constantNode = token.As<ConstantNode>();
+            Assert.NotNull(node);
+            var constantNode = Assert.IsType<ConstantNode>(node);
             if (expectedValue == null)
             {
-                constantNode.Value.Should().BeNull();
+                Assert.Null(constantNode.Value);
             }
             else
             {
-                constantNode.Value.Should().BeAssignableTo<TValue>();
-                constantNode.Value.As<TValue>().ShouldBeEquivalentTo(expectedValue);
+                Type nodeValueType = constantNode.Value.GetType();
+                Assert.True(typeof(TValue).IsAssignableFrom(nodeValueType));
+                Assert.Equal(constantNode.Value, constantNode.Value);
             }
 
-            return new AndConstraint<ConstantNode>(constantNode);
+            return constantNode;
         }
 
-        public static AndConstraint<ConstantNode> ShouldBeEnumNode<TValue>(this QueryNode token, TValue expectedValue)
+        public static ConvertNode ShouldBeConvertQueryNode(this QueryNode node, EdmPrimitiveTypeKind expectedTypeKind)
         {
-            token.Should().BeOfType<ConstantNode>();
-            var node = token.As<ConstantNode>();
-            if (expectedValue == null)
+            Assert.NotNull(node);
+            var convertNode = Assert.IsType<ConvertNode>(node);
+            Assert.Equal(expectedTypeKind, convertNode.TypeReference.PrimitiveKind());
+            return convertNode;
+        }
+
+        public static ConvertNode ShouldBeConvertQueryNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        {
+            Assert.NotNull(node);
+            var convertNode = Assert.IsType<ConvertNode>(node);
+            Assert.True(convertNode.TypeReference.IsEquivalentTo(expectedTypeReference));
+            return convertNode;
+        }
+
+        public static ResourceRangeVariable ShouldBeResourceRangeVariable(this RangeVariable variable, IEdmEntityTypeReference expectedTypeReference)
+        {
+            Assert.NotNull(variable);
+            var node = Assert.IsType<ResourceRangeVariable>(variable);
+            Assert.True(node.TypeReference.IsEquivalentTo(expectedTypeReference));
+            return node;
+        }
+
+        public static ResourceRangeVariable ShouldBeResourceRangeVariable(this RangeVariable variable, string expectedName)
+        {
+            Assert.NotNull(variable);
+            var rangeVariable = Assert.IsType<ResourceRangeVariable>(variable);
+            Assert.Equal(expectedName, rangeVariable.Name);
+            return rangeVariable;
+        }
+
+        public static NonResourceRangeVariable ShouldBeNonentityRangeVariable(this RangeVariable variable, string expectedName)
+        {
+            Assert.NotNull(variable);
+            var rangeVariable = Assert.IsType<NonResourceRangeVariable>(variable);
+            Assert.Equal(expectedName, rangeVariable.Name);
+            return rangeVariable;
+        }
+
+        public static NonResourceRangeVariableReferenceNode ShouldBeNonResourceRangeVariableReferenceNode(this QueryNode node, string expectedName)
+        {
+            Assert.NotNull(node);
+            var rangeVariableNode = Assert.IsType<NonResourceRangeVariableReferenceNode>(node);
+            Assert.Equal(expectedName, rangeVariableNode.Name);
+            return rangeVariableNode;
+        }
+
+        public static ResourceRangeVariableReferenceNode ShouldBeResourceRangeVariableReferenceNode(this QueryNode node, string expectedName)
+        {
+            Assert.NotNull(node);
+            var referenceNode = Assert.IsType<ResourceRangeVariableReferenceNode>(node);
+            Assert.Equal(expectedName, referenceNode.Name);
+            return referenceNode;
+        }
+
+        public static SingleValueFunctionCallNode ShouldBeSingleValueFunctionCallQueryNode(this QueryNode node, params IEdmFunction[] operationImports)
+        {
+            Assert.NotNull(node);
+            var functionCallNode = Assert.IsType<SingleValueFunctionCallNode>(node);
+            functionCallNode.Functions.ContainExactly(operationImports);
+            return functionCallNode;
+        }
+
+        public static SingleResourceFunctionCallNode ShouldBeSingleResourceFunctionCallQueryNode(this QueryNode node, params IEdmFunction[] operationImports)
+        {
+            Assert.NotNull(node);
+            var functionCallNode = Assert.IsType<SingleResourceFunctionCallNode>(node);
+            functionCallNode.Functions.ContainExactly(operationImports);
+            return functionCallNode;
+        }
+
+        /// <summary>
+        /// Asserts that the current collection only contains items that are assignable to the type T.
+        /// </summary>
+        /// <typeparam name="T">The type of the element.</typeparam>
+        /// <param name="enumerable">The test enumerable.</param>
+        private static void ContainItemsAssignableTo<TValue>(this IEnumerable<QueryNode> enumerable)
+        {
+            Type type = typeof(TValue);
+            foreach (var item in enumerable)
             {
-                node.Value.Should().BeNull();
+                Assert.True(type.IsAssignableFrom(item.GetType()));
             }
-            else
-            {
-                node.Value.Should().BeAssignableTo<TValue>();
-                node.Value.As<TValue>().ShouldBeEquivalentTo(expectedValue);
-            }
-
-            return new AndConstraint<ConstantNode>(node);
         }
 
-        public static AndConstraint<ConvertNode> ShouldBeConvertQueryNode(this QueryNode token, EdmPrimitiveTypeKind expectedTypeKind)
+        public static SingleValueFunctionCallNode ShouldHaveConstantParameter<TValue>(this SingleValueFunctionCallNode functionCallNode, string name, TValue value)
         {
-            token.Should().BeOfType<ConvertNode>();
-            var convertNode = token.As<ConvertNode>();
-            convertNode.TypeReference.PrimitiveKind().Should().Be(expectedTypeKind);
-            return new AndConstraint<ConvertNode>(convertNode);
-        }
-
-        public static AndConstraint<ConvertNode> ShouldBeConvertQueryNode(this QueryNode token, IEdmTypeReference expectedTypeReference)
-        {
-            token.Should().BeOfType<ConvertNode>();
-            var convertNode = token.As<ConvertNode>();
-            convertNode.TypeReference.IsEquivalentTo(expectedTypeReference);
-            return new AndConstraint<ConvertNode>(convertNode);
-        }
-
-        public static AndConstraint<ResourceRangeVariable> ShouldBeResourceRangeVariable(this RangeVariable variable, IEdmEntityTypeReference expectedTypeReference)
-        {
-            variable.Should().BeOfType<ResourceRangeVariable>();
-            var node = variable.As<ResourceRangeVariable>();
-            node.TypeReference.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<ResourceRangeVariable>(node);
-        }
-
-        public static AndConstraint<ResourceRangeVariable> ShouldBeResourceRangeVariable(this RangeVariable variable, string expectedName)
-        {
-            variable.Should().BeOfType<ResourceRangeVariable>();
-            var rangeVariable = variable.As<ResourceRangeVariable>();
-            rangeVariable.Name.Should().Be(expectedName);
-            return new AndConstraint<ResourceRangeVariable>(rangeVariable);
-        }
-
-        public static AndConstraint<NonResourceRangeVariable> ShouldBeNonentityRangeVariable(this RangeVariable token, string expectedName)
-        {
-            token.Should().BeOfType<NonResourceRangeVariable>();
-            var rangeVariable = token.As<NonResourceRangeVariable>();
-            rangeVariable.Name.Should().Be(expectedName);
-            return new AndConstraint<NonResourceRangeVariable>(rangeVariable);
-        }
-
-        public static AndConstraint<NonResourceRangeVariableReferenceNode> ShouldBeNonResourceRangeVariableReferenceNode(this QueryNode token, string expectedName)
-        {
-            token.Should().BeOfType<NonResourceRangeVariableReferenceNode>();
-            var rangeVariableNode = token.As<NonResourceRangeVariableReferenceNode>();
-            rangeVariableNode.Name.Should().Be(expectedName);
-            return new AndConstraint<NonResourceRangeVariableReferenceNode>(rangeVariableNode);
-        }
-
-        public static AndConstraint<ResourceRangeVariableReferenceNode> ShouldBeResourceRangeVariableReferenceNode(this QueryNode token, string expectedName)
-        {
-            token.Should().BeOfType<ResourceRangeVariableReferenceNode>();
-            var parameterNode = token.As<ResourceRangeVariableReferenceNode>();
-            parameterNode.Name.Should().Be(expectedName);
-            return new AndConstraint<ResourceRangeVariableReferenceNode>(parameterNode);
-        }
-
-        public static AndConstraint<SingleValueFunctionCallNode> ShouldBeSingleValueFunctionCallQueryNode(this QueryNode token, params IEdmFunction[] operationImports)
-        {
-            token.Should().BeOfType<SingleValueFunctionCallNode>();
-            var functionCallNode = token.As<SingleValueFunctionCallNode>();
-            functionCallNode.Functions.Should().ContainExactly(operationImports);
-            return new AndConstraint<SingleValueFunctionCallNode>(functionCallNode);
-        }
-
-        public static AndConstraint<SingleResourceFunctionCallNode> ShouldBeSingleResourceFunctionCallQueryNode(this QueryNode token, params IEdmFunction[] operationImports)
-        {
-            token.Should().BeOfType<SingleResourceFunctionCallNode>();
-            var functionCallNode = token.As<SingleResourceFunctionCallNode>();
-            functionCallNode.Functions.Should().ContainExactly(operationImports);
-            return new AndConstraint<SingleResourceFunctionCallNode>(functionCallNode);
-        }
-
-        public static AndConstraint<SingleValueFunctionCallNode> ShouldHaveConstantParameter<TValue>(this SingleValueFunctionCallNode functionCallNode, string name, TValue value)
-        {
-            functionCallNode.Should().NotBeNull();
-            functionCallNode.Parameters.Should().ContainItemsAssignableTo<NamedFunctionParameterNode>();
-            var argument = functionCallNode.Parameters.Cast<NamedFunctionParameterNode>().SingleOrDefault(p => p.Name == name);
-            argument.Should().NotBeNull();
+            Assert.NotNull(functionCallNode);
+            functionCallNode.Parameters.ContainItemsAssignableTo<NamedFunctionParameterNode>();
+            var argument = functionCallNode.Parameters.OfType<NamedFunctionParameterNode>().SingleOrDefault(p => p.Name == name);
+            Assert.NotNull(argument);
             argument.Value.ShouldBeConstantQueryNode(value);
-            return new AndConstraint<SingleValueFunctionCallNode>(functionCallNode);
+            return functionCallNode;
         }
 
-        public static AndConstraint<CollectionFunctionCallNode> ShouldHaveConstantParameter<TValue>(this CollectionFunctionCallNode functionCallNode, string name, TValue value)
+        public static CollectionFunctionCallNode ShouldHaveConstantParameter<TValue>(this CollectionFunctionCallNode functionCallNode, string name, TValue value)
         {
-            functionCallNode.Should().NotBeNull();
-            functionCallNode.Parameters.Should().ContainItemsAssignableTo<NamedFunctionParameterNode>();
-            var argument = functionCallNode.Parameters.Cast<NamedFunctionParameterNode>().SingleOrDefault(p => p.Name == name);
-            argument.Should().NotBeNull();
+            Assert.NotNull(functionCallNode);
+            functionCallNode.Parameters.ContainItemsAssignableTo<NamedFunctionParameterNode>();
+            var argument = functionCallNode.Parameters.OfType<NamedFunctionParameterNode>().SingleOrDefault(p => p.Name == name);
+            Assert.NotNull(argument);
             argument.Value.ShouldBeConstantQueryNode(value);
-            return new AndConstraint<CollectionFunctionCallNode>(functionCallNode);
+            return functionCallNode;
         }
 
-        public static AndConstraint<CollectionResourceFunctionCallNode> ShouldHaveConstantParameter<TValue>(this CollectionResourceFunctionCallNode functionCallNode, string name, TValue value)
+        public static CollectionResourceFunctionCallNode ShouldHaveConstantParameter<TValue>(this CollectionResourceFunctionCallNode functionCallNode, string name, TValue value)
         {
-            functionCallNode.Should().NotBeNull();
-            functionCallNode.Parameters.Should().ContainItemsAssignableTo<NamedFunctionParameterNode>();
-            var argument = functionCallNode.Parameters.Cast<NamedFunctionParameterNode>().SingleOrDefault(p => p.Name == name);
-            argument.Should().NotBeNull();
+            Assert.NotNull(functionCallNode);
+            functionCallNode.Parameters.ContainItemsAssignableTo<NamedFunctionParameterNode>();
+            var argument = functionCallNode.Parameters.OfType<NamedFunctionParameterNode>().SingleOrDefault(p => p.Name == name);
+            Assert.NotNull(argument);
             argument.Value.ShouldBeConstantQueryNode(value);
-            return new AndConstraint<CollectionResourceFunctionCallNode>(functionCallNode);
+            return functionCallNode;
         }
 
-        public static AndConstraint<SingleValueFunctionCallNode> ShouldBeSingleValueFunctionCallQueryNode(this QueryNode token, string name, IEdmTypeReference returnType = null)
+        public static SingleValueFunctionCallNode ShouldBeSingleValueFunctionCallQueryNode(this QueryNode node, string name, IEdmTypeReference returnType = null)
         {
-            token.Should().BeOfType<SingleValueFunctionCallNode>();
-            SingleValueFunctionCallNode functionCallNode = token.As<SingleValueFunctionCallNode>();
-            functionCallNode.Name.Should().Be(name);
+            Assert.NotNull(node);
+            SingleValueFunctionCallNode functionCallNode = Assert.IsType<SingleValueFunctionCallNode>(node);
+            Assert.Equal(name, functionCallNode.Name);
             if (returnType != null)
             {
-                functionCallNode.TypeReference.ShouldBeEquivalentTo(returnType);
+                Assert.True(functionCallNode.TypeReference.IsEquivalentTo(returnType));
             }
 
-            return new AndConstraint<SingleValueFunctionCallNode>(functionCallNode);
+            return functionCallNode;
         }
 
-        public static AndConstraint<SingleResourceFunctionCallNode> ShouldBeSingleResourceFunctionCallNode(this QueryNode token, params IEdmFunction[] operationImports)
+        public static SingleResourceFunctionCallNode ShouldBeSingleResourceFunctionCallNode(this QueryNode node, params IEdmFunction[] operationImports)
         {
-            token.Should().BeOfType<SingleResourceFunctionCallNode>();
-            var functionCallNode = token.As<SingleResourceFunctionCallNode>();
-            functionCallNode.Functions.Should().ContainExactly(operationImports);
-            return new AndConstraint<SingleResourceFunctionCallNode>(functionCallNode);
+            Assert.NotNull(node);
+            var functionCallNode = Assert.IsType<SingleResourceFunctionCallNode>(node);
+            functionCallNode.Functions.ContainExactly(operationImports);
+            return functionCallNode;
         }
 
-        public static AndConstraint<SingleResourceFunctionCallNode> ShouldBeSingleResourceFunctionCallNode(this QueryNode token, string name)
+        public static SingleResourceFunctionCallNode ShouldBeSingleResourceFunctionCallNode(this QueryNode node, string name)
         {
-            token.Should().BeOfType<SingleResourceFunctionCallNode>();
-            var functionCallNode = token.As<SingleResourceFunctionCallNode>();
-            functionCallNode.Name.Should().Be(name);
-            return new AndConstraint<SingleResourceFunctionCallNode>(functionCallNode);
+            Assert.NotNull(node);
+            var functionCallNode = Assert.IsType<SingleResourceFunctionCallNode>(node);
+            Assert.Equal(name, functionCallNode.Name);
+            return functionCallNode;
         }
 
-        public static AndConstraint<CollectionFunctionCallNode> ShouldBeCollectionFunctionCallNode(this QueryNode token, params IEdmFunction[] operationImports)
+        public static CollectionFunctionCallNode ShouldBeCollectionFunctionCallNode(this QueryNode node, params IEdmFunction[] operationImports)
         {
-            token.Should().BeOfType<CollectionFunctionCallNode>();
-            var functionCallNode = token.As<CollectionFunctionCallNode>();
-            functionCallNode.Functions.Should().ContainExactly(operationImports);
-            return new AndConstraint<CollectionFunctionCallNode>(functionCallNode);
+            Assert.NotNull(node);
+            var functionCallNode = Assert.IsType<CollectionFunctionCallNode>(node);
+            functionCallNode.Functions.ContainExactly(operationImports);
+            return functionCallNode;
         }
 
-        public static AndConstraint<CollectionResourceFunctionCallNode> ShouldBeCollectionResourceFunctionCallNode(this QueryNode token, params IEdmFunction[] operationImports)
+        public static CollectionResourceFunctionCallNode ShouldBeCollectionResourceFunctionCallNode(this QueryNode node, params IEdmFunction[] operationImports)
         {
-            token.Should().BeOfType<CollectionResourceFunctionCallNode>();
-            var functionCallNode = token.As<CollectionResourceFunctionCallNode>();
-            functionCallNode.Functions.Should().ContainExactly(operationImports);
-            return new AndConstraint<CollectionResourceFunctionCallNode>(functionCallNode);
+            Assert.NotNull(node);
+            var functionCallNode = Assert.IsType<CollectionResourceFunctionCallNode>(node);
+            functionCallNode.Functions.ContainExactly(operationImports);
+            return  functionCallNode;
         }
 
-        public static AndConstraint<SingleValuePropertyAccessNode> ShouldBeSingleValuePropertyAccessQueryNode(this QueryNode token, IEdmProperty expectedProperty)
+        public static SingleValuePropertyAccessNode ShouldBeSingleValuePropertyAccessQueryNode(this QueryNode node, IEdmProperty expectedProperty)
         {
-            token.Should().BeOfType<SingleValuePropertyAccessNode>();
-            var propertyAccessNode = token.As<SingleValuePropertyAccessNode>();
-            propertyAccessNode.Property.Should().BeSameAs(expectedProperty);
-            propertyAccessNode.TypeReference.Should().BeSameAs(expectedProperty.Type);
-            return new AndConstraint<SingleValuePropertyAccessNode>(propertyAccessNode);
+            Assert.NotNull(node);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(node);
+            Assert.Same(expectedProperty, propertyAccessNode.Property);
+            Assert.True(propertyAccessNode.TypeReference.IsEquivalentTo(expectedProperty.Type));
+            return propertyAccessNode;
         }
 
-        public static AndConstraint<SingleComplexNode> ShouldBeSingleComplexNode(this QueryNode token, IEdmProperty expectedProperty)
+        public static SingleComplexNode ShouldBeSingleComplexNode(this QueryNode node, IEdmProperty expectedProperty)
         {
-            token.Should().BeOfType<SingleComplexNode>();
-            var propertyAccessNode = token.As<SingleComplexNode>();
-            propertyAccessNode.Property.Should().BeSameAs(expectedProperty);
-            propertyAccessNode.TypeReference.ShouldBeEquivalentTo(expectedProperty.Type.AsComplex());
-            return new AndConstraint<SingleComplexNode>(propertyAccessNode);
+            Assert.NotNull(node);
+            var propertyAccessNode = Assert.IsType<SingleComplexNode>(node);
+            Assert.Same(expectedProperty, propertyAccessNode.Property);
+            Assert.True(propertyAccessNode.TypeReference.IsEquivalentTo(expectedProperty.Type.AsComplex()));
+            return propertyAccessNode;
         }
 
-        public static AndConstraint<SingleValueOpenPropertyAccessNode> ShouldBeSingleValueOpenPropertyAccessQueryNode(this QueryNode token, string expectedPropertyName)
+        public static SingleValueOpenPropertyAccessNode ShouldBeSingleValueOpenPropertyAccessQueryNode(this QueryNode node, string expectedPropertyName)
         {
-            token.Should().BeOfType<SingleValueOpenPropertyAccessNode>();
-            var propertyAccessNode = token.As<SingleValueOpenPropertyAccessNode>();
-            propertyAccessNode.Name.Should().Be(expectedPropertyName);
-            return new AndConstraint<SingleValueOpenPropertyAccessNode>(propertyAccessNode);
+            Assert.NotNull(node);
+            var propertyAccessNode = Assert.IsType<SingleValueOpenPropertyAccessNode>(node);
+            Assert.Equal(expectedPropertyName, propertyAccessNode.Name);
+            return propertyAccessNode;
         }
 
-        public static AndConstraint<CountNode> ShouldBeCountNode(this QueryNode token)
+        public static CountNode ShouldBeCountNode(this QueryNode node)
         {
-            token.Should().BeOfType<CountNode>();
-            var propertyAccessNode = token.As<CountNode>();
-            return new AndConstraint<CountNode>(propertyAccessNode);
+            Assert.NotNull(node);
+            var propertyAccessNode = Assert.IsType<CountNode>(node);
+            return propertyAccessNode;
         }
         
-        public static AndConstraint<CollectionOpenPropertyAccessNode> ShouldBeCollectionOpenPropertyAccessQueryNode(this QueryNode token, string expectedPropertyName)
+        public static CollectionOpenPropertyAccessNode ShouldBeCollectionOpenPropertyAccessQueryNode(this QueryNode node, string expectedPropertyName)
         {
-            token.Should().BeOfType<CollectionOpenPropertyAccessNode>();
-            var propertyAccessNode = token.As<CollectionOpenPropertyAccessNode>();
-            propertyAccessNode.Name.Should().Be(expectedPropertyName);
-            return new AndConstraint<CollectionOpenPropertyAccessNode>(propertyAccessNode);
+            Assert.NotNull(node);
+            var propertyAccessNode = Assert.IsType<CollectionOpenPropertyAccessNode>(node);
+            Assert.Equal(expectedPropertyName, propertyAccessNode.Name);
+            return propertyAccessNode;
         }
 
-        public static AndConstraint<CollectionPropertyAccessNode> ShouldBeCollectionPropertyAccessQueryNode(this QueryNode token, IEdmProperty expectedProperty)
+        public static CollectionPropertyAccessNode ShouldBeCollectionPropertyAccessQueryNode(this QueryNode node, IEdmProperty expectedProperty)
         {
-            token.Should().BeOfType<CollectionPropertyAccessNode>();
-            var propertyAccessNode = token.As<CollectionPropertyAccessNode>();
-            propertyAccessNode.Property.Should().Be(expectedProperty);
-            propertyAccessNode.ItemType.Should().BeSameAs(((IEdmCollectionType)expectedProperty.Type.Definition).ElementType);
-            return new AndConstraint<CollectionPropertyAccessNode>(propertyAccessNode);
+            Assert.NotNull(node);
+            var propertyAccessNode = Assert.IsType<CollectionPropertyAccessNode>(node);
+            Assert.Same(expectedProperty, propertyAccessNode.Property);
+            Assert.True(propertyAccessNode.ItemType.IsEquivalentTo(((IEdmCollectionType)expectedProperty.Type.Definition).ElementType));
+            return propertyAccessNode;
         }
 
-        public static AndConstraint<CollectionComplexNode> ShouldBeCollectionComplexNode(this QueryNode token, IEdmProperty expectedProperty)
+        public static CollectionComplexNode ShouldBeCollectionComplexNode(this QueryNode node, IEdmProperty expectedProperty)
         {
-            token.Should().BeOfType<CollectionComplexNode>();
-            var propertyAccessNode = token.As<CollectionComplexNode>();
-            propertyAccessNode.Property.Should().Be(expectedProperty);
-            propertyAccessNode.ItemType.ShouldBeEquivalentTo(((IEdmCollectionType)expectedProperty.Type.Definition).ElementType.AsComplex());
-            return new AndConstraint<CollectionComplexNode>(propertyAccessNode);
+            Assert.NotNull(node);
+            var propertyAccessNode = Assert.IsType<CollectionComplexNode>(node);
+            Assert.Same(expectedProperty, propertyAccessNode.Property);
+            Assert.True(propertyAccessNode.ItemType.IsEquivalentTo(((IEdmCollectionType)expectedProperty.Type.Definition).ElementType.AsComplex()));
+            return propertyAccessNode;
         }
 
-        public static AndConstraint<SingleNavigationNode> ShouldBeSingleNavigationNode(this QueryNode token, IEdmNavigationProperty expectedProperty)
+        public static SingleNavigationNode ShouldBeSingleNavigationNode(this QueryNode node, IEdmNavigationProperty expectedProperty)
         {
-            token.Should().BeOfType<SingleNavigationNode>();
-            var navigationPropertyNode = token.As<SingleNavigationNode>();
-            navigationPropertyNode.NavigationProperty.Should().BeSameAs(expectedProperty);
-            return new AndConstraint<SingleNavigationNode>(navigationPropertyNode);
+            Assert.NotNull(node);
+            var navigationPropertyNode = Assert.IsType<SingleNavigationNode>(node);
+            Assert.Same(expectedProperty, navigationPropertyNode.NavigationProperty);
+            return navigationPropertyNode;
         }
 
-        public static AndConstraint<CollectionNavigationNode> ShouldBeCollectionNavigationNode(this QueryNode token, IEdmNavigationProperty expectedProperty)
+        public static CollectionNavigationNode ShouldBeCollectionNavigationNode(this QueryNode node, IEdmNavigationProperty expectedProperty)
         {
-            token.Should().BeOfType<CollectionNavigationNode>();
-            var navigationPropertyNode = token.As<CollectionNavigationNode>();
-            navigationPropertyNode.NavigationProperty.Should().BeSameAs(expectedProperty);
-            navigationPropertyNode.ItemType.ShouldBeEquivalentTo(new EdmEntityTypeReference(expectedProperty.ToEntityType(), expectedProperty.TargetMultiplicity() == EdmMultiplicity.ZeroOrOne));
-            return new AndConstraint<CollectionNavigationNode>(navigationPropertyNode);
+            Assert.NotNull(node);
+            var navigationPropertyNode = Assert.IsType<CollectionNavigationNode>(node);
+            Assert.Same(expectedProperty, navigationPropertyNode.NavigationProperty);
+            Assert.True(navigationPropertyNode.ItemType.IsEquivalentTo(new EdmEntityTypeReference(expectedProperty.ToEntityType(), expectedProperty.TargetMultiplicity() == EdmMultiplicity.ZeroOrOne)));
+            return navigationPropertyNode;
         }
 
-        public static AndConstraint<KeyLookupNode> ShouldBeKeyLookupQueryNode(this QueryNode node)
+        public static KeyLookupNode ShouldBeKeyLookupQueryNode(this QueryNode node)
         {
-            node.Should().BeOfType<KeyLookupNode>();
-            var keyLookupNode = node.As<KeyLookupNode>();
-            return new AndConstraint<KeyLookupNode>(keyLookupNode);
+            Assert.NotNull(node);
+            var keyLookupNode = Assert.IsType<KeyLookupNode>(node);
+            return keyLookupNode;
         }
 
-        public static AndConstraint<EntitySetNode> ShouldBeEntitySetQueryNode(this QueryNode node, IEdmEntitySet expectedSet)
+        public static EntitySetNode ShouldBeEntitySetQueryNode(this QueryNode node, IEdmEntitySet expectedSet)
         {
-            node.Should().BeOfType<EntitySetNode>();
-            var entitySetQueryNode = node.As<EntitySetNode>();
-            entitySetQueryNode.NavigationSource.Should().BeSameAs(expectedSet);
-            return new AndConstraint<EntitySetNode>(entitySetQueryNode);
+            Assert.NotNull(node);
+            var entitySetQueryNode = Assert.IsType<EntitySetNode>(node);
+            Assert.Same(expectedSet, entitySetQueryNode.NavigationSource);
+            return entitySetQueryNode;
         }
 
-        public static AndConstraint<CollectionResourceCastNode> ShouldBeCollectionCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        public static CollectionResourceCastNode ShouldBeCollectionCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
-            node.Should().BeOfType<CollectionResourceCastNode>();
-            var collectionCastNode = node.As<CollectionResourceCastNode>();
-            collectionCastNode.ItemType.ShouldBeEquivalentTo(expectedTypeReference); // TODO
-            return new AndConstraint<CollectionResourceCastNode>(collectionCastNode);
+            Assert.NotNull(node);
+            var collectionCastNode = Assert.IsType<CollectionResourceCastNode>(node);
+            Assert.True(collectionCastNode.ItemType.IsEquivalentTo(expectedTypeReference));
+            return collectionCastNode;
         }
 
-        public static AndConstraint<SingleResourceCastNode> ShouldBeSingleCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        public static SingleResourceCastNode ShouldBeSingleCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
-            node.Should().BeOfType<SingleResourceCastNode>();
-            var singleCastNode = node.As<SingleResourceCastNode>();
-            singleCastNode.TypeReference.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<SingleResourceCastNode>(singleCastNode);
+            Assert.NotNull(node);
+            var singleCastNode = Assert.IsType<SingleResourceCastNode>(node);
+            Assert.True(singleCastNode.TypeReference.IsEquivalentTo(expectedTypeReference));
+            return singleCastNode;
         }
 
-        public static AndConstraint<SingleResourceCastNode> ShouldBeSingleResourceCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        public static SingleResourceCastNode ShouldBeSingleResourceCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
-            node.Should().BeOfType<SingleResourceCastNode>();
-            var singleValueCastNode = node.As<SingleResourceCastNode>();
-            singleValueCastNode.TypeReference.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<SingleResourceCastNode>(singleValueCastNode);
+            Assert.NotNull(node);
+            var singleValueCastNode = Assert.IsType<SingleResourceCastNode>(node);
+            Assert.True(singleValueCastNode.TypeReference.IsEquivalentTo(expectedTypeReference));
+            return singleValueCastNode;
         }
 
-        public static AndConstraint<CollectionResourceCastNode> ShouldBeCollectionResourceCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        public static CollectionResourceCastNode ShouldBeCollectionResourceCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
-            node.Should().BeOfType<CollectionResourceCastNode>();
-            var collectionResourceCastNode = node.As<CollectionResourceCastNode>();
-            collectionResourceCastNode.ItemType.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<CollectionResourceCastNode>(collectionResourceCastNode);
+            Assert.NotNull(node);
+            var collectionResourceCastNode = Assert.IsType<CollectionResourceCastNode>(node);
+            Assert.True(collectionResourceCastNode.ItemType.IsEquivalentTo(expectedTypeReference));
+            return collectionResourceCastNode;
         }
 
-        public static AndConstraint<AnyNode> ShouldBeAnyQueryNode(this QueryNode node)
+        public static AnyNode ShouldBeAnyQueryNode(this QueryNode node)
         {
-            node.Should().BeOfType<AnyNode>();
-            var orderByQueryNode = node.As<AnyNode>();
-            return new AndConstraint<AnyNode>(orderByQueryNode);
+            Assert.NotNull(node);
+            var anyNode = Assert.IsType<AnyNode>(node);
+            return anyNode;
         }
 
-        public static AndConstraint<AllNode> ShouldBeAllQueryNode(this QueryNode node)
+        public static AllNode ShouldBeAllQueryNode(this QueryNode node)
         {
-            node.Should().BeOfType<AllNode>();
-            var orderByQueryNode = node.As<AllNode>();
-            return new AndConstraint<AllNode>(orderByQueryNode);
+            Assert.NotNull(node);
+            var allNode = Assert.IsType<AllNode>(node);
+            return allNode;
         }
 
-        public static AndConstraint<ConstantNode> ShouldBeEnumNode(this QueryNode node, IEdmEnumType enumType, Int64 value)
+        public static ConstantNode ShouldBeEnumNode(this QueryNode node, IEdmEnumType enumType, string value)
         {
-            node.Should().BeOfType<ConstantNode>();
-            var enumNode = node.As<ConstantNode>();
+            Assert.NotNull(node);
+            var enumNode = Assert.IsType<ConstantNode>(node);
 
-            enumNode.TypeReference.FullName().Should().Be(enumType.FullTypeName());
-            ((ODataEnumValue)enumNode.Value).Value.Should().Be(value + "");
-            ((ODataEnumValue)enumNode.Value).TypeName.Should().Be(enumType.FullTypeName());
+            Assert.Equal(enumType.FullTypeName(), enumNode.TypeReference.FullName());
+            Assert.Equal(value, ((ODataEnumValue)enumNode.Value).Value);
+            Assert.Equal(enumType.FullTypeName(), ((ODataEnumValue)enumNode.Value).TypeName);
 
-            return new AndConstraint<ConstantNode>(enumNode);
+            return enumNode;
         }
 
-        public static AndConstraint<BinaryOperatorNode> ShouldBeBinaryOperatorNode(this QueryNode node, BinaryOperatorKind expectedOperatorKind)
+        public static ConstantNode ShouldBeEnumNode(this QueryNode node, IEdmEnumType enumType, Int64 value)
         {
-            node.Should().BeOfType<BinaryOperatorNode>();
-            var orderByQueryNode = node.As<BinaryOperatorNode>();
-            orderByQueryNode.OperatorKind.Should().Be(expectedOperatorKind);
-            return new AndConstraint<BinaryOperatorNode>(orderByQueryNode);
+            Assert.NotNull(node);
+            var enumNode = Assert.IsType<ConstantNode>(node);
+
+            Assert.Equal(enumType.FullTypeName(), enumNode.TypeReference.FullName());
+            Assert.Equal(value + "", ((ODataEnumValue)enumNode.Value).Value);
+            Assert.Equal(enumType.FullTypeName(), ((ODataEnumValue)enumNode.Value).TypeName);
+
+            return enumNode;
         }
 
-        public static AndConstraint<InNode> ShouldBeInNode(this QueryNode node)
+        public static BinaryOperatorNode ShouldBeBinaryOperatorNode(this QueryNode node, BinaryOperatorKind expectedOperatorKind)
         {
-            node.Should().BeOfType<InNode>();
-            var inNode = node.As<InNode>();
-            return new AndConstraint<InNode>(inNode);
+            Assert.NotNull(node);
+            var orderByQueryNode = Assert.IsType<BinaryOperatorNode>(node);
+            Assert.Equal(expectedOperatorKind, orderByQueryNode.OperatorKind);
+            return orderByQueryNode;
         }
 
-        public static AndConstraint<UnaryOperatorNode> ShouldBeUnaryOperatorNode(this QueryNode node, UnaryOperatorKind expectedOperatorKind)
+        public static InNode ShouldBeInNode(this QueryNode node)
         {
-            node.Should().BeOfType<UnaryOperatorNode>();
-            var unaryOpeartorNode = node.As<UnaryOperatorNode>();
-            unaryOpeartorNode.OperatorKind.Should().Be(expectedOperatorKind);
-            return new AndConstraint<UnaryOperatorNode>(unaryOpeartorNode);
+            Assert.NotNull(node);
+            var inNode = Assert.IsType<InNode>(node);
+            return inNode;
         }
 
-        public static AndConstraint<SearchTermNode> ShouldBeSearchTermNode(this QueryNode node, string text)
+        public static UnaryOperatorNode ShouldBeUnaryOperatorNode(this QueryNode node, UnaryOperatorKind expectedOperatorKind)
         {
-            node.Should().BeOfType<SearchTermNode>();
-            var searchTermNode = node.As<SearchTermNode>();
-            searchTermNode.Text.Should().Be(text);
-            return new AndConstraint<SearchTermNode>(searchTermNode);
+            Assert.NotNull(node);
+            var unaryOpeartorNode = Assert.IsType<UnaryOperatorNode>(node);
+            Assert.Equal(expectedOperatorKind, unaryOpeartorNode.OperatorKind);
+            return unaryOpeartorNode;
         }
 
-        public static AndConstraint<double> ShouldBe(this double value, Double expectedValue)
+        public static SearchTermNode ShouldBeSearchTermNode(this QueryNode node, string text)
         {
-            value.Should().BeInRange(expectedValue, expectedValue);
-            return new AndConstraint<double>(value);
+            Assert.NotNull(node);
+            var searchTermNode = Assert.IsType<SearchTermNode>(node);
+            Assert.Equal(text, searchTermNode.Text);
+            return searchTermNode;
         }
 
-        public static AndConstraint<double?> ShouldBe(this double? value, Double expectedValue)
+        public static ParameterAliasNode ShouldBeParameterAliasNode(this QueryNode node, string alias, IEdmTypeReference typeReference)
         {
-            value.Should().BeInRange(expectedValue, expectedValue);
-            return new AndConstraint<double?>(value);
-        }
-
-        public static AndConstraint<ParameterAliasNode> ShouldBeParameterAliasNode(this QueryNode node, string alias, IEdmTypeReference typeReference)
-        {
-            var tmp = node.As<ParameterAliasNode>();
-            tmp.Alias.Should().Be(alias);
-            tmp.TypeReference.ShouldBeEquivalentTo(typeReference);
-            return new AndConstraint<ParameterAliasNode>(tmp);
+            Assert.NotNull(node);
+            var paramAliasNode = Assert.IsType<ParameterAliasNode>(node);
+            Assert.Equal(alias, paramAliasNode.Alias);
+            Assert.True(paramAliasNode.TypeReference.IsEquivalentTo(typeReference));
+            return paramAliasNode;
         }
     }
 }
