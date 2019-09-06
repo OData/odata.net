@@ -137,12 +137,12 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<OperationSegment>(operationSegment);
         }
 
-        public static AndConstraint<BatchReferenceSegment> ShouldBeBatchReferenceSegment(this ODataPathSegment segment, IEdmType resultingType)
+        public static BatchReferenceSegment ShouldBeBatchReferenceSegment(this ODataPathSegment segment, IEdmType resultingType)
         {
-            segment.Should().BeOfType<BatchReferenceSegment>();
-            BatchReferenceSegment batchReferenceSegment = segment.As<BatchReferenceSegment>();
-            batchReferenceSegment.EdmType.Should().Be(resultingType);
-            return new AndConstraint<BatchReferenceSegment>(batchReferenceSegment);
+            Assert.NotNull(segment);
+            BatchReferenceSegment batchReferenceSegment = Assert.IsType<BatchReferenceSegment>(segment);
+            Assert.Same(resultingType, batchReferenceSegment.EdmType);
+            return batchReferenceSegment;
         }
 
         public static EntitySetSegment ShouldBeEntitySetSegment(this ODataPathSegment segment, IEdmEntitySet entitySet)

@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("Artist ne 'Emily Carr'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
             var binaryOperatorNode =
-                filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual).And;
+                filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual);
             binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPaintingArtistProp());
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Emily Carr");
         }
@@ -40,11 +40,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("-Genre eq 'Abstract'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
             var binaryOperatorNode =
-                filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+                filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             
             binaryOperatorNode.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
-                              .And.Source.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
-                              .And.Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
+                              .Source.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
+                              .Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
             
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Abstract");
         }
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterQueryNode = ParseFilter("not Genre", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
-            filterQueryNode.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).And
+            filterQueryNode.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not)
                 .Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
             filterQueryNode.Expression.TypeReference.Should().BeNull();
         }
@@ -97,11 +97,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("Genre/SubGenre ne 'Modern'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
             var binaryOperatorNode =
-                filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual).And;
+                filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual);
 
             binaryOperatorNode.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
-                              .And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("SubGenre")
-                              .And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
+                              .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("SubGenre")
+                              .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
             
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Modern");
         }
@@ -126,12 +126,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyPaintings/any(p: startswith(-p/Genre, 'Ab'))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var functionNode =
-                filterQueryNode.Expression.ShouldBeAnyQueryNode().And.Body.As<SingleValueFunctionCallNode>();
+                filterQueryNode.Expression.ShouldBeAnyQueryNode().Body.As<SingleValueFunctionCallNode>();
 
             var parameterNode = functionNode.Parameters.First();
             parameterNode.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
-                         .And.Source.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
-                         .And.Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
+                         .Source.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
+                         .Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
         } 
          
         [Fact]
@@ -140,8 +140,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyFavoritePainting/Genre eq 'Ab'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                                      .And.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
-                                      .And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
+                                      .Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
+                                      .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var orderBy = ParseOrderBy("day(Genre)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
-            var functionNode = orderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode("day").And;
+            var functionNode = orderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode("day");
             functionNode.Parameters.Single().ShouldBeSingleValueOpenPropertyAccessQueryNode("Genre");
             functionNode.TypeReference.Should().BeNull();
         }
@@ -159,9 +159,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filter = ParseOrderBy("substring(Genre, 5)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
-            var functionNode = filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("substring").And;
+            var functionNode = filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("substring");
             functionNode.Parameters.First().ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetString(true)).
-                And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Genre");
+                Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Genre");
             functionNode.TypeReference.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetString(true));
         }
 
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterWithCollectionOpenPropertyExpectCollectionOpenPropertyAccessQueryNode()
         {
             var filterQueryNode = ParseFilter("Critics/any(p:p eq 0)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
-            var lambdaNode = filterQueryNode.Expression.ShouldBeAnyQueryNode().And.As<LambdaNode>();
+            var lambdaNode = filterQueryNode.Expression.ShouldBeAnyQueryNode().As<LambdaNode>();
 
             lambdaNode.Source.ShouldBeCollectionOpenPropertyAccessQueryNode("Critics");
             lambdaNode.Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);

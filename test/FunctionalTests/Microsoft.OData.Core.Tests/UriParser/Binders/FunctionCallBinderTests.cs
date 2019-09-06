@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var arguments = new List<QueryToken>() { new LiteralToken("ignored") };
             var token = new FunctionCallToken("year", arguments);
             var result = functionCallBinder.BindFunctionCall(token);
-            result.ShouldBeSingleValueFunctionCallQueryNode("year").And.Parameters.Single().ShouldBeConstantQueryNode<object>(null).And.TypeReference.Should().BeNull();
+            result.ShouldBeSingleValueFunctionCallQueryNode("year").Parameters.Single().ShouldBeConstantQueryNode<object>(null).TypeReference.Should().BeNull();
         }
 
         [Fact]
@@ -63,8 +63,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var token = new FunctionCallToken("substring", arguments);
             var result = functionCallBinder.BindFunctionCall(token);
             result.ShouldBeSingleValueFunctionCallQueryNode("substring");
-            result.As<SingleValueFunctionCallNode>().Parameters.First().ShouldBeConstantQueryNode<object>(null).And.TypeReference.Should().BeNull();
-            result.As<SingleValueFunctionCallNode>().Parameters.Last().ShouldBeConstantQueryNode<object>(null).And.TypeReference.Should().BeNull();
+            result.As<SingleValueFunctionCallNode>().Parameters.First().ShouldBeConstantQueryNode<object>(null).TypeReference.Should().BeNull();
+            result.As<SingleValueFunctionCallNode>().Parameters.Last().ShouldBeConstantQueryNode<object>(null).TypeReference.Should().BeNull();
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                             new ConstantNode(3)
                                         };
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).And.Source.ShouldBeConstantQueryNode<object>(null);
+            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).Source.ShouldBeConstantQueryNode<object>(null);
             nodes[1].ShouldBeConstantQueryNode(3);
 
             AssertSignatureTypesMatchArguments(signature, nodes);
@@ -148,8 +148,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                             new ConstantNode(null)
                                         };
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).And.Source.ShouldBeConstantQueryNode<object>(null);
-            nodes[1].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32).And.Source.ShouldBeConstantQueryNode<object>(null);
+            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).Source.ShouldBeConstantQueryNode<object>(null);
+            nodes[1].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32).Source.ShouldBeConstantQueryNode<object>(null);
 
             AssertSignatureTypesMatchArguments(signature, nodes);
         }
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                         };
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
             nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
-                    .And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
+                    .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
             nodes[1].ShouldBeConstantQueryNode(3);
 
             AssertSignatureTypesMatchArguments(signature, nodes);
@@ -182,9 +182,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                         };
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
             nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
-                    .And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
+                    .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
             nodes[1].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32)
-                    .And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName + "1");
+                    .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName + "1");
 
             AssertSignatureTypesMatchArguments(signature, nodes);
         }
@@ -200,9 +200,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                         };
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
             nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
-                    .And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
+                    .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
             nodes[1].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32)
-                    .And.Source.ShouldBeConstantQueryNode<object>(null);
+                    .Source.ShouldBeConstantQueryNode<object>(null);
 
             AssertSignatureTypesMatchArguments(signature, nodes);
         }
@@ -1154,7 +1154,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryNode functionCallNode;
             RunBindEndPathAsFunctionCall("Fully.Qualified.Namespace.GetMyDog", out functionCallNode).Should().BeTrue();
             functionCallNode.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
-                .And.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
+                .NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
@@ -1163,7 +1163,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryNode functionCallNode;
             RunBindEndPathAsFunctionCall("Fully.Qualified.Namespace.AllMyFriendsDogs", out functionCallNode).Should().BeTrue();
             functionCallNode.ShouldBeCollectionResourceFunctionCallNode(HardCodedTestModel.GetFunctionForAllMyFriendsDogs())
-                .And.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
+                .NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]

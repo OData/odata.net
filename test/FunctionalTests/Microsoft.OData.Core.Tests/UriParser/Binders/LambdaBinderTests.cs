@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var allToken = this.CreateTestAllQueryToken();
 
             var result = binder.BindLambdaToken(allToken, state);
-            result.ShouldBeAllQueryNode().And.Source.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetPeopleSet());
+            result.ShouldBeAllQueryNode().Source.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetPeopleSet());
             result.Body.ShouldBeConstantQueryNode(true);
         }
 
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var allToken = this.CreateTestAllQueryToken();
 
             var result = binder.BindLambdaToken(allToken, state);
-            result.ShouldBeAllQueryNode().And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetDogNicknamesProperty());
+            result.ShouldBeAllQueryNode().Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetDogNicknamesProperty());
             result.Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual);
         }
 
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var anyToken = this.CreateTestAnyQueryToken();
 
             var result = binder.BindLambdaToken(anyToken, state);
-            result.ShouldBeAnyQueryNode().And.Source.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetPeopleSet());
+            result.ShouldBeAnyQueryNode().Source.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetPeopleSet());
             result.Body.ShouldBeConstantQueryNode(true);
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var anyToken = new AnyToken(expression, null, parent);
 
             var result = binder.BindLambdaToken(anyToken, state);
-            result.ShouldBeAnyQueryNode().And.Source.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetPeopleSet());
+            result.ShouldBeAnyQueryNode().Source.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetPeopleSet());
             result.Body.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate);
         }
 

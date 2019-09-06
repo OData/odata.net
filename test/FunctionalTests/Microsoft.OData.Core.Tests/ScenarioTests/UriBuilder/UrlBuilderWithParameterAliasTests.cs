@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
 
             odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
-            odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDecimal(false));
+            odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDecimal(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
+            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
@@ -234,7 +234,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
+            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
@@ -255,7 +255,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
+            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
@@ -276,7 +276,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p2", null);
+            odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p2", null);
             aliasNodes["@p1"].Should().BeNull();
             aliasNodes["@p2"].Should().BeNull();
 
@@ -297,8 +297,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
-            aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).And.Right.ShouldBeConstantQueryNode(2);
+            odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
+            aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).Right.ShouldBeConstantQueryNode(2);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
@@ -402,7 +402,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             var expectedFunc = HardCodedTestModel.GetAllHasDogFunctionOverloadsForPeople().Single(s => s.Parameters.Count() == 2);
-            odataUri.OrderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+            odataUri.OrderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
@@ -422,8 +422,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.OrderBy.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
-            aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide).And.Right.ShouldBeConstantQueryNode(2);
+            odataUri.OrderBy.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
+            aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide).Right.ShouldBeConstantQueryNode(2);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);

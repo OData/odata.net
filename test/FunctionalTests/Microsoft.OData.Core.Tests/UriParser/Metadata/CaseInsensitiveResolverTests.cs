@@ -139,7 +139,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$filter=TestNS.Person/Addr/TestNS.Address/ZipCode eq '550'",
                "People?$filter=TestNS.Person/Addr/TestNS.AddrESS/ZipCode eq '550'",
                parser => parser.ParseFilter(),
-               clause => clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Left.ShouldBeSingleValuePropertyAccessQueryNode(ZipCodeProperty),
+               clause => clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Left.ShouldBeSingleValuePropertyAccessQueryNode(ZipCodeProperty),
                Strings.CastBinder_ChildTypeIsNotEntity("TestNS.AddrESS"));
         }
 
@@ -385,7 +385,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 {
                     IList<QueryNode> parameters = filter.Expression
                        .ShouldBeSingleValueFunctionCallQueryNode("startswith", EdmCoreModel.Instance.GetBoolean(false))
-                       .And.Parameters.ToList();
+                       .Parameters.ToList();
                     parameters.Count.Should().Be(2);
                     parameters[0].ShouldBeSingleValuePropertyAccessQueryNode(ZipCodeProperty);
                     parameters[1].ShouldBeConstantQueryNode("2");

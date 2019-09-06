@@ -1152,8 +1152,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             };
             var path = parser.ParsePath();
 
-            path.FirstSegment.ShouldBeBatchReferenceSegment(HardCodedTestModel.GetDogType())
-                .And.ContentId.Should().Be("$42");
+            Assert.Equal("$42", path.FirstSegment.ShouldBeBatchReferenceSegment(HardCodedTestModel.GetDogType()).ContentId);
             path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
             path.FirstSegment.TranslateWith(new DetermineNavigationSourceTranslator()).Should().Be(HardCodedTestModel.GetDogsSet());
         }

@@ -152,8 +152,8 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="ODataException">Another Uri literal parser is already registered for the given EdmType</exception>
         public static void AddCustomUriLiteralParser(IEdmTypeReference edmTypeReference, IUriLiteralParser customUriLiteralParser)
         {
-            ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
             ExceptionUtils.CheckArgumentNotNull(edmTypeReference, "edmTypeReference");
+            ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
             lock (CustomUriLiteralParsers.Locker)
             {

@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ResourceRangeVariable rangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.RangeVariable.ShouldBeResourceRangeVariable(HardCodedTestModel.GetDogTypeReference()).And.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
+            referenceNode.RangeVariable.ShouldBeResourceRangeVariable(HardCodedTestModel.GetDogTypeReference()).NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]

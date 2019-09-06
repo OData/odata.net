@@ -104,7 +104,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
-                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDecimal(false));
+                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDecimal(false));
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
                 });
         }
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.AllHaveDog(inOffice=@p1)&@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
                 });
         }
@@ -256,7 +256,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice=false,name=@p1)&@p1=Name"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
+                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
                     aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
                 });
         }
@@ -268,7 +268,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice=false,name=@p1)&@p2=Name&@p1=@p2"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
+                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
                     aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
                     aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
                 });
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice=@p1,name=@p1)&@p2=Name&@p1=@p2"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
+                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
                     aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
                     aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
                 });
@@ -306,7 +306,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice=@p1,name=@p2)"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p2", null);
+                    filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p2", null);
                     aliasNodes["@p1"].Should().BeNull();
                     aliasNodes["@p2"].Should().BeNull();
                 });
@@ -319,8 +319,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=ID eq @p1&@p1=1 add 2"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).And.Right.ShouldBeConstantQueryNode(2);
+                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).Right.ShouldBeConstantQueryNode(2);
                 });
         }
 
@@ -410,7 +410,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].SingleResult.Should().BeFalse();
 
                     filterClause.Should().BeNull();
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(42);
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(42);
                 });
         }
 
@@ -432,7 +432,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     filterClause.Should().BeNull();
                     aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                        .And.Right.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetInt32(false));
+                        .Right.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetInt32(false));
                     aliasNodes["@p2"].ShouldBeConstantQueryNode(9001);
                 });
         }
@@ -686,8 +686,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterClause.Expression.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetBoolean(false));
                     filterClause.ItemType.Definition.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
 
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode("num");
-                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode("num");
+                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(1);
                 });
         }
 
@@ -799,7 +799,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterClause.Expression.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetBoolean(false));
                     filterClause.ItemType.Definition.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
-                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(1);
                 });
         }
 
@@ -843,8 +843,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[1].SingleResult.Should().BeFalse();
 
                     filterClause.Should().BeNull();
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
-                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode("num");
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(1);
+                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode("num");
                 });
         }
 
@@ -864,7 +864,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].SingleResult.Should().BeFalse();
 
                     filterClause.Should().BeNull();
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(1);
                 });
         }
 
@@ -896,7 +896,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].SingleResult.Should().BeFalse();
 
                     filterClause.Should().BeNull();
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode("example@contoso.com");
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode("example@contoso.com");
                 });
         }
         #endregion
@@ -910,7 +910,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     var expectedFunc = HardCodedTestModel.GetAllHasDogFunctionOverloadsForPeople().Single(s => s.Parameters.Count() == 2);
-                    orderByClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    orderByClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc).Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
                 });
         }
@@ -922,8 +922,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$orderby=ID mul @p1 asc&@p1=3 div 2"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    orderByClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide).And.Right.ShouldBeConstantQueryNode(2);
+                    orderByClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide).Right.ShouldBeConstantQueryNode(2);
                 });
         }
         #endregion

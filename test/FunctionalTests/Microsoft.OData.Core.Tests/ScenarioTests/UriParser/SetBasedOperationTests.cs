@@ -112,7 +112,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     oDataPath.Count.Should().Be(2);
 
-                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(42);
+                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(42);
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].SingleResult.Should().BeFalse();
 
                     filterClause.Should().BeNull();
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(42);
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(42);
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
@@ -166,8 +166,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 
-                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode("num");
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(42);
+                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode("num");
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(42);
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].SingleResult.Should().BeFalse();
 
                     filterClause.Should().BeNull();
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode("example@contoso.com");
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode("example@contoso.com");
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
@@ -228,7 +228,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     oDataPath.Count.Should().Be(3);
 
-                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(42);
+                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(42);
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
@@ -253,8 +253,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetEmployeeType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 
-                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(42);
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode("example@contoso.com");
+                    filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(42);
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode("example@contoso.com");
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].SingleResult.Should().BeFalse();
 
                     filterClause.Should().BeNull();
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(1);
 
                     EachSegment eachSegment = oDataPath.Last() as EachSegment;
                     eachSegment.Should().NotBeNull();
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterSegments[0].SingleResult.Should().BeFalse();
 
                     filterClause.Should().BeNull();
-                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConstantQueryNode(1);
 
                     List<EachSegment> eachSegments = oDataPath.OfType<EachSegment>().ToList();
                     eachSegments.Count.Should().Be(1);

@@ -33,7 +33,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void AndTest()
         {
             var result = this.RunSearchTest("mountain bike");
-            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
             node1.Left.ShouldBeSearchTermNode("mountain");
             node1.Right.ShouldBeSearchTermNode("bike");
         }
@@ -42,17 +42,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ImplicitAndTest()
         {
             var result = this.RunSearchTest("mountain NOT bike");
-            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
             node1.Left.ShouldBeSearchTermNode("mountain");
-            node1.Right.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).And.Operand.ShouldBeSearchTermNode("bike");
+            node1.Right.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).Operand.ShouldBeSearchTermNode("bike");
         }
 
         [Fact]
         public void ErrorProneImplicitAndTest()
         {
             var result = this.RunSearchTest("mountain or bike");
-            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
-            var node2 = node1.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
+            var node2 = node1.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
             node2.Left.ShouldBeSearchTermNode("mountain");
             node2.Right.ShouldBeSearchTermNode("or");
             node1.Right.ShouldBeSearchTermNode("bike");
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void OrTest()
         {
             var result = this.RunSearchTest("mountain OR bike");
-            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Or).And;
+            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Or);
             node1.Left.ShouldBeSearchTermNode("mountain");
             node1.Right.ShouldBeSearchTermNode("bike");
         }
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void NotTest()
         {
             var result = this.RunSearchTest("NOT bike");
-            var node1 = result.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).And;
+            var node1 = result.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not);
             node1.Operand.ShouldBeSearchTermNode("bike");
         }
 
@@ -79,10 +79,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void CombinationTest()
         {
             var result = this.RunSearchTest("NOT Tis AND (in OR \"my memory\") \"lock'd\"");
-            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
-            var node2 = node1.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
-            node2.Left.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).And.Operand.ShouldBeSearchTermNode("Tis");
-            var node3 = node2.Right.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Or).And;
+            var node1 = result.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
+            var node2 = node1.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
+            node2.Left.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).Operand.ShouldBeSearchTermNode("Tis");
+            var node3 = node2.Right.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Or);
             node3.Left.ShouldBeSearchTermNode("in");
             node3.Right.ShouldBeSearchTermNode("my memory");
             node1.Right.ShouldBeSearchTermNode("lock'd");

@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -22,46 +21,50 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CountTrueWorks()
         {
-            ParseCount("true").Should().BeTrue();
+            bool? value = ParseCount("true");
+            Assert.True(value.Value);
         }
 
         [Fact]
         public void CountFalseWorks()
         {
-            ParseCount("false").Should().BeFalse();
+            bool? value = ParseCount("false");
+            Assert.False(value.Value);
         }
 
         [Fact]
         public void LeadingAndTrailingWhitespaceIsTrimmed()
         {
-            ParseCount("   true  ").Should().BeTrue();
+            bool? value = ParseCount("   true  ");
+            Assert.True(value.Value);
         }
 
         [Fact]
         public void NullInputCase()
         {
-            ParseCount(null).Should().NotHaveValue();
+            bool? value = ParseCount(null);
+            Assert.Null(value);
         }
 
         [Fact]
         public void EmptyInputCase()
         {
             Action createWithInvalidInput = () => ParseCount("");
-            createWithInvalidInput.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataUriParser_InvalidCount(""));
+            createWithInvalidInput.Throws<ODataException>(ODataErrorStrings.ODataUriParser_InvalidCount(""));
         }
 
         [Fact]
         public void InvalidCaseThrows()
         {
             Action createWithInvalidInput = () => ParseCount("True");
-            createWithInvalidInput.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataUriParser_InvalidCount("True"));
+            createWithInvalidInput.Throws<ODataException>(ODataErrorStrings.ODataUriParser_InvalidCount("True"));
         }
 
         [Fact]
         public void InvalidThrows()
         {
             Action createWithInvalidInput = () => ParseCount("fasle");
-            createWithInvalidInput.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataUriParser_InvalidCount("fasle"));
+            createWithInvalidInput.Throws<ODataException>(ODataErrorStrings.ODataUriParser_InvalidCount("fasle"));
         }
 
         private static bool? ParseCount(string p)

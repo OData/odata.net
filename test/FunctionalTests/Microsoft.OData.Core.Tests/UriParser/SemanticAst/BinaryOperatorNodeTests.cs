@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -22,7 +21,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode(1);
             ConstantNode right = new ConstantNode(2);
             BinaryOperatorNode operatorNode = new BinaryOperatorNode(BinaryOperatorKind.Add, left, right);
-            operatorNode.OperatorKind.Should().Be(BinaryOperatorKind.Add);
+            Assert.Equal(BinaryOperatorKind.Add, operatorNode.OperatorKind);
         }
 
         [Fact]
@@ -31,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode(1);
             ConstantNode right = new ConstantNode(2);
             BinaryOperatorNode operatorNode = new BinaryOperatorNode(BinaryOperatorKind.Add, left, right);
-            operatorNode.Left.Should().Be(left);
+            Assert.Same(left, operatorNode.Left);
         }
 
         [Fact]
@@ -40,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode(1);
             ConstantNode right = new ConstantNode(2);
             BinaryOperatorNode operatorNode = new BinaryOperatorNode(BinaryOperatorKind.Add, left, right);
-            operatorNode.Right.Should().Be(right);
+            Assert.Same(right, operatorNode.Right);
         }
 
         [Fact]
@@ -49,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode(1);
             ConstantNode right = new ConstantNode(2);
             BinaryOperatorNode operatorNode = new BinaryOperatorNode(BinaryOperatorKind.Add, left, right);
-            operatorNode.TypeReference.FullName().Should().Be("Edm.Int32");
+            Assert.Equal("Edm.Int32", operatorNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -58,7 +57,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode(1);
             ConstantNode right = new ConstantNode(2);
             BinaryOperatorNode operatorNode = new BinaryOperatorNode(BinaryOperatorKind.Add, left, right);
-            operatorNode.InternalKind.Should().Be(InternalQueryNodeKind.BinaryOperator);
+            Assert.Equal(InternalQueryNodeKind.BinaryOperator, operatorNode.InternalKind);
         }
     }
 }

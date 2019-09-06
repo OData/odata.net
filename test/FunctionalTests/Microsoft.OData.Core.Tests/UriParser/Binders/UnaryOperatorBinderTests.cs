@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var unaryOperatorQueryToken = new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken(true));
             var resultNode = this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
             resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
-                      .And.Operand.ShouldBeConstantQueryNode<object>(null);
+                      .Operand.ShouldBeConstantQueryNode<object>(null);
             resultNode.As<UnaryOperatorNode>().TypeReference.Should().BeNull();
         }
 
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var unaryOperatorQueryToken = new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken(true));
             var resultNode = this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
             resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
-                      .And.Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
+                      .Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
             resultNode.As<UnaryOperatorNode>().TypeReference.Should().BeNull();
         }
 
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             this.parameterSingleValueQueryNode = new SingleValueFunctionCallNode("func", null, EdmCoreModel.Instance.GetBoolean(false));
             var unaryOperatorQueryToken = new UnaryOperatorToken(UnaryOperatorKind.Not, new LiteralToken("foo"));
             var resultNode = this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
-            resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).And.TypeReference.FullName().Should().Be("Edm.Boolean");
+            resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).TypeReference.FullName().Should().Be("Edm.Boolean");
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             this.extensionSingleValueQueryNode = new SingleValueQueryNodeWithTypeReference();
             var unaryOperatorQueryToken = new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken("foo"));
             var resultNode = this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
-            resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate).And.TypeReference.FullName().Should().Be("Edm.Int32");
+            resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate).TypeReference.FullName().Should().Be("Edm.Int32");
         }
 
         [Fact]
