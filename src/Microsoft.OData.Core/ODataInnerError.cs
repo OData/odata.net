@@ -59,8 +59,6 @@ namespace Microsoft.OData
         ///  Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with a dictionary of property names and corresponding ODataValues.
         /// </summary>
         /// <param name="properties">Dictionary of string keys with ODataValue as value. Key string indicates the property name where as the value of the property is encapsulated in ODataValue.</param>
-        /// <param name="nestedInnerErrorName">The name of the field for the nested inner error object inside inner error.</param>
-        /// <param name="nestedObject">Nested inner error object.</param>
         public ODataInnerError(IDictionary<string, ODataValue> properties)
         {
             ExceptionUtils.CheckArgumentNotNull(properties, "properties");
