@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using FluentAssertions;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Evaluation;
 using Xunit;
@@ -57,55 +56,55 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void BaseBuilderShouldReturnNullForContainer()
         {
-            this.builder.BuildBaseUri().Should().BeNull();
+            Assert.Null(this.builder.BuildBaseUri());
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullForSet()
         {
-            this.builder.BuildEntitySetUri(null, "Fake").Should().BeNull();
+            Assert.Null(this.builder.BuildEntitySetUri(null, "Fake"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullForEntityKey()
         {
-            this.builder.BuildEntityInstanceUri(null, new Collection<KeyValuePair<string, object>>(), "TypeName").Should().BeNull();
+            Assert.Null(this.builder.BuildEntityInstanceUri(null, new Collection<KeyValuePair<string, object>>(), "TypeName"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullForNavigation()
         {
-            this.builder.BuildNavigationLinkUri(null, "Fake").Should().BeNull();
+            Assert.Null(this.builder.BuildNavigationLinkUri(null, "Fake"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullForAssociation()
         {
-            this.builder.BuildAssociationLinkUri(null, "Fake").Should().BeNull();
+            Assert.Null(this.builder.BuildAssociationLinkUri(null, "Fake"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullForOperation()
         {
-            this.builder.BuildOperationTargetUri(null, "Fake", null, null).Should().BeNull();
+            Assert.Null(this.builder.BuildOperationTargetUri(null, "Fake", null, null));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullForStreamEdit()
         {
-            this.builder.BuildStreamEditLinkUri(null, "Fake").Should().BeNull();
+            Assert.Null(this.builder.BuildStreamEditLinkUri(null, "Fake"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullForStreamRead()
         {
-            this.builder.BuildStreamReadLinkUri(null, "Fake").Should().BeNull();
+            Assert.Null(this.builder.BuildStreamReadLinkUri(null, "Fake"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullForTypeSegment()
         {
-            this.builder.AppendTypeSegment(null, "NS.TypeName").Should().BeNull();
+            Assert.Null(this.builder.AppendTypeSegment(null, "NS.TypeName"));
         }
 
         private class TestBuilder : ODataUriBuilder

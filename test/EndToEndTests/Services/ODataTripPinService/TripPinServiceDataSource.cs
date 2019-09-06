@@ -99,7 +99,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 },
                 new Airport()
                 {
-                    Name = "Beijing Capital International Airport",
+                    Name = "Beijing International Airport",
                     Location = new AirportLocation()
                     {
                         Address = "Airport Road, Chaoyang District, Beijing, 100621",

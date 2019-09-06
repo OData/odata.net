@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -19,28 +18,28 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void IdentifierIsValueSegment()
         {
             ValueSegment segment = new ValueSegment(HardCodedTestModel.GetPersonType());
-            segment.Identifier.Should().Be(UriQueryConstants.ValueSegment);
+            Assert.Equal(UriQueryConstants.ValueSegment, segment.Identifier);
         }
 
         [Fact]
         public void SingleResultIsTrue()
         {
             ValueSegment segment = new ValueSegment(HardCodedTestModel.GetPersonType());
-            segment.SingleResult.Should().BeTrue();
+            Assert.True(segment.SingleResult);
         }
 
         [Fact]
         public void CollectionTypeThrows()
         {
             Action createWithCollectionType = () => new ValueSegment(ModelBuildingHelpers.BuildValidCollectionType());
-            createWithCollectionType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
+            createWithCollectionType.Throws<ODataException>(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
         }
 
         [Fact]
         public void EntityTypeIsConvertedToStream()
         {
             ValueSegment segment = new ValueSegment(ModelBuildingHelpers.BuildValidEntityType());
-            segment.EdmType.Should().BeSameAs(EdmCoreModel.Instance.GetStream(false).Definition);
+            Assert.Same(EdmCoreModel.Instance.GetStream(false).Definition, segment.EdmType);
         }
 
         [Fact]
@@ -48,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             IEdmType nonEntityType = ModelBuildingHelpers.BuildValidComplexType();
             ValueSegment segment = new ValueSegment(nonEntityType);
-            segment.EdmType.Should().BeSameAs(nonEntityType);
+            Assert.Same(nonEntityType, segment.EdmType);
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             IEdmEntityType entityType = ModelBuildingHelpers.BuildValidEntityType();
             ValueSegment segment1 = new ValueSegment(entityType);
             ValueSegment segment2 = new ValueSegment(entityType);
-            segment1.Equals(segment2).Should().BeTrue();
+            Assert.True(segment1.Equals(segment2));
         }
 
         [Fact]
@@ -66,8 +65,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ValueSegment segment1 = new ValueSegment(ModelBuildingHelpers.BuildValidEntityType());
             ValueSegment segment2 = new ValueSegment(ModelBuildingHelpers.BuildValidComplexType());
             BatchSegment segment3 = BatchSegment.Instance;
-            segment1.Equals(segment2).Should().BeFalse();
-            segment1.Equals(segment3).Should().BeFalse();
+            Assert.False(segment1.Equals(segment2));
+            Assert.False(segment1.Equals(segment3));
         }
     }
 }

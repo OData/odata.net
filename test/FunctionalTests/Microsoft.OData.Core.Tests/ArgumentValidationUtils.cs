@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
+using Xunit;
 
 namespace Microsoft.OData.Tests
 {
@@ -14,19 +14,20 @@ namespace Microsoft.OData.Tests
         internal static void ShouldThrowOnNullArgument<T>(this Action<T> action, string argumentName) where T : class
         {
             Action withNullValue = () => action(null);
-            withNullValue.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains(argumentName));
+            Assert.Throws<ArgumentNullException>(argumentName, withNullValue);
         }
 
-        internal static void ShouldThrowOnEmptyStringArgument(this Action<string> action, string argumentName)
+        internal static void ShouldThrowOnEmptyStringArgument<T>(this Action<string> action, string argumentName) where T : Exception
         {
             Action withEmptyValue = () => action(string.Empty);
-            withEmptyValue.ShouldThrow<ArgumentException>().Where(e => e.Message.Contains(argumentName));
+            Exception exception = Assert.Throws<T>(withEmptyValue);
+            Assert.Contains(argumentName, exception.Message);
         }
 
         internal static void ShouldThrowOnNullOrEmptyStringArgument(this Action<string> action, string argumentName)
         {
             action.ShouldThrowOnNullArgument(argumentName);
-            action.ShouldThrowOnEmptyStringArgument(argumentName);
+            action.ShouldThrowOnEmptyStringArgument<ArgumentNullException>(argumentName);
         }
     }
 }

@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -26,12 +25,12 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     rangeVariable
                 };
             AnyNode anyNode = new AnyNode(rangeVariables, rangeVariable);
-            anyNode.RangeVariables.Count.Should().Be(1);
-            anyNode.RangeVariables[0].Name.Should().Be(ExpressionConstants.It);
-            anyNode.RangeVariables[0].Kind.Should().Be(RangeVariableKind.Resource);
-            anyNode.RangeVariables[0].TypeReference.FullName().Should().Be(HardCodedTestModel.GetDogTypeReference().FullName());
+            Assert.Single(anyNode.RangeVariables);
+            Assert.Equal(ExpressionConstants.It, anyNode.RangeVariables[0].Name);
+            Assert.Equal(RangeVariableKind.Resource, anyNode.RangeVariables[0].Kind);
+            Assert.Equal(HardCodedTestModel.GetDogTypeReference().FullName(), anyNode.RangeVariables[0].TypeReference.FullName());
             ResourceRangeVariable returnedRangeVariable = (ResourceRangeVariable)anyNode.RangeVariables[0];
-            returnedRangeVariable.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
+            Assert.Same(HardCodedTestModel.GetDogsSet(), returnedRangeVariable.NavigationSource);
         }
 
         [Fact]
@@ -45,9 +44,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     rangeVariable
                 };
             AnyNode anyNode = new AnyNode(rangeVariables, rangeVariable);
-            anyNode.CurrentRangeVariable.Name.Should().Be(ExpressionConstants.It);
-            anyNode.CurrentRangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
-            anyNode.CurrentRangeVariable.TypeReference.FullName().Should().Be(HardCodedTestModel.GetDogTypeReference().FullName());
+            Assert.Equal(ExpressionConstants.It, anyNode.CurrentRangeVariable.Name);
+            Assert.Equal(RangeVariableKind.Resource, anyNode.CurrentRangeVariable.Kind);
+            Assert.Equal(HardCodedTestModel.GetDogTypeReference().FullName(), anyNode.CurrentRangeVariable.TypeReference.FullName());
         }
 
         [Fact]
@@ -59,7 +58,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     rangeVariable
                 };
             AnyNode anyNode = new AnyNode(rangeVariables, rangeVariable);
-            anyNode.TypeReference.FullName().Should().Be("Edm.Boolean");
+            Assert.Equal("Edm.Boolean", anyNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -71,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     rangeVariable
                 };
             AnyNode anyNode = new AnyNode(rangeVariables, rangeVariable);
-            anyNode.InternalKind.Should().Be(InternalQueryNodeKind.Any);
+            Assert.Equal(InternalQueryNodeKind.Any, anyNode.InternalKind);
         }
     }
 }

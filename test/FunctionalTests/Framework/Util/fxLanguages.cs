@@ -550,14 +550,14 @@ namespace System.Data.Test.Astoria
 		    '\u200F',	//right-to-left mark (RLM)
 
             //Turkish
-		    '\u0049',		// capital dotless I
+		    '\u0049',		// dotless I
 		    '\u0069',		// small case i
 		    '\u00E2',		
 		    '\u00EE',
 		    '\u00F6',
 		    '\u00FB',
 		    '\u00FC',
-		    '\u0130',		// capital I
+		    '\u0130',		// I
 		    '\u0131',		// small case dotless i
 
    		    '\u9DD7',
@@ -1476,14 +1476,14 @@ namespace System.Data.Test.Astoria
 		    _validchars = new char[] 
             {
 		    '\u00E7',
-		    '\u0049',		// capital dotless I
+		    '\u0049',		// dotless I
 		    '\u0069',		// small case i
 		    '\u00E2',		
 		    '\u00EE',
 		    '\u00F6',
 		    '\u00FB',
 		    '\u00FC',
-		    '\u0130',		// capital I
+		    '\u0130',		// I
 		    '\u0131',		// small case dotless i
 		    '\u015F',
 		    };

@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -16,7 +15,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void ParentCanBeNull()
         {
             StarToken starToken = new StarToken(null);
-            starToken.NextToken.Should().BeNull();
+            Assert.Null(starToken.NextToken);
         }
 
         [Fact]
@@ -30,7 +29,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void NameIsAlwaysStar()
         {
             StarToken starToken = new StarToken(null);
-            starToken.Identifier.Should().Be("*");
+            Assert.Equal("*", starToken.Identifier);
         }
     }
 }

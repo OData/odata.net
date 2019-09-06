@@ -120,7 +120,6 @@ namespace Microsoft.OData.UriParser
             bool? countOption = null;
             QueryToken searchOption = null;
             SelectToken selectOption = null;
-            ExpandToken expandOption = null;
             ComputeToken computeOption = null;
 
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
@@ -177,10 +176,6 @@ namespace Microsoft.OData.UriParser
                             selectOption = ParseInnerSelect(pathToken);
                             break;
 
-                        case ExpressionConstants.QueryOptionExpand: // inner $expand
-                            expandOption = ParseInnerExpand(pathToken);
-                            break;
-
                         case ExpressionConstants.QueryOptionCompute: // inner $compute
                             computeOption = ParseInnerCompute();
                             break;
@@ -200,7 +195,7 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
             }
 
-            return new SelectTermToken(pathToken, filterOption, orderByOptions, topOption, skipOption, countOption, searchOption, selectOption, expandOption, computeOption);
+            return new SelectTermToken(pathToken, filterOption, orderByOptions, topOption, skipOption, countOption, searchOption, selectOption, computeOption);
         }
 
         /// <summary>

@@ -93,7 +93,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
 
             var myPeopleExpand = parsedUri.SelectAndExpand.SelectedItems.First()
-                .ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>().And;
+                .ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>();
 
             myPeopleExpand.PathToNavigationProperty.Single()
                 .ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var myDogSelectedItems = parser.ParseSelectAndExpand().SelectedItems.ToList();
             myDogSelectedItems.Count.Should().Be(3);
             myDogSelectedItems[1].ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
-            var myPeopleExpansionSelectionItem = myDogSelectedItems[0].ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>().And;
+            var myPeopleExpansionSelectionItem = myDogSelectedItems[0].ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>();
             myPeopleExpansionSelectionItem.PathToNavigationProperty.Single().ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
             myPeopleExpansionSelectionItem.SelectAndExpand.SelectedItems.Should().BeEmpty();
             var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith").And.Parameters.ToList();

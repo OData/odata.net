@@ -5,10 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
+using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.Metadata
 {
@@ -271,11 +270,11 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             if (errorMessage != null)
             {
                 Action action = () => parse(getCaseInsensitiveParser());
-                action.ShouldThrow<ODataException>().WithMessage(errorMessage);
+                action.ThrowsAny<ODataException>(errorMessage);
             }
             else
             {
-                parse(getCaseInsensitiveParser()).Should().BeNull();
+                Assert.Null(parse(getCaseInsensitiveParser()));
             }
 
             // CaseInsensitive case should pass with CaseInsensitive parser
@@ -303,7 +302,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
 
             // Original case should fail with CaseInsensitive parser with errorMessage
             Action action = () => parse(new ODataUriParser(model, originalCase) { Resolver = resolver });
-            action.ShouldThrow<ODataException>().WithMessage(conflictMessage);
+            action.ThrowsAny<ODataException>(conflictMessage);
         }
 
         protected void TestConflictWithExactMatch<TResult>(
@@ -327,7 +326,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
 
             // Insensitive case should fail with case insensitive parser with errorMessage
             Action action = () => parse(new ODataUriParser(model, insensitiveCase) { Resolver = resolver });
-            action.ShouldThrow<ODataException>().WithMessage(conflictMessage);
+            action.ThrowsAny<ODataException>(conflictMessage);
         }
 
         protected void TestNotExist<TResult>(
@@ -342,13 +341,13 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             // Original case should fail with message
             ODataUriParser parser = new ODataUriParser(model, originalCase);
             Action action = () => parse(parser);
-            action.ShouldThrow<ODataException>().WithMessage(message);
+            action.ThrowsAny<ODataException>(message);
 
             // Original case should fail with CaseInsensitive parser with same errorMessage
             parser = new ODataUriParser(model, originalCase);
             parserSet(parser);
             action = () => parse(parser);
-            action.ShouldThrow<ODataException>().WithMessage(message);
+            action.ThrowsAny<ODataException>(message);
         }
         #endregion
     }

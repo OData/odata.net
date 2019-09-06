@@ -1,7 +1,13 @@
-﻿using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
+﻿//---------------------------------------------------------------------
+// <copyright file="ApplyBuilderTest.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
+using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
-using System;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder

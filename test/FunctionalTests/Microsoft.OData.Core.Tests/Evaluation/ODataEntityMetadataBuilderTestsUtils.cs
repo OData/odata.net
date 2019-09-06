@@ -14,13 +14,13 @@ namespace Microsoft.OData.Tests.Evaluation
         internal static void GetStreamEditLinkShouldValidateArguments(ODataResourceMetadataBuilder builder)
         {
             Action<string> action = (value) => builder.GetStreamEditLink(value);
-            action.ShouldThrowOnEmptyStringArgument("streamPropertyName");
+            action.ShouldThrowOnEmptyStringArgument<ArgumentException>("streamPropertyName");
         }
 
         internal static void GetStreamReadLinkShouldValidateArguments(ODataResourceMetadataBuilder builder)
         {
             Action<string> action = (value) => builder.GetStreamReadLink(value);
-            action.ShouldThrowOnEmptyStringArgument("streamPropertyName");
+            action.ShouldThrowOnEmptyStringArgument<ArgumentException>("streamPropertyName");
         }
 
         internal static void GetNavigationLinkUriShouldValidateArguments(ODataResourceMetadataBuilder builder)

@@ -91,6 +91,12 @@ namespace Microsoft.OData.MultipartMixed
                     }
                 }
             }
+            else if (this.InputContext.MessageReaderSettings.Version <= ODataVersion.V4)
+            {
+                // For backward compatibility, don't enforce uniqueness of Content-ID
+                // in MultipartMixed outside of a changeset
+                this.PayloadUriConverter.Reset();
+            }
 
             ODataBatchOperationRequestMessage requestMessage = BuildOperationRequestMessage(
                 () => ODataBatchUtils.CreateBatchOperationReadStream(this.batchStream, headers, this),

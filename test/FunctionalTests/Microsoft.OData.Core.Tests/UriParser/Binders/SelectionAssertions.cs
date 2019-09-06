@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
+using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -15,47 +15,51 @@ namespace Microsoft.OData.Tests.UriParser.Binders
     /// </summary>
     internal static class SelectionAssertions
     {
-        public static AndConstraint<T> ShouldBeSelectedItemOfType<T>(this SelectItem actual) where T : SelectItem
+        public static T ShouldBeSelectedItemOfType<T>(this SelectItem actual) where T : SelectItem
         {
-            actual.Should().BeOfType<T>();
-            return new AndConstraint<T>(actual as T);
+            Assert.NotNull(actual);
+            return Assert.IsType<T>(actual);
         }
 
-        public static AndConstraint<PathSelectItem> ShouldBePathSelectionItem(this SelectItem actual, ODataPath path)
+        public static PathSelectItem ShouldBePathSelectionItem(this SelectItem actual, ODataPath path)
         {
-            var andConstraint = actual.ShouldBeSelectedItemOfType<PathSelectItem>();
-            andConstraint.And.SelectedPath.Equals(path).Should().BeTrue();
-            return andConstraint;
+            PathSelectItem pathSeleteItem = actual.ShouldBeSelectedItemOfType<PathSelectItem>();
+            Assert.True(pathSeleteItem.SelectedPath.Equals(path));
+            return pathSeleteItem;
         }
 
-        public static AndConstraint<WildcardSelectItem> ShouldBeWildcardSelectionItem(this SelectItem actual)
+        public static WildcardSelectItem ShouldBeWildcardSelectionItem(this SelectItem actual)
         {
-            var andConstraint = actual.ShouldBeSelectedItemOfType<WildcardSelectItem>();
-            return andConstraint;
+            WildcardSelectItem wildSelectItem = actual.ShouldBeSelectedItemOfType<WildcardSelectItem>();
+            return wildSelectItem;
         }
 
-        public static AndConstraint<ExpandedNavigationSelectItem> ShouldBeExpansionFor(this SelectItem item, IEdmNavigationProperty navigationProperty)
+        public static ExpandedNavigationSelectItem ShouldBeExpansionFor(this SelectItem item, IEdmNavigationProperty navigationProperty)
         {
-            item.Should().BeOfType<ExpandedNavigationSelectItem>();
-            var expansion = item.As<ExpandedNavigationSelectItem>();
-            expansion.PathToNavigationProperty.LastSegment.As<NavigationPropertySegment>().NavigationProperty.Should().BeSameAs(navigationProperty);
-            return new AndConstraint<ExpandedNavigationSelectItem>(expansion);
+            Assert.NotNull(item);
+            ExpandedNavigationSelectItem expanded = Assert.IsType<ExpandedNavigationSelectItem>(item);
+            Assert.NotNull(expanded.PathToNavigationProperty.LastSegment);
+            NavigationPropertySegment navigationSegment = Assert.IsType<NavigationPropertySegment>(expanded.PathToNavigationProperty.LastSegment);
+            Assert.Same(navigationProperty, navigationSegment.NavigationProperty);
+            return expanded;
         }
 
-        public static AndConstraint<ExpandedReferenceSelectItem> ShouldBeExpansionWithRefFor(this SelectItem item, IEdmNavigationProperty navigationProperty)
+        public static ExpandedReferenceSelectItem ShouldBeExpansionWithRefFor(this SelectItem item, IEdmNavigationProperty navigationProperty)
         {
-            item.Should().BeOfType<ExpandedReferenceSelectItem>();
-            var expansion = item.As<ExpandedReferenceSelectItem>();
-            expansion.PathToNavigationProperty.LastSegment.As<NavigationPropertySegment>().NavigationProperty.Should().BeSameAs(navigationProperty);
-            return new AndConstraint<ExpandedReferenceSelectItem>(expansion);
+            Assert.NotNull(item);
+            ExpandedReferenceSelectItem expanded = Assert.IsType<ExpandedReferenceSelectItem>(item);
+            Assert.NotNull(expanded.PathToNavigationProperty.LastSegment);
+            NavigationPropertySegment navigationSegment = Assert.IsType<NavigationPropertySegment>(expanded.PathToNavigationProperty.LastSegment);
+            Assert.Same(navigationProperty, navigationSegment.NavigationProperty);
+            return expanded;
         }
 
-        public static AndConstraint<ExpandedNavigationSelectItem> ShouldBeExpansionFor(this SelectItem item, ODataPath path)
+        public static ExpandedNavigationSelectItem ShouldBeExpansionFor(this SelectItem item, ODataPath path)
         {
-            item.Should().BeOfType<ExpandedNavigationSelectItem>();
-            var expansion = item.As<ExpandedNavigationSelectItem>();
-            expansion.PathToNavigationProperty.Equals(path).Should().BeTrue();
-            return new AndConstraint<ExpandedNavigationSelectItem>(expansion);
+            Assert.NotNull(item);
+            ExpandedNavigationSelectItem expanded = Assert.IsType<ExpandedNavigationSelectItem>(item);
+            Assert.True(expanded.PathToNavigationProperty.Equals(path));
+            return expanded;
         }
     }
 }

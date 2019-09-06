@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -16,35 +15,35 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void IdentifierIsPropertyName()
         {
             DynamicPathSegment openPropertySegment = new DynamicPathSegment("stuff");
-            openPropertySegment.Identifier.Should().Be("stuff");
+            Assert.Equal("stuff", openPropertySegment.Identifier);
         }
-        
+
         [Fact]
         public void TargetEdmTypeIsNull()
         {
             DynamicPathSegment openPropertySegment = new DynamicPathSegment("evenmoreawesomestuff");
-            openPropertySegment.TargetEdmType.Should().BeNull();
+            Assert.Null(openPropertySegment.TargetEdmType);
         }
 
         [Fact]
         public void TargetKindIsOpenProperty()
         {
             DynamicPathSegment openPropertySegment = new DynamicPathSegment("anincredibleamountofstuff");
-            openPropertySegment.TargetKind.Should().Be(RequestTargetKind.Dynamic);
+            Assert.Equal(RequestTargetKind.Dynamic, openPropertySegment.TargetKind);
         }
 
         [Fact]
         public void SingleResultIsTrue()
         {
             DynamicPathSegment openPropertySegment = new DynamicPathSegment("itblowsmymindhowmuchstuffthereisinhere");
-            openPropertySegment.SingleResult.Should().BeTrue();
+            Assert.True(openPropertySegment.SingleResult);
         }
 
         [Fact]
         public void PropertyNameSetCorrectly()
         {
             DynamicPathSegment openPropertySegment = new DynamicPathSegment("beans");
-            openPropertySegment.Identifier.Should().Be("beans");
+            Assert.Equal("beans", openPropertySegment.Identifier);
         }
 
         [Fact]
@@ -52,7 +51,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             DynamicPathSegment openPropertySegment1 = new DynamicPathSegment("superbeans");
             DynamicPathSegment openPropertySegment2 = new DynamicPathSegment("superbeans");
-            openPropertySegment1.Equals(openPropertySegment2).Should().BeTrue();
+            Assert.True(openPropertySegment1.Equals(openPropertySegment2));
         }
 
         [Fact]
@@ -60,7 +59,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             DynamicPathSegment segment1 = new DynamicPathSegment("superbeans", HardCodedTestModel.GetPersonType(), null, true);
             DynamicPathSegment segment2 = new DynamicPathSegment("superbeans", HardCodedTestModel.GetPersonType(), null, true);
-            segment1.Equals(segment2).Should().BeTrue();
+            Assert.True(segment1.Equals(segment2));
         }
 
         [Fact]
@@ -68,7 +67,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             DynamicPathSegment segment1 = new DynamicPathSegment("superbeans", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), true);
             DynamicPathSegment segment2 = new DynamicPathSegment("superbeans", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), true);
-            segment1.Equals(segment2).Should().BeTrue();
+            Assert.True(segment1.Equals(segment2));
         }
 
         [Fact]
@@ -82,13 +81,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             DynamicPathSegment segment6 = new DynamicPathSegment("superbeans", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPaintingsSet(), true);
             DynamicPathSegment segment7 = new DynamicPathSegment("superbeans", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), false);
             BatchSegment segment = BatchSegment.Instance;
-            segment1.Equals(segment2).Should().BeFalse();
-            segment2.Equals(segment).Should().BeFalse();
-            segment1.Equals(segment3).Should().BeFalse();
-            segment3.Equals(segment4).Should().BeFalse();
-            segment3.Equals(segment5).Should().BeFalse();
-            segment3.Equals(segment6).Should().BeFalse();
-            segment3.Equals(segment7).Should().BeFalse();
+            Assert.False(segment1.Equals(segment2));
+            Assert.False(segment2.Equals(segment));
+            Assert.False(segment1.Equals(segment3));
+            Assert.False(segment3.Equals(segment4));
+            Assert.False(segment3.Equals(segment5));
+            Assert.False(segment3.Equals(segment6));
+            Assert.False(segment3.Equals(segment7));
         }
     }
 }

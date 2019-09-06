@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
@@ -35,49 +34,49 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void IfKeyAsSegmentSettingIsTrueAndNoModelIsGivenThenLinkShouldHaveKeyAsSegment()
         {
-            this.SerializeEntryInFullMetadataJson(true, /*model*/ null)
-                .Should().Contain("People/KeyValue")
-                .And.NotContain("People('KeyValue')");
+            string json = this.SerializeEntryInFullMetadataJson(true, /*model*/ null);
+            Assert.Contains("People/KeyValue", json);
+            Assert.DoesNotContain("People('KeyValue')", json);
         }
 
         [Fact]
         public void IfKeyAsSegmentSettingIsTrueAndAModelIsGivenThenLinkShouldHaveKeyAsSegment()
         {
-            this.SerializeEntryInFullMetadataJson(true, this.model, this.personType, this.peopleSet)
-                .Should().Contain("People/KeyValue")
-                .And.NotContain("People('KeyValue')");
+            string json = this.SerializeEntryInFullMetadataJson(true, this.model, this.personType, this.peopleSet);
+            Assert.Contains("People/KeyValue", json);
+            Assert.DoesNotContain("People('KeyValue')", json);
         }
 
         [Fact]
         public void IfKeyAsSegmentSettingIsTrueAndModelHasKeyAsSegmentAnnotationThenLinkShouldHaveKeyAsSegment()
         {
-            this.SerializeEntryInFullMetadataJson(true, this.model, this.personType, this.peopleSet)
-                .Should().Contain("People/KeyValue")
-                .And.NotContain("People('KeyValue')");
+            string json = this.SerializeEntryInFullMetadataJson(true, this.model, this.personType, this.peopleSet);
+            Assert.Contains("People/KeyValue", json);
+            Assert.DoesNotContain("People('KeyValue')", json);
         }
 
         [Fact]
         public void IfKeyAsSegmentSettingIsFalseAndNoModelIsGivenThenLinkShouldHaveKeyInParens()
         {
-            this.SerializeEntryInFullMetadataJson(false, /*model*/ null)
-                .Should().Contain("People('KeyValue')")
-                .And.NotContain("People/KeyValue");
+            string json = this.SerializeEntryInFullMetadataJson(false, /*model*/ null);
+            Assert.Contains("People('KeyValue')", json);
+            Assert.DoesNotContain("People/KeyValue", json);
         }
 
         [Fact]
         public void IfKeyAsSegmentSettingIsFalseAndAModelIsGivenThenLinkShouldHaveKeyInParens()
         {
-            this.SerializeEntryInFullMetadataJson(false, this.model, this.personType, this.peopleSet)
-                .Should().Contain("People('KeyValue')")
-                .And.NotContain("People/KeyValue");
+            string json = this.SerializeEntryInFullMetadataJson(false, this.model, this.personType, this.peopleSet);
+            Assert.Contains("People('KeyValue')", json);
+            Assert.DoesNotContain("People/KeyValue", json);
         }
 
         [Fact]
         public void IfKeyAsSegmentSettingIsFalseAndModelHasKeyAsSegmentAnnotationThenLinkShouldNotHaveKeyAsSegment()
         {
-            this.SerializeEntryInFullMetadataJson(false, this.model, this.personType, this.peopleSet)
-                .Should().Contain("People('KeyValue')")
-                .And.NotContain("People/KeyValue");
+            string json = this.SerializeEntryInFullMetadataJson(false, this.model, this.personType, this.peopleSet);
+            Assert.Contains("People('KeyValue')", json);
+            Assert.DoesNotContain("People/KeyValue", json);
         }
 
         private string SerializeEntryInFullMetadataJson(

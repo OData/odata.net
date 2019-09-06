@@ -99,7 +99,8 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties,
             bool isResponse,
             bool keyAsSegment,
-            ODataUri odataUri);
+            ODataUri odataUri,
+            ODataMessageWriterSettings settings);
 
         /// <summary>
         /// Injects the appropriate metadata builder based on the metadata level.

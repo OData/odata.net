@@ -119,7 +119,9 @@
     <Compile Include="..\Evaluation\ODataEntityMetadataBuilderTestsUtils.cs" />
     <Compile Include="..\Evaluation\ODataEntryMetadataContextTest.cs" />
     <Compile Include="..\Evaluation\ODataMetadataContextTests.cs" />
+    <Compile Include="..\Evaluation\ODataMetadataSelectorTests.cs" />
     <Compile Include="..\Evaluation\ODataMissingOperationGeneratorTests.cs" />
+	<Compile Include="..\Evaluation\TestMetadataSelector.cs" />
     <Compile Include="..\Evaluation\TestModel.cs" />
     <Compile Include="..\HttpHeaderValueElementTests.cs" />
     <Compile Include="..\HttpHeaderValueLexerTests.cs" />

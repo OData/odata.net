@@ -27,8 +27,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         {
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Authorization.V1"" Alias=""Auth"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <TypeDefinition Name=""SchemeName"" UnderlyingType=""Edm.String"">
+    <Annotation Term=""Core.Description"" String=""The name of the authorization scheme."" />
+  </TypeDefinition>
   <ComplexType Name=""SecurityScheme"">
-    <Property Name=""Authorization"" Type=""Edm.String"" Nullable=""false"">
+    <Property Name=""Authorization"" Type=""Auth.SchemeName"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""The name of a required authorization scheme"" />
     </Property>
     <Property Name=""RequiredScopes"" Type=""Collection(Edm.String)"" Nullable=""false"">
@@ -245,6 +248,22 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), enumType.UnderlyingType);
 
             Assert.Equal("Header|QueryOption|Cookie", string.Join("|", enumType.Members.Select(e => e.Name)));
+        }
+
+        [Fact]
+        public void TestAuthorizationVocabularySchemeNameTypeDefinition()
+        {
+            var schemaType = this._authorizationModel.FindDeclaredType("Org.OData.Authorization.V1.SchemeName");
+            Assert.NotNull(schemaType);
+
+            Assert.Equal(EdmTypeKind.TypeDefinition, schemaType.TypeKind);
+            IEdmTypeDefinition schemeName = schemaType as IEdmTypeDefinition;
+            Assert.NotNull(schemeName);
+            Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), schemeName.UnderlyingType);
+
+            string description = this._authorizationModel.GetDescriptionAnnotation(schemeName);
+
+            Assert.Equal("The name of the authorization scheme.", description);
         }
     }
 }

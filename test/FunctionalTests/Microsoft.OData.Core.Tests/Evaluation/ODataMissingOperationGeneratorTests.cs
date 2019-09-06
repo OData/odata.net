@@ -131,7 +131,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = typeIsOpen,
             };
 
-            var entryContext = ODataResourceMetadataContext.Create(entry, new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, entityType, metadataContext, selectedProperties);
+            var entryContext = ODataResourceMetadataContext.Create(entry, new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, entityType, metadataContext, selectedProperties, null);
             var generator = new ODataMissingOperationGenerator(entryContext, metadataContext);
             List<ODataAction> actions = generator.GetComputedActions().ToList();
             List<ODataFunction> functions = generator.GetComputedFunctions().ToList();
