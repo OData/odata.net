@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$filter=Name eq 'Bob'"));
             ODataUri parsedUri = parser.ParseUri();
-            var equalOperator = parsedUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var equalOperator = parsedUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             equalOperator.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
             equalOperator.Right.ShouldBeConstantQueryNode("Bob");
         }
@@ -172,7 +172,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var myPeopleExpansionSelectionItem = myDogSelectedItems[0].ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>();
             myPeopleExpansionSelectionItem.PathToNavigationProperty.Single().ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
             myPeopleExpansionSelectionItem.SelectAndExpand.SelectedItems.Should().BeEmpty();
-            var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith").And.Parameters.ToList();
+            var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith").Parameters.ToList();
             startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp());
             startsWithArgs[1].ShouldBeConstantQueryNode("Blue");
             var orderby = parser.ParseOrderBy();
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var fullUri = new Uri("http://www.odata.com/OData/People(1)/Fully.Qualified.Namespace.GetHotPeople(limit=@p1)" + "?$filter=startswith(Name, @p2)&@p1=123&@p3='Blue'&@p2=concat('is_p2',@p3)");
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
-            var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith").And.Parameters.ToList();
+            var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith").Parameters.ToList();
             startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
             startsWithArgs[1].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
 
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parser.ParameterAliasNodes["@p1"].TypeReference.IsInt32().Should().BeTrue();
 
             // @p2
-            List<QueryNode> p2Node = parser.ParameterAliasNodes["@p2"].ShouldBeSingleValueFunctionCallQueryNode("concat").And.Parameters.ToList();
+            List<QueryNode> p2Node = parser.ParameterAliasNodes["@p2"].ShouldBeSingleValueFunctionCallQueryNode("concat").Parameters.ToList();
             p2Node[0].ShouldBeConstantQueryNode("is_p2");
             p2Node[1].ShouldBeParameterAliasNode("@p3", EdmCoreModel.Instance.GetString(true));
 

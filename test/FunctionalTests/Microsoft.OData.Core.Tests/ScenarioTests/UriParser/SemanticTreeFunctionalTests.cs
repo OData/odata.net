@@ -106,10 +106,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/MyPeople/Fully.Qualified.Namespace.Employee/any(a: a/Shoe eq 'Calvin Klein' )", this.edmModel);
             semanticTree.Filter.Expression.ShouldBeAnyQueryNode().
-                And.Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonShoeProp()).
-                And.Source.ShouldBeResourceRangeVariableReferenceNode("a").
-                And.TypeReference.Definition.Should().Be(HardCodedTestModel.GetEmployeeType());
+                Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonShoeProp()).
+                Source.ShouldBeResourceRangeVariableReferenceNode("a").
+                TypeReference.Definition.Should().Be(HardCodedTestModel.GetEmployeeType());
         }
 
         [Fact]
@@ -165,8 +165,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Repro for: Syntactic parser assumes any token which matches the name of a previously used range variable is also a range variable, even after the scope has been exited
             var semanticTree = HardCodedTestModel.ParseUri("Paintings?$filter=Colors/all(c: true) and c", this.edmModel);
             semanticTree.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And)
-                .And.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean)
-                    .And.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("c");
+                .Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean)
+                    .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("c");
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void OrderbyWithBasicAny()
         {
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$orderby=MyPeople/any(a: a/Shoe eq $it/Color)", this.edmModel);
-            var anyNode = semanticTree.OrderBy.Expression.ShouldBeAnyQueryNode().And;
+            var anyNode = semanticTree.OrderBy.Expression.ShouldBeAnyQueryNode();
             anyNode.RangeVariables.Count.Should().Be(2);
             anyNode.RangeVariables.Should().Contain(n => n.Name == "a");
             anyNode.Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);

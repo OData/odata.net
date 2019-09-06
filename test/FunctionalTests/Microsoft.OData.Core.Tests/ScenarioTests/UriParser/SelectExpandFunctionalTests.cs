@@ -1391,7 +1391,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
             expandedSelectionItem.ComputeOption.Should().NotBeNull();
             expandedSelectionItem.ComputeOption.ComputedItems.Single().Alias.ShouldBeEquivalentTo("ColorAlias");
-            var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("ColorAlias");
         }
 
@@ -1426,7 +1426,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
             expandedSelectionItem.ApplyOption.Should().NotBeNull();
             expandedSelectionItem.ApplyOption.Transformations.Single().As<AggregateTransformationNode>().Expressions.Single().Alias.ShouldBeEquivalentTo("MaxColor");
-            var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("MaxColor");
         }
 

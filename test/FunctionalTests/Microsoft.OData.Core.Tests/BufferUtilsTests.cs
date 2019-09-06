@@ -4,21 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using Microsoft.OData.Buffers;
+using Xunit;
+
 namespace Microsoft.OData.Tests
 {
-    using System;
-    using FluentAssertions;
-    using Microsoft.OData.Buffers;
-    using Xunit;
-
     public class BufferUtilsTests
     {
         [Fact]
         public void BufferUtilsShouldCreateANewBufferIfPassedInBufferIsNull()
         {
             char[] buffer = null;
-            BufferUtils.InitializeBufferIfRequired(buffer).Should()
-                .NotBeNull("If null buffer is passed then a new buffer should be created");
+            Assert.NotNull(BufferUtils.InitializeBufferIfRequired(buffer));
         }
 
         [Fact]
@@ -26,15 +24,15 @@ namespace Microsoft.OData.Tests
         {
             char[] buffer = null;
             buffer = BufferUtils.InitializeBufferIfRequired(buffer);
-            buffer.Length.Should().BeGreaterThan(0, "Created Buffer should be greater than zero");
+            Assert.True(buffer.Length > 0);
         }
 
         [Fact]
         public void BufferUtilsShouldNotCreateANewBufferIfPassedInBuferIsNotNull()
         {
             char[] buffer = new char[10];
-            buffer = BufferUtils.InitializeBufferIfRequired(buffer);
-            buffer.ShouldBeEquivalentTo(buffer);
+            var newBuffer = BufferUtils.InitializeBufferIfRequired(buffer);
+            Assert.Same(newBuffer, buffer);
         }
 
         [Fact]

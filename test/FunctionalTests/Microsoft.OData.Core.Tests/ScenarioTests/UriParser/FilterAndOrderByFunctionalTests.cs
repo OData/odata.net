@@ -350,9 +350,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyDog/Color eq 'brown'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp()).
-                    And.Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp()).
-                    And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
+                Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp()).
+                    Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp()).
+                    NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
@@ -361,8 +361,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyDates/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeCountNode().
-                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDatesProp());
+                Left.ShouldBeCountNode().
+                    Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDatesProp());
         }
 
         [Fact]
@@ -371,8 +371,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("PreviousAddresses/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeCountNode().
-                    And.Source.ShouldBeCollectionComplexNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
+                Left.ShouldBeCountNode().
+                    Source.ShouldBeCollectionComplexNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
         }
 
         [Fact]
@@ -381,8 +381,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("FavoriteColors/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeCountNode().
-                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonFavoriteColorsProp());
+                Left.ShouldBeCountNode().
+                    Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonFavoriteColorsProp());
         }
 
         [Fact]
@@ -391,8 +391,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyFriendsDogs/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeCountNode().
-                    And.Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+                Left.ShouldBeCountNode().
+                    Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
         }
 
         [Fact]
@@ -400,7 +400,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            var binary = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var binary = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binary.Left.ShouldBeSingleComplexNode(HardCodedTestModel.GetPersonAddressProp());
             binary.Right.ShouldBeConvertQueryNode(HardCodedTestModel.GetPersonAddressProp().Type);
         }
@@ -411,7 +411,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("replace(Name, 'a', 'e') eq 'endrew'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeSingleValueFunctionCallQueryNode("replace");
+                Left.ShouldBeSingleValueFunctionCallQueryNode("replace");
         }
 
         [Fact]
@@ -427,9 +427,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyDog/Color eq 'brown'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp()).
-                    And.Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp()).
-                    And.NavigationSource.Should().BeNull();
+                Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp()).
+                    Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp()).
+                    NavigationSource.Should().BeNull();
         }
 
         [Fact]
@@ -446,7 +446,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyAddress/MyNeighbors/any()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             filterQueryNode.Expression.ShouldBeAnyQueryNode().
-                And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetAddressMyNeighborsProperty());
+                Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetAddressMyNeighborsProperty());
         }
 
         [Fact]
@@ -471,8 +471,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var orderByQueryNode = ParseOrderBy("MyDog/Color", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             orderByQueryNode.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp()).
-                And.Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp()).
-                    And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
+                Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp()).
+                    NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
@@ -481,8 +481,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var orderByQueryNode = ParseOrderBy("MyContainedDog/Color", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             orderByQueryNode.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp()).
-                And.Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyContainedDogNavProp()).
-                    And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetContainedDogEntitySet());
+                Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyContainedDogNavProp()).
+                    NavigationSource.Should().BeSameAs(HardCodedTestModel.GetContainedDogEntitySet());
         }
 
         [Fact]
@@ -491,8 +491,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var orderByQueryNode = ParseOrderBy("MyDog/Color", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             orderByQueryNode.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp()).
-                And.Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp()).
-                    And.NavigationSource.Should().BeNull();
+                Source.ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp()).
+                    NavigationSource.Should().BeNull();
         }
 
         [Fact]
@@ -513,10 +513,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var orderByQueryNode = ParseOrderBy("PetColorPattern asc, cast(PetColorPattern,'Edm.String') desc, PetColorPattern has Fully.Qualified.Namespace.ColorPattern'SolidYellow' asc", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet2Type());
             orderByQueryNode.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
             orderByQueryNode.Direction.Should().Be(OrderByDirection.Ascending);
-            orderByQueryNode.ThenBy.Expression.ShouldBeSingleValueFunctionCallQueryNode().And.Parameters.Count().Should().Be(2);
+            orderByQueryNode.ThenBy.Expression.ShouldBeSingleValueFunctionCallQueryNode().Parameters.Count().Should().Be(2);
             orderByQueryNode.ThenBy.Direction.Should().Be(OrderByDirection.Descending);
             orderByQueryNode.ThenBy.ThenBy.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
+                .Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
             orderByQueryNode.ThenBy.ThenBy.Direction.Should().Be(OrderByDirection.Ascending);
         }
 
@@ -533,7 +533,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var orderByQueryNode = ParseOrderBy("Fully.Qualified.Namespace.ColorPattern'SolidYellow' asc", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet2Type());
             var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
-            orderByQueryNode.Expression.ShouldBeEnumNode(new ODataEnumValue(12L + "", enumtypeRef.FullName()));
+            orderByQueryNode.Expression.ShouldBeEnumNode(enumtypeRef.EnumDefinition(), "12");
             orderByQueryNode.Direction.Should().Be(OrderByDirection.Ascending);
         }
 
@@ -566,8 +566,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterNode = ParseFilter("Birthdate gt 1997-02-04+11:00", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
-            filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
-                And.Right.ShouldBeConstantQueryNode(new DateTimeOffset(1997, 2, 4, 0, 0, 0, 0, new TimeSpan(11, 0, 0)));
+            filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan)
+                .Right.ShouldBeConstantQueryNode(new DateTimeOffset(1997, 2, 4, 0, 0, 0, 0, new TimeSpan(11, 0, 0)));
         }
 
         [Fact]
@@ -576,8 +576,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterNode = ParseFilter("Birthdate gt 1997-02-04", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
-                And.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(true))
-                .And.Source.ShouldBeConstantQueryNode(new Date(1997, 2, 4));
+                Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(false))
+                .Source.ShouldBeConstantQueryNode(new Date(1997, 2, 4));
         }
 
         [Fact]
@@ -586,7 +586,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterNode = ParseFilter("MyDate gt 1997-02-04", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
-                 And.Right.ShouldBeConstantQueryNode(new Date(1997, 2, 4));
+                 Right.ShouldBeConstantQueryNode(new Date(1997, 2, 4));
         }
 
         [Fact]
@@ -595,7 +595,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterNode = ParseFilter("MyTimeOfDay gt 23:40:40.900", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
-                And.Right.ShouldBeConstantQueryNode(new TimeOfDay(23, 40, 40, 900));
+                Right.ShouldBeConstantQueryNode(new TimeOfDay(23, 40, 40, 900));
         }
 
         [Fact]
@@ -603,7 +603,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterNode = ParseFilter("duration'PT0H0M15S' eq duration'P1DT0H0M30S'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
-            var binaryOp = filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var binaryOp = filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binaryOp.Left.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 15));
             binaryOp.Right.ShouldBeConstantQueryNode(new TimeSpan(1, 0, 0, 30));
         }
@@ -612,7 +612,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterByWithNonEntityType()
         {
             FilterClause filter = ParseFilter("$it gt 6", HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32));
-            var binaryOp = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).And;
+            var binaryOp = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
             binaryOp.Left.ShouldBeNonResourceRangeVariableReferenceNode("$it");
             binaryOp.Right.ShouldBeConstantQueryNode(6);
         }
@@ -644,8 +644,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var result = ParseFilter("day(null)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
-            result.Expression.ShouldBeSingleValueFunctionCallQueryNode("day").
-                And.Parameters.Single().ShouldBeConstantQueryNode<object>(null).And.TypeReference.Should().BeNull();
+            result.Expression.ShouldBeSingleValueFunctionCallQueryNode("day")
+                .Parameters.Single().ShouldBeConstantQueryNode<object>(null).TypeReference.Should().BeNull();
         }
 
         [Fact]
@@ -731,8 +731,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filter = ParseFilter("cast(MyDog, 'Fully.Qualified.Namespace.Dog')/Color eq 'blue'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             SingleResourceFunctionCallNode function = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                .And.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp())
-                .And.Source.ShouldBeSingleResourceFunctionCallNode("cast").And;
+                .Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp())
+                .Source.ShouldBeSingleResourceFunctionCallNode("cast");
             function.Parameters.Should().HaveCount(2);
             function.Parameters.ElementAt(0).ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp());
             function.Parameters.ElementAt(1).ShouldBeConstantQueryNode("Fully.Qualified.Namespace.Dog");
@@ -763,7 +763,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterClause = ParseFilter("MyPaintings/any(p:p/OpenProperty)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Should().NotBeNull();
             filterClause.Expression.ShouldBeAnyQueryNode()
-                        .And.Body.ShouldBeSingleValueOpenPropertyAccessQueryNode("OpenProperty");
+                        .Body.ShouldBeSingleValueOpenPropertyAccessQueryNode("OpenProperty");
         }
 
         [Fact]
@@ -779,14 +779,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // regression test for: [UriParser] \n in string leads to ambiguity
             var filterClause = ParseFilter("length(Name) \neq 30", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
-            binaryOperatorNode.Left.ShouldBeSingleValueFunctionCallQueryNode("length").And.Parameters.Single().ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            binaryOperatorNode.Left.ShouldBeSingleValueFunctionCallQueryNode("length").Parameters.Single().ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
             binaryOperatorNode.Right.ShouldBeConstantQueryNode(30);
 
             // regression test for: [UriParser] \r in the path string gets disappeared
             var filterClause1 = ParseFilter("length(Name) \req 30", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var binaryOperatorNode1 = filterClause1.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
-            binaryOperatorNode1.Left.ShouldBeSingleValueFunctionCallQueryNode("length").And.Parameters.Single().ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+            var binaryOperatorNode1 = filterClause1.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            binaryOperatorNode1.Left.ShouldBeSingleValueFunctionCallQueryNode("length").Parameters.Single().ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
             binaryOperatorNode1.Right.ShouldBeConstantQueryNode(30);
         }
 
@@ -878,7 +878,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterClause = ParseFilter("Fully.Qualified.Namespace.HasDog(inOffice=true)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters())
-                .And.Source.ShouldBeResourceRangeVariableReferenceNode("$it");
+                .Source.ShouldBeResourceRangeVariableReferenceNode("$it");
         }
 
         [Fact]
@@ -886,8 +886,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterClause = ParseOrderBy("MyPeople/any(a: a/Fully.Qualified.Namespace.HasDog(inOffice=true))", HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
             filterClause.Expression.ShouldBeAnyQueryNode()
-                .And.Body.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters())
-                .And.Source.ShouldBeResourceRangeVariableReferenceNode("a");
+                .Body.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters())
+                .Source.ShouldBeResourceRangeVariableReferenceNode("a");
         }
 
         [Fact]
@@ -896,7 +896,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             const string text = "Fully.Qualified.Namespace.CanMoveToAddress(address={'Street' : 'stuff', 'City' : 'stuff'})";
             var filterClause = ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddress())
-                .And.Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.Should().Be("{'Street' : 'stuff', 'City' : 'stuff'}");
+                .Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.Should().Be("{'Street' : 'stuff', 'City' : 'stuff'}");
         }
 
         [Fact]
@@ -911,7 +911,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterCaluse = ParseFilter("Fully.Qualified.Namespace.CanMoveToAddress(address={\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddress())
-                .And.Parameters.Single().As<NamedFunctionParameterNode>()
+                .Parameters.Single().As<NamedFunctionParameterNode>()
                 .Value.As<ConstantNode>().Value.Should().Be("{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
         }
 
@@ -920,7 +920,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string text = "Fully.Qualified.Namespace.OwnsTheseDogs(dogNames=[\"Barky\",\"Junior\"])";
             var filterCaluse = ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).And.Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.ShouldBeODataCollectionValue()
+            filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.ShouldBeODataCollectionValue()
             .And.ItemsShouldBeAssignableTo<string>().And.Count().Should().Be(2);
         }
 
@@ -931,7 +931,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterCaluse = ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             // TODO: parameter value is ConstantNode, whose .TypeReference should NOT be null though .Value is ok to be ODataCollectionValue.
             filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddresses())
-                .And.Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.Should().Be("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
+                .Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.Should().Be("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
         }
 
         [Fact]
@@ -940,7 +940,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/"), new Uri("http://host/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice=@a)&@a=null"));
             var filterClause = uriParser.ParseFilter();
             filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters())
-                .And.Parameters.Single().As<NamedFunctionParameterNode>()
+                .Parameters.Single().As<NamedFunctionParameterNode>()
                 .Value.As<ParameterAliasNode>().Alias.Should().Be("@a");
 
             // verify alias value node:
@@ -952,7 +952,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterClause = ParseFilter("Fully.Qualified.Namespace.HasDog(inOffice=@a)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters())
-                .And.Parameters.Single().As<NamedFunctionParameterNode>()
+                .Parameters.Single().As<NamedFunctionParameterNode>()
                 .Value.As<ParameterAliasNode>()
                 .Alias.Should().Be("@a");
         }
@@ -961,9 +961,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionsAreComposable()
         {
             var filterClause = ParseFilter("Fully.Qualified.Namespace.GetMyDog/Color eq 'Blue'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp())
-                              .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog());
+                              .Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog());
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Blue");
         }
 
@@ -1023,7 +1023,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             var filterNode = ParseFilter("Color/Test.IsDarkerThan(other={\"Red\":64}) eq true", model, model.EntityTypes().Single(e => e.Name == "Vegetable"), null);
-            var left = filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Left;
+            var left = filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Left;
             left.ShouldBeSingleValueFunctionCallQueryNode(model.FindDeclaredOperations("Test.IsDarkerThan").Single().As<IEdmFunction>());
             left.As<SingleValueFunctionCallNode>().Source.ShouldBeSingleComplexNode(model.EntityTypes().Single().Properties().Single(p => p.Name == "Color"));
 
@@ -1035,7 +1035,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             var filterNode = ParseFilter("Color/Test.GetMostPopularVegetableWithThisColor()/ID eq ID", model, model.EntityTypes().Single(e => e.Name == "Vegetable"), null);
             filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeSingleValuePropertyAccessQueryNode(model.EntityTypes().Single().Properties().Single(p => p.Name == "ID"));
+                Left.ShouldBeSingleValuePropertyAccessQueryNode(model.EntityTypes().Single().Properties().Single(p => p.Name == "ID"));
         }
 
         [Fact]
@@ -1073,13 +1073,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void LongFunctionChainWorksInFilter()
         {
             var filter = ParseFilter("Fully.Qualified.Namespace.GetMyDog/Fully.Qualified.Namespace.GetMyPerson/Fully.Qualified.Namespace.GetMyDog/Fully.Qualified.Namespace.GetMyPerson/Name eq 'Bob'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var binaryOperatorNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var binaryOperatorNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp())
-                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyPerson())
-                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
-                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyPerson())
-                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
-                .And.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
+                .Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyPerson())
+                .Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
+                .Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyPerson())
+                .Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
+                .Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Bob");
         }
 
@@ -1119,11 +1119,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 });
             odataQueryOptionParser.ParseApply();
             var filterClause = odataQueryOptionParser.ParseFilter();
-            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And);
             var leftBinaryOperatorNode =
-                binaryOperatorNode.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And;
+                binaryOperatorNode.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual);
             var rightBinaryOperatorNode =
-                binaryOperatorNode.Right.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual).And;
+                binaryOperatorNode.Right.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual);
             leftBinaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
             rightBinaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Max");
         }
@@ -1188,7 +1188,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 });
             odataQueryOptionParser.ParseCompute();
             var filterClause = odataQueryOptionParser.ParseFilter();
-            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).And;
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
             binaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
         }
 
@@ -1206,7 +1206,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             odataQueryOptionParser.ParseApply();
             odataQueryOptionParser.ParseCompute();
             var filterClause = odataQueryOptionParser.ParseFilter();
-            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).And;
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
             binaryOperatorNode.Left.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
             binaryOperatorNode.Right.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
         }
@@ -1350,8 +1350,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var point = GeometryPoint.Create(1, 2);
             var orderByClause = ParseOrderBy("Fully.Qualified.Namespace.GetColorAtPosition(position=geometry'" + SpatialHelpers.WriteSpatial(point) + "',includeAlpha=null)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), HardCodedTestModel.GetPaintingsSet());
             orderByClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetColorAtPositionFunction())
-                .And.ShouldHaveConstantParameter("position", point)
-                .And.ShouldHaveConstantParameter("includeAlpha", (object)null);
+                .ShouldHaveConstantParameter("position", point)
+                .ShouldHaveConstantParameter("includeAlpha", (object)null);
         }
 
         [Fact]
@@ -1360,9 +1360,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var point = GeographyPoint.Create(1, 2);
             var filterClause = ParseFilter("Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)/any()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Expression.ShouldBeAnyQueryNode()
-                .And.Source.ShouldBeCollectionResourceFunctionCallNode(HardCodedTestModel.GetNearbyPriorAddressesFunction())
-                    .And.ShouldHaveConstantParameter("currentLocation", point)
-                    .And.ShouldHaveConstantParameter("limit", (object)null);
+                .Source.ShouldBeCollectionResourceFunctionCallNode(HardCodedTestModel.GetNearbyPriorAddressesFunction())
+                    .ShouldHaveConstantParameter("currentLocation", point)
+                    .ShouldHaveConstantParameter("limit", (object)null);
         }
 
         [Fact]
@@ -1384,9 +1384,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionWithoutBindingParameterShouldWorkInFilterOrderby()
         {
             var filterClause = ParseFilter("Fully.Qualified.Namespace.FindMyOwner(dogsName='fido')/Name eq 'Bob'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var binaryOperator = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var binaryOperator = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binaryOperator.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp())
-                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForFindMyOwner());
+                .Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForFindMyOwner());
             binaryOperator.Right.ShouldBeConstantQueryNode("Bob");
         }
 
@@ -1506,7 +1506,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             OrderByClause orderby = ParseOrderBy("-TimeEmployed", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var node = orderby.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate).And;
+            var node = orderby.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate);
             node.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDuration(true));
             node.Operand.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonTimeEmployedProp());
         }
@@ -1516,11 +1516,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filter = ParseFilter("-duration'PT130S' eq  TimeEmployed", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
-            var left = expression.Left.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDuration(true)).And;
+            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            var left = expression.Left.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDuration(true));
             left.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDuration(true));
             left.Source.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
-                .And.Operand.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 2, 10));
+                .Operand.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 2, 10));
             expression.Right.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonTimeEmployedProp());
         }
 
@@ -1529,17 +1529,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filter = ParseFilter("TimeEmployed add 2010-06-10 le 2011-06-18+00:00", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual).And;
+            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual);
             var left =
                 expression.Left.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(true))
-                    .And.Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add)
-                    .And;
+                    .Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add);
+
             left.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDate(true));
             left.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonTimeEmployedProp());
             left.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDate(true))
-                .And.Source.ShouldBeConstantQueryNode(new Date(2010, 06, 10));
+                .Source.ShouldBeConstantQueryNode(new Date(2010, 06, 10));
             expression.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(true))
-                .And.Source.ShouldBeConstantQueryNode(new DateTimeOffset(new DateTime(2011, 06, 18), new TimeSpan(0, 0, 0)));
+                .Source.ShouldBeConstantQueryNode(new DateTimeOffset(new DateTime(2011, 06, 18), new TimeSpan(0, 0, 0)));
         }
 
         [Fact]
@@ -1547,15 +1547,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filter = ParseFilter("TimeEmployed add MyDate le 2011-06-18+00:00", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual).And;
+            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual);
             var left = expression.Left.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(true))
-                    .And.Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).And;
+                    .Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add);
             left.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDate(true));
             left.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonTimeEmployedProp());
             left.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDate(true))
-                .And.Source.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDateProp());
+                .Source.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDateProp());
             expression.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(true))
-                .And.Source.ShouldBeConstantQueryNode(new DateTimeOffset(new DateTime(2011, 06, 18), new TimeSpan(0, 0, 0)));
+                .Source.ShouldBeConstantQueryNode(new DateTimeOffset(new DateTime(2011, 06, 18), new TimeSpan(0, 0, 0)));
         }
 
         [Fact]
@@ -1563,17 +1563,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filter = ParseFilter("2010-06-10 add TimeEmployed le 2011-06-18+00:00", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual).And;
+            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual);
             var left =
                 expression.Left.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(true))
-                    .And.Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add)
-                    .And;
+                    .Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add);
+
             left.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDate(true));
             left.Right.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonTimeEmployedProp());
             left.Left.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDate(true))
-                .And.Source.ShouldBeConstantQueryNode(new Date(2010, 06, 10));
+                .Source.ShouldBeConstantQueryNode(new Date(2010, 06, 10));
             expression.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(true))
-                .And.Source.ShouldBeConstantQueryNode(new DateTimeOffset(new DateTime(2011, 06, 18), new TimeSpan(0, 0, 0)));
+                .Source.ShouldBeConstantQueryNode(new DateTimeOffset(new DateTime(2011, 06, 18), new TimeSpan(0, 0, 0)));
         }
 
         [Fact]
@@ -1581,14 +1581,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filter = ParseFilter("TimeEmployed add 2010-06-10 le 2011-06-18", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual).And;
-            var left = expression.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).And;
+            var expression = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual);
+            var left = expression.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add);
             left.TypeReference.AsPrimitive().AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDate(true));
             left.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonTimeEmployedProp());
             left.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDate(true))
-                .And.Source.ShouldBeConstantQueryNode(new Date(2010, 06, 10));
+                .Source.ShouldBeConstantQueryNode(new Date(2010, 06, 10));
             expression.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDate(true))
-                .And.Source.ShouldBeConstantQueryNode(new Date(2011, 06, 18));
+                .Source.ShouldBeConstantQueryNode(new Date(2011, 06, 18));
         }
 
         [Fact]
@@ -1596,12 +1596,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             OrderByClause orderby = ParseOrderBy("TimeEmployed add -duration'PT130S'", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).And;
+            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add);
             expression.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDuration(true));
             expression.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonTimeEmployedProp());
             expression.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDuration(true))
-                .And.Source.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
-                .And.Operand.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 2, 10));
+                .Source.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
+                .Operand.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 2, 10));
         }
 
         [Fact]
@@ -1609,7 +1609,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             OrderByClause orderby = ParseOrderBy("2011-06-18 sub duration'PT130S'", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract).And;
+            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract);
             expression.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDate(false));
             expression.Left.ShouldBeConstantQueryNode(new Date(2011, 06, 18));
             expression.Right.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 2, 10));
@@ -1620,7 +1620,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             OrderByClause orderby = ParseOrderBy("MyDate sub duration'PT130S'", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract).And;
+            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract);
             expression.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDate(false));//PrimitiveKind().Should().Be(EdmPrimitiveTypeKind.Date);
             expression.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDateProp());
             expression.Right.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 2, 10));
@@ -1631,7 +1631,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             OrderByClause orderby = ParseOrderBy("MyDate sub 2010-06-18", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract).And;
+            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract);
             expression.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDuration(false));
             expression.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDateProp());
             expression.Right.ShouldBeConstantQueryNode(new Date(2010, 06, 18));
@@ -1642,11 +1642,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             OrderByClause orderby = ParseOrderBy("TimeEmployed sub duration'PT130S'", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract).And;
+            var expression = orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract);
             expression.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDuration(true));
             expression.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonTimeEmployedProp());
             expression.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDuration(true))
-                .And.Source.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 2, 10));
+                .Source.ShouldBeConstantQueryNode(new TimeSpan(0, 0, 2, 10));
         }
 
         [Fact]
@@ -1654,9 +1654,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filterClause = ParseFilter("2011-06-18 sub 2010-06-10 ge TimeEmployed", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And;
+            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual);
             var left = expression.Left.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDuration(true))
-                .And.Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract).And;
+                .Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract);
             left.TypeReference.AsPrimitive().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetDuration(false));
             left.Left.ShouldBeConstantQueryNode(new Date(2011, 06, 18));
             left.Right.ShouldBeConstantQueryNode(new Date(2010, 06, 10));
@@ -1668,12 +1668,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filterClause = ParseFilter("MyDate ge date(2011-06-18)", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And;
+            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual);
             expression.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDateProp());
-            var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("date", EdmCoreModel.Instance.GetDate(false)).And;
+            var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("date", EdmCoreModel.Instance.GetDate(false));
             right.Parameters.Single()
                 .ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetDateTimeOffset(false))
-                .And.Source.ShouldBeConstantQueryNode(new Date(2011, 6, 18));
+                .Source.ShouldBeConstantQueryNode(new Date(2011, 6, 18));
 
         }
 
@@ -1691,9 +1691,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filterClause = ParseFilter("MyTimeOfDay ge time(2014-09-19T12:13:14+00:00)", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And;
+            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual);
             expression.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonMyTimeOfDayProp());
-            var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("time", EdmCoreModel.Instance.GetTimeOfDay(false)).And;
+            var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("time", EdmCoreModel.Instance.GetTimeOfDay(false));
             right.Parameters.Single().ShouldBeConstantQueryNode(new DateTimeOffset(2014, 9, 19, 12, 13, 14, new TimeSpan(0, 0, 0)));
         }
 
@@ -1711,10 +1711,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filterClause = ParseFilter("year(MyDate) ge year(2010-12-13)", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And;
-            var left = expression.Left.ShouldBeSingleValueFunctionCallQueryNode("year", EdmCoreModel.Instance.GetInt32(false)).And;
+            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual);
+            var left = expression.Left.ShouldBeSingleValueFunctionCallQueryNode("year", EdmCoreModel.Instance.GetInt32(false));
             left.Parameters.Single().ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDateProp());
-            var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("year", EdmCoreModel.Instance.GetInt32(false)).And;
+            var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("year", EdmCoreModel.Instance.GetInt32(false));
             right.Parameters.Single().ShouldBeConstantQueryNode(new Date(2010, 12, 13));
         }
 
@@ -1723,10 +1723,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filterClause = ParseFilter("hour(MyTimeOfDay) ge hour(19:20:5)", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And;
-            var left = expression.Left.ShouldBeSingleValueFunctionCallQueryNode("hour", EdmCoreModel.Instance.GetInt32(false)).And;
+            var expression = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual);
+            var left = expression.Left.ShouldBeSingleValueFunctionCallQueryNode("hour", EdmCoreModel.Instance.GetInt32(false));
             left.Parameters.Single().ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonMyTimeOfDayProp());
-            var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("hour", EdmCoreModel.Instance.GetInt32(false)).And;
+            var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("hour", EdmCoreModel.Instance.GetInt32(false));
             right.Parameters.Single().ShouldBeConstantQueryNode(new TimeOfDay(19, 20, 5, 0));
         }
         #endregion
@@ -1745,7 +1745,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterOnComplexTypeProperty()
         {
             FilterClause clause = ParseFilter("MyAddress/Fully.Qualified.Namespace.HomeAddress/HomeNO eq 'dva'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Left.ShouldBeSingleValuePropertyAccessQueryNode(homeNo);
+            clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Left.ShouldBeSingleValuePropertyAccessQueryNode(homeNo);
         }
         #endregion
 

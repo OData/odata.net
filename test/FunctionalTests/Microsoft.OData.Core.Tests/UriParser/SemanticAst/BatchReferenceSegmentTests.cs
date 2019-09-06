@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -19,14 +18,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeCannotBeNull()
         {
             Action createWithNullType = () => new BatchReferenceSegment("stuff", null, HardCodedTestModel.GetPeopleSet());
-            createWithNullType.ShouldThrow<Exception>(Error.ArgumentNull("resultingType").ToString());
+            Assert.Throws<ArgumentNullException>("edmType", createWithNullType);
         }
 
         [Fact]
         public void ContentIdCannotBeNull()
         {
             Action createWithNullId = () => new BatchReferenceSegment(null, ModelBuildingHelpers.BuildValidEntityType(), HardCodedTestModel.GetPeopleSet());
-            createWithNullId.ShouldThrow<Exception>(Error.ArgumentNull("contentId").ToString());
+            Assert.Throws<ArgumentNullException>("contentId", createWithNullId);
         }
 
         [Fact]
@@ -37,10 +36,10 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             Action createWitnInvalidContentId2 = () => new BatchReferenceSegment("1$2", type, HardCodedTestModel.GetPeopleSet());
             Action createWitnInvalidContentId3 = () => new BatchReferenceSegment("$", type, HardCodedTestModel.GetPeopleSet());
             Action createWitnInvalidContentId4 = () => new BatchReferenceSegment("$0a1", type, HardCodedTestModel.GetPeopleSet());
-            createWitnInvalidContentId1.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("stuff"));
-            createWitnInvalidContentId2.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("1$2"));
-            createWitnInvalidContentId3.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("$"));
-            createWitnInvalidContentId4.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("$0a1"));
+            createWitnInvalidContentId1.Throws<ODataException>(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("stuff"));
+            createWitnInvalidContentId2.Throws<ODataException>(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("1$2"));
+            createWitnInvalidContentId3.Throws<ODataException>(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("$"));
+            createWitnInvalidContentId4.Throws<ODataException>(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("$0a1"));
         }
 
         [Fact]
@@ -59,10 +58,10 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             IEdmEntityType type = HardCodedTestModel.GetPersonType();
             BatchReferenceSegment batchReferenceSegment = new BatchReferenceSegment("$40", type, HardCodedTestModel.GetPeopleSet());
-            batchReferenceSegment.ShouldBeBatchReferenceSegment(type).And.ContentId.Should().Be("$40");
+            Assert.Equal("$40", batchReferenceSegment.ShouldBeBatchReferenceSegment(type).ContentId);
             IEdmEntityType dogType = HardCodedTestModel.GetDogType();
             BatchReferenceSegment containedBatchReferenceSegment = new BatchReferenceSegment("$40", dogType, HardCodedTestModel.GetContainedDogEntitySet());
-            containedBatchReferenceSegment.ShouldBeBatchReferenceSegment(dogType).And.ContentId.Should().Be("$40");
+            Assert.Equal("$40", containedBatchReferenceSegment.ShouldBeBatchReferenceSegment(dogType).ContentId);
         }
 
         [Fact]
@@ -70,10 +69,10 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             IEdmEntityType type = HardCodedTestModel.GetPersonType();
             BatchReferenceSegment batchReferenceSegment = new BatchReferenceSegment("$0", type, HardCodedTestModel.GetPeopleSet());
-            batchReferenceSegment.EntitySet.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), batchReferenceSegment.EntitySet);
             IEdmEntityType dogType = HardCodedTestModel.GetDogType();
             BatchReferenceSegment containedBatchReferenceSegment = new BatchReferenceSegment("$40", dogType, HardCodedTestModel.GetContainedDogEntitySet());
-            containedBatchReferenceSegment.EntitySet.Should().Be(HardCodedTestModel.GetContainedDogEntitySet());
+            Assert.Same(HardCodedTestModel.GetContainedDogEntitySet(), containedBatchReferenceSegment.EntitySet);
         }
 
         [Fact]
@@ -82,7 +81,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             IEdmEntityType type = HardCodedTestModel.GetPersonType();
             BatchReferenceSegment batchReferenceSegment1 = new BatchReferenceSegment("$0", type, HardCodedTestModel.GetPeopleSet());
             BatchReferenceSegment batchReferenceSegment2 = new BatchReferenceSegment("$0", type, HardCodedTestModel.GetPeopleSet());
-            batchReferenceSegment1.Equals(batchReferenceSegment2).Should().BeTrue();
+            Assert.True(batchReferenceSegment1.Equals(batchReferenceSegment2));
         }
 
         [Fact]
@@ -94,9 +93,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             BatchReferenceSegment batchReferenceSegment2 = new BatchReferenceSegment("$0", type2, HardCodedTestModel.GetDogsSet());
             BatchReferenceSegment batchReferenceSegment3 = new BatchReferenceSegment("$10", type1, HardCodedTestModel.GetPeopleSet());
             BatchReferenceSegment batchReferenceSegment4 = new BatchReferenceSegment("$10", type2, HardCodedTestModel.GetContainedDogEntitySet());
-            batchReferenceSegment1.Equals(batchReferenceSegment2).Should().BeFalse();
-            batchReferenceSegment1.Equals(batchReferenceSegment3).Should().BeFalse();
-            batchReferenceSegment2.Equals(batchReferenceSegment4).Should().BeFalse();
+            Assert.False(batchReferenceSegment1.Equals(batchReferenceSegment2));
+            Assert.False(batchReferenceSegment1.Equals(batchReferenceSegment3));
+            Assert.False(batchReferenceSegment2.Equals(batchReferenceSegment4));
         }
     }
 }

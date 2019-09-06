@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Json;
 using Microsoft.OData.UriParser;
@@ -65,11 +64,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             Assert.Equal(encodedByteArr, jsonReader.Value);
 
             object defaultParsedByteArray;
-            DefaultLiteralParser.TryParseLiteral(byteArray.GetType(), Uri.UnescapeDataString(defaultFormattedByteArray), out defaultParsedByteArray).Should().BeTrue();
+            Assert.True(DefaultLiteralParser.TryParseLiteral(byteArray.GetType(), Uri.UnescapeDataString(defaultFormattedByteArray), out defaultParsedByteArray));
             Assert.Equal((byte[])defaultParsedByteArray, byteArray);
 
             object keyAsSegmentParsedByteArray;
-            KeyAsSegmentsLiteralParser.TryParseLiteral(byteArray.GetType(), Uri.UnescapeDataString(keyAsSegmentFormattedByteArray), out keyAsSegmentParsedByteArray).Should().BeTrue();
+            Assert.True(KeyAsSegmentsLiteralParser.TryParseLiteral(byteArray.GetType(), Uri.UnescapeDataString(keyAsSegmentFormattedByteArray), out keyAsSegmentParsedByteArray));
             Assert.Equal((byte[])keyAsSegmentParsedByteArray, byteArray);
         }
     }

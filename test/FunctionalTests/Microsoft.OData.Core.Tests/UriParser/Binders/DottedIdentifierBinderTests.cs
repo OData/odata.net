@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
             resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetEmployeeTypeReference())
-                .And.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
+                .Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
             resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetEmployeeTypeReference())
-                .And.Source.Should().BeSameAs(FakeBindMethods.FakePersonNode);
+                .Source.Should().BeSameAs(FakeBindMethods.FakePersonNode);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
             resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetPersonTypeReference())
-                .And.Source.Should().BeSameAs(FakeBindMethods.FakePersonNode);
+                .Source.Should().BeSameAs(FakeBindMethods.FakePersonNode);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
             resultNode.ShouldBeCollectionCastNode(HardCodedTestModel.GetEmployeeTypeReference())
-                .And.Source.Should().BeSameAs(FakeBindMethods.FakeEntityCollectionNode);
+                .Source.Should().BeSameAs(FakeBindMethods.FakeEntityCollectionNode);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
             resultNode.ShouldBeCollectionCastNode(HardCodedTestModel.GetPersonTypeReference())
-                .And.Source.Should().BeSameAs(FakeBindMethods.FakeEntityCollectionNode);
+                .Source.Should().BeSameAs(FakeBindMethods.FakeEntityCollectionNode);
         }
 
         [Fact]

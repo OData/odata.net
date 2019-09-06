@@ -464,7 +464,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             var uriParser = ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(fullUri, out odataPath);
             var filterClause = uriParser.ParseFilter();
-            var binaryNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+            var binaryNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binaryNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(folderType.FindProperty("childCount"));
             binaryNode.Right.ShouldBeConstantQueryNode(20);
         }

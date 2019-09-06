@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -15,13 +14,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void IdentifierIsBatchSegment()
         {
-            BatchSegment.Instance.Identifier.Should().Be(UriQueryConstants.BatchSegment);
+            Assert.Equal(UriQueryConstants.BatchSegment, BatchSegment.Instance.Identifier);
         }
 
         [Fact]
         public void TargetKindIsBatch()
         {
-            BatchSegment.Instance.TargetKind.Should().Be(RequestTargetKind.Batch);
+            Assert.Equal(RequestTargetKind.Batch, BatchSegment.Instance.TargetKind);
         }
 
         [Fact]
@@ -29,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             BatchSegment segment1 = BatchSegment.Instance;
             BatchSegment segment2 = BatchSegment.Instance;
-            segment1.Equals(segment2).Should().BeTrue();
+            Assert.True(segment1.Equals(segment2));
         }
 
         [Fact]
@@ -37,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             BatchSegment segment1 = BatchSegment.Instance;
             CountSegment segment2 = CountSegment.Instance;
-            segment1.Equals(segment2).Should().BeFalse();
+            Assert.False(segment1.Equals(segment2));
         }
     }
 }

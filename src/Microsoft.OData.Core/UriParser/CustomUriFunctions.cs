@@ -48,8 +48,8 @@ namespace Microsoft.OData.UriParser
         public static void AddCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature)
         {
             // Parameters validation
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "customFunctionName");
-            ExceptionUtils.CheckArgumentNotNull(functionSignature, "newCustomFunctionSignature");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
+            ExceptionUtils.CheckArgumentNotNull(functionSignature, "functionSignature");
 
             ValidateFunctionWithReturnType(functionSignature);
 
@@ -83,8 +83,8 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
         public static bool RemoveCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "customFunctionName");
-            ExceptionUtils.CheckArgumentNotNull(functionSignature, "customFunctionSignature");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
+            ExceptionUtils.CheckArgumentNotNull(functionSignature, "functionSignature");
 
             ValidateFunctionWithReturnType(functionSignature);
 
@@ -129,7 +129,7 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
         public static bool RemoveCustomUriFunction(string functionName)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "customFunctionName");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
 
             lock (Locker)
             {

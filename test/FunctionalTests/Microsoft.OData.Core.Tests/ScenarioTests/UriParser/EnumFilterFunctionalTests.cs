@@ -92,8 +92,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
 
             binaryNode
                 .Left
@@ -115,8 +114,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
 
             binaryNode
                 .Left
@@ -138,8 +136,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
 
             binaryNode
                 .Left
@@ -161,8 +158,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
 
             binaryNode
                 .Left
@@ -184,8 +180,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
 
             binaryNode
             .Left
@@ -207,8 +202,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
 
             binaryNode
                 .Left
@@ -230,8 +224,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
 
             binaryNode
                 .Left
@@ -255,8 +248,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
 
             binaryNode
                 .Left
@@ -280,8 +272,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
 
             binaryNode
                 .Left
@@ -305,8 +296,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
 
             binaryNode
                 .Left
@@ -330,8 +320,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var binaryNode = filterQueryNode
                 .Expression
-                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
-                .And;
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
 
             binaryNode
                 .Left
@@ -358,7 +347,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var binaryNode = filterQueryNode
                 .Expression
                 .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Or)
-                .And.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
+                .Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
 
             binaryNode
                 .Left
@@ -385,8 +374,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterQueryNode = ParseFilter("Color eq null", this.userModel, this.entityType, this.entitySet);
             var binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
-            binaryNode.And.Left.ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
-            binaryNode.And.Right.As<ConvertNode>().Source.ShouldBeConstantQueryNode((object)null);
+            binaryNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+            binaryNode.Right.As<ConvertNode>().Source.ShouldBeConstantQueryNode((object)null);
         }
 
         [Fact]
@@ -394,7 +383,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filter = ParseFilter("cast(NS.Color'Green', 'Edm.String') eq 'blue'", this.userModel, this.entityType, this.entitySet);
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.As<ConvertNode>().Source.As<SingleValueFunctionCallNode>().Name.Should().Be("cast"); // ConvertNode is because cast() result's nullable=false.
+                Left.As<ConvertNode>().Source.As<SingleValueFunctionCallNode>().Name.Should().Be("cast"); // ConvertNode is because cast() result's nullable=false.
         }
 
         [Fact]
@@ -402,7 +391,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filter = ParseFilter("cast('Green', 'NS.Color') eq NS.Color'Green'", this.userModel, this.entityType, this.entitySet);
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.As<SingleValueFunctionCallNode>().Name.Should().Be("cast");
+                Left.As<SingleValueFunctionCallNode>().Name.Should().Be("cast");
         }
 
         //to do: verify the exceptions for the Mismatch cases.

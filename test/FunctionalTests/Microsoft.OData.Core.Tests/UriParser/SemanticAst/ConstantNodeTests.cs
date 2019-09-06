@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -21,41 +20,42 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ValueIsSetCorrectly()
         {
             ConstantNode constantNode = new ConstantNode(1);
-            constantNode.Value.As<int>().Should().Be(1);
+            Assert.Equal(1, Assert.IsType<int>(constantNode.Value));
         }
 
         [Fact]
         public void TypeIsSetFromTheTypeOfTheValue()
         {
             ConstantNode constantNode = new ConstantNode(1);
-            constantNode.TypeReference.FullName().Should().Be("Edm.Int32");
+            Assert.Equal("Edm.Int32", constantNode.TypeReference.FullName());
         }
 
         [Fact]
         public void KindIsConstantNode()
         {
             ConstantNode constantNode = new ConstantNode(1);
-            constantNode.InternalKind.Should().Be(InternalQueryNodeKind.Constant);
+            Assert.Equal(InternalQueryNodeKind.Constant, constantNode.InternalKind);
         }
 
         [Fact]
         public void NullValueShouldNotThrow()
         {
             Action target = () => new ConstantNode(null);
-            target.ShouldNotThrow();
+            target.DoesNotThrow();
         }
 
         [Fact]
         public void NullLiteralTextShouldThrow()
         {
             Action target = () => new ConstantNode(null, null);
-            target.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("literalText"));
+            Assert.Throws<ArgumentNullException>("literalText", target);
         }
 
         [Fact]
         public void LiteralTextPropertyShouldBeSet()
         {
-            new ConstantNode(null, "foo").LiteralText.Should().Be("foo");
+            ConstantNode constantNode = new ConstantNode(null, "foo");
+            Assert.Equal("foo", constantNode.LiteralText);
         }
     }
 }

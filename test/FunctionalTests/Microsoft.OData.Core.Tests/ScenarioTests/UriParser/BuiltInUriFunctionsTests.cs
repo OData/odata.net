@@ -1,12 +1,14 @@
-﻿using Microsoft.OData.UriParser;
+﻿//---------------------------------------------------------------------
+// <copyright file="BuiltInUriFunctionsTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using FluentAssertions;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -21,7 +23,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("substring", out builtInFunctionsSignature);
 
-            builtInFunctionsSignature.Length.Should().Be(6);
+            Assert.Equal(6, builtInFunctionsSignature.Length);
         }
 
         [Fact]
@@ -30,7 +32,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("year", out builtInFunctionsSignature);
 
-            builtInFunctionsSignature.Length.Should().Be(4); // DateTimeOffset and Date, Nullable and not Nullable
+            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset and Date, Nullable and not Nullable
         }
 
         [Fact]
@@ -39,7 +41,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("month", out builtInFunctionsSignature);
 
-            builtInFunctionsSignature.Length.Should().Be(4); // DateTimeOffset and Date, Nullable and not Nullable
+            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset and Date, Nullable and not Nullable
         }
 
         [Fact]
@@ -48,7 +50,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("day", out builtInFunctionsSignature);
 
-            builtInFunctionsSignature.Length.Should().Be(4); // DateTimeOffset and Date, Nullable and not Nullable
+            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset and Date, Nullable and not Nullable
         }
 
         [Fact]
@@ -57,7 +59,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("hour", out builtInFunctionsSignature);
 
-            builtInFunctionsSignature.Length.Should().Be(6); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
+            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
         }
 
         [Fact]
@@ -66,7 +68,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("minute", out builtInFunctionsSignature);
 
-            builtInFunctionsSignature.Length.Should().Be(6); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
+            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
         }
 
         [Fact]
@@ -75,7 +77,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("second", out builtInFunctionsSignature);
 
-            builtInFunctionsSignature.Length.Should().Be(6); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
+            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
         }
 
         [Fact]
@@ -84,7 +86,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("fractionalseconds", out builtInFunctionsSignature);
 
-            builtInFunctionsSignature.Length.Should().Be(4); // DateTimeOffset, TimeOfDay, Nullable and not Nullable
+            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset, TimeOfDay, Nullable and not Nullable
         }
 
         [Fact]
@@ -94,17 +96,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             BuiltInUriFunctions.CreateSpatialFunctions(functions);
             FunctionSignatureWithReturnType[] signatures;
             functions.TryGetValue("geo.distance", out signatures);
-            signatures.Length.Should().Be(2);
-            signatures[0].ReturnType.Definition.FullTypeName().Should().Be(EdmCoreModel.Instance.GetDouble(true).FullName());
-            signatures[0].ArgumentTypes[0].Definition.FullTypeName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).FullName());
-            signatures[0].ArgumentTypes[1].Definition.FullTypeName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).FullName());
-            signatures[1].ReturnType.Definition.FullTypeName().Should().Be(EdmCoreModel.Instance.GetDouble(true).FullName());
-            signatures[1].ArgumentTypes[0].Definition.FullTypeName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).FullName());
-            signatures[1].ArgumentTypes[1].Definition.FullTypeName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).FullName());
+            Assert.Equal(2, signatures.Length);
+            Assert.Equal("Edm.Double", signatures[0].ReturnType.Definition.FullTypeName());
+
+            Assert.Equal("Edm.GeographyPoint", signatures[0].ArgumentTypes[0].Definition.FullTypeName());
+            Assert.Equal("Edm.GeographyPoint", signatures[0].ArgumentTypes[1].Definition.FullTypeName());
+
+            Assert.Equal("Edm.Double", signatures[1].ReturnType.Definition.FullTypeName());
+            Assert.Equal("Edm.GeometryPoint", signatures[1].ArgumentTypes[0].Definition.FullTypeName());
+            Assert.Equal("Edm.GeometryPoint", signatures[1].ArgumentTypes[1].Definition.FullTypeName());
         }
 
         [Fact]
@@ -113,8 +113,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             var result = BuiltInUriFunctions.TryGetBuiltInFunction("rarg", out builtInFunctionsSignature);
 
-            result.Should().BeFalse();
-            builtInFunctionsSignature.Should().BeNull();
+            Assert.False(result);
+            Assert.Null(builtInFunctionsSignature);
         }
     }
 }

@@ -1,5 +1,10 @@
-﻿using System;
-using FluentAssertions;
+﻿//---------------------------------------------------------------------
+// <copyright file="CustomUriLiteralPrefixUnitsTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -21,7 +26,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addCustomUriLiteralPrefix = () =>
                 CustomUriLiteralPrefixes.AddCustomLiteralPrefix(null, EdmCoreModel.Instance.GetBoolean(false));
 
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("literalPrefix", addCustomUriLiteralPrefix);
         }
 
         [Fact]
@@ -31,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addCustomUriLiteralPrefix = () =>
                 CustomUriLiteralPrefixes.AddCustomLiteralPrefix(string.Empty, EdmCoreModel.Instance.GetBoolean(false));
 
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("literalPrefix", addCustomUriLiteralPrefix);
         }
 
         [Fact]
@@ -41,45 +46,34 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addCustomUriLiteralPrefix = () =>
                 CustomUriLiteralPrefixes.AddCustomLiteralPrefix("MyCustomLiteralPrefix", null);
 
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("literalEdmTypeReference", addCustomUriLiteralPrefix);
         }
 
-        [Fact]
-        public void CustomUriLiteralPrefix_Add_LiteralNameValidation()
+        [Theory]
+        [InlineData("myCustomUriLiteralPrefix56")]
+        [InlineData("myCustomUriLiteralPrefix?")]
+        [InlineData("myCustomUriLiteralPrefix ")]
+        [InlineData("myCustomUriLiteralPrefix*")]
+        public void CustomUriLiteralPrefix_Add_InvalidLiteralNameThrows(string literalPrefix)
         {
-            const string INVALID_LITERAL_PREFIX_NUMBER = "myCustomUriLiteralPrefix56";
-            const string INVALID_LITERAL_PREFIX_PUNCTUATION = "myCustomUriLiteralPrefix?";
-            const string INVALID_LITERAL_PREFIX_WHITESPACE = "myCustomUriLiteralPrefix ";
-            const string INVALID_LITERAL_PREFIX_SIGN = "myCustomUriLiteralPrefix*";
-
             Action addCustomUriLiteralPrefix = () =>
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(INVALID_LITERAL_PREFIX_NUMBER, EdmCoreModel.Instance.GetBoolean(false));
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentException>();
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(literalPrefix, EdmCoreModel.Instance.GetBoolean(false));
 
-            addCustomUriLiteralPrefix = () =>
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(INVALID_LITERAL_PREFIX_PUNCTUATION, EdmCoreModel.Instance.GetBoolean(false));
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentException>();
+            addCustomUriLiteralPrefix.Throws<ArgumentException>(Strings.UriParserHelper_InvalidPrefixLiteral(literalPrefix));
+        }
 
-            addCustomUriLiteralPrefix = () =>
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(INVALID_LITERAL_PREFIX_WHITESPACE, EdmCoreModel.Instance.GetBoolean(false));
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentException>();
-
-            addCustomUriLiteralPrefix = () =>
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(INVALID_LITERAL_PREFIX_SIGN, EdmCoreModel.Instance.GetBoolean(false));
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentException>();
-
-            const string VALID_LITERAL_PREFIX_LETTERS = "myCustomUriLiteralPrefix";
-            const string VALID_LITERAL_PREFIX_POINT = "myCustom.LiteralPrefix";
-
+        [Theory]
+        [InlineData("myCustomUriLiteralPrefix")]
+        [InlineData("myCustom.LiteralPrefix")]
+        public void CustomUriLiteralPrefix_Add_ValidLiteralNamePassValidation(string literalPrefix)
+        {
             try
             {
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(VALID_LITERAL_PREFIX_LETTERS, EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(VALID_LITERAL_PREFIX_POINT, EdmCoreModel.Instance.GetBoolean(false));
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(literalPrefix, EdmCoreModel.Instance.GetBoolean(false));
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(VALID_LITERAL_PREFIX_LETTERS);
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(VALID_LITERAL_PREFIX_POINT);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(literalPrefix);
             }
         }
 
@@ -98,12 +92,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action addCustomUriLiteralPrefix = () =>
                     CustomUriLiteralPrefixes.AddCustomLiteralPrefix(LITERAL_PREFIX, booleanTypeReference);
 
-                addCustomUriLiteralPrefix.ShouldThrow<ODataException>().
-                    WithMessage(Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(LITERAL_PREFIX));
+                addCustomUriLiteralPrefix.Throws<ODataException>(Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(LITERAL_PREFIX));
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX).Should().BeTrue();
+                Assert.True(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX));
             }
         }
 
@@ -123,12 +116,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action addCustomUriLiteralPrefix = () =>
                     CustomUriLiteralPrefixes.AddCustomLiteralPrefix(LITERAL_PREFIX, intTypeReference);
 
-                addCustomUriLiteralPrefix.ShouldThrow<ODataException>().
-                    WithMessage(Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(LITERAL_PREFIX));
+                addCustomUriLiteralPrefix.Throws<ODataException>(Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(LITERAL_PREFIX));
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX).Should().BeTrue();
+                Assert.True(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX));
             }
         }
 
@@ -145,13 +137,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
                 CustomUriLiteralPrefixes.AddCustomLiteralPrefix(SECOND_LITERAL_PREFIX, booleanTypeReference);
 
-                CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(FIRST_LITERAL_PREFIX).IsEquivalentTo(booleanTypeReference).Should().BeTrue();
-                CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(SECOND_LITERAL_PREFIX).IsEquivalentTo(booleanTypeReference).Should().BeTrue();
+                Assert.True(CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(FIRST_LITERAL_PREFIX).IsEquivalentTo(booleanTypeReference));
+                Assert.True(CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(SECOND_LITERAL_PREFIX).IsEquivalentTo(booleanTypeReference));
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(FIRST_LITERAL_PREFIX).Should().BeTrue();
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(SECOND_LITERAL_PREFIX).Should().BeTrue();
+                Assert.True(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(FIRST_LITERAL_PREFIX));
+                Assert.True(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(SECOND_LITERAL_PREFIX));
             }
         }
 
@@ -169,13 +161,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 IEdmTypeReference second_stringTypeReference = EdmCoreModel.Instance.GetString(false);
                 CustomUriLiteralPrefixes.AddCustomLiteralPrefix(SECOND_LITERAL_PREFIX, second_stringTypeReference);
 
-                CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(FIRST_LITERAL_PREFIX).IsEquivalentTo(first_booleanTypeReference).Should().BeTrue();
-                CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(SECOND_LITERAL_PREFIX).IsEquivalentTo(second_stringTypeReference).Should().BeTrue();
+                Assert.True(CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(FIRST_LITERAL_PREFIX).IsEquivalentTo(first_booleanTypeReference));
+                Assert.True(CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(SECOND_LITERAL_PREFIX).IsEquivalentTo(second_stringTypeReference));
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(FIRST_LITERAL_PREFIX).Should().BeTrue();
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(SECOND_LITERAL_PREFIX).Should().BeTrue();
+                Assert.True(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(FIRST_LITERAL_PREFIX));
+                Assert.True(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(SECOND_LITERAL_PREFIX));
             }
         }
 
@@ -189,11 +181,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 IEdmTypeReference first_booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
                 CustomUriLiteralPrefixes.AddCustomLiteralPrefix(EXISITING_BUILTIN_LITERAL_NAME, first_booleanTypeReference);
 
-                CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(EXISITING_BUILTIN_LITERAL_NAME).IsEquivalentTo(first_booleanTypeReference).Should().BeTrue();
+                Assert.True(CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(EXISITING_BUILTIN_LITERAL_NAME).IsEquivalentTo(first_booleanTypeReference));
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(EXISITING_BUILTIN_LITERAL_NAME).Should().BeTrue();
+                Assert.True(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(EXISITING_BUILTIN_LITERAL_NAME));
             }
         }
 
@@ -208,7 +200,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action removeCustomUriLiteralPrefix = () =>
                 CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(null);
 
-            removeCustomUriLiteralPrefix.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("literalPrefix", removeCustomUriLiteralPrefix);
         }
 
         [Fact]
@@ -218,45 +210,34 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action removeCustomUriLiteralPrefix = () =>
                 CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(string.Empty);
 
-            removeCustomUriLiteralPrefix.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("literalPrefix", removeCustomUriLiteralPrefix);
         }
 
-        [Fact]
-        public void CustomUriLiteralPrefix_Remove_LiteralNameValidation()
+        [Theory]
+        [InlineData("myCustomUriLiteralPrefix56")]
+        [InlineData("myCustomUriLiteralPrefix?")]
+        [InlineData("myCustomUriLiteralPrefix ")]
+        [InlineData("myCustomUriLiteralPrefix*")]
+        public void CustomUriLiteralPrefix_Remove_InvalidLiteralNameThrows(string literalPrefix)
         {
-            const string INVALID_LITERAL_PREFIX_NUMBER = "myCustomUriLiteralPrefix56";
-            const string INVALID_LITERAL_PREFIX_PUNCTUATION = "myCustomUriLiteralPrefix?";
-            const string INVALID_LITERAL_PREFIX_WHITESPACE = "myCustomUriLiteralPrefix ";
-            const string INVALID_LITERAL_PREFIX_SIGN = "myCustomUriLiteralPrefix*";
-
             Action addCustomUriLiteralPrefix = () =>
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(INVALID_LITERAL_PREFIX_NUMBER);
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentException>();
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(literalPrefix);
 
-            addCustomUriLiteralPrefix = () =>
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(INVALID_LITERAL_PREFIX_PUNCTUATION);
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentException>();
+            addCustomUriLiteralPrefix.Throws<ArgumentException>(Strings.UriParserHelper_InvalidPrefixLiteral(literalPrefix));
+        }
 
-            addCustomUriLiteralPrefix = () =>
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(INVALID_LITERAL_PREFIX_WHITESPACE);
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentException>();
-
-            addCustomUriLiteralPrefix = () =>
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(INVALID_LITERAL_PREFIX_SIGN);
-            addCustomUriLiteralPrefix.ShouldThrow<ArgumentException>();
-
-            const string VALID_LITERAL_PREFIX_LETTERS = "myCustomUriLiteralPrefix";
-            const string VALID_LITERAL_PREFIX_POINT = "myCustom.LiteralPrefix";
-
+        [Theory]
+        [InlineData("myCustomUriLiteralPrefix")]
+        [InlineData("myCustom.LiteralPrefix")]
+        public void CustomUriLiteralPrefix_Remove_ValidLiteralNameValidation(string literalPrefix)
+        {
             try
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(VALID_LITERAL_PREFIX_LETTERS);
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(VALID_LITERAL_PREFIX_POINT);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(literalPrefix);
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(VALID_LITERAL_PREFIX_LETTERS);
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(VALID_LITERAL_PREFIX_POINT);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(literalPrefix);
             }
         }
 
@@ -268,7 +249,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
             CustomUriLiteralPrefixes.AddCustomLiteralPrefix(LITERAL_PREFIX, booleanTypeReference);
 
-            CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX).Should().BeTrue();
+            Assert.True(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX));
         }
 
         [Fact]
@@ -276,7 +257,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             const string LITERAL_PREFIX = "myCustomUriLiteralPrefix";
 
-            CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX).Should().BeFalse();
+            Assert.False(CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX));
         }
 
         #endregion
@@ -291,7 +272,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmTypeReference edmType =
                 CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(NOT_EXISTING_PREFIX_NAME);
 
-            edmType.Should().BeNull();
+            Assert.Null(edmType);
         }
 
         #endregion
@@ -316,7 +297,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 Action parsingFilter = () => parser.ParseFilter();
-                parsingFilter.ShouldThrow<ODataException>();
+                Assert.Throws<ODataException>(parsingFilter);
             }
             finally
             {
@@ -358,7 +339,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action parsingFilterAction = () =>
                     parser.ParseFilter();
 
-                parsingFilterAction.ShouldThrow<ODataException>();
+                Assert.Throws<ODataException>(parsingFilterAction);
             }
             finally
             {
