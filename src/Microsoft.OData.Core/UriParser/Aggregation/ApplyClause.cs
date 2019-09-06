@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser.Aggregation
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -128,11 +129,20 @@ namespace Microsoft.OData.UriParser.Aggregation
             IEnumerable<AggregateExpressionBase> aggregateExpressions,
             IEnumerable<ComputeExpression> computeExpressions)
         {
+            Func<GroupByPropertyNode, string> func = (prop) =>
+           {
+               var children = CreatePropertiesUriSegment(prop.ChildTransformations, null, null);
+
+               return string.IsNullOrEmpty(children)
+                      ? prop.Name
+                      : prop.Name + ODataConstants.ContextUriProjectionStart + children + ODataConstants.ContextUriProjectionEnd;
+           };
+
             string result = string.Empty;
             if (groupByPropertyNodes != null)
             {
                 var groupByPropertyArray =
-                    groupByPropertyNodes.Select(prop => prop.Name + CreatePropertiesUriSegment(prop.ChildTransformations, null, null))
+                    groupByPropertyNodes.Select(prop => func(prop))
                         .ToArray();
                 result = string.Join(",", groupByPropertyArray);
                 result = aggregateExpressions == null
@@ -146,20 +156,16 @@ namespace Microsoft.OData.UriParser.Aggregation
                     : CreateAggregatePropertiesUriSegment(aggregateExpressions);
             }
 
-            if (computeExpressions != null)
+            if (computeExpressions != null && !string.IsNullOrEmpty(result) /* don't add compute if only compute() is present */)
             {
                 string computeProperties = string.Join(",", computeExpressions.Select(e => e.Alias).ToArray());
                 if (!string.IsNullOrEmpty(computeProperties))
                 {
-                    result = string.IsNullOrEmpty(result)
-                        ? computeProperties
-                        : string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, computeProperties);
+                    result = string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, computeProperties);
                 }
             }
 
-            return string.IsNullOrEmpty(result)
-                ? result
-                : ODataConstants.ContextUriProjectionStart + result + ODataConstants.ContextUriProjectionEnd;
+            return result;
         }
 
         private static string CreateAggregatePropertiesUriSegment(IEnumerable<AggregateExpressionBase> aggregateExpressions)

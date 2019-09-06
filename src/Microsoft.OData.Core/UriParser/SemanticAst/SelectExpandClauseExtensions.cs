@@ -11,6 +11,7 @@ namespace Microsoft.OData.UriParser
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
+    using Microsoft.OData.UriParser.Aggregation;
 
     /// <summary>
     /// Extension methods for <see cref="SelectExpandClause"/>.
@@ -95,8 +96,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="selectExpandClause">The select expand clause for evaluation.</param>
         /// <param name="processSubResult">The method to deal with sub expand result.</param>
         /// <param name="combineSelectAndExpand">The method to combine select and expand result lists.</param>
+        /// <param name="processApply">The method to deal with apply result.</param>
         /// <param name="result">The result of the traversing.</param>
-        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, out T result)
+        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, Func<ApplyClause, T> processApply, out T result)
         {
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
             List<T> expandList = new List<T>();
@@ -107,12 +109,15 @@ namespace Microsoft.OData.UriParser
                 T subResult = default(T);
                 if (expandSelectItem.SelectAndExpand.SelectedItems.Any())
                 {
-                    Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand,
-                        out subResult);
+                    Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, processApply, out subResult);
+                }
+
+                if (expandSelectItem.ApplyOption != null && processApply != null)
+                {
+                    subResult = processApply(expandSelectItem.ApplyOption);
                 }
 
                 var expandItem = processSubResult(currentExpandClause, subResult);
-
                 if (expandItem != null)
                 {
                     expandList.Add(expandItem);
@@ -188,7 +193,7 @@ namespace Microsoft.OData.UriParser
             {
                 string currentExpandClause = String.Join("/", expandItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
                 string expandStr;
-                expandItem.SelectAndExpand.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out expandStr);
+                expandItem.SelectAndExpand.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, null, out expandStr);
                 if (!string.IsNullOrEmpty(expandStr))
                 {
                     currentExpandClause += "(" + expandStr + ")";

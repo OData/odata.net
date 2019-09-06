@@ -280,14 +280,13 @@ namespace Microsoft.OData
         {
             if (odataUri != null)
             {
-                // TODO: Figure out how to deal with $select after $apply
-                if (odataUri.Apply != null)
-                {
-                    return CreateApplyUriSegment(odataUri.Apply);
-                }
-                else
+                if (odataUri.SelectAndExpand != null)
                 {
                     return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand);
+                }
+                else if (odataUri.Apply != null)
+                {
+                    return CreateApplyUriSegment(odataUri.Apply);
                 }
             }
 
@@ -374,7 +373,11 @@ namespace Microsoft.OData
         {
             if (applyClause != null)
             {
-                return applyClause.GetContextUri();
+                string contextUri = applyClause.GetContextUri();
+                if (!string.IsNullOrEmpty(contextUri))
+                {
+                    return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
+                }
             }
 
             return string.Empty;
@@ -391,7 +394,7 @@ namespace Microsoft.OData
             if (selectExpandClause != null)
             {
                 string contextUri;
-                selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out contextUri);
+                selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, ProcessApply, out contextUri);
                 if (!string.IsNullOrEmpty(contextUri))
                 {
                     return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
@@ -399,6 +402,16 @@ namespace Microsoft.OData
             }
 
             return string.Empty;
+        }
+
+        private static string ProcessApply(ApplyClause applyClause)
+        {
+            if (applyClause != null)
+            {
+                return applyClause.GetContextUri();
+            }
+
+            return null;
         }
 
         /// <summary>Process sub expand node, contact with subexpand result</summary>

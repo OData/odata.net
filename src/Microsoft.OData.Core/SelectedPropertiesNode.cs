@@ -809,7 +809,7 @@ namespace Microsoft.OData
         private static SelectedPropertiesNode CreateFromSelectExpandClause(SelectExpandClause selectExpandClause)
         {
             SelectedPropertiesNode node;
-            selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out node);
+            selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, null, out node);
             return node;
         }
 
