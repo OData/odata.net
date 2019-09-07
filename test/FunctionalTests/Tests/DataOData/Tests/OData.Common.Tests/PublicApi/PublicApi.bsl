@@ -5181,8 +5181,6 @@ public sealed class Microsoft.OData.ODataInnerError {
 	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.ODataValue]] Properties  { public get; }
 	string StackTrace  { public get; public set; }
 	string TypeName  { public get; public set; }
-
-	public static Microsoft.OData.ODataInnerError CreateEmptyInnerError ()
 }
 
 public sealed class Microsoft.OData.ODataInstanceAnnotation : Microsoft.OData.ODataAnnotatable {

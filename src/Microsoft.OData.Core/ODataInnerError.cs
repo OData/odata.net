@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Text;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -63,16 +64,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(properties, "properties");
 
-            Properties = properties;
-        }
-
-        /// <summary>
-        /// Creates an instance of ODataInnerError with an empty property bag.
-        /// </summary>
-        /// <returns>returns an instance of ODataInnerError with empty property bag.</returns>
-        public static ODataInnerError CreateEmptyInnerError()
-        {
-            return new ODataInnerError(new Dictionary<string, ODataValue>());
+            Properties = new Dictionary<string, ODataValue>(properties);
         }
 
         /// <summary>
@@ -122,17 +114,36 @@ namespace Microsoft.OData
         /// <returns>The string in Json format</returns>
         internal string ToJson()
         {
+            StringBuilder sb = new StringBuilder();
+
+            // Write some properties to enforce an order. 
+            foreach (KeyValuePair<string, ODataValue> keyValuePair in Properties)
+            {
+                if (keyValuePair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
+                    keyValuePair.Key == JsonConstants.ODataErrorInnerErrorStackTraceName ||
+                    keyValuePair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName ||
+                    keyValuePair.Key == JsonConstants.ODataErrorInnerErrorInnerErrorName)
+                {
+                    continue; ;
+                }
+
+                sb.Append(",");
+                sb.Append("\"").Append(keyValuePair.Key).Append("\"").Append(":");
+                ODataJsonWriterUtils.ODataValueToString(sb, keyValuePair.Value);
+            }
+
             return string.Format(CultureInfo.InvariantCulture,
                 "{{" +
                 "\"message\":\"{0}\"," +
                 "\"type\":\"{1}\"," +
                 "\"stacktrace\":\"{2}\"," +
-                "\"innererror\":{3}" +
+                "\"innererror\":{3}{4}" +
                 "}}",
                 this.Message == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Message),
                 this.TypeName == null ? "" : JsonValueUtils.GetEscapedJsonString(this.TypeName),
                 this.StackTrace == null ? "" : JsonValueUtils.GetEscapedJsonString(this.StackTrace),
-                this.InnerError == null ? "{}" : this.InnerError.ToJson());
+                this.InnerError == null ? "{}" : this.InnerError.ToJson(),
+                sb.ToString());
         }
 
         private string GetStringValue(string propertyKey)
@@ -147,26 +158,16 @@ namespace Microsoft.OData
 
         private void SetStringValue(string propertyKey, string value)
         {
+            ODataValue odataValue = value == null ? new ODataNullValue() : value.ToODataValue();
+
             if (!Properties.ContainsKey(propertyKey))
             {
-                if (value == null)
-                {
-                    Properties.Add(propertyKey, new ODataNullValue());
-                    return;
-                }
-
-                Properties.Add(propertyKey, value.ToODataValue());
-                return;
+                Properties.Add(propertyKey, odataValue);
             }
-
-            if (value == null)
+            else
             {
-                Properties[propertyKey] = new ODataNullValue();
-                return;
+                Properties[propertyKey] = odataValue;
             }
-
-            Properties[propertyKey] = value.ToODataValue();
-            return;
         }
     }
 }

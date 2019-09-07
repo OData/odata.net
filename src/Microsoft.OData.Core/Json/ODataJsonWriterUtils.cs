@@ -11,6 +11,7 @@ namespace Microsoft.OData.Json
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text;
     using Microsoft.OData.JsonLight;
     #endregion Namespaces
 
@@ -213,8 +214,6 @@ namespace Microsoft.OData.Json
         /// <param name="innerErrorPropertyName">The property name for the inner error property.</param>
         /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
-        /// <param name="skipNullProperties">if set, stacktrace, type, and message will not be written if they are empty strings on ODataInnerError.</param>
-
         private static void WriteInnerError(IJsonWriter jsonWriter, ODataInnerError innerError, string innerErrorPropertyName, int recursionDepth, int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
@@ -232,13 +231,13 @@ namespace Microsoft.OData.Json
                 {
                     jsonWriter.WriteName(pair.Key);
 
-                    if ((pair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
+                    if (pair.Value is ODataNullValue &&
+                        (pair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
                         pair.Key == JsonConstants.ODataErrorInnerErrorStackTraceName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName) &&
-                        pair.Value is ODataNullValue)
+                        pair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName))
                     {
                         // Write empty string for null values in stacktrace, type and message properties of inner error. 
-                        jsonWriter.WriteJsonValue(string.Empty);
+                        jsonWriter.WriteODataValue(new ODataPrimitiveValue(string.Empty));
                     }
                     else
                     {
@@ -255,6 +254,83 @@ namespace Microsoft.OData.Json
 
             // }
             jsonWriter.EndObjectScope();
+        }
+
+        internal static void ODataValueToString(StringBuilder sb, ODataValue value)
+        {
+            if (value == null || value is ODataNullValue)
+            {
+                sb.Append("null");
+            }
+            else if (value is ODataCollectionValue collectionValue)
+            {
+                ODataCollectionValueToString(sb, collectionValue);
+            }
+            else if (value is ODataResourceValue resourceValue)
+            {
+                ODataResourceValueToString(sb, resourceValue);
+            }
+            else if (value is ODataPrimitiveValue primitiveValue)
+            {
+                if (primitiveValue.FromODataValue() is string)
+                {
+                    sb.Append("\"" + JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()) + "\"");
+                }
+                else
+                {
+                    sb.Append(JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()));
+                }
+            }
+        }
+
+        private static void ODataCollectionValueToString(StringBuilder sb, ODataCollectionValue value)
+        {
+            bool isFirst = true;
+            sb.Append("[");
+            foreach (object item in value.Items)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                if (item is ODataValue odataValue)
+                {
+                    ODataValueToString(sb, odataValue);
+                }
+                else
+                {
+                    sb.Append(item.ToString());
+                }
+            }
+
+            sb.Append("]");
+        }
+
+        private static void ODataResourceValueToString(StringBuilder sb, ODataResourceValue value)
+        {
+            bool isFirst = true;
+            sb.Append("{");
+            foreach (ODataProperty property in value.Properties)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                sb.Append("\"").Append(property.Name).Append("\"").Append(":");
+                ODataValueToString(sb, property.ODataValue);
+            }
+
+            sb.Append("}");
         }
     }
 }

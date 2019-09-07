@@ -118,7 +118,6 @@ namespace Microsoft.OData.Tests.Json
                 maxInnerErrorDepth: 5,
                 writingJsonLight: false);
              var result = stringWriter.GetStringBuilder().ToString();
-             //result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"internalexception\":{\"nested\":null}}}}}");
              result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"internalexception\":{\"nested\":null}}}}");
         }
 
@@ -168,6 +167,46 @@ namespace Microsoft.OData.Tests.Json
                 writingJsonLight: false);
             var result = stringWriter.GetStringBuilder().ToString();
             result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"message\":\"The other properties on the inner error object should serialize as empty strings because of using this constructor.\",\"type\":\"\",\"stacktrace\":\"\"}}}");
+        }
+
+        [Fact]
+        public void WriteError_InnerErrorWithCollectionAndNulls()
+        {
+            ODataInnerError innerError = new ODataInnerError();
+            innerError.Properties.Add("ResourceValue", new ODataResourceValue() { Properties = new ODataProperty[] { new ODataProperty() { Name = "PropertyName", Value = "PropertyValue" }, new ODataProperty() { Name = "NullProperty", Value = new ODataNullValue() } } });
+            innerError.Properties.Add("NullProperty", new ODataNullValue());
+            innerError.Properties.Add("CollectionValue", new ODataCollectionValue() { Items = new List<object>() { new ODataNullValue(), new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1) } });
+
+            var error = new ODataError
+            {
+                Target = "any target",
+                Details =
+                    new[] { new ODataErrorDetail { ErrorCode = "500", Target = "any target", Message = "any msg" } },
+                InnerError = innerError
+            };
+
+            ODataJsonWriterUtils.WriteError(
+                jsonWriter,
+                enumerable => { },
+                error,
+                includeDebugInformation: true,
+                maxInnerErrorDepth: 5,
+                writingJsonLight: false);
+            var result = stringWriter.GetStringBuilder().ToString();
+            result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\",\"ResourceValue\":{\"PropertyName\":\"PropertyValue\",\"NullProperty\":null},\"NullProperty\":null,\"CollectionValue\":[null,\"CollectionValue\",1]}}}");
+        }
+
+        [Fact]
+        public void ODataInnerErrorToStringTest()
+        {
+            ODataInnerError innerError = new ODataInnerError();
+            innerError.Properties.Add("ResourceValue", new ODataResourceValue(){Properties = new ODataProperty[] { new ODataProperty() { Name = "PropertyName", Value = "PropertyValue"}, new ODataProperty(){Name = "NullProperty", Value = new ODataNullValue()}}});
+            innerError.Properties.Add("NullProperty", new ODataNullValue());
+            innerError.Properties.Add("CollectionValue", new ODataCollectionValue(){Items = new List<object>() {new ODataNullValue(), new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1)}});
+
+            string result = innerError.ToJson();
+
+            result.Should().Be("{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\",\"innererror\":{},\"ResourceValue\":{\"PropertyName\":\"PropertyValue\",\"NullProperty\":null},\"NullProperty\":null,\"CollectionValue\":[null,\"CollectionValue\",1]}");
         }
 
     }

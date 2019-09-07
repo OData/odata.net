@@ -180,7 +180,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="propertyValue">value to write.</param>
-        internal static void WriteJsonValue(this IJsonWriter jsonWriter, object propertyValue)
+        private static void WriteJsonValue(this IJsonWriter jsonWriter, object propertyValue)
         {
             if (propertyValue == null)
             {
@@ -238,9 +238,35 @@ namespace Microsoft.OData.Json
                 }
 
                 jsonWriter.EndObjectScope();
+                return;
             }
 
-            return;
+            ODataCollectionValue collectionValue = odataValue as ODataCollectionValue;
+            if (collectionValue != null)
+            {
+                jsonWriter.StartArrayScope();
+
+                foreach (object item in collectionValue.Items)
+                {
+                    // Will not be able to accurately serialize complex objects unless they are ODataValues. 
+                    if (item is ODataValue collectionItem)
+                    {
+                        jsonWriter.WriteODataValue(collectionItem);
+                    }
+                    else
+                    {
+                        throw new ODataException(
+                            "Unable to serialize an object in a collection as it is not an ODataPrimitve or ODataResourceValue.");
+                    }
+                }
+
+                jsonWriter.EndArrayScope();
+
+                return; 
+            }
+
+            throw new ODataException(
+                "Unable to serialize the ODataValue.");
         }
     }
 }

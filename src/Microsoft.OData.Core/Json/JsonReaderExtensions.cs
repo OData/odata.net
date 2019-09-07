@@ -344,6 +344,22 @@ namespace Microsoft.OData.Json
 
                 return resourceValue;
             }
+            else if (jsonReader.NodeType == JsonNodeType.StartArray)
+            {
+                jsonReader.ReadStartArray();
+                ODataCollectionValue collectionValue = new ODataCollectionValue();
+                IList<object> propertyList = new List<object>();
+
+                while (jsonReader.NodeType != JsonNodeType.EndArray)
+                {
+                    propertyList.Add(jsonReader.ReadODataValue());
+                }
+
+                collectionValue.Items = propertyList;
+                jsonReader.ReadEndArray();
+
+                return collectionValue;
+            }
             else
             {
                 return jsonReader.ReadAsUntypedOrNullValue();

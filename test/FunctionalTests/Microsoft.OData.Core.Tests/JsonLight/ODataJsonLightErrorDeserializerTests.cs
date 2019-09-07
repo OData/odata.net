@@ -180,6 +180,24 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(nestedMyNewObject.Properties.ElementAt(4).Value, null);
         }
 
+        [Fact]
+        public void ReadErrorWithCollectionInInnerError()
+        {
+            // Arrange
+            const string payload = "{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\",\"ResourceValue\":{\"PropertyName\":\"PropertyValue\",\"NullProperty\":null},\"NullProperty\":null,\"CollectionValue\":[null,\"CollectionValue\",1]}}}";
+
+            var context = GetInputContext(payload, GetEdmModel());
+            var deserializer = new ODataJsonLightErrorDeserializer(context);
+
+            // Act
+            var error = deserializer.ReadTopLevelError();
+
+            //Assert Inner Error properties
+            Assert.NotNull(error.InnerError);
+            Assert.True(error.InnerError.Properties.ContainsKey("CollectionValue"));
+            Assert.Equal(3, error.InnerError.Properties["CollectionValue"].As<ODataCollectionValue>().Items.Count());
+        }
+
         private ODataJsonLightInputContext GetInputContext(string payload, IEdmModel model = null)
         {
             var messageInfo = new ODataMessageInfo
