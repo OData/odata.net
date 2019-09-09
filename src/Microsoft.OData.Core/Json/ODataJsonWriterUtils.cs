@@ -262,15 +262,21 @@ namespace Microsoft.OData.Json
             {
                 sb.Append("null");
             }
-            else if (value is ODataCollectionValue collectionValue)
+
+            ODataCollectionValue collectionValue = value as ODataCollectionValue;
+            if (collectionValue != null)
             {
                 ODataCollectionValueToString(sb, collectionValue);
             }
-            else if (value is ODataResourceValue resourceValue)
+
+            ODataResourceValue resourceValue = value as ODataResourceValue;
+            if (resourceValue != null)
             {
                 ODataResourceValueToString(sb, resourceValue);
             }
-            else if (value is ODataPrimitiveValue primitiveValue)
+
+            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
+            if (primitiveValue != null)
             {
                 if (primitiveValue.FromODataValue() is string)
                 {
@@ -298,13 +304,14 @@ namespace Microsoft.OData.Json
                     sb.Append(",");
                 }
 
-                if (item is ODataValue odataValue)
+                ODataValue odataValue = item as ODataValue;
+                if (odataValue != null)
                 {
                     ODataValueToString(sb, odataValue);
                 }
                 else
                 {
-                    sb.Append(item.ToString());
+                    throw new ODataException("");
                 }
             }
 

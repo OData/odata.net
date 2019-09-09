@@ -249,14 +249,14 @@ namespace Microsoft.OData.Json
                 foreach (object item in collectionValue.Items)
                 {
                     // Will not be able to accurately serialize complex objects unless they are ODataValues. 
-                    if (item is ODataValue collectionItem)
+                    ODataValue collectionItem = item as ODataValue;
+                    if (item != null)
                     {
                         jsonWriter.WriteODataValue(collectionItem);
                     }
                     else
                     {
-                        throw new ODataException(
-                            "Unable to serialize an object in a collection as it is not an ODataPrimitve or ODataResourceValue.");
+                        throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
                     }
                 }
 
@@ -266,7 +266,7 @@ namespace Microsoft.OData.Json
             }
 
             throw new ODataException(
-                "Unable to serialize the ODataValue.");
+                ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(odataValue.GetType().FullName));
         }
     }
 }

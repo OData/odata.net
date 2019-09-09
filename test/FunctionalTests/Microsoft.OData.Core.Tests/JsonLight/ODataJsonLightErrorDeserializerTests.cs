@@ -136,7 +136,10 @@ namespace Microsoft.OData.Tests.JsonLight
                                         "\"IntProperty\": 1," +
                                         "\"BooleanProperty\": true," +
                                         "\"type\":\"\"," +
-                                        "\"NestedNull\":null" + 
+                                        "\"NestedNull\":{" +
+                                           "\"InnerMostPropertyName\":\"InnerMostPropertyValue\"," +
+                                           "\"InnerMostNull\":null" +
+                                         "}" +
                                      "}" +
                                  "}" +
                             "}" +
@@ -163,21 +166,31 @@ namespace Microsoft.OData.Tests.JsonLight
             ODataResourceValue nestedInnerObject = error.InnerError.Properties["innererror"] as ODataResourceValue;
             ODataResourceValue nestedMyNewObject    = nestedInnerObject.Properties.FirstOrDefault(p => p.Name == "MyNewObject").ODataValue as ODataResourceValue;
 
-            Assert.Equal(nestedMyNewObject.Properties.Count(), 5);
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(0).Name, "StringProperty");
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(0).Value, "newProperty");
+            Assert.Equal(5, nestedMyNewObject.Properties.Count());
+            Assert.Equal("StringProperty", nestedMyNewObject.Properties.ElementAt(0).Name);
+            Assert.Equal("newProperty", nestedMyNewObject.Properties.ElementAt(0).Value);
 
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(1).Name, "IntProperty");
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(1).Value, 1);
+            Assert.Equal("IntProperty", nestedMyNewObject.Properties.ElementAt(1).Name);
+            Assert.Equal(1, nestedMyNewObject.Properties.ElementAt(1).Value);
 
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(2).Name, "BooleanProperty");
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(2).Value, true);
+            Assert.Equal("BooleanProperty", nestedMyNewObject.Properties.ElementAt(2).Name);
+            Assert.Equal(true, nestedMyNewObject.Properties.ElementAt(2).Value);
 
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(3).Name, "type");
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(3).Value, "");
+            Assert.Equal("type", nestedMyNewObject.Properties.ElementAt(3).Name);
+            Assert.Equal("", nestedMyNewObject.Properties.ElementAt(3).Value);
 
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(4).Name, "NestedNull");
-            Assert.Equal(nestedMyNewObject.Properties.ElementAt(4).Value, null);
+            Assert.Equal("NestedNull", nestedMyNewObject.Properties.ElementAt(4).Name);
+
+            ODataResourceValue innerValue = nestedMyNewObject.Properties.ElementAt(4).Value as ODataResourceValue;
+            
+            Assert.NotNull(innerValue);
+
+            Assert.Equal(2,innerValue.Properties.Count());
+            Assert.Equal("InnerMostPropertyName",innerValue.Properties.ElementAt(0).Name);
+            Assert.Equal("InnerMostPropertyValue",innerValue.Properties.ElementAt(0).Value);
+
+            Assert.Equal("InnerMostNull", innerValue.Properties.ElementAt(1).Name);
+            Assert.Equal(null, innerValue.Properties.ElementAt(1).Value);
         }
 
         [Fact]

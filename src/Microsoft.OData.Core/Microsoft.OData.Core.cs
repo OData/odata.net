@@ -120,6 +120,7 @@ namespace Microsoft.OData {
         internal const string PropertyAnnotationAfterTheProperty = "PropertyAnnotationAfterTheProperty";
         internal const string AtomValueUtils_CannotConvertValueToAtomPrimitive = "AtomValueUtils_CannotConvertValueToAtomPrimitive";
         internal const string ODataJsonWriter_UnsupportedValueType = "ODataJsonWriter_UnsupportedValueType";
+        internal const string ODataJsonWriter_UnsupportedValueInCollection = "ODataJsonWriter_UnsupportedValueInCollection";
         internal const string ODataException_GeneralError = "ODataException_GeneralError";
         internal const string ODataErrorException_GeneralError = "ODataErrorException_GeneralError";
         internal const string ODataUriParserException_GeneralError = "ODataUriParserException_GeneralError";
