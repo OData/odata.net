@@ -13,6 +13,7 @@ namespace Microsoft.OData.Json
     using System.Linq;
     using System.Text;
     using Microsoft.OData.JsonLight;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
     /// <summary>
@@ -311,7 +312,7 @@ namespace Microsoft.OData.Json
                 }
                 else
                 {
-                    throw new ODataException("");
+                    throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
                 }
             }
 
