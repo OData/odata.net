@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using System;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -461,6 +461,53 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.True(TypePromotionUtils.CanConvertTo(null, primitiveType, stringType));
         }
 
+        [Fact]
+        public void DifferentTypesCanNotConvertToEachOther()
+        {
+            var stringPrimitiveType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), true);
+            var entityType = new EdmEntityType("NS", "Entity").GetTypeReference();
+            var complexType = new EdmComplexType("NS", "Complex").GetTypeReference();
+            var enumType = new EdmEnumTypeReference(new EdmEnumType("NS", "MyName", false), false);
+
+            Assert.False(TypePromotionUtils.CanConvertTo(null, stringPrimitiveType, complexType));
+            Assert.False(TypePromotionUtils.CanConvertTo(null, stringPrimitiveType, entityType));
+
+            // Implicit conversions between string and enum is allowed.
+            Assert.True(TypePromotionUtils.CanConvertTo(null, stringPrimitiveType, enumType));
+
+            Assert.False(TypePromotionUtils.CanConvertTo(null, complexType, stringPrimitiveType));
+            Assert.False(TypePromotionUtils.CanConvertTo(null, complexType, entityType));
+            Assert.False(TypePromotionUtils.CanConvertTo(null, complexType, enumType));
+
+            Assert.False(TypePromotionUtils.CanConvertTo(null, entityType, stringPrimitiveType));
+            Assert.False(TypePromotionUtils.CanConvertTo(null, entityType, complexType));
+            Assert.False(TypePromotionUtils.CanConvertTo(null, entityType, enumType));
+
+            Assert.False(TypePromotionUtils.CanConvertTo(null, enumType, complexType));
+            Assert.False(TypePromotionUtils.CanConvertTo(null, enumType, entityType));
+            Assert.False(TypePromotionUtils.CanConvertTo(null, enumType, stringPrimitiveType));
+        }
+
+        [Fact]
+        public void ConvertToAndFromUntyped()
+        {
+            var untypedType = EdmCoreModel.Instance.GetUntyped();
+
+            var primitiveType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), true);
+            var entityType = new EdmEntityType("NS", "Entity").GetTypeReference();
+            var complexType = new EdmComplexType("NS", "Complex").GetTypeReference();
+            var enumType = new EdmEnumTypeReference(new EdmEnumType("NS", "MyName", false), false);
+
+            Assert.True(TypePromotionUtils.CanConvertTo(null, primitiveType, untypedType));
+            Assert.True(TypePromotionUtils.CanConvertTo(null, entityType, untypedType));
+            Assert.True(TypePromotionUtils.CanConvertTo(null, complexType, untypedType));
+            Assert.True(TypePromotionUtils.CanConvertTo(null, enumType, untypedType));
+
+            Assert.True(TypePromotionUtils.CanConvertTo(null, untypedType, primitiveType));
+            Assert.True(TypePromotionUtils.CanConvertTo(null, untypedType, entityType));
+            Assert.True(TypePromotionUtils.CanConvertTo(null, untypedType, complexType));
+            Assert.True(TypePromotionUtils.CanConvertTo(null, untypedType, enumType));
+        }
 
         [Fact]
         public void EnumTypesOfSameFullNameAndStructureCanConvertToEachOther()
