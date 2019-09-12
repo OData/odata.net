@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -534,7 +533,7 @@ namespace Microsoft.OData.Tests.JsonLight
             },
             null);
 
-            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
         }
 
         [Fact]
@@ -559,7 +558,7 @@ namespace Microsoft.OData.Tests.JsonLight
             },
             null);
 
-            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
         }
 
         [Fact]
@@ -584,7 +583,7 @@ namespace Microsoft.OData.Tests.JsonLight
             },
             null);
 
-            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
         }
 
         [Fact]
@@ -609,7 +608,7 @@ namespace Microsoft.OData.Tests.JsonLight
             },
             null);
 
-            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.DuplicatePropertyNamesNotAllowed("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Strings.DuplicatePropertyNamesNotAllowed("textAsStream"));
         }
 
         [Fact]
@@ -634,7 +633,7 @@ namespace Microsoft.OData.Tests.JsonLight
             },
             null);
 
-            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.DuplicatePropertyNamesNotAllowed("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Strings.DuplicatePropertyNamesNotAllowed("textAsStream"));
         }
 
         [Fact]
@@ -655,7 +654,7 @@ namespace Microsoft.OData.Tests.JsonLight
             },
             null);
 
-            writeWithExtraValue.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
         }
         #region Test Helper Methods
 
@@ -690,7 +689,7 @@ namespace Microsoft.OData.Tests.JsonLight
             ODataWriter writer = CreateODataWriter(stream);
             test(writer);
             string payload = ReadPayload(stream);
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, payload);
         }
 
         private string ReadPayload(Stream stream)

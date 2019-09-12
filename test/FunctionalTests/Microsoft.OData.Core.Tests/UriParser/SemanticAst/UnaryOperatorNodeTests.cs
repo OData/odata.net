@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void OperatorKindSetCorrectly()
         {
             UnaryOperatorNode unaryOperatorNode = new UnaryOperatorNode(UnaryOperatorKind.Negate, new ConstantNode(1));
-            unaryOperatorNode.OperatorKind.Should().Be(UnaryOperatorKind.Negate);
+            Assert.Equal(UnaryOperatorKind.Negate, unaryOperatorNode.OperatorKind);
         }
 
         [Fact]
@@ -33,14 +33,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeReferenceSetFromOperand()
         {
             UnaryOperatorNode unaryOperatorNode = new UnaryOperatorNode(UnaryOperatorKind.Negate, new ConstantNode(1));
-            unaryOperatorNode.TypeReference.Should().Be(new ConstantNode(1).TypeReference);
+            Assert.True(unaryOperatorNode.TypeReference.IsEquivalentTo(new ConstantNode(1).TypeReference));
         }
 
         [Fact]
         public void KindIsUnaryOperatorNode()
         {
             UnaryOperatorNode unaryOperatorNode = new UnaryOperatorNode(UnaryOperatorKind.Negate, new ConstantNode(1));
-            unaryOperatorNode.InternalKind.Should().Be(InternalQueryNodeKind.UnaryOperator);
+            Assert.Equal(InternalQueryNodeKind.UnaryOperator, unaryOperatorNode.InternalKind);
         }
     }
 }

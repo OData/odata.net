@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Microsoft.Test.OData.DependencyInjection;
@@ -52,10 +51,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
             ODataResource entry = this.ReadSingleton(payload);
 
-            entry.Id.Should().Be("http://odata.org/test/MySingleton");
-            entry.TypeName.Should().Be("NS.Web");
-            entry.EditLink.Should().Be("http://odata.org/test/MySingleton");
-            entry.Properties.Count().Should().Be(0);
+            Assert.Equal(new Uri("http://odata.org/test/MySingleton"), entry.Id);
+            Assert.Equal("NS.Web", entry.TypeName);
+            Assert.Equal(new Uri("http://odata.org/test/MySingleton"), entry.EditLink);
+            Assert.Empty(entry.Properties);
         }
 
         [Fact]
@@ -68,9 +67,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
             ODataResource entry = this.ReadSingleton(payload);
 
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.Single(p => p.Name == "WebId").Value.Should().Be(10);
-            entry.Properties.Single(p => p.Name == "Name").Value.Should().Be("SingletonWeb");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(10, entry.Properties.Single(p => p.Name == "WebId").Value);
+            Assert.Equal("SingletonWeb", entry.Properties.Single(p => p.Name == "Name").Value);
         }
 
         [Fact]
@@ -84,9 +83,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
             ODataResource entry = this.ReadSingleton(payload);
 
-            entry.Id.Should().Be("http://odata.org/test/Bla");
-            entry.EditLink.Should().Be("http://odata.org/test/BlaBla");
-            entry.ReadLink.Should().Be("http://odata.org/test/BlaBlaBla");
+            Assert.Equal(new Uri("http://odata.org/test/Bla"), entry.Id);
+            Assert.Equal(new Uri("http://odata.org/test/BlaBla"), entry.EditLink);
+            Assert.Equal(new Uri("http://odata.org/test/BlaBlaBla"), entry.ReadLink);
         }
 
         [Fact]
@@ -96,7 +95,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton(10)\"}";
 
             Action readResult = () => this.ReadSingleton(payload);
-            readResult.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightContextUriParser_LastSegmentIsKeySegment("http://odata.org/test/$metadata#MySingleton(10)"));
+            readResult.Throws<ODataException>(Strings.ODataJsonLightContextUriParser_LastSegmentIsKeySegment("http://odata.org/test/$metadata#MySingleton(10)"));
         }
 
         [Fact]
@@ -108,8 +107,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
             ODataResource entry = this.ReadSingleton(payload);
 
-            entry.Properties.Count().Should().Be(1);
-            entry.Properties.Single().Value.Should().Be(10);
+            Assert.Equal(10, Assert.Single(entry.Properties).Value);
         }
 
         [Fact]
@@ -158,8 +156,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             this.NavigationLinkTestSetting();
             ODataNestedResourceInfo navigationLink = this.ReadSingletonNavigationLink(payload);
 
-            navigationLink.Name.Should().Be("Pages");
-            navigationLink.AssociationLinkUrl.Should().Be("http://odata.org/test/MySingleton/Pages/$ref");
+            Assert.Equal("Pages", navigationLink.Name);
+            Assert.Equal(new Uri("http://odata.org/test/MySingleton/Pages/$ref"), navigationLink.AssociationLinkUrl);
         }
 
         [Fact]
@@ -173,8 +171,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
             ODataNestedResourceInfo navigationLink = this.ReadSingletonNavigationLink(payload);
 
-            navigationLink.Name.Should().Be("Pages");
-            navigationLink.AssociationLinkUrl.Should().Be("http://odata.org/test/BlaBlaBla");
+            Assert.Equal("Pages", navigationLink.Name);
+            Assert.Equal(new Uri("http://odata.org/test/BlaBlaBla"), navigationLink.AssociationLinkUrl);
         }
 
         private void NavigationLinkTestSetting()
@@ -203,8 +201,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
             ODataResource entry = this.ReadSingleton(payload);
 
-            entry.MediaResource.ReadLink.Should().Be("http://odata.org/test/Bla");
-            entry.MediaResource.ContentType.Should().Be("image/jpeg");
+            Assert.Equal(new Uri("http://odata.org/test/Bla"), entry.MediaResource.ReadLink);
+            Assert.Equal("image/jpeg", entry.MediaResource.ContentType);
         }
 
         private void MediaEntrySetSetting()
@@ -230,7 +228,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
         {
             ODataResource entry = this.ReadSingleton(payload, enableReadingODataAnnotationWithoutPrefix);
 
-            entry.ETag.Should().Be("Bla");
+            Assert.Equal("Bla", entry.ETag);
         }
 
         [Fact]
@@ -272,8 +270,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             ODataResource entry = this.ReadSingleton(payload, enableReadingODataAnnotationWithoutPrefix);
 
             ODataStreamReferenceValue logo = (ODataStreamReferenceValue)entry.Properties.Single().Value;
-            logo.ContentType.Should().Be("image/jpeg");
-            logo.ETag.Should().Be("stream etag");
+            Assert.Equal("image/jpeg", logo.ContentType);
+            Assert.Equal("stream etag", logo.ETag);
         }
 
         [Fact]
@@ -346,8 +344,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
             ODataResource entry = this.ReadSingleton(payload);
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(p => p.Name == "OpenType2").Value.As<ODataUntypedValue>().RawValue.Should().Be("\"BlaBla\"");
+            Assert.Equal(3, entry.Properties.Count());
+            var property = Assert.Single(entry.Properties, p => p.Name == "OpenType2");
+            var unTypedValue = Assert.IsType<ODataUntypedValue>(property.Value);
+            Assert.Equal("\"BlaBla\"", unTypedValue.RawValue);
         }
 
         private void OpenTypeTestSetting()
@@ -381,9 +381,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 "}";
             ODataResource entry = this.ReadSingleton(payload);
 
-            entry.Functions.Count().Should().Be(1);
-            entry.Functions.Single().Title.Should().Be("NS.SingletonFunction");
-            entry.Functions.Single().Target.Should().Be("http://odata.org/test/MySingleton/NS.SingletonFunction");
+            var function = Assert.Single(entry.Functions);
+            Assert.Equal("NS.SingletonFunction", function.Title);
+            Assert.Equal(new Uri("http://odata.org/test/MySingleton/NS.SingletonFunction"), function.Target);
         }
 
         private void BoundFunctionTestSetting()

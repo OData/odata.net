@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
@@ -29,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             });
 
             IEdmType entitySetCollection = new EdmCollectionType(new EdmEntityTypeReference(entitySet.EntityType(), false));
-            path.EdmType().ShouldBeEquivalentTo(entitySetCollection.ToTypeReference());
+            Assert.True(path.EdmType().IsEquivalentTo(entitySetCollection.ToTypeReference()));
         }
 
         [Fact]
@@ -41,7 +40,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new EntitySetSegment(entitySet)
             });
 
-            path.NavigationSource().Should().BeSameAs(entitySet);
+            Assert.Same(entitySet, path.NavigationSource());
         }
 
         [Fact]
@@ -53,7 +52,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new EntitySetSegment(entitySet)
             });
 
-            path.IsCollection().Should().BeTrue();
+            Assert.True(path.IsCollection());
         }
 
         [Fact]
@@ -65,7 +64,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new PropertySegment(property)
             });
 
-            path.IsCollection().Should().BeFalse();
+            Assert.False(path.IsCollection());
         }
 
         [Fact]
@@ -80,8 +79,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             );
 
             Action expandPathAction = () => path.ToExpandPath();
-            expandPathAction.ShouldThrow<ODataException>().WithMessage(
-                ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+            expandPathAction.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
         }
 
         [Fact]
@@ -96,8 +94,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 }
             );
 
-            path.ToExpandPath().Count.Should().Be(1);
-            path.ToExpandPath().FirstSegment.Identifier.Should().Be("MyDog");
+            Assert.Equal(1, path.ToExpandPath().Count);
+            Assert.Equal("MyDog", path.ToExpandPath().FirstSegment.Identifier);
         }
 
         [Fact]
@@ -151,7 +149,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, testCase));
                 ODataPath path = parser.ParsePath();
                 string result = path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
-                result.Should().Be(testCase);
+                Assert.Equal(testCase, result);
             }
         }
 
@@ -186,8 +184,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 ODataPath path = parser.ParsePath();
                 string originalPath = path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
                 string result = path.TrimEndingKeySegment().ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
-                result.Should().Be(testCase.Result);
-                path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses).Should().Be(originalPath);
+                Assert.Equal(testCase.Result, result);
+                Assert.Equal(originalPath, path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
             }
         }
 
@@ -248,8 +246,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 ODataPath path = parser.ParsePath();
                 string originalPath = path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
                 string result = path.TrimEndingTypeSegment().ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
-                result.Should().Be(testCase.Query);
-                path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses).Should().Be(originalPath);
+                Assert.Equal(testCase.Query, result);
+                Assert.Equal(originalPath, path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
             }
         }
 
@@ -315,14 +313,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             {
                 ODataPath path = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, testCase)).ParsePath();
                 bool result = path.IsIndividualProperty();
-                result.Should().BeTrue("Resource path \"{0}\" should target at individual property", testCase);
+                Assert.True(result, string.Format("Resource path \"{0}\" should target at individual property", testCase));
             }
 
             foreach (var testCase in falseCases)
             {
                 ODataPath path = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, testCase)).ParsePath();
                 bool result = path.IsIndividualProperty();
-                result.Should().BeFalse("Resource path \"{0}\" should not target at individual property", testCase);
+                Assert.False(result, string.Format("Resource path \"{0}\" should not target at individual property", testCase));
             }
         }
     }

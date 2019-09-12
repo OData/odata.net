@@ -398,5 +398,14 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.True(paramAliasNode.TypeReference.IsEquivalentTo(typeReference));
             return paramAliasNode;
         }
+
+        public static UriTemplateExpression ShouldBeUriTemplateExpression(this object node, string literalText, IEdmTypeReference expectedType)
+        {
+            Assert.NotNull(node);
+            UriTemplateExpression uriTemplate = Assert.IsType<UriTemplateExpression>(node);
+            Assert.Equal(literalText, uriTemplate.LiteralText);
+            Assert.True(uriTemplate.ExpectedType.IsEquivalentTo(expectedType));
+            return uriTemplate;
+        }
     }
 }

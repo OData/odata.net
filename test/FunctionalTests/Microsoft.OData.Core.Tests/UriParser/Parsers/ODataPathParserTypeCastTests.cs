@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
@@ -68,7 +67,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the negative type cast: ~/Me/NS.NormalCustomer
             Action parsePath = () => pathParser.ParsePath(new[] { "Me", "NS.NormalCustomer" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "singleton", "Me"));
+            parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "singleton", "Me"));
         }
 
         [Theory]
@@ -94,12 +93,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the negative type cast: ~/Me/NS.VipCustomer
             Action parsePath = () => pathParser.ParsePath(new[] { "Me", "NS.VipCustomer" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.VipCustomer", "singleton", "Me"));
+            parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.VipCustomer", "singleton", "Me"));
 
             // verify the negative type cast: ~/Me/NS.NormalCustomer
             pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
             parsePath = () => pathParser.ParsePath(new[] { "Me", "NS.NormalCustomer" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "singleton", "Me"));
+            parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "singleton", "Me"));
         }
 
         private static IEdmModel GetSingletonEdmModel(string annotation, bool inline = true)
@@ -187,7 +186,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
                 // verify the negative type cast: ~/Customers/NS.NormalCustomer
                 Action parsePath = () => pathParser.ParsePath(new[] { segment, "NS.NormalCustomer" });
-                parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "entity set", "Customers"));
+                parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "entity set", "Customers"));
 
                 index++;
             }
@@ -283,7 +282,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
                 // verify the negative type cast
                 Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.CnAddress" });
-                parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.CnAddress", "property", segment));
+                parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.CnAddress", "property", segment));
                 index++;
             }
         }
@@ -394,7 +393,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
                 // verify the negative type cast
                 Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.NormalCustomer" });
-                parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation property", segment));
+                parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation property", segment));
                 index++;
             }
         }
@@ -427,7 +426,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the negative type cast
             Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", "SubCustomers(1)", "NS.NormalCustomer" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation property", "SubCustomers"));
+            parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation property", "SubCustomers"));
         }
 
         private static IEdmModel GetNavigationPropertyEdmModel(string annotation, bool inline = true)
@@ -524,7 +523,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the negative type cast
             Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", "Data", "Edm.Double" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("Edm.Double", "type definition", "Data"));
+            parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("Edm.Double", "type definition", "Data"));
         }
 
         private static IEdmModel GetTypeDefinitionEdmModel(string annotation, bool inline = true)
@@ -608,7 +607,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the negative type cast: ~/Customers(1)/NS.NormalCustomer/NS.Image()
             Action parsePath = () => pathParser.ParsePath(new[] { "Customers", "NS.NormalCustomer", "NS.Image()" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "operation", "Image"));
+            parsePath.Throws<ODataException>(ErrorStrings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint("NS.NormalCustomer", "operation", "Image"));
         }
 
         private static IEdmModel GetOperationEdmModel(string annotation, bool inline = true)

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -25,7 +24,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void WritePayloadStartWritesJsonPaddingStuffIfSpecified()
         {
             var result = SetupSerializerAndRunTest("functionName", serializer => serializer.WritePayloadStart());
-            result.Should().StartWith("functionName(");
+            Assert.StartsWith("functionName(", result);
         }
 
         [Fact]
@@ -37,7 +36,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WritePayloadEnd();
             });
 
-            result.Should().EndWith(")");
+            Assert.EndsWith(")", result);
         }
 
         [Fact]
@@ -49,7 +48,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WritePayloadEnd();
             });
 
-            result.Should().NotContain("(").And.NotContain(")");
+            Assert.DoesNotContain("(", result);
+            Assert.DoesNotContain(")", result);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"code\":\"Error Code\"");
+            Assert.Contains("\"code\":\"Error Code\"", result);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"message\":\"error message text\"");
+            Assert.Contains("\"message\":\"error message text\"", result);
         }
 
         [Fact]
@@ -85,9 +85,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, includeDebugInformation: false);
             });
 
-            result.Should().Contain("\"target\":\"error target text\"");
+            Assert.Contains("\"target\":\"error target text\"", result);
         }
-        
+
         [Fact]
         public void WriteTopLevelErrorHasCorrectDefaults()
         {
@@ -97,10 +97,10 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"code\":\"\"");
-            result.Should().Contain("\"message\":\"\"");
-            result.Should().NotContain("\"target\"");
-            result.Should().NotContain("\"details\"");
+            Assert.Contains("\"code\":\"\"", result);
+            Assert.Contains("\"message\":\"\"", result);
+            Assert.DoesNotContain("\"target\"", result);
+            Assert.DoesNotContain("\"details\"", result);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"@sample.primitive\":\"stringValue\"");
+            Assert.Contains("\"@sample.primitive\":\"stringValue\"", result);
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"sample.primitive@odata.type\":\"#DateTimeOffset\",\"@sample.primitive\":\"2000-01-01T12:30:00Z\"");
+            Assert.Contains("\"sample.primitive@odata.type\":\"#DateTimeOffset\",\"@sample.primitive\":\"2000-01-01T12:30:00Z\"", result);
         }
 
         [Fact]
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"sample.primitive@odata.type\":\"#Date\",\"@sample.primitive\":\"2014-08-08\"");
+            Assert.Contains("\"sample.primitive@odata.type\":\"#Date\",\"@sample.primitive\":\"2014-08-08\"", result);
         }
 
         [Fact]
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"sample.primitive@odata.type\":\"#TimeOfDay\",\"@sample.primitive\":\"12:30:05.0900000\"");
+            Assert.Contains("\"sample.primitive@odata.type\":\"#TimeOfDay\",\"@sample.primitive\":\"12:30:05.0900000\"", result);
         }
 
         [Fact]
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"sample.primitive@odata.type\":\"#Custom.Type\",\"@sample.primitive\":\"stringValue\"");
+            Assert.Contains("\"sample.primitive@odata.type\":\"#Custom.Type\",\"@sample.primitive\":\"stringValue\"", result);
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"@sample.complex\":{\"@odata.type\":\"#ns.ErrorDetails\"}");
+            Assert.Contains("\"@sample.complex\":{\"@odata.type\":\"#ns.ErrorDetails\"}", result);
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 error.InstanceAnnotations = instanceAnnotations;
 
                 Action writeError = () => serializer.WriteTopLevelError(error, false);
-                writeError.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+                writeError.Throws<ODataException>(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
             });
         }
 
@@ -248,7 +248,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 serializer.WriteTopLevelError(error, false);
             });
 
-            result.Should().Contain("\"sample.collection@odata.type\":\"#Collection(ns.ErrorDetails)\",\"@sample.collection\":[{},{}]");
+            Assert.Contains("\"sample.collection@odata.type\":\"#Collection(ns.ErrorDetails)\",\"@sample.collection\":[{},{}]", result);
         }
 
         [Fact]
@@ -267,7 +267,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 error.InstanceAnnotations = instanceAnnotations;
 
                 Action writeError = () => serializer.WriteTopLevelError(error, false);
-                writeError.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+                writeError.Throws<ODataException>(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
             });
         }
 
@@ -278,7 +278,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var serializer = GetSerializer(stream, null, true, false);
             var uri = new Uri("TestUri", UriKind.Relative);
             Action uriToStrongError = () => serializer.UriToString(uri);
-            uriToStrongError.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata(UriUtils.UriToString(uri)));
+            uriToStrongError.Throws<ODataException>(Strings.ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata(UriUtils.UriToString(uri)));
         }
 
         [Fact]
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var stream = new MemoryStream();
             var serializer = GetSerializer(stream, null, true);
             string uri = serializer.UriToString(new Uri("TestUri", UriKind.Relative));
-            uri.Should().Equals("http://example.com/TestUri");
+            Assert.Equal("http://example.com/TestUri", uri);
         }
 
         [Fact]
@@ -298,7 +298,7 @@ namespace Microsoft.OData.Tests.JsonLight
             serializer.JsonWriter.StartObjectScope();
             serializer.WriteContextUriProperty(ODataPayloadKind.ServiceDocument);
             string uri = serializer.UriToString(new Uri("TestUri", UriKind.Relative));
-            uri.Should().Equals("TestUri");
+            Assert.Equal("TestUri", uri);
         }
 
         /// <summary>

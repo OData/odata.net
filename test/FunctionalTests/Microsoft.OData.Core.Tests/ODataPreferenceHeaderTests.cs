@@ -6,7 +6,6 @@
 
 using System;
 using System.Globalization;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -45,7 +44,7 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnRepresentationPreference + "," + Preference1);
             this.preferHeader.ReturnContent = null;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(Preference1);
+            Assert.Equal(Preference1, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -53,15 +52,16 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnMinimalPreference + "," + Preference1);
             this.preferHeader.ReturnContent = null;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(Preference1);
+            Assert.Equal(Preference1, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
         public void SetReturnNoContentToNullPreferHeaderShouldAddHeader()
         {
-            this.requestMessage.Headers.Should().NotContain(kvp => kvp.Key.Equals(PreferHeaderName));
+            Assert.DoesNotContain(this.requestMessage.Headers, kvp => kvp.Key.Equals(PreferHeaderName));
+
             this.preferHeader.ReturnContent = false;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(ReturnMinimalPreference);
+            Assert.Equal(ReturnMinimalPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -69,21 +69,21 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, "");
             this.preferHeader.ReturnContent = true;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(ReturnRepresentationPreference);
+            Assert.Equal(ReturnRepresentationPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
         public void SetAnnotationFilterToEmptyShouldThrow()
         {
             Action test = () => this.preferHeader.AnnotationFilter = "";
-            test.ShouldThrow<ArgumentException>().WithMessage(Strings.ExceptionUtils_ArgumentStringEmpty + "\r\nParameter name: AnnotationFilter");
+            test.Throws<ArgumentException>(Strings.ExceptionUtils_ArgumentStringEmpty + "\r\nParameter name: AnnotationFilter");
         }
 
         [Fact]
         public void SetAnnotationFilterToNullShouldNoOpIfODataAnnotationPreferenceIsMissing()
         {
             this.preferHeader.AnnotationFilter = null;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().BeNull();
+            Assert.Null(this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, ODataAnnotationPreference + "," + Preference1);
             this.preferHeader.AnnotationFilter = null;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(Preference1);
+            Assert.Equal(Preference1, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -99,12 +99,12 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, ExistingPreference);
             this.preferHeader.AnnotationFilter = AnnotationFilter;
-            this.requestMessage.GetHeader(PreferHeaderName).Split(new[] { ',' })
-                .Should().Contain(Preference1)
-                .And.Contain(Preference2)
-                .And.Contain(Preference3)
-                .And.Contain(Preference4)
-                .And.Contain(ODataAnnotationPreference);
+            var heads = this.requestMessage.GetHeader(PreferHeaderName).Split(new[] { ',' });
+            Assert.Contains(Preference1, heads);
+            Assert.Contains(Preference2, heads);
+            Assert.Contains(Preference3, heads);
+            Assert.Contains(Preference4, heads);
+            Assert.Contains(ODataAnnotationPreference, heads);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, ODataAnnotationPreference);
             this.preferHeader.AnnotationFilter = "ns.*";
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(ODataAnnotationPreferenceToken + "=\"ns.*\"");
+            Assert.Equal(ODataAnnotationPreferenceToken + "=\"ns.*\"", this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnRepresentationPreference + "," + ReturnMinimalPreference);
             this.preferHeader.ReturnContent = false;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(ReturnMinimalPreference);
+            Assert.Equal(ReturnMinimalPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -128,49 +128,49 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnMinimalPreference);
             this.preferHeader.ReturnContent = true;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(ReturnRepresentationPreference);
+            Assert.Equal(ReturnRepresentationPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
         public void ReturnContentShouldReturnNullOnNullHeader()
         {
-            this.requestMessage.Headers.Should().NotContain(kvp => kvp.Key == PreferHeaderName);
-            this.preferHeader.ReturnContent.HasValue.Should().BeFalse();
+            Assert.DoesNotContain(this.requestMessage.Headers, kvp => kvp.Key == PreferHeaderName);
+            Assert.False(this.preferHeader.ReturnContent.HasValue);
         }
 
         [Fact]
         public void ReturnContentShouldReturnNullOnEmptyHeader()
         {
             this.requestMessage.SetHeader(PreferHeaderName, "");
-            this.preferHeader.ReturnContent.HasValue.Should().BeFalse();
+            Assert.False(this.preferHeader.ReturnContent.HasValue);
         }
 
         [Fact]
         public void AnnotationFilterShouldReturnNullWhenODataAnnotationsPreferenceIsMissing()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ExistingPreference);
-            this.preferHeader.AnnotationFilter.Should().BeNull();
+            Assert.Null(this.preferHeader.AnnotationFilter);
         }
 
         [Fact]
         public void AnnotationFilterShouldReturnNullWhenODataAnnotationsPreferenceValueIsNotSet()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ExistingPreference + "," + ODataAnnotationPreferenceToken);
-            this.preferHeader.AnnotationFilter.Should().BeNull();
+            Assert.Null(this.preferHeader.AnnotationFilter);
         }
 
         [Fact]
         public void ReturnContentShouldReturnFalseWhenReturnRepresentationIsAfterReturnMinimalPreferencesAreInHeader()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnMinimalPreference + "," + ReturnRepresentationPreference + "," + ExistingPreference);
-            this.preferHeader.ReturnContent.Should().BeFalse();
+            Assert.False(this.preferHeader.ReturnContent);
         }
 
         [Fact]
         public void ReturnContentShouldReturnTrueWhenReturnRepresentationIsBeforeReturnMinimalPreferencesAreInHeader2()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnRepresentationPreference + "," + ReturnMinimalPreference + "," + ExistingPreference);
-            this.preferHeader.ReturnContent.Should().BeTrue();
+            Assert.True(this.preferHeader.ReturnContent);
         }
 
 
@@ -179,21 +179,21 @@ namespace Microsoft.OData.Tests
         public void ReturnContentShouldReturnFalseWhenReturnNoContentPreferenceIsInHeader()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnMinimalPreference + "," + ExistingPreference);
-            this.preferHeader.ReturnContent.Should().BeFalse();
+            Assert.False(this.preferHeader.ReturnContent);
         }
 
         [Fact]
         public void ReturnContentShouldReturnTrueWhenReturnContentPreferenceIsInHeader()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnRepresentationPreference + "," + ExistingPreference);
-            this.preferHeader.ReturnContent.Should().BeTrue();
+            Assert.True(this.preferHeader.ReturnContent);
         }
 
         [Fact]
         public void AnnotationFilterShouldReturnFilterWhenODataAnnotationsPreferenceIsInHeader()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ExistingPreference + "," + ODataAnnotationPreference);
-            this.preferHeader.AnnotationFilter.Should().Be("*");
+            Assert.Equal("*", this.preferHeader.AnnotationFilter);
         }
 
         [Fact]
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Tests
             this.preferHeader.AnnotationFilter = "ns.*";
             this.preferHeader.AnnotationFilter = "ns.name";
             this.preferHeader.AnnotationFilter = AnnotationFilter;
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(ODataAnnotationPreference);
+            Assert.Equal(ODataAnnotationPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
 
@@ -210,16 +210,16 @@ namespace Microsoft.OData.Tests
         public void SetRespondAsyncToTrueShouldAppendHeader()
         {
             this.preferHeader.RespondAsync = true;
-            this.preferHeader.RespondAsync.Should().BeTrue();
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(RespondAyncPreference);
+            Assert.True(this.preferHeader.RespondAsync);
+            Assert.Equal(RespondAyncPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
         public void SetRespondAsyncToFalseShouldClearHeader()
         {
             this.preferHeader.RespondAsync = false;
-            this.preferHeader.RespondAsync.Should().BeFalse();
-            this.requestMessage.GetHeader(PreferHeaderName).Should().BeNull();
+            Assert.False(this.preferHeader.RespondAsync);
+            Assert.Null(this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -227,17 +227,17 @@ namespace Microsoft.OData.Tests
         {
             this.preferHeader.RespondAsync = true;
             this.preferHeader.Wait = 10;
-            this.preferHeader.RespondAsync.Should().BeTrue();
-            this.preferHeader.Wait.Should().Be(10);
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(RespondAsyncAndWaitPreference);
+            Assert.True(this.preferHeader.RespondAsync);
+            Assert.Equal(10, this.preferHeader.Wait);
+            Assert.Equal(RespondAsyncAndWaitPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
         public void SetWaitShouldAppendHeader()
         {
             this.preferHeader.Wait = 10;
-            this.preferHeader.Wait.Should().Be(10);
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(WaitPreference);
+            Assert.Equal(10, this.preferHeader.Wait);
+            Assert.Equal(WaitPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -245,9 +245,9 @@ namespace Microsoft.OData.Tests
         {
             this.preferHeader.RespondAsync = true;
             this.preferHeader.Wait = null;
-            this.preferHeader.RespondAsync.Should().BeTrue();
-            this.preferHeader.Wait.Should().Be(null);
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(RespondAyncPreference);
+            Assert.True(this.preferHeader.RespondAsync);
+            Assert.Null(this.preferHeader.Wait);
+            Assert.Equal(RespondAyncPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Tests
             this.preferHeader = new ODataPreferenceHeader(this.requestMessage);
             int? wait;
             Action test = () => wait = this.preferHeader.Wait;
-            test.ShouldThrow<ODataException>().WithMessage(
+            test.Throws<ODataException>(
                 string.Format(CultureInfo.InvariantCulture,
                 "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
                 "abc", WaitPreferenceTokenName));
@@ -267,16 +267,16 @@ namespace Microsoft.OData.Tests
         public void SetContinueOnErrorToTrueShouldAppendHeader()
         {
             this.preferHeader.ContinueOnError = true;
-            this.preferHeader.ContinueOnError.Should().BeTrue();
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(ContinueOnErrorPreference);
+            Assert.True(this.preferHeader.ContinueOnError);
+            Assert.Equal(ContinueOnErrorPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
         public void SetContinueOnErrorToFalseShouldClearHeader()
         {
             this.preferHeader.ContinueOnError = false;
-            this.preferHeader.ContinueOnError.Should().BeFalse();
-            this.requestMessage.GetHeader(PreferHeaderName).Should().BeNull();
+            Assert.False(this.preferHeader.ContinueOnError);
+            Assert.Null(this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -284,16 +284,16 @@ namespace Microsoft.OData.Tests
         {
             const int MaxPageSize = 10;
             this.preferHeader.MaxPageSize = MaxPageSize;
-            this.preferHeader.MaxPageSize.Should().Be(MaxPageSize);
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(string.Format("{0}={1}", MaxPageSizePreference, MaxPageSize));
+            Assert.Equal(MaxPageSize, this.preferHeader.MaxPageSize);
+            Assert.Equal(string.Format("{0}={1}", MaxPageSizePreference, MaxPageSize), this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
         public void SetMaxPageSizeToNullShouldClearHeader()
         {
             this.preferHeader.MaxPageSize = null;
-            this.preferHeader.MaxPageSize.Should().Be(null);
-            this.requestMessage.GetHeader(PreferHeaderName).Should().BeNull();
+            Assert.Null(this.preferHeader.MaxPageSize);
+            Assert.Null(this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
@@ -303,8 +303,7 @@ namespace Microsoft.OData.Tests
             this.preferHeader = new ODataPreferenceHeader(this.requestMessage);
             int? maxPageSize;
             Action test = () => maxPageSize = this.preferHeader.MaxPageSize;
-            test.ShouldThrow<ODataException>().WithMessage(
-                string.Format(CultureInfo.InvariantCulture,
+            test.Throws<ODataException>(string.Format(CultureInfo.InvariantCulture,
                 "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
                 "abc", MaxPageSizePreference));
         }
@@ -313,16 +312,16 @@ namespace Microsoft.OData.Tests
         public void SetTrackChangesToTrueShouldAppendHeader()
         {
             this.preferHeader.TrackChanges = true;
-            this.preferHeader.TrackChanges.Should().BeTrue();
-            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(TrackChangesPreference);
+            Assert.True(this.preferHeader.TrackChanges);
+            Assert.Equal(TrackChangesPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
         [Fact]
         public void SetTrackChangesToFalseShouldClearHeader()
         {
             this.preferHeader.TrackChanges = false;
-            this.preferHeader.TrackChanges.Should().BeFalse();
-            this.requestMessage.GetHeader(PreferHeaderName).Should().BeNull();
+            Assert.False(this.preferHeader.TrackChanges);
+            Assert.Null(this.requestMessage.GetHeader(PreferHeaderName));
         }
     }
 }

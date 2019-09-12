@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -30,14 +29,15 @@ namespace Microsoft.OData.Tests
         public void IfValueIsNullThenODataValueShouldBeODataNullValue()
         {
             this.property.Value = null;
-            this.property.ODataValue.Should().BeOfType<ODataNullValue>();
+            Assert.IsType<ODataNullValue>(this.property.ODataValue);
         }
 
         [Fact]
         public void IfValueIsStringThenODataValueShouldBePrimitiveValue()
         {
             this.property.Value = "myString";
-            this.property.ODataValue.As<ODataPrimitiveValue>().Value.Should().Be("myString");
+            var value = Assert.IsType<ODataPrimitiveValue>(this.property.ODataValue);
+            Assert.Equal("myString", value.Value);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Tests
         {
             var enumValue = new ODataEnumValue(Color.Green.ToString());
             this.property.Value = enumValue;
-            this.property.ODataValue.Should().BeSameAs(enumValue);
+            Assert.Same(enumValue, this.property.ODataValue);
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests
         {
             ODataResourceValue resourceValue = new ODataResourceValue();
             this.property.Value = resourceValue;
-            this.property.ODataValue.Should().BeSameAs(resourceValue);
+            Assert.Same(resourceValue, this.property.ODataValue);
         }
 
         [Fact]
@@ -61,20 +61,20 @@ namespace Microsoft.OData.Tests
         {
             ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue(42);
             this.property.Value = primitiveValue;
-            this.property.ODataValue.Should().BeSameAs(primitiveValue);
+            Assert.Same(primitiveValue, this.property.ODataValue);
         }
 
         [Fact]
         public void SettingValueToNonPrimitiveTypeShouldThrow()
         {
             Action testSubject = () => this.property.Value = new ODataMessageWriterSettings();
-            testSubject.ShouldThrow<ODataException>().WithMessage(Strings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType("Microsoft.OData.ODataMessageWriterSettings"));
+            testSubject.Throws<ODataException>(Strings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType("Microsoft.OData.ODataMessageWriterSettings"));
         }
 
         [Fact]
         public void NewPropertyShouldNotContainSerializationInfo()
         {
-            this.property.SerializationInfo.Should().BeNull();
+            Assert.Null(this.property.SerializationInfo);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Tests
         {
             ODataPrimitiveValue valueUInt16 = new ODataPrimitiveValue((UInt16)123);
             this.property.Value = valueUInt16;
-            this.property.ODataValue.Should().BeSameAs(valueUInt16);
+            Assert.Same(valueUInt16, this.property.ODataValue);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Tests
         {
             ODataPrimitiveValue valueUInt32 = new ODataPrimitiveValue((UInt32)123);
             this.property.Value = valueUInt32;
-            this.property.ODataValue.Should().BeSameAs(valueUInt32);
+            Assert.Same(valueUInt32, this.property.ODataValue);
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace Microsoft.OData.Tests
         {
             ODataPrimitiveValue valueUInt64 = new ODataPrimitiveValue((UInt64)123);
             this.property.Value = valueUInt64;
-            this.property.ODataValue.Should().BeSameAs(valueUInt64);
+            Assert.Same(valueUInt64, this.property.ODataValue);
         }
     }
 }

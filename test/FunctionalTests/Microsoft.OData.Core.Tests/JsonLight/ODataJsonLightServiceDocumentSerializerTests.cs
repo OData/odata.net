@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -110,7 +109,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             //Note: Only testing one of three exceptions that occurs in the Validate ServiceDocumentElements because if one throws then we know that the code path is going through
             // the validation method. If the validation method is changed then in the future two exception tests might be needed.
-            WriteServiceDocumentShouldError(serviceDocument).ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
+            WriteServiceDocumentShouldError(serviceDocument).Throws<ODataException>(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
         }
 
         private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(MemoryStream memoryStream, IODataPayloadUriConverter urlResolver = null)
@@ -148,7 +147,7 @@ namespace Microsoft.OData.Tests.JsonLight
             serializer.WriteServiceDocument(serviceDocument);
             serializer.JsonWriter.Flush();
             string actualResult = Encoding.UTF8.GetString(memoryStream.ToArray());
-            actualResult.Should().Be(expectedOutput);
+            Assert.Equal(expectedOutput, actualResult);
         }
     }
 }

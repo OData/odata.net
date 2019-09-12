@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -31,13 +30,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void PositiveTopValueWorks()
         {
-            ParseTop("5").Should().Be(5);
+            Assert.Equal(5, ParseTop("5"));
         }
 
         [Fact]
         public void ZeroTopValueWorks()
         {
-            ParseTop(" 0  ").Should().Be(0);
+            Assert.Equal(0, ParseTop(" 0  "));
         }
 
         [Fact]
@@ -46,7 +45,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             foreach (var input in SharedInvalidNumericInput)
             {
                 Action action = () => ParseTop(input);
-                action.ShouldThrow<ODataException>("'{0}' should be invalid input", input).WithMessage(Strings.SyntacticTree_InvalidTopQueryOptionValue(input));
+                action.Throws<ODataException>(Strings.SyntacticTree_InvalidTopQueryOptionValue(input));
             }
 
         }
@@ -56,13 +55,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void PositiveSkipValueWorks()
         {
-            ParseSkip("5").Should().Be(5);
+            Assert.Equal(5, ParseSkip("5"));
         }
 
         [Fact]
         public void ZeroSkipValueWorks()
         {
-            ParseSkip(" 0  ").Should().Be(0);
+            Assert.Equal(0, ParseSkip(" 0  "));
         }
 
         [Fact]
@@ -71,7 +70,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             foreach (var input in SharedInvalidNumericInput)
             {
                 Action action = () => ParseSkip(input);
-                action.ShouldThrow<ODataException>("'{0}' should be invalid input", input).WithMessage(Strings.SyntacticTree_InvalidSkipQueryOptionValue(input));
+                action.Throws<ODataException>(Strings.SyntacticTree_InvalidSkipQueryOptionValue(input));
             }
         }
         #endregion $skip option
@@ -96,7 +95,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var parser = new ODataQueryOptionParser(EdmCoreModel.Instance, null, null, new Dictionary<string, string>() { { "$index", value } });
             var index = parser.ParseIndex();
-            index.Should().Be(expect);
+            Assert.Equal(expect, index);
         }
 
         [Theory]
@@ -109,7 +108,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var parser = new ODataQueryOptionParser(EdmCoreModel.Instance, null, null, new Dictionary<string, string>() { { "$index", value } });
             Action action = () => parser.ParseIndex();
-            action.ShouldThrow<ODataException>("'{0}' should be invalid input", value).WithMessage(Strings.SyntacticTree_InvalidIndexQueryOptionValue(value));
+            action.Throws<ODataException>(Strings.SyntacticTree_InvalidIndexQueryOptionValue(value));
         }
     }
 }

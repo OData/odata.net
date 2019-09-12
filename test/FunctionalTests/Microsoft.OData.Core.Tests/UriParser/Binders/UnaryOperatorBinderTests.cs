@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -42,7 +41,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var resultNode = this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
             resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
                       .Operand.ShouldBeConstantQueryNode<object>(null);
-            resultNode.As<UnaryOperatorNode>().TypeReference.Should().BeNull();
+            var node = Assert.IsType<UnaryOperatorNode>(resultNode);
+            Assert.Null(node.TypeReference);
         }
 
         [Fact]
@@ -55,7 +55,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var resultNode = this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
             resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate)
                       .Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
-            resultNode.As<UnaryOperatorNode>().TypeReference.Should().BeNull();
+            var node = Assert.IsType<UnaryOperatorNode>(resultNode);
+            Assert.Null(node.TypeReference);
         }
 
         [Fact]
@@ -65,7 +66,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             this.parameterSingleValueQueryNode = new SingleValueFunctionCallNode("func", null, EdmCoreModel.Instance.GetBoolean(false));
             var unaryOperatorQueryToken = new UnaryOperatorToken(UnaryOperatorKind.Not, new LiteralToken("foo"));
             var resultNode = this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
-            resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not).TypeReference.FullName().Should().Be("Edm.Boolean");
+            var node = resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not);
+            Assert.Equal("Edm.Boolean", node.TypeReference.FullName());
         }
 
         [Fact]
@@ -75,7 +77,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             this.extensionSingleValueQueryNode = new SingleValueQueryNodeWithTypeReference();
             var unaryOperatorQueryToken = new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken("foo"));
             var resultNode = this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
-            resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate).TypeReference.FullName().Should().Be("Edm.Int32");
+            var node = resultNode.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Negate);
+            Assert.Equal("Edm.Int32", node.TypeReference.FullName());
         }
 
         [Fact]
@@ -85,8 +88,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var unaryOperatorToken = new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken("foo"));
             Action bind = () => this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_UnaryOperatorOperandNotSingleValue(UnaryOperatorKind.Negate.ToString())));
+            bind.Throws<ODataException>(Strings.MetadataBinder_UnaryOperatorOperandNotSingleValue(UnaryOperatorKind.Negate.ToString()));
         }
 
         [Fact]
@@ -97,8 +99,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var unaryOperatorQueryToken = new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken("foo"));
             Action bind = () => this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_IncompatibleOperandError("Edm.DateTimeOffset", UnaryOperatorKind.Negate)));
+            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandError("Edm.DateTimeOffset", UnaryOperatorKind.Negate));
         }
 
         /// <summary>

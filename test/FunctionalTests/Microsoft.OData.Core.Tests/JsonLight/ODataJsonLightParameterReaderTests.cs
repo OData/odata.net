@@ -9,9 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
@@ -44,8 +42,8 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().BeEmpty();
-            result.Collections.Should().BeEmpty();
+            Assert.Empty(result.Values);
+            Assert.Empty(result.Collections);
         }
 
         [Fact]
@@ -55,7 +53,10 @@ namespace Microsoft.OData.Tests.JsonLight
             const string payload = "{\"days\":4}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("days") && keyValuePair.Value.Equals(4));
+            Assert.NotNull(result);
+            var value = Assert.Single(result.Values);
+            Assert.Equal("days", value.Key);
+            Assert.Equal(4, value.Value);
         }
 
         [Fact]
@@ -65,7 +66,7 @@ namespace Microsoft.OData.Tests.JsonLight
             const string payload = "{ }";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().BeEmpty();
+            Assert.Empty(result.Values);
         }
 
         [Fact]
@@ -75,7 +76,7 @@ namespace Microsoft.OData.Tests.JsonLight
             const string payload = "{ }";
 
             Action test = () => this.RunParameterReaderTest(payload);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataParameterReaderCore_ParametersMissingInPayload("ActionImport", "days"));
+            test.Throws<ODataException>(Strings.ODataParameterReaderCore_ParametersMissingInPayload("ActionImport", "days"));
         }
 
         [Fact]
@@ -87,9 +88,9 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
 
-            result.Values.Should().HaveCount(2);
-            result.Values.Should().Contain(keyValuePair => keyValuePair.Key.Equals("days") && keyValuePair.Value.Equals(4));
-            result.Values.Should().Contain(keyValuePair => keyValuePair.Key.Equals("optionalDays") && keyValuePair.Value.Equals(8));
+            Assert.Equal(2, result.Values.Count);
+            Assert.Contains(result.Values, v => v.Key.Equals("days") && v.Value.Equals(4));
+            Assert.Contains(result.Values, v => v.Key.Equals("optionalDays") && v.Value.Equals(8));
         }
 
         [Fact]
@@ -100,7 +101,10 @@ namespace Microsoft.OData.Tests.JsonLight
             const string payload = "{\"days\":4 }";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("days") && keyValuePair.Value.Equals(4));
+
+            var value = Assert.Single(result.Values);
+            Assert.Equal("days", value.Key);
+            Assert.Equal(4, value.Value);
         }
 
         [Fact]
@@ -111,9 +115,10 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"days\":4, \"name\":\"john\"}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().HaveCount(2);
-            result.Values.Should().Contain(keyValuePair => keyValuePair.Key.Equals("days") && keyValuePair.Value.Equals(4));
-            result.Values.Should().Contain(keyValuePair => keyValuePair.Key.Equals("name") && keyValuePair.Value.Equals("john"));
+
+            Assert.Equal(2, result.Values.Count);
+            Assert.Contains(result.Values, v => v.Key.Equals("days") && v.Value.Equals(4));
+            Assert.Contains(result.Values, v => v.Key.Equals("name") && v.Value.Equals("john"));
         }
 
         [Fact]
@@ -123,10 +128,12 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"names\": [\"john\", \"suzy\"]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Collections.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("names"));
-            var collectionItems = result.Collections.Single().Value.Items;
-            collectionItems.Should().HaveCount(2);
-            collectionItems.Should().ContainInOrder(new[] { "john", "suzy" });
+            var item = Assert.Single(result.Collections);
+            Assert.Equal("names", item.Key);
+
+            var collectionItems = item.Value.Items;
+            Assert.Equal(2, collectionItems.Count());
+            Assert.Equal(new[] { "john", "suzy" }, collectionItems.OfType<string>());
         }
 
         [Fact]
@@ -137,10 +144,10 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"address\" : { \"StreetName\": \"Bla\", \"StreetNumber\" : 61 } }";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Entries.Should().HaveCount(1);
-            result.Entries.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
 
-            result.Entries.SingleOrDefault().Value.Should().OnlyContain(item => item is ODataResource);
+            var item = Assert.Single(result.Entries);
+            Assert.Equal("address", item.Key);
+            Assert.Single(item.Value);
         }
 
         [Fact]
@@ -155,10 +162,9 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"address\" : { \"StreetName\": \"Bla\", \"StreetNumber\" : 61, \"@odata.type\":\"TestModel.derivedAddress\" } }";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Entries.Should().HaveCount(1);
-            result.Entries.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
-
-            result.Entries.SingleOrDefault().Value.Should().OnlyContain(item => item is ODataResource); ;
+            var item = Assert.Single(result.Entries);
+            Assert.Equal("address", item.Key);
+            Assert.Single(item.Value);
         }
 
         [Fact]
@@ -173,10 +179,13 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"addresses\" : [{ \"StreetName\": \"Bla\", \"StreetNumber\" : 61, \"@odata.type\":\"TestModel.derivedAddress\" }, { \"StreetName\": \"Bla2\" }]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
-            var collectioItems = result.Entries.First().Value;
-            collectioItems.Should().HaveCount(2);
-            collectioItems.Should().OnlyContain(item => item is ODataResource);
+
+            var item = Assert.Single(result.Feeds);
+            Assert.Equal("addresses", item.Key);
+
+            var collectioItems = Assert.Single(result.Entries).Value;
+            Assert.Equal(2, collectioItems.Count());
+            Assert.Equal(2, collectioItems.OfType<ODataResource>().Count());
         }
 
         [Fact]
@@ -187,10 +196,12 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"addresses\" : [{ \"StreetName\": \"Bla\", \"StreetNumber\" : 61 }, { \"StreetName\": \"Bla2\", \"StreetNumber\" : 64 }]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
-            var collectioItems = result.Entries.First().Value;
-            collectioItems.Should().HaveCount(2);
-            collectioItems.Should().OnlyContain(item => item is ODataResource);
+            var item = Assert.Single(result.Feeds);
+            Assert.Equal("addresses", item.Key);
+
+            var collectioItems = Assert.Single(result.Entries).Value;
+            Assert.Equal(2, collectioItems.Count());
+            Assert.Equal(2, collectioItems.OfType<ODataResource>().Count());
         }
 
         [Fact]
@@ -203,7 +214,7 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"days\":4, \"name\":\"john\", \"thirdParameter\": 90}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().HaveCount(3);
+            Assert.Equal(3, result.Values.Count());
         }
 
         [Fact]
@@ -215,7 +226,7 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"days\":4, \"name\":\"john\"}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().HaveCount(2);
+            Assert.Equal(2, result.Values.Count());
         }
 
         [Fact]
@@ -227,8 +238,8 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"name\" : \"john\", \"hobbies\": [\"football\", \"basketball\"]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().HaveCount(1);
-            result.Collections.Should().HaveCount(1);
+            Assert.Single(result.Values);
+            Assert.Single(result.Collections);
         }
 
         [Fact]
@@ -241,8 +252,8 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"name\" : \"john\", \"hobbies\": [\"football\", \"basketball\"]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().HaveCount(1);
-            result.Collections.Should().HaveCount(1);
+            Assert.Single(result.Values);
+            Assert.Single(result.Collections);
         }
 
         [Fact]
@@ -253,7 +264,7 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"length\":\"4.5\"}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.First().Value.Should().BeOfType<Double>();
+            Assert.IsType<double>(Assert.Single(result.Values).Value);
         }
 
         [Fact]
@@ -265,12 +276,11 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"entry\":{\"ID\":1}}";
 
             var result = this.RunParameterReaderTest(payload);
-            var pair = result.Entries.First();
-            pair.Key.Should().Be("entry");
-            pair.Value.Count().Should().Be(1);
-            var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(1);
-            entry.Properties.First().Value.Should().Be(1);
+            var pair = Assert.Single(result.Entries);
+            Assert.Equal("entry", pair.Key);
+            var entry = Assert.Single(pair.Value);
+            var property = Assert.Single(entry.Properties);
+            Assert.Equal(1, property.Value);
         }
 
         [Fact]
@@ -285,18 +295,18 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"entry\":{\"ID\":1,\"complexProperty\":{\"Name\":\"ComplexName\"}},\"complex\":{\"Name\":\"ComplexName\"}}";
 
             var result = this.RunParameterReaderTest(payload);
+            Assert.Equal(2, result.Entries.Count);
             var pair = result.Entries.First();
-            pair.Key.Should().Be("entry");
-            pair.Value.Count().Should().Be(2);
+            Assert.Equal("entry", pair.Key);
+            Assert.Equal(2, pair.Value.Count);
             var complex = pair.Value.ElementAt(0);
-            complex.Properties.First().Value.Should().Be("ComplexName");
+            Assert.Equal("ComplexName", Assert.Single(complex.Properties).Value);
             var entry = pair.Value.Last();
-            entry.Properties.Count().Should().Be(1);
-            entry.Properties.First().Value.Should().Be(1);
+            Assert.Equal(1, Assert.Single(entry.Properties).Value);
+
             var pair2 = result.Entries.Last();
-            pair2.Key.Should().Be("complex");
-            pair2.Value.Count().Should().Be(1);
-            pair2.Value.Single().Properties.Count().Should().Be(1);
+            Assert.Equal("complex", pair2.Key);
+            Assert.Single(Assert.Single(pair2.Value).Properties);
         }
 
         [Fact]
@@ -309,11 +319,11 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
             var pair = result.Entries.First();
-            pair.Key.Should().Be("entry");
-            pair.Value.Count().Should().Be(1);
-            var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.ElementAt(1).Value.As<ODataUntypedValue>().RawValue.Should().Be("\"DynamicValue\"");
+            Assert.Equal("entry", pair.Key);
+            var entry = Assert.Single(pair.Value);
+            Assert.Equal(2, entry.Properties.Count());
+            var untypedValue = Assert.IsType<ODataUntypedValue>(entry.Properties.ElementAt(1).Value);
+            Assert.Equal("\"DynamicValue\"", untypedValue.RawValue);
         }
 
         [Fact]
@@ -326,13 +336,12 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"entry\":{\"@odata.type\":\"#NS.DerivedType\",\"ID\":1,\"Name\":\"TestName\"}}";
 
             var result = this.RunParameterReaderTest(payload);
-            var pair = result.Entries.First();
-            pair.Key.Should().Be("entry");
-            pair.Value.Count().Should().Be(1);
-            var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.First().Value.Should().Be(1);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            var pair = Assert.Single(result.Entries);
+            Assert.Equal("entry", pair.Key);
+            var entry = Assert.Single(pair.Value);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(1, entry.Properties.First().Value);
+            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
         }
 
         [Fact]
@@ -344,11 +353,10 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"entry\":null}";
 
             var result = this.RunParameterReaderTest(payload);
-            var pair = result.Entries.First();
-            pair.Key.Should().Be("entry");
-            pair.Value.Count().Should().Be(1);
-            var entry = pair.Value.First();
-            entry.Should().BeNull();
+            var pair = Assert.Single(result.Entries);
+            Assert.Equal("entry", pair.Key);
+            var entry = Assert.Single(pair.Value);
+            Assert.Null(entry);
         }
 
         [Fact]
@@ -360,13 +368,12 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"feed\":[{\"ID\":1}]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Count.Should().Be(1);
-            var pair = result.Entries.First();
-            pair.Key.Should().Be("feed");
-            pair.Value.Count().Should().Be(1);
-            var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(1);
-            entry.Properties.First().Value.Should().Be(1);
+            Assert.Single(result.Feeds);
+            var pair = Assert.Single(result.Entries);
+            Assert.Equal("feed", pair.Key);
+            var entry = Assert.Single(pair.Value);
+            var property = Assert.Single(entry.Properties);
+            Assert.Equal(1, property.Value);
         }
 
         [Fact]
@@ -379,20 +386,21 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
 
-            result.Feeds.Count.Should().Be(2);
-            result.Entries.Count.Should().Be(2);
+            Assert.Equal(2, result.Feeds.Count);
+            Assert.Equal(2, result.Entries.Count);
             var feedA = result.Feeds.First();
-            feedA.Key.Should().Be("feedA");
-            feedA.Value.Count().Should().Be(1);
+            Assert.Equal("feedA", feedA.Key);
+            Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            entryA.Properties.Count().Should().Be(1);
-            entryA.Properties.First().Value.Should().Be(1);
-            var feedB = result.Feeds.ElementAt(1);
-            feedB.Key.Should().Be("feedB");
-            feedB.Value.Count().Should().Be(1);
+            var property = Assert.Single(entryA.Properties);
+            Assert.Equal(1, property.Value);
+
+            var feedB = result.Feeds.Last();
+            Assert.Equal("feedB", feedB.Key);
+            Assert.Single(feedB.Value);
             var entryB = result.Entries.ElementAt(1).Value.First();
-            entryB.Properties.Count().Should().Be(1);
-            entryB.Properties.First().Value.Should().Be(2);
+            property = Assert.Single(entryB.Properties);
+            Assert.Equal(2, property.Value);
         }
 
         [Fact]
@@ -406,20 +414,21 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
 
-            result.Feeds.Count.Should().Be(2);
-            result.Entries.Count.Should().Be(2);
+            Assert.Equal(2, result.Feeds.Count);
+            Assert.Equal(2, result.Entries.Count);
             var feedA = result.Feeds.First();
-            feedA.Key.Should().Be("feedA");
-            feedA.Value.Count().Should().Be(1);
+            Assert.Equal("feedA", feedA.Key);
+            Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            entryA.Properties.Count().Should().Be(1);
-            entryA.Properties.First().Value.Should().Be(1);
+            var property = Assert.Single(entryA.Properties);
+            Assert.Equal(1, property.Value);
+
             var feedB = result.Feeds.ElementAt(1);
-            feedB.Key.Should().Be("feedB");
-            feedB.Value.Count().Should().Be(1);
+            Assert.Equal("feedB", feedB.Key);
+            Assert.Single(feedB.Value);
             var entryB = result.Entries.ElementAt(1).Value.First();
-            entryB.Properties.Count().Should().Be(1);
-            entryB.Properties.First().Value.Should().Be(2);
+            property = Assert.Single(entryB.Properties);
+            Assert.Equal(2, property.Value);
         }
 
         [Fact]
@@ -434,23 +443,22 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
 
-            result.Feeds.Count.Should().Be(2);
-            result.Entries.Count.Should().Be(2);
+            Assert.Equal(2, result.Feeds.Count);
+            Assert.Equal(2, result.Entries.Count);
             var feedA = result.Feeds.First();
-            feedA.Key.Should().Be("feedA");
-            feedA.Value.Count().Should().Be(1);
-            var entryA = result.Entries.First().Value.First();
-            entryA.Properties.Count().Should().Be(1);
-            entryA.Properties.First().Value.Should().Be(1);
-            var feedB = result.Feeds.ElementAt(1);
-            feedB.Key.Should().Be("feedB");
-            feedB.Value.Count().Should().Be(1);
-            var entryB = result.Entries.ElementAt(1).Value.First();
-            entryB.Properties.Count().Should().Be(2);
-            entryB.Properties.First().Value.Should().Be(2);
-            entryB.Properties.ElementAt(1).Value.Should().Be("testName");
-        }
+            Assert.Equal("feedA", feedA.Key);
+            var entryA = Assert.Single(result.Entries.First().Value);
+            var property = Assert.Single(entryA.Properties);
+            Assert.Equal(1, property.Value);
 
+            var feedB = result.Feeds.ElementAt(1);
+            Assert.Equal("feedB", feedB.Key);
+            Assert.Single(feedB.Value);
+            var entryB = result.Entries.ElementAt(1).Value.First();
+            Assert.Equal(2, entryB.Properties.Count());
+            Assert.Equal(2, entryB.Properties.First().Value);
+            Assert.Equal("testName", entryB.Properties.ElementAt(1).Value);
+        }
 
         [Fact]
         public void ReadFeedAndEntry()
@@ -462,19 +470,19 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
 
-            result.Feeds.Count.Should().Be(1);
-            result.Entries.Count.Should().Be(2);
-            var feedA = result.Feeds.First();
-            feedA.Key.Should().Be("feedA");
-            feedA.Value.Count().Should().Be(1);
+            var feedA = Assert.Single(result.Feeds);
+            Assert.Equal("feedA", feedA.Key);
+            Assert.Single(feedA.Value);
+
+            Assert.Equal(2, result.Entries.Count);
             var entryA = result.Entries.First().Value.First();
-            entryA.Properties.Count().Should().Be(1);
-            entryA.Properties.First().Value.Should().Be(1);
+            var property = Assert.Single(entryA.Properties);
+            Assert.Equal(1, property.Value);
             var pair = result.Entries.ElementAt(1);
-            pair.Key.Should().Be("entryB");
+            Assert.Equal("entryB", pair.Key);
             var entryB = pair.Value.First();
-            entryB.Properties.Count().Should().Be(1);
-            entryB.Properties.First().Value.Should().Be(2);
+            property = Assert.Single(entryB.Properties);
+            Assert.Equal(2, property.Value);
         }
 
         [Fact]
@@ -488,17 +496,15 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
 
-            result.Feeds.Count.Should().Be(1);
+            Assert.Single(result.Feeds);
             var feedA = result.Feeds.First();
-            feedA.Key.Should().Be("feed");
-            feedA.Value.Count().Should().Be(1);
+            Assert.Equal("feed", feedA.Key);
+            Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            entryA.Properties.Count().Should().Be(1);
-            entryA.Properties.First().Value.Should().Be(1);
+            Assert.Equal(1, Assert.Single(entryA.Properties).Value);
 
             var entryB = result.Entries.Last().Value.Single();
-            entryB.Properties.Count().Should().Be(1);
-            entryB.Properties.First().Value.Should().Be("ComplexName");
+            Assert.Equal("ComplexName", Assert.Single(entryB.Properties).Value);
         }
 
         [Fact]
@@ -511,15 +517,15 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
 
-            result.Feeds.Count.Should().Be(1);
-            var feedA = result.Feeds.First();
-            feedA.Key.Should().Be("feed");
-            feedA.Value.Count().Should().Be(1);
+            var feedA = Assert.Single(result.Feeds);
+            Assert.Equal("feed", feedA.Key);
+            Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            entryA.Properties.Count().Should().Be(1);
-            entryA.Properties.First().Value.Should().Be(1);
-            result.Values.Count().Should().Be(1);
-            result.Values.Should().Contain(keyValuePair => keyValuePair.Key.Equals("property") && keyValuePair.Value.Equals("value"));
+            Assert.Equal(1, Assert.Single(entryA.Properties).Value);
+
+            var item = Assert.Single(result.Values);
+            Assert.Equal("property", item.Key);
+            Assert.Equal("value",  item.Value);
         }
 
         [Fact]
@@ -535,15 +541,12 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = this.RunParameterReaderTest(payload);
 
-            result.Feeds.Count.Should().Be(1);
-            var feedA = result.Feeds.First();
-            feedA.Key.Should().Be("feed");
-            feedA.Value.Count().Should().Be(1);
+            var feedA = Assert.Single(result.Feeds);
+            Assert.Equal("feed", feedA.Key);
+            Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            entryA.Properties.Count().Should().Be(1);
-            entryA.Properties.First().Value.Should().Be(1);
-            result.Values.Count().Should().Be(1);
-            result.Values.First().Value.Should().BeOfType<ODataEnumValue>();
+            Assert.Equal(1, Assert.Single(entryA.Properties).Value);
+            Assert.IsType<ODataEnumValue>(Assert.Single(result.Values).Value);
         }
 
         [Fact]
@@ -556,17 +559,16 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"feed\":[{\"ID\":1},{\"@odata.type\":\"#NS.DerivedType\",\"ID\":1,\"Name\":\"TestName\"}]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Count.Should().Be(1);
+            Assert.Single(result.Feeds);
             var pair = result.Entries.First();
-            pair.Key.Should().Be("feed");
-            pair.Value.Count().Should().Be(2);
+            Assert.Equal("feed", pair.Key);
+            Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(1);
-            entry.Properties.First().Value.Should().Be(1);
+            Assert.Equal(1, Assert.Single(entry.Properties).Value);
 
             entry = pair.Value.ElementAt(1);
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
         }
 
         [Fact]
@@ -579,13 +581,12 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"feed\":[{\"@odata.type\":\"#NS.DerivedType\",\"ID\":1,\"Name\":\"TestName\"}]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Count.Should().Be(1);
+            Assert.Single(result.Feeds);
             var pair = result.Entries.First();
-            pair.Key.Should().Be("feed");
-            pair.Value.Count().Should().Be(1);
-            var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            Assert.Equal("feed", pair.Key);
+            var entry = Assert.Single(pair.Value);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
         }
 
         [Fact]
@@ -599,13 +600,13 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"feed\":[{\"ID\":1,\"Property1\":{\"ID\":1,\"Name\":\"TestName\"}}]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Count.Should().Be(1);
+            Assert.Single(result.Feeds);
             var pair = result.Entries.First();
-            pair.Key.Should().Be("feed");
-            pair.Value.Count().Should().Be(2);
+            Assert.Equal("feed", pair.Key);
+            Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
         }
 
         [Fact]
@@ -619,13 +620,13 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"feed\":[{\"ID\":1,\"Property1\":{\"ID\":1,\"Name\":\"TestName\"}}]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Count.Should().Be(1);
+            Assert.Single(result.Feeds);
             var pair = result.Entries.First();
-            pair.Key.Should().Be("feed");
-            pair.Value.Count().Should().Be(2);
+            Assert.Equal("feed", pair.Key);
+            Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
         }
 
         [Fact]
@@ -639,13 +640,13 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"feed\":[{\"ID\":1,\"Property1\":[{\"ID\":1,\"Name\":\"TestName\"}]}]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Count.Should().Be(1);
+            Assert.Single(result.Feeds);
             var pair = result.Entries.First();
-            pair.Key.Should().Be("feed");
-            pair.Value.Count().Should().Be(2);
+            Assert.Equal("feed", pair.Key);
+            Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
         }
 
         [Fact]
@@ -659,13 +660,13 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"feed\":[{\"ID\":1,\"Property1\":[{\"ID\":1,\"Name\":\"TestName\"}]}]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Feeds.Count.Should().Be(1);
+            Assert.Single(result.Feeds);
             var pair = result.Entries.First();
-            pair.Key.Should().Be("feed");
-            pair.Value.Count().Should().Be(2);
+            Assert.Equal("feed", pair.Key);
+            Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
         }
 
         private ParameterReaderResult RunParameterReaderTest(string payload)

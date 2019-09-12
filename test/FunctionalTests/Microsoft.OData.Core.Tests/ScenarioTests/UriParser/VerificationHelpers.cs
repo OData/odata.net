@@ -6,8 +6,8 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
+using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         /// </summary>
         public static void VerifyPath(ODataPath path, Action<ODataPathSegment>[] segmentVerifiers)
         {
-            path.Count().Should().Be(segmentVerifiers.Count());
+            Assert.Equal(segmentVerifiers.Count(), path.Count());
 
             var i = 0;
             foreach (var segment in path)

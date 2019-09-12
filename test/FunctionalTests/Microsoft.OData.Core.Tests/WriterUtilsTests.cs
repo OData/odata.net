@@ -1,10 +1,9 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataWriterTypeNameUtilsTests.cs" company="Microsoft">
+// <copyright file="WriterUtilsTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -25,8 +24,8 @@ namespace Microsoft.OData.Tests
                 typeFromMetadata, 
                 typeFromValue, 
                 /* isOpenProperty*/ false);
-            result.Should().Be("Edm.GeographyPoint");
-            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V4).Should().Be("#GeographyPoint");
+            Assert.Equal("Edm.GeographyPoint", result);
+            Assert.Equal("#GeographyPoint", WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V4));
         }
 
         [Fact]
@@ -38,8 +37,8 @@ namespace Microsoft.OData.Tests
                 typeFromMetadata,
                 typeFromValue,
                 /* isOpenProperty*/ false);
-            result.Should().Be("Edm.GeographyPoint");
-            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V401).Should().Be("GeographyPoint");
+            Assert.Equal("Edm.GeographyPoint", result);
+            Assert.Equal("GeographyPoint", WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V401));
         }
 
         [Fact]
@@ -47,10 +46,10 @@ namespace Microsoft.OData.Tests
         {
             var typeFromMetadata = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true);
             var typeFromValue = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false);
-            this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(Microsoft.Spatial.GeographyPoint.Create(42, 42)),
+            Assert.Null(this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(Microsoft.Spatial.GeographyPoint.Create(42, 42)),
                 typeFromMetadata,
                 typeFromValue,
-                /* isOpenProperty*/ false).Should().BeNull();
+                /* isOpenProperty*/ false));
         }
 
         [Fact]
@@ -58,18 +57,18 @@ namespace Microsoft.OData.Tests
         {
             var typeFromMetadata = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), true);
             var typeFromValue = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), false);
-            this.typeNameOracle.GetResourceTypeNameForWriting(typeFromMetadata.FullName(),
+            Assert.Null(this.typeNameOracle.GetResourceTypeNameForWriting(typeFromMetadata.FullName(),
                 new ODataResource { TypeName = "Test.ComplexType" },
-                /* isUndeclared*/ false).Should().BeNull();
+                /* isUndeclared*/ false));
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenForUndeclaredComplexProperty()
         {
             var typeFromValue = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), false);
-            this.typeNameOracle.GetResourceTypeNameForWriting(null, 
+            Assert.Equal("Test.ComplexType", this.typeNameOracle.GetResourceTypeNameForWriting(null, 
                 new ODataResource { TypeName = "Test.ComplexType" },
-                /* isUndeclared*/ true).Should().Be("Test.ComplexType");
+                /* isUndeclared*/ true));
         }
 
         [Fact]
@@ -77,10 +76,10 @@ namespace Microsoft.OData.Tests
         {
             var typeNameFromMetadata = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true));
             var typeFromValue = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false));
-            this.typeNameOracle.GetValueTypeNameForWriting(new ODataCollectionValue() { TypeName = "Collection(String)" },
+            Assert.Null(this.typeNameOracle.GetValueTypeNameForWriting(new ODataCollectionValue() { TypeName = "Collection(String)" },
                 typeNameFromMetadata,
                 typeFromValue,
-                /* isOpenProperty*/ false).Should().BeNull();
+                /* isOpenProperty*/ false));
         }
 
         [Fact]
@@ -91,8 +90,8 @@ namespace Microsoft.OData.Tests
                 null,
                 typeFromValue,
                 /* isOpenProperty*/ true);
-            result.Should().Be("Collection(Edm.String)");
-            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V4).Should().Be("#Collection(String)");
+            Assert.Equal("Collection(Edm.String)", result);
+            Assert.Equal("#Collection(String)", WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V4));
         }
 
         [Fact]
@@ -103,8 +102,8 @@ namespace Microsoft.OData.Tests
                 null,
                 typeFromValue,
                 /* isOpenProperty*/ true);
-            result.Should().Be("Collection(Edm.String)");
-            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V401).Should().Be("Collection(String)");
+            Assert.Equal("Collection(Edm.String)", result);
+            Assert.Equal("Collection(String)", WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V401));
         }
 
         [Fact]
@@ -112,10 +111,11 @@ namespace Microsoft.OData.Tests
         {
             var typeFromMetadata = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, true));
             var typeFromValue = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false));
-            this.typeNameOracle.GetValueTypeNameForWriting(new ODataCollectionValue() { TypeName = "Collection(Geography)" },
+            Assert.Equal("Collection(Edm.GeographyPoint)",
+                this.typeNameOracle.GetValueTypeNameForWriting(new ODataCollectionValue() { TypeName = "Collection(Geography)" },
                 typeFromMetadata,
                 typeFromValue,
-                /* isOpenProperty*/ false).Should().Be("Collection(Edm.GeographyPoint)");
+                /* isOpenProperty*/ false));
         }
 
         [Fact]
@@ -123,10 +123,10 @@ namespace Microsoft.OData.Tests
         {
             var typeFromMetadata = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true));
             var typeFromValue = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false));
-            this.typeNameOracle.GetValueTypeNameForWriting(new ODataCollectionValue() { TypeName = "Collection(GeographyPoint)" },
+            Assert.Null(this.typeNameOracle.GetValueTypeNameForWriting(new ODataCollectionValue() { TypeName = "Collection(GeographyPoint)" },
                 typeFromMetadata,
                 typeFromValue,
-                /* isOpenProperty*/ false).Should().BeNull();
+                /* isOpenProperty*/ false));
         }
 
         [Fact]
@@ -134,10 +134,10 @@ namespace Microsoft.OData.Tests
         {
             var value = new ODataPrimitiveValue(42);
             value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
-            this.typeNameOracle.GetValueTypeNameForWriting(value,
+            Assert.Equal("FromSTNA", this.typeNameOracle.GetValueTypeNameForWriting(value,
                 EdmCoreModel.Instance.GetInt32(true),
                 EdmCoreModel.Instance.GetInt32(false),
-                /* isOpenProperty*/ false).Should().Be("FromSTNA");
+                /* isOpenProperty*/ false));
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Tests
         {
             var value = new ODataResource() {TypeName = "Model.Bla"};
             value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
-            this.typeNameOracle.GetResourceTypeNameForWriting("Model.Bla", value, /* isUndeclared */ false).Should().Be("FromSTNA");
+            Assert.Equal("FromSTNA", this.typeNameOracle.GetResourceTypeNameForWriting("Model.Bla", value, /* isUndeclared */ false));
         }
 
         [Fact]
@@ -153,10 +153,10 @@ namespace Microsoft.OData.Tests
         {
             var value = new ODataCollectionValue() {TypeName = "Collection(Edm.String)"};
             value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
-            this.typeNameOracle.GetValueTypeNameForWriting(value,
+            Assert.Equal("FromSTNA", this.typeNameOracle.GetValueTypeNameForWriting(value,
                 EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true)),
                 EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false)),
-                /* isOpenProperty*/ false).Should().Be("FromSTNA");
+                /* isOpenProperty*/ false));
         }
         #endregion JSON Light ODataValue type name tests
     }

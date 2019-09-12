@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.Test.OData.Utils.ODataLibTest;
@@ -47,7 +46,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         private void ShouldBeAbleToReadEntryWithIdOnlyImplementation(string payload, bool enableReadingODataAnnotationWithoutPrefix)
         {
             var actual = ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, enableReadingODataAnnotationWithoutPrefix: enableReadingODataAnnotationWithoutPrefix);
-            actual.Id.Should().Be("http://www.example.com/defaultService.svc/entryId");
+            Assert.Equal("http://www.example.com/defaultService.svc/entryId", actual.Id.ToString());
         }
 
         [Fact]
@@ -114,24 +113,24 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                         switch (++count)
                         {
                             case 1:
-                                resource.Should().Be(null);
+                                Assert.Null(resource);
                                 break;
                             case 3:
                                 var enumerator = ((ODataCollectionValue)(resource.Properties.Skip(1).Single().Value)).Items.GetEnumerator();
                                 enumerator.MoveNext();
-                                enumerator.Current.Should().Be(1L);
+                                Assert.Equal(1L, enumerator.Current);
                                 enumerator.MoveNext();
-                                enumerator.Current.Should().Be(2L);
+                                Assert.Equal(2L, enumerator.Current);
                                 enumerator.MoveNext();
-                                enumerator.Current.Should().Be(null);
+                                Assert.Null(enumerator.Current);
                                 break;
                         }
                     }
                     else if (reader.State == ODataReaderState.ResourceSetEnd)
                     {
                         var resourceSet = reader.Item as ODataResourceSet;
-                        resourceSet.Should().NotBeNull();
-                        resourceSet.TypeName.Should().Be("Collection(NS.ComplexType)");
+                        Assert.NotNull(resourceSet);
+                        Assert.Equal("Collection(NS.ComplexType)", resourceSet.TypeName);
                     }
                 }
             };
@@ -153,7 +152,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         {
             const string payload = "{" + ContextUrl + ",\"@odata.id\":null}";
             var actual = ReadJsonLightEntry(payload, FullMetadata, readingResponse: true);
-            actual.IsTransient.Should().BeTrue();
+            Assert.True(actual.IsTransient);
         }
 
         [Fact]
@@ -161,7 +160,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         {
             const string payload = "{" + ContextUrl + ",\"@odata.id\":null}";
             var actual = ReadJsonLightEntry(payload, MinimalMetadata, readingResponse: true);
-            actual.IsTransient.Should().BeTrue();
+            Assert.True(actual.IsTransient);
         }
 
         #region LinkReadingRequestShouldBeTheSameForJsonEntry
@@ -169,8 +168,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         private void LinkReadingRequestShouldBeTheSameForJsonEntryImplementation(string payload, bool odataSimplified)
         {
             var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: false, enableReadingODataAnnotationWithoutPrefix: odataSimplified);
-            actual.Id.Should().Be(CreateUri("entryId"));
-            actual.EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit"));
+            Assert.Equal(CreateUri("entryId"), actual.Id);
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/edit"), actual.EditLink);
         }
 
         [Fact]
@@ -211,8 +210,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"@odata.editLink\": \"http://www.example.com/defaultService.svc/edit\", " +
                 "\"@odata.id\":\"entryId\"}";
             var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true);
-            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
-            actual.EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit"));
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/entryId"), actual.Id);
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/edit"), actual.EditLink);
         }
 
         #region EditLinkShouldBeNullIfItsReadonlyEntry
@@ -220,9 +219,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         private void EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(string payload, bool enableReadingODataAnnotationWithoutPrefix)
         {
             var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, enableReadingODataAnnotationWithoutPrefix: enableReadingODataAnnotationWithoutPrefix);
-            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
-            actual.EditLink.Should().BeNull();
-            actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/entryId"), actual.Id);
+            Assert.Null(actual.EditLink);
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"), actual.ReadLink);
         }
 
         [Fact]
@@ -275,10 +274,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     "]" +
                 "}";
             var entries = this.ReadJsonLightFeed(payload, MinimalMetadata, readingResponse: false);
-            entries[0].Id.Should().Be(CreateUri("entryId1"));
-            entries[0].EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit1"));
-            entries[1].Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId2"));
-            entries[1].EditLink.Should().Be(CreateUri("edit2"));
+            Assert.Equal(CreateUri("entryId1"), entries[0].Id);
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/edit1"), entries[0].EditLink);
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/entryId2"), entries[1].Id);
+            Assert.Equal(CreateUri("edit2"), entries[1].EditLink);
         }
 
         [Fact]
@@ -300,10 +299,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     "]" +
                 "}";
             var entries = this.ReadJsonLightFeed(payload, MinimalMetadata, readingResponse: true);
-            entries[0].Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId1"));
-            entries[0].EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit1"));
-            entries[1].Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId2"));
-            entries[1].EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit2"));
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/entryId1"), entries[0].Id);
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/edit1"), entries[0].EditLink);
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/entryId2"), entries[1].Id);
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/edit2"), entries[1].EditLink);
         }
 
         [Fact]
@@ -314,7 +313,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"@odata.metadataEtag\": \"W\\\"A1FF3E230954908F\", " +
                 "\"@odata.id\":\"entryId\"}";
             var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: false);
-            actual.Id.Should().Be(CreateUri("entryId"));
+            Assert.Equal(CreateUri("entryId"), actual.Id);
         }
 
         [Fact]
@@ -325,7 +324,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"@odata.metadataEtag\": \"W/A1FF3E230954908F\", " +
                 "\"@odata.id\":\"entryId\"}";
             var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true);
-            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
+            Assert.Equal(CreateUri("http://www.example.com/defaultService.svc/entryId"), actual.Id);
         }
 
         [Fact]
@@ -388,11 +387,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             });
             read();
             Assert.Equal(2, entries.Count);
-            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
+            Assert.Equal(12L, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value);
 
-            navigations[0].Name.Should().Be("ComplexProperty");
-            entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
-            entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1.0F, "value should be in correct type.");
+            Assert.Equal("ComplexProperty", navigations[0].Name);
+            Assert.Equal(1L, entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal(1.0F, entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value);
 
             payload =
                 "{" +
@@ -406,11 +405,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             navigations.Clear();
             read();
             Assert.Equal(2, entries.Count);
-            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
+            Assert.Equal(12L, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value);
 
-            navigations[0].Name.Should().Be("ComplexProperty");
-            entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
-            entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "DerivedCFloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1.0F, "value should be in correct type.");
+            Assert.Equal("ComplexProperty", navigations[0].Name);
+            Assert.Equal(1L, entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal(1.0F, entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "DerivedCFloatId", StringComparison.OrdinalIgnoreCase)).Value);
         }
 
         [Fact]
@@ -487,8 +486,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Boolean derived = true;
             foreach (var complex in entries.Skip(1))
             {
-                complex.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
-                if (derived) complex.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1.0F, "value should be in correct type.");
+                Assert.Equal(1L, complex.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
+                if (derived)
+                {
+                    Assert.Equal(1.0F, complex.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value);
+                }
+
                 derived = false;
             }
 
@@ -543,8 +546,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 });
 
             var address = entries[1];
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase)).Value.As<ODataUntypedValue>().RawValue.Should().Be("\"Shanghai\"");
+            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            var property = address.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase));
+            var value = Assert.IsType<ODataUntypedValue>(property.Value);
+            Assert.Equal("\"Shanghai\"", value.RawValue);
         }
 
         [Fact]
@@ -601,8 +606,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 });
 
             var address = entries[1];
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
-            entries[2].Properties.FirstOrDefault().Value.Should().Be("Shanghai");
+            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Shanghai", entries[2].Properties.FirstOrDefault().Value);
         }
 
         [Fact]
@@ -681,11 +686,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 });
 
                 Assert.NotNull(entry);
-                entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
+                Assert.Equal("China", entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
 
                 if (payload.Contains("NS.AddressWithCity"))
                 {
-                    entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Shanghai", "value should be in correct type.");
+                    Assert.Equal("Shanghai", entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase)).Value);
                 }
             };
 
@@ -794,10 +799,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, true, true);
 
             Assert.Equal(3, resources.Count);
-            resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
-            resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
-            resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
-            nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
+            Assert.Equal("China", resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Korea", resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Seoul", resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("City", nestedResourceInfos.First().Name);
         }
 
         [Fact]
@@ -828,10 +833,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
 
             Assert.Equal(3, resources.Count);
-            resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
-            resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
-            resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
-            nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
+            Assert.Equal("China", resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Korea", resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Seoul", resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("City", nestedResourceInfos.First().Name);
         }
 
         [Fact]
@@ -860,10 +865,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
 
             Assert.Equal(3, resources.Count);
-            resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
-            resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
-            resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
-            nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
+            Assert.Equal("China", resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Korea", resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Seoul", resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("City", nestedResourceInfos.First().Name);
         }
 
         [Fact]
@@ -891,10 +896,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
 
             Assert.Equal(3, resources.Count);
-            resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
-            resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
-            resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
-            nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
+            Assert.Equal("China", resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Korea", resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("Seoul", resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("City", nestedResourceInfos.First().Name);
         }
 
         private void ReadingTopLevelComplexCollectionProperty(
@@ -955,7 +960,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             if (expectedException != null)
             {
-                read.ShouldThrow<ODataException>().WithMessage(expectedException);
+                read.Throws<ODataException>(expectedException);
             }
             else
             {
@@ -998,10 +1003,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 }, true, true);
 
             var address = entries[1];
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
 
             var openNavigation = entries[2];
-            openNavigation.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.OrdinalIgnoreCase)).Value.Should().Be(0);
+            Assert.Equal(0, openNavigation.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.OrdinalIgnoreCase)).Value);
         }
 
         [Fact]
@@ -1037,10 +1042,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 }, false, false);
 
             var address = entries[1];
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
 
             var openNavigation = entries[2];
-            openNavigation.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.OrdinalIgnoreCase)).Value.Should().Be(0);
+            Assert.Equal(0, openNavigation.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.OrdinalIgnoreCase)).Value);
 
             payload = "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
@@ -1052,7 +1057,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             Action readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
 
-            readEntry.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "NS.Person"));
+            readEntry.Throws<ODataException>(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "NS.Person"));
 
             payload = "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
@@ -1063,7 +1068,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
 
-            readEntry.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenComplex", "NS.Person"));
+            readEntry.Throws<ODataException>(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenComplex", "NS.Person"));
 
             payload = "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
@@ -1074,7 +1079,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
 
-            readEntry.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "NS.Person"));
+            readEntry.Throws<ODataException>(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "NS.Person"));
         }
 
         private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmStructuredType entityType, Action<ODataReader> action, bool isRequest = false, bool isIeee754Compatible = true)

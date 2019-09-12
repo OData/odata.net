@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
@@ -99,7 +98,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             stream.Position = 0;
             string payload = (new StreamReader(stream)).ReadToEnd();
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, payload);
         }
     }
 }

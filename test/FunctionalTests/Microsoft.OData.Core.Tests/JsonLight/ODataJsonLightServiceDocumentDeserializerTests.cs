@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -27,11 +26,10 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadServiceDocumentWithFunctionImportInfo()
         {
             var serviceDocument = ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""name"":""functionImport"",""url"":""http://service/functionimport"", ""kind"":""FunctionImport""}"));
-            serviceDocument.FunctionImports.Should().NotBeNull();
-            var functionImports = serviceDocument.FunctionImports.ToList();
-            functionImports.Count.Should().Be(1);
-            functionImports[0].Name.Should().Be("functionImport");
-            functionImports[0].Url.ToString().Should().Be("http://service/functionimport");
+            Assert.NotNull(serviceDocument.FunctionImports);
+            var functionImport = Assert.Single(serviceDocument.FunctionImports);
+            Assert.Equal("functionImport", functionImport.Name);
+            Assert.Equal("http://service/functionimport", functionImport.Url.ToString());
         }
 
         #region Singleton service document test
@@ -40,11 +38,10 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadServiceDocumentWithSingletonInfo()
         {
             var serviceDocument = ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""name"":""singleton"",""url"":""http://service/singleton"", ""kind"":""Singleton""}"));
-            serviceDocument.Singletons.Should().NotBeEmpty();
-            var singletons = serviceDocument.Singletons.ToList();
-            singletons.Count.Should().Be(1);
-            singletons[0].Name.Should().Be("singleton");
-            singletons[0].Url.ToString().Should().Be("http://service/singleton");
+            Assert.NotEmpty(serviceDocument.Singletons);
+            var singleton = Assert.Single(serviceDocument.Singletons);
+            Assert.Equal("singleton", singleton.Name);
+            Assert.Equal("http://service/singleton", singleton.Url.ToString());
         }
 
         [Fact]
@@ -52,46 +49,45 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             // Json ServiceDocumentReader can not accept a name/value pair with name title
             var serviceDocument = ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""name"":""singleton"",""url"":""singleton"", ""kind"":""Singleton"", ""title"":""Singleton Test""}"));
-            serviceDocument.Singletons.Should().NotBeEmpty();
-            var singletons = serviceDocument.Singletons.ToList();
-            singletons.Count.Should().Be(1);
-            singletons[0].Name.Should().Be("singleton");
-            singletons[0].Url.ToString().Should().Be("http://odata.org/singleton");
+            Assert.NotEmpty(serviceDocument.Singletons);
+            var singleton = Assert.Single(serviceDocument.Singletons);
+            Assert.Equal("singleton", singleton.Name);
+            Assert.Equal("http://odata.org/singleton", singleton.Url.ToString());
         }
 
         [Fact]
         public void ReadServiceDocumentWithMultiSingletonInfo()
         {
             var serviceDocument = ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""name"":""singleton"",""url"":""singleton"", ""kind"":""Singleton""}, {""name"":""singleton1"",""url"":""http://service/singleton1"", ""kind"":""Singleton""}"));
-            serviceDocument.Singletons.Should().NotBeEmpty();
+            Assert.NotEmpty(serviceDocument.Singletons);
             var singletons = serviceDocument.Singletons.ToList();
-            singletons.Count.Should().Be(2);
-            singletons[0].Name.Should().Be("singleton");
-            singletons[0].Url.ToString().Should().Be("http://odata.org/singleton");
-            singletons[1].Name.Should().Be("singleton1");
-            singletons[1].Url.ToString().Should().Be("http://service/singleton1");
+            Assert.Equal(2, singletons.Count);
+            Assert.Equal("singleton", singletons[0].Name);
+            Assert.Equal("http://odata.org/singleton", singletons[0].Url.ToString());
+            Assert.Equal("singleton1", singletons[1].Name);
+            Assert.Equal("http://service/singleton1", singletons[1].Url.ToString());
         }
 
         [Fact]
         public void ReadServiceDocumentWithSingletonInfoWithNameAbsent() 
         {
             Action test = () => ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""url"":""singleton"", ""kind"":""Singleton""}"));
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementName));
+            test.Throws<ODataException>(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementName));
         }
 
         [Fact]
         public void ReadServiceDocumentWithSingletonInfoWithKindAbsent() 
         {
             var serviceDocument = ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""url"":""singleton"", ""name"":""singleton""}"));
-            serviceDocument.Singletons.Should().BeEmpty();
-            serviceDocument.EntitySets.Should().NotBeEmpty();
+            Assert.Empty(serviceDocument.Singletons);
+            Assert.NotEmpty(serviceDocument.EntitySets);
         }
 
         [Fact]
         public void ReaderServiceDocumentWithSingletonInfoWithEmptyUrl() 
         {
             Action test = () => ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""url"":"""", ""name"":""singleton""}"));
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementUrlName));
+            test.Throws<ODataException>(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementUrlName));
         }
         #endregion
 
@@ -113,8 +109,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadServiceDocumentShouldIgnoreUnknownKind()
         {
             var serviceDocument = ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""name"":""entityset"",""url"":""http://service/entityset"", ""kind"":""somethingelse""}"));
-            var entitySets = serviceDocument.EntitySets.ToList();
-            entitySets.Count.Should().Be(0);
+            Assert.Empty(serviceDocument.EntitySets);
         }
 
         [Fact]
@@ -126,29 +121,27 @@ namespace Microsoft.OData.Tests.JsonLight
   {""name"":""singleton2"",""url"":""http://service/singleton2"", ""kind"":""Singleton"" },
   {""name"":""functionImport"",""url"":""http://service/functionimport"", ""kind"":""FunctionImport"", ""title"":""some function import""}"));
 
-            serviceDocument.EntitySets.Should().NotBeNull();
-            var entitySets = serviceDocument.EntitySets.ToList();
-            entitySets.Count.Should().Be(1);
-            entitySets[0].Name.Should().Be("entityset");
-            entitySets[0].Url.ToString().Should().Be("http://service/entityset");
-            entitySets[0].Title.Should().Be("some entity set");
+            Assert.NotNull(serviceDocument.EntitySets);
+            var entitySet = Assert.Single(serviceDocument.EntitySets);
+            Assert.Equal("entityset", entitySet.Name);
+            Assert.Equal("http://service/entityset", entitySet.Url.ToString());
+            Assert.Equal("some entity set", entitySet.Title);
 
-            serviceDocument.Singletons.Should().NotBeNull();
+            Assert.NotNull(serviceDocument.Singletons);
             var singleton = serviceDocument.Singletons.ToList();
-            singleton.Count.Should().Be(2);
-            singleton[0].Name.Should().Be("singleton");
-            singleton[0].Url.ToString().Should().Be("http://service/singleton");
-            singleton[0].Title.Should().Be("some singleton");
-            singleton[1].Name.Should().Be("singleton2");
-            singleton[1].Url.ToString().Should().Be("http://service/singleton2");
-            singleton[1].Title.Should().Be(null);
+            Assert.Equal(2, singleton.Count);
+            Assert.Equal("singleton", singleton[0].Name);
+            Assert.Equal("http://service/singleton", singleton[0].Url.ToString());
+            Assert.Equal("some singleton", singleton[0].Title);
+            Assert.Equal("singleton2", singleton[1].Name);
+            Assert.Equal("http://service/singleton2", singleton[1].Url.ToString());
+            Assert.Null(singleton[1].Title);
 
-            serviceDocument.FunctionImports.Should().NotBeNull();
-            var functionImports = serviceDocument.FunctionImports.ToList();
-            functionImports.Count.Should().Be(1);
-            functionImports[0].Name.Should().Be("functionImport");
-            functionImports[0].Url.ToString().Should().Be("http://service/functionimport");
-            functionImports[0].Title.Should().Be("some function import");
+            Assert.NotNull(serviceDocument.FunctionImports);
+            var functionImport = Assert.Single(serviceDocument.FunctionImports);
+            Assert.Equal("functionImport", functionImport.Name);
+            Assert.Equal("http://service/functionimport", functionImport.Url.ToString());
+            Assert.Equal("some function import", functionImport.Title);
         }
 
         private ODataServiceDocument ReadServiceDocument(string payload)
@@ -177,11 +170,10 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private void TestEntitySetInServiceDocument(ODataServiceDocument serviceDocument)
         {
-            serviceDocument.EntitySets.Should().NotBeNull();
-            var entitySets = serviceDocument.EntitySets.ToList();
-            entitySets.Count.Should().Be(1);
-            entitySets[0].Name.Should().Be("entityset");
-            entitySets[0].Url.ToString().Should().Be("http://service/entityset");
+            Assert.NotNull(serviceDocument.EntitySets);
+            var entitySet = Assert.Single(serviceDocument.EntitySets);
+            Assert.Equal("entityset", entitySet.Name);
+            Assert.Equal("http://service/entityset", entitySet.Url.ToString());
         }
     }
 }

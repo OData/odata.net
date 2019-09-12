@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -27,11 +26,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var path = uriParser.ParsePath();
 
-            var keySegment = path.LastSegment.As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
+            Assert.Equal("ID", keypair.Key);
 
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{1}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression("{1}", edmTypeReference);
         }
 
         [Fact]
@@ -43,10 +43,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             var path = uriParser.ParsePath();
-            var keySegment = path.LastSegment.As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{ 1  }", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression("{ 1  }", edmTypeReference);
         }
 
         [Fact]
@@ -58,10 +60,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             var path = uriParser.ParsePath();
-            var keySegment = path.LastSegment.As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{1}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression("{1}", edmTypeReference);
         }
 
         [Fact]
@@ -69,7 +73,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People({1})"));
             Action action = () => uriParser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_SyntaxError);
+            action.Throws<ODataException>(Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -82,10 +86,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             var path = uriParser.ParsePath();
-            var keySegment = path.LastSegment.As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{1}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression("{1}", edmTypeReference);
         }
 
         [Fact]
@@ -97,7 +103,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             Action action = () => uriParser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_SyntaxError);
+            action.Throws<ODataException>(Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -109,19 +115,23 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             var path = uriParser.ParsePath();
-            var keySegment = path.LastSegment.As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
             IList<KeyValuePair<string, object>> keys = keySegment.Keys.ToList();
-            List<IEdmStructuralProperty> keyTypes = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.ToList();
+            List<IEdmStructuralProperty> keyTypes = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.ToList();
 
-            keys.Count.Should().Be(4);
-            keys[0].Key.Should().Be("Rid");
-            keys[0].Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{RID}", ExpectedType = keyTypes[0].Type });
-            keys[1].Key.Should().Be("Gid");
-            keys[1].Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{GID}", ExpectedType = keyTypes[1].Type });
-            keys[2].Key.Should().Be("Name");
-            keys[2].Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{NAME}", ExpectedType = keyTypes[2].Type });
-            keys[3].Key.Should().Be("Upgraded");
-            keys[3].Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{UPGRADE}", ExpectedType = keyTypes[3].Type });
+            Assert.Equal(4, keys.Count);
+
+            Assert.Equal("Rid", keys[0].Key);
+            keys[0].Value.ShouldBeUriTemplateExpression("{RID}", keyTypes[0].Type);
+
+            Assert.Equal("Gid", keys[1].Key);
+            keys[1].Value.ShouldBeUriTemplateExpression("{GID}", keyTypes[1].Type);
+
+            Assert.Equal("Name", keys[2].Key);
+            keys[2].Value.ShouldBeUriTemplateExpression("{NAME}", keyTypes[2].Type);
+
+            Assert.Equal("Upgraded", keys[3].Key);
+            keys[3].Value.ShouldBeUriTemplateExpression("{UPGRADE}", keyTypes[3].Type);
         }
 
         [Fact]
@@ -134,11 +144,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var path = uriParser.ParsePath();
 
-            var keySegment = path.LastSegment.As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("Color");
+            Assert.Equal("Color", keypair.Key);
 
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{enumKey}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression("{enumKey}", edmTypeReference);
         }
 
         [Fact]
@@ -151,10 +162,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             var path = uriParser.ParsePath();
-            var keySegment = path.LastSegment.As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("Color");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{enumKey}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("Color", keypair.Key);
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression("{enumKey}", edmTypeReference);
         }
         #endregion
 
@@ -167,7 +179,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 EnableUriTemplateParsing = true
             };
 
-            IEdmFunction function = HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(f => f.Parameters.Count() == 2).As<IEdmFunction>();
+            IEdmFunction function = HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(f => f.Parameters.Count() == 2)as IEdmFunction;
+            Assert.NotNull(function);
             var path = uriParser.ParsePath();
             OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationSegment(function).And.Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("onCat", new UriTemplateExpression { LiteralText = "{why555}", ExpectedType = function.Parameters.Last().Type });
@@ -192,7 +205,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(1)/Fully.Qualified.Namespace.HasHat(onCat={why555})"));
             Action action = () => uriParser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionLexer_ExpectedLiteralToken("{why555}"));
+            action.Throws<ODataException>(Strings.ExpressionLexer_ExpectedLiteralToken("{why555}"));
         }
 
         [Fact]
@@ -220,7 +233,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 EnableUriTemplateParsing = true
             };
 
-            IEdmFunctionImport functionImport = HardCodedTestModel.TestModel.EntityContainer.FindOperationImports("IsAddressGood").Single().As<IEdmFunctionImport>();
+            IEdmFunctionImport functionImport = HardCodedTestModel.TestModel.EntityContainer.FindOperationImports("IsAddressGood").Single() as IEdmFunctionImport;
+            Assert.NotNull(functionImport);
             var path = uriParser.ParsePath();
             OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationImportSegment(functionImport).And.Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("address", new UriTemplateExpression { LiteralText = "{ADDR}", ExpectedType = functionImport.Function.Parameters.Single().Type });
@@ -238,13 +252,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var paths = uriParser.ParsePath().ToList();
 
-            var keySegment = paths[1].As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(paths[1]);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{1}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression("{1}", edmTypeReference);
 
-            var templateSegment = paths[2].As<PathTemplateSegment>();
-            templateSegment.LiteralText.Should().Be("{some}");
+            var templateSegment = Assert.IsType<PathTemplateSegment>(paths[2]);
+            Assert.Equal("{some}", templateSegment.LiteralText);
         }
 
         [Fact]
@@ -256,7 +271,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             Action action = () => uriParser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_MustBeLeafSegment("{some}"));
+            action.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_MustBeLeafSegment("{some}"));
         }
 
         [Fact]
@@ -268,7 +283,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             Action action = () => uriParser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_MustBeLeafSegment("{some}"));
+            action.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_MustBeLeafSegment("{some}"));
         }
 
         [Fact]
@@ -280,7 +295,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             Action action = () => uriParser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_ResourceNotFound("{some}"));
+            action.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_ResourceNotFound("{some}"));
         }
         #endregion
 
@@ -297,10 +312,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var typesDic = operation.Parameters.ToDictionary(_ => _.Name, _ => _.Type);
 
             var path = uriParser.ParsePath();
-            var keySegment = path.ElementAt(1).As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.ElementAt(1));
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = "{KEY}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression("{KEY}", edmTypeReference);
             IList<OperationSegmentParameter> parameters = path.LastSegment.ShouldBeOperationSegment(operation).And.Parameters.ToList();
             parameters[0].ShouldBeConstantParameterWithValueType("name", new UriTemplateExpression { LiteralText = "{NAME}", ExpectedType = typesDic["name"] });
             parameters[1].ShouldBeConstantParameterWithValueType("inOffice", new UriTemplateExpression { LiteralText = "{INOFFICE}", ExpectedType = typesDic["inOffice"] });
@@ -320,7 +336,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             // Validate template for parameters
-            IEdmFunction function = HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(f => f.Parameters.Count() == 2).As<IEdmFunction>();
+            IEdmFunction function = HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(f => f.Parameters.Count() == 2)as IEdmFunction;
             foreach (var input in inputs)
             {
                 var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People(1)/Fully.Qualified.Namespace.HasHat(onCat=" + input + ")", UriKind.Relative))
@@ -342,10 +358,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 };
 
                 var path = uriParser.ParsePath();
-                var keySegment = path.LastSegment.As<KeySegment>();
+                var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
                 KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-                keypair.Key.Should().Be("ID");
-                keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression { LiteralText = input, ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+                Assert.Equal("ID", keypair.Key);
+                var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+                keypair.Value.ShouldBeUriTemplateExpression(input, edmTypeReference);
             }
         }
 
@@ -371,7 +388,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 };
 
                 Action action = () => uriParser.ParsePath();
-                action.ShouldThrow<ODataException>().WithMessage(errorCase.Error);
+                action.Throws<ODataException>(errorCase.Error);
             }
         }
 
@@ -397,7 +414,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 };
 
                 Action action = () => uriParser.ParsePath();
-                action.ShouldThrow<ODataException>().WithMessage(errorCase.Error);
+                action.Throws<ODataException>(errorCase.Error);
             }
         }
         #endregion

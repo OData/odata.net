@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -28,9 +27,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValueOpenPropertyAccessNode(new ConstantNode(null)/*parent*/, "myOpenPropertyname"); // open property's TypeReference is null
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
         }
 
         [Fact]
@@ -42,9 +41,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.NotEqual, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
         }
 
         [Fact]
@@ -56,9 +55,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
         }
 
         [Fact]
@@ -71,9 +70,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
-            right.ShouldBeEquivalentTo(otherComplexType);
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
+            Assert.True(right.IsEquivalentTo(otherComplexType));
         }
 
         [Fact]
@@ -85,9 +84,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.GreaterThan, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
         }
 
         [Fact]
@@ -99,9 +98,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValueOpenPropertyAccessNode(new ConstantNode(null)/*parent*/, "myOpenPropertyname"); // open property's TypeReference is null
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
         }
 
         [Fact]
@@ -113,9 +112,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValueOpenPropertyAccessNode(new ConstantNode(null)/*parent*/, "myOpenPropertyname"); // open property's TypeReference is null
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.NotEqual, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
         }
 
         [Fact]
@@ -127,9 +126,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
         }
 
         [Fact]
@@ -141,9 +140,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
         }
 
         [Fact]
@@ -155,9 +154,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
         }
 
         [Fact]
@@ -169,9 +168,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetDogTypeReference());
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetDogTypeReference()));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
         }
 
         [Fact]
@@ -183,9 +182,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
         }
 
         [Fact]
@@ -197,9 +196,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
         }
 
         [Fact]
@@ -214,9 +213,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(nullableType);
-            right.ShouldBeEquivalentTo(nullableType);
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(nullableType));
+            Assert.True(right.IsEquivalentTo(nullableType));
 
             // Reverse order
             left = nullableType;
@@ -225,9 +224,9 @@ namespace Microsoft.OData.Tests.UriParser
             rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(nullableType);
-            right.ShouldBeEquivalentTo(nullableType);
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(nullableType));
+            Assert.True(right.IsEquivalentTo(nullableType));
         }
 
         [Fact]
@@ -242,9 +241,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(nullableType);
-            right.ShouldBeEquivalentTo(nullableType);
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(nullableType));
+            Assert.True(right.IsEquivalentTo(nullableType));
 
             // Reverse order
             left = nullableType;
@@ -253,9 +252,9 @@ namespace Microsoft.OData.Tests.UriParser
             rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(nullableType);
-            right.ShouldBeEquivalentTo(nullableType);
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(nullableType));
+            Assert.True(right.IsEquivalentTo(nullableType));
         }
 
         [Fact]
@@ -267,9 +266,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetInt32(true));
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(EdmCoreModel.Instance.GetInt32(true)));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
         }
 
         [Fact]
@@ -281,9 +280,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetInt32(true));
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(EdmCoreModel.Instance.GetInt32(true)));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
         }
 
         [Fact]
@@ -295,9 +294,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonTypeReference());
-            right.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetInt32(true));
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonTypeReference()));
+            Assert.True(right.IsEquivalentTo(EdmCoreModel.Instance.GetInt32(true)));
         }
 
         [Fact]
@@ -309,9 +308,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeFalse();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
-            right.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetInt32(true));
+            Assert.False(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type));
+            Assert.True(right.IsEquivalentTo(EdmCoreModel.Instance.GetInt32(true)));
         }
 
         [Fact]
@@ -323,9 +322,9 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
-            result.Should().BeTrue();
-            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPet2PetColorPatternProperty().Type);
-            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPet2PetColorPatternProperty().Type);
+            Assert.True(result);
+            Assert.True(left.IsEquivalentTo(HardCodedTestModel.GetPet2PetColorPatternProperty().Type));
+            Assert.True(right.IsEquivalentTo(HardCodedTestModel.GetPet2PetColorPatternProperty().Type));
         }
         #endregion
 
@@ -337,7 +336,7 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmTypeReference type = HardCodedTestModel.GetPersonAddressProp().Type;
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Negate, ref type);
 
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
@@ -346,7 +345,7 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmTypeReference type = HardCodedTestModel.GetPersonAddressProp().Type;
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Negate, ref type);
 
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
@@ -355,8 +354,8 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmTypeReference type = EdmCoreModel.Instance.GetInt32(false);
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Negate, ref type);
 
-            result.Should().BeTrue();
-            type.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetInt32(false));
+            Assert.True(result);
+            Assert.True(type.IsEquivalentTo(EdmCoreModel.Instance.GetInt32(false)));
         }
 
         [Fact]
@@ -365,7 +364,7 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmTypeReference type = EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false);
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Negate, ref type);
 
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
@@ -374,7 +373,7 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmTypeReference type = EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false);
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Negate, ref type);
 
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
@@ -383,8 +382,8 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmTypeReference type = null;
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Negate, ref type);
 
-            result.Should().BeTrue();
-            type.Should().BeNull();
+            Assert.True(result);
+            Assert.Null(type);
         }
 
         [Fact]
@@ -393,7 +392,7 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmTypeReference type = HardCodedTestModel.GetPersonAddressProp().Type;
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Not, ref type);
 
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
@@ -402,7 +401,7 @@ namespace Microsoft.OData.Tests.UriParser
             IEdmTypeReference type = EdmCoreModel.Instance.GetInt32(false);
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Not, ref type);
 
-            result.Should().BeFalse();
+            Assert.False(result);
         }
         #endregion
 
@@ -418,7 +417,7 @@ namespace Microsoft.OData.Tests.UriParser
             // we specifically want to find just the first function that matches the number of arguments, we don't care about
             // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
             // those arguments are.
-            functions.FirstOrDefault(candidateFunction => candidateFunction.ArgumentTypes.Count() == 1).Should().NotBeNull();
+            Assert.NotNull(functions.FirstOrDefault(candidateFunction => candidateFunction.ArgumentTypes.Count() == 1));
         }
 
         [Fact]
@@ -435,7 +434,7 @@ namespace Microsoft.OData.Tests.UriParser
             // we specifically want to find just the first function that matches the number of arguments, we don't care about
             // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
             // those arguments are.
-            functions.FirstOrDefault(candidateFunction => candidateFunction.ArgumentTypes.Count() == 1).Should().Be(first);
+            Assert.Same(first, functions.FirstOrDefault(candidateFunction => candidateFunction.ArgumentTypes.Count() == 1));
         }
 
         [Fact]
@@ -450,7 +449,7 @@ namespace Microsoft.OData.Tests.UriParser
             // we specifically want to find just the first function that matches the number of arguments, we don't care about
             // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
             // those arguments are.
-            functions.FirstOrDefault(candidateFunction => candidateFunction.ArgumentTypes.Count() == 2).Should().BeNull();
+            Assert.Null(functions.FirstOrDefault(candidateFunction => candidateFunction.ArgumentTypes.Count() == 2));
         }
 
         [Fact]

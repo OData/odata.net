@@ -13,7 +13,6 @@ using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 
 namespace Microsoft.Test.OData.Utils.Metadata
