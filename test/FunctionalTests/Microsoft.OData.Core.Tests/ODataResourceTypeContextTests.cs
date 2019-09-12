@@ -5,10 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -61,16 +58,16 @@ namespace Microsoft.OData.Tests
         public void ShouldCreateSubclassWithoutModelWhenSerializationInfoIsGiven()
         {
             var typeContext = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
-            typeContext.Should().NotBeNull();
-            typeContext.GetType().Name.EndsWith("WithoutModel").Should().BeTrue();
+            Assert.NotNull(typeContext);
+            Assert.True(typeContext.GetType().Name.EndsWith("WithoutModel"));
         }
 
         [Fact]
         public void ShouldCreateSubclassWithModelWhenMetadataIsGiven()
         {
             var typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, throwIfMissingTypeInfo: true);
-            typeContext.Should().NotBeNull();
-            typeContext.GetType().Name.EndsWith("WithModel").Should().BeTrue();
+            Assert.NotNull(typeContext);
+            Assert.True(typeContext.GetType().Name.EndsWith("WithModel"));
         }
 
         [Fact]
@@ -78,55 +75,55 @@ namespace Microsoft.OData.Tests
         {
             var typeContext = ODataResourceTypeContext.Create(null, navigationSource: null,
                 navigationSourceEntityType: null, expectedResourceType: ComplexType, throwIfMissingTypeInfo: false);
-            typeContext.Should().NotBeNull();
-            typeContext.GetType().Name.EndsWith("WithModel").Should().BeTrue();
+            Assert.NotNull(typeContext);
+            Assert.True(typeContext.GetType().Name.EndsWith("WithModel"));
         }
 
         [Fact]
         public void ShouldCreateSubclassWithoutModelWhenBothSerializationInfoAndMetadataAreGiven()
         {
             var typeContext = ODataResourceTypeContext.Create(SerializationInfo, EntitySet, EntitySetElementType, ExpectedEntityType, throwIfMissingTypeInfo: true);
-            typeContext.Should().NotBeNull();
-            typeContext.GetType().Name.EndsWith("WithoutModel").Should().BeTrue();
+            Assert.NotNull(typeContext);
+            Assert.True(typeContext.GetType().Name.EndsWith("WithoutModel"));
         }
 
         [Fact]
         public void ShouldCreateBaseClassWhenSerializationInfoAndUserModelAreBothMissingAndThrowIfMissingTypeInfoIsTrue()
         {
             var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
-            typeContext.Should().BeOfType<ODataResourceTypeContext>();
+            Assert.IsType<ODataResourceTypeContext>(typeContext);
         }
 
         [Fact]
         public void ShouldCreateBaseClassWhenSerializationInfoAndUserModelAreBothMissingAndThrowIfMissingTypeInfoIsFalse()
         {
             var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: false);
-            typeContext.Should().BeOfType<ODataResourceTypeContext>();
+            Assert.IsType<ODataResourceTypeContext>(typeContext);
         }
 
         #region TypeContextWithoutModel
         [Fact]
         public void TypeContextWithSerializationInfoShouldReturnEntitySetName()
         {
-            TypeContextWithoutModel.NavigationSourceName.Should().Be("MyCustomers");
+            Assert.Equal("MyCustomers", TypeContextWithoutModel.NavigationSourceName);
         }
 
         [Fact]
         public void TypeContextWithSerializationInfoShouldReturnEntitySetElementTypeName()
         {
-            TypeContextWithoutModel.NavigationSourceEntityTypeName.Should().Be("ns.MyCustomer");
+            Assert.Equal("ns.MyCustomer", TypeContextWithoutModel.NavigationSourceEntityTypeName);
         }
 
         [Fact]
         public void TypeContextWithSerializationInfoShouldReturnExpectedEntityTypeName()
         {
-            TypeContextWithoutModel.ExpectedResourceTypeName.Should().Be("ns.MyVipCustomer");
+            Assert.Equal("ns.MyVipCustomer", TypeContextWithoutModel.ExpectedResourceTypeName);
         }
 
         [Fact]
         public void TypeContextWithSerializationInfoShouldReturnFalseForIsMediaLinkEntry()
         {
-            TypeContextWithoutModel.IsMediaLinkEntry.Should().BeFalse();
+            Assert.False(TypeContextWithoutModel.IsMediaLinkEntry);
         }
         #endregion TypeContextWithoutModel
 
@@ -134,25 +131,25 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeContextWithMetadataShouldReturnEntitySetName()
         {
-            TypeContextWithModel.NavigationSourceName.Should().Be("Customers");
+            Assert.Equal("Customers", TypeContextWithModel.NavigationSourceName);
         }
 
         [Fact]
         public void TypeContextWithMetadataShouldReturnEntitySetElementTypeName()
         {
-            TypeContextWithModel.NavigationSourceEntityTypeName.Should().Be("ns.Customer");
+            Assert.Equal("ns.Customer", TypeContextWithModel.NavigationSourceEntityTypeName);
         }
 
         [Fact]
         public void TypeContextWithMetadataShouldReturnExpectedEntityTypeName()
         {
-            TypeContextWithModel.ExpectedResourceTypeName.Should().Be("ns.VipCustomer");
+            Assert.Equal("ns.VipCustomer", TypeContextWithModel.ExpectedResourceTypeName);
         }
 
         [Fact]
         public void TypeContextWithMetadataShouldReturnIsMediaLinkEntry()
         {
-            TypeContextWithModel.IsMediaLinkEntry.Should().BeFalse();
+            Assert.False(TypeContextWithModel.IsMediaLinkEntry);
         }
         #endregion TypeContextWithModel
 
@@ -160,27 +157,27 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BaseTypeContextThatThrowsShouldThrowForEntitySetName()
         {
-            Action test = () => BaseTypeContextThatThrows.NavigationSourceName.Should().BeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            Action test = () => Assert.Null(BaseTypeContextThatThrows.NavigationSourceName);
+            test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
         public void BaseTypeContextThatThrowsShouldThrowForEntitySetElementTypeName()
         {
-            Action test = () => BaseTypeContextThatThrows.NavigationSourceEntityTypeName.Should().BeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            Action test = () => Assert.Null(BaseTypeContextThatThrows.NavigationSourceEntityTypeName);
+            test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
         public void BaseTypeContextThatThrowsShouldReturnNullExpectedEntityTypeName()
         {
-            BaseTypeContextThatThrows.ExpectedResourceTypeName.Should().BeNull();
+            Assert.Null(BaseTypeContextThatThrows.ExpectedResourceTypeName);
         }
 
         [Fact]
         public void BaseTypeContextThatThrowsShouldReturnFalseIsMediaLinkEntry()
         {
-            BaseTypeContextThatThrows.IsMediaLinkEntry.Should().BeFalse();
+            Assert.False(BaseTypeContextThatThrows.IsMediaLinkEntry);
         }
         #endregion BaseTypeContextThatThrows
 
@@ -188,25 +185,25 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BaseTypeContextThatWillNotThrowShouldReturnNullEntitySetName()
         {
-            BaseTypeContextThatWillNotThrow.NavigationSourceName.Should().BeNull();
+            Assert.Null(BaseTypeContextThatWillNotThrow.NavigationSourceName);
         }
 
         [Fact]
         public void BaseTypeContextThatWillNotThrowShouldReturnNullEntitySetElementTypeName()
         {
-            BaseTypeContextThatWillNotThrow.NavigationSourceEntityTypeName.Should().BeNull();
+            Assert.Null(BaseTypeContextThatWillNotThrow.NavigationSourceEntityTypeName);
         }
 
         [Fact]
         public void BaseTypeContextThatWillNotThrowShouldReturnNullExpectedEntityTypeName()
         {
-            BaseTypeContextThatWillNotThrow.ExpectedResourceTypeName.Should().BeNull();
+            Assert.Null(BaseTypeContextThatWillNotThrow.ExpectedResourceTypeName);
         }
 
         [Fact]
         public void BaseTypeContextThatWillNotThrowShouldReturnFalseIsMediaLinkEntry()
         {
-            BaseTypeContextThatWillNotThrow.IsMediaLinkEntry.Should().BeFalse();
+            Assert.False(BaseTypeContextThatWillNotThrow.IsMediaLinkEntry);
         }
         #endregion BaseTypeContextThatWillNotThrow
 
@@ -214,25 +211,25 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeContextWithEdmUnknowEntitySetShouldReturnNullEntitySetName()
         {
-            TypeContextWithEdmUnknowEntitySet.NavigationSourceName.Should().Be(null);
+            Assert.Null(TypeContextWithEdmUnknowEntitySet.NavigationSourceName);
         }
 
         [Fact]
         public void TypeContextWithEdmUnknowEntitySetShouldReturnEntitySetElementTypeName()
         {
-            TypeContextWithEdmUnknowEntitySet.NavigationSourceEntityTypeName.Should().Be("ns.MyCustomer");
+            Assert.Equal("ns.MyCustomer", TypeContextWithEdmUnknowEntitySet.NavigationSourceEntityTypeName);
         }
 
         [Fact]
         public void TypeContextWithEdmUnknowEntitySetShouldReturnExpectedEntityTypeName()
         {
-            TypeContextWithEdmUnknowEntitySet.ExpectedResourceTypeName.Should().Be("ns.MyVipCustomer");
+            Assert.Equal("ns.MyVipCustomer", TypeContextWithEdmUnknowEntitySet.ExpectedResourceTypeName);
         }
 
         [Fact]
         public void TypeContextWithEdmUnknowEntitySetShouldReturnFalseForIsMediaLinkEntry()
         {
-            TypeContextWithEdmUnknowEntitySet.IsMediaLinkEntry.Should().BeFalse();
+            Assert.False(TypeContextWithEdmUnknowEntitySet.IsMediaLinkEntry);
         }
         #endregion TypeContextWithEdmUnknowEntitySet
     }

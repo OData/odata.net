@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer
@@ -38,8 +37,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
             var responseStream = message.GetStream();
             responseStream.Position = 0;
             var responseString = new StreamReader(responseStream).ReadToEnd();
-            responseString.Should().Be("functionName({\"@odata.context\":\"http://stuff/$metadata#Edm.String\",\"value\":\"value\"})");
-            message.GetHeader("Content-Type").Should().StartWith("text/javascript");
+            Assert.Equal("functionName({\"@odata.context\":\"http://stuff/$metadata#Edm.String\",\"value\":\"value\"})", responseString);
+            Assert.StartsWith("text/javascript", message.GetHeader("Content-Type"));
         }
 
         /// <summary>
@@ -60,8 +59,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
             var responseStream = message.GetStream();
             responseStream.Position = 0;
             var responseString = new StreamReader(responseStream).ReadToEnd();
-            responseString.Should().Be("functionName(123)");
-            message.GetHeader("Content-Type").Should().StartWith("text/javascript");
+            Assert.Equal("functionName(123)", responseString);
+            Assert.StartsWith("text/javascript", message.GetHeader("Content-Type"));
         }
 
         /// <summary>
@@ -84,8 +83,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
             var responseStream = message.GetStream();
             responseStream.Position = 0;
             var responseString = new StreamReader(responseStream).ReadToEnd();
-            responseString.Should().Be("functionName({\"@odata.context\":\"http://stuff/$metadata#Edm.String\",\"value\":\"value\"})");
-            message.GetHeader("Content-Type").Should().StartWith("text/javascript");
+            Assert.Equal("functionName({\"@odata.context\":\"http://stuff/$metadata#Edm.String\",\"value\":\"value\"})", responseString);
+            Assert.StartsWith("text/javascript", message.GetHeader("Content-Type"));
         }
 
         [Fact]
@@ -106,8 +105,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
             var responseStream = message.GetStream();
             responseStream.Position = 0;
             var responseString = new StreamReader(responseStream, Encoding.GetEncoding("iso-8859-1")).ReadToEnd();
-            responseString.Should().Be("functionName({\"@odata.context\":\"http://stuff/$metadata#Edm.String\",\"value\":\"value\"})");
-            message.GetHeader("Content-Type").Should().StartWith("text/javascript");
+            Assert.Equal("functionName({\"@odata.context\":\"http://stuff/$metadata#Edm.String\",\"value\":\"value\"})", responseString);
+            Assert.StartsWith("text/javascript", message.GetHeader("Content-Type"));
         }
     }
 }

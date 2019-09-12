@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
@@ -51,7 +50,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             string payload = this.TestFinish();
-            payload.Should().Contain("\"@odata.context\":\"http://host/service/$metadata#Collection(MyNS.District)\"");
+            Assert.Contains("\"@odata.context\":\"http://host/service/$metadata#Collection(MyNS.District)\"", payload);
         }
 
         [Fact]
@@ -70,7 +69,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             string payload = this.TestFinish();
-            payload.Should().Contain("\"@odata.context\":\"http://host/service/$metadata#MyNS.District\"");
+            Assert.Contains("\"@odata.context\":\"http://host/service/$metadata#MyNS.District\"", payload);
         }
 
         [Fact]
@@ -97,7 +96,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             string payload = this.TestFinish();
-            payload.Should().Contain("\"@odata.context\":\"http://host/service/$metadata#Collection(MyNS.District)\"");
+            Assert.Contains("\"@odata.context\":\"http://host/service/$metadata#Collection(MyNS.District)\"", payload);
         }
 
         [Fact]
@@ -122,7 +121,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             string payload = this.TestFinish();
-            payload.Should().Contain("\"@odata.context\":\"http://host/service/$metadata#MyNS.District\"");
+            Assert.Contains("\"@odata.context\":\"http://host/service/$metadata#MyNS.District\"", payload);
         }
 
         #region Private Methods

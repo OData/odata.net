@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Xunit;
@@ -39,7 +38,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         null /*ODataPayloadValueConverter*/
                     }
                 );
-            nullValue.Should().Be(null);
+            Assert.Null(nullValue);
         }
 
         [Fact]
@@ -63,7 +62,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 object result = typeReaderUtils.GetMethod("GetPayloadTypeName", bindingFlags)
                     .Invoke(null, /*static method*/
                         pair.Key);
-                result.Should().Be(pair.Value);
+                Assert.Equal(pair.Value, result);
             }
         }
 
@@ -80,13 +79,12 @@ namespace Microsoft.OData.Tests.JsonLight
             }
             catch (TargetInvocationException e)
             {
-                e.InnerException.Should().BeOfType<ODataException>();
-                e.InnerException.Message.Should()
-                    .Be("An internal error 'ODataJsonLightReader_ReadResourceStart' occurred.");
+                Assert.IsType<ODataException>(e.InnerException);
+                Assert.Equal("An internal error 'ODataJsonLightReader_ReadResourceStart' occurred.", e.InnerException.Message);
                 return;
             }
 
-            exceptionThrown.Should().BeTrue("Exception is expected to be thrown and test execution should not reach here.");
+            Assert.True(exceptionThrown);
         }
     }
 }

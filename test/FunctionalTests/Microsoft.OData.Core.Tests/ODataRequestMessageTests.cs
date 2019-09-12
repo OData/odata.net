@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -23,10 +22,10 @@ namespace Microsoft.OData.Tests
 
             var simulatedRequestMessage = new InMemoryMessage();
             simulatedRequestMessage.SetHeader(headerName, headerValue);
-            
+
             var odataRequestMessage = new ODataRequestMessage(simulatedRequestMessage, false, false, -1);
 
-            odataRequestMessage.GetHeader(headerName).Should().Be(headerValue);
+            Assert.Equal(headerValue, odataRequestMessage.GetHeader(headerName));
         }
 
         [Fact]
@@ -38,11 +37,11 @@ namespace Microsoft.OData.Tests
 
             var simulatedRequestMessage = new InMemoryMessage();
             simulatedRequestMessage.SetHeader(headerName, headerValueBefore);
-            
+
             var odataRequestMessage = new ODataRequestMessage(simulatedRequestMessage, false, false, -1);
             simulatedRequestMessage.SetHeader(headerName, headerValueAfter);
-            
-            odataRequestMessage.GetHeader(headerName).Should().Be(headerValueAfter);
+
+            Assert.Equal(headerValueAfter, odataRequestMessage.GetHeader(headerName));
         }
 
         [Fact]
@@ -58,7 +57,7 @@ namespace Microsoft.OData.Tests
             var odataRequestMessage = new ODataRequestMessage(simulatedRequestMessage, true, false, -1);
             odataRequestMessage.SetHeader(headerName, headerValueAfter);
 
-            simulatedRequestMessage.GetHeader(headerName).Should().Be(headerValueAfter);
+            Assert.Equal(headerValueAfter, simulatedRequestMessage.GetHeader(headerName));
         }
 
         [Fact]
@@ -70,10 +69,10 @@ namespace Microsoft.OData.Tests
 
             var simulatedRequestMessage = new InMemoryMessage(); 
             simulatedRequestMessage.SetHeader(headerName, headerValueBefore);
-            
+
             var odataRequestMessage = new ODataRequestMessage(simulatedRequestMessage, false, false, -1);
             Action setHeader = (() => odataRequestMessage.SetHeader(headerName, headerValueAfter));
-            setHeader.ShouldThrow<ODataException>().WithMessage(Strings.ODataMessage_MustNotModifyMessage);
+            setHeader.Throws<ODataException>(Strings.ODataMessage_MustNotModifyMessage);
         }
 
         [Fact]
@@ -87,7 +86,7 @@ namespace Microsoft.OData.Tests
 
             var odataRequestMessage = new ODataRequestMessage(simulatedRequestMessage, false, false, -1);
 
-            odataRequestMessage.GetHeader(headerName).Should().Be(headerValue);
+            Assert.Equal(headerValue, odataRequestMessage.GetHeader(headerName));
         }
     }
 }

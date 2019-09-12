@@ -5,8 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Tests.JsonLight;
@@ -49,53 +47,53 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void NewODataStreamReferenceValueShouldHaveNullEditLink()
         {
-            this.testSubject.EditLink.Should().BeNull();
+            Assert.Null(this.testSubject.EditLink);
         }
 
         [Fact]
         public void NewODataStreamReferenceValueShouldHaveNullReadLink()
         {
-            this.testSubject.ReadLink.Should().BeNull();
+            Assert.Null(this.testSubject.ReadLink);
         }
 
         [Fact]
         public void NewODataStreamReferenceValueShouldHaveNullETag()
         {
-            this.testSubject.ETag.Should().BeNull();
+            Assert.Null(this.testSubject.ETag);
         }
 
         [Fact]
         public void NewODataStreamReferenceValueShouldHaveNullContentType()
         {
-            this.testSubject.ContentType.Should().BeNull();
+            Assert.Null(this.testSubject.ContentType);
         }
 
         [Fact]
         public void ShouldBeAbleToSetEditLinkToODataStreamReferenceValue()
         {
             this.testSubject.EditLink = EditLink;
-            this.testSubject.EditLink.Should().BeSameAs(EditLink);
+            Assert.Same(EditLink, this.testSubject.EditLink);
         }
 
         [Fact]
         public void ShouldBeAbleToSetReadLinkToODataStreamReferenceValue()
         {
             this.testSubject.ReadLink = ReadLink;
-            this.testSubject.ReadLink.Should().BeSameAs(ReadLink);
+            Assert.Same(ReadLink, this.testSubject.ReadLink);
         }
 
         [Fact]
         public void ShouldBeAbleToSetETagToODataStreamReferenceValue()
         {
             this.testSubject.ETag = "ETag";
-            this.testSubject.ETag.Should().Be("ETag");
+            Assert.Equal("ETag", this.testSubject.ETag);
         }
 
         [Fact]
         public void ShouldBeAbleToSetContentTypeToODataStreamReferenceValue()
         {
             this.testSubject.ContentType = "ContentType";
-            this.testSubject.ContentType.Should().Be("ContentType");
+            Assert.Equal("ContentType", this.testSubject.ContentType);
         }
 
         [Fact]
@@ -103,7 +101,7 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.EditLink = EditLink;
             this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
-            this.testSubject.EditLink.Should().BeSameAs(EditLink);
+            Assert.Same(EditLink, this.testSubject.EditLink);
         }
 
         [Fact]
@@ -111,7 +109,7 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.ReadLink = ReadLink;
             this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
-            this.testSubject.ReadLink.Should().BeSameAs(ReadLink);
+            Assert.Same(ReadLink, this.testSubject.ReadLink);
         }
 
         [Fact]
@@ -119,7 +117,7 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.ETag = "ETag";
             this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
-            this.testSubject.ETag.Should().Be("ETag");
+            Assert.Equal("ETag", this.testSubject.ETag);
         }
 
         [Fact]
@@ -127,49 +125,49 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.ContentType = "ContentType";
             this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
-            this.testSubject.ContentType.Should().Be("ContentType");
+            Assert.Equal("ContentType", this.testSubject.ContentType);
         }
 
         [Fact]
         public void GetMetadataBuilderShouldReturnCurrentBuilder()
         {
-            this.testSubject.GetMetadataBuilder().Should().BeNull();
+            Assert.Null(this.testSubject.GetMetadataBuilder());
             this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
-            this.testSubject.GetMetadataBuilder().Should().BeSameAs(ODataResourceMetadataBuilder.Null);
+            Assert.Same(ODataResourceMetadataBuilder.Null, this.testSubject.GetMetadataBuilder());
         }
 
         [Fact]
         public void ChangingMetadataBuilderShouldUpdateCalculatedEditLink()
         {
             this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataResource()), "propertyName");
-            this.testSubject.EditLink.OriginalString.Should().Be("http://service/ComputedStreamEditLink/propertyName");
+            Assert.Equal("http://service/ComputedStreamEditLink/propertyName", this.testSubject.EditLink.OriginalString);
             this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
-            this.testSubject.EditLink.Should().BeNull();
+            Assert.Null(this.testSubject.EditLink);
         }
 
         [Fact]
         public void ChangingMetadataBuilderShouldUpdateCalculatedReadLink()
         {
             this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataResource()), "propertyName");
-            this.testSubject.ReadLink.OriginalString.Should().Be("http://service/ComputedStreamReadLink/propertyName");
+            Assert.Equal("http://service/ComputedStreamReadLink/propertyName", this.testSubject.ReadLink.OriginalString);
             this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
-            this.testSubject.ReadLink.Should().BeNull();
+            Assert.Null(this.testSubject.ReadLink);
         }
 
         [Fact]
         public void SettingEditLinkToNullShouldOverrideEditLinkFromFullBuilder()
         {
-            this.streamWithFullBuilder.EditLink.OriginalString.Should().Be("http://service/Set(1)/ns.DerivedType/Stream");
+            Assert.Equal("http://service/Set(1)/ns.DerivedType/Stream", this.streamWithFullBuilder.EditLink.OriginalString);
             this.streamWithFullBuilder.EditLink = null;
-            this.streamWithFullBuilder.EditLink.Should().BeNull();
+            Assert.Null(this.streamWithFullBuilder.EditLink);
         }
 
         [Fact]
         public void SettingReadLinkToNullShouldOverrideReadLinkFromFullBuilder()
         {
-            this.streamWithFullBuilder.ReadLink.OriginalString.Should().Be("http://service/Set(1)/ns.DerivedType/Stream");
+            Assert.Equal("http://service/Set(1)/ns.DerivedType/Stream", this.streamWithFullBuilder.ReadLink.OriginalString);
             this.streamWithFullBuilder.ReadLink = null;
-            this.streamWithFullBuilder.ReadLink.Should().BeNull();
+            Assert.Null(this.streamWithFullBuilder.ReadLink);
         }
     }
 }

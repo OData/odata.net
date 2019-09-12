@@ -6,10 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -22,29 +20,31 @@ namespace Microsoft.OData.Tests.UriParser
         public void DefaultParameterAliasNodesShouldBeEmtpy()
         {
             var uriParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string>());
-            uriParser.ParameterAliasNodes.Count.Should().Be(0);
+            Assert.Empty(uriParser.ParameterAliasNodes);
         }
 
         [Fact]
         public void NullInputQueryOptionShouldThrow()
         {
             Action action = () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), null);
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("Value cannot be null."));
+
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.Contains("Value cannot be null.", exception.Message);
         }
 
         [Fact]
         public void EmptyQueryOptionDictionaryShouldWork()
         {
             var uriParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string>());
-            uriParser.ParseFilter().Should().BeNull();
-            uriParser.ParseSelectAndExpand().Should().BeNull();
-            uriParser.ParseOrderBy().Should().BeNull();
-            uriParser.ParseTop().Should().Be(null);
-            uriParser.ParseSkip().Should().Be(null);
-            uriParser.ParseIndex().Should().Be(null);
-            uriParser.ParseCount().Should().Be(null);
-            uriParser.ParseSearch().Should().BeNull();
-            uriParser.ParseCompute().Should().BeNull();
+            Assert.Null(uriParser.ParseFilter());
+            Assert.Null(uriParser.ParseSelectAndExpand());
+            Assert.Null(uriParser.ParseOrderBy());
+            Assert.Null(uriParser.ParseTop());
+            Assert.Null(uriParser.ParseSkip());
+            Assert.Null(uriParser.ParseIndex());
+            Assert.Null(uriParser.ParseCount());
+            Assert.Null(uriParser.ParseSearch());
+            Assert.Null(uriParser.ParseCompute());
         }
 
         [Fact]
@@ -65,22 +65,22 @@ namespace Microsoft.OData.Tests.UriParser
                 {"$unknow"  , ""},
             });
 
-            uriParser.ParseFilter().Should().BeNull();
+            Assert.Null(uriParser.ParseFilter());
             var results = uriParser.ParseSelectAndExpand();
-            results.AllSelected.Should().BeTrue();
-            results.SelectedItems.Should().HaveCount(0);
-            uriParser.ParseOrderBy().Should().BeNull();
-            uriParser.ParseCompute().Should().BeNull();
+            Assert.True(results.AllSelected);
+            Assert.Empty(results.SelectedItems);
+            Assert.Null(uriParser.ParseOrderBy());
+            Assert.Null(uriParser.ParseCompute());
             Action action = () => uriParser.ParseTop();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
+            action.Throws<ODataException>(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
             action = () => uriParser.ParseSkip();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidSkipQueryOptionValue(""));
+            action.Throws<ODataException>(Strings.SyntacticTree_InvalidSkipQueryOptionValue(""));
             action = () => uriParser.ParseIndex();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidIndexQueryOptionValue(""));
+            action.Throws<ODataException>(Strings.SyntacticTree_InvalidIndexQueryOptionValue(""));
             action = () => uriParser.ParseCount();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataUriParser_InvalidCount(""));
+            action.Throws<ODataException>(Strings.ODataUriParser_InvalidCount(""));
             action = () => uriParser.ParseSearch();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
+            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
         }
 
         [Fact]
@@ -101,15 +101,15 @@ namespace Microsoft.OData.Tests.UriParser
                 {"$unknow"  , null},
             });
 
-            uriParser.ParseFilter().Should().BeNull();
-            uriParser.ParseSelectAndExpand().Should().BeNull();
-            uriParser.ParseOrderBy().Should().BeNull();
-            uriParser.ParseTop().Should().Be(null);
-            uriParser.ParseSkip().Should().Be(null);
-            uriParser.ParseIndex().Should().Be(null);
-            uriParser.ParseCount().Should().Be(null);
-            uriParser.ParseSearch().Should().BeNull();
-            uriParser.ParseCompute().Should().BeNull();
+            Assert.Null(uriParser.ParseFilter());
+            Assert.Null(uriParser.ParseSelectAndExpand());
+            Assert.Null(uriParser.ParseOrderBy());
+            Assert.Null(uriParser.ParseTop());
+            Assert.Null(uriParser.ParseSkip());
+            Assert.Null(uriParser.ParseIndex());
+            Assert.Null(uriParser.ParseCount());
+            Assert.Null(uriParser.ParseSearch());
+            Assert.Null(uriParser.ParseCompute());
         }
     }
 }

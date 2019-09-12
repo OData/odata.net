@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.UriParser;
@@ -30,9 +29,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { BatchReferenceCallback = callback });
             IList<ODataPathSegment> segments = pathParser.ParsePath(new[] { "$0" });
             ODataPathSegment segment = segments.ToList().Single();
-            segment.Identifier.Should().Be("$0");
-            segment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
-            segment.TargetEdmType.Should().Be(HardCodedTestModel.GetPersonType());
+            Assert.Equal("$0", segment.Identifier);
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), segment.TargetEdmNavigationSource);
+            Assert.Same(HardCodedTestModel.GetPersonType(), segment.TargetEdmType);
         }
 
         [Fact]
@@ -52,13 +51,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string queryPortion;
 
             Action emptyString = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(string.Empty, out actualIdentifier, out queryPortion);
-            emptyString.ShouldThrow<ODataException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+            emptyString.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
 
             Action noIdentifier = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression("()", out actualIdentifier, out queryPortion);
-            noIdentifier.ShouldThrow<ODataException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+            noIdentifier.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
 
             Action noEndParen = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression("foo(", out actualIdentifier, out queryPortion);
-            noEndParen.ShouldThrow<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
+            noEndParen.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         #region $ref cases
@@ -73,84 +72,84 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void EntityReferenceToNonexistentPropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "foo", "$ref" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
         }
 
         [Fact]
         public void EntityReferenceToOpenPropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Paintings(1)", "foo", "$ref" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_EntityReferenceNotSupported("foo"));
+            parsePath.Throws<ODataException>(ErrorStrings.PathParser_EntityReferenceNotSupported("foo"));
         }
 
         [Fact]
         public void EntityReferenceToPrimitivePropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Name", "$ref" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("Name", UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("Name", UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void FurtherCompositionAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "$ref", "MyPeople" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void FurtherCompositionAfterEntityReferenceWithKeyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "MyPeople(2)", "$ref", "MyDog" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void FurtherCompositionAfterEntityCollectionReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "MyPeople", "$ref", "1" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void KeyAfterEntityReferenceWithKeyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "MyPeople(5)", "$ref", "1" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void KeyAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "$ref", "5" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void EntityReferenceAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "$ref", "MyPeople", "$ref" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void AnythingAfterCountAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "MyPeople", "$ref", "$count", "foo" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void EntityReferenceForOpenPropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Paintings(1)", "foo", "MyDog", "$ref" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PathParser_EntityReferenceNotSupported("MyDog"));
+            parsePath.Throws<ODataException>(ErrorStrings.PathParser_EntityReferenceNotSupported("MyDog"));
         }
 
         [Fact]
         public void EntityReferenceForActionShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Fully.Qualified.Namespace.Walk", "$ref" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.Walk"));
+            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.Walk"));
         }
 
         [Fact]
@@ -164,14 +163,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CountAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "MyPeople", "$ref", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void CountAfterEntityReferenceWithKeyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "MyPeople(5)", "$ref", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
         #endregion
 
@@ -179,14 +178,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParenthesesAfterCollectionPropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Nicknames()" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_SyntaxError);
+            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void ParenthesesAfterAnythingThatIsASingleResultShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Color()" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_SyntaxError);
+            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -200,17 +199,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NavigationInSingletonShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "Boss", "MyDog" });
-            path.Count.Should().Be(2);
+            Assert.Equal(2, path.Count);
             path[0].ShouldBeSingletonSegment(HardCodedTestModel.GetBossSingleton());
-            path[1].ShouldBeNavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp()).
-                And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
+            path[1].ShouldBeNavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp());
+            var navigationSegment = Assert.IsType<NavigationPropertySegment>(path[1]);
+            Assert.Same(HardCodedTestModel.GetDogsSet(), navigationSegment.NavigationSource);
         }
 
         [Fact]
         public void SingletonWithKeyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Boss(1)" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_SyntaxError);
+            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -218,7 +218,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "FindMyOwner(dogsName='fido')" });
             var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
-            parameter.As<OperationSegmentParameter>().Value.As<ConstantNode>().Value.Should().Be("fido");
+            var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
+            var node = Assert.IsType<ConstantNode>(segmentParameter.Value);
+            Assert.Equal("fido", node.Value);
         }
 
         [Fact]
@@ -226,7 +228,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "FindMyOwner(dogsName='000110011E0124221929')" });
             var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
-            parameter.As<OperationSegmentParameter>().Value.As<ConstantNode>().Value.Should().Be("000110011E0124221929");
+
+            var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
+            var node = Assert.IsType<ConstantNode>(segmentParameter.Value);
+            Assert.Equal("000110011E0124221929", node.Value);
         }
 
         #region Template cases without KeyAsSgment
@@ -235,7 +240,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IList<ODataPathSegment> path = this.templateParser.ParsePath(new[] { "FindMyOwner(dogsName='fido')" });
             var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
-            parameter.As<OperationSegmentParameter>().Value.As<ConstantNode>().Value.Should().Be("fido");
+
+            var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
+            var node = Assert.IsType<ConstantNode>(segmentParameter.Value);
+            Assert.Equal("fido", node.Value);
         }
 
         [Fact]
@@ -260,33 +268,43 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void KeyWithTemplateShouldWork()
         {
             IList<ODataPathSegment> path = this.templateParser.ParsePath(new[] { "Dogs({fido})", "MyPeople" });
-            var keySegment = path[1].As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path[1]);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{fido}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+            var uriExpression = Assert.IsType<UriTemplateExpression>(keypair.Value);
+            Assert.Equal("{fido}", uriExpression.LiteralText);
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            Assert.True(uriExpression.ExpectedType.IsEquivalentTo(edmTypeReference));
         }
 
         [Fact]
         public void NamedKeyWithTemplateShouldWork()
         {
             IList<ODataPathSegment> path = this.templateParser.ParsePath(new[] { "Dogs(ID={fido})", "MyPeople" });
-            var keySegment = path[1].As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path[1]);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{fido}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+            var uriExpression = Assert.IsType<UriTemplateExpression>(keypair.Value);
+            Assert.Equal("{fido}", uriExpression.LiteralText);
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            Assert.True(uriExpression.ExpectedType.IsEquivalentTo(edmTypeReference));
         }
 
         [Fact]
         public void ParseTemplateWithTypeCastShouldWork()
         {
             IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "Dogs(ID={fido})", "MyPeople", "Fully.Qualified.Namespace.Employee" });
-            var keySegment = path[1].As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path[1]);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{fido}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
 
-            var typeSegment = path[3].As<TypeSegment>();
-            typeSegment.Identifier.ShouldBeEquivalentTo("Fully.Qualified.Namespace.Employee");
+            var uriExpression = Assert.IsType<UriTemplateExpression>(keypair.Value);
+            Assert.Equal("{fido}", uriExpression.LiteralText);
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            Assert.True(uriExpression.ExpectedType.IsEquivalentTo(edmTypeReference));
+
+            var typeSegment = Assert.IsType<TypeSegment>(path[3]);
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.Identifier);
         }
         #endregion
 
@@ -295,22 +313,32 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void KeyAsSegmentWithTemplateShouldWork()
         {
             IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "Dogs", "{fido}", "MyPeople" });
-            var keySegment = path[1].As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path[1]);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{fido}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+            var uriExpression = Assert.IsType<UriTemplateExpression>(keypair.Value);
+            Assert.Equal("{fido}", uriExpression.LiteralText);
+
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            Assert.True(uriExpression.ExpectedType.IsEquivalentTo(edmTypeReference));
         }
 
         [Fact]
         public void ParseTemplateWithTypeCastWhenKeyAsSegmentShouldWork()
         {
             IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "Dogs", "{fido}", "MyPeople", "Fully.Qualified.Namespace.Employee" });
-            var keySegment = path[1].As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path[1]);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{fido}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
-            var typeSegment = path[3].As<TypeSegment>();
-            typeSegment.Identifier.ShouldBeEquivalentTo("Fully.Qualified.Namespace.Employee");
+            Assert.Equal("ID", keypair.Key);
+
+            var uriExpression = Assert.IsType<UriTemplateExpression>(keypair.Value);
+            Assert.Equal("{fido}", uriExpression.LiteralText);
+
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            Assert.True(uriExpression.ExpectedType.IsEquivalentTo(edmTypeReference));
+
+            var typeSegment = Assert.IsType<TypeSegment>(path[3]);
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.Identifier);
         }
 
         [Fact]
@@ -318,7 +346,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "FindMyOwner(dogsName='fido')" });
             var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
-            parameter.As<OperationSegmentParameter>().Value.As<ConstantNode>().Value.Should().Be("fido");
+            var node = Assert.IsType<ConstantNode>(Assert.IsType<OperationSegmentParameter>(parameter).Value);
+            Assert.Equal("fido", node.Value);
         }
 
         [Fact]
@@ -346,9 +375,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanByte(age=123)" });
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanByte());
-            var constantNode = path[2].As<OperationSegment>().Parameters.Single().Value.As<ConstantNode>();
-            constantNode.Value.Should().Be((byte)123);
-            constantNode.TypeReference.FullName().Should().Be("Edm.Byte");
+            var constantNode = Assert.IsType<ConstantNode>(Assert.IsType<OperationSegment>(path[2]).Parameters.Single().Value);
+            Assert.Equal((byte)123, constantNode.Value);
+            Assert.Equal("Edm.Byte", constantNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -356,9 +385,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanSByte(age=-128)" });
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanSByte());
-            var constantNode = path[2].As<OperationSegment>().Parameters.Single().Value.As<ConstantNode>();
-            constantNode.Value.Should().Be((sbyte)-128);
-            constantNode.TypeReference.FullName().Should().Be("Edm.SByte");
+            var constantNode = Assert.IsType<ConstantNode>(Assert.IsType<OperationSegment>(path[2]).Parameters.Single().Value);
+            Assert.Equal((sbyte)-128, constantNode.Value);
+            Assert.Equal("Edm.SByte", constantNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -366,9 +395,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanShort(age=12345)" });
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanShort());
-            var constantNode = path[2].As<OperationSegment>().Parameters.Single().Value.As<ConstantNode>();
-            constantNode.Value.Should().Be((short)12345);
-            constantNode.TypeReference.FullName().Should().Be("Edm.Int16");
+            var constantNode = Assert.IsType<ConstantNode>(Assert.IsType<OperationSegment>(path[2]).Parameters.Single().Value);
+            Assert.Equal((short)12345, constantNode.Value);
+            Assert.Equal("Edm.Int16", constantNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -376,7 +405,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // short.MaxValue + 1 = 32768
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanShort(age=32768)" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Int16"));
+            parsePath.Throws<ODataException>(ErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Int16"));
         }
 
         [Fact]
@@ -384,16 +413,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanSingle(age=123.456)" });
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanSingle());
-            var constantNode = path[2].As<OperationSegment>().Parameters.Single().Value.As<ConstantNode>();
-            constantNode.Value.Should().Be((float)123.456);
-            constantNode.TypeReference.FullName().Should().Be("Edm.Single");
+
+            var constantNode = Assert.IsType<ConstantNode>(Assert.IsType<OperationSegment>(path[2]).Parameters.Single().Value);
+            Assert.Equal((float)123.456, constantNode.Value);
+            Assert.Equal("Edm.Single", constantNode.TypeReference.FullName());
         }
 
         [Fact]
         public void TestDoubleArgumentOnSingleParameter()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanSingle(age=123.45678987)" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.MetadataBinder_CannotConvertToType("Edm.Double", "Edm.Single"));
+            parsePath.Throws<ODataException>(ErrorStrings.MetadataBinder_CannotConvertToType("Edm.Double", "Edm.Single"));
         }
         #endregion
 
@@ -408,114 +438,132 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ActionBoundToPrimitiveTypeShouldThrow()
         {
             Action bindToPrimitiveType = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Color", "ChangeOwner" });
-            bindToPrimitiveType.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("Color", "ChangeOwner"));
+            bindToPrimitiveType.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("Color", "ChangeOwner"));
         }
 
         [Fact]
         public void CannotCallFunctionInOpenTypeSpace()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Paintings(0)", "OpenProperty", "Fully.Qualified.Namespace.FindMyOwner(dogsName='fido')" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty("Fully.Qualified.Namespace.FindMyOwner"));
+            parsePath.Throws<ODataException>(ErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty("Fully.Qualified.Namespace.FindMyOwner"));
         }
 
         [Fact]
         public void UriParserExceptionDataTest()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "UNKNOW", "$ref" });
-            ODataUnrecognizedPathException ex = parsePath.ShouldThrow<ODataUnrecognizedPathException>().And;
-            ex.ParsedSegments.As<IEnumerable<ODataPathSegment>>().Count().Should().Be(2);
-            ex.CurrentSegment.Should().Be("UNKNOW");
-            ex.UnparsedSegments.As<IEnumerable<string>>().Count().Should().Be(1);
+            ODataUnrecognizedPathException ex = Assert.Throws<ODataUnrecognizedPathException>(parsePath);
+            Assert.Equal(2, ex.ParsedSegments.Count());
+            Assert.Equal("UNKNOW", ex.CurrentSegment);
+            Assert.Equal("$ref", Assert.Single(ex.UnparsedSegments));
         }
 
         [Fact]
         public void LiteralTextShouldNeverBeNullForConstantNodeOfInt()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetPet1(id=1)" });
-            path[0].As<OperationImportSegment>().Parameters.Single().Value.As<ConstantNode>().LiteralText.Should().Be("1");
+            var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
+            var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
+            Assert.Equal("1", node.LiteralText);
         }
 
         [Fact]
         public void LiteralTextShouldNeverBeNullForConstantNodeOfNullableInt()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetCoolestPersonWithStyle(styleID=1)" });
-            path[0].As<OperationImportSegment>().Parameters.Single().Value.As<ConstantNode>().LiteralText.Should().Be("1");
+
+            var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
+            var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
+            Assert.Equal("1", node.LiteralText);
         }
 
         [Fact]
         public void LiteralTextShouldNeverBeNullForConstantNodeOfDouble()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetPet3(id=1.5)" });
-            path[0].As<OperationImportSegment>().Parameters.Single().Value.As<ConstantNode>().LiteralText.Should().Be("1.5");
+
+            var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
+            var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
+            Assert.Equal("1.5", node.LiteralText);
         }
 
         [Fact]
         public void LiteralTextShouldNeverBeNullForConstantNodeOfBoolean()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetPet5(id=true)" });
-            path[0].As<OperationImportSegment>().Parameters.Single().Value.As<ConstantNode>().LiteralText.Should().Be("true");
+
+            var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
+            var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
+            Assert.Equal("true", node.LiteralText);
         }
 
         [Fact]
         public void LiteralTextShouldNeverBeNullForConstantNodeOfString()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "FindMyOwner(dogsName='myDog')" });
-            path[0].As<OperationImportSegment>().Parameters.Single().Value.As<ConstantNode>().LiteralText.Should().Be("'myDog'");
+
+            var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
+            var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
+            Assert.Equal("'myDog'", node.LiteralText);
         }
 
         [Fact]
         public void ParseEnumAsFunctionParameterShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "TryGetPetCount(colorPattern=Fully.Qualified.Namespace.ColorPattern'Red')" });
+
+            var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
+            var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'1'", node.LiteralText);
         }
 
         [Fact]
         public void ParseCountAfterSinglePrimitiveShouldFail()
         {
             Action parse = () => this.testSubject.ParsePath(new[] { "Lions(ID1=1,ID2=2)", "AngerLevel", "$count" });
-            parse.ShouldThrow<ODataUnrecognizedPathException>().WithMessage(Strings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("AngerLevel", "$count"));
+            parse.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("AngerLevel", "$count"));
         }
 
         [Fact]
         public void ParseCountAfterSingleEnumShouldFail()
         {
             Action parse = () => this.testSubject.ParsePath(new[] { "Pet2Set(1)", "PetColorPattern", "$count" });
-            parse.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'PetColorPattern' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parse.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'PetColorPattern' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterSingleComplexShouldFail()
         {
             Action parse = () => this.testSubject.ParsePath(new[] { "People(1)", "MyAddress", "$count" });
-            parse.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'MyAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parse.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'MyAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterSingleDerivedComplexShouldFail()
         {
             Action parse = () => this.testSubject.ParsePath(new[] { "People(1)", "MyAddress", "Fully.Qualified.Namespace.HomeAddress", "$count" });
-            parse.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.HomeAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parse.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.HomeAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterSingleEntityShouldFail()
         {
             Action parse = () => this.testSubject.ParsePath(new[] { "People(1)", "$count" });
-            parse.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'People' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parse.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'People' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterSingleDerivedEntityShouldFail()
         {
             Action parse = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.Employee", "$count" });
-            parse.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.Employee' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parse.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.Employee' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterCollectionOfPrimitiveShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "Lions(ID1=1,ID2=2)", "AttackDates", "$count" });
-            path.Count.Should().Be(4);
+            Assert.Equal(4, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetLionSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID1", 1), new KeyValuePair<string, object>("ID2", 2));
             path[2].ShouldBePropertySegment(HardCodedTestModel.GetLionAttackDatesProp());
@@ -526,7 +574,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterCollectionOfComplexShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "PreviousAddresses", "$count" });
-            path.Count.Should().Be(4);
+            Assert.Equal(4, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBePropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp());
@@ -537,7 +585,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterCollectionOfEnumShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "FavoriteColors", "$count" });
-            path.Count.Should().Be(4);
+            Assert.Equal(4, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBePropertySegment(HardCodedTestModel.GetPersonFavoriteColorsProp());
@@ -548,7 +596,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterCollectionOfEntityShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "MyFriendsDogs", "$count" });
-            path.Count.Should().Be(4);
+            Assert.Equal(4, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBeNavigationPropertySegment(HardCodedTestModel.GetPersonMyFriendsDogsProp());
@@ -559,7 +607,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterCollectionOfDerivedEntityShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "Dogs(1)", "MyPeople", "Fully.Qualified.Namespace.Employee", "$count" });
-            path.Count.Should().Be(5);
+            Assert.Equal(5, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetDogsSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
@@ -571,7 +619,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterUnboundFunctionReturnsCollectionOfDerivedEntityShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetCoolPeople(id=1,limit=1)", "Fully.Qualified.Namespace.Employee", "$count" });
-            path.Count.Should().Be(3);
+            Assert.Equal(3, path.Count);
             path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolPeople());
             path[1].ShouldBeTypeSegment(new EdmCollectionType(HardCodedTestModel.GetEmployeeTypeReference()));
             path[2].ShouldBeCountSegment();
@@ -581,7 +629,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterUnboundFunctionReturnsCollectionOfPrimitiveShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetSomeNumbers", "$count" });
-            path.Count.Should().Be(2);
+            Assert.Equal(2, path.Count);
             path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetSomeNumbers());
             path[1].ShouldBeCountSegment();
         }
@@ -590,7 +638,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterUnboundFunctionReturnsCollectionOfComplexShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetSomeAddresses", "$count" });
-            path.Count.Should().Be(2);
+            Assert.Equal(2, path.Count);
             path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetSomeAddresses());
             path[1].ShouldBeCountSegment();
         }
@@ -599,7 +647,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterUnboundFunctionReturnsCollectionOfEnumShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetSomeColors", "$count" });
-            path.Count.Should().Be(2);
+            Assert.Equal(2, path.Count);
             path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetSomeColors());
             path[1].ShouldBeCountSegment();
         }
@@ -608,7 +656,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterBoundFunctionReturnsCollectionOfPrimitiveShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetPriorAddresses", "$count" });
-            path.Count.Should().Be(4);
+            Assert.Equal(4, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForGetPriorAddresses());
@@ -619,7 +667,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterBoundFunctionReturnsCollectionOfComplexShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetPriorNumbers", "$count" });
-            path.Count.Should().Be(4);
+            Assert.Equal(4, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForGetPriorNumbers());
@@ -630,7 +678,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterBoundFunctionReturnsCollectionOfDerivedEntityShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetHotPeople(limit=1)", "Fully.Qualified.Namespace.Employee", "$count" });
-            path.Count.Should().Be(5);
+            Assert.Equal(5, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForGetHotPeople());
@@ -642,7 +690,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterBoundFunctionReturnsCollectionOfEnumShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetFavoriteColors", "$count" });
-            path.Count.Should().Be(4);
+            Assert.Equal(4, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForGetFavoriteColors());
@@ -653,70 +701,70 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterUnboundFunctionReturnsSinglePrimitiveShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "GetSomeNumber", "$count" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("GetSomeNumber", "$count"));
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("GetSomeNumber", "$count"));
         }
 
         [Fact]
         public void ParseCountAfterUnboundFunctionReturnsSingleComplexShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "GetSomeAddress", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'GetSomeAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'GetSomeAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterUnboundFunctionReturnsSingleDerivedComplexShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "GetSomeAddress", "Fully.Qualified.Namespace.HomeAddress", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.HomeAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.HomeAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterUnboundFunctionReturnsSingleEnumShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "GetSomeColor", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'GetSomeColor' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'GetSomeColor' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterUnboundFunctionReturnsSingleEntityShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "GetCoolestPerson", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'GetCoolestPerson' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'GetCoolestPerson' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterUnboundFunctionReturnsSingleDerivedEntityShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "GetCoolestPerson", "Fully.Qualified.Namespace.Employee", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.Employee' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.Employee' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterBoundFunctionReturnsSinglePrimitiveShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.HasJob", "$count" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.HasJob"));
+            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.HasJob"));
         }
 
         [Fact]
         public void ParseCountAfterBoundFunctionReturnsSingleComplexShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetPriorAddress", "$count" });
-            parsePath.ShouldThrow<ODataException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.GetPriorAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.GetPriorAddress' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterBoundFunctionReturnsSingleEnumShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetFavoriteColor", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.GetFavoriteColor' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.GetFavoriteColor' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterBoundFunctionReturnsSingleEntityShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetMyDog", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.GetMyDog' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'Fully.Qualified.Namespace.GetMyDog' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
@@ -724,28 +772,28 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var point = GeographyPoint.Create(1, 2);
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)", "$count" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.GetNearbyPriorAddresses"));
+            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.GetNearbyPriorAddresses"));
         }
 
         [Fact]
         public void ParseCountAfterActionShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Fully.Qualified.Namespace.Walk", "$count" });
-            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.Walk"));
+            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.Walk"));
         }
 
         [Fact]
         public void ParseCountAfterSingletonShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Boss", "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid. $count cannot be applied to the segment 'Boss' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid. $count cannot be applied to the segment 'Boss' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
         [Fact]
         public void ParseCountAfterServiceRootShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "$count" });
-            parsePath.ShouldThrow<ODataUnrecognizedPathException>().WithMessage("The request URI is not valid, the segment $count cannot be applied to the root of the service.");
+            parsePath.Throws<ODataUnrecognizedPathException>("The request URI is not valid, the segment $count cannot be applied to the root of the service.");
         }
 
         [Fact]
@@ -753,7 +801,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetFullName(nickname='abc')" });
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForGetFullName());
-            path[2].As<OperationSegment>().Parameters.Single().As<OperationSegmentParameter>().Value.As<ConvertNode>().Source.As<ConstantNode>().Value.Should().Be("abc");
+
+            var parameterValue = Assert.IsType<OperationSegmentParameter>(Assert.Single(Assert.IsType<OperationSegment>(path[2]).Parameters)).Value;
+            var node = Assert.IsType<ConstantNode>(Assert.IsType<ConvertNode>(parameterValue).Source);
+            Assert.Equal("abc", node.Value);
         }
 
         private static void ExtractSegmentIdentifierAndParenthesisExpression(string segment, string expectedIdentifier, string expectedQueryPortion)
@@ -761,8 +812,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string actualIdentifier;
             string queryPortion;
             ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(segment, out actualIdentifier, out queryPortion);
-            actualIdentifier.Should().Be(expectedIdentifier);
-            queryPortion.Should().Be(expectedQueryPortion);
+            Assert.Equal(expectedIdentifier, actualIdentifier);
+            Assert.Equal(expectedQueryPortion, queryPortion);
         }
     }
 }

@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -104,55 +103,54 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
-            this.writerOutput.Value.Should()
-                .NotContain("DeclaredInt16@odata.type")
-                .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
-                .And.Contain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
-                .And.Contain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
+            Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
+            Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
+            Assert.Contains("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
+            Assert.Contains("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightFullMetadata, null);
-            this.writerOutput.Value.Should()
-                .Contain("DeclaredInt16@odata.type")
-                .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
-                .And.Contain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
-                .And.Contain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
+
+            Assert.Contains("DeclaredInt16@odata.type", this.writerOutput.Value);
+            Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
+            Assert.Contains("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
+            Assert.Contains("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
-            this.writerOutput.Value.Should()
-                .NotContain("DeclaredInt16@odata.type")
-                .And.NotContain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
-                .And.NotContain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
-                .And.NotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
+
+            Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
+            Assert.DoesNotContain("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
+            Assert.DoesNotContain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
+            Assert.DoesNotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
-            this.writerOutput.Value.Should()
-                .NotContain("DeclaredInt16@odata.type")
-                .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
-                .And.Contain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
-                .And.Contain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
+
+            Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
+            Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
+            Assert.Contains("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
+            Assert.Contains("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
-            this.writerOutput.Value.Should()
-                .NotContain("DeclaredInt16@odata.type")
-                .And.NotContain("UndeclaredDecimal@odata.type")
-                .And.NotContain("DerivedPrimitive@odata.type")
-                .And.NotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
+
+            Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
+            Assert.DoesNotContain("UndeclaredDecimal@odata.type", this.writerOutput.Value);
+            Assert.DoesNotContain("DerivedPrimitive@odata.type", this.writerOutput.Value);
+            Assert.DoesNotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
 
         [Fact]
@@ -160,22 +158,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
             this.settings.JsonPCallback = "callback";
-            this.writerOutput.Value.Should()
-                .NotContain("DeclaredInt16@odata.type")
-                .And.NotContain("UndeclaredDecimal@odata.type")
-                .And.NotContain("DerivedPrimitive@odata.type")
-                .And.NotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
+
+            Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
+            Assert.DoesNotContain("UndeclaredDecimal@odata.type", this.writerOutput.Value);
+            Assert.DoesNotContain("DerivedPrimitive@odata.type", this.writerOutput.Value);
+            Assert.DoesNotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightFullMetadata, null);
-            this.writerOutput.Value.Should()
-                .Contain("DeclaredInt16@odata.type\":\"#Int16\"")
-                .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
-                .And.Contain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
-                .And.Contain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
+
+            Assert.Contains("DeclaredInt16@odata.type", this.writerOutput.Value);
+            Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
+            Assert.Contains("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
+            Assert.Contains("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
     }
 }

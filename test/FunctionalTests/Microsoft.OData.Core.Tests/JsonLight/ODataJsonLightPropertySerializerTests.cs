@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -280,14 +279,14 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void DeclaredPrimitivePropertyWithNoSerializationTypeNameAnnotationShouldNotWriteTypeName()
         {
-            this.SerializeProperty(this.entityType, this.declaredProperty).Should().NotContain("@odata.type");
+            Assert.DoesNotContain("@odata.type", this.SerializeProperty(this.entityType, this.declaredProperty));
         }
 
         [Fact]
         public void DeclaredPrimitivePropertyOfDerivedTypeShouldWriteTypeNameFromValue()
         {
             // If the type of the actual value is more derived than the property type declared in metadata, we write out the more derived type name.
-            this.SerializeProperty(this.entityType, this.declaredGeometryProperty).Should().Contain("@odata.type\":\"#GeometryPoint\"");
+            Assert.Contains("@odata.type\":\"#GeometryPoint\"", this.SerializeProperty(this.entityType, this.declaredGeometryProperty));
         }
 
         [Fact]
@@ -336,13 +335,13 @@ namespace Microsoft.OData.Tests.JsonLight
         private void UndeclaredPropertyShouldNotWriteTypeName(object value)
         {
             var property = new ODataProperty { Name = "UndeclaredProperty", Value = value };
-            this.SerializeProperty(this.entityType, property).Should().NotContain("@odata.type");
+            Assert.DoesNotContain("@odata.type", this.SerializeProperty(this.entityType, property));
         }
 
         private void UndeclaredPropertyShouldWriteTypeName(object value, string typeName)
         {
             var property = new ODataProperty { Name = "UndeclaredProperty", Value = value };
-            this.SerializeProperty(this.entityType, property).Should().Contain(string.Format("@odata.type\":\"#{0}\"", typeName));
+            Assert.Contains(string.Format("@odata.type\":\"#{0}\"", typeName), this.SerializeProperty(this.entityType, property));
         }
         #endregion Default type name serialization behavior for primitive values
 
@@ -351,28 +350,28 @@ namespace Microsoft.OData.Tests.JsonLight
         public void DeclaredPrimitivePropertyWithSerializationTypeNameAnnotationShouldWriteTypeNameFromAnnotation()
         {
             this.declaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation("MyArbitraryTypeName" );
-            this.SerializeProperty(this.entityType, this.declaredProperty).Should().Contain("@odata.type\":\"#MyArbitraryTypeName\"");
+            Assert.Contains("@odata.type\":\"#MyArbitraryTypeName\"", this.SerializeProperty(this.entityType, this.declaredProperty));
         }
 
         [Fact]
         public void DeclaredPrimitivePropertyWithNullSerializationTypeNameAnnotationShouldNotWriteTypeName()
         {
             this.declaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation();
-            this.SerializeProperty(this.entityType, this.declaredProperty).Should().NotContain("@odata.type");
+            Assert.DoesNotContain("@odata.type", this.SerializeProperty(this.entityType, this.declaredProperty));
         }
 
         [Fact]
         public void UndeclaredPrimitivePropertyWithSerializationTypeNameAnnotationShouldWriteTypeNameFromAnnotation()
         {
             this.undeclaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation("MyArbitraryTypeName");
-            this.SerializeProperty(this.entityType, this.undeclaredProperty).Should().Contain("@odata.type\":\"#MyArbitraryTypeName\"");
+            Assert.Contains("@odata.type\":\"#MyArbitraryTypeName\"", this.SerializeProperty(this.entityType, this.undeclaredProperty));
         }
 
         [Fact]
         public void UndeclaredPrimitivePropertyWithNullSerializationTypeNameAnnotationShouldNotWriteTypeName()
         {
             this.undeclaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation();
-            this.SerializeProperty(this.entityType, this.undeclaredProperty).Should().NotContain("@odata.type");
+            Assert.DoesNotContain("@odata.type", this.SerializeProperty(this.entityType, this.undeclaredProperty));
         }
         #endregion SerializationTypeNameAnnotation on primitive values
 
@@ -380,37 +379,41 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void UndeclaredSingleTypePropertyWithInfinityValueShouldWriteInfWithCorrectTypeName()
         {
-            this.SerializeProperty(this.entityType, new ODataProperty { Name = "UndeclaredSingleProperty", Value = Single.PositiveInfinity })
-                .Should().Be("{\"UndeclaredSingleProperty@odata.type\":\"#Single\",\"UndeclaredSingleProperty\":\"INF\"}");
-            this.SerializeProperty(this.entityType, new ODataProperty { Name = "UndeclaredSingleProperty", Value = Single.NegativeInfinity })
-                .Should().Be("{\"UndeclaredSingleProperty@odata.type\":\"#Single\",\"UndeclaredSingleProperty\":\"-INF\"}");
+            Assert.Equal("{\"UndeclaredSingleProperty@odata.type\":\"#Single\",\"UndeclaredSingleProperty\":\"INF\"}",
+                this.SerializeProperty(this.entityType, new ODataProperty { Name = "UndeclaredSingleProperty", Value = Single.PositiveInfinity }));
+
+            Assert.Equal("{\"UndeclaredSingleProperty@odata.type\":\"#Single\",\"UndeclaredSingleProperty\":\"-INF\"}",
+                this.SerializeProperty(this.entityType, new ODataProperty { Name = "UndeclaredSingleProperty", Value = Single.NegativeInfinity }));
         }
 
         [Fact]
         public void UndeclaredDoubleTypePropertyOfInfinityValueShouldWriteInfWithCorrectTypeName()
         {
-            this.SerializeProperty(this.entityType, new ODataProperty { Name = "UndeclaredDoubleProperty", Value = Double.PositiveInfinity })
-                .Should().Be("{\"UndeclaredDoubleProperty@odata.type\":\"#Double\",\"UndeclaredDoubleProperty\":\"INF\"}");
-            this.SerializeProperty(this.entityType, new ODataProperty { Name = "UndeclaredDoubleProperty", Value = Double.NegativeInfinity })
-                .Should().Be("{\"UndeclaredDoubleProperty@odata.type\":\"#Double\",\"UndeclaredDoubleProperty\":\"-INF\"}");
+            Assert.Equal("{\"UndeclaredDoubleProperty@odata.type\":\"#Double\",\"UndeclaredDoubleProperty\":\"INF\"}",
+                this.SerializeProperty(this.entityType, new ODataProperty { Name = "UndeclaredDoubleProperty", Value = Double.PositiveInfinity }));
+
+            Assert.Equal("{\"UndeclaredDoubleProperty@odata.type\":\"#Double\",\"UndeclaredDoubleProperty\":\"-INF\"}",
+                this.SerializeProperty(this.entityType, new ODataProperty { Name = "UndeclaredDoubleProperty", Value = Double.NegativeInfinity }));
         }
 
         [Fact]
         public void DeclaredSingleTypePropertyWithInfinityValueShouldWriteInf()
         {
-            this.SerializeProperty(this.entityType, new ODataProperty { Name = "DeclaredSingleProperty", Value = Single.PositiveInfinity })
-                .Should().Be("{\"DeclaredSingleProperty\":\"INF\"}");
-            this.SerializeProperty(this.entityType, new ODataProperty { Name = "DeclaredSingleProperty", Value = Single.NegativeInfinity })
-                .Should().Be("{\"DeclaredSingleProperty\":\"-INF\"}");
+            Assert.Equal("{\"DeclaredSingleProperty\":\"INF\"}",
+                this.SerializeProperty(this.entityType, new ODataProperty { Name = "DeclaredSingleProperty", Value = Single.PositiveInfinity }));
+
+            Assert.Equal("{\"DeclaredSingleProperty\":\"-INF\"}",
+                this.SerializeProperty(this.entityType, new ODataProperty { Name = "DeclaredSingleProperty", Value = Single.NegativeInfinity }));
         }
 
         [Fact]
         public void DeclaredDoubleTypePropertyWithInfinityValueShouldWriteInf()
         {
-            this.SerializeProperty(this.entityType, new ODataProperty { Name = "DeclaredDoubleProperty", Value = Double.PositiveInfinity })
-                .Should().Be("{\"DeclaredDoubleProperty\":\"INF\"}");
-            this.SerializeProperty(this.entityType, new ODataProperty { Name = "DeclaredDoubleProperty", Value = Double.NegativeInfinity })
-                .Should().Be("{\"DeclaredDoubleProperty\":\"-INF\"}");
+            Assert.Equal("{\"DeclaredDoubleProperty\":\"INF\"}",
+                this.SerializeProperty(this.entityType, new ODataProperty { Name = "DeclaredDoubleProperty", Value = Double.PositiveInfinity }));
+
+            Assert.Equal("{\"DeclaredDoubleProperty\":\"-INF\"}",
+                this.SerializeProperty(this.entityType, new ODataProperty { Name = "DeclaredDoubleProperty", Value = Double.NegativeInfinity }));
         }
         #endregion float point infinity value tests
 
@@ -419,13 +422,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void WritingTypeDefinitionOfInt32PropertyShouldWorkJsonLight()
         {
-            this.SerializeProperty(this.entityType, this.declaredPropertyMyInt32).Should().Contain("\"MyInt32Property\":12345");
+            Assert.Contains("\"MyInt32Property\":12345", this.SerializeProperty(this.entityType, this.declaredPropertyMyInt32));
         }
 
         [Fact]
         public void WritingTypeDefinitionOfStringPropertyShouldWorkJsonLight()
         {
-            this.SerializeProperty(this.entityType, this.declaredPropertyMyString).Should().Contain("\"MyStringProperty\":\"abcde\"");
+            Assert.Contains("\"MyStringProperty\":\"abcde\"", this.SerializeProperty(this.entityType, this.declaredPropertyMyString));
         }
 
         #endregion
@@ -434,13 +437,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void WritingTimeOfDayPropertyShouldWorkJsonLight()
         {
-            this.SerializeProperty(this.entityType, this.declaredPropertyTimeOfDay).Should().Contain("\"TimeOfDayProperty\":\"01:30:05.1230000\"");
+            Assert.Contains("\"TimeOfDayProperty\":\"01:30:05.1230000\"", this.SerializeProperty(this.entityType, this.declaredPropertyTimeOfDay));
         }
 
         [Fact]
         public void WritingDatePropertyShouldWorkJsonLight()
         {
-            this.SerializeProperty(this.entityType, this.declaredPropertyDate).Should().Contain("\"DateProperty\":\"2014-09-17\"");
+            Assert.Contains("\"DateProperty\":\"2014-09-17\"", this.SerializeProperty(this.entityType, this.declaredPropertyDate));
         }
         #endregion
 
@@ -487,13 +490,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void WritingPropertyInEntryShouldWriteInstanceAnnotation()
         {
-            this.SerializeProperty(null, this.declaredPropertyCountryRegionWithInstanceAnnotation).Should().Contain("\"CountryRegion@Is.ReadOnly\":true");
+            Assert.Contains("\"CountryRegion@Is.ReadOnly\":true", this.SerializeProperty(null, this.declaredPropertyCountryRegionWithInstanceAnnotation));
         }
 
         [Fact]
         public void WritingPropertyInEntryShouldWriteInstanceAnnotations()
         {
-            this.SerializeProperty(null, this.declaredPropertyMyInt32WithInstanceAnnotations).Should().Contain("\"MyInt32Property@Is.AutoComputable\":true,\"MyInt32Property@Is.ReadOnly\":false");
+            Assert.Contains("\"MyInt32Property@Is.AutoComputable\":true,\"MyInt32Property@Is.ReadOnly\":false", this.SerializeProperty(null, this.declaredPropertyMyInt32WithInstanceAnnotations));
         }
 
         #endregion
@@ -502,13 +505,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void WritingDeclaredPropertyInOpenComplexTypeShouldWorkJsonLight()
         {
-            this.SerializeProperty(this.openAddressType, this.declaredPropertyCountryRegion).Should().Contain("\"CountryRegion\":\"China\"");
+            Assert.Contains("\"CountryRegion\":\"China\"", this.SerializeProperty(this.openAddressType, this.declaredPropertyCountryRegion));
         }
 
         [Fact]
         public void WritingDynamicPropertyInOpenComplexTypeShouldWorkJsonLight()
         {
-            this.SerializeProperty(this.openAddressType, this.undeclaredPropertyCity).Should().Contain("\"City\":\"Shanghai\"");
+            Assert.Contains("\"City\":\"Shanghai\"", this.SerializeProperty(this.openAddressType, this.undeclaredPropertyCity));
         }
         #endregion Serializing declared and dynamic properties in open ComplexType
 

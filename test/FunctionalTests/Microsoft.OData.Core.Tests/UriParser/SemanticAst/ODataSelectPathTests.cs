@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
@@ -19,21 +18,21 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void SelectPathShouldNotAllowCountSegment()
         {
             Action buildWithCountSegment = () => new ODataSelectPath(CountSegment.Instance);
-            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.UriParser.CountSegment"));
+            buildWithCountSegment.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("CountSegment"));
         }
 
         [Fact]
         public void SelectPathShouldNotAllowValueSegment()
         {
             Action buildWithCountSegment = () => new ODataSelectPath(new ValueSegment(ModelBuildingHelpers.BuildValidEntityType()));
-            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.UriParser.ValueSegment"));
+            buildWithCountSegment.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("ValueSegment"));
         }
 
         [Fact]
         public void SelectPathShouldAllowMultipleDifferentSegments()
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null), new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null) };
-            new ODataSelectPath(typeSegments).Should().ContainExactly(typeSegments.ToArray());
+            new ODataSelectPath(typeSegments).ContainExactly(typeSegments.ToArray());
         }
 
         [Fact]
@@ -41,7 +40,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null) };
             Action createWithTypeAsLastSegment = () => new ODataSelectPath(typeSegments);
-            createWithTypeAsLastSegment.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataSelectPath_CannotOnlyHaveTypeSegment);
+            createWithTypeAsLastSegment.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_CannotOnlyHaveTypeSegment);
         }
 
         [Fact]
@@ -49,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null), new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null), new PropertySegment(HardCodedTestModel.GetDogColorProp()) };
             Action createWithInteriorNavProp = () => new ODataSelectPath(typeSegments);
-            createWithInteriorNavProp.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment);
+            createWithInteriorNavProp.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment);
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null), new OperationSegment(HardCodedTestModel.GetFunctionForGetCoolPeople(), HardCodedTestModel.GetPeopleSet()), new PropertySegment(HardCodedTestModel.GetDogColorProp()) };
             Action createWithInteriorNavProp = () => new ODataSelectPath(typeSegments);
-            createWithInteriorNavProp.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
+            createWithInteriorNavProp.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
         }
 
         [Fact]
@@ -65,7 +64,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new OperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolestPerson(), HardCodedTestModel.GetPeopleSet())};
             Action createWithInteriorNavProp = () => new ODataSelectPath(typeSegments);
-            createWithInteriorNavProp.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType(typeof(OperationImportSegment).Name));
+            createWithInteriorNavProp.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType(typeof(OperationImportSegment).Name));
         }
     }
 }

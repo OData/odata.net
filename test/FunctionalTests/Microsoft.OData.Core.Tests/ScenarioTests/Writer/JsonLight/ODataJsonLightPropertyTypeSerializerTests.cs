@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -47,203 +46,203 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         public void ShouldWriteODataTypeForPrimitiveTypeBinary()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new byte[] { 1, 2, 4 } });
-            result.Should().Contain("@odata.type\":\"#Binary");
+            Assert.Contains("@odata.type\":\"#Binary", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeBinary_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new byte[] { 1, 2, 4 } }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"Binary");
+            Assert.Contains("@type\":\"Binary", result);
         }
 
         [Fact]
         public void ShouldNotWriteODataTypeForPrimitiveTypeBoolean()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = true });
-            result.Should().NotContain("@odata.type");
+            Assert.DoesNotContain("@odata.type", result);
         }
 
         [Fact]
         public void ShouldNotWriteODataTypeForPrimitiveTypeBoolean_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = true }, ODataVersion.V401);
-            result.Should().NotContain("@type");
+            Assert.DoesNotContain("@type", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeByte()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Byte.Parse("12") });
-            result.Should().Contain("@odata.type\":\"#Byte");
+            Assert.Contains("@odata.type\":\"#Byte", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeByte_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Byte.Parse("12") }, ODataVersion.V401);
-            result.Should().Contain("type\":\"Byte");
+            Assert.Contains("type\":\"Byte", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeDate()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new Date(2014, 8, 8) });
-            result.Should().Contain("@odata.type\":\"#Date");
+            Assert.Contains("@odata.type\":\"#Date", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeDate_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new Date(2014, 8, 8) }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"Date");
+            Assert.Contains("@type\":\"Date", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeDateTimeOffset()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new DateTimeOffset(2013, 11, 28, 12, 12, 12, TimeSpan.Zero) });
-            result.Should().Contain("@odata.type\":\"#DateTimeOffset");
+            Assert.Contains("@odata.type\":\"#DateTimeOffset", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeDateTimeOffset_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new DateTimeOffset(2013, 11, 28, 12, 12, 12, TimeSpan.Zero) }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"DateTimeOffset");
+            Assert.Contains("@type\":\"DateTimeOffset", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeDecimal()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Decimal.Parse("111.100") });
-            result.Should().Contain("@odata.type\":\"#Decimal");
+            Assert.Contains("@odata.type\":\"#Decimal", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeDecimal_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Decimal.Parse("111.100") }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"Decimal");
+            Assert.Contains("@type\":\"Decimal", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeNanDouble()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Double.NaN });
-            result.Should().Contain("@odata.type\":\"#Double");
+            Assert.Contains("@odata.type\":\"#Double", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeInfiniteDouble()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Double.NegativeInfinity });
-            result.Should().Contain("@odata.type\":\"#Double");
+            Assert.Contains("@odata.type\":\"#Double", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeInfiniteDouble_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Double.NegativeInfinity }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"Double");
+            Assert.Contains("@type\":\"Double", result);
         }
 
         [Fact]
         public void ShouldNotWriteODataTypeForPrimitiveTypeNormalDouble()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Double.Parse("111.11") });
-            result.Should().NotContain("@odata.type");
+            Assert.DoesNotContain("@odata.type", result);
         }
 
         [Fact]
         public void ShouldNotWriteODataTypeForPrimitiveTypeNormalDouble_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Double.Parse("111.11") }, ODataVersion.V401);
-            result.Should().NotContain("@type");
+            Assert.DoesNotContain("@type", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeGuid()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Guid.Empty });
-            result.Should().Contain("@odata.type\":\"#Guid");
+            Assert.Contains("@odata.type\":\"#Guid", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeGuid_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Guid.Empty }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"Guid");
+            Assert.Contains("@type\":\"Guid", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeInt16()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int16.Parse("16") });
-            result.Should().Contain("@odata.type\":\"#Int16");
+            Assert.Contains("@odata.type\":\"#Int16", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeInt16_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int16.Parse("16") }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"Int16");
+            Assert.Contains("@type\":\"Int16", result);
         }
 
         [Fact]
         public void ShouldNotWriteODataTypeForPrimitiveTypeInt32()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int32.Parse("32") });
-            result.Should().NotContain("@odata.type");
+            Assert.DoesNotContain("@odata.type", result);
         }
 
         [Fact]
         public void ShouldNotWriteODataTypeForPrimitiveTypeInt32_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int32.Parse("32") }, ODataVersion.V401);
-            result.Should().NotContain("@type");
+            Assert.DoesNotContain("@type", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeInt64()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int64.Parse("64") });
-            result.Should().Contain("@odata.type\":\"#Int64");
+            Assert.Contains("@odata.type\":\"#Int64", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeInt64_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int64.Parse("64") }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"Int64");
+            Assert.Contains("@type\":\"Int64", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeSByte()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = SByte.Parse("1") });
-            result.Should().Contain("@odata.type\":\"#SByte");
+            Assert.Contains("@odata.type\":\"#SByte", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeSByte_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = SByte.Parse("1") }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"SByte");
+            Assert.Contains("@type\":\"SByte", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeTimeOfDay()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new TimeOfDay(23, 59, 59, 0) });
-            result.Should().Contain("@odata.type\":\"#TimeOfDay");
+            Assert.Contains("@odata.type\":\"#TimeOfDay", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeTimeOfDay_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new TimeOfDay(23, 59, 59, 0) }, ODataVersion.V401);
-            result.Should().Contain("@type\":\"TimeOfDay");
+            Assert.Contains("@type\":\"TimeOfDay", result);
         }
 
         [Fact]
@@ -297,7 +296,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             foreach (var testCase in testCases)
             {
                 string result = this.SerializeProperty(testCase.Value);
-                result.Should().Contain(testCase.Expect);
+                Assert.Contains(testCase.Expect, result);
             }
         }
 
@@ -352,7 +351,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             foreach (var testCase in testCases)
             {
                 string result = this.SerializeProperty(testCase.Value);
-                result.Should().Contain(testCase.Expect);
+                Assert.Contains(testCase.Expect, result);
             }
         }
 
@@ -429,7 +428,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "MyProperty", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation(testCase.InstanceName, testCase.CollectionValue));
                 string result = this.WriteODataEntry(entryToWrite);
-                result.Should().Contain(testCase.Expect);
+                Assert.Contains(testCase.Expect, result);
             }
         }
 
