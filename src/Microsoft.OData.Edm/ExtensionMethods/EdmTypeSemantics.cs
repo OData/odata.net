@@ -113,11 +113,11 @@ namespace Microsoft.OData.Edm
         public static bool IsStructured(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            switch (type.TypeKind())
+
+            EdmTypeKind kind = type.TypeKind();
+            if (kind == EdmTypeKind.Entity || kind == EdmTypeKind.Complex)
             {
-                case EdmTypeKind.Entity:
-                case EdmTypeKind.Complex:
-                    return true;
+                return true;
             }
 
             return false;
@@ -130,11 +130,9 @@ namespace Microsoft.OData.Edm
         /// <returns>This kind refers to a structured type.</returns>
         public static bool IsStructured(this EdmTypeKind typeKind)
         {
-            switch (typeKind)
+            if (typeKind == EdmTypeKind.Entity || typeKind == EdmTypeKind.Complex)
             {
-                case EdmTypeKind.Entity:
-                case EdmTypeKind.Complex:
-                    return true;
+                return true;
             }
 
             return false;
