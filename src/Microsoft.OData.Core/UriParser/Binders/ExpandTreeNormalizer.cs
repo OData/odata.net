@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Translator from the old expand syntax tree to the new Expand Option syntax tree
     /// </summary>
-    internal sealed class ExpandTreeNormalizer
+    internal static class ExpandTreeNormalizer
     {
         /// <summary>
         /// Normalize an expand syntax tree into the new ExpandOption syntax.

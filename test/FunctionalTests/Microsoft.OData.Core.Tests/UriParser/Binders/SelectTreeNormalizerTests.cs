@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.UriParser;
@@ -72,7 +73,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
-        public void CombineTermsThrowsForMultipleCountOptions()
+        public void NormalizeSelectTreeThrowsForMultipleTermsWithSameSelectPath()
         {
             // Arrange: $select=1($count=true), 1($count=false)
             List<SelectTermToken> selectTerms = new List<SelectTermToken>();
@@ -85,118 +86,33 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             SelectToken select = new SelectToken(selectTerms);
 
             // Act
-            System.Action test = () => SelectTreeNormalizer.CombineSelectToken(select);
+            Action test = () => SelectTreeNormalizer.NormalizeSelectTree(select);
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal("Found mutliple '$count' query options at one $select.", exception.Message);
+            Assert.Equal("Found mutliple select terms with same select path '1' at one $select, please combine them together.", exception.Message);
         }
 
         [Fact]
-        public void CombineTermsWorksForMultipleSelectQueryOptions()
+        public void NormalizeSelectTreeThrowsForMultipleSelectTermsInDeepLevel()
         {
-            // Arrange: $select=1($select=2;$top=5), 1($select=3;$count=true)
+            // Arrange: $select=1($select=2($top=5),2($count=true))
             List<SelectTermToken> selectTerms = new List<SelectTermToken>();
-            var token2 = new NonSystemToken("2", null, null);
-            var token3 = new NonSystemToken("3", null, null);
             selectTerms.Add(new SelectTermToken(new NonSystemToken("1", /*namedValues*/null, /*nextToken*/null),
-                null, null, 5, null, null, null,
-                new SelectToken(new List<SelectTermToken>() { new SelectTermToken(token2) }), null));
-
-            selectTerms.Add(new SelectTermToken(new NonSystemToken("1", /*namedValues*/null, /*nextToken*/null),
-                null, null, null, null, true, null,
-                new SelectToken(new List<SelectTermToken>() { new SelectTermToken(token3) }), null));
+                new SelectToken(new List<SelectTermToken>()
+                {
+                    new SelectTermToken(new NonSystemToken("2", null, null), null, null, 5, null, null, null, null, null),
+                    new SelectTermToken(new NonSystemToken("2", null, null), null, null, null, null, true, null, null, null)
+                })));
 
             SelectToken select = new SelectToken(selectTerms);
 
             // Act
-            SelectToken combinedSelect = SelectTreeNormalizer.CombineSelectToken(select);
+            Action test = () => SelectTreeNormalizer.NormalizeSelectTree(select);
 
             // Assert
-            SelectTermToken finalTermToken = Assert.Single(combinedSelect.SelectTerms);
-            finalTermToken.ShouldBeSelectTermToken("1", true);
-
-            // $top
-            Assert.NotNull(finalTermToken.TopOption);
-            Assert.Equal(5, finalTermToken.TopOption);
-
-            // $count
-            Assert.NotNull(finalTermToken.CountQueryOption);
-            Assert.True(finalTermToken.CountQueryOption);
-
-            Assert.Null(finalTermToken.FilterOption);
-            Assert.Null(finalTermToken.OrderByOptions);
-            Assert.Null(finalTermToken.SkipOption);
-            Assert.Null(finalTermToken.ComputeOption);
-
-            // $select
-            Assert.NotNull(finalTermToken.SelectOption);
-            Assert.Equal(2, finalTermToken.SelectOption.SelectTerms.Count());
-
-            SelectTermToken innnerTermToken = finalTermToken.SelectOption.SelectTerms.ElementAt(0);
-            innnerTermToken.ShouldBeSelectTermToken("2", true);
-
-            innnerTermToken = finalTermToken.SelectOption.SelectTerms.ElementAt(1);
-            innnerTermToken.ShouldBeSelectTermToken("3", true);
-
-            string originalSelectPath = new SelectExpandTokenSyntacticTreeVisitor().Visit(select);
-            Assert.Equal("$select=1($top=5;$select=2),1($count=true;$select=3)", originalSelectPath);
-
-            string combinedSelectPath = new SelectExpandTokenSyntacticTreeVisitor().Visit(combinedSelect);
-            Assert.Equal("$select=1($top=5;$count=true;$select=2,3)", combinedSelectPath);
-        }
-
-        [Fact]
-        public void CombineTermsWorksForMultipleSelectQueryOptionsAtDifferentLevel()
-        {
-            // Arrange: $select=1($top=8;$select=2($top=5)),1($count=false;$select=3,2($count=true))
-            List<SelectTermToken> selectTerms = new List<SelectTermToken>();
-            var token2 = new NonSystemToken("2", null, null);
-            var token3 = new NonSystemToken("3", null, null);
-            selectTerms.Add(new SelectTermToken(new NonSystemToken("1", /*namedValues*/null, /*nextToken*/null),
-                null, null, 8, null, null, null,
-                new SelectToken(new List<SelectTermToken>() { new SelectTermToken(token2, null, 
-                null, 5, null, null, null, null, null) }), null));
-
-            selectTerms.Add(new SelectTermToken(new NonSystemToken("1", /*namedValues*/null, /*nextToken*/null),
-                null, null, null, null, false, null,
-                new SelectToken(new List<SelectTermToken>() { new SelectTermToken(token3), new SelectTermToken(token2, null,
-                null, null, null, true, null, null, null)}), null));
-
-            SelectToken select = new SelectToken(selectTerms);
-
-            // Act
-            SelectToken combinedSelect = SelectTreeNormalizer.CombineSelectToken(select);
-
-            // Assert
-            SelectTermToken finalTermToken = Assert.Single(combinedSelect.SelectTerms);
-            finalTermToken.ShouldBeSelectTermToken("1", true);
-
-            Assert.NotNull(finalTermToken.TopOption);
-            Assert.Equal(8, finalTermToken.TopOption);
-
-            Assert.NotNull(finalTermToken.CountQueryOption);
-            Assert.False(finalTermToken.CountQueryOption);
-
-            Assert.Null(finalTermToken.FilterOption);
-            Assert.Null(finalTermToken.OrderByOptions);
-            Assert.Null(finalTermToken.SkipOption);
-            Assert.Null(finalTermToken.ComputeOption);
-
-            Assert.NotNull(finalTermToken.SelectOption);
-            Assert.Equal(2, finalTermToken.SelectOption.SelectTerms.Count());
-
-            SelectTermToken innnerTermToken = finalTermToken.SelectOption.SelectTerms.ElementAt(0);
-            innnerTermToken.ShouldBeSelectTermToken("2", true);
-
-            innnerTermToken = finalTermToken.SelectOption.SelectTerms.ElementAt(1);
-            innnerTermToken.ShouldBeSelectTermToken("3", true);
-
-            string originalSelectPath = new SelectExpandTokenSyntacticTreeVisitor().Visit(select);
-            Assert.Equal("$select=1($top=8;$select=2($top=5)),1($count=false;$select=3,2($count=true))", originalSelectPath);
-
-            string combinedSelectPath = new SelectExpandTokenSyntacticTreeVisitor().Visit(combinedSelect);
-            Assert.Equal("$select=1($top=8;$count=false;$select=2($top=5;$count=true),3)", combinedSelectPath);
+            ODataException exception = Assert.Throws<ODataException>(test);
+            Assert.Equal("Found mutliple select terms with same select path '2' at one $select, please combine them together.", exception.Message);
         }
     }
 }

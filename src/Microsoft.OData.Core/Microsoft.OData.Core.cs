@@ -736,7 +736,7 @@ namespace Microsoft.OData {
         internal const string Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum = "Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum";
         internal const string Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType = "Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType";
         internal const string ExpandTreeNormalizer_NonPathInPropertyChain = "ExpandTreeNormalizer_NonPathInPropertyChain";
-        internal const string SelectTreeNormalizer_MultipleQueryOptionsFound = "SelectTreeNormalizer_MultipleQueryOptionsFound";
+        internal const string SelectTreeNormalizer_MultipleSelecTermWithSamePathFound = "SelectTreeNormalizer_MultipleSelecTermWithSamePathFound";
         internal const string UriExpandParser_TermIsNotValidForStar = "UriExpandParser_TermIsNotValidForStar";
         internal const string UriExpandParser_TermIsNotValidForStarRef = "UriExpandParser_TermIsNotValidForStarRef";
         internal const string UriExpandParser_ParentStructuredTypeIsNull = "UriExpandParser_ParentStructuredTypeIsNull";

@@ -5127,10 +5127,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Found mutliple '{0}' query options at one $select."
+        /// A string like "Found mutliple select terms with same select path '{0}' at one $select, please combine them together."
         /// </summary>
-        internal static string SelectTreeNormalizer_MultipleQueryOptionsFound(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectTreeNormalizer_MultipleQueryOptionsFound, p0);
+        internal static string SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound, p0);
         }
 
         /// <summary>

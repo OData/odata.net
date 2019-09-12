@@ -1208,17 +1208,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DuplicatePropertiesAreCollapsed()
+        public void DuplicatePropertiesThrows()
         {
-
             const string expandClauseText = "";
             const string selectClauseText = "Name, Name";
-            const string expectedExpand = "";
-            const string expectedSelect = "Name";
 
-            var results = RunParseSelectExpand(selectClauseText, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            AssertExpandString(expectedExpand, results);
-            AssertSelectString(expectedSelect, results);
+            Action test = () => RunParseSelectExpand(selectClauseText, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            test.Throws<ODataException>("Found mutliple select terms with same select path 'Name' at one $select, please combine them together.");
         }
 
         [Fact]

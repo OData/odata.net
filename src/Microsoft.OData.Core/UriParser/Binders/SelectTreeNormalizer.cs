@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.UriParser
@@ -12,7 +14,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Translate a select tree into the right format.
     /// </summary>
-    internal sealed class SelectTreeNormalizer
+    internal static class SelectTreeNormalizer
     {
         /// <summary>
         /// Normalize a <see cref="SelectToken"/>.
@@ -21,31 +23,76 @@ namespace Microsoft.OData.UriParser
         /// <returns>Normalized SelectToken</returns>
         public static SelectToken NormalizeSelectTree(SelectToken selectToken)
         {
+            // Be noted: It's not allowed have multple select clause with same path.
+            // For example: $select=abc($top=2),abc($skip=2) is not allowed by design.
+            // Cusotmer should combine them together, for example: $select=abc($top=2;$skip=2).
+            // The logic is different with ExpandTreeNormalizer. We should change the logic in ExpandTreeNormalizer
+            // in next breaking change version.
+            VerifySelectToken(selectToken);
+
             // To normalize the select tree we need to:
             // invert the path tree on each of its select term tokens
             selectToken = NormalizeSelectPaths(selectToken);
 
-            // combine terms that start with the path tree
-            return CombineSelectToken(selectToken);
+            return selectToken;
         }
 
-        /// <summary>
-        /// Collapse all redundant select term tokens in a select tree.
-        /// </summary>
-        /// <param name="selectToken">the select token to collapse</param>
-        /// <returns>The collapsed select tree.</returns>
-        public static SelectToken CombineSelectToken(SelectToken selectToken)
+        private static void VerifySelectToken(SelectToken selectToken)
         {
             if (selectToken == null)
             {
-                return null;
+                return;
             }
 
-            var combinedTerms = new Dictionary<PathSegmentToken, SelectTermToken>(new PathSegmentTokenEqualityComparer());
+            HashSet<PathSegmentToken> pathTerms = new HashSet<PathSegmentToken>(new PathSegmentTokenEqualityComparer());
+            foreach (SelectTermToken term in selectToken.SelectTerms)
+            {
+                if (pathTerms.Contains(term.PathToProperty))
+                {
+                    throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(term.PathToProperty)));
+                }
+                else
+                {
+                    pathTerms.Add(term.PathToProperty);
+                }
 
-            CombineSelectTokenToDictionary(selectToken, combinedTerms);
+                // Verify at next level
+                if (term.SelectOption != null)
+                {
+                    VerifySelectToken(term.SelectOption);
+                }
+            }
+        }
 
-            return new SelectToken(combinedTerms.Values);
+        /// <summary>
+        /// Get the path string for a path segment token.
+        /// </summary>
+        /// <param name="head">The head of the path</param>
+        /// <returns>The path string.</returns>
+        private static string ToPathString(PathSegmentToken head)
+        {
+            StringBuilder sb = new StringBuilder();
+            PathSegmentToken curr = head;
+            while (curr != null)
+            {
+                sb.Append(curr.Identifier);
+
+                NonSystemToken nonSystem = curr as NonSystemToken;
+                if (nonSystem != null && nonSystem.NamedValues != null)
+                {
+                    sb.Append("(");
+                    sb.Append(string.Join(",", nonSystem.NamedValues.Select(c => c.Name + "=" + c.Value.Value).ToArray()));
+                    sb.Append(")");
+                }
+
+                curr = curr.NextToken;
+                if (curr != null)
+                {
+                    sb.Append("/");
+                }
+            }
+
+            return sb.ToString();
         }
 
         private static SelectToken NormalizeSelectPaths(SelectToken selectToken)
@@ -66,83 +113,6 @@ namespace Microsoft.OData.UriParser
             }
 
             return selectToken;
-        }
-
-        private static SelectTermToken CombineTerms(SelectTermToken existingToken, SelectTermToken newToken)
-        {
-            return new SelectTermToken(
-                    existingToken.PathToProperty,
-                    CombineQueryOption(existingToken.FilterOption, newToken.FilterOption, "$filter"),
-                    CombineQueryOption(existingToken.OrderByOptions, newToken.OrderByOptions, "$orderby"),
-                    CombineQueryOption(existingToken.TopOption, newToken.TopOption, "$top"),
-                    CombineQueryOption(existingToken.SkipOption, newToken.SkipOption, "$skip"),
-                    CombineQueryOption(existingToken.CountQueryOption, newToken.CountQueryOption, "$count"),
-                    CombineQueryOption(existingToken.SearchOption, newToken.SearchOption, "$search"),
-                    CombineSelects(existingToken.SelectOption, newToken.SelectOption),
-                    CombineQueryOption(existingToken.ComputeOption, newToken.ComputeOption, "$compute"));
-        }
-
-        private static SelectToken CombineSelects(SelectToken existingToken, SelectToken newToken)
-        {
-            if (existingToken == null)
-            {
-                return newToken;
-            }
-
-            if (newToken == null)
-            {
-                return existingToken;
-            }
-
-            var combinedTerms = new Dictionary<PathSegmentToken, SelectTermToken>(new PathSegmentTokenEqualityComparer());
-
-            CombineSelectTokenToDictionary(existingToken, combinedTerms);
-
-            CombineSelectTokenToDictionary(newToken, combinedTerms);
-
-            return new SelectToken(combinedTerms.Values);
-        }
-
-        private static void CombineSelectTokenToDictionary(SelectToken select, IDictionary<PathSegmentToken, SelectTermToken> combinedTerms)
-        {
-            if (select != null)
-            {
-                foreach (SelectTermToken termToken in select.SelectTerms)
-                {
-                    if (termToken.SelectOption != null)
-                    {
-                        termToken.SelectOption = CombineSelectToken(termToken.SelectOption);
-                    }
-
-                    SelectTermToken existingTermToken;
-                    if (combinedTerms.TryGetValue(termToken.PathToProperty, out existingTermToken))
-                    {
-                        combinedTerms[termToken.PathToProperty] = CombineTerms(existingTermToken, termToken);
-                    }
-                    else
-                    {
-                        combinedTerms[termToken.PathToProperty] = termToken;
-                    }
-                }
-            }
-        }
-
-        // filter, orderby, search, comput, top, skip, count
-        private static T CombineQueryOption<T>(T existingFilterToken, T newFilterToken, string identifier)
-        {
-            if (existingFilterToken == null)
-            {
-                return newFilterToken;
-            }
-            else if (newFilterToken == null)
-            {
-                return existingFilterToken;
-            }
-
-            // We don't allow muliple query options (exception for $select) by design.
-            // Theoretically, we can compare the query option contents, if they are same, we can pick one.
-            // for example: $select=1($top=5),1($top=5;$count=true), we can allow this because $top=5 is same.
-            throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleQueryOptionsFound(identifier));
         }
     }
 }

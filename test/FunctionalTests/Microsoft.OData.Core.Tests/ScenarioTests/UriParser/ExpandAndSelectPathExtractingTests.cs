@@ -170,11 +170,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SelectDuplicateProperty()
+        public void SelectDuplicatePropertyThrows()
         {
             const string selectClauseText = "Id,Id";
             const string expectedSelectClauseText = "Id";
-            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: expectedSelectClauseText, expectedExpandClauseFromOM: null);
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: expectedSelectClauseText, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found mutliple select terms with same select path 'Id' at one $select, please combine them together.");
         }
 
         [Fact]

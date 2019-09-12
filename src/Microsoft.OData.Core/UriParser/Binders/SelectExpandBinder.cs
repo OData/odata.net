@@ -133,7 +133,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // It's better to return "null" if both expand and select are null.
-            // However, in order to be consitent, we returns empty "SelectExpandClause" with AllSelected = true.
+            // However, in order to be consistent, we returns empty "SelectExpandClause" with AllSelected = true.
             return new SelectExpandClause(selectExpandItems, isAllSelected);
         }
 
@@ -428,7 +428,7 @@ namespace Microsoft.OData.UriParser
             else
             {
                 // It's better to return null for both Expand and Select are null.
-                // However, in order to be consitent, we returns the empty SelectExpandClause with AllSelected = true.
+                // However, in order to be consistent, we returns the empty SelectExpandClause with AllSelected = true.
                 return new SelectExpandClause(new Collection<SelectItem>(), true);
             }
         }
