@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -18,14 +17,14 @@ namespace Microsoft.OData.Tests
         public void ServiceDocumentElementIsNotNullShouldThrow()
         {
             Action test = () => ValidationUtils.ValidateServiceDocumentElement(null, ODataFormat.Json);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
+            test.Throws<ODataException>(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
         }
 
         [Fact]
         public void ServiceDocumentElementHasNullUrlShouldThrow()
         {
             Action test = () => ValidationUtils.ValidateServiceDocumentElement(new ODataFunctionImportInfo() { Name = "good" }, ODataFormat.Json);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_ResourceMustSpecifyUrl);
+            test.Throws<ODataException>(Strings.ValidationUtils_ResourceMustSpecifyUrl);
         }
 
         [Fact]
@@ -33,14 +32,14 @@ namespace Microsoft.OData.Tests
         {
             var uri = new Uri("http://link/foo");
             Action test = () => ValidationUtils.ValidateServiceDocumentElement(new ODataFunctionImportInfo() { Url = uri }, ODataFormat.Json);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_ResourceMustSpecifyName(uri.OriginalString));
+            test.Throws<ODataException>(Strings.ValidationUtils_ResourceMustSpecifyName(uri.OriginalString));
         }
 
         [Fact]
         public void ServiceDocumentElementShouldNotThrow()
         {
             Action test = () => ValidationUtils.ValidateServiceDocumentElement(new ODataFunctionImportInfo() { Url = new Uri("http://link/foo"), Name = "GoodName" }, ODataFormat.Json);
-            test.ShouldNotThrow();
+            test.DoesNotThrow();
         }
         #endregion
 
@@ -53,13 +52,13 @@ namespace Microsoft.OData.Tests
             EdmComplexType type3 = new EdmComplexType("NS", "Type3", null, false);
 
             Action test1 = () => ValidationUtils.ValidateComplexTypeIsAssignable(type1, type2);
-            test1.ShouldNotThrow();
+            test1.DoesNotThrow();
 
             Action test2 = () => ValidationUtils.ValidateComplexTypeIsAssignable(type1, type1);
-            test2.ShouldNotThrow();
+            test2.DoesNotThrow();
 
             Action test3 = () => ValidationUtils.ValidateComplexTypeIsAssignable(type1, type3);
-            test3.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatibleType("NS.Type3", "NS.Type1"));
+            test3.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("NS.Type3", "NS.Type1"));
         }
         #endregion
     }

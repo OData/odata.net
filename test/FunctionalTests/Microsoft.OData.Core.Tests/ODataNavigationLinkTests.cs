@@ -5,8 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
 using Xunit;
@@ -54,26 +52,26 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void NewODataNavigationLinkShouldHaveNullName()
         {
-            this.navigationLink.Name.Should().BeNull();
+            Assert.Null(this.navigationLink.Name);
         }
 
         [Fact]
         public void NewODataNavigationLinkShouldHaveNullUrl()
         {
-            this.navigationLink.Url.Should().BeNull();
+            Assert.Null(this.navigationLink.Url);
         }
 
         [Fact]
         public void NewODataNavigationLinkShouldHaveNullAssociationLinkUrl()
         {
-            this.navigationLink.AssociationLinkUrl.Should().BeNull();
+            Assert.Null(this.navigationLink.AssociationLinkUrl);
         }
 
         [Fact]
         public void ShouldBeAbleToSetNameToODataNavigationLink()
         {
             this.navigationLink.Name = "Name";
-            this.navigationLink.Name.Should().Be("Name");
+            Assert.Equal("Name", this.navigationLink.Name);
         }
 
         [Fact]
@@ -81,7 +79,7 @@ namespace Microsoft.OData.Tests
         {
             var url = new Uri("http://foo", UriKind.Absolute);
             this.navigationLink.Url = url;
-            this.navigationLink.Url.Should().Be(url);
+            Assert.Equal(url, this.navigationLink.Url);
         }
 
         [Fact]
@@ -89,7 +87,7 @@ namespace Microsoft.OData.Tests
         {
             var associationLinkUrl = new Uri("http://foo", UriKind.Absolute);
             this.navigationLink.AssociationLinkUrl = associationLinkUrl;
-            this.navigationLink.AssociationLinkUrl.Should().BeSameAs(associationLinkUrl);
+            Assert.Same(associationLinkUrl, this.navigationLink.AssociationLinkUrl);
         }
 
         [Fact]
@@ -97,61 +95,61 @@ namespace Microsoft.OData.Tests
         {
             this.navigationLink.Name = "Name";
             this.navigationLink.MetadataBuilder = ODataResourceMetadataBuilder.Null;
-            this.navigationLink.Name.Should().Be("Name");
+            Assert.Equal("Name", this.navigationLink.Name);
         }
 
         [Fact]
         public void SettingUrlToNullShouldOverrideUrlFromFullBuilder()
         {
-            this.navigationLinkWithFullBuilder.Url.Should().Be("http://service/Set(1)/ns.DerivedType/NavProp");
+            Assert.Equal(new Uri("http://service/Set(1)/ns.DerivedType/NavProp"), this.navigationLinkWithFullBuilder.Url);
             this.navigationLinkWithFullBuilder.Url = null;
-            this.navigationLinkWithFullBuilder.Url.Should().BeNull();
+            Assert.Null(this.navigationLinkWithFullBuilder.Url);
         }
 
         [Fact]
         public void SettingAssociationLinkUrlToNullShouldOverrideAssociationLinkUrlFromFullBuilder()
         {
-            this.navigationLinkWithFullBuilder.AssociationLinkUrl.Should().Be("http://service/Set(1)/ns.DerivedType/NavProp/$ref");
+            Assert.Equal(new Uri("http://service/Set(1)/ns.DerivedType/NavProp/$ref"), this.navigationLinkWithFullBuilder.AssociationLinkUrl);
             this.navigationLinkWithFullBuilder.AssociationLinkUrl = null;
-            this.navigationLinkWithFullBuilder.AssociationLinkUrl.Should().BeNull();
+            Assert.Null(this.navigationLinkWithFullBuilder.AssociationLinkUrl);
         }
 
         [Fact]
         public void ShouldBeAbleToSetAndClearUrlOnNavigationLinkWithNoOpBuilder()
         {
             var link = new Uri("http://link", UriKind.Absolute);
-            this.navigationLinkWithNoOpBuilder.Url.Should().BeNull();
+            Assert.Null(this.navigationLinkWithNoOpBuilder.Url);
             this.navigationLinkWithNoOpBuilder.Url = link;
-            this.navigationLinkWithNoOpBuilder.Url.Should().BeSameAs(link);
+            Assert.Same(link, this.navigationLinkWithNoOpBuilder.Url);
             this.navigationLinkWithNoOpBuilder.Url = null;
-            this.navigationLinkWithNoOpBuilder.Url.Should().BeNull();
+            Assert.Null(this.navigationLinkWithNoOpBuilder.Url);
         }
 
         [Fact]
         public void ShouldBeAbleToSetAndClearAssociationLinkUrlOnNavigationLinkWithNoOpBuilder()
         {
             var link = new Uri("http://link", UriKind.Absolute);
-            this.navigationLinkWithNoOpBuilder.AssociationLinkUrl.Should().BeNull();
+            Assert.Null(this.navigationLinkWithNoOpBuilder.AssociationLinkUrl);
             this.navigationLinkWithNoOpBuilder.AssociationLinkUrl = link;
-            this.navigationLinkWithNoOpBuilder.AssociationLinkUrl.Should().BeSameAs(link);
+            Assert.Same(link, this.navigationLinkWithNoOpBuilder.AssociationLinkUrl);
             this.navigationLinkWithNoOpBuilder.AssociationLinkUrl = null;
-            this.navigationLinkWithNoOpBuilder.AssociationLinkUrl.Should().BeNull();
+            Assert.Null(this.navigationLinkWithNoOpBuilder.AssociationLinkUrl);
         }
 
         [Fact]
         public void UrlShouldAlwaysBeNullOnNavigationLinkWithNullBuilder()
         {
-            this.navigationLinkWithNullBuilder.Url.Should().BeNull();
+            Assert.Null(this.navigationLinkWithNullBuilder.Url);
             this.navigationLinkWithNullBuilder.Url = new Uri("http://link", UriKind.Absolute);
-            this.navigationLinkWithNullBuilder.Url.Should().BeNull();
+            Assert.Null(this.navigationLinkWithNullBuilder.Url);
         }
 
         [Fact]
         public void AssociationLinkUrlShouldAlwaysBeNullOnNavigationLinkWithNullBuilder()
         {
-            this.navigationLinkWithNullBuilder.AssociationLinkUrl.Should().BeNull();
+            Assert.Null(this.navigationLinkWithNullBuilder.AssociationLinkUrl);
             this.navigationLinkWithNullBuilder.AssociationLinkUrl = new Uri("http://link", UriKind.Absolute);
-            this.navigationLinkWithNullBuilder.AssociationLinkUrl.Should().BeNull();
+            Assert.Null(this.navigationLinkWithNullBuilder.AssociationLinkUrl);
         }
     }
 }

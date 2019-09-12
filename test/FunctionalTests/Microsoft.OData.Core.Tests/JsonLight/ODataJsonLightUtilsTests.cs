@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -81,28 +80,28 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void IsMetadataReferencePropertyShouldReturnTrue()
         {
-            ODataJsonLightUtils.IsMetadataReferenceProperty("#name").Should().BeTrue();
-            ODataJsonLightUtils.IsMetadataReferenceProperty("foo#name").Should().BeTrue();
-            ODataJsonLightUtils.IsMetadataReferenceProperty("http://www.example.com/foo#name").Should().BeTrue();
+            Assert.True(ODataJsonLightUtils.IsMetadataReferenceProperty("#name"));
+            Assert.True(ODataJsonLightUtils.IsMetadataReferenceProperty("foo#name"));
+            Assert.True(ODataJsonLightUtils.IsMetadataReferenceProperty("http://www.example.com/foo#name"));
         }
 
         [Fact]
         public void IsMetadataReferencePropertyShouldReturnFalse()
         {
-            ODataJsonLightUtils.IsMetadataReferenceProperty("name").Should().BeFalse();
-            ODataJsonLightUtils.IsMetadataReferenceProperty("http://www.example.com/foo").Should().BeFalse();
+            Assert.False(ODataJsonLightUtils.IsMetadataReferenceProperty("name"));
+            Assert.False(ODataJsonLightUtils.IsMetadataReferenceProperty("http://www.example.com/foo"));
         }
 
         [Fact]
         public void GetFullyQualifiedFunctionImportNameFromMetadataReferencePropertyNameShouldReturnSubstringAfterHashAndBeforeLeftParan()
         {
-            TestGetFunctionName("#name", name => name.Should().Be("name"), parameter => parameter.Should().BeNull());
-            TestGetFunctionName("#namespace.a.b.name", name => name.Should().Be("namespace.a.b.name"), parameter => parameter.Should().BeNull());
-            TestGetFunctionName("#namespace.a.b.name()", name => name.Should().Be("namespace.a.b.name"), parameter => parameter.Should().BeEmpty());
-            TestGetFunctionName("#namespace.a.b.name(a.b,c.d)", name => name.Should().Be("namespace.a.b.name"), parameter => parameter.Should().Be("a.b,c.d"));
-            TestGetFunctionName("#namespace.a.b.name(Edm.Duration)", name => name.Should().Be("namespace.a.b.name"), parameter => parameter.Should().Be("Edm.Duration"));
-            TestGetFunctionName("#namespace.a.b.name(Edm.Duration", name => name.Should().Be("namespace.a.b.name"), parameter => parameter.Should().Be("Edm.Duration"));
-            TestGetFunctionName("#namespace.a.b.name(((((", name => name.Should().Be("namespace.a.b.name"), parameter => parameter.Should().BeEmpty());
+            TestGetFunctionName("#name", name => Assert.Equal("name", name), parameter => Assert.Null(parameter));
+            TestGetFunctionName("#namespace.a.b.name", name => Assert.Equal("namespace.a.b.name", name), parameter => Assert.Null(parameter));
+            TestGetFunctionName("#namespace.a.b.name()", name => Assert.Equal("namespace.a.b.name", name), parameter => Assert.Empty(parameter));
+            TestGetFunctionName("#namespace.a.b.name(a.b,c.d)", name => Assert.Equal("namespace.a.b.name", name), parameter => Assert.Equal("a.b,c.d", parameter));
+            TestGetFunctionName("#namespace.a.b.name(Edm.Duration)", name => Assert.Equal("namespace.a.b.name", name), parameter => Assert.Equal("Edm.Duration", parameter));
+            TestGetFunctionName("#namespace.a.b.name(Edm.Duration", name => Assert.Equal("namespace.a.b.name", name), parameter => Assert.Equal("Edm.Duration", parameter));
+            TestGetFunctionName("#namespace.a.b.name(((((", name => Assert.Equal("namespace.a.b.name", name), parameter => Assert.Empty(parameter));
         }
 
         private void TestGetFunctionName(string metadataPropertyName, Action<string> validateName, Action<string> validateParameters)
@@ -116,50 +115,50 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void GetUriFragmentFromMetadataReferencePropertyNameShouldReturnTheSubstringAfterHash()
         {
-            ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentUri, "#name").Should().Be("name");
-            ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentUri, "http://example.com/foo#name").Should().Be("name");
-            ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentUri, "##").Should().Be("#");
-            ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentUri, "#function(Edm.Duration,Edm.Guid)").Should().Be("function(Edm.Duration,Edm.Guid)");
+            Assert.Equal("name", ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentUri, "#name"));
+            Assert.Equal("name", ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentUri, "http://example.com/foo#name"));
+            Assert.Equal("#", ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentUri, "##"));
+            Assert.Equal("function(Edm.Duration,Edm.Guid)", ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentUri, "#function(Edm.Duration,Edm.Guid)"));
         }
 
         [Fact]
         public void GetAbsoluteUriFromMetadataReferencePropertyNameShouldReturnAnAbsoluteUri()
         {
-            ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "#name").Should().Be(new Uri(this.MetadataDocumentUri, "#name"));
-            ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "http://example.com/foo#name").Should().Be(new Uri("http://example.com/foo#name", UriKind.Absolute));
-            ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "#").Should().Be(new Uri(this.MetadataDocumentUri, "#"));
-            ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "http://example.com/foo#").Should().Be(new Uri("http://example.com/foo#", UriKind.Absolute));
-            ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "##").Should().Be(new Uri(this.MetadataDocumentUri, "##"));
+            Assert.Equal(new Uri(this.MetadataDocumentUri, "#name"), ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "#name"));
+            Assert.Equal(new Uri("http://example.com/foo#name", UriKind.Absolute), ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "http://example.com/foo#name"));
+            Assert.Equal(new Uri(this.MetadataDocumentUri, "#"), ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "#"));
+            Assert.Equal(new Uri("http://example.com/foo#", UriKind.Absolute), ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "http://example.com/foo#"));
+            Assert.Equal(new Uri(this.MetadataDocumentUri, "##"), ODataJsonLightUtils.GetAbsoluteUriFromMetadataReferencePropertyName(this.MetadataDocumentUri, "##"));
         }
 
         [Fact]
         public void GetMetadataReferenceNameFromFunctionImportShouldReturnCorrectNameForFunctionImportWithNoOverload()
         {
-            ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithNoOverload).Should().Be("TestModel.FunctionImportWithNoOverload");
+            Assert.Equal("TestModel.FunctionImportWithNoOverload", ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithNoOverload));
         }
 
         [Fact]
         public void GetMetadataReferenceNameFromFunctionImportShouldReturnCorrectNameForFunctionImportWithOverloadAnd0Param()
         {
-            ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithOverloadAnd0Param).Should().Be("TestModel.FunctionImportWithOverload()");
+            Assert.Equal("TestModel.FunctionImportWithOverload()", ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithOverloadAnd0Param));
         }
 
         [Fact]
         public void GetMetadataReferenceNameFromFunctionImportShouldReturnCorrectNameForFunctionImportWithOverloadAnd1Param()
         {
-            ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithOverloadAnd1Param).Should().Be("TestModel.FunctionImportWithOverload(p1)");
+            Assert.Equal("TestModel.FunctionImportWithOverload(p1)", ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithOverloadAnd1Param));
         }
 
         [Fact]
         public void GetMetadataReferenceNameFromFunctionImportShouldReturnCorrectNameForFunctionImportWithOverloadAnd2Params()
         {
-            ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithOverloadAnd2Params).Should().Be("TestModel.FunctionImportWithOverload(p1,p2)");
+            Assert.Equal("TestModel.FunctionImportWithOverload(p1,p2)", ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithOverloadAnd2Params));
         }
 
         [Fact]
         public void GetMetadataReferenceNameFromFunctionImportShouldReturnCorrectNameForFunctionImportWithOverloadAnd5Params()
         {
-            ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithOverloadAnd5Params).Should().Be("TestModel.FunctionImportWithOverload(p1,p2,p3,p4,p5)");
+            Assert.Equal("TestModel.FunctionImportWithOverload(p1,p2,p3,p4,p5)", ODataJsonLightUtils.GetMetadataReferenceName(this.model, this.operationWithOverloadAnd5Params));
         }
 
         [Fact]

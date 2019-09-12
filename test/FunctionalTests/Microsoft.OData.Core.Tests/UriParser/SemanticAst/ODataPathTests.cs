@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -31,46 +30,45 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void FirstSegmentShouldReturnNullIfPathIsEmpty()
         {
-            new ODataPath().FirstSegment.Should().BeNull();
+            Assert.Null(new ODataPath().FirstSegment);
         }
 
         [Fact]
         public void LastSegmentShouldReturnNullIfPathIsEmpty()
         {
-            new ODataPath().LastSegment.Should().BeNull();
+            Assert.Null(new ODataPath().LastSegment);
         }
 
         [Fact]
         public void PathsOfDifferentLengthsAreNotEqual()
         {
-            new ODataPath().Equals(new ODataPath(MetadataSegment.Instance)).Should().BeFalse();
+            Assert.False(new ODataPath().Equals(new ODataPath(MetadataSegment.Instance)));
         }
 
         [Fact]
         public void PathsWithDifferentSegmentsAreNotEqual()
         {
-            new ODataPath(MetadataSegment.Instance).Equals(new ODataPath(BatchSegment.Instance)).Should().BeFalse();
+            Assert.False(new ODataPath(MetadataSegment.Instance).Equals(new ODataPath(BatchSegment.Instance)));
         }
 
         [Fact]
         public void PathsWithEqualivalentSegmentsAreEqual()
         {
-            new ODataPath(new DynamicPathSegment("foo")).Equals(new ODataPath(new DynamicPathSegment("foo"))).Should().BeTrue();
+            Assert.True(new ODataPath(new DynamicPathSegment("foo")).Equals(new ODataPath(new DynamicPathSegment("foo"))));
         }
 
         [Fact]
         public void PathsShouldNotAllowSegmentsToBeNull()
         {
             Action createWithNull = () => new ODataPath((IEnumerable<ODataPathSegment>)null);
-            createWithNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("segments"));
+            Assert.Throws<ArgumentNullException>("segments", createWithNull);
         }
 
         [Fact]
         public void PathsShouldNotAllowAnySegmentToBeNull()
         {
             Action createWithNull = () => new ODataPath((ODataPathSegment)null);
-            // TODO: better error?
-            createWithNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("segments"));
+            Assert.Throws<ArgumentNullException>("segments", createWithNull);
         }
 
         [Fact]
@@ -90,7 +88,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void PathsOfDifferentLengthsAreNotEqualBatch()
         {
-            new ODataPath().Equals(new ODataPath(BatchSegment.Instance)).Should().BeFalse();
+            Assert.False(new ODataPath().Equals(new ODataPath(BatchSegment.Instance)));
         }
     }
 }

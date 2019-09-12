@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -21,7 +20,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void IsNullMethodShouldBeTrueForNullValue()
         {
-            this.nullValue.IsNullValue.Should().BeTrue();
+            Assert.True(this.nullValue.IsNullValue);
         }
     }
 }

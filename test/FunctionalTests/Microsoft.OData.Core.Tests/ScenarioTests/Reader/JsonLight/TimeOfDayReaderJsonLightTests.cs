@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             foreach (var testCase in testCases)
             {
                 Action action = () => this.VerifyTimeOfDayValueReader(testCase.Payload, "Edm.TimeOfDay", null);
-                action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderValidationUtils_CannotConvertPrimitiveValue(testCase.Show, "Edm.TimeOfDay"));
+                action.Throws<ODataException>(ErrorStrings.ReaderValidationUtils_CannotConvertPrimitiveValue(testCase.Show, "Edm.TimeOfDay"));
             }
         }
 
@@ -90,7 +89,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                     /*insideResourceValue*/ false,
                     /*propertyName*/ null);
             }
-            actualValue.Should().Be(expectedResult, "payload ->{0}<- for type '{1}'", payload, edmTypeName);
+
+            Assert.Equal(expectedResult, actualValue);
         }
     }
 }

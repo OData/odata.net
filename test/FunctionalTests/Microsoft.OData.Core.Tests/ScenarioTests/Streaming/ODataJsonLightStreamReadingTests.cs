@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -46,16 +45,16 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
                 var comments = resource.Properties.FirstOrDefault(p => p.Name == "comments").ODataValue as ODataCollectionValue;
-                comments.Should().NotBeNull();
+                Assert.NotNull(comments);
                 List<object> collection = comments.Items.ToList();
-                collection.Count().Should().Be(3);
-                collection[0].Should().Be("one");
-                collection[1].Should().Be("two");
-                collection[2].Should().BeNull();
+                Assert.Equal(3, collection.Count());
+                Assert.Equal("one", collection[0]);
+                Assert.Equal("two", collection[1]);
+                Assert.Null(collection[2]);
             }
         }
 
@@ -92,7 +91,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.NestedProperty:
-                            ((ODataPropertyInfo)reader.Item).Name.Should().NotBe("id", "Should never stream id");
+                            Assert.Equal("id", ((ODataPropertyInfo)reader.Item).Name);
                             break;
 
                         case ODataReaderState.Stream:
@@ -101,13 +100,13 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(3);
-                propertyValues[0].Should().Be("one");
-                propertyValues[1].Should().Be("two");
-                propertyValues[2].Should().Be("");
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(3, propertyValues.Count);
+                Assert.Equal("one", propertyValues[0]);
+                Assert.Equal("two", propertyValues[1]);
+                Assert.Equal("", propertyValues[2]);
             }
         }
 
@@ -150,13 +149,13 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(3);
-                ((ODataPrimitiveValue)propertyValues[0]).Value.Should().Be("one");
-                ((ODataPrimitiveValue)propertyValues[1]).Value.Should().Be("two");
-                propertyValues[2].Should().BeNull();
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(3, propertyValues.Count);
+                Assert.Equal("one", ((ODataPrimitiveValue)propertyValues[0]).Value);
+                Assert.Equal("two", ((ODataPrimitiveValue)propertyValues[1]).Value);
+                Assert.Null(propertyValues[2]);
             }
         }
 
@@ -222,24 +221,24 @@ namespace Microsoft.OData.Tests.JsonLight
 
                             case ODataReaderState.NestedResourceInfoStart:
                                 ODataNestedResourceInfo info = reader.Item as ODataNestedResourceInfo;
-                                info.Name.Should().Be("untypedCollection");
-                                propertyValues.Should().BeNull();
+                                Assert.Equal("untypedCollection", info.Name);
+                                Assert.Null(propertyValues);
                                 propertyValues = new List<object>();
                                 break;
                         }
                     }
 
-                    resource.Should().NotBeNull();
-                    resource.Properties.Count().Should().Be(expectedPropertyCount);
-                    resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                    propertyValues.Count.Should().Be(7);
-                    propertyValues[0].Should().Be(binaryValue);
-                    propertyValues[1].Should().Be(stringValue);
-                    propertyValues[2].Should().Be(stringValue);
-                    propertyValues[3].Should().BeNull();
-                    propertyValues[4].Should().Be(true);
-                    propertyValues[5].Should().Be(false);
-                    ((Decimal)propertyValues[6]).Should().Be(-10.5m);
+                    Assert.NotNull(resource);
+                    Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                    Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                    Assert.Equal(7, propertyValues.Count);
+                    Assert.Equal(binaryValue, propertyValues[0]);
+                    Assert.Equal(stringValue, propertyValues[1]);
+                    Assert.Equal(stringValue, propertyValues[2]);
+                    Assert.Null(propertyValues[3]);
+                    Assert.Equal(true, propertyValues[4]);
+                    Assert.Equal(false, propertyValues[5]);
+                    Assert.Equal(-10.5m, ((Decimal)propertyValues[6]));
                 }
             }
         }
@@ -284,7 +283,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         case ODataReaderState.NestedProperty:
                             ODataPropertyInfo propertyInfo = reader.Item as ODataPropertyInfo;
                             currentProperty = propertyInfo.Name;
-                            propertyInfo.Name.Should().NotBe("id", "Should never stream id");
+                            Assert.NotEqual("id", propertyInfo.Name);
                             break;
 
                         case ODataReaderState.Stream:
@@ -293,19 +292,19 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                numberOfTimesCalled.Should().Be(2);
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(2, numberOfTimesCalled);
                 var comments = resource.Properties.FirstOrDefault(p => p.Name == "comments").ODataValue as ODataCollectionValue;
-                comments.Should().NotBeNull();
-                propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be("Thor");
+                Assert.NotNull(comments);
+                Assert.Single(propertyValues);
+                Assert.Equal("Thor", propertyValues[0]);
                 List<object> collection = comments.Items.ToList();
-                collection.Count().Should().Be(3);
-                collection[0].Should().Be("one");
-                collection[1].Should().Be("two");
-                collection[2].Should().BeNull();
+                Assert.Equal(3, collection.Count());
+                Assert.Equal("one", collection[0]);
+                Assert.Equal("two", collection[1]);
+                Assert.Null(collection[2]);
             }
         }
 
@@ -337,25 +336,25 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("stream");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("stream", propertyInfo.Name);
 
                             break;
 
                         case ODataReaderState.Stream:
                             var streamInfo = reader.Item as ODataStreamItem;
-                            streamInfo.Should().NotBeNull();
-                            streamInfo.PrimitiveTypeKind.Should().Be(EdmPrimitiveTypeKind.None);
+                            Assert.NotNull(streamInfo);
+                            Assert.Equal(EdmPrimitiveTypeKind.None, streamInfo.PrimitiveTypeKind);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(2);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryValue);
+                Assert.NotNull(resource);
+                Assert.Equal(2, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Single(propertyValues);
+                Assert.Equal(binaryValue, propertyValues[0]);
             }
         }
 
@@ -385,23 +384,22 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("undeclaredStream");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("undeclaredStream", propertyInfo.Name);
                             break;
 
                         case ODataReaderState.Stream:
                             var streamInfo = reader.Item as ODataStreamItem;
-                            streamInfo.Should().NotBeNull();
+                            Assert.NotNull(streamInfo);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryValue);
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(binaryValue, Assert.Single(propertyValues));
             }
         }
 
@@ -436,12 +434,12 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
                 ODataStreamReferenceValue undeclaredStreamProperty = resource.Properties.FirstOrDefault(p => p.Name == "undeclaredStream").Value as ODataStreamReferenceValue;
-                undeclaredStreamProperty.Should().NotBeNull();
-                undeclaredStreamProperty.ContentType.Should().Be("text/plain");
+                Assert.NotNull(undeclaredStreamProperty);
+                Assert.Equal("text/plain", undeclaredStreamProperty.ContentType);
             }
         }
 
@@ -470,24 +468,23 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("stream");
-                            propertyInfo.ContentType.Should().Be("image/jpg");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("stream", propertyInfo.Name);
+                            Assert.Equal("image/jpg", propertyInfo.ContentType);
                             break;
 
                         case ODataReaderState.Stream:
                             var streamInfo = reader.Item as ODataStreamItem;
-                            streamInfo.Should().NotBeNull();
+                            Assert.NotNull(streamInfo);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(2);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryValue);
+                Assert.NotNull(resource);
+                Assert.Equal(2, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(binaryValue, Assert.Single(propertyValues));
             }
         }
 
@@ -516,24 +513,23 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("stream");
-                            propertyInfo.ContentType.Should().Be("text/plain");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("stream", propertyInfo.Name);
+                            Assert.Equal("text/plain", propertyInfo.ContentType);
                             break;
 
                         case ODataReaderState.Stream:
                             var streamInfo = reader.Item as ODataStreamItem;
-                            streamInfo.Should().NotBeNull();
+                            Assert.NotNull(streamInfo);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(2);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryValue);
+                Assert.NotNull(resource);
+                Assert.Equal(2, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(binaryValue, Assert.Single(propertyValues));
             }
         }
 
@@ -563,24 +559,23 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("stream");
-                            propertyInfo.ContentType.Should().Be("application/xml");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("stream", propertyInfo.Name);
+                            Assert.Equal("application/xml", propertyInfo.ContentType);
                             break;
 
                         case ODataReaderState.Stream:
                             var streamInfo = reader.Item as ODataStreamItem;
-                            streamInfo.Should().NotBeNull();
+                            Assert.NotNull(streamInfo);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(2);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(xmlValue);
+                Assert.NotNull(resource);
+                Assert.Equal(2, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(xmlValue, Assert.Single(propertyValues));
             }
         }
 
@@ -610,24 +605,23 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("undeclaredStream");
-                            propertyInfo.ContentType.Should().Be("image/jpg");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("undeclaredStream", propertyInfo.Name);
+                            Assert.Equal("image/jpg", propertyInfo.ContentType);
                             break;
 
                         case ODataReaderState.Stream:
                             var streamInfo = reader.Item as ODataStreamItem;
-                            streamInfo.Should().NotBeNull();
+                            Assert.NotNull(streamInfo);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryValue);
+                Assert.NotNull(resource);
+                Assert.Equal(expectedCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(binaryValue, Assert.Single(propertyValues));
             }
         }
 
@@ -657,24 +651,23 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("undeclaredStream");
-                            propertyInfo.ContentType.Should().Be("text/plain");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("undeclaredStream", propertyInfo.Name);
+                            Assert.Equal("text/plain", propertyInfo.ContentType);
                             break;
 
                         case ODataReaderState.Stream:
                             var streamInfo = reader.Item as ODataStreamItem;
-                            streamInfo.Should().NotBeNull();
+                            Assert.NotNull(streamInfo);
                             propertyValues.Add(ReadStream(reader));
                             break;
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyValues.Count.Should().Be(1);
-                propertyValues[0].Should().Be(binaryValue);
+                Assert.NotNull(resource);
+                Assert.Equal(expectedCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(binaryValue, Assert.Single(propertyValues));
             }
         }
 
@@ -702,14 +695,14 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             ODataStreamPropertyInfo propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("stream");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("stream", propertyInfo.Name);
                             break;
 
                         case ODataReaderState.Stream:
                             var streamValue = reader.Item as ODataStreamItem;
-                            streamValue.Should().NotBeNull();
-                            streamValue.ContentType.Should().Be("application/json");
+                            Assert.NotNull(streamValue);
+                            Assert.Equal("application/json", streamValue.ContentType);
                             using (TextReader textReader = reader.CreateTextReader())
                             {
                                 jsonStream = textReader.ReadToEnd();
@@ -718,13 +711,13 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(2);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                Assert.NotNull(resource);
+                Assert.Equal(2, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
                 ODataStreamReferenceValue streamReference = resource.Properties.FirstOrDefault(p => p.Name == "stream").Value as ODataStreamReferenceValue;
-                streamReference.Should().NotBeNull();
-                streamReference.ContentType.Should().Be("application/json");
-                jsonStream.Should().Be(jsonString);
+                Assert.NotNull(streamReference);
+                Assert.Equal("application/json", streamReference.ContentType);
+                Assert.Equal(jsonString, jsonStream);
             }
         }
 
@@ -755,14 +748,14 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedProperty:
                             ODataPropertyInfo propertyInfo = reader.Item as ODataStreamPropertyInfo;
-                            propertyInfo.Should().NotBeNull();
-                            propertyInfo.Name.Should().Be("jsonStream");
+                            Assert.NotNull(propertyInfo);
+                            Assert.Equal("jsonStream", propertyInfo.Name);
                             break;
 
                         case ODataReaderState.Stream:
                             var streamInfo = reader.Item as ODataStreamItem;
-                            streamInfo.Should().NotBeNull();
-                            streamInfo.ContentType.Should().Be("application/json");
+                            Assert.NotNull(streamInfo);
+                            Assert.Equal("application/json", streamInfo.ContentType);
                             using (TextReader textReader = reader.CreateTextReader())
                             {
                                 jsonStream = textReader.ReadToEnd();
@@ -771,13 +764,13 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
+                Assert.NotNull(resource);
+                Assert.Equal(expectedCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
                 ODataStreamReferenceValue streamReference = resource.Properties.FirstOrDefault(p => p.Name == "jsonStream").Value as ODataStreamReferenceValue;
-                streamReference.Should().NotBeNull();
-                streamReference.ContentType.Should().Be("application/json");
-                jsonStream.Should().Be(jsonString);
+                Assert.NotNull(streamReference);
+                Assert.Equal("application/json", streamReference.ContentType);
+                Assert.Equal(jsonString, jsonStream);
             }
         }
 
@@ -812,7 +805,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 };
 
-                readPartialStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                readPartialStream.Throws<ODataException>(Strings.ODataReaderCore_ReadCalledWithOpenStream);
             }
         }
 
@@ -846,7 +839,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 };
 
-                readPartialStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                readPartialStream.Throws<ODataException>(Strings.ODataReaderCore_ReadCalledWithOpenStream);
             }
         }
 
@@ -877,11 +870,11 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(2);
+                Assert.NotNull(resource);
+                Assert.Equal(2, resource.Properties.Count());
                 ODataStreamReferenceValue propertyInfo = resource.Properties.FirstOrDefault(p => p.Name == "stream").Value as ODataStreamReferenceValue;
-                propertyInfo.Should().NotBeNull();
-                propertyInfo.ContentType.Should().Be("text/plain");
+                Assert.NotNull(propertyInfo);
+                Assert.Equal("text/plain", propertyInfo.ContentType);
             }
         }
 
@@ -910,8 +903,8 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         case ODataReaderState.NestedResourceInfoStart:
                             ODataNestedResourceInfo nestedInfo = reader.Item as ODataNestedResourceInfo;
-                            nestedInfo.Name.Should().Be("streamCollection");
-                            streamValues.Should().BeNull();
+                            Assert.Equal("streamCollection", nestedInfo.Name);
+                            Assert.Null(streamValues);
                             streamValues = new List<string>();
                             break;
 
@@ -921,13 +914,13 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                streamValues.Should().NotBeNull();
-                streamValues.Count.Should().Be(2);
-                streamValues[0].Should().Be(binaryString);
-                streamValues[1].Should().Be(binaryString);
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.NotNull(streamValues);
+                Assert.Equal(2, streamValues.Count);
+                Assert.Equal(binaryString, streamValues[0]);
+                Assert.Equal(binaryString, streamValues[1]);
             }
         }
 
@@ -961,7 +954,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.NestedProperty:
-                            propertyInfo.Should().BeNull();
+                            Assert.Null(propertyInfo);
                             propertyInfo = reader.Item as ODataPropertyInfo;
                             break;
 
@@ -971,14 +964,13 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyInfo.Name.Should().Be("name");
-                propertyInfo.PrimitiveTypeKind.Should().Be(EdmPrimitiveTypeKind.String);
-                streamValues.Should().NotBeNull();
-                streamValues.Count.Should().Be(1);
-                streamValues[0].Should().Be("Thor");
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("name", propertyInfo.Name);
+                Assert.Equal(EdmPrimitiveTypeKind.String, propertyInfo.PrimitiveTypeKind);
+                Assert.NotNull(streamValues);
+                Assert.Equal("Thor", Assert.Single(streamValues));
             }
         }
 
@@ -1025,15 +1017,15 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                resource.Properties.FirstOrDefault(p => p.Name == "isMarvel").Value.Should().Be(true);
-                ((ODataEnumValue)resource.Properties.FirstOrDefault(p => p.Name == "gender").Value).Value.Should().Be("male");
-                resource.Properties.FirstOrDefault(p => p.Name == "age").Value.Should().Be(4000);
-                propertyValues.Count.Should().Be(2);
-                propertyValues[0].Should().Be("Thor");
-                propertyValues[1].Should().Be("");
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(true, resource.Properties.FirstOrDefault(p => p.Name == "isMarvel").Value);
+                Assert.Equal("male", ((ODataEnumValue)resource.Properties.FirstOrDefault(p => p.Name == "gender").Value).Value);
+                Assert.Equal(4000, resource.Properties.FirstOrDefault(p => p.Name == "age").Value);
+                Assert.Equal(2, propertyValues.Count);
+                Assert.Equal("Thor", propertyValues[0]);
+                Assert.Equal("", propertyValues[1]);
             }
         }
 
@@ -1067,7 +1059,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             break;
 
                         case ODataReaderState.NestedProperty:
-                            propertyInfo.Should().BeNull();
+                            Assert.Null(propertyInfo);
                             propertyInfo = reader.Item as ODataPropertyInfo;
                             break;
 
@@ -1077,14 +1069,13 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 }
 
-                resource.Should().NotBeNull();
-                resource.Properties.Count().Should().Be(expectedPropertyCount);
-                resource.Properties.FirstOrDefault(p => p.Name == "id").Should().NotBeNull();
-                propertyInfo.Name.Should().Be("binaryAsStream");
-                propertyInfo.PrimitiveTypeKind.Should().Be(EdmPrimitiveTypeKind.Binary);
-                streamValues.Should().NotBeNull();
-                streamValues.Count.Should().Be(1);
-                streamValues[0].Should().Be(binaryString);
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("binaryAsStream", propertyInfo.Name);
+                Assert.Equal(EdmPrimitiveTypeKind.Binary, propertyInfo.PrimitiveTypeKind);
+                Assert.NotNull(streamValues);
+                Assert.Equal(binaryString, Assert.Single(streamValues));
             }
         }
 
@@ -1112,7 +1103,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     }
                 };
 
-                action.ShouldThrow<ODataException>().WithMessage(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                action.Throws<ODataException>(Strings.ODataReaderCore_ReadCalledWithOpenStream);
             }
         }
 
@@ -1248,7 +1239,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private string ReadStream(ODataReader reader)
         {
             ODataStreamItem streamValue = reader.Item as ODataStreamItem;
-            streamValue.Should().NotBeNull();
+            Assert.NotNull(streamValue);
             string result;
             if (streamValue.PrimitiveTypeKind == EdmPrimitiveTypeKind.String ||
                 streamValue.PrimitiveTypeKind == EdmPrimitiveTypeKind.None)
@@ -1272,7 +1263,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private string ReadPartialStream(ODataReader reader)
         {
             ODataStreamItem streamValue = reader.Item as ODataStreamItem;
-            streamValue.Should().NotBeNull();
+            Assert.NotNull(streamValue);
             if (streamValue.PrimitiveTypeKind == EdmPrimitiveTypeKind.String)
             {
                 TextReader textReader = reader.CreateTextReader();

@@ -8,9 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
@@ -146,7 +144,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             Action action = () => this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
             string fullName = this.entityType.FindProperty("ColorFlags").Type.FullName();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("MyColorFlags", fullName));
+            action.Throws<ODataException>(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("MyColorFlags", fullName));
         }
 
         [Fact]
@@ -202,7 +200,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             Action action = () => this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
             string fullName = this.entityType.FindProperty("ColorFlags").Type.FullName();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("MyColorFlags", fullName));
+            action.Throws<ODataException>(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("MyColorFlags", fullName));
         }
 
         [Fact]
@@ -320,7 +318,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             // test payload as request
             ODataResource entry = null;
             ReadRequestEntryPayload(this.userModel, payload, "application/json;odata.metadata=none", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            entry.TypeName.Should().Be(expectedEntry.TypeName);
+            Assert.Equal(expectedEntry.TypeName, entry.TypeName);
             TestUtils.AssertODataPropertiesAreEqual(expectedEntry.Properties, entry.Properties);
 
             // test payload as response
@@ -345,7 +343,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             Action action = () => this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
             string fullName = this.entityType.FindProperty("ColorFlags").Type.FullName();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("ColorFlags", fullName));
+            action.Throws<ODataException>(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("ColorFlags", fullName));
         }
 
         [Fact]
@@ -370,7 +368,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"ColorFlags\":2}";
             ODataResource entry = null;
             Action parse = () => ReadRequestEntryPayload(this.userModel, payload, "application/json;odata.metadata=minimal", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.JsonReaderExtensions_CannotReadValueAsString("2"));
+            parse.Throws<ODataException>(Strings.JsonReaderExtensions_CannotReadValueAsString("2"));
         }
         #endregion
 
@@ -568,7 +566,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     readerAction(reader);
                 }
             };
-            action.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(action);
         }
 
         private void ReadEntryPayloadAndVerify(string payload, string contentType, params ODataResource[] expectedEntries)
@@ -608,13 +606,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             // test payload as request
             ODataResource entry = null;
             ReadRequestEntryPayload(this.userModel, payload, contentType, this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            entry.TypeName.Should().Be(expectedEntry.TypeName);
+            Assert.Equal(expectedEntry.TypeName, entry.TypeName);
             TestUtils.AssertODataPropertiesAreEqual(expectedEntry.Properties, entry.Properties);
 
             // test payload as response
             entry = null;
             ReadResponseEntryPayload(this.userModel, payload, contentType, this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            entry.TypeName.Should().Be(expectedEntry.TypeName);
+            Assert.Equal(expectedEntry.TypeName, entry.TypeName);
             TestUtils.AssertODataPropertiesAreEqual(expectedEntry.Properties, entry.Properties);
         }
 
@@ -655,7 +653,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             {
                 var expected = expectedResoures[i];
                 var actual = actualResoures[i];
-                actual.TypeName.Should().Be(expected.TypeName);
+                Assert.Equal(expected.TypeName, actual.TypeName);
 
                 TestUtils.AssertODataPropertiesAreEqual(expected.Properties, actual.Properties);
             }

@@ -8,7 +8,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Xunit;
@@ -45,7 +44,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
             Action test = () => WriteAndValidate(outputContext => outputContext.WriteProperty(property), "", writingResponse: true);
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull);
+            test.Throws<ODataException>(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull);
         }
 
         [Fact]
@@ -74,7 +73,8 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
             Action test = () => WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "", writingResponse: false, synchronous: false);
-            test.ShouldThrow<AggregateException>().WithInnerMessage(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull);
+            AggregateException exception = Assert.Throws<AggregateException>(test);
+            Assert.Equal(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull, exception.InnerException.Message);
         }
 
         [Fact]
@@ -127,13 +127,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ShouldBeAbleToCreateResourceSetWriterAsyncForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result), "", writingResponse: false, synchronous: false);
         }
 
         [Fact]
         public void ShouldBeAbleToCreateResourceSetWriterAsyncForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result), "", writingResponse: true, synchronous: false);
         }
         #endregion CreateResourceSetWriter
 
@@ -153,13 +153,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ShouldBeAbleToCreateResourceWriterAsyncForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result), "", writingResponse: false, synchronous: false);
         }
 
         [Fact]
         public void ShouldBeAbleToCreateResourceWriterAsyncForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result), "", writingResponse: true, synchronous: false);
         }
         #endregion CreateResourceWriter
 
@@ -179,13 +179,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ShouldBeAbleToCreateCollectionWriterAsyncForRequestWithoutModelAndWithoutItemType()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataCollectionWriterAsync(itemTypeReference: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataCollectionWriterAsync(itemTypeReference: null).Result), "", writingResponse: false, synchronous: false);
         }
 
         [Fact]
         public void ShouldBeAbleToCreateCollectionWriterAsyncForResponseWithoutModelAndWithoutItemType()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataCollectionWriterAsync(itemTypeReference: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataCollectionWriterAsync(itemTypeReference: null).Result), "", writingResponse: true, synchronous: false);
         }
         #endregion CreateCollectionWriter
 
@@ -205,13 +205,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ShouldBeAbleToCreateParameterWriterAsyncForRequestWithoutModelAndWithoutFunction()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataParameterWriterAsync(operation: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataParameterWriterAsync(operation: null).Result), "", writingResponse: false, synchronous: false);
         }
 
         [Fact]
         public void ShouldBeAbleToCreateParameterWriterAsyncForResponseWithoutModelAndWithoutFunction()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataParameterWriterAsync(operation: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataParameterWriterAsync(operation: null).Result), "", writingResponse: true, synchronous: false);
         }
         #endregion CreateParameterWriter
 
@@ -353,7 +353,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ShouldDefaultToWritingPrefix40(bool isResponse)
         {
             var outputContext = CreateJsonLightOutputContext(new MemoryStream(), isResponse);
-            outputContext.OmitODataPrefix.Should().BeFalse();
+            Assert.False(outputContext.OmitODataPrefix);
         }
 
         [Theory]
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ShouldDefaultToOmitPrefix401(bool isResponse)
         {
             var outputContext = CreateJsonLightOutputContext(new MemoryStream(), isResponse, true, false, ODataVersion.V401);
-            outputContext.OmitODataPrefix.Should().BeTrue();
+            Assert.True(outputContext.OmitODataPrefix);
         }
 
         #endregion
@@ -384,7 +384,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             stream.Seek(0, SeekOrigin.Begin);
             string payload = (new StreamReader(stream)).ReadToEnd();
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, payload);
         }
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(

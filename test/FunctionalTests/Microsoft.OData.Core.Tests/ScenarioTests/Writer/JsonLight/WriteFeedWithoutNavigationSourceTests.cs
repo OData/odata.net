@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             string payload = this.TestFinish();
-            payload.Should().Contain("\"@odata.context\":\"http://host/service/$metadata#Collection(NS.BaseType)\"");
+            Assert.Contains("\"@odata.context\":\"http://host/service/$metadata#Collection(NS.BaseType)\"", payload);
         }
 
         [Fact]
@@ -85,7 +84,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             string payload = this.TestFinish();
-            payload.Should().Contain("\"@odata.context\":\"http://host/service/$metadata#Collection(NS.BaseType)\"");
+            Assert.Contains("\"@odata.context\":\"http://host/service/$metadata#Collection(NS.BaseType)\"", payload);
         }
         #endregion
 

@@ -1,10 +1,12 @@
-﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
-using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="TestMetadataSelector.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Evaluation
 {

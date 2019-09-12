@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -23,85 +22,88 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void AllPropertiesShouldBeNullOrFalseOnCreation()
         {
-            this.testSubject.NavigationSourceName.Should().BeNull();
-            this.testSubject.NavigationSourceEntityTypeName.Should().BeNull();
-            this.testSubject.ExpectedTypeName.Should().BeNull();
+            Assert.Null(this.testSubject.NavigationSourceName);
+            Assert.Null(this.testSubject.NavigationSourceEntityTypeName);
+            Assert.Null(this.testSubject.ExpectedTypeName);
         }
 
         [Fact]
         public void SettingNullEntitySetNameShouldNotThrow()
         {
             this.testSubject.NavigationSourceName = null;
-            this.testSubject.NavigationSourceName.Should().Be(null);
+            Assert.Null(this.testSubject.NavigationSourceName);
         }
 
         [Fact]
         public void SettingEmptyEntitySetNameShouldNotThrow()
         {
             this.testSubject.NavigationSourceName = string.Empty;
-            this.testSubject.NavigationSourceName.Should().Be(string.Empty);
+            Assert.Equal(string.Empty, this.testSubject.NavigationSourceName);
         }
 
         [Fact]
         public void ShouldBeAbleToSetEntitySetName()
         {
             this.testSubject.NavigationSourceName = "Set";
-            this.testSubject.NavigationSourceName.Should().Be("Set");
+            Assert.Equal("Set", this.testSubject.NavigationSourceName);
         }
 
         [Fact]
         public void SettingNullBaseTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.NavigationSourceEntityTypeName = null;
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("NavigationSourceEntityTypeName"));
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.Contains("NavigationSourceEntityTypeName", exception.Message);
         }
 
         [Fact]
         public void SettingEmptyBaseTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.NavigationSourceEntityTypeName = "";
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("NavigationSourceEntityTypeName"));
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.Contains("NavigationSourceEntityTypeName", exception.Message);
         }
 
         [Fact]
         public void ShouldBeAbleToSetBaseTypeName()
         {
             this.testSubject.NavigationSourceEntityTypeName = "NavigationSourceEntityTypeName";
-            this.testSubject.NavigationSourceEntityTypeName.Should().Be("NavigationSourceEntityTypeName");
+            Assert.Equal("NavigationSourceEntityTypeName", this.testSubject.NavigationSourceEntityTypeName);
         }
 
         [Fact]
         public void ShouldBeAbleToSetNullExpectedTypeName()
         {
             this.testSubject.ExpectedTypeName = null;
-            this.testSubject.ExpectedTypeName.Should().BeNull();
+            Assert.Null(this.testSubject.ExpectedTypeName);
         }
 
         [Fact]
         public void SettingEmptyExpectedTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.ExpectedTypeName = "";
-            action.ShouldThrow<ArgumentException>().Where(e => e.Message.Contains("ExpectedTypeName"));
+            ArgumentException exception = Assert.Throws<ArgumentException>(action);
+            Assert.Contains("ExpectedTypeName", exception.Message);
         }
 
         [Fact]
         public void ShouldBeAbleToSetExpectedTypeName()
         {
             this.testSubject.ExpectedTypeName = "ExpectedTypeName";
-            this.testSubject.ExpectedTypeName.Should().Be("ExpectedTypeName");
+            Assert.Equal("ExpectedTypeName", this.testSubject.ExpectedTypeName);
         }
 
         [Fact]
         public void ExpectedTypeNameShouldBeDefaultToBaseTypeName()
         {
             this.testSubject.NavigationSourceEntityTypeName = "EntitySetElementTypeName";
-            this.testSubject.ExpectedTypeName.Should().Be("EntitySetElementTypeName");
+            Assert.Equal("EntitySetElementTypeName", this.testSubject.ExpectedTypeName);
         }
 
         [Fact]
         public void ValidateNullSerializationInfoShouldReturnNull()
         {
-            ODataResourceSerializationInfo.Validate(null).Should().BeNull();
+            Assert.Null(ODataResourceSerializationInfo.Validate(null));
         }
 
         [Fact]
@@ -109,20 +111,24 @@ namespace Microsoft.OData.Tests
         {
             Action action = () => ODataResourceSerializationInfo.Validate(
                 new ODataResourceSerializationInfo() { NavigationSourceKind = EdmNavigationSourceKind.EntitySet });
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.NavigationSourceName"));
+
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.Contains("serializationInfo.NavigationSourceName", exception.Message);
         }
 
         [Fact]
         public void ValidatingSerializationInfoShouldThrowIfBaseTypeNameNotSet()
         {
             Action action = () => ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceKind = EdmNavigationSourceKind.EntitySet });
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.NavigationSourceEntityTypeName"));
+
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.Contains("serializationInfo.NavigationSourceEntityTypeName", exception.Message);
         }
 
         [Fact]
         public void ValidatingSerializationInfoShouldAllowExpectedTypeNameNotSet()
         {
-            ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "EntitySetElementTypeName" }).Should().NotBeNull();
+            Assert.NotNull(ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "EntitySetElementTypeName" }));
         }
 
         [Fact]

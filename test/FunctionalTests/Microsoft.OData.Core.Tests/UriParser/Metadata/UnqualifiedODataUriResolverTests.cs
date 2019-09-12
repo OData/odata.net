@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -141,7 +140,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 Resolver = new UnqualifiedODataUriResolver() {EnableCaseInsensitive = false}
             };
             Action action = () => parser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.BadRequest_KeyCountMismatch("TestNS.Pet"));
+            action.Throws<ODataException>(Strings.BadRequest_KeyCountMismatch("TestNS.Pet"));
         }
 
         [Fact]
@@ -150,7 +149,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             Uri uriUnmatchedKeysCount = new Uri("PetSet(key1=1, key2='aStr', nonExistingKey='bStr')", UriKind.Relative);
             ODataUriParser parser = new ODataUriParser(Model, uriUnmatchedKeysCount);
             Action action = () => parser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.BadRequest_KeyCountMismatch("TestNS.Pet"));
+            action.Throws<ODataException>(Strings.BadRequest_KeyCountMismatch("TestNS.Pet"));
         }
 
         private void TestUnqualified<TResult>(

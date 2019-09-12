@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -17,7 +16,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ConstructorDoesNotThrow()
         {
             Action ctor = () => new WildcardSelectItem();
-            ctor.ShouldNotThrow();
+            ctor.DoesNotThrow();
         }
 
         [Fact]
@@ -25,7 +24,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             var item1 = new WildcardSelectItem();
             var item2 = new WildcardSelectItem();
-            item1.Should().NotBeSameAs(item2);
+            Assert.NotSame(item2, item1);
         }
     }
 }
