@@ -7,7 +7,6 @@
 using Microsoft.OData.UriParser;
 using Microsoft.Spatial;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser
 {

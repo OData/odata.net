@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -36,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     new List<KeyValuePair<string, object>>(),
                     ModelBuildingHelpers.BuildValidEntityType(),
                     null));
-            callWithNullNavProp.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("currentNavigationProperty"));
+            Assert.Throws<ArgumentNullException>("currentNavigationProperty", callWithNullNavProp);
         }
 
         [Fact]
@@ -56,7 +55,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     new List<KeyValuePair<string, object>>(),
                     ModelBuildingHelpers.BuildValidEntityType(),
                     null));
-            callWithNullRawKey.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("rawKeyValues"));
+            Assert.Throws<ArgumentNullException>("rawKeyValuesFromUri", callWithNullRawKey);
         }
 
         [Fact]
@@ -77,7 +76,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     new List<KeyValuePair<string, object>>(),
                     ModelBuildingHelpers.BuildValidEntityType(),
                     null));
-            newKey.Should().Be(key);
+            Assert.Same(key, newKey);
         }
 
         [Fact]
@@ -100,7 +99,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.Should().Be(key);
+            Assert.Same(key, newKey);
         }
 
         [Fact]
@@ -123,7 +122,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.Should().Be(key);
+            Assert.Same(key, newKey);
         }
 
         [Fact]
@@ -146,8 +145,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.NamedValues.Should().ContainKey("ID1")
-                .And.ContainValue("6");
+            Assert.Contains("ID1", newKey.NamedValues.Keys);
+            Assert.Contains("6", newKey.NamedValues.Values);
         }
 
         [Fact]
@@ -170,8 +169,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.NamedValues.Should().Contain(new KeyValuePair<string, string>("ID1", "32"))
-                .And.Contain(new KeyValuePair<string, string>("ID2", "6"));
+            Assert.Contains(newKey.NamedValues, kvp => kvp.Key == "ID1" && kvp.Value == "32");
+            Assert.Contains(newKey.NamedValues, kvp => kvp.Key == "ID2" && kvp.Value == "6");
         }
 
         [Fact]
@@ -195,7 +194,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.Should().Be(key);
+            Assert.Same(key, newKey);
         }
 
         [Fact]
@@ -218,7 +217,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.PositionalValues.Should().BeEmpty();
+            Assert.Empty(newKey.PositionalValues);
         }
 
         [Fact]
@@ -241,7 +240,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.AreValuesNamed.Should().BeTrue();
+            Assert.True(newKey.AreValuesNamed);
         }
 
         [Fact]
@@ -264,8 +263,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.NamedValues.Should().Contain(new KeyValuePair<string, string>("ID1", "32"))
-                .And.Contain(new KeyValuePair<string, string>("ID2", "6"));
+
+            Assert.Contains(newKey.NamedValues, kvp => kvp.Key == "ID1" && kvp.Value == "32");
+            Assert.Contains(newKey.NamedValues, kvp => kvp.Key == "ID2" && kvp.Value == "6");
         }
 
         [Fact]
@@ -288,8 +288,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.NamedValues.Should().Contain(new KeyValuePair<string, string>("ID1", "32"))
-                .And.Contain(new KeyValuePair<string, string>("ID2", "{6}"));
+
+            Assert.Contains(newKey.NamedValues, kvp => kvp.Key == "ID1" && kvp.Value == "32");
+            Assert.Contains(newKey.NamedValues, kvp => kvp.Key == "ID2" && kvp.Value == "{6}");
         }
 
         [Fact]
@@ -311,7 +312,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.Should().Be(key);
+            Assert.Same(key, newKey);
         }
 
         [Fact]
@@ -333,7 +334,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()));
-            newKey.Should().Be(key);
+            Assert.Same(key, newKey);
         }
     }
 }

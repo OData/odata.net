@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -18,7 +17,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void NameCannotBeNull()
         {
             Action createWithNullName = () => new InnerPathToken(null, new LiteralToken(1), new NamedValue[] { new NamedValue("blah", new LiteralToken(1)) });
-            createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
+            Assert.Throws<ArgumentNullException>("identifier", createWithNullName);
         }
 
         [Fact]
@@ -32,15 +31,15 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void NameSetCorrectly()
         {
             InnerPathToken innerPathToken = new InnerPathToken("stuff", new LiteralToken(1), new NamedValue[] { new NamedValue("blah", new LiteralToken(1)) });
-            innerPathToken.Identifier.Should().Be("stuff");
+            Assert.Equal("stuff", innerPathToken.Identifier);
         }
 
         [Fact]
         public void NamedValuesSetCorrectly()
         {
             InnerPathToken innerPathToken = new InnerPathToken("stuff", new LiteralToken(1), new NamedValue[] { new NamedValue("blah", new LiteralToken(1)) });
-            innerPathToken.NamedValues.Count().Should().Be(1);
-            innerPathToken.NamedValues.ElementAt(0).Name.Should().Be("blah");
+            Assert.Single(innerPathToken.NamedValues);
+            Assert.Equal("blah", innerPathToken.NamedValues.ElementAt(0).Name);
             innerPathToken.NamedValues.ElementAt(0).Value.ShouldBeLiteralQueryToken(1);
         }
 
@@ -48,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void KindIsInnerPath()
         {
             InnerPathToken innerPathToken = new InnerPathToken("stuff", new LiteralToken(1), new NamedValue[] { new NamedValue("blah", new LiteralToken(1)) });
-            innerPathToken.Kind.Should().Be(QueryTokenKind.InnerPath);
+            Assert.Equal(QueryTokenKind.InnerPath, innerPathToken.Kind);
         }
     }
 }

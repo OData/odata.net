@@ -1,9 +1,14 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="NavigationPropertyOnComplexTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Tests.UriParser;
@@ -66,7 +71,7 @@ namespace Microsoft.OData.Tests
 
             uri = new Uri(@"http://host/People('abc')/Addresses/City");
             Action parse = () => new ODataUriParser(Model, ServiceRoot, uri).ParsePath().ToList();
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_CannotQueryCollections("Addresses"));
+            parse.Throws<ODataException>(Strings.RequestUriProcessor_CannotQueryCollections("Addresses"));
         }
 
         [Fact]
@@ -89,14 +94,14 @@ namespace Microsoft.OData.Tests
             var selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
 
             // verify
-            selectAndExpandClause.SelectedItems.Count().Should().Be(2);
+            Assert.Equal(2, selectAndExpandClause.SelectedItems.Count());
             var items = selectAndExpandClause.SelectedItems.ToList();
-            items[0].Should().BeOfType<ExpandedNavigationSelectItem>();
-            items[1].Should().BeOfType<PathSelectItem>();
+            Assert.IsType<ExpandedNavigationSelectItem>(items[0]);
+            Assert.IsType<PathSelectItem>(items[1]);
 
             var expandItem = items[0] as ExpandedNavigationSelectItem;
             expandItem.PathToNavigationProperty.First().ShouldBeNavigationPropertySegment(city);
-            expandItem.NavigationSource.Should().Be(cities);
+            Assert.Same(cities, expandItem.NavigationSource);
 
             var selectItem = items[1] as PathSelectItem;
             selectItem.SelectedPath.FirstOrDefault().ShouldBeNavigationPropertySegment(city);
@@ -106,14 +111,14 @@ namespace Microsoft.OData.Tests
             selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
 
             // verify
-            selectAndExpandClause.SelectedItems.Count().Should().Be(2);
+            Assert.Equal(2, selectAndExpandClause.SelectedItems.Count());
             items = selectAndExpandClause.SelectedItems.ToList();
-            items[0].Should().BeOfType<ExpandedNavigationSelectItem>();
-            items[1].Should().BeOfType<PathSelectItem>();
+            Assert.IsType<ExpandedNavigationSelectItem>(items[0]);
+            Assert.IsType<PathSelectItem>(items[1]);
 
             expandItem = items[0] as ExpandedNavigationSelectItem;
             expandItem.PathToNavigationProperty.First().ShouldBeNavigationPropertySegment(city);
-            expandItem.NavigationSource.Should().Be(cities);
+            Assert.Same(cities, expandItem.NavigationSource);
 
             selectItem = items[1] as PathSelectItem;
             selectItem.SelectedPath.FirstOrDefault().ShouldBeNavigationPropertySegment(city);
@@ -123,10 +128,8 @@ namespace Microsoft.OData.Tests
             selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
 
             // verify
-            selectAndExpandClause.SelectedItems.Count().Should().Be(1);
-            items = selectAndExpandClause.SelectedItems.ToList();
-            items[0].Should().BeOfType<ExpandedNavigationSelectItem>();
-            expandItem = items[0] as ExpandedNavigationSelectItem;
+            var item = Assert.Single(selectAndExpandClause.SelectedItems);
+            expandItem = Assert.IsType<ExpandedNavigationSelectItem>(item);
             var paths = expandItem.PathToNavigationProperty.ToList();
             paths[0].ShouldBePropertySegment(addressProperty);
             paths[1].ShouldBePropertySegment(workAddressProperty);
@@ -138,10 +141,8 @@ namespace Microsoft.OData.Tests
             selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
 
             // verify
-            selectAndExpandClause.SelectedItems.Count().Should().Be(1);
-            items = selectAndExpandClause.SelectedItems.ToList();
-            items[0].Should().BeOfType<ExpandedNavigationSelectItem>();
-            expandItem = items[0] as ExpandedNavigationSelectItem;
+            item = Assert.Single(selectAndExpandClause.SelectedItems);
+            expandItem = Assert.IsType<ExpandedNavigationSelectItem>(item);
             paths = expandItem.PathToNavigationProperty.ToList();
             paths[0].ShouldBePropertySegment(addressesProperty);
             paths[1].ShouldBeNavigationPropertySegment(city);
@@ -151,10 +152,10 @@ namespace Microsoft.OData.Tests
             selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
 
             // verify
-            selectAndExpandClause.SelectedItems.Count().Should().Be(2);
+            Assert.Equal(2, selectAndExpandClause.SelectedItems.Count());
             items = selectAndExpandClause.SelectedItems.ToList();
-            items[0].Should().BeOfType<ExpandedNavigationSelectItem>();
-            items[1].Should().BeOfType<PathSelectItem>();
+            Assert.IsType<ExpandedNavigationSelectItem>(items[0]);
+            Assert.IsType<PathSelectItem>(items[1]);
 
             expandItem = items[0] as ExpandedNavigationSelectItem;
             paths = expandItem.PathToNavigationProperty.ToList();
@@ -198,7 +199,7 @@ namespace Microsoft.OData.Tests
             var selectAndExpandClause = new ODataUriParser(CollectionModel, ServiceRoot, uri).ParseSelectAndExpand();
 
             // verify
-            selectAndExpandClause.SelectedItems.Count().Should().Be(2);
+            Assert.Equal(2, selectAndExpandClause.SelectedItems.Count());
             var items = selectAndExpandClause.SelectedItems.ToList();
 
             var expandItem = items[0] as ExpandedNavigationSelectItem;
@@ -216,7 +217,7 @@ namespace Microsoft.OData.Tests
             selectAndExpandClause = new ODataUriParser(CollectionModel, ServiceRoot, uri).ParseSelectAndExpand();
 
             // verify
-            selectAndExpandClause.SelectedItems.Count().Should().Be(2);
+            Assert.Equal(2, selectAndExpandClause.SelectedItems.Count());
             items = selectAndExpandClause.SelectedItems.ToList();
 
             expandItem = items[0] as ExpandedNavigationSelectItem;
@@ -250,9 +251,9 @@ namespace Microsoft.OData.Tests
 
             var entryLists = ReadPayload(payload, Model, EntitySet, EntityType).OfType<ODataResource>().ToList();
 
-            entryLists[0].Id.Should().Be("http://host/City(111)");
-            entryLists[1].TypeName.Should().Be("DefaultNs.Address");
-            entryLists[2].Id.Should().Be("http://host/People('abc')");
+            Assert.Equal("http://host/City(111)", entryLists[0].Id.OriginalString);
+            Assert.Equal("DefaultNs.Address", entryLists[1].TypeName);
+            Assert.Equal("http://host/People('abc')", entryLists[2].Id.OriginalString);
         }
 
         [Fact]
@@ -278,13 +279,13 @@ namespace Microsoft.OData.Tests
 
             var entryLists = ReadPayload(payload, Model, EntitySet, EntityType).OfType<ODataResource>().ToList();
 
-            entryLists[0].Id.Should().Be("http://host/City(111)");
-            entryLists[1].TypeName.Should().Be("DefaultNs.Address");
-            entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road").Value.Should().Be("Zixing");
-            entryLists[2].Id.Should().Be("http://host/City(222)");
-            entryLists[3].TypeName.Should().Be("DefaultNs.WorkAddress");
-            entryLists[3].Properties.FirstOrDefault(s => s.Name == "Road").Value.Should().Be("Ziyue");
-            entryLists[4].Id.Should().Be("http://host/People('abc')");
+            Assert.Equal("http://host/City(111)", entryLists[0].Id.OriginalString);
+            Assert.Equal("DefaultNs.Address", entryLists[1].TypeName);
+            Assert.Equal("Zixing", entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road").Value);
+            Assert.Equal("http://host/City(222)", entryLists[2].Id.OriginalString);
+            Assert.Equal("DefaultNs.WorkAddress", entryLists[3].TypeName);
+            Assert.Equal("Ziyue", entryLists[3].Properties.FirstOrDefault(s => s.Name == "Road").Value);
+            Assert.Equal("http://host/People('abc')", entryLists[4].Id.OriginalString);
         }
 
         [Fact]
@@ -305,11 +306,11 @@ namespace Microsoft.OData.Tests
 
             var entryLists = ReadPayload(payload, Model, EntitySet, EntityType).OfType<ODataResource>().ToList();
 
-            entryLists[0].Id.Should().Be("http://host/City(111)");
-            entryLists[1].TypeName.Should().Be("DefaultNs.WorkAddress");
-            entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road").Value.Should().Be("workplace");
-            entryLists[2].Properties.FirstOrDefault(s => s.Name == "Road").Value.Should().Be("Zixing");
-            entryLists[3].Id.Should().Be("http://host/People('abc')");
+            Assert.Equal("http://host/City(111)", entryLists[0].Id.OriginalString);
+            Assert.Equal("DefaultNs.WorkAddress", entryLists[1].TypeName);
+            Assert.Equal("workplace", entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road").Value);
+            Assert.Equal("Zixing", entryLists[2].Properties.FirstOrDefault(s => s.Name == "Road").Value);
+            Assert.Equal("http://host/People('abc')", entryLists[3].Id.OriginalString);
         }
 
         [Fact]
@@ -417,17 +418,17 @@ namespace Microsoft.OData.Tests
             Assert.Equal(actual, expected);
 
             var entryList = ReadPayload(expected, Model, EntitySet, EntityType, true, version: version).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/City(222)"));
-            entryList[0].TypeName.Should().Be("DefaultNs.City");
+            Assert.Equal(new Uri("http://host/City(222)"), entryList[0].Id);
+            Assert.Equal("DefaultNs.City", entryList[0].TypeName);
 
-            entryList[1].Id.Should().Be(null);
-            entryList[1].TypeName.Should().Be("DefaultNs.WorkAddress");
+            Assert.Null(entryList[1].Id);
+            Assert.Equal("DefaultNs.WorkAddress", entryList[1].TypeName);
 
-            entryList[2].Id.Should().Be(null);
-            entryList[2].TypeName.Should().Be("DefaultNs.Address");
+            Assert.Null(entryList[2].Id);
+            Assert.Equal("DefaultNs.Address", entryList[2].TypeName);
 
-            entryList[3].Id.Should().Be(new Uri("http://host/People('abc')"));
-            entryList[3].TypeName.Should().Be("DefaultNs.Person");
+            Assert.Equal(new Uri("http://host/People('abc')"), entryList[3].Id);
+            Assert.Equal("DefaultNs.Person", entryList[3].TypeName);
         }
 
         private const string v4MinimalMetadataPayload =
@@ -545,17 +546,17 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expectedPayload, output);
 
             var entryList = ReadPayload(output, CollectionModel, entitySet, entityType, version: version).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/NavEntities('aaa')"));
-            entryList[0].TypeName.Should().Be("DefaultNs.NavEntityType");
+            Assert.Equal(new Uri("http://host/NavEntities('aaa')"), entryList[0].Id);
+            Assert.Equal("DefaultNs.NavEntityType", entryList[0].TypeName);
 
-            entryList[1].Id.Should().Be(new Uri("http://host/NavEntities('bbb')"));
-            entryList[1].TypeName.Should().Be("DefaultNs.NavEntityType");
+            Assert.Equal(new Uri("http://host/NavEntities('bbb')"), entryList[1].Id);
+            Assert.Equal("DefaultNs.NavEntityType", entryList[1].TypeName);
 
-            entryList[2].Id.Should().Be(null);
-            entryList[2].TypeName.Should().Be("DefaultNs.ComplexType");
+            Assert.Null(entryList[2].Id);
+            Assert.Equal("DefaultNs.ComplexType", entryList[2].TypeName);
 
-            entryList[3].Id.Should().Be(new Uri("http://host/Entities('abc')"));
-            entryList[3].TypeName.Should().Be("DefaultNs.EntityType");
+            Assert.Equal(new Uri("http://host/Entities('abc')"), entryList[3].Id);
+            Assert.Equal("DefaultNs.EntityType", entryList[3].TypeName);
         }
 
         [Fact]
@@ -592,14 +593,14 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expectedPayload, output);
 
             var entryList = ReadPayload(expectedPayload, CollectionModel, null, complexType).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/NavEntities('aaa')"));
-            entryList[0].TypeName.Should().Be("DefaultNs.NavEntityType");
+            Assert.Equal(new Uri("http://host/NavEntities('aaa')"), entryList[0].Id);
+            Assert.Equal("DefaultNs.NavEntityType", entryList[0].TypeName);
 
-            entryList[1].Id.Should().Be(new Uri("http://host/NavEntities('bbb')"));
-            entryList[1].TypeName.Should().Be("DefaultNs.NavEntityType");
+            Assert.Equal(new Uri("http://host/NavEntities('bbb')"), entryList[1].Id);
+            Assert.Equal("DefaultNs.NavEntityType", entryList[1].TypeName);
 
-            entryList[2].Id.Should().Be(null);
-            entryList[2].TypeName.Should().Be("DefaultNs.ComplexType");
+            Assert.Null(entryList[2].Id);
+            Assert.Equal("DefaultNs.ComplexType", entryList[2].TypeName);
         }
 
         [Fact]
@@ -633,11 +634,11 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expectedPayload, output);
 
             var entryList = ReadPayload(expectedPayload, CollectionModel, null, complexType, true).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/NavEntities('aaa')"));
-            entryList[0].TypeName.Should().Be("DefaultNs.NavEntityType");
+            Assert.Equal(new Uri("http://host/NavEntities('aaa')"), entryList[0].Id);
+            Assert.Equal("DefaultNs.NavEntityType", entryList[0].TypeName);
 
-            entryList[1].Id.Should().Be(null);
-            entryList[1].TypeName.Should().Be("DefaultNs.ComplexType");
+            Assert.Null(entryList[1].Id);
+            Assert.Equal("DefaultNs.ComplexType", entryList[1].TypeName);
         }
 
         [Theory]
@@ -696,14 +697,14 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expectedPayload, output);
 
             var entryList = ReadPayload(expectedPayload, Model, null, complexType, version: version).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/Regions('Land')"));
-            entryList[0].TypeName.Should().Be("DefaultNs.Region");
+            Assert.Equal(new Uri("http://host/Regions('Land')"), entryList[0].Id);
+            Assert.Equal("DefaultNs.Region", entryList[0].TypeName);
 
-            entryList[1].Id.Should().Be(new Uri("http://host/City(222)"));
-            entryList[1].TypeName.Should().Be("DefaultNs.City");
+            Assert.Equal(new Uri("http://host/City(222)"), entryList[1].Id);
+            Assert.Equal("DefaultNs.City", entryList[1].TypeName);
 
-            entryList[2].Id.Should().Be(null);
-            entryList[2].TypeName.Should().Be("DefaultNs.WorkAddress");
+            Assert.Null(entryList[2].Id);
+            Assert.Equal("DefaultNs.WorkAddress", entryList[2].TypeName);
         }
 
         [Theory]
@@ -768,14 +769,14 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expectedPayload, output);
 
             var entryList = ReadPayload(expectedPayload, Model, null, complexType, version: version).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/Regions('China')"));
-            entryList[0].TypeName.Should().Be("DefaultNs.Region");
+            Assert.Equal(new Uri("http://host/Regions('China')"), entryList[0].Id);
+            Assert.Equal("DefaultNs.Region", entryList[0].TypeName);
 
-            entryList[1].Id.Should().Be(new Uri("http://host/City(222)"));
-            entryList[1].TypeName.Should().Be("DefaultNs.City");
+            Assert.Equal(new Uri("http://host/City(222)"), entryList[1].Id);
+            Assert.Equal("DefaultNs.City", entryList[1].TypeName);
 
-            entryList[2].Id.Should().Be(null);
-            entryList[2].TypeName.Should().Be("DefaultNs.WorkAddress");
+            Assert.Null(entryList[2].Id);
+            Assert.Equal("DefaultNs.WorkAddress", entryList[2].TypeName);
         }
 
         [Theory]
@@ -846,17 +847,17 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expectedPayload, output);
 
             var entryList = ReadPayload(expectedPayload, Model, null, complexType, version: version).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/Regions('Land')"));
-            entryList[0].TypeName.Should().Be("DefaultNs.Region");
+            Assert.Equal(new Uri("http://host/Regions('Land')"), entryList[0].Id);
+            Assert.Equal("DefaultNs.Region", entryList[0].TypeName);
 
-            entryList[1].Id.Should().Be(new Uri("http://host/City(222)"));
-            entryList[1].TypeName.Should().Be("DefaultNs.City");
+            Assert.Equal(new Uri("http://host/City(222)"), entryList[1].Id);
+            Assert.Equal("DefaultNs.City", entryList[1].TypeName);
 
-            entryList[2].Id.Should().Be(null);
-            entryList[2].TypeName.Should().Be("DefaultNs.WorkAddress");
+            Assert.Null(entryList[2].Id);
+            Assert.Equal("DefaultNs.WorkAddress", entryList[2].TypeName);
 
-            entryList[3].Id.Should().Be(null);
-            entryList[3].TypeName.Should().Be("DefaultNs.Address");
+            Assert.Null(entryList[3].Id);
+            Assert.Equal("DefaultNs.Address", entryList[3].TypeName);
         }
         #endregion
 
@@ -904,21 +905,21 @@ namespace Microsoft.OData.Tests
 
             var itemsList = ReadPayload(expected, CollectionModel, entitySet, entityType).ToList();
             var nestedInfo = itemsList[0] as ODataNestedResourceInfo;
-            nestedInfo.AssociationLinkUrl.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav/$ref"));
-            nestedInfo.Url.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav"));
+            Assert.Equal(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav/$ref"), nestedInfo.AssociationLinkUrl);
+            Assert.Equal(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav"), nestedInfo.Url);
 
             // itemsList[1] is nested info of SingleOfNav, skip the validation.
 
             var resource = itemsList[2] as ODataResource;
-            resource.TypeName.Should().Be("DefaultNs.ComplexType");
+            Assert.Equal("DefaultNs.ComplexType", resource.TypeName);
 
             nestedInfo = itemsList[3] as ODataNestedResourceInfo;
-            nestedInfo.Name.Should().Be("Complex");
-            nestedInfo.AssociationLinkUrl.Should().Be(null);
-            nestedInfo.Url.Should().Be(null);
+            Assert.Equal("Complex", nestedInfo.Name);
+            Assert.Null(nestedInfo.AssociationLinkUrl);
+            Assert.Null(nestedInfo.Url);
 
             resource = itemsList[4] as ODataResource;
-            resource.Id.Should().Be(new Uri("http://host/Entities('abc')"));
+            Assert.Equal(new Uri("http://host/Entities('abc')"), resource.Id);
         }
 
         [Fact]
@@ -1056,12 +1057,12 @@ namespace Microsoft.OData.Tests
 
             var itemsList = ReadPayload(payload, CollectionModel, entitySet, entityType).OfType<ODataNestedResourceInfo>().ToList();
             var nestedInfo = itemsList[0];
-            nestedInfo.AssociationLinkUrl.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav/$ref"));
-            nestedInfo.Url.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav"));
+            Assert.Equal(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav/$ref"), nestedInfo.AssociationLinkUrl);
+            Assert.Equal(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav"), nestedInfo.Url);
 
             nestedInfo = itemsList[1];
-            nestedInfo.AssociationLinkUrl.Should().Be(new Uri("http://host/Entities('abc')/Complex/SingleOfNav/$ref"));
-            nestedInfo.Url.Should().Be(new Uri("http://host/Entities('abc')/Complex/SingleOfNav"));
+            Assert.Equal(new Uri("http://host/Entities('abc')/Complex/SingleOfNav/$ref"), nestedInfo.AssociationLinkUrl);
+            Assert.Equal(new Uri("http://host/Entities('abc')/Complex/SingleOfNav"), nestedInfo.Url);
         }
 
         [Fact]
@@ -1088,21 +1089,21 @@ namespace Microsoft.OData.Tests
 
             // Region under City2
             var nestInfo = itemsList[0];
-            nestInfo.Url.Should().Be(new Uri("http://host/City(222)/Region"));
+            Assert.Equal(new Uri("http://host/City(222)/Region"), nestInfo.Url);
 
             // City2 under WorkAddress
             nestInfo = itemsList[1];
-            nestInfo.Url.Should().Be(new Uri("http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2"));
+            Assert.Equal(new Uri("http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2"), nestInfo.Url);
 
             // City under WorkAddress
             nestInfo = itemsList[2];
-            nestInfo.Url.Should().Be(new Uri("http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City"));
+            Assert.Equal(new Uri("http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City"), nestInfo.Url);
 
             // itemsList[3] is the nested info for complex property WorkAddress, skip the validation.
 
             // City under Address
             nestInfo = itemsList[4];
-            nestInfo.Url.Should().Be(new Uri("http://host/People('abc')/Address/City"));
+            Assert.Equal(new Uri("http://host/People('abc')/Address/City"), nestInfo.Url);
         }
         #endregion
 
@@ -1243,9 +1244,9 @@ namespace Microsoft.OData.Tests
                        "\"NavUnderContained\":[{\"ID\":\"efg\"}]}]}";
 
             var itemsList = ReadPayload(payload, model, null, complexType).OfType<ODataResource>().ToList();
-            itemsList[0].Id.Should().Be(new Uri("http://host/Entities2('efg')"));
-            itemsList[1].Id.Should().Be(new Uri("http://host/Entities1('abc')/Complex/ContainedUnderComplex('def')"));
-;        }
+            Assert.Equal(new Uri("http://host/Entities2('efg')"), itemsList[0].Id);
+            Assert.Equal(new Uri("http://host/Entities1('abc')/Complex/ContainedUnderComplex('def')"), itemsList[1].Id);
+        }
 
         #endregion
 

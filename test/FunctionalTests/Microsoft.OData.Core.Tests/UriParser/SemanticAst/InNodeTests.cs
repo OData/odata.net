@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -24,7 +23,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode("Doggo");
             CollectionPropertyAccessNode right = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
             InNode inNode = new InNode(left, right);
-            inNode.Left.Should().Be(left);
+            Assert.Same(left, inNode.Left);
         }
 
         [Fact]
@@ -33,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode("YungPupper");
             CollectionPropertyAccessNode right = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
             InNode inNode = new InNode(left, right);
-            inNode.Right.Should().Be(right);
+            Assert.Same(right, inNode.Right);
         }
 
         [Fact]
@@ -42,7 +41,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode("Cat");
             CollectionPropertyAccessNode right = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
             InNode inNode = new InNode(left, right);
-            inNode.TypeReference.FullName().Should().Be("Edm.Boolean");
+            Assert.Equal("Edm.Boolean", inNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -51,7 +50,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode left = new ConstantNode("Scooby");
             CollectionPropertyAccessNode right = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
             InNode inNode = new InNode(left, right);
-            inNode.InternalKind.Should().Be(InternalQueryNodeKind.In);
+            Assert.Equal(InternalQueryNodeKind.In, inNode.InternalKind);
         }
     }
 }

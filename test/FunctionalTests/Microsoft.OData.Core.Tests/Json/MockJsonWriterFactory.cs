@@ -4,9 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using Microsoft.OData.Json;
 
 namespace Microsoft.OData.Tests.Json

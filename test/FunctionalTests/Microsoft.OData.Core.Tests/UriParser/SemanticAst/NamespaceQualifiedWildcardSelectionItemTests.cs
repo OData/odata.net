@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -17,14 +16,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ContainerIsSetFromConstructor()
         {
             var item = new NamespaceQualifiedWildcardSelectItem("name.space");
-            item.Namespace.Should().Be("name.space");
+            Assert.Equal("name.space", item.Namespace);
         }
 
         [Fact]
         public void ContainerCannotBeNull()
         {
             Action ctor = () => new NamespaceQualifiedWildcardSelectItem(null);
-            ctor.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("namespaceName", ctor);
         }
     }
 }

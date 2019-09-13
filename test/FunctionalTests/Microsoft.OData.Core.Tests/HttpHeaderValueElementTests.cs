@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -17,21 +16,21 @@ namespace Microsoft.OData.Tests
         public void NullNameShouldThrow()
         {
             Action test = () => new HttpHeaderValueElement(null, null, new KeyValuePair<string, string>[0]);
-            test.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("name"));
+            Assert.Throws<ArgumentNullException>("name", test);
         }
 
         [Fact]
         public void EmptyNameShouldThrow()
         {
             Action test = () => new HttpHeaderValueElement("", "", new KeyValuePair<string, string>[0]);
-            test.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("name"));
+            Assert.Throws<ArgumentNullException>("name", test);
         }
 
         [Fact]
         public void NullParametersShouldThrow()
         {
             Action test = () => new HttpHeaderValueElement("name", null, null);
-            test.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("parameters"));
+            Assert.Throws<ArgumentNullException>("parameters", test);
         }
 
         [Fact]
@@ -62,7 +61,7 @@ namespace Microsoft.OData.Tests
 
             foreach(KeyValuePair<HttpHeaderValueElement, string> test in testCases)
             {
-                test.Key.ToString().Should().Be(test.Value);
+                Assert.Equal(test.Value, test.Key.ToString());
             }
         }
     }

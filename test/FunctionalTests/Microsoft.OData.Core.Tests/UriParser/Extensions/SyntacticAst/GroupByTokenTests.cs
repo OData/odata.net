@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
@@ -23,28 +22,28 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         public void PropertiesCannotBeNull()
         {
             Action action = () => new GroupByToken(null, aggregate);
-            action.ShouldThrow<Exception>(Error.ArgumentNull("properties").ToString());
+            Assert.Throws<ArgumentNullException>("properties", action);
         }
 
         [Fact]
         public void AggregateCanBeNull()
         {
             Action action = () => new GroupByToken(properties, null);
-            action.ShouldNotThrow();
+            action.DoesNotThrow();
         }
 
         [Fact]
         public void PropertiesSetCorrectly()
         {
             var token = new GroupByToken(properties, null);
-            ((object)token.Properties).Should().Be(properties);
+            Assert.Same(properties, ((object)token.Properties));
         }
 
         [Fact]
         public void AggregateSetCorrectly()
         {
             var token = new GroupByToken(properties, aggregate);
-            ((object)token.Child).Should().Be(aggregate);
+            Assert.Same(aggregate, ((object)token.Child));
         }
 
         [Fact]
@@ -52,7 +51,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         {
             var token = new GroupByToken(properties, null);
 
-            token.Kind.Should().Be(QueryTokenKind.AggregateGroupBy);
+            Assert.Equal(QueryTokenKind.AggregateGroupBy, token.Kind);
         }
     }
 }

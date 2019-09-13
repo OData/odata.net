@@ -9,11 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
@@ -151,7 +149,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -171,7 +169,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                             "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedNavProp/$entity\"," +
                                             "\"ID\":102,\"Name\":\"Bob\"" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -195,7 +193,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -215,7 +213,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                             "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedNavProp/Namespace.DerivedType/$entity\"," +
                                             "\"ID\":102,\"Name\":\"Bob\"" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -249,7 +247,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                     "}" +
                                                     "]" +
                                             "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -278,7 +276,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, ModelWithFunction))
             {
-                messageReader.DetectPayloadKind().Single().PayloadKind.Should().Be(ODataPayloadKind.ResourceSet);
+                Assert.Equal(ODataPayloadKind.ResourceSet, messageReader.DetectPayloadKind().Single().PayloadKind);
 
                 var reader = messageReader.CreateODataResourceSetReader();
                 while (reader.Read())
@@ -293,8 +291,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             ODataResourceSet feed = feedList[0];
-            feed.Actions.Count().Should().Be(1);
-            feed.Functions.Count().Should().Be(1);
+            Assert.Single(feed.Actions);
+            Assert.Single(feed.Functions);
         }
 
         [Fact]
@@ -337,7 +335,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                     "}" +
                                                  "]" +
                                             "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -372,7 +370,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -406,7 +404,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -442,7 +440,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                             "]" +
 
                                     "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -477,7 +475,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                     "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -519,7 +517,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                     "}" +
                                                  "]" +
                                             "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -554,7 +552,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -588,7 +586,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -633,9 +631,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             ODataResource bobEntry = entryList[1];
             ODataResource aliceEntry = entryList[2];
 
-            charileEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)/ContainedNavProp");
-            bobEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)");
-            aliceEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)");
+            Assert.Equal("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)/ContainedNavProp", charileEntry.Id.OriginalString);
+            Assert.Equal("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)", bobEntry.Id.OriginalString);
+            Assert.Equal("http://example.org/odata.svc/EntitySet(101)", aliceEntry.Id.OriginalString);
         }
 
         [Fact]
@@ -668,7 +666,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                             "]," +
                                             "\"ContainedNavProp\":{\"ID\":103,\"Name\":\"Charlie\"}" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -709,10 +707,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             ODataResource containedCharileEntry = entryList[2];
             ODataResource topLevelAliceEntry = entryList[3];
 
-            bobEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(102)");
-            containedBobEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)");
-            containedCharileEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedNavProp");
-            topLevelAliceEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)");
+            Assert.Equal("http://example.org/odata.svc/EntitySet(102)", bobEntry.Id.OriginalString);
+            Assert.Equal("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)", containedBobEntry.Id.OriginalString);
+            Assert.Equal("http://example.org/odata.svc/EntitySet(101)/ContainedNavProp", containedCharileEntry.Id.OriginalString);
+            Assert.Equal("http://example.org/odata.svc/EntitySet(101)", topLevelAliceEntry.Id.OriginalString);
         }
 
         [Fact]
@@ -746,7 +744,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             foreach (var oDataEntry in entryList)
             {
-                oDataEntry.Id.Should().NotBeNull();
+                Assert.NotNull(oDataEntry.Id);
             }
 
         }
@@ -776,7 +774,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -806,7 +804,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "}" +
                                             "]" +
                                         "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -841,7 +839,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             ODataResourceSet topFeed = feedList[0];
-            topFeed.Count.Should().Be(1881);
+            Assert.Equal(1881, topFeed.Count);
         }
 
         [Fact]
@@ -879,9 +877,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
 
             ODataResourceSet innerFeed = feedList[0];
-            innerFeed.Count.Should().Be(1900);
+            Assert.Equal(1900, innerFeed.Count);
             ODataResourceSet topFeed = feedList[1];
-            topFeed.Count.Should().Be(null);
+            Assert.Null(topFeed.Count);
         }
         #endregion Inlinecount Tests
 
@@ -915,7 +913,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 EntitySet,
                 EntityType,
                 enableBasicValidation: true);
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
 
             result = this.GetWriterOutputForContentTypeAndKnobValue(
                 "application/json;odata.metadata=minimal",
@@ -925,7 +923,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 EntitySet,
                 EntityType,
                 enableBasicValidation: false);
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -958,7 +956,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":[{\"ID\":102,\"Name\":\"Bob\"}]" +
                                       "}";
-            result.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, result);
         }
 
         [Fact]
@@ -975,7 +973,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             string applyClause = "compute(ID mul 2 as idMul2,length(Name) as nameLenght)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, contianedEntitySet, EntityType, null, null, resourcePath, applyClause);
 
-            result.Should().StartWith("{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedCollectionNavProp");
+            Assert.StartsWith("{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedCollectionNavProp", result);
         }
 
         #region Help Methods
@@ -1039,7 +1037,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                     Assert.True(false, "Top level item to write must be entry or feed.");
                 }
 
-                currentIdx.Should().Be(itemsToWrite.Length, "Invalid list of items to write.");
+                Assert.Equal(itemsToWrite.Length, currentIdx);
 
                 outputStream.Seek(0, SeekOrigin.Begin);
                 output = new StreamReader(outputStream).ReadToEnd();

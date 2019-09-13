@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -16,9 +15,9 @@ namespace Microsoft.OData.Tests
         public void EmptyHttpHeaderValueToStringShouldReturnNull()
         {
             HttpHeaderValue elements = new HttpHeaderValue();
-            elements.ToString().Should().BeNull();
+            Assert.Null(elements.ToString());
         }
-        
+
         [Fact]
         public void HttpHeaderValueToStringShouldPutAllHttpHeaderValueElementsInString()
         {
@@ -36,7 +35,13 @@ namespace Microsoft.OData.Tests
             const string eStr6 = "e6=\"quoted-string\";p1;p2;p3=v3;p4=\"v4\"";
 
             HttpHeaderValue elements = new HttpHeaderValue {{"e1", e1}, {"e2", e2}, {"e3", e3}, {"e4", e4}, {"e5", e5}, {"e6", e6},};
-            elements.ToString().Split(new[] {','}).Should().Contain(eStr1).And.Contain(eStr2).And.Contain(eStr3).And.Contain(eStr4).And.Contain(eStr5).And.Contain(eStr6);
+            var items = elements.ToString().Split(new[] { ',' });
+            Assert.Contains(eStr1, items);
+            Assert.Contains(eStr2, items);
+            Assert.Contains(eStr3, items);
+            Assert.Contains(eStr4, items);
+            Assert.Contains(eStr5, items);
+            Assert.Contains(eStr6, items);
         }
     }
 }

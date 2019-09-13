@@ -5,9 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Xml;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -114,14 +111,14 @@ namespace Microsoft.OData.Tests
             };
 
             var t = settings.BaseUri.ToString();
-            settings.BaseUri.ToString().Should().BeEquivalentTo("http://example.org/odata.svc/");
+            Assert.Equal("http://example.org/odata.svc/", settings.BaseUri.ToString());
 
             settings = new ODataMessageReaderSettings()
             {
                 BaseUri = new Uri("http://example.org/odata.svc/"),
             };
 
-            settings.BaseUri.ToString().Should().BeEquivalentTo("http://example.org/odata.svc/");
+            Assert.Equal("http://example.org/odata.svc/", settings.BaseUri.ToString());
         }
 
         [Fact]
@@ -163,25 +160,25 @@ namespace Microsoft.OData.Tests
         {
             // MaxPartsPerBatch
             Action test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxPartsPerBatch = -1 } };
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.ExceptionUtils_CheckIntegerNotNegative("-1") + "\r\nParameter name: MaxPartsPerBatch");
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerNotNegative("-1") + "\r\nParameter name: MaxPartsPerBatch");
 
             // MaxOperationsPerChangeset
             test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxOperationsPerChangeset = -1 } };
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.ExceptionUtils_CheckIntegerNotNegative("-1") + "\r\nParameter name: MaxOperationsPerChangeset");
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerNotNegative("-1") + "\r\nParameter name: MaxOperationsPerChangeset");
 
             // MaxNestingDepth
             test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxNestingDepth = -1 } };
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.ExceptionUtils_CheckIntegerPositive("-1") + "\r\nParameter name: MaxNestingDepth");
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerPositive("-1") + "\r\nParameter name: MaxNestingDepth");
 
             test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxNestingDepth = 0 } };
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.ExceptionUtils_CheckIntegerPositive("0") + "\r\nParameter name: MaxNestingDepth");
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerPositive("0") + "\r\nParameter name: MaxNestingDepth");
 
             // MaxMessageSize
             test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = -1 } };
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.ExceptionUtils_CheckLongPositive("-1") + "\r\nParameter name: MaxReceivedMessageSize");
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckLongPositive("-1") + "\r\nParameter name: MaxReceivedMessageSize");
 
             test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = 0 } };
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.ExceptionUtils_CheckLongPositive("0") + "\r\nParameter name: MaxReceivedMessageSize");
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckLongPositive("0") + "\r\nParameter name: MaxReceivedMessageSize");
         }
 
         private void CompareMessageReaderSettings(ODataMessageReaderSettings expected, ODataMessageReaderSettings actual)
@@ -215,7 +212,7 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings();
             readerSettings.MaxProtocolVersion = ODataVersion.V4;
-            readerSettings.ShouldSkipAnnotation("any.any").Should().BeTrue();
+            Assert.True(readerSettings.ShouldSkipAnnotation("any.any"));
         }
 
         [Fact]
@@ -224,9 +221,9 @@ namespace Microsoft.OData.Tests
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings();
             readerSettings.MaxProtocolVersion = ODataVersion.V4;
             readerSettings.ShouldIncludeAnnotation = name => name.StartsWith("ns1.");
-            readerSettings.ShouldIncludeAnnotation.Should().NotBeNull();
-            readerSettings.ShouldSkipAnnotation("any.any").Should().BeTrue();
-            readerSettings.ShouldSkipAnnotation("ns1.any").Should().BeFalse();
+            Assert.NotNull(readerSettings.ShouldIncludeAnnotation);
+            Assert.True(readerSettings.ShouldSkipAnnotation("any.any"));
+            Assert.False(readerSettings.ShouldSkipAnnotation("ns1.any"));
         }
 
         [Fact]
@@ -235,7 +232,7 @@ namespace Microsoft.OData.Tests
             ODataMessageReaderSettings testSubject = new ODataMessageReaderSettings();
             testSubject.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("namespace.*");
             var copy = testSubject.Clone();
-            copy.ShouldIncludeAnnotation.Should().BeSameAs(testSubject.ShouldIncludeAnnotation);
+            Assert.Same(testSubject.ShouldIncludeAnnotation, copy.ShouldIncludeAnnotation);
         }
     }
 }

@@ -4,13 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.MultipartMixed;

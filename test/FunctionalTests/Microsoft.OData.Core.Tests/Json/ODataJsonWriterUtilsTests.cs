@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Json;
 using Xunit;
 
@@ -34,7 +33,7 @@ namespace Microsoft.OData.Tests.Json
         {
             settings.JsonPCallback = null;
             ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.jsonWriter, settings);
-            stringWriter.GetStringBuilder().ToString().Should().BeEmpty();
+            Assert.Empty(stringWriter.GetStringBuilder().ToString());
         }
 
         [Fact]
@@ -42,7 +41,7 @@ namespace Microsoft.OData.Tests.Json
         {
             settings.JsonPCallback = "";
             ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.jsonWriter, settings);
-            stringWriter.GetStringBuilder().ToString().Should().BeEmpty();
+            Assert.Empty(stringWriter.GetStringBuilder().ToString());
         }
 
         [Fact]
@@ -50,7 +49,7 @@ namespace Microsoft.OData.Tests.Json
         {
             settings.JsonPCallback = null;
             ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.jsonWriter, settings);
-            stringWriter.GetStringBuilder().ToString().Should().BeEmpty();
+            Assert.Empty(stringWriter.GetStringBuilder().ToString());
         }
 
         [Fact]
@@ -58,7 +57,7 @@ namespace Microsoft.OData.Tests.Json
         {
             settings.JsonPCallback = "";
             ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.jsonWriter, settings);
-            stringWriter.GetStringBuilder().ToString().Should().BeEmpty();
+            Assert.Empty(stringWriter.GetStringBuilder().ToString());
         }
 
         [Fact]
@@ -67,7 +66,7 @@ namespace Microsoft.OData.Tests.Json
             settings.JsonPCallback = "functionName";
             ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.jsonWriter, settings);
             ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.jsonWriter, settings);
-            stringWriter.GetStringBuilder().ToString().Should().Be("functionName()");
+            Assert.Equal("functionName()", stringWriter.GetStringBuilder().ToString());
         }
 
         [Fact]
@@ -88,8 +87,8 @@ namespace Microsoft.OData.Tests.Json
                 maxInnerErrorDepth: 0,
                 writingJsonLight: false);
             var result = stringWriter.GetStringBuilder().ToString();
-            result.Should().Be(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target""," +
-                @"""details"":[{""code"":""500"",""target"":""any target"",""message"":""any msg""}]}}");
+            Assert.Equal(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target""," +
+                @"""details"":[{""code"":""500"",""target"":""any target"",""message"":""any msg""}]}}", result);
         }
     }
 }

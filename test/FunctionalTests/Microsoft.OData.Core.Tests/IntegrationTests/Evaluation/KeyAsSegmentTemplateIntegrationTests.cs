@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
@@ -23,20 +22,20 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         public void ComputedIdentityShouldUseCorrectKeyDelimiter()
         {
             var entry1 = CreateEntryWithKeyAsSegmentConvention(false);
-            entry1.Id.Should().Be(UrlUsingParenthesesAsKeyDelimiter);
+            Assert.Equal(UrlUsingParenthesesAsKeyDelimiter, entry1.Id.OriginalString);
 
             var entry2 = CreateEntryWithKeyAsSegmentConvention(true);
-            entry2.Id.Should().Be(UrlUsingSlashAsKeyDelimiter);
+            Assert.Equal(UrlUsingSlashAsKeyDelimiter, entry2.Id.OriginalString);
         }
 
         [Fact]
         public void ComputedEditLinkShouldUseCorrectKeyDelimiter()
         {
             var entry1 = CreateEntryWithKeyAsSegmentConvention(false);
-            entry1.EditLink.Should().Be(UrlUsingParenthesesAsKeyDelimiter);
+            Assert.Equal(UrlUsingParenthesesAsKeyDelimiter, entry1.EditLink.OriginalString);
 
             var entry2 = CreateEntryWithKeyAsSegmentConvention(true);
-            entry2.EditLink.Should().Be(UrlUsingSlashAsKeyDelimiter);
+            Assert.Equal(UrlUsingSlashAsKeyDelimiter, entry2.EditLink.OriginalString);
         }
 
         private static ODataResource CreateEntryWithKeyAsSegmentConvention(bool useKeyAsSegment)

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using FluentAssertions;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -43,11 +42,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             };
 
             IEdmModel model = this.ReadMetadataDocument(map, mainUrl);
-            var c1 = model.FindDeclaredType("demo.C1").As<IEdmComplexType>();
-            c1.Should().NotBeNull();
-            var b1 = model.FindDeclaredType("demo.B1").As<IEdmComplexType>();
-            b1.Should().NotBeNull();
-            b1.IsAssignableFrom(c1).Should().BeTrue();
+            var c1 = model.FindDeclaredType("demo.C1") as IEdmComplexType;
+            Assert.NotNull(c1);
+            var b1 = model.FindDeclaredType("demo.B1") as IEdmComplexType;
+            Assert.NotNull(b1);
+            Assert.True(b1.IsAssignableFrom(c1));
         }
 
         [Fact]
@@ -87,11 +86,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             };
 
             IEdmModel model = this.ReadMetadataDocument(map, "main");
-            var c1 = model.FindDeclaredType("demo.C1").As<IEdmComplexType>();
-            c1.Should().NotBeNull();
-            var b1 = model.FindType("demo.B1").As<IEdmComplexType>();
-            b1.Should().NotBeNull();
-            b1.IsAssignableFrom(c1).Should().BeTrue();
+            var c1 = model.FindDeclaredType("demo.C1") as IEdmComplexType;
+            Assert.NotNull(c1);
+            var b1 = model.FindType("demo.B1") as IEdmComplexType;
+            Assert.NotNull(b1);
+            Assert.True(b1.IsAssignableFrom(c1));
         }
 
         [Fact]
@@ -111,10 +110,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
             Action test = () => this.ReadMetadataDocument(map, "main");
 
-            test.ShouldThrow<ODataErrorException>()
-                .WithMessage("An error was read from the payload. See the 'Error' property for more details.")
-                .Where(e => e.Error.ErrorCode == "code42")
-                .Where(e => e.Error.Message == "message text");
+            ODataErrorException exception = Assert.Throws<ODataErrorException>(test);
+            Assert.Equal("An error was read from the payload. See the 'Error' property for more details.", exception.Message);
+            Assert.Equal("code42", exception.Error.ErrorCode);
+            Assert.Equal("message text", exception.Error.Message);
         }
 
         [Fact]
@@ -134,8 +133,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             };
 
             Action test = () => this.ReadMetadataDocument(map, "main");
-            test.ShouldThrow<ODataException>()
-                .WithMessage(Strings.ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName("code"));
+            test.Throws<ODataException>(Strings.ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName("code"));
         }
 
         [Fact]
@@ -161,11 +159,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
             Action test = () => this.ReadMetadataDocument(map, "main");
 
-            test.ShouldThrow<ODataErrorException>()
-                .WithMessage("An error was read from the payload. See the 'Error' property for more details.")
-                .Where(e => e.Error.ErrorCode == "code42")
-                .Where(e => e.Error.Message == "message text")
-                .Where(e => e.Error.InnerError.Message == "some inner error");
+            ODataErrorException exception = Assert.Throws<ODataErrorException>(test);
+            Assert.Equal("An error was read from the payload. See the 'Error' property for more details.", exception.Message);
+            Assert.Equal("code42", exception.Error.ErrorCode);
+            Assert.Equal("message text", exception.Error.Message);
+            Assert.Equal("some inner error", exception.Error.InnerError.Message);
         }
 
         [Fact]
@@ -190,8 +188,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             };
 
             Action test = () => this.ReadMetadataDocument(map, "main");
-            test.ShouldThrow<ODataException>()
-                .WithMessage(Strings.ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName("stacktrace"));
+            test.Throws<ODataException>(Strings.ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName("stacktrace"));
         }
 
         private IEdmModel ReadMetadataDocument(Dictionary<string, string> map, string mainUrl)

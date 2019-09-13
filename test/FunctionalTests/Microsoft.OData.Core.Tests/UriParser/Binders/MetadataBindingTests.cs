@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
-using Microsoft.OData.UriParser;
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -25,44 +24,42 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void MetadataBinderProcessSkipWithNullReturnsNull()
         {
             long? result = MetadataBinder.ProcessSkip(null);
-            result.Should().Be(null);
+            Assert.Null(result);
         }
 
         [Fact]
         public void MetadataBinderProcessSkipWithNegativeNumberShouldThrow()
         {
             Action metadataBinderAction = () => MetadataBinder.ProcessSkip(-1);
-            metadataBinderAction.ShouldThrow<ODataException>().WithMessage(
-                ODataErrorStrings.MetadataBinder_SkipRequiresNonNegativeInteger("-1"));
+            metadataBinderAction.Throws<ODataException>(ODataErrorStrings.MetadataBinder_SkipRequiresNonNegativeInteger("-1"));
         }
 
         [Fact]
         public void MetadataBinderProcessSkipWithPositiveNumberShouldReturnNumber()
         {
             long? result = MetadataBinder.ProcessSkip(1);
-            result.Should().Be(1);
+            Assert.Equal(1, result);
         }
 
         [Fact]
         public void MetadataBinderProcessTopWithNullReturnsNull()
         {
             long? result = MetadataBinder.ProcessTop(null);
-            result.Should().Be(null);
+            Assert.Null(result);
         }
 
         [Fact]
         public void MetadataBinderProcessTopWithNegativeNumberShouldThrow()
         {
             Action metadataBinderAction = () => MetadataBinder.ProcessTop(-1);
-            metadataBinderAction.ShouldThrow<ODataException>().WithMessage(
-                ODataErrorStrings.MetadataBinder_TopRequiresNonNegativeInteger("-1"));
+            metadataBinderAction.Throws<ODataException>(ODataErrorStrings.MetadataBinder_TopRequiresNonNegativeInteger("-1"));
         }
 
         [Fact]
         public void MetadataBinderProcessTopWithPositiveNumberShouldReturnNumber()
         {
             long? result = MetadataBinder.ProcessTop(1);
-            result.Should().Be(1);
+            Assert.Equal(1, result);
         }
 
         [Fact]
@@ -72,22 +69,21 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             // Test null bind state
             Action metadataBinderAction = () => MetadataBinder.ProcessQueryOptions(null, bindInfo.BindMethod);
-            metadataBinderAction.ShouldThrow<ODataException>(
-                ODataErrorStrings.MetadataBinder_QueryOptionsBindStateCannotBeNull);
+            metadataBinderAction.Throws<ODataException>(ODataErrorStrings.MetadataBinder_QueryOptionsBindStateCannotBeNull);
 
             // Test bind state that doesn't have query options populated
             metadataBinderAction = () => MetadataBinder.ProcessQueryOptions(bindInfo.BindingState, bindInfo.BindMethod);
-            metadataBinderAction.ShouldThrow<ODataException>(
+            metadataBinderAction.Throws<ODataException>(
                 ODataErrorStrings.MetadataBinder_QueryOptionsBindStateCannotBeNull);
         }
 
         [Fact]
         public void MetadataBinderProcessQueryOptionsWithNullBindMethodShouldThrow()
         {
-            BindInfo bindInfo = new BindInfo();
+            BindInfo bindInfo = new BindInfo(new List<CustomQueryOptionToken>());
 
             Action metadataBinderAction = () => MetadataBinder.ProcessQueryOptions(bindInfo.BindingState, null);
-            metadataBinderAction.ShouldThrow<ODataException>(
+            metadataBinderAction.Throws<ODataException>(
                 ODataErrorStrings.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
         }
 
@@ -100,7 +96,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             BindInfo bindInfo = new BindInfo(queryOptions, BindMethodReturnsNull);
 
             List<QueryNode> result = MetadataBinder.ProcessQueryOptions(bindInfo.BindingState, bindInfo.BindMethod);
-            result.Count.Should().Be(0);
+            Assert.Empty(result);
         }
 
         [Fact]
@@ -112,7 +108,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             BindInfo bindInfo = new BindInfo(queryOptions, BindMethodReturnsNode);
 
             List<QueryNode> result = MetadataBinder.ProcessQueryOptions(bindInfo.BindingState, bindInfo.BindMethod);
-            result.Count.Should().Be(1);
+            Assert.Single(result);
         }
         #endregion
 

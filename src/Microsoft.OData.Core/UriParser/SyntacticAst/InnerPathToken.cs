@@ -47,7 +47,7 @@ namespace Microsoft.OData.UriParser
         public InnerPathToken(string identifier, QueryToken nextToken, IEnumerable<NamedValue> namedValues)
         {
             // We allow an "empty" Identifier segment so we can create one for the case of a service-document URL (which has no path)
-            ExceptionUtils.CheckArgumentNotNull(identifier, "Identifier");
+            ExceptionUtils.CheckArgumentNotNull(identifier, "identifier");
 
             this.identifier = identifier;
             this.nextToken = nextToken;

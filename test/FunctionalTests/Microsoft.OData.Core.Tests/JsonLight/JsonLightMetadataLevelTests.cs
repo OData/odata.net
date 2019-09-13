@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -30,48 +29,48 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ODataMinimalMetadataShouldCreateMinimalMetadataLevel()
         {
             this.parameterList.Add(new KeyValuePair<string, string>("odata.metadata", "minimal"));
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonMinimalMetadataLevel>();
+            Assert.IsType<JsonMinimalMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
         public void ODataFullMetadataShouldCreateFullMetadataLevel()
         {
             this.parameterList.Add(new KeyValuePair<string, string>("odata.metadata", "full"));
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonFullMetadataLevel>();
+            Assert.IsType<JsonFullMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
         public void ODataNoMetadataShouldCreateNoMetadataLevel()
         {
             this.parameterList.Add(new KeyValuePair<string, string>("odata.metadata", "none"));
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonNoMetadataLevel>();
+            Assert.IsType<JsonNoMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
         public void NoODataParameterShouldCreateMinimalMetadataLevel()
         {
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonMinimalMetadataLevel>();
+            Assert.IsType<JsonMinimalMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
         public void FooFullMetadataShouldCreateMinimalMetadataLevel()
         {
             this.parameterList.Add(new KeyValuePair<string, string>("foo", "full"));
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonMinimalMetadataLevel>();
+            Assert.IsType<JsonMinimalMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
         public void FooNoMetadataShouldCreateMinimalMetadataLevel()
         {
             this.parameterList.Add(new KeyValuePair<string, string>("foo", "none"));
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonMinimalMetadataLevel>();
+            Assert.IsType<JsonMinimalMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
         public void FooMinimalMetadataShouldCreateMinimalMetadataLevel()
         {
             this.parameterList.Add(new KeyValuePair<string, string>("foo", "minimal"));
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonMinimalMetadataLevel>();
+            Assert.IsType<JsonMinimalMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
@@ -79,7 +78,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             this.parameterList.Add(new KeyValuePair<string, string>("foo", "something"));
             this.parameterList.Add(new KeyValuePair<string, string>("odata.metadata", "full"));
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonFullMetadataLevel>();
+            Assert.IsType<JsonFullMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
@@ -88,13 +87,13 @@ namespace Microsoft.OData.Tests.JsonLight
             // We could also throw in this case, but this should have already been validated.
             this.parameterList.Add(new KeyValuePair<string, string>("odata.metadata", "none"));
             this.parameterList.Add(new KeyValuePair<string, string>("odata.metadata", "full"));
-            JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonNoMetadataLevel>();
+            Assert.IsType<JsonNoMetadataLevel>(JsonLightMetadataLevel.Create(this.applicationJsonMediaType, MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
 
         [Fact]
         public void MediaTypeWithNullParameterListShouldCreateMinimalMetadataLevel()
         {
-            JsonLightMetadataLevel.Create(new ODataMediaType("application", "json"), MetadataDocumentUri, Model, /*writingResponse*/ true).Should().BeOfType<JsonMinimalMetadataLevel>();
+            Assert.IsType<JsonMinimalMetadataLevel>(JsonLightMetadataLevel.Create(new ODataMediaType("application", "json"), MetadataDocumentUri, Model, /*writingResponse*/ true));
         }
     }
 }

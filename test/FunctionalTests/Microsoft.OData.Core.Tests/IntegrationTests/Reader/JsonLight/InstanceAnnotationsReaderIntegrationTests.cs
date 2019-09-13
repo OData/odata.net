@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
@@ -136,7 +135,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                                 }
                                 else
                                 {
-                                    feedFromReader.InstanceAnnotations.Count.Should().Be(0);
+                                    Assert.Empty(feedFromReader.InstanceAnnotations);
                                 }
                             }
                             else
@@ -146,7 +145,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             break;
 
                         case ODataReaderState.ResourceSetEnd:
-                            feedFromReader.Should().NotBeNull();
+                            Assert.NotNull(feedFromReader);
                             ValidateContainsAllExpectedInstanceAnnotations(feedFromReader.InstanceAnnotations, shouldReadAndValidateCustomInstanceAnnotations);
 
                             break;
@@ -154,7 +153,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 }
             }
 
-            feedFromReader.Should().NotBeNull();
+            Assert.NotNull(feedFromReader);
             ValidateContainsAllExpectedInstanceAnnotations(feedFromReader.InstanceAnnotations, shouldReadAndValidateCustomInstanceAnnotations);
         }
 
@@ -195,30 +194,30 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         private static void ValidateContainsAllExpectedInstanceAnnotationsBeforeStateChange(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, bool shouldReadAndValidateCustomInstanceAnnotations)
         {
-            instanceAnnotations.Should().NotBeNull();
+            Assert.NotNull(instanceAnnotations);
             if (shouldReadAndValidateCustomInstanceAnnotations)
             {
-                instanceAnnotations.Should().HaveCount(1);
+                Assert.Single(instanceAnnotations);
                 TestUtils.AssertODataValueAreEqual(PrimitiveValue123, instanceAnnotations.Single(ia => ia.Name == "custom.Int32Annotation1").Value);
             }
             else
             {
-                instanceAnnotations.Should().BeEmpty();
+                Assert.Empty(instanceAnnotations);
             }
         }
 
         private static void ValidateContainsAllExpectedInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, bool shouldReadAndValidateCustomInstanceAnnotations)
         {
-            instanceAnnotations.Should().NotBeNull();
+            Assert.NotNull(instanceAnnotations);
             if (shouldReadAndValidateCustomInstanceAnnotations)
             {
-                instanceAnnotations.Should().HaveCount(2);
+                Assert.Equal(2, instanceAnnotations.Count());
                 TestUtils.AssertODataValueAreEqual(PrimitiveValue123, instanceAnnotations.Single(ia => ia.Name == "custom.Int32Annotation1").Value);
                 TestUtils.AssertODataValueAreEqual(PrimitiveValue456, instanceAnnotations.Single(ia => ia.Name == "custom.Int32Annotation2").Value);
             }
             else
             {
-                instanceAnnotations.Should().BeEmpty();
+                Assert.Empty(instanceAnnotations);
             }
         }
 
@@ -386,14 +385,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             break;
 
                         case ODataReaderState.ResourceEnd:
-                            entryFromReader.Should().NotBeNull();
+                            Assert.NotNull(entryFromReader);
                             ValidateContainsAllExpectedInstanceAnnotations(entryFromReader.InstanceAnnotations, shouldReadAndValidateCustomInstanceAnnotations);
                             break;
                     }
                 }
             }
 
-            entryFromReader.Should().NotBeNull();
+            Assert.NotNull(entryFromReader);
             ValidateContainsAllExpectedInstanceAnnotations(entryFromReader.InstanceAnnotations, shouldReadAndValidateCustomInstanceAnnotations);
         }
 
@@ -587,7 +586,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             }
                             else
                             {
-                                ((ODataResource)odataReader.Item).InstanceAnnotations.Should().HaveCount(0);
+                                Assert.Empty(((ODataResource)odataReader.Item).InstanceAnnotations);
                             }
 
                             break;
@@ -595,12 +594,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                         case ODataReaderState.ResourceEnd:
                             if (depth == 1)
                             {
-                                entryFromReader.Should().NotBeNull();
+                                Assert.NotNull(entryFromReader);
                                 ValidateContainsAllExpectedInstanceAnnotations(entryFromReader.InstanceAnnotations, shouldReadAndValidateCustomInstanceAnnotations);
                             }
                             else
                             {
-                                ((ODataResource)odataReader.Item).InstanceAnnotations.Should().HaveCount(0);
+                                Assert.Empty(((ODataResource)odataReader.Item).InstanceAnnotations);
                             }
 
                             break;
@@ -608,7 +607,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 }
             }
 
-            entryFromReader.Should().NotBeNull();
+            Assert.NotNull(entryFromReader);
             ValidateContainsAllExpectedInstanceAnnotations(entryFromReader.InstanceAnnotations, shouldReadAndValidateCustomInstanceAnnotations);
         }
 

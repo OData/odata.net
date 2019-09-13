@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
@@ -44,7 +43,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Action test = () => serializer.WriteCollectionValue(collectionValue, null, null, false, false, false);
 
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
+            test.Throws<ODataException>(Strings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true));
             Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"));
+            test.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"));
         }
 
         [Fact]
@@ -70,7 +69,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true));
             Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"));
+            test.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"));
         }
 
         [Fact]
@@ -102,7 +101,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false));
             Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_NonNullableCollectionElementsMustNotBeNull);
+            test.Throws<ODataException>(Strings.ValidationUtils_NonNullableCollectionElementsMustNotBeNull);
         }
 
         [Fact]
@@ -114,7 +113,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Action test = () => serializer.WritePrimitiveValue("123", uint64);
 
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.String", true, "NS.UInt64", true));
+            test.Throws<ODataException>(Strings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.String", true, "NS.UInt64", true));
         }
 
         [Fact]
@@ -130,7 +129,7 @@ namespace Microsoft.OData.Tests.JsonLight
             ContainerBuilderHelper.BuildContainer(
                 builder => builder.AddService<ODataPayloadValueConverter, DateTimeOffsetCustomFormatPrimitivePayloadValueConverter>(ServiceLifetime.Singleton)));
 
-            result.Should().Be("\"Thu, 12 Apr 2012 18:43:10 GMT\"");
+            Assert.Equal("\"Thu, 12 Apr 2012 18:43:10 GMT\"", result);
         }
 
         [Fact]
@@ -142,7 +141,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Action test = () => serializer.WriteResourceValue(resourceValue, null, false, null);
 
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
+            test.Throws<ODataException>(Strings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
         }
 
         [Fact]

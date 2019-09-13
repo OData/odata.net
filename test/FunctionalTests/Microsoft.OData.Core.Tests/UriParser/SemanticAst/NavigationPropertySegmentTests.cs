@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -17,44 +16,44 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NavPropCannotBeNull()
         {
             Action createWithNullNavProp = () => new NavigationPropertySegment(null, null);
-            createWithNullNavProp.ShouldThrow<Exception>(Error.ArgumentNull("navigationProperty").ToString());
+            Assert.Throws<ArgumentNullException>("navigationProperty", createWithNullNavProp);
         }
 
         [Fact]
         public void IdentifierShouldBeNavPropName()
         {
             NavigationPropertySegment navigationPropertySegment = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
-            navigationPropertySegment.Identifier.Should().Be(HardCodedTestModel.GetPersonMyDogNavProp().Name);
+            Assert.Equal(HardCodedTestModel.GetPersonMyDogNavProp().Name, navigationPropertySegment.Identifier);
         }
         
         [Fact]
         public void TargetEdmTypeShouldBeNavPropTypeDefinition()
         {
             NavigationPropertySegment navigationPropertySegment = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
-            navigationPropertySegment.TargetEdmType.Should().BeSameAs(HardCodedTestModel.GetPersonMyDogNavProp().Type.Definition);
+            Assert.Same(HardCodedTestModel.GetPersonMyDogNavProp().Type.Definition, navigationPropertySegment.TargetEdmType);
         }
 
         [Fact]
         public void SingleResultSetCorrectly()
         {
             NavigationPropertySegment navigationPropertySegment1 = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
-            navigationPropertySegment1.SingleResult.Should().BeTrue();
+            Assert.True(navigationPropertySegment1.SingleResult);
             NavigationPropertySegment navigationPropertySegment2 = new NavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp(), null);
-            navigationPropertySegment2.SingleResult.Should().BeFalse();
+            Assert.False(navigationPropertySegment2.SingleResult);
         }
 
         [Fact]
         public void TargetKindShouldBeResource()
         {
             NavigationPropertySegment navigationPropertySegment = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
-            navigationPropertySegment.TargetKind.Should().Be(RequestTargetKind.Resource);
+            Assert.Equal(RequestTargetKind.Resource, navigationPropertySegment.TargetKind);
         }
 
         [Fact]
         public void NavPropSetCorrectly()
         {
             NavigationPropertySegment segment = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
-            segment.NavigationProperty.Should().BeSameAs(HardCodedTestModel.GetPersonMyDogNavProp());
+            Assert.Same(HardCodedTestModel.GetPersonMyDogNavProp(), segment.NavigationProperty);
         }
 
         [Fact]
@@ -62,7 +61,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             NavigationPropertySegment navigationPropertySegment1 = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
             NavigationPropertySegment navigationPropertySegment2 = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
-            navigationPropertySegment1.Equals(navigationPropertySegment2).Should().BeTrue();
+            Assert.True(navigationPropertySegment1.Equals(navigationPropertySegment2));
         }
 
         [Fact]
@@ -71,8 +70,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             NavigationPropertySegment navigationPropertySegment1 = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
             NavigationPropertySegment navigationPropertySegment2 = new NavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp(), null);
             CountSegment segment = CountSegment.Instance;
-            navigationPropertySegment1.Equals(navigationPropertySegment2).Should().BeFalse();
-            navigationPropertySegment1.Equals(segment).Should().BeFalse();
+            Assert.False(navigationPropertySegment1.Equals(navigationPropertySegment2));
+            Assert.False(navigationPropertySegment1.Equals(segment));
         }
     }
 }

@@ -4,15 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.OData.Utils.Common;
+
 namespace Microsoft.Test.OData.Utils.Metadata
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Vocabularies;
-    using Microsoft.Test.OData.Utils.Common;
-
     /// <summary>
     /// Extension methods that make writing astoria tests easier
     /// </summary>

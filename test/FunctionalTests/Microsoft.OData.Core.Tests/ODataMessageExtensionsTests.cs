@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -28,7 +27,7 @@ namespace Microsoft.OData.Tests
 
             IODataRequestMessage request = new ODataRequestMessage(simulatedRequestMessage, false, false, long.MaxValue);
             ODataVersion version = request.GetODataVersion(ODataVersion.V4);
-            version.Should().Be(ODataUtils.StringToODataVersion(request.GetHeader(ODataConstants.ODataVersionHeader)));
+            Assert.Equal(ODataUtils.StringToODataVersion(request.GetHeader(ODataConstants.ODataVersionHeader)), version);
         }
 
         [Fact]
@@ -39,13 +38,13 @@ namespace Microsoft.OData.Tests
 
             IODataResponseMessage response = new ODataResponseMessage(simulatedRequestMessage, false, false, long.MaxValue);
             ODataVersion version = response.GetODataVersion(ODataVersion.V4);
-            version.Should().Be(ODataUtils.StringToODataVersion(response.GetHeader(ODataConstants.ODataVersionHeader)));
+            Assert.Equal(ODataUtils.StringToODataVersion(response.GetHeader(ODataConstants.ODataVersionHeader)), version);
         }
 
         [Fact]
         public void PreferHeaderShouldReturnODataPreferenceHeader()
         {
-            this.requestMessage.PreferHeader().Should().NotBeNull();
+            Assert.NotNull(this.requestMessage.PreferHeader());
         }
 
         [Fact]
@@ -53,13 +52,15 @@ namespace Microsoft.OData.Tests
         {
             this.requestMessage.PreferHeader().ReturnContent = true;
             this.requestMessage.PreferHeader().AnnotationFilter = "*";
-            this.requestMessage.GetHeader("Prefer").Split(new[] {','}, 2).Should().Contain("return=representation").And.Contain("odata.include-annotations=\"*\"");
+            var headers = this.requestMessage.GetHeader("Prefer").Split(new[] { ',' }, 2);
+            Assert.Contains("return=representation", headers);
+            Assert.Contains("odata.include-annotations=\"*\"", headers);
         }
 
         [Fact]
         public void PreferenceAppliedHeaderShouldReturnODataPreferenceHeader()
         {
-            this.responseMessage.PreferenceAppliedHeader().Should().NotBeNull();
+            Assert.NotNull(this.responseMessage.PreferenceAppliedHeader());
         }
 
         [Fact]
@@ -67,7 +68,9 @@ namespace Microsoft.OData.Tests
         {
             this.responseMessage.PreferenceAppliedHeader().ReturnContent = false;
             this.responseMessage.PreferenceAppliedHeader().AnnotationFilter = "*";
-            this.responseMessage.GetHeader("Preference-Applied").Split(new[] { ',' }, 2).Should().Contain("return=minimal").And.Contain("odata.include-annotations=\"*\"");
+            var headers = this.responseMessage.GetHeader("Preference-Applied").Split(new[] { ',' }, 2);
+            Assert.Contains("return=minimal", headers);
+            Assert.Contains("odata.include-annotations=\"*\"", headers);
         }
     }
 }
