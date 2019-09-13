@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -30,8 +29,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var token = new InnerPathToken("MyPeople", new DummyToken(), null /*namedValues*/);
 
             var result = binder.BindInnerPathSegment(token);
-            result.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetDogMyPeopleNavProp()).
-                NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet().FindNavigationTarget(HardCodedTestModel.GetDogMyPeopleNavProp()));
+            Assert.Same(HardCodedTestModel.GetDogsSet().FindNavigationTarget(HardCodedTestModel.GetDogMyPeopleNavProp()),
+                result.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetDogMyPeopleNavProp()).NavigationSource);
         }
 
         [Fact]
@@ -46,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             string expectedMessage =
                 ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetDogType().FullTypeName(), MissingPropertyName);
-            bind.ShouldThrow<ODataException>(expectedMessage);
+            bind.Throws<ODataException>(expectedMessage);
         }
 
         [Fact]
@@ -150,7 +149,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var token = new InnerPathToken("MyDog", new InnerPathToken("MyPeople", null, null), null);
 
             Action bind = () => binder.BindInnerPathSegment(token);
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue("MyDog"));
+            bind.Throws<ODataException>(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue("MyDog"));
         }
         #endregion
 
@@ -160,35 +159,35 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void BindPropertyShouldReturnCorrectPropertyIfFoundForEntity()
         {
             var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "Shoe", DefaultUriResolver);
-            result.Should().BeSameAs(HardCodedTestModel.GetPersonShoeProp());
+            Assert.Same(HardCodedTestModel.GetPersonShoeProp(), result);
         }
 
         [Fact]
         public void BindPropertyShouldReturnCorrectPropertyIfFoundForComplex()
         {
             var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonAddressProp().Type, "MyNeighbors", DefaultUriResolver);
-            result.Should().BeSameAs(HardCodedTestModel.GetAddressMyNeighborsProperty());
+            Assert.Same(HardCodedTestModel.GetAddressMyNeighborsProperty(), result);
         }
 
         [Fact]
         public void BindPropertyShouldBeCaseSensitive()
         {
             var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "shoe", DefaultUriResolver);
-            result.Should().BeNull();
+            Assert.Null(result);
         }
 
         [Fact]
         public void BindPropertyShouldReturnNullIfNotFound()
         {
             var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "missing", DefaultUriResolver);
-            result.Should().BeNull();
+            Assert.Null(result);
         }
 
         [Fact]
         public void BindPropertyShouldReturnNullIfTypeNotStructured()
         {
             var result = InnerPathTokenBinder.BindProperty(EdmCoreModel.Instance.GetDecimal(false), "NotStructured", DefaultUriResolver);
-            result.Should().BeNull();
+            Assert.Null(result);
         }
 
         [Fact]
@@ -196,7 +195,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var parent = new SingleNavigationNode((IEdmEntitySet)null, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
             var result = InnerPathTokenBinder.EnsureParentIsResourceForNavProp(parent);
-            result.Should().BeSameAs(parent);
+            Assert.Same(parent, result);
         }
 
         [Fact]
@@ -204,7 +203,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var parent = new ConstantNode(null);
             Action targetMethod = () => InnerPathTokenBinder.EnsureParentIsResourceForNavProp(parent);
-            targetMethod.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
+            targetMethod.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
         }
 
         [Fact]

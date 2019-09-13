@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using FluentAssertions;
+using System.Linq;
 using Microsoft.OData.Evaluation;
 using Xunit;
 
@@ -18,37 +18,37 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullEditLink()
         {
-            this.testSubject.GetEditLink().Should().BeNull();
+            Assert.Null(this.testSubject.GetEditLink());
         }
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullId()
         {
-            this.testSubject.GetId().Should().BeNull();
+            Assert.Null(this.testSubject.GetId());
         }
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullReadLink()
         {
-            this.testSubject.GetReadLink().Should().BeNull();
+            Assert.Null(this.testSubject.GetReadLink());
         }
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullETag()
         {
-            this.testSubject.GetETag().Should().BeNull();
+            Assert.Null(this.testSubject.GetETag());
         }
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullStreamEditLink()
         {
-            this.testSubject.GetStreamEditLink("streamName").Should().BeNull();
+            Assert.Null(this.testSubject.GetStreamEditLink("streamName"));
         }
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullStreamReadLink()
         {
-            this.testSubject.GetStreamReadLink("streamName").Should().BeNull();
+            Assert.Null(this.testSubject.GetStreamReadLink("streamName"));
         }
 
         [Fact]
@@ -60,25 +60,25 @@ namespace Microsoft.OData.Tests.Evaluation
                     new ODataProperty() {Name = "StreamProperty", Value = new ODataStreamReferenceValue()}
                 };
 
-            this.testSubject.GetProperties(properties).Should().OnlyContain(p => p.Name == "IntegerProperty");
+            Assert.Single(this.testSubject.GetProperties(properties).Where(p => p.Name == "IntegerProperty"));
         }
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullMediaResource()
         {
-            this.testSubject.GetMediaResource().Should().BeNull();
+            Assert.Null(this.testSubject.GetMediaResource());
         }
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullActions()
         {
-            this.testSubject.GetActions().Should().BeNull();
+            Assert.Null(this.testSubject.GetActions());
         }
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullFunctions()
         {
-            this.testSubject.GetFunctions().Should().BeNull();
+            Assert.Null(this.testSubject.GetFunctions());
         }
     }
 }

@@ -1,9 +1,14 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="MultiBindingTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
@@ -101,13 +106,13 @@ namespace Microsoft.OData.Tests
         {
             var entries = ReadPayload(complexPayload, Model, EntitySet, EntityType);
 
-            entries[0].Id.Should().Be(new Uri("http://host/NavEntitySet1('NavEntity1')"));
-            entries[1].Id.Should().Be(new Uri("http://host/NavEntitySet1('NavEntity2')"));
-            entries[2].TypeName.Should().Be("NS.ComplexType");
-            entries[3].Id.Should().Be(new Uri("http://host/NavEntitySet2('NavEntity2')"));
-            entries[4].Id.Should().Be(new Uri("http://host/NavEntitySet2('NavEntity1')"));
-            entries[5].TypeName.Should().Be("NS.ComplexType");
-            entries[6].Id.Should().Be(new Uri("http://host/EntitySet('TopEntity')"));
+            Assert.Equal(new Uri("http://host/NavEntitySet1('NavEntity1')"), entries[0].Id);
+            Assert.Equal(new Uri("http://host/NavEntitySet1('NavEntity2')"), entries[1].Id);
+            Assert.Equal("NS.ComplexType", entries[2].TypeName);
+            Assert.Equal(new Uri("http://host/NavEntitySet2('NavEntity2')"), entries[3].Id);
+            Assert.Equal(new Uri("http://host/NavEntitySet2('NavEntity1')"), entries[4].Id);
+            Assert.Equal("NS.ComplexType", entries[5].TypeName);
+            Assert.Equal(new Uri("http://host/EntitySet('TopEntity')"), entries[6].Id);
         }
 
         [Fact]
@@ -172,11 +177,11 @@ namespace Microsoft.OData.Tests
             // Reader
             var entryList = ReadPayload(expected, Model, EntitySet, EntityType);
 
-            entryList[0].Id.Should().Be(new Uri("http://host/NavEntitySet1('NavEntity1')"));
-            entryList[1].Id.Should().Be(new Uri("http://host/NavEntitySet1('NavEntity2')"));
-            entryList[2].Id.Should().Be(null);
-            entryList[2].TypeName.Should().Be("NS.DerivedComplexType");
-            entryList[3].Id.Should().Be(new Uri("http://host/EntitySet('TopEntity')"));
+            Assert.Equal(new Uri("http://host/NavEntitySet1('NavEntity1')"), entryList[0].Id);
+            Assert.Equal(new Uri("http://host/NavEntitySet1('NavEntity2')"), entryList[1].Id);
+            Assert.Null(entryList[2].Id);
+            Assert.Equal("NS.DerivedComplexType", entryList[2].TypeName);
+            Assert.Equal(new Uri("http://host/EntitySet('TopEntity')"), entryList[3].Id);
         }
 
 
@@ -249,11 +254,11 @@ namespace Microsoft.OData.Tests
         {
             var entries = ReadPayload(containmentPayload, Model, EntitySet, EntityType);
 
-            entries[0].Id.Should().Be(new Uri("http://host/NavEntitySet1('NavEntity1')"));
-            entries[1].Id.Should().Be(new Uri("http://host/EntitySet('TopEntity')/ContainedNav1"));
-            entries[2].Id.Should().Be(new Uri("http://host/NavEntitySet2('NavEntity2')"));
-            entries[3].Id.Should().Be(new Uri("http://host/EntitySet('TopEntity')/ContainedNav2"));
-            entries[4].Id.Should().Be(new Uri("http://host/EntitySet('TopEntity')"));
+            Assert.Equal(new Uri("http://host/NavEntitySet1('NavEntity1')"), entries[0].Id);
+            Assert.Equal(new Uri("http://host/EntitySet('TopEntity')/ContainedNav1"), entries[1].Id);
+            Assert.Equal(new Uri("http://host/NavEntitySet2('NavEntity2')"), entries[2].Id);
+            Assert.Equal(new Uri("http://host/EntitySet('TopEntity')/ContainedNav2"), entries[3].Id);
+            Assert.Equal(new Uri("http://host/EntitySet('TopEntity')"), entries[4].Id);
         }
 
         [Fact]
@@ -288,9 +293,9 @@ namespace Microsoft.OData.Tests
 
             // Reader
             var entries = ReadPayload(expected, Model, EntitySet, EntityType);
-            entries[0].Id.Should().Be(new Uri("http://host/NavEntitySet1('NavEntity1')"));
-            entries[1].Id.Should().Be(new Uri("http://host/EntitySet('TopEntity')"));
-            entries[1].TypeName.Should().Be("NS.DerivedEntityType");
+            Assert.Equal(new Uri("http://host/NavEntitySet1('NavEntity1')"), entries[0].Id);
+            Assert.Equal(new Uri("http://host/EntitySet('TopEntity')"), entries[1].Id);
+            Assert.Equal("NS.DerivedEntityType", entries[1].TypeName);
         }
         #endregion
 
@@ -301,11 +306,11 @@ namespace Microsoft.OData.Tests
         {
             Uri uri = new Uri(@"http://host/EntitySet/NS.DerivedEntityType('abc')/Nav");
             var path = new ODataUriParser(GetDerivedModel(), ServiceRoot, uri).ParsePath().ToList();
-            path[3].TargetEdmNavigationSource.Name.Should().Be("NavEntitySet");
+            Assert.Equal("NavEntitySet", path[3].TargetEdmNavigationSource.Name);
 
             uri = new Uri(@"http://host/EntitySet('abc')/NS.DerivedEntityType/Nav");
             path = new ODataUriParser(GetDerivedModel(), ServiceRoot, uri).ParsePath().ToList();
-            path[3].TargetEdmNavigationSource.Name.Should().Be("NavEntitySet");
+            Assert.Equal("NavEntitySet", path[3].TargetEdmNavigationSource.Name);
         }
 
         [Fact]
@@ -313,21 +318,21 @@ namespace Microsoft.OData.Tests
         {
             Uri uri = new Uri(@"http://host/EntitySet?$expand=complexProp1/CollectionOfNavOnComplex($expand=NavNested)");
             var selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
-            ((selectAndExpandClause.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.ToList()[0]
-                as ExpandedNavigationSelectItem).NavigationSource.Should().BeSameAs(NavNestEntitySet);
+            Assert.Same(NavNestEntitySet, ((selectAndExpandClause.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.ToList()[0]
+                as ExpandedNavigationSelectItem).NavigationSource);
 
             uri = new Uri(@"http://host/EntitySet('abc')/complexProp1?$expand=CollectionOfNavOnComplex($expand=NavNested)");
             selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
-            ((selectAndExpandClause.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.ToList()[0]
-                as ExpandedNavigationSelectItem).NavigationSource.Should().BeSameAs(NavNestEntitySet);
+            Assert.Same(NavNestEntitySet, ((selectAndExpandClause.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.ToList()[0]
+                as ExpandedNavigationSelectItem).NavigationSource);
 
             uri = new Uri(@"http://host/EntitySet('abc')/complexProp1/CollectionOfNavOnComplex?$expand=NavNested");
             selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
-            (selectAndExpandClause.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).NavigationSource.Should().BeSameAs(NavNestEntitySet);
+            Assert.Same(NavNestEntitySet, (selectAndExpandClause.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).NavigationSource);
 
             uri = new Uri(@"http://host/EntitySet('abc')/ContainedNav2/NavOnContained");
             var path = new ODataUriParser(Model, ServiceRoot, uri).ParsePath();
-            (path.LastSegment as NavigationPropertySegment).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            Assert.Same(NavEntitySet2, (path.LastSegment as NavigationPropertySegment).NavigationSource);
         }
 
         [Fact]
@@ -342,8 +347,7 @@ namespace Microsoft.OData.Tests
             // Collection navigation under collection of complex
             Uri uri = new Uri(@"http://host/EntitySet('abc')?$expand=collectionComplex/CollectionComplexProp/CollectionOfNavOnComplex");
             var selectAndExpand = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
-            (selectAndExpand.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).NavigationSource.Should()
-                .BeSameAs(NavEntitySet1);
+            Assert.Same(NavEntitySet1, (selectAndExpand.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).NavigationSource);
 
             uri = new Uri(@"http://host/EntitySet('abc')?$select=collectionComplex/CollectionComplexProp/CollectionOfNavOnComplex");
             selectAndExpand = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
@@ -356,13 +360,12 @@ namespace Microsoft.OData.Tests
 
             uri = new Uri(@"http://host/EntitySet('abc')?$expand=collectionComplex/CollectionOfNavOnComplex");
             selectAndExpand = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
-            (selectAndExpand.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).NavigationSource.Should()
-                .BeSameAs(NavEntitySet2);
+            Assert.Same(NavEntitySet2, (selectAndExpand.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).NavigationSource);
 
             uri = new Uri(@"http://host/EntitySet('abc')?$select=collectionComplex/CollectionOfNavOnComplex&$expand=collectionComplex/CollectionOfNavOnComplex");
             selectAndExpand = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
             items = selectAndExpand.SelectedItems.ToList();
-            (items[0] as ExpandedNavigationSelectItem).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            Assert.Same(NavEntitySet2, (items[0] as ExpandedNavigationSelectItem).NavigationSource);
             selectItem = items[1] as PathSelectItem;
             segments = selectItem.SelectedPath.ToList();
             segments[0].ShouldBePropertySegment(complexProperty);
@@ -378,72 +381,70 @@ namespace Microsoft.OData.Tests
             Uri uri = new Uri(@"http://host/EntitySet('abc')?$orderby=ContainedNav2/NavOnContained/ID");
             var orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
             singleNavigationNode = (orderBy.Expression as SingleValuePropertyAccessNode).Source as SingleNavigationNode;
-            singleNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
-            singleNavigationNode.BindingPath.Path.Should().Be("ContainedNav2/NavOnContained");
+            Assert.Same(NavEntitySet2, singleNavigationNode.NavigationSource);
+            Assert.Equal("ContainedNav2/NavOnContained", singleNavigationNode.BindingPath.Path);
 
             uri = new Uri(@"http://host/EntitySet('abc')?$orderby=ContainedNav2/ManyNavOnContained/$count");
             orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
             collectionNavigationNode = (orderBy.Expression as CountNode).Source as CollectionNavigationNode;
-            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
-            collectionNavigationNode.BindingPath.Path.Should().Be("ContainedNav2/ManyNavOnContained");
+            Assert.Same(NavEntitySet2, collectionNavigationNode.NavigationSource);
+            Assert.Equal("ContainedNav2/ManyNavOnContained", collectionNavigationNode.BindingPath.Path);
 
             uri = new Uri(@"http://host/EntitySet('abc')/ContainedNav2?$filter=NavOnContained/ID eq 'abc'");
             var filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
             singleNavigationNode =
                 (((filter.Expression as BinaryOperatorNode).Left as ConvertNode).Source as SingleValuePropertyAccessNode)
                     .Source as SingleNavigationNode;
-            singleNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
-            singleNavigationNode.BindingPath.Path.Should().Be("ContainedNav2/NavOnContained");
+            Assert.Same(NavEntitySet2, singleNavigationNode.NavigationSource);
+            Assert.Equal("ContainedNav2/NavOnContained", singleNavigationNode.BindingPath.Path);
 
             uri = new Uri(@"http://host/EntitySet('abc')/ContainedNav2?$filter=ManyNavOnContained/any(a: a/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            Assert.Same(NavEntitySet2, ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource);
 
             // Navigation under complex
             uri = new Uri(@"http://host/EntitySet?$filter=complexProp2/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
             collectionNavigationNode = (filter.Expression as AnyNode).Source as CollectionNavigationNode;
-            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
-            collectionNavigationNode.BindingPath.Path.Should().Be("complexProp2/CollectionOfNavOnComplex");
+            Assert.Same(NavEntitySet2, collectionNavigationNode.NavigationSource);
+            Assert.Equal("complexProp2/CollectionOfNavOnComplex", collectionNavigationNode.BindingPath.Path);
 
             uri = new Uri(@"http://host/EntitySet('abc')/complexProp2?$filter=CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
             collectionNavigationNode = (filter.Expression as AnyNode).Source as CollectionNavigationNode;
-            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
-            collectionNavigationNode.BindingPath.Path.Should().Be("complexProp2/CollectionOfNavOnComplex");
+            Assert.Same(NavEntitySet2, collectionNavigationNode.NavigationSource);
+            Assert.Equal("complexProp2/CollectionOfNavOnComplex", collectionNavigationNode.BindingPath.Path);
 
             uri = new Uri(@"http://host/EntitySet?$orderby=complexProp2/CollectionOfNavOnComplex/$count");
             orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
             collectionNavigationNode = (orderBy.Expression as CountNode).Source as CollectionNavigationNode;
-            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
-            collectionNavigationNode.Source.Should().BeOfType<SingleComplexNode>();
-            collectionNavigationNode.BindingPath.Path.Should().Be("complexProp2/CollectionOfNavOnComplex");
+            Assert.Same(NavEntitySet2, collectionNavigationNode.NavigationSource);
+            Assert.IsType<SingleComplexNode>(collectionNavigationNode.Source);
+            Assert.Equal("complexProp2/CollectionOfNavOnComplex", collectionNavigationNode.BindingPath.Path);
 
             uri = new Uri(@"http://host/EntitySet('abc')/complexProp2?$orderby=CollectionOfNavOnComplex/$count");
             orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
-            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
-                .Should().BeSameAs(NavEntitySet2);
+            Assert.Same(NavEntitySet2, ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource);
 
             // Navigation under collection of complex
             uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/any(a:a/CollectionOfNavOnComplex/any(t:t/ID eq 'abc'))");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
             collectionNavigationNode = ((filter.Expression as AnyNode).Body as AnyNode).Source as CollectionNavigationNode;
-            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
-            collectionNavigationNode.BindingPath.Path.Should().Be("collectionComplex/CollectionOfNavOnComplex");
+            Assert.Same(NavEntitySet2, collectionNavigationNode.NavigationSource);
+            Assert.Equal("collectionComplex/CollectionOfNavOnComplex", collectionNavigationNode.BindingPath.Path);
 
             uri = new Uri(@"http://host/EntitySet('abc')/collectionComplex?$filter=CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            Assert.Same(NavEntitySet2, ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource);
 
             uri = new Uri(@"http://host/EntitySet('abc')/collectionComplex?$orderby=CollectionOfNavOnComplex/$count");
             orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
-            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
-                .Should().BeSameAs(NavEntitySet2);
+            Assert.Same(NavEntitySet2, ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource);
 
             // Collection of complex under collection of complex
             uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/any(a1:a1/CollectionComplexProp/any(a2:a2/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')))");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            ((((((filter.Expression as AnyNode).Body) as AnyNode).Body) as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet1);
+            Assert.Same(NavEntitySet1, ((((filter.Expression as AnyNode).Body as AnyNode).Body as AnyNode).Source as CollectionNavigationNode).NavigationSource);
         }
 
         #endregion

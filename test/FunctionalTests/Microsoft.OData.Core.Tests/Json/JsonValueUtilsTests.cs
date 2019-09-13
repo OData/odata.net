@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Json;
 using Xunit;
 
@@ -56,7 +55,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty, stringEscapeOption, ref this.buffer);
-            this.StreamToString().Should().Be("\"\"");
+            Assert.Equal("\"\"", this.StreamToString());
         }
 
         [Theory]
@@ -66,7 +65,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123", stringEscapeOption, ref this.buffer);
-            this.StreamToString().Should().Be("\"abcdefg123\"");
+            Assert.Equal("\"abcdefg123\"", this.StreamToString());
         }
 
         [Theory]
@@ -76,7 +75,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_\n\r\b", stringEscapeOption, ref this.buffer);
-            this.StreamToString().Should().Be("\"cA_\\n\\r\\b\"");
+            Assert.Equal("\"cA_\\n\\r\\b\"", this.StreamToString());
         }
 
         [Fact]
@@ -84,7 +83,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
-            this.StreamToString().Should().Be("\"cA_\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\"");
+            Assert.Equal("\"cA_\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\"", this.StreamToString());
         }
 
         [Fact]
@@ -92,7 +91,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeOnlyControls, ref this.buffer);
-            this.StreamToString().Should().Be("\"cA_Россия\"");
+            Assert.Equal("\"cA_Россия\"", this.StreamToString());
         }
 
         [Fact]
@@ -103,7 +102,7 @@ namespace Microsoft.OData.Tests.Json
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
-                this.StreamToString().Should().Be(string.Format("\"{0}\"", this.escapedCharMap[specialChar]));
+                Assert.Equal(string.Format("\"{0}\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -115,7 +114,7 @@ namespace Microsoft.OData.Tests.Json
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}MiddleEnd", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
-                this.StreamToString().Should().Be(string.Format("\"{0}MiddleEnd\"", this.escapedCharMap[specialChar]));
+                Assert.Equal(string.Format("\"{0}MiddleEnd\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -127,7 +126,7 @@ namespace Microsoft.OData.Tests.Json
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}End", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
-                this.StreamToString().Should().Be(string.Format("\"Start{0}End\"", this.escapedCharMap[specialChar]));
+                Assert.Equal(string.Format("\"Start{0}End\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -139,7 +138,7 @@ namespace Microsoft.OData.Tests.Json
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("StartMiddle{0}", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
-                this.StreamToString().Should().Be(string.Format("\"StartMiddle{0}\"", this.escapedCharMap[specialChar]));
+                Assert.Equal(string.Format("\"StartMiddle{0}\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -151,7 +150,7 @@ namespace Microsoft.OData.Tests.Json
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}Start{0}Middle{0}End", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
-                this.StreamToString().Should().Be(string.Format("\"{0}Start{0}Middle{0}End\"", this.escapedCharMap[specialChar]));
+                Assert.Equal(string.Format("\"{0}Start{0}Middle{0}End\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -164,7 +163,7 @@ namespace Microsoft.OData.Tests.Json
                 char[] charBuffer = new char[10];
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("StartMiddle{0}End", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, ref charBuffer);
-                this.StreamToString().Should().Be(string.Format("\"StartMiddle{0}End\"", this.escapedCharMap[specialChar]));
+                Assert.Equal(string.Format("\"StartMiddle{0}End\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -177,7 +176,7 @@ namespace Microsoft.OData.Tests.Json
                 char[] charBuffer = new char[6];
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}Middle{0}End{0}", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, ref charBuffer);
-                this.StreamToString().Should().Be(string.Format("\"Start{0}Middle{0}End{0}\"", this.escapedCharMap[specialChar]));
+                Assert.Equal(string.Format("\"Start{0}Middle{0}End{0}\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -190,7 +189,7 @@ namespace Microsoft.OData.Tests.Json
                 char[] charBuffer = new char[6];
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, ref charBuffer);
-                this.StreamToString().Should().Be(string.Format("\"Start{0}\"", this.escapedCharMap[specialChar]));
+                Assert.Equal(string.Format("\"Start{0}\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -205,7 +204,7 @@ namespace Microsoft.OData.Tests.Json
                 char[] charBuffer = new char[6];
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("S{0}M{0}E{0}", specialChar),
                     escapeOption, ref charBuffer);
-                this.StreamToString().Should().Be(string.Format("\"S{0}M{0}E{0}\"", this.controlCharsMap[specialChar]));
+                Assert.Equal(string.Format("\"S{0}M{0}E{0}\"", this.controlCharsMap[specialChar]), this.StreamToString());
             }
         }
 
@@ -217,8 +216,8 @@ namespace Microsoft.OData.Tests.Json
             this.TestInit();
             char[] charBuffer = null;
             JsonValueUtils.WriteEscapedJsonString(this.writer, "StartMiddleEnd", stringEscapeOption, ref charBuffer);
-            this.StreamToString().Should().Be("\"StartMiddleEnd\"");
-            charBuffer.Should().BeNull("Char Buffer for cases with zero special characters should need to use buffer");
+            Assert.Equal("\"StartMiddleEnd\"", this.StreamToString());
+            Assert.Null(charBuffer);
         }
 
         [Theory]
@@ -234,7 +233,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             JsonValueUtils.WriteEscapedJsonString(this.writer, "StartVeryVeryLongMiddleEnd", stringEscapeOption, ref charBuffer);
-            this.StreamToString().Should().Be("\"StartVeryVeryLongMiddleEnd\"");
+            Assert.Equal("\"StartVeryVeryLongMiddleEnd\"", this.StreamToString());
         }
 
         [Fact]
@@ -243,7 +242,7 @@ namespace Microsoft.OData.Tests.Json
             this.TestInit();
             var byteArray = new byte[] { 1, 2, 3 };
             JsonValueUtils.WriteValue(this.writer, byteArray, ref this.buffer);
-            this.StreamToString().Should().Be("\"AQID\"");
+            Assert.Equal("\"AQID\"", this.StreamToString());
         }
 
         [Fact]
@@ -305,7 +304,7 @@ namespace Microsoft.OData.Tests.Json
             this.TestInit();
             var byteArray = new byte[] { };
             JsonValueUtils.WriteValue(this.writer, byteArray, ref this.buffer);
-            this.StreamToString().Should().Be("\"\"");
+            Assert.Equal("\"\"", this.StreamToString());
         }
 
         [Fact]
@@ -313,7 +312,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             JsonValueUtils.WriteValue(this.writer, (byte[])null, ref this.buffer);
-            this.StreamToString().Should().Be("null");
+            Assert.Equal("null", this.StreamToString());
         }
 
         private void TestInit()

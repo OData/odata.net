@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -33,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)) };
 
             var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
+            Assert.Equal(FakeBindMethods.KeyBinderConstantToken, results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue);
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue("ID", new LiteralToken(123)) };
 
             var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
+            Assert.Equal(FakeBindMethods.KeyBinderConstantToken, results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue);
         }
 
         [Fact]
@@ -53,7 +52,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)), new NamedValue(null, new LiteralToken(456)), };
 
             Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(HardCodedTestModel.GetLionSet().EntityType().FullTypeName()));
+            bind.Throws<ODataException>(Strings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(HardCodedTestModel.GetLionSet().EntityType().FullTypeName()));
         }
 
         [Fact]
@@ -63,7 +62,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue("ID1", new LiteralToken(123)) };
 
             Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.FullName()));
+            bind.Throws<ODataException>(Strings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.FullName()));
         }
 
         [Fact]
@@ -83,7 +82,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue("ID1", new LiteralToken(123)), new NamedValue("ID2", new LiteralToken(456)) };
 
             var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Count().Should().Be(2);
+            Assert.Equal(2, results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Count());
         }
 
         [Fact]
@@ -93,7 +92,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue("ID", new LiteralToken(123)) };
 
             var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
+            Assert.Equal(FakeBindMethods.KeyBinderConstantToken, results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue);
         }
 
         // TODO: Clearly CollectionNode is too broad for BindKeyValues. Consider change the object model and/or the paramter type for BindKeyValues.

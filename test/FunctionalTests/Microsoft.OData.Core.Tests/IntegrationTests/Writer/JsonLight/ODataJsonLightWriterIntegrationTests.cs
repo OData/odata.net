@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -24,7 +23,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             const string expected = "{\"@odata.id\":\"http://test.org/EntitySet('1')\"}";
             var actual = WriteJsonLightEntry(true, null, false, new ODataResource() { Id = new Uri("http://test.org/EntitySet('1')") }, entitySet, entityType);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -34,7 +33,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             const string expected = "{}";
             var actual = WriteJsonLightEntry(true, null, false, new ODataResource(), entitySet, entityType);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             Action writeEmptyEntry = () => WriteJsonLightEntry(false, new Uri("http://temp.org/"), false, new ODataResource(), entitySet, entityType);
-            writeEmptyEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            writeEmptyEntry.Throws<ODataException>(ErrorStrings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
@@ -52,7 +51,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             Action writeEmptyEntry = () => WriteJsonLightEntry(false, null, true, new ODataResource(), entitySet, entityType);
-            writeEmptyEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataOutputContext_MetadataDocumentUriMissing);
+            writeEmptyEntry.Throws<ODataException>(ErrorStrings.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         [Fact]
@@ -62,7 +61,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             ODataResource transientEntry = new ODataResource() { IsTransient = true };
             var actual = WriteJsonLightEntry(true, null, false, transientEntry, entitySet, entityType);
-            actual.Should().Contain("\"@odata.id\":null");
+            Assert.Contains("\"@odata.id\":null", actual);
         }
 
         [Fact]
@@ -85,7 +84,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 entitySet: containedEntitySet,
                 resourceType: containedEntitySet.Type as IEdmEntityType,
                 odataUri: odataUri);
-            actual.Should().Contain("\"@odata.id\":\"FakeSet('parent')/nav('son')\"");
+            Assert.Contains("\"@odata.id\":\"FakeSet('parent')/nav('son')\"", actual);
         }
 
         [Fact]
@@ -220,7 +219,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                             @"""key"":1" +
                 @"}]}]}";
 
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -240,7 +239,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 entitySet: containedEntitySet,
                 resourceType: containedEntitySet.Type as IEdmEntityType,
                 odataUri: null);
-            writeContainedEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+            writeContainedEntry.Throws<ODataException>(ErrorStrings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
         }
 
         [Fact]
@@ -264,8 +263,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 entityType: entityType
                 );
 
-            actual.Should().Contain("\"@odata.readLink\":\"http://test.org/EntitySet('1')/read\"");
-            actual.Should().NotContain("\"@odata.editLink\"");
+            Assert.Contains("\"@odata.readLink\":\"http://test.org/EntitySet('1')/read\"", actual);
+            Assert.DoesNotContain("\"@odata.editLink\"", actual);
         }
 
         [Fact]
@@ -290,8 +289,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 entityType: entityType
                 );
 
-            actual.Should().Contain("\"@odata.readLink\":\"http://test.org/EntitySet('1')/read\"");
-            actual.Should().Contain("\"@odata.editLink\":\"http://test.org/EntitySet('1')/edit\"");
+            Assert.Contains("\"@odata.readLink\":\"http://test.org/EntitySet('1')/read\"", actual);
+            Assert.Contains("\"@odata.editLink\":\"http://test.org/EntitySet('1')/edit\"", actual);
         }
 
         [Fact]
@@ -316,8 +315,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 entityType: entityType
                 );
 
-            actual.Should().Contain("\"@odata.editLink\":\"http://test.org/EntitySet('1')\"");
-            actual.Should().NotContain("\"@odata.readLink\"");
+            Assert.Contains("\"@odata.editLink\":\"http://test.org/EntitySet('1')\"", actual);
+            Assert.DoesNotContain("\"@odata.readLink\"", actual);
         }
 
         [Fact]
@@ -462,7 +461,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
     "}" +
   "]" +
 "}";
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -542,7 +541,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
     "}" +
   "]" +
 "}";
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -732,7 +731,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 isResourceSet: true,
                 model: model);
 
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -865,7 +864,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 },
                 throwOnUndeclaredProperty: true
                 );
-            writeEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "Fake.Type"));
+            writeEntry.Throws<ODataException>(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "Fake.Type"));
 
             // Should throw on undeclared complex value property
             res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } } };
@@ -885,7 +884,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 },
                 throwOnUndeclaredProperty: true
                 );
-            writeEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenComplex", "Fake.Type"));
+            writeEntry.Throws<ODataException>(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenComplex", "Fake.Type"));
 
             // Should throw on undeclared navigation property
             res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } } };
@@ -913,7 +912,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 },
                 throwOnUndeclaredProperty: true
                 );
-            writeEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "Fake.Type"));
+            writeEntry.Throws<ODataException>(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "Fake.Type"));
         }
 
         private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet, ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType)

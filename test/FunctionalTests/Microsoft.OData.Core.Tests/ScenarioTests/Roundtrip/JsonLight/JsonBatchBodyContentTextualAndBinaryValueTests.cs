@@ -4,17 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.OData.Tests.JsonLight;
+using Xunit;
+
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
-    using System;
-    using System.IO;
-    using System.Globalization;
-    using System.Text;
-    using System.Text.RegularExpressions;
-
-    using Microsoft.OData.Tests.JsonLight;
-    using Xunit;
-
     public class JsonBatchBodyContentTextualAndBinaryValueTests
     {
         private const string batchContentTypeApplicationJson = "application/json; odata.streaming=true";

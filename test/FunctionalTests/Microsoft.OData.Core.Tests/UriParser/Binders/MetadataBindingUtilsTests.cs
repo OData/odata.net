@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -49,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             SingleValueNode node = new ConstantNode(7);
             var targetType = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyMultiLineString, false);
             Action convertMethod = () => MetadataBindingUtils.ConvertToTypeIfNeeded(node, targetType);
-            convertMethod.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_CannotConvertToType(node.TypeReference.FullName(), targetType.FullName()));
+            convertMethod.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType(node.TypeReference.FullName(), targetType.FullName()));
         }
         #endregion
     }

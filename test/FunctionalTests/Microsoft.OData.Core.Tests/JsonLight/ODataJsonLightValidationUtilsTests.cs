@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
@@ -26,7 +25,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsOpenMetadataReferenceProperty()
         {
             Action action = () => ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "http://www.example.com/$metadata#foo");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/$metadata#foo", metadataDocumentUri.AbsoluteUri));
+            action.Throws<ODataException>(ErrorStrings.ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/$metadata#foo", metadataDocumentUri.AbsoluteUri));
         }
         
         [Fact]
@@ -39,28 +38,28 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsWithoutHash()
         {
             Action action = () => ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "bar");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("bar"));
+            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("bar"));
         }
 
         [Fact]
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsAbsoluteUriWithoutHash()
         {
             Action action = () => ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "http://www.example.com/foo");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("http://www.example.com/foo"));
+            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("http://www.example.com/foo"));
         }
 
         [Fact]
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsIdentifierHashIdentifier()
         {
             Action action = () => ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "foo#baz");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("foo#baz"));
+            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("foo#baz"));
         }
 
         [Fact]
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsJustHash()
         {
             Action action = () => ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "#");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("#"));
+            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("#"));
         }
 
         [Fact]
@@ -73,26 +72,26 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void IsOpenMetadataReferencePropertyNameShouldBeTrueWhenNameIsAbsoluteUriNotRelativeToMetadataDocumentUri()
         {
-            ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, "http://www.example.com/foo#baz").Should().BeTrue();
+            Assert.True(ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, "http://www.example.com/foo#baz"));
         }
 
         [Fact]
         public void IsOpenMetadataReferencePropertyNameShouldBeFalseWhenNameDoesNotContainHash()
         {
-            ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, "http://www.example.com/foobaz").Should().BeFalse();
-            ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, "foobaz").Should().BeFalse();
+            Assert.False(ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, "http://www.example.com/foobaz"));
+            Assert.False(ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, "foobaz"));
         }
 
         [Fact]
         public void IsOpenMetadataReferencePropertyNameShouldBeFalseWhenNameIsAbsoluteUriRelativeToMetadataDocumentUri()
         {
-            ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, metadataDocumentUri.OriginalString + "#baz").Should().BeFalse();
+            Assert.False(ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, metadataDocumentUri.OriginalString + "#baz"));
         }
 
         [Fact]
         public void IsOpenMetadataReferencePropertyNameShouldBeFalseWhenNameIsHashThenIdentifier()
         {
-            ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, "#baz").Should().BeFalse();
+            Assert.False(ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(metadataDocumentUri, "#baz"));
         }
 
         [Fact]
@@ -100,7 +99,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             ODataOperation operation = new ODataAction();
             Action action = () => ODataJsonLightValidationUtils.ValidateOperation(metadataDocumentUri, operation);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata(operation.GetType().Name));
+            action.Throws<ODataException>(ErrorStrings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata(operation.GetType().Name));
         }
 
         [Fact]
@@ -108,7 +107,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             ODataOperation operation = new ODataAction {Metadata = new Uri("foobaz", UriKind.Relative)};
             Action action = () => ODataJsonLightValidationUtils.ValidateOperation(metadataDocumentUri, operation);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("foobaz"));
+            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("foobaz"));
         }
 
         [Fact]
@@ -116,7 +115,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             ODataOperation operation = new ODataAction {Metadata = new Uri("http://www.example.com/foo#baz")};
             Action action = () => ODataJsonLightValidationUtils.ValidateOperation(metadataDocumentUri, operation);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/foo#baz", metadataDocumentUri.AbsoluteUri));
+            action.Throws<ODataException>(ErrorStrings.ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/foo#baz", metadataDocumentUri.AbsoluteUri));
         }
 
         [Fact]
@@ -124,7 +123,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             ODataOperation operation = new ODataAction {Metadata = new Uri("http://www.example.com/foo#baz"), Target = new Uri("http://www.example.com")};
             Action action = () => ODataJsonLightValidationUtils.ValidateOperation(metadataDocumentUri, operation);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/foo#baz", metadataDocumentUri.AbsoluteUri));
+            action.Throws<ODataException>(ErrorStrings.ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/foo#baz", metadataDocumentUri.AbsoluteUri));
         }
 
         [Fact]
@@ -138,7 +137,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ValidateOperationPropertyShouldThrowWhenPropertyValueIsNull()
         {
             Action action = () => ODataJsonLightValidationUtils.ValidateOperationPropertyValueIsNotNull(null, "target", "#action1");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightValidationUtils_OperationPropertyCannotBeNull("target", "#action1"));
+            action.Throws<ODataException>(ErrorStrings.ODataJsonLightValidationUtils_OperationPropertyCannotBeNull("target", "#action1"));
         }
 
         [Fact]

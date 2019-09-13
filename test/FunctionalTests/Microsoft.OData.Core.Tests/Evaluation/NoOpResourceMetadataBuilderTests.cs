@@ -7,7 +7,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.Evaluation;
 using Xunit;
 
@@ -19,21 +18,21 @@ namespace Microsoft.OData.Tests.Evaluation
         public void NoOpMetadataBuilderShouldReturnEditLinkSetByUser()
         {
             var editLink = new Uri("http://example.com");
-            new NoOpResourceMetadataBuilder(new ODataResource {EditLink = editLink}).GetEditLink().Should().Be(editLink);
+            Assert.Equal(editLink, new NoOpResourceMetadataBuilder(new ODataResource {EditLink = editLink}).GetEditLink());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnReadLinkSetByUser()
         {
             var readLink = new Uri("http://example.com");
-            new NoOpResourceMetadataBuilder(new ODataResource {ReadLink = readLink}).GetReadLink().Should().Be(readLink);
+            Assert.Equal(readLink, new NoOpResourceMetadataBuilder(new ODataResource {ReadLink = readLink}).GetReadLink());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnIdSetByUser()
         {
             var id = new Uri("http://example.com");
-            new NoOpResourceMetadataBuilder(new ODataResource {Id = id}).GetId().Should().Be(id);
+            Assert.Equal(id, new NoOpResourceMetadataBuilder(new ODataResource {Id = id}).GetId());
         }
 
         [Fact]
@@ -45,14 +44,15 @@ namespace Microsoft.OData.Tests.Evaluation
                 IsTransient = true,
                 Id = id
             };
-            new NoOpResourceMetadataBuilder(odataEntry).GetId().Should().BeNull();
+
+            Assert.Null(new NoOpResourceMetadataBuilder(odataEntry).GetId());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnETagSetByUser()
         {
             const string etag = "etag value";
-            new NoOpResourceMetadataBuilder(new ODataResource {ETag = etag}).GetETag().Should().Be(etag);
+            Assert.Equal(etag, new NoOpResourceMetadataBuilder(new ODataResource {ETag = etag}).GetETag());
         }
 
         [Fact]
@@ -66,8 +66,7 @@ namespace Microsoft.OData.Tests.Evaluation
                     ETag = "stream etag"
                 };
 
-            new NoOpResourceMetadataBuilder(new ODataResource { MediaResource = mediaResource }).GetMediaResource()
-                .Should().Be(mediaResource);
+            Assert.Same(mediaResource, new NoOpResourceMetadataBuilder(new ODataResource { MediaResource = mediaResource }).GetMediaResource());
         }
 
         [Fact]
@@ -80,8 +79,7 @@ namespace Microsoft.OData.Tests.Evaluation
                     new ODataProperty {Name = "CollectionProperty", Value = new ODataCollectionValue()}
                 };
 
-            new NoOpResourceMetadataBuilder(new ODataResource {Properties = properties}).GetProperties(properties)
-                .Should().HaveCount(3);
+            Assert.Equal(3, new NoOpResourceMetadataBuilder(new ODataResource { Properties = properties }).GetProperties(properties).Count());
         }
 
         [Fact]
@@ -96,13 +94,12 @@ namespace Microsoft.OData.Tests.Evaluation
 
             ODataResource entry = new ODataResource();
             entry.AddAction(action);
-            new NoOpResourceMetadataBuilder(entry).GetActions()
-                .Should().ContainSingle(a => a == action);
-            
+            Assert.Single(new NoOpResourceMetadataBuilder(entry).GetActions().Where(a => a == action));
+
             // Verify that the action information wasn't removed or changed.
-            action.Metadata.Should().Be(new Uri("http://example.com/$metadata#Action"));
-            action.Target.Should().Be(new Uri("http://example.com/Action"));
-            action.Title.Should().Be("ActionTitle");
+            Assert.Equal(new Uri("http://example.com/$metadata#Action"), action.Metadata);
+            Assert.Equal(new Uri("http://example.com/Action"), action.Target);
+            Assert.Equal("ActionTitle", action.Title);
         }
 
         [Fact]
@@ -118,94 +115,94 @@ namespace Microsoft.OData.Tests.Evaluation
             ODataResource entry = new ODataResource();
             entry.AddFunction(function);
 
-            new NoOpResourceMetadataBuilder(entry).GetFunctions()
-                .Should().ContainSingle(f => f == function);
-            
+            Assert.Single(new NoOpResourceMetadataBuilder(entry).GetFunctions().Where(f => f == function));
+
             // Verify that the Function information wasn't removed or changed.
-            function.Metadata.Should().Be(new Uri("http://example.com/$metadata#Function"));
-            function.Target.Should().Be(new Uri("http://example.com/Function"));
-            function.Title.Should().Be("FunctionTitle");
+            Assert.Equal(new Uri("http://example.com/$metadata#Function"), function.Metadata);
+            Assert.Equal(new Uri("http://example.com/Function"), function.Target);
+            Assert.Equal("FunctionTitle", function.Title);
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnNavigationLinkSetByUser()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", new Uri("http://example.com/navLink"), false)
-                .Should().Be(new Uri("http://example.com/navLink"));
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", new Uri("http://example.com/navLink"), true)
-                .Should().Be(new Uri("http://example.com/navLink"));
+            Assert.Equal(new Uri("http://example.com/navLink"),
+                new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", new Uri("http://example.com/navLink"), false));
+
+            Assert.Equal(new Uri("http://example.com/navLink"),
+                new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", new Uri("http://example.com/navLink"), true));
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnAssociationLinkSetByUser()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", new Uri("http://example.com/associationLink"), false)
-                .Should().Be(new Uri("http://example.com/associationLink"));
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", new Uri("http://example.com/associationLink"), true)
-                .Should().Be(new Uri("http://example.com/associationLink"));
+            Assert.Equal(new Uri("http://example.com/associationLink"),
+                new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", new Uri("http://example.com/associationLink"), false));
+
+            Assert.Equal(new Uri("http://example.com/associationLink"),
+                new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", new Uri("http://example.com/associationLink"), true));
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructEditLink()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetEditLink().Should().BeNull();
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetEditLink());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructReadLink()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetReadLink().Should().BeNull();
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetReadLink());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructId()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetId().Should().BeNull();
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetId());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructETag()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetETag().Should().BeNull();
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetETag());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructMediaResource()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetMediaResource().Should().BeNull();
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetMediaResource());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructProperties()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetProperties(new ODataProperty[]{})
-                .Should().BeEmpty();
+            Assert.Empty(new NoOpResourceMetadataBuilder(new ODataResource()).GetProperties(new ODataProperty[] { }));
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructActions()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetActions().Count().Should().Be(0);
+            Assert.Empty(new NoOpResourceMetadataBuilder(new ODataResource()).GetActions());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructFunctions()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetFunctions().Count().Should().Be(0);
+            Assert.Empty(new NoOpResourceMetadataBuilder(new ODataResource()).GetFunctions());
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructNavigationLink()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", null, false).Should().BeNull();
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", null, true).Should().BeNull();
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", null, false));
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", null, true));
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructAssociationLink()
         {
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", null, false).Should().BeNull();
-            new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", null, true).Should().BeNull();
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", null, false));
+            Assert.Null(new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", null, true));
         }
 
         [Fact]
@@ -216,8 +213,8 @@ namespace Microsoft.OData.Tests.Evaluation
                 IsTransient =  true
             };
             Uri id;
-            new NoOpResourceMetadataBuilder(odataEntry).TryGetIdForSerialization(out id).Should().BeTrue();
-            id.Should().BeNull();
+            Assert.True(new NoOpResourceMetadataBuilder(odataEntry).TryGetIdForSerialization(out id));
+            Assert.Null(id);
         }
 
         [Fact]
@@ -228,8 +225,8 @@ namespace Microsoft.OData.Tests.Evaluation
                 IsTransient = false
             };
             Uri id;
-            new NoOpResourceMetadataBuilder(odataEntry).TryGetIdForSerialization(out id).Should().BeFalse();
-            id.Should().BeNull();
+            Assert.False(new NoOpResourceMetadataBuilder(odataEntry).TryGetIdForSerialization(out id));
+            Assert.Null(id);
         }
     }
 }

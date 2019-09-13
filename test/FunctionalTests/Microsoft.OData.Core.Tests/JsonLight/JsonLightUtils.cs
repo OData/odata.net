@@ -4,14 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.OData.JsonLight;
+
 namespace Microsoft.OData.Tests.JsonLight
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.OData.JsonLight;
-    #endregion Namespaces
-
     public static class JsonLightUtils
     {
         /// <summary>The default streaming Json Light media type.</summary>
@@ -34,7 +32,6 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             return propertyName + JsonLightConstants.ODataPropertyAnnotationSeparatorChar + annotationName;
         }
-
 
         /// <summary>
         /// Get the Json string with special characters escaped.

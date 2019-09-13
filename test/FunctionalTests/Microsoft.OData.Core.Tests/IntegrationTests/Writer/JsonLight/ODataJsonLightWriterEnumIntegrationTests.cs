@@ -9,10 +9,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
@@ -650,11 +648,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
             // with model: write response
             Action action = () => { this.WriteResponseWithModelAndValidatePayload(mediaType, nestedItemToWrite, "no_expectedPayload", true); };
-            action.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue("ColorFlags", fullName));
+            action.Throws<ODataException>(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue("ColorFlags", fullName));
 
             // with model: write request
             action = () => { this.WriteMinimalRequestWithModelAndValidatePayload(mediaType, nestedItemToWrite, "no_expectedPayload", true); };
-            action.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue("ColorFlags", fullName));
+            action.Throws<ODataException>(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue("ColorFlags", fullName));
         }
 
         [Fact]
@@ -917,7 +915,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
                 stream.Seek(0, SeekOrigin.Begin);
                 string payload = (new StreamReader(stream)).ReadToEnd();
-                payload.Should().Be(expectedPayload);
+                Assert.Equal(expectedPayload, payload);
             }
 
             // without model
@@ -931,7 +929,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
                 stream.Seek(0, SeekOrigin.Begin);
                 string payload = (new StreamReader(stream)).ReadToEnd();
-                payload.Should().Be(expectedPayload);
+                Assert.Equal(expectedPayload, payload);
             }
         }
 
@@ -1019,7 +1017,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             writer.Flush();
             stream.Seek(0, SeekOrigin.Begin);
             string payload = (new StreamReader(stream)).ReadToEnd();
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, payload);
         }
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, ODataMediaType mediaType, bool writingResponse = true, IEdmModel userModel = null, Uri serviceDocumentUri = null)

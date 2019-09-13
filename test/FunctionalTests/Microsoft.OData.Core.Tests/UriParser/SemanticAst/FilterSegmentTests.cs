@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
@@ -24,7 +23,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             FilterClause filterClause = CreateFilterClause(filterExpression);
 
             Action create = () => new FilterSegment(null, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-            create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: expression");
+            Assert.Throws<ArgumentNullException>("expression", create);
         }
 
         [Fact]
@@ -36,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
 
             Action create = () => new FilterSegment(expression, null, HardCodedTestModel.GetPet1Set());
-            create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: rangeVariable");
+            Assert.Throws<ArgumentNullException>("rangeVariable", create);
         }
 
         [Fact]
@@ -48,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
 
             Action create = () => new FilterSegment(expression, filterClause.RangeVariable, null);
-            create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: navigationSource");
+            Assert.Throws<ArgumentNullException>("navigationSource", create);
         }
 
         [Fact]
@@ -60,8 +59,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
             FilterSegment filterSegment = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
-            filterSegment.Expression.Equals(expression).Should().BeTrue();
-            filterSegment.RangeVariable.Equals(filterClause.RangeVariable).Should().BeTrue();
+            Assert.True(filterSegment.Expression.Equals(expression));
+            Assert.True(filterSegment.RangeVariable.Equals(filterClause.RangeVariable));
         }
 
         [Fact]
@@ -73,8 +72,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             BinaryOperatorNode expression = filterClause.Expression as BinaryOperatorNode;
             FilterSegment filterSegment = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
-            filterSegment.Expression.Equals(expression).Should().BeTrue();
-            filterSegment.RangeVariable.Equals(filterClause.RangeVariable).Should().BeTrue();
+            Assert.True(filterSegment.Expression.Equals(expression));
+            Assert.True(filterSegment.RangeVariable.Equals(filterClause.RangeVariable));
         }
 
         [Fact]
@@ -86,7 +85,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
             FilterSegment filterSegment = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
-            filterSegment.SingleResult.Should().BeFalse();
+            Assert.False(filterSegment.SingleResult);
         }
 
         [Fact]
@@ -98,7 +97,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
             FilterSegment filterSegment = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
-            filterSegment.EdmType.Equals(filterClause.RangeVariable.TypeReference.Definition).Should().BeFalse();
+            Assert.False(filterSegment.EdmType.Equals(filterClause.RangeVariable.TypeReference.Definition));
         }
 
         [Fact]
@@ -111,8 +110,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             FilterSegment filterSegment1 = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
             FilterSegment filterSegment2 = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
-            filterSegment1.Equals(filterSegment2).Should().BeTrue();
-            filterSegment2.Equals(filterSegment1).Should().BeTrue();
+            Assert.True(filterSegment1.Equals(filterSegment2));
+            Assert.True(filterSegment2.Equals(filterSegment1));
         }
 
         [Fact]
@@ -128,8 +127,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             FilterSegment filterSegment1 = new FilterSegment(expression1, filterClause1.RangeVariable, HardCodedTestModel.GetPet1Set());
             FilterSegment filterSegment2 = new FilterSegment(expression2, filterClause2.RangeVariable, HardCodedTestModel.GetPet1Set());
 
-            filterSegment1.Equals(filterSegment2).Should().BeFalse();
-            filterSegment2.Equals(filterSegment1).Should().BeFalse();
+            Assert.False(filterSegment1.Equals(filterSegment2));
+            Assert.False(filterSegment2.Equals(filterSegment1));
         }
 
         [Fact]
@@ -142,8 +141,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             FilterSegment filterSegment1 = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
             FilterSegment filterSegment2 = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPeopleSet());
 
-            filterSegment1.Equals(filterSegment2).Should().BeFalse();
-            filterSegment2.Equals(filterSegment1).Should().BeFalse();
+            Assert.False(filterSegment1.Equals(filterSegment2));
+            Assert.False(filterSegment2.Equals(filterSegment1));
         }
         #endregion
 

@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -33,7 +32,7 @@ namespace Microsoft.OData.Tests.Json
         public void StartPaddingFunctionScopeWritesParenthesis()
         {
             this.writer.StartPaddingFunctionScope();
-            this.builder.ToString().Should().Be("(");
+            Assert.Equal("(", this.builder.ToString());
         }
 
         [Fact]
@@ -41,14 +40,14 @@ namespace Microsoft.OData.Tests.Json
         {
             this.writer.StartPaddingFunctionScope();
             this.writer.EndPaddingFunctionScope();
-            this.builder.ToString().Should().Be("()");
+            Assert.Equal("()", this.builder.ToString());
         }
 
         [Fact]
         public void WritePaddingFunctionNameWritesName()
         {
             this.writer.WritePaddingFunctionName("example");
-            this.builder.ToString().Should().Be("example");
+            Assert.Equal("example", this.builder.ToString());
         }
 
         #region WritePrimitiveValue
@@ -164,14 +163,14 @@ namespace Microsoft.OData.Tests.Json
         private void VerifyWritePrimitiveValue<T>(T parameter, string expected)
         {
             this.writer.WritePrimitiveValue(parameter);
-            this.builder.ToString().Should().Be(expected);
+            Assert.Equal(expected, this.builder.ToString());
         }
 
         private void VerifyWriterPrimitiveValueWithIeee754Compatible<T>(T parameter, string expected, bool isIeee754Compatible)
         {
             this.writer = new JsonWriter(new StringWriter(builder), isIeee754Compatible);
             this.writer.WritePrimitiveValue(parameter);
-            this.builder.ToString().Should().Be(expected);
+            Assert.Equal(expected, this.builder.ToString());
         }
 
         #endregion
