@@ -99,7 +99,28 @@ namespace Microsoft.OData.Tests.Json
         {
             IDictionary<string, ODataValue> properties = new Dictionary<string, ODataValue>();
             properties.Add("stacktrace", "NormalString".ToODataValue());
-            properties.Add("MyNewObject", new ODataResourceValue(){TypeName = "ComplexValue", Properties = new List<ODataProperty>(){ new ODataProperty(){ Name = "NestedResourcePropertyName", Value = new ODataResourceValue() { Properties = new List<ODataProperty>() {new ODataProperty() {Name = "InnerMostPropertyName", Value = "InnerMostPropertyValue"} } } }}});
+            properties.Add("MyNewObject", new ODataResourceValue()
+            {
+                TypeName = "ComplexValue",
+                Properties = new List<ODataProperty>()
+                {
+                    new ODataProperty()
+                    {
+                        Name = "NestedResourcePropertyName",
+                        Value = new ODataResourceValue()
+                        {
+                            Properties = new List<ODataProperty>()
+                            {
+                                new ODataProperty()
+                                {
+                                    Name = "InnerMostPropertyName",
+                                    Value = "InnerMostPropertyValue"
+                                }
+                            }
+                        }
+                    }
+                }
+            });
             IDictionary<string, ODataValue> nestedDict = new Dictionary<string, ODataValue>();
             nestedDict.Add("nested", null);
             var error = new ODataError
@@ -118,7 +139,24 @@ namespace Microsoft.OData.Tests.Json
                 maxInnerErrorDepth: 5,
                 writingJsonLight: false);
              var result = stringWriter.GetStringBuilder().ToString();
-             result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":{\"InnerMostPropertyName\":\"InnerMostPropertyValue\"}},\"internalexception\":{\"nested\":null}}}}");
+             result.Should().Be("{\"error\":" +
+                                "{\"code\":\"\"," +
+                                "\"message\":\"\"," +
+                                "\"target\":\"any target\"," +
+                                "\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}]," +
+                                "\"innererror\":{" +
+                                    "\"stacktrace\":\"NormalString\"," +
+                                    "\"MyNewObject\":{" +
+                                        "\"NestedResourcePropertyName\":{" +
+                                            "\"InnerMostPropertyName\":\"InnerMostPropertyValue\"" +
+                                          "}" +
+                                     "}," +
+                                     "\"internalexception\":{" +
+                                            "\"nested\":null" +
+                                      "}" +
+                                  "}" +
+                                "}" +
+                                "}");
         }
 
         [Fact]
@@ -144,7 +182,25 @@ namespace Microsoft.OData.Tests.Json
                 maxInnerErrorDepth: 5,
                 writingJsonLight: false);
             var result = stringWriter.GetStringBuilder().ToString();
-            result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"},\"internalexception\":{\"stacktrace\":\"NormalString\",\"MyNewObject\":{\"NestedResourcePropertyName\":\"NestedPropertyValue\"}}}}}");
+            result.Should().Be("{\"error\":" +
+                               "{\"code\":\"\"," +
+                               "\"message\":\"\"," +
+                               "\"target\":\"any target\"," +
+                               "\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}]," +
+                               "\"innererror\":{" +
+                                    "\"stacktrace\":\"NormalString\"," +
+                                    "\"MyNewObject\":{" +
+                                        "\"NestedResourcePropertyName\":\"NestedPropertyValue\"" +
+                                    "}," +
+                                    "\"internalexception\":{" +
+                                        "\"stacktrace\":\"NormalString\"," +
+                                        "\"MyNewObject\":{" +
+                                            "\"NestedResourcePropertyName\":\"NestedPropertyValue\"" +
+                                        "}" +
+                                    "}" +
+                               "}" +
+                               "}" +
+                               "}");
         }
 
         [Fact]
@@ -166,7 +222,18 @@ namespace Microsoft.OData.Tests.Json
                 maxInnerErrorDepth: 5,
                 writingJsonLight: false);
             var result = stringWriter.GetStringBuilder().ToString();
-            result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"message\":\"The other properties on the inner error object should serialize as empty strings because of using this constructor.\",\"type\":\"\",\"stacktrace\":\"\"}}}");
+            result.Should().Be("{\"error\":" +
+                               "{\"code\":\"\"," +
+                               "\"message\":\"\"," +
+                               "\"target\":\"any target\"," +
+                               "\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}]," +
+                               "\"innererror\":{" +
+                                    "\"message\":\"The other properties on the inner error object should serialize as empty strings because of using this constructor.\"," +
+                                    "\"type\":\"\"," +
+                                    "\"stacktrace\":\"\"" +
+                                "}" +
+                               "}" +
+                               "}");
         }
 
         [Fact]
@@ -193,7 +260,24 @@ namespace Microsoft.OData.Tests.Json
                 maxInnerErrorDepth: 5,
                 writingJsonLight: false);
             var result = stringWriter.GetStringBuilder().ToString();
-            result.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\",\"ResourceValue\":{\"PropertyName\":\"PropertyValue\",\"NullProperty\":null},\"NullProperty\":null,\"CollectionValue\":[null,\"CollectionValue\",1]}}}");
+            result.Should().Be("{\"error\":" +
+                               "{\"code\":\"\"," +
+                               "\"message\":\"\"," +
+                               "\"target\":\"any target\"," +
+                               "\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}]," +
+                               "\"innererror\":{" +
+                                    "\"message\":\"\"," +
+                                    "\"type\":\"\"," +
+                                    "\"stacktrace\":\"\"," +
+                                    "\"ResourceValue\":{" +
+                                        "\"PropertyName\":\"PropertyValue\"," +
+                                        "\"NullProperty\":null" +
+                                     "}," +
+                                    "\"NullProperty\":null," +
+                                    "\"CollectionValue\":[null,\"CollectionValue\",1]" +
+                                "}" +
+                               "}" +
+                               "}");
         }
 
         [Fact]
@@ -206,7 +290,17 @@ namespace Microsoft.OData.Tests.Json
 
             string result = innerError.ToJson();
 
-            result.Should().Be("{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\",\"innererror\":{},\"ResourceValue\":{\"PropertyName\":\"PropertyValue\",\"NullProperty\":null},\"NullProperty\":null,\"CollectionValue\":[null,\"CollectionValue\",1]}");
+            result.Should().Be("{\"message\":\"\"," +
+                               "\"type\":\"\"," +
+                               "\"stacktrace\":\"\"," +
+                               "\"innererror\":{}," +
+                               "\"ResourceValue\":{" +
+                                    "\"PropertyName\":\"PropertyValue\"," +
+                                    "\"NullProperty\":null" +
+                                    "}," +
+                               "\"NullProperty\":null," +
+                               "\"CollectionValue\":[null,\"CollectionValue\",1]" +
+                               "}");
         }
 
     }

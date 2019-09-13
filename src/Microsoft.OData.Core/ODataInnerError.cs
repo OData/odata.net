@@ -124,7 +124,7 @@ namespace Microsoft.OData
                     keyValuePair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName ||
                     keyValuePair.Key == JsonConstants.ODataErrorInnerErrorInnerErrorName)
                 {
-                    continue; ;
+                    continue;
                 }
 
                 sb.Append(",");

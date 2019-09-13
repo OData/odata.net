@@ -6,11 +6,9 @@
 
 using System.IO;
 using System.Linq;
-using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Xunit;
-using System.Collections.Generic;
-using FluentAssertions;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -162,7 +160,11 @@ namespace Microsoft.OData.Tests.JsonLight
             //Assert Inner Error properties
             Assert.NotNull(error.InnerError);
             Assert.True(error.InnerError.Properties.ContainsKey("innererror"));
-            Assert.NotNull(error.InnerError.Properties["innererror"].As<ODataResourceValue>().Properties.FirstOrDefault(p =>p.Name == "MyNewObject").ODataValue.As<ODataResourceValue>());
+            var objectValue =
+                (error.InnerError.Properties["innererror"] as ODataResourceValue).Properties
+                .FirstOrDefault(p => p.Name == "MyNewObject").ODataValue as ODataResourceValue;
+            Assert.NotNull(objectValue);
+
             ODataResourceValue nestedInnerObject = error.InnerError.Properties["innererror"] as ODataResourceValue;
             ODataResourceValue nestedMyNewObject    = nestedInnerObject.Properties.FirstOrDefault(p => p.Name == "MyNewObject").ODataValue as ODataResourceValue;
 
@@ -208,7 +210,7 @@ namespace Microsoft.OData.Tests.JsonLight
             //Assert Inner Error properties
             Assert.NotNull(error.InnerError);
             Assert.True(error.InnerError.Properties.ContainsKey("CollectionValue"));
-            Assert.Equal(3, error.InnerError.Properties["CollectionValue"].As<ODataCollectionValue>().Items.Count());
+            Assert.Equal(3, (error.InnerError.Properties["CollectionValue"] as ODataCollectionValue).Items.Count());
         }
 
         private ODataJsonLightInputContext GetInputContext(string payload, IEdmModel model = null)

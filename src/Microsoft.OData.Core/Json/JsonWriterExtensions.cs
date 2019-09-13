@@ -157,60 +157,10 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Writes the json array value.
+        /// Writes the ODataValue (primitive, collection or resource value) to the underlying json writer.
         /// </summary>
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
-        /// <param name="arrayValue">Writes the json array value to the underlying json writer.</param>
-        private static void WriteJsonArrayValue(this IJsonWriter jsonWriter, IEnumerable arrayValue)
-        {
-            Debug.Assert(arrayValue != null, "arrayValue != null");
-
-            jsonWriter.StartArrayScope();
-
-            foreach (object element in arrayValue)
-            {
-                jsonWriter.WriteJsonValue(element);
-            }
-
-            jsonWriter.EndArrayScope();
-        }
-
-        /// <summary>
-        /// Writes the json value (primitive, IDictionary or IEnumerable) to the underlying json writer.
-        /// </summary>
-        /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
-        /// <param name="propertyValue">value to write.</param>
-        private static void WriteJsonValue(this IJsonWriter jsonWriter, object propertyValue)
-        {
-            if (propertyValue == null)
-            {
-                jsonWriter.WriteValue((string)null);
-            }
-            else if (EdmLibraryExtensions.IsPrimitiveType(propertyValue.GetType()))
-            {
-                jsonWriter.WritePrimitiveValue(propertyValue);
-            }
-            else
-            {
-                IDictionary<string, object> objectValue = propertyValue as IDictionary<string, object>;
-                if (objectValue != null)
-                {
-                    jsonWriter.WriteJsonObjectValue(objectValue, null /*typeName */);
-                }
-                else
-                {
-                    IEnumerable arrayValue = propertyValue as IEnumerable;
-                    Debug.Assert(arrayValue != null, "arrayValue != null");
-                    jsonWriter.WriteJsonArrayValue(arrayValue);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Writes the json value (primitive, IDictionary or IEnumerable) to the underlying json writer.
-        /// </summary>
-        /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
-        /// <param name="propertyValue">value to write.</param>
+        /// <param name="odataValue">value to write.</param>
         internal static void WriteODataValue(this IJsonWriter jsonWriter, ODataValue odataValue)
         {
             if (odataValue == null || odataValue is ODataNullValue)
@@ -262,11 +212,61 @@ namespace Microsoft.OData.Json
 
                 jsonWriter.EndArrayScope();
 
-                return; 
+                return;
             }
 
             throw new ODataException(
                 ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(odataValue.GetType().FullName));
+        }
+
+        /// <summary>
+        /// Writes the json array value.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
+        /// <param name="arrayValue">Writes the json array value to the underlying json writer.</param>
+        private static void WriteJsonArrayValue(this IJsonWriter jsonWriter, IEnumerable arrayValue)
+        {
+            Debug.Assert(arrayValue != null, "arrayValue != null");
+
+            jsonWriter.StartArrayScope();
+
+            foreach (object element in arrayValue)
+            {
+                jsonWriter.WriteJsonValue(element);
+            }
+
+            jsonWriter.EndArrayScope();
+        }
+
+        /// <summary>
+        /// Writes the json value (primitive, IDictionary or IEnumerable) to the underlying json writer.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
+        /// <param name="propertyValue">value to write.</param>
+        private static void WriteJsonValue(this IJsonWriter jsonWriter, object propertyValue)
+        {
+            if (propertyValue == null)
+            {
+                jsonWriter.WriteValue((string)null);
+            }
+            else if (EdmLibraryExtensions.IsPrimitiveType(propertyValue.GetType()))
+            {
+                jsonWriter.WritePrimitiveValue(propertyValue);
+            }
+            else
+            {
+                IDictionary<string, object> objectValue = propertyValue as IDictionary<string, object>;
+                if (objectValue != null)
+                {
+                    jsonWriter.WriteJsonObjectValue(objectValue, null /*typeName */);
+                }
+                else
+                {
+                    IEnumerable arrayValue = propertyValue as IEnumerable;
+                    Debug.Assert(arrayValue != null, "arrayValue != null");
+                    jsonWriter.WriteJsonArrayValue(arrayValue);
+                }
+            }
         }
     }
 }
