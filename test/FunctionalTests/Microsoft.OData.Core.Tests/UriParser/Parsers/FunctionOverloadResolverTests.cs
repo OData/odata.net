@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -29,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperationImport function;
             Action test = () => FunctionOverloadResolver.ResolveOperationImportFromList("Foo", parameters, model, out function, DefaultUriResolver);
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads("Foo"));
+            test.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads("Foo"));
         }
 
         [Fact]
@@ -40,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperation function;
             Action test = () => FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetPersonType(), model, out function, DefaultUriResolver);
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates("Fully.Qualified.Namespace.Move"));
+            test.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates("Fully.Qualified.Namespace.Move"));
         }
 
         [Fact]
@@ -51,7 +50,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperationImport function;
             Action resolve = () => FunctionOverloadResolver.ResolveOperationImportFromList("Action", parameters, model, out function, DefaultUriResolver);
-            resolve.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_MultipleActionImportOverloads("Action"));
+            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleActionImportOverloads("Action"));
         }
 
         [Fact]
@@ -60,8 +59,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new[] { "inOffice" };
 
             IEdmOperation function;
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.HasDog", parameters, HardCodedTestModel.GetPersonType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters());
+            var result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.HasDog", parameters, HardCodedTestModel.GetPersonType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters(), function);
         }
 
         [Fact]
@@ -70,8 +70,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[] { };
 
             IEdmOperation function;
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetEmployeeType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(HardCodedTestModel.GetMoveOverloadForEmployee());
+            var result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetEmployeeType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(HardCodedTestModel.GetMoveOverloadForEmployee(), function);
         }
 
         [Fact]
@@ -80,8 +81,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[] { };
 
             IEdmOperation function;
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetManagerType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(HardCodedTestModel.GetMoveOverloadForEmployee());
+            var result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetManagerType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(HardCodedTestModel.GetMoveOverloadForEmployee(), function);
         }
 
         [Fact]
@@ -90,8 +92,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[] { };
 
             IEdmOperationImport function;
-            FunctionOverloadResolver.ResolveOperationImportFromList("GetCoolPeople", parameters, HardCodedTestModel.TestModel, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(HardCodedTestModel.GetFunctionImportForGetCoolPeople());
+            var result = FunctionOverloadResolver.ResolveOperationImportFromList("GetCoolPeople", parameters, HardCodedTestModel.TestModel, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(HardCodedTestModel.GetFunctionImportForGetCoolPeople(), function);
         }
 
         [Fact]
@@ -160,38 +163,43 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Resolve overload function import without parameter.
             var parameters = new string[] { };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
-            functionImport.Should().BeSameAs(functionImportWithoutParameter);
+            var result = FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionImportWithoutParameter, functionImport);
 
             // Resolve overload function import with parameter.
             parameters = new string[] { "Parameter" };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
-            functionImport.Should().BeSameAs(functionImportWithParameter);
+            result = FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionImportWithParameter, functionImport);
 
             // Resolve overload function import with parameter.
             parameters = new string[] { "Parameter", "Parameter2" };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
-            functionImport.Should().BeSameAs(functionImportWithTwoParameter);
+            result = FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
+            Assert.Same(functionImportWithTwoParameter, functionImport);
 
             // Resolve overload function with two required and one optional parameter.
             parameters = new string[] { "Parameter", "Parameter2", "Parameter3" };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
-            functionImport.Should().BeSameAs(functionImportWithTwoRequiredOneOptionalParameter);
+            result = FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionImportWithTwoRequiredOneOptionalParameter, functionImport);
 
             // Resolve overload function with one required and two optional parameters.
             parameters = new string[] { "Parameter1", "Parameter3" };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
-            functionImport.Should().BeSameAs(functionImportWithOneRequiredOneOptionalParameter);
+            result = FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionImportWithOneRequiredOneOptionalParameter, functionImport);
 
             // Resolve overload function with one required and three optional parameters (one omitted).
             parameters = new string[] { "Parameter1", "Parameter3", "Parameter5" };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
-            functionImport.Should().BeSameAs(functionImportWithOneRequiredThreeOptionalParameter);
+            result = FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionImportWithOneRequiredThreeOptionalParameter, functionImport);
 
             // Raise exception if more than one match.
             parameters = new string[] { "Parameter1", "Parameter4" };
             Action resolve = () => FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
-            resolve.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads("FunctionImport"));
+            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads("FunctionImport"));
         }
 
         [Fact]
@@ -255,38 +263,44 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Resolve overload function without parameter.
             var parameters = new string[] { };
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithoutParameter);
+            var result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithoutParameter, function);
 
             // Resolve overload function with parameter.
             parameters = new string[] { "Parameter" };
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithParameter);
+            result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithParameter, function);
 
             // Resolve overload function with parameter.
             parameters = new string[] { "Parameter", "Parameter2" };
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithTwoParameter);
+            result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithTwoParameter, function);
 
             // Resolve overload function with two required and one optional parameter.
             parameters = new string[] { "Parameter", "Parameter2", "Parameter3" };
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithTwoRequiredOneOptionalParameter);
+            result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithTwoRequiredOneOptionalParameter, function);
 
             // Resolve overload function with one required and two optional parameters (one omitted).
             parameters = new string[] { "Parameter1", "Parameter3" };
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithOneRequiredOneOptionalParameter);
+            result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithOneRequiredOneOptionalParameter, function);
 
             // Resolve overload function with one required and three optional parameters (one omitted).
             parameters = new string[] { "Parameter1", "Parameter3", "Parameter5" };
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithOneRequiredThreeOptionalParameter);
+            result = FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithOneRequiredThreeOptionalParameter, function);
 
             // Raise exception if more than one match.
             parameters = new string[] { "Parameter1", "Parameter4" };
-            Action resolve = () => FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            resolve.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Fully.Qualified.Namespace.Function", string.Join(",", parameters)));
+            Action resolve = () => Assert.True(FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver));
+            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Fully.Qualified.Namespace.Function", string.Join(",", parameters)));
         }
 
         [Fact]
@@ -312,22 +326,26 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Resolve overload function without parameter. Be noted, it picks the one with no optional parameters.
             var parameters = new string[] { };
-            FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithoutParameter);
+            var result = FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithoutParameter, function);
 
             // Resolve overload function with one bound and two optional parameters (one omitted).
             parameters = new string[] { "Parameter1" };
-            FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithAllOptionalParameters);
+            result = FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithAllOptionalParameters, function);
 
             // Resolve overload function with one bound and two optional parameters (both specified).
             parameters = new string[] { "Parameter1", "Parameter2" };
-            FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeTrue();
-            function.Should().BeSameAs(functionWithAllOptionalParameters);
+            result = FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.True(result);
+            Assert.Same(functionWithAllOptionalParameters, function);
 
             // Return false if no match.
             parameters = new string[] { "Parameter1", "Parameter4" };
-            FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver).Should().BeFalse();
+            result = FunctionOverloadResolver.ResolveOperationFromList("NS.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver);
+            Assert.False(result);
         }
     }
 }

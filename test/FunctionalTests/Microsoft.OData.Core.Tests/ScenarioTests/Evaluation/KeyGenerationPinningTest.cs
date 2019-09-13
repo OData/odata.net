@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using FluentAssertions;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -201,7 +200,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
 ";
 
             var actual = builder.ToString();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -220,7 +219,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
             RunPinningTest(builder, keyValues);
 
             var actual = builder.ToString();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         private static void RunPinningTest(StringBuilder builder, params object[] keyValues)

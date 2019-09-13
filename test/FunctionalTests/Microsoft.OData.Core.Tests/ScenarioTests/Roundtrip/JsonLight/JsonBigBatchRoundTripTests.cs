@@ -4,18 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Globalization;
+using System.Text;
+using Microsoft.OData.Edm;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Globalization;
-    using System.Text;
-    using Xunit;
-    using Xunit.Abstractions;
-    using Microsoft.OData.Edm;
-
     public class JsonBigBatchRoundTripTests
     {
         private const string serviceDocumentUri = "http://odata.org/test/";

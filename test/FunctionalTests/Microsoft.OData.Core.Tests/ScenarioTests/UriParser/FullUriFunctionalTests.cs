@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
@@ -68,7 +67,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$orderby=Name asc"));
             ODataUri parsedUri = parser.ParseUri();
             parsedUri.OrderBy.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
-            parsedUri.OrderBy.Direction.Should().Be(OrderByDirection.Ascending);
+            Assert.Equal(OrderByDirection.Ascending, parsedUri.OrderBy.Direction);
         }
 
         [Fact]
@@ -76,7 +75,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/Name?$select=Name"));
             Action parseWithNonEntity = () => parser.ParseUri();
-            parseWithNonEntity.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_TypeInvalidForSelectExpand("Edm.String"));
+            parseWithNonEntity.Throws<ODataException>(ODataErrorStrings.UriParser_TypeInvalidForSelectExpand("Edm.String"));
         }
 
         [Fact]
@@ -84,7 +83,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/Dogs?$select=Color, MyPeople&$expand=MyPeople"));
             ODataUri parsedUri = parser.ParseUri();
-            parsedUri.SelectAndExpand.SelectedItems.Count().Should().Be(3);
+            Assert.Equal(3, parsedUri.SelectAndExpand.SelectedItems.Count());
             parsedUri.SelectAndExpand.SelectedItems.ElementAt(2).ShouldBePathSelectionItem(
                 new ODataSelectPath(
                     new NavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp(), HardCodedTestModel.GetPeopleSet())));
@@ -99,8 +98,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 .ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
 
             var myPeopleSelectExpand = myPeopleExpand.SelectAndExpand;
-            myPeopleSelectExpand.AllSelected.Should().BeTrue();
-            myPeopleSelectExpand.SelectedItems.Should().BeEmpty();
+            Assert.True(myPeopleSelectExpand.AllSelected);
+            Assert.Empty(myPeopleSelectExpand.SelectedItems);
         }
 
         [Fact]
@@ -108,7 +107,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$top=1"));
             ODataUri parsedUri = parser.ParseUri();
-            parsedUri.Top.Should().Be(1);
+            Assert.Equal(1, parsedUri.Top);
         }
 
         [Fact]
@@ -116,7 +115,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/MyAddress?$top=1"));
             ODataUri parsedUri = parser.ParseUri();
-            parsedUri.Top.Should().Be(1);
+            Assert.Equal(1, parsedUri.Top);
 
             // This test was originally written to expect an error but there currently
             // is no error in this case.
@@ -129,7 +128,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$skip=1"));
             ODataUri parsedUri = parser.ParseUri();
-            parsedUri.Skip.Should().Be(1);
+            Assert.Equal(1, parsedUri.Skip);
         }
 
         [Fact]
@@ -137,7 +136,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/MyAddress?$skip=1"));
             ODataUri parsedUri = parser.ParseUri();
-            parsedUri.Skip.Should().Be(1);
+            Assert.Equal(1, parsedUri.Skip);
 
             // This test was originally written to expect an error but there currently
             // is no error in this case.
@@ -150,7 +149,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/RelatedIDs?$index=1"));
             ODataUri parsedUri = parser.ParseUri();
-            parsedUri.Index.Should().Be(1);
+            Assert.Equal(1, parsedUri.Index);
         }
 
         [Fact]
@@ -158,7 +157,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$count=false"));
             ODataUri parsedUri = parser.ParseUri();
-            parsedUri.QueryCount.Should().BeFalse();
+            Assert.False(parsedUri.QueryCount);
         }
 
        [Fact]
@@ -167,16 +166,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), new Uri("http://www.odata.com/OData/Dogs?$select=Color, MyPeople&$expand=MyPeople&$filter=startswith(Color, 'Blue')&$orderby=Color asc"));
             parser.ParsePath().FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetDogsSet());
             var myDogSelectedItems = parser.ParseSelectAndExpand().SelectedItems.ToList();
-            myDogSelectedItems.Count.Should().Be(3);
+            Assert.Equal(3, myDogSelectedItems.Count);
             myDogSelectedItems[1].ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
             var myPeopleExpansionSelectionItem = myDogSelectedItems[0].ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>();
             myPeopleExpansionSelectionItem.PathToNavigationProperty.Single().ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
-            myPeopleExpansionSelectionItem.SelectAndExpand.SelectedItems.Should().BeEmpty();
+            Assert.Empty(myPeopleExpansionSelectionItem.SelectAndExpand.SelectedItems);
             var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith").Parameters.ToList();
             startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp());
             startsWithArgs[1].ShouldBeConstantQueryNode("Blue");
             var orderby = parser.ParseOrderBy();
-            orderby.Direction.Should().Be(OrderByDirection.Ascending);
+            Assert.Equal(OrderByDirection.Ascending, orderby.Direction);
             orderby.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp());
         }
 
@@ -191,7 +190,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             startsWithArgs[1].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
 
             // @p1
-            parser.ParameterAliasNodes["@p1"].TypeReference.IsInt32().Should().BeTrue();
+            Assert.True(parser.ParameterAliasNodes["@p1"].TypeReference.IsInt32());
 
             // @p2
             List<QueryNode> p2Node = parser.ParameterAliasNodes["@p2"].ShouldBeSingleValueFunctionCallQueryNode("concat").Parameters.ToList();

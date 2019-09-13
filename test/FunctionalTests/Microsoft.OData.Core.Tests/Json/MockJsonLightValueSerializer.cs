@@ -5,10 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
-using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -32,13 +31,13 @@ namespace Microsoft.OData.Tests.Json
 
         public override void WriteNullValue()
         {
-            this.WriteNullVerifier.Should().NotBeNull("WriteNullValue was called.");
+            Assert.NotNull(this.WriteNullVerifier);
             this.WriteNullVerifier();
         }
 
         public override void WriteResourceValue(ODataResourceValue resourceValue, IEdmTypeReference metadataTypeReference, bool isOpenPropertyType, IDuplicatePropertyNameChecker duplicatePropertyNamesChecker)
         {
-            this.WriteResourceValueVerifier.Should().NotBeNull("WriteResourceValue was called.");
+            Assert.NotNull(this.WriteResourceValueVerifier);
             this.WriteResourceValueVerifier(resourceValue, metadataTypeReference, isOpenPropertyType, duplicatePropertyNamesChecker);
         }
 
@@ -49,19 +48,19 @@ namespace Microsoft.OData.Tests.Json
         /// <param name="expectedTypeReference">expected type reference</param>
         public override void WriteEnumValue(ODataEnumValue value, IEdmTypeReference expectedTypeReference)
         {
-            this.WriteEnumVerifier.Should().NotBeNull("WriteEnumValue was called.");
+            Assert.NotNull(this.WriteEnumVerifier);
             this.WriteEnumVerifier(value, expectedTypeReference);
         }
 
         public override void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
         {
-            this.WriteCollectionVerifier.Should().NotBeNull("WriteCollectionValue was called.");
+            Assert.NotNull(this.WriteCollectionVerifier);
             this.WriteCollectionVerifier(collectionValue, metadataTypeReference, valueTypeReference, isTopLevelProperty, isInUri, isOpenPropertyType);
         }
 
         public override void WritePrimitiveValue(object value, IEdmTypeReference expectedTypeReference)
         {
-            this.WritePrimitiveVerifier.Should().NotBeNull("WritePrimitiveValue was called.");
+            Assert.NotNull(this.WritePrimitiveVerifier);
             this.WritePrimitiveVerifier(value, expectedTypeReference);
         }
 
@@ -72,7 +71,7 @@ namespace Microsoft.OData.Tests.Json
 
         public override void WriteUntypedValue(ODataUntypedValue value)
         {
-            this.WritePrimitiveVerifier.Should().NotBeNull("WriteUntypedValue was called.");
+            Assert.NotNull(this.WritePrimitiveVerifier);
             this.WritePrimitiveVerifier(value, null);
         }
     }

@@ -5,17 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
-using System.Collections.ObjectModel;
-using Microsoft.Spatial;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 {
@@ -118,22 +113,26 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void WritingTopLevelDerivedComplexTypePropertyWithJsonMiniShouldWriteTypeName()
         {
-            this.SerializeComplexResource(addressType, this.homeAddress).Should().Contain("\"@odata.type\":\"#TestNamespace.HomeAddress\"");
+            var result = this.SerializeComplexResource(addressType, this.homeAddress);
+            Assert.Contains("\"@odata.type\":\"#TestNamespace.HomeAddress\"", result);
         }
         [Fact]
         public void WritingTopLevelUnderivedComplexTypePropertyWithJsonMiniShouldNotWriteTypeName()
         {
-            this.SerializeComplexResource(null, this.address).Should().NotContain("\"@odata.type\":\"#TestNamespace.Address\"");
+            var result = this.SerializeComplexResource(null, this.address);
+            Assert.DoesNotContain("\"@odata.type\":\"#TestNamespace.Address\"", result);
         }
         [Fact]
         public void WritingTopLevelComplexTypePropertyShouldWriteInstanceAnnotation()
         {
-            this.SerializeComplexResource(null, this.addressWithInstanceAnnotation).Should().Contain("\"@Is.ReadOnly\":true");
+            var result = this.SerializeComplexResource(null, this.addressWithInstanceAnnotation);
+            Assert.Contains("\"@Is.ReadOnly\":true", result);
         }
         [Fact]
         public void WritingTopLevelComplexTypePropertyShouldWriteInstanceAnnotations()
         {
-            this.SerializeComplexResource(null, this.homeAddressWithInstanceAnnotations).Should().Contain("\"@Is.AutoComputable\":true,\"@Is.ReadOnly\":false");
+            var result = this.SerializeComplexResource(null, this.homeAddressWithInstanceAnnotations);
+            Assert.Contains("\"@Is.AutoComputable\":true,\"@Is.ReadOnly\":false", result);
         }
         #endregion Serializing top-level complextype properties
 
@@ -142,9 +141,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void WritingPropertyInComplexTypeShouldWriteInsatanceAnnotation()
         {
-            this.SerializeComplexResource(null, this.homeAddressWithInstanceAnnotations).Should()
-                .Contain("\"FamilyName@FamilyName.annotation\":true,\"FamilyName\":\"Green\"").And
-                .Contain("\"City@City.annotation1\":true,\"City@City.annotation2\":123,\"City\":\"Shanghai\"");
+            var result = this.SerializeComplexResource(null, this.homeAddressWithInstanceAnnotations);
+
+            Assert.Contains("\"FamilyName@FamilyName.annotation\":true,\"FamilyName\":\"Green\"", result);
+            Assert.Contains("\"City@City.annotation1\":true,\"City@City.annotation2\":123,\"City\":\"Shanghai\"", result);
         }
 
         #endregion
@@ -154,14 +154,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldWriteODataTypeForUndeclaredComplexType()
         {
             string result = this.SerializeComplexResourceInEntity(address);
-            result.Should().Contain("@odata.type\":\"#TestNamespace.Address");
+            Assert.Contains("@odata.type\":\"#TestNamespace.Address", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForForUndeclaredDerivedComplexType()
         {
             string result = this.SerializeComplexResourceInEntity(homeAddress);
-            result.Should().Contain("@odata.type\":\"#TestNamespace.HomeAddress");
+            Assert.Contains("@odata.type\":\"#TestNamespace.HomeAddress", result);
         }
 
         #endregion

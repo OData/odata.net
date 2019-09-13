@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -17,261 +16,261 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void CreateWithNullValueShouldReturnHttpHeaderStart()
         {
-            HttpHeaderValueLexer.Create("headerName", null).Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Start);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Start, HttpHeaderValueLexer.Create("headerName", null).Type);
         }
 
         [Fact]
         public void CreateWithEmptyValueShouldReturnHttpHeaderStart()
         {
-            HttpHeaderValueLexer.Create("headerName", "").Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Start);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Start, HttpHeaderValueLexer.Create("headerName", "").Type);
         }
 
         [Fact]
         public void CreateShouldReturnHttpHeaderStart()
         {
-            HttpHeaderValueLexer.Create("headerName", "token").Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Start);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Start, HttpHeaderValueLexer.Create("headerName", "token").Type);
         }
 
         [Fact]
         public void StartCannotTransitionToQuotedString()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", "\"quoted-string\"").ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "\"quoted-string\"", 0));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "\"quoted-string\"", 0));
         }
 
         [Fact]
         public void StartCannotTrnasistionToElementSeparator()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", ",").ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", ",", 0));            
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", ",", 0));            
         }
 
         [Fact]
         public void StartCannotTrnasistionToParameterSeparator()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", ";").ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", ";", 0));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", ";", 0));
         }
 
         [Fact]
         public void StartCannotTrnasistionToValueSeparator()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", "=").ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "=", 0));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "=", 0));
         }
 
         [Fact]
         public void StartCanTransitionToToken()
         {
-            HttpHeaderValueLexer.Create("headerName", "token").ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Token);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Token, HttpHeaderValueLexer.Create("headerName", "token").ReadNext().Type);
         }
 
         [Fact]
         public void StartCanTransitionToEnd()
         {
-            HttpHeaderValueLexer.Create("headerName", " ").ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.End);            
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.End, HttpHeaderValueLexer.Create("headerName", " ").ReadNext().Type);
         }
 
         [Fact]
         public void TokenCanTransitionToElementSeparator()
         {
-            HttpHeaderValueLexer.Create("headerName", "token,").ReadNext().ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, HttpHeaderValueLexer.Create("headerName", "token,").ReadNext().ReadNext().Type);
         }
 
         [Fact]
         public void TokenCanTransitionToParameterSeparator()
         {
-            HttpHeaderValueLexer.Create("headerName", "token ;").ReadNext().ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator);            
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, HttpHeaderValueLexer.Create("headerName", "token ;").ReadNext().ReadNext().Type);
         }
 
         [Fact]
         public void TokenCanTransitionToValueSeparator()
         {
-            HttpHeaderValueLexer.Create("headerName", "token  =  ").ReadNext().ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator, HttpHeaderValueLexer.Create("headerName", "token  =  ").ReadNext().ReadNext().Type);
         }
 
         [Fact]
         public void TokenCanTransitionToEnd()
         {
-            HttpHeaderValueLexer.Create("headerName", "token").ReadNext().ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.End);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.End, HttpHeaderValueLexer.Create("headerName", "token").ReadNext().ReadNext().Type);
         }
 
         [Fact]
         public void TokenCannotNotTransitionToQuotedString()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", "token\"quotes-string\"").ReadNext().ReadNext();
-            test.ShouldThrow<ODataException>(Strings.HttpHeaderValueLexer_UnrecognizedSeparator("headerName", "token\"quotes-string\"", 5, "\""));
+            test.Throws<ODataException>(Strings.HttpUtils_EscapeCharWithoutQuotes("headerName", "token\"quotes-string\"", 5, "\""));
         }
 
         [Fact]
         public void QuotedStringCanTransitionToEnd()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=\"quotes-string\"").ReadNext().ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString);
-            lexer.ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.End);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.End, lexer.ReadNext().Type);
         }
 
         [Fact]
         public void QuotedStringCanTransitionToElementSeparator()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token = \"quotes-string\" ,").ReadNext().ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString);
-            lexer.ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator);            
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, lexer.ReadNext().Type);
         }
 
         [Fact]
         public void QuotedStringCanTransitionToParameterSeparator()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=   \"quotes-string\";").ReadNext().ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString);
-            lexer.ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator);            
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, lexer.ReadNext().Type);
         }
 
         [Fact]
         public void QuotedStringCannotTransitionToValueSeparator()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=\"quotes-string\"=").ReadNext().ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString("headerName", "token=\"quotes-string\"=", 21, "="));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString("headerName", "token=\"quotes-string\"=", 21, "="));
         }
 
         [Fact]
         public void QuotesStringCannotTransitionToToken()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=\"quotes-string\"token").ReadNext().ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_UnrecognizedSeparator("headerName", "token=\"quotes-string\"token", 21, "t"));            
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_UnrecognizedSeparator("headerName", "token=\"quotes-string\"token", 21, "t"));            
         }
 
         [Fact]
         public void QuotedStringCannotTransitionToQuotedString()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=\"quotes-string\"\"quotes-string\"").ReadNext().ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_UnrecognizedSeparator("headerName", "token=\"quotes-string\"\"quotes-string\"", 21, "\""));                        
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_UnrecognizedSeparator("headerName", "token=\"quotes-string\"\"quotes-string\"", 21, "\""));                        
         }
 
         [Fact]
         public void ElementSeparatorCannotTransitionToEnd()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token,").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token,", 6, ","));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token,", 6, ","));
         }
 
         [Fact]
         public void ParameterSeparatorCannotTransitionToEnd()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token;").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token;", 6, ";"));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token;", 6, ";"));
         }
 
         [Fact]
         public void ValueSeparatorCannotTransitionToEnd()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token=", 6, "="));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token=", 6, "="));
         }
 
         [Fact]
         public void ValueSeparatorCanTransitionToToken()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token = token").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator);
-            lexer.ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Token);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator, lexer.Type);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Token, lexer.ReadNext().Type);
         }
 
         [Fact]
         public void ValueSeparatorCanTransitionToQuotedString()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token= \"quoted-string\"").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator);
-            lexer.ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator, lexer.Type);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.ReadNext().Type);
         }
 
         [Fact]
         public void ValueSeparatorCannotTransitionToSeparator()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token= =").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token= =", 7));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token= =", 7));
         }
 
         [Fact]
         public void ElementSeparatorCanTransitionToToken()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token,token").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator);
-            lexer.ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Token);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, lexer.Type);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Token, lexer.ReadNext().Type);
         }
 
         [Fact]
         public void ElementSeparatorCannotTransitionToQuotedString()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token,\"quoted-string\"").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "token,\"quoted-string\"", 6));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "token,\"quoted-string\"", 6));
         }
 
         [Fact]
         public void ElementSeparatorCannotTransitionToSeparator()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token,,").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token,,", 6));            
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token,,", 6));
         }
 
         [Fact]
         public void ParameterSeparatorCanTransitionToToken()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token  ;   token").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator);
-            lexer.ReadNext().Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Token);            
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, lexer.Type);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Token, lexer.ReadNext().Type);
         }
 
         [Fact]
         public void ParameterSeparatorCannotTransitionToQuotedString()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token;\"quoted-string\"").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "token;\"quoted-string\"", 6));            
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "token;\"quoted-string\"", 6));
         }
 
         [Fact]
         public void ParameterSeparatorCannotTransitionToSeparator()
         {
             var lexer = HttpHeaderValueLexer.Create("headerName", "token;;").ReadNext().ReadNext();
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token;;", 6));
+            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token;;", 6));
         }
 
         [Fact]
         public void HttpHeaderValueEndToHttpHeaderValueElementsShouldReturnEmptyDictionary()
         {
             var lexer = HttpHeaderValueLexer.Create("header", null);
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Start);
-            lexer.ToHttpHeaderValue().Count.Should().Be(0);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Start, lexer.Type);
+            Assert.Empty(lexer.ToHttpHeaderValue());
         }
 
         [Fact]
         public void EmptyHeaderValueToHttpHeaderValueElementsShouldReturnEmptyDictionary()
         {
             var lexer = HttpHeaderValueLexer.Create("header", " ");
-            lexer.Type.Should().Be(HttpHeaderValueLexer.HttpHeaderValueItemType.Start);
-            lexer.ToHttpHeaderValue().Count.Should().Be(0);
+            Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.Start, lexer.Type);
+            Assert.Empty(lexer.ToHttpHeaderValue());
         }
 
         [Fact]
@@ -293,7 +292,7 @@ namespace Microsoft.OData.Tests
             string headerValue = string.Join(",", eStr1, eStr2, eStr3, eStr4, eStr5, eStr6);
             var lexer = HttpHeaderValueLexer.Create("header", headerValue);
             var elements = lexer.ToHttpHeaderValue();
-            elements.Count.Should().Be(6);
+            Assert.Equal(6, elements.Count);
             AssertEqual(e1, elements["e1"]);
             AssertEqual(e2, elements["e2"]);
             AssertEqual(e3, elements["e3"]);

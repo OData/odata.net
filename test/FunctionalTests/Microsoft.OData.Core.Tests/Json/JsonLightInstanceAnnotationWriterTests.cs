@@ -191,8 +191,6 @@ namespace Microsoft.OData.Tests.Json
             verifierCalls.Should().Be(4);
         }
 
-
-
         [Fact]
         public void WriteInstanceAnnotation_ForSpatialShouldUsePrimitiveCodePathWithTypeName()
         {

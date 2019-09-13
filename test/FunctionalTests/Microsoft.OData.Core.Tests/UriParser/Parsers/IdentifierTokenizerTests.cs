@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
@@ -28,10 +27,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ConstructorParametersCannotBeNull()
         {
             Action create = () => new IdentifierTokenizer(null, GetRealFunctionCallParser("stuff"));
-            create.ShouldThrow<ArgumentNullException>(Error.ArgumentNull("parameters").ToString());
+            Assert.Throws<ArgumentNullException>("parameters", create);
 
             create = () => new IdentifierTokenizer(this.parameters, null);
-            create.ShouldThrow<ArgumentNullException>(Error.ArgumentNull("functionCallParser").ToString());
+            Assert.Throws<ArgumentNullException>("functionCallParser", create);
         }
 
         // ParseIdentifier Short-Span Integration Tests
@@ -58,7 +57,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var tokenizer = this.GetIdentifierTokenizerWithRealFunctionParser("*");
             RangeVariableToken fakeToken = new RangeVariableToken(ExpressionConstants.It);
             QueryToken result = tokenizer.ParseMemberAccess(fakeToken);
-            result.ShouldBeStarToken().NextToken.Should().BeSameAs(fakeToken);
+            Assert.Same(fakeToken, result.ShouldBeStarToken().NextToken);
         }
 
         [Fact]
@@ -76,7 +75,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var tokenizer = this.GetIdentifierTokenizerWithRealFunctionParser("stuff");
             RangeVariableToken rangeVariableToken = new RangeVariableToken(ExpressionConstants.It);
             QueryToken result = tokenizer.ParseMemberAccess(rangeVariableToken);
-            result.ShouldBeEndPathToken("stuff").NextToken.As<RangeVariableToken>().Name.Should().Be(ExpressionConstants.It);
+            var rangeToken = Assert.IsType<RangeVariableToken>(result.ShouldBeEndPathToken("stuff").NextToken);
+            Assert.Equal(ExpressionConstants.It, rangeToken.Name);
         }
 
         // ParseStarMemberAccess
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var tokenizer = this.GetIdentifierTokenizerWithRealFunctionParser("stuff");
             RangeVariableToken rangeVariableToken = new RangeVariableToken(ExpressionConstants.It);
             Action createWithNonStarToken = () => tokenizer.ParseStarMemberAccess(rangeVariableToken);
-            createWithNonStarToken.ShouldThrow<ODataException>(ODataErrorStrings.UriQueryExpressionParser_CannotCreateStarTokenFromNonStar("stuff"));
+            createWithNonStarToken.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_CannotCreateStarTokenFromNonStar("stuff"));
         }
 
         // Helpers

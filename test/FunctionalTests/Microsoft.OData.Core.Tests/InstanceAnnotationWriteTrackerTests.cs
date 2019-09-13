@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -15,9 +14,9 @@ namespace Microsoft.OData.Tests
         public void InstanceAnnotationWriteTrackerTracksWrites()
         {
             var tracker = new InstanceAnnotationWriteTracker();
-            tracker.IsAnnotationWritten("key").Should().BeFalse();
+            Assert.False(tracker.IsAnnotationWritten("key"));
             tracker.MarkAnnotationWritten("key");
-            tracker.IsAnnotationWritten("key").Should().BeTrue();
+            Assert.True(tracker.IsAnnotationWritten("key"));
         }
 
         [Fact]
@@ -29,8 +28,8 @@ namespace Microsoft.OData.Tests
             tracker.MarkAnnotationWritten(key.ToUpper());
             tracker.MarkAnnotationWritten(key.ToLower());
 
-            tracker.IsAnnotationWritten(key.ToLower()).Should().BeTrue();
-            tracker.IsAnnotationWritten(key.ToUpper()).Should().BeTrue();
+            Assert.True(tracker.IsAnnotationWritten(key.ToLower()));
+            Assert.True(tracker.IsAnnotationWritten(key.ToUpper()));
         }
     }
 }

@@ -4,30 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.Json;
+using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
-    public class JsonReaderAssertions
+    public static class JsonReaderAssertions
     {
-        private IJsonReader jsonReader;
-
-        internal JsonReaderAssertions(IJsonReader jsonReader)
+        internal static IJsonReader ShouldBeOn(this IJsonReader jsonReader, JsonNodeType nodeType, object value)
         {
-            this.jsonReader = jsonReader;
-        }
-
-        internal AndConstraint<JsonReaderAssertions> BeOn(JsonNodeType nodeType, object value)
-        {
-            return this.BeOn(nodeType, value, null);
-        }
-
-        internal AndConstraint<JsonReaderAssertions> BeOn(JsonNodeType nodeType, object value, string reason, params object[] reasonArgs)
-        {
-            this.jsonReader.NodeType.Should().Be(nodeType, reason, reasonArgs);
-            this.jsonReader.Value.Should().Be(value, reason, reasonArgs);
-            return new AndConstraint<JsonReaderAssertions>(this);
+            Assert.Equal(nodeType, jsonReader.NodeType);
+            Assert.Equal(value, jsonReader.Value);
+            return jsonReader;
         }
     }
 }

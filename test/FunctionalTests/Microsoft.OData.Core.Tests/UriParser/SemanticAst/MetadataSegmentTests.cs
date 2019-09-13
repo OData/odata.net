@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -15,13 +14,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void IdentifierShouldBeMetadataSegment()
         {
-            MetadataSegment.Instance.Identifier.Should().Be(UriQueryConstants.MetadataSegment);
+            Assert.Equal(UriQueryConstants.MetadataSegment, MetadataSegment.Instance.Identifier);
         }
 
         [Fact]
         public void TargetKindShouldBeMetadata()
         {
-            MetadataSegment.Instance.TargetKind.Should().Be(RequestTargetKind.Metadata);
+            Assert.Equal(RequestTargetKind.Metadata, MetadataSegment.Instance.TargetKind);
         }
 
         [Fact]
@@ -29,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             MetadataSegment segment1 = MetadataSegment.Instance;
             MetadataSegment segment2 = MetadataSegment.Instance;
-            segment1.Equals(segment2).Should().BeTrue();
+            Assert.True(segment1.Equals(segment2));
         }
 
         [Fact]
@@ -37,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             MetadataSegment segment1 = MetadataSegment.Instance;
             CountSegment segment2 = CountSegment.Instance;
-            segment1.Equals(segment2).Should().BeFalse();
+            Assert.False(segment1.Equals(segment2));
         }
     }
 }

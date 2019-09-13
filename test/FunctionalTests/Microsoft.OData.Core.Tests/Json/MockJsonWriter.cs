@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
+using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -23,136 +23,136 @@ namespace Microsoft.OData.Tests.Json
 
         public void StartPaddingFunctionScope()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void EndPaddingFunctionScope()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void StartObjectScope()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void EndObjectScope()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void StartArrayScope()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void EndArrayScope()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteName(string name)
         {
-            this.WriteNameVerifier.Should().NotBeNull();
+            Assert.NotNull(this.WriteNameVerifier);
             this.WriteNameVerifier(name);
         }
 
         public void WritePaddingFunctionName(string functionName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(bool value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(int value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(float value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(short value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(long value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(double value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void WriteValue(System.Guid value)
+        public void WriteValue(Guid value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(decimal value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(Date value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void WriteValue(System.DateTimeOffset value)
+        public void WriteValue(DateTimeOffset value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void WriteValue(System.TimeSpan value)
+        public void WriteValue(TimeSpan value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(TimeOfDay value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(byte value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(sbyte value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void WriteValue(string value)
         {
-            this.WriteValueVerifier.Should().NotBeNull();
+            Assert.NotNull(this.WriteValueVerifier);
             this.WriteValueVerifier(value);
         }
 
         public void WriteValue(byte[] value)
         {
-            this.WriteValueVerifier.Should().NotBeNull();
+            Assert.NotNull(this.WriteValueVerifier);
             this.WriteValueVerifier(Convert.ToBase64String(value));
         }
 
         public void WriteRawValue(string rawValue)
         {
-            this.WriteValueVerifier.Should().NotBeNull();
+            Assert.NotNull(this.WriteValueVerifier);
             this.WriteValueVerifier(rawValue);
         }
 
         public void Flush()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

@@ -4,19 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Xml.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.Spatial;
+using Microsoft.Test.OData.Utils.Common;
+
 namespace Microsoft.Test.OData.Utils.Metadata
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Xml.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.Spatial;
-    using Microsoft.Test.OData.Utils.Common;
-
     /// <summary>
     /// Helper methods for testing metadata and their OM
     /// </summary>
