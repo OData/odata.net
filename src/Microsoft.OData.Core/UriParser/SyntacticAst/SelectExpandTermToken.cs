@@ -59,7 +59,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the property for this select or expand term.
         /// </summary>
-        public PathSegmentToken PathToProperty { get; private set; }
+        public PathSegmentToken PathToProperty { get; internal set; }
 
         /// <summary>
         /// Gets the filter option for this select or expand term.
@@ -94,7 +94,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the select option for this select or expand term.
         /// </summary>
-        public SelectToken SelectOption { get; private set; }
+        public SelectToken SelectOption { get; internal set; }
 
         /// <summary>
         /// Gets the compute option for this select or expand term.

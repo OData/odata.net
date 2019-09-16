@@ -268,8 +268,8 @@
     <Compile Include="..\ScenarioTests\UriParser\EntityIdFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\EntityReferenceFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\EnumFilterFunctionalTests.cs" />
-    <Compile Include="..\ScenarioTests\UriParser\ExapndOptionFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\ExpandAndSelectPathExtractingTests.cs" />
+    <Compile Include="..\ScenarioTests\UriParser\ExpandOptionFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\ExtendedContainerElementsFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\FilterAndOrderByFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\FullUriFunctionalTests.cs" />
@@ -293,6 +293,8 @@
     <Compile Include="..\UriParser\Extensions\SyntacticAst\AggregateExpressionTokenTests.cs" />
     <Compile Include="..\UriParser\Extensions\SyntacticAst\AggregateTokenTests.cs" />
     <Compile Include="..\UriParser\Extensions\SyntacticAst\GroupByTokenTests.cs" />
+    <Compile Include="..\UriParser\Extensions\PathSegmentTokenExtensions.cs" />
+    <Compile Include="..\UriParser\Extensions\SelectExpandTokenSyntacticTreeVisitor.cs" />
     <Compile Include="..\UriParser\LiteralUtilsTests.cs" />
     <Compile Include="..\UriParser\Metadata\CaseInsensitiveBuiltinIdentifierTests.cs" />
     <Compile Include="..\UriParser\Metadata\CaseInsensitiveResolverTests.cs" />
@@ -432,9 +434,9 @@
     <Compile Include="..\UriParser\Visitors\PathSegmentTokenEqualityComparerTests.cs" />
     <Compile Include="..\UriParser\Parsers\SegmentArgumentParserTests.cs" />
     <Compile Include="..\UriParser\Binders\SelectBinderTests.cs" />
+    <Compile Include="..\UriParser\Binders\SelectExpandBinderTests.cs" />
     <Compile Include="..\UriParser\Binders\SelectExpandClauseFinisherTests.cs" />
     <Compile Include="..\UriParser\Binders\SelectExpandPathBinderTests.cs" />
-    <Compile Include="..\UriParser\Binders\SelectExpandSyntacticUnifierTests.cs" />
     <Compile Include="..\UriParser\Binders\SelectPathSegmentTokenBinderTests.cs" />
     <Compile Include="..\UriParser\Binders\SelectTreeNormalizerTests.cs" />
     <Compile Include="..\UriParser\Binders\UnaryOperatorBinderTests.cs" />

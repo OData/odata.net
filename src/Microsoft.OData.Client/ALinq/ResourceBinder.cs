@@ -1650,7 +1650,7 @@ namespace Microsoft.OData.Client
                         }
                         else
                         {
-                            newPropertyToAdd.SetNextToken(propertyPath);
+                            newPropertyToAdd.NextToken = propertyPath;
                             propertyPath = newPropertyToAdd;
                         }
                         e = me.Expression;
@@ -1659,7 +1659,7 @@ namespace Microsoft.OData.Client
                         if (convertedType != null)
                         {
                             NonSystemToken subPropertyToAdd = new NonSystemToken(UriHelper.GetEntityTypeNameForUriAndValidateMaxProtocolVersion(convertedType, context, ref uriVersion), null, null);
-                            subPropertyToAdd.SetNextToken(propertyPath);
+                            subPropertyToAdd.NextToken = propertyPath;
                             propertyPath = subPropertyToAdd;
                         }
                     }

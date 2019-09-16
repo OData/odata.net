@@ -4497,6 +4497,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Can not resolve the segment identifier '{0}' in query option."
+        /// </summary>
+        internal static string MetadataBinder_InvalidIdentifierInQueryOption(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_InvalidIdentifierInQueryOption, p0);
+        }
+
+        /// <summary>
         /// A string like "Property '{0}' is not declared on type '{1}' or is not a key property. Only key properties can be used in key lookups."
         /// </summary>
         internal static string MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue(object p0, object p1) {
@@ -4914,6 +4921,27 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "It's not allowed to append '{0}' after wildcard."
+        /// </summary>
+        internal static string SelectExpandBinder_InvalidIdentifierAfterWildcard(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectExpandBinder_InvalidIdentifierAfterWildcard, p0);
+        }
+
+        /// <summary>
+        /// A string like "It's not allowed to nest query options within '{0}' selection."
+        /// </summary>
+        internal static string SelectExpandBinder_InvalidQueryOptionNestedSelection(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectExpandBinder_InvalidQueryOptionNestedSelection, p0);
+        }
+
+        /// <summary>
+        /// A string like "Found a system token, '{0}', while parsing a select clause."
+        /// </summary>
+        internal static string SelectExpandBinder_SystemTokenInSelect(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectExpandBinder_SystemTokenInSelect, p0);
+        }
+
+        /// <summary>
         /// A string like "Only properties specified in $expand can be traversed in $select query options. Selected item was '{0}'."
         /// </summary>
         internal static string SelectionItemBinder_NoExpandForSelectedProperty(object p0) {
@@ -4925,22 +4953,6 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string SelectExpandPathBinder_FollowNonTypeSegment(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectExpandPathBinder_FollowNonTypeSegment, p0);
-        }
-
-        /// <summary>
-        /// A string like "Found a system token, '{0}', while parsing a select clause."
-        /// </summary>
-        internal static string SelectPropertyVisitor_SystemTokenInSelect(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectPropertyVisitor_SystemTokenInSelect, p0);
-        }
-
-        /// <summary>
-        /// A string like "Any selection that is expanded must have the same type qualifier on both selection and expansion."
-        /// </summary>
-        internal static string SelectPropertyVisitor_DisparateTypeSegmentsInSelectExpand {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectPropertyVisitor_DisparateTypeSegmentsInSelectExpand);
-            }
         }
 
         /// <summary>
@@ -5112,6 +5124,13 @@ namespace Microsoft.OData {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpandTreeNormalizer_NonPathInPropertyChain);
             }
+        }
+
+        /// <summary>
+        /// A string like "Found mutliple select terms with same select path '{0}' at one $select, please combine them together."
+        /// </summary>
+        internal static string SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound, p0);
         }
 
         /// <summary>

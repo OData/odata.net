@@ -1,5 +1,5 @@
 $select = 
-$expand = AssociatedOrder($expand=CustomerForOrder($select=City)),AssociatedOrder,AssociatedOrder($select=*),AssociatedOrder($select=OrderDate),AssociatedOrder($expand=CustomerForOrder($expand=Orders($select=Microsoft.Test.Taupo.OData.WCFService.OrdersWithMoreThanTwoItems)))
+$expand = AssociatedOrder($expand=CustomerForOrder($select=City)),AssociatedOrder,AssociatedOrder($select=*),AssociatedOrder($select=OrderDate),AssociatedOrder($expand=CustomerForOrder($expand=Orders))
 
 
 SelectExpandQueryOption
@@ -18,8 +18,7 @@ SelectExpandQueryOption
 								Expanded Navigation Property
 									Path[(NavigationProperty: Orders)]
 									SelectExpandQueryOption
-										AllSelected = False
-										SelectedItems
-											Path]
+										AllSelected = True
+										SelectedItems(Empty List)
 								Path[(Property: City)]
 					(Wildcard)

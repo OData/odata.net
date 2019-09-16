@@ -704,6 +704,7 @@ SelectionItemBinder_NonNavigationPathToken=Inner or start path segments must be 
 
 MetadataBinder_UnsupportedQueryTokenKind=An unsupported query token kind '{0}' was found.
 MetadataBinder_PropertyNotDeclared=Could not find a property named '{1}' on type '{0}'.
+MetadataBinder_InvalidIdentifierInQueryOption=Can not resolve the segment identifier '{0}' in query option.
 MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue=Property '{0}' is not declared on type '{1}' or is not a key property. Only key properties can be used in key lookups.
 MetadataBinder_QualifiedFunctionNameWithParametersNotDeclared=Could not find a function named '{0}' with parameters '{1}'.
 MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties=An unnamed key value was used in a key lookup on a type '{0}' which has more than one key property. Unnamed key value can only be used on a type with one key property.
@@ -765,12 +766,12 @@ Binder_IsNotValidEnumConstant=The string '{0}' is not a valid enumeration type c
 BatchReferenceSegment_InvalidContentID=Invalid content-id '{0}' for batch reference segment.
 
 SelectExpandBinder_UnknownPropertyType=Property '{0}' is of an unrecognized EdmPropertyKind.
+SelectExpandBinder_InvalidIdentifierAfterWildcard=It's not allowed to append '{0}' after wildcard.
+SelectExpandBinder_InvalidQueryOptionNestedSelection=It's not allowed to nest query options within '{0}' selection.
+SelectExpandBinder_SystemTokenInSelect=Found a system token, '{0}', while parsing a select clause.
 SelectionItemBinder_NoExpandForSelectedProperty=Only properties specified in $expand can be traversed in $select query options. Selected item was '{0}'.
 
 SelectExpandPathBinder_FollowNonTypeSegment=Trying to follow type segments on a segment that isn't a type. Segment was '{0}'.
-
-SelectPropertyVisitor_SystemTokenInSelect=Found a system token, '{0}', while parsing a select clause.
-SelectPropertyVisitor_DisparateTypeSegmentsInSelectExpand=Any selection that is expanded must have the same type qualifier on both selection and expansion.
 
 SelectBinder_MultiLevelPathInSelect=Found a path with multiple navigation properties or a bad complex property path in a select clause. Please reword your query such that each level of select or expand only contains either TypeSegments or Properties.
 
@@ -796,6 +797,7 @@ Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An inst
 Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType=An instance of InNode can only be created where the item types of the right operand '{0}' and the left operand '{1}' can be compared.
 
 ExpandTreeNormalizer_NonPathInPropertyChain=Found a segment that isn't a path while parsing the path within a select or expand query option.
+SelectTreeNormalizer_MultipleSelecTermWithSamePathFound=Found mutliple select terms with same select path '{0}' at one $select, please combine them together.
 
 UriExpandParser_TermIsNotValidForStar=Term '{0}' is not valid in a $expand expression, as only $level option is allowed when the expanded navigation property is star.
 UriExpandParser_TermIsNotValidForStarRef=Term '{0}' is not valid in a $expand expression, no option is allowed when the expanded navigation property is */$ref.
