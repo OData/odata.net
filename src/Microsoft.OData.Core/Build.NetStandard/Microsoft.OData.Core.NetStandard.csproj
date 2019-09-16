@@ -1154,9 +1154,6 @@
     <Compile Include="..\UriParser\Binders\SearchBinder.cs">
       <Link>UriParser\Binders\SearchBinder.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Binders\SelectBinder.cs">
-      <Link>UriParser\Binders\SelectBinder.cs</Link>
-    </Compile>
     <Compile Include="..\UriParser\Binders\SelectExpandBinder.cs">
       <Link>UriParser\Binders\SelectExpandBinder.cs</Link>
     </Compile>
@@ -1168,9 +1165,6 @@
     </Compile>
     <Compile Include="..\UriParser\Binders\SelectExpandSemanticBinder.cs">
       <Link>UriParser\Binders\SelectExpandSemanticBinder.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\Binders\SelectExpandSyntacticUnifier.cs">
-      <Link>UriParser\Binders\SelectExpandSyntacticUnifier.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Binders\SelectPathSegmentTokenBinder.cs">
       <Link>UriParser\Binders\SelectPathSegmentTokenBinder.cs</Link>
@@ -1780,9 +1774,6 @@
     </Compile>
     <Compile Include="..\UriParser\Visitors\SelectItemTranslator.cs">
       <Link>UriParser\Visitors\SelectItemTranslator.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\Visitors\SelectPropertyVisitor.cs">
-      <Link>UriParser\Visitors\SelectPropertyVisitor.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs">
       <Link>UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs</Link>

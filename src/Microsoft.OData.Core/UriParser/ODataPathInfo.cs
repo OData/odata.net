@@ -56,7 +56,6 @@ namespace Microsoft.OData.UriParser
             this.segments = new List<ODataPathSegment>();
         }
 
-
         public IEdmType TargetEdmType
         {
             get { return targetEdmType; }

@@ -137,7 +137,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the expand option for this select or expand term.
         /// </summary>
-        public ExpandToken ExpandOption { get; private set; }
+        public ExpandToken ExpandOption { get; internal set; }
 
         /// <summary>
         /// Gets the levels option for this expand term.

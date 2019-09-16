@@ -4,14 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser.Aggregation;
 using ODataErrorStrings = Microsoft.OData.Strings;
+
 
 namespace Microsoft.OData.UriParser
 {
@@ -103,78 +104,106 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Bind the top level expand.
+        /// Bind the $expand <see cref="ExpandToken"/> and $select <see cref="SelectToken"/> at this level.
         /// </summary>
-        /// <param name="tokenIn">the token to visit</param>
-        /// <returns>a SelectExpand clause based on this ExpandToken</returns>
-        public SelectExpandClause Bind(ExpandToken tokenIn)
+        /// <param name="expandToken">the expand token to visit.</param>
+        /// <param name="selectToken">the select token to visit.</param>
+        /// <returns>a SelectExpand clause based on <see cref="ExpandToken"/> and <see cref="SelectToken"/>.</returns>
+        public SelectExpandClause Bind(ExpandToken expandToken, SelectToken selectToken)
+        {
+            List<SelectItem> selectExpandItems = new List<SelectItem>();
+
+            // $expand=
+            if (expandToken != null && expandToken.ExpandTerms.Any())
+            {
+                selectExpandItems.AddRange(expandToken.ExpandTerms.Select(this.GenerateExpandItem).Where(s => s != null));
+            }
+
+            // $select=
+            bool isAllSelected = true;
+            if (selectToken != null && selectToken.SelectTerms.Any())
+            {
+                // if there are any select items at this level then allSelected is false, otherwise it's true.
+                isAllSelected = false;
+
+                foreach (SelectTermToken selectTermToken in selectToken.SelectTerms)
+                {
+                    AddToSelectedItems(GenerateSelectItem(selectTermToken), selectExpandItems);
+                }
+            }
+
+            // It's better to return "null" if both expand and select are null.
+            // However, in order to be consistent, we returns empty "SelectExpandClause" with AllSelected = true.
+            return new SelectExpandClause(selectExpandItems, isAllSelected);
+        }
+
+        /// <summary>
+        /// Generate a select item <see cref="SelectItem"/> based on a <see cref="SelectTermToken"/>.
+        /// for example:  abc/efg($count=true;$filter=....;$top=1)
+        /// </summary>
+        /// <param name="tokenIn">the select term token to visit</param>
+        /// <returns>the select item for this select term token.</returns>
+        private SelectItem GenerateSelectItem(SelectTermToken tokenIn)
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
+            ExceptionUtils.CheckArgumentNotNull(tokenIn.PathToProperty, "pathToProperty");
 
-            // the top level represents $it then has only select populated..
-            List<SelectItem> expandedTerms = new List<SelectItem>();
-            if (tokenIn.ExpandTerms.Single().ExpandOption != null)
+            VerifySelectedPath(tokenIn);
+
+            SelectItem newSelectItem;
+            if (ProcessWildcardTokenPath(tokenIn, out newSelectItem))
             {
-                expandedTerms.AddRange(tokenIn.ExpandTerms.Single().ExpandOption.ExpandTerms.Select(this.GenerateExpandItem).Where(expandedNavigationSelectItem => expandedNavigationSelectItem != null));
+                return newSelectItem;
             }
 
-            // if there are any select items at this level then allSelected is false, otherwise it's true.
-            bool isAllSelected = tokenIn.ExpandTerms.Single().SelectOption == null;
-            SelectExpandClause topLevelExpand = new SelectExpandClause(expandedTerms, isAllSelected);
-            if (!isAllSelected)
+            IList<ODataPathSegment> selectedPath = ProcessSelectTokenPath(tokenIn.PathToProperty);
+            Debug.Assert(selectedPath.Count > 0);
+
+            // Navigation property should be the last segment in select path.
+            if (VerifySelectedNavigationProperty(selectedPath, tokenIn))
             {
-                SelectBinder selectBinder = new SelectBinder(this.Model, this.EdmType, this.Configuration.Settings.SelectExpandLimit, topLevelExpand, configuration.Resolver, this.state);
-                selectBinder.Bind(tokenIn.ExpandTerms.Single().SelectOption);
+                return new PathSelectItem(new ODataSelectPath(selectedPath));
             }
 
-            return topLevelExpand;
-        }
+            // We should use the "NavigationSource" at this level for the next level binding.
+            IEdmNavigationSource targetNavigationSource = this.NavigationSource;
+            ODataPathSegment lastSegment = selectedPath.Last();
+            IEdmType targetElementType = lastSegment.TargetEdmType;
+            IEdmCollectionType collection = targetElementType as IEdmCollectionType;
+            if (collection != null)
+            {
+                targetElementType = collection.ElementType.Definition;
+            }
+            IEdmTypeReference elementTypeReference = targetElementType.ToTypeReference();
 
-        /// <summary>
-        /// Bind a sub level expand
-        /// </summary>
-        /// <param name="tokenIn">the token to visit</param>
-        /// <returns>a SelectExpand clause based on this ExpandToken</returns>
-        private SelectExpandClause BindSubLevel(ExpandToken tokenIn)
-        {
-            List<SelectItem> expandTerms = tokenIn.ExpandTerms.Select(this.GenerateExpandItem).Where(expandedNavigationSelectItem => expandedNavigationSelectItem != null).ToList();
+            // $compute
+            ComputeClause compute = BindCompute(tokenIn.ComputeOption, targetNavigationSource, elementTypeReference);
+            HashSet<EndPathToken> generatedProperties = GetGeneratedProperties(compute, null);
 
-            return new SelectExpandClause(expandTerms, true);
-        }
+            // $filter
+            FilterClause filter = BindFilter(tokenIn.FilterOption, targetNavigationSource, elementTypeReference, generatedProperties);
 
-        /// <summary>
-        /// Generate a SubExpand based on the current nav property and the curren token
-        /// </summary>
-        /// <param name="tokenIn">the current token</param>
-        /// <returns>a new SelectExpand clause bound to the current token and nav prop</returns>
-        private SelectExpandClause GenerateSubExpand(ExpandTermToken tokenIn)
-        {
-            SelectExpandBinder nextLevelBinder = new SelectExpandBinder(this.Configuration, new ODataPathInfo(new ODataPath(this.parsedSegments)), null);
-            return nextLevelBinder.BindSubLevel(tokenIn.ExpandOption);
-        }
+            // $orderby
+            OrderByClause orderBy = BindOrderby(tokenIn.OrderByOptions, targetNavigationSource, elementTypeReference, generatedProperties);
 
-        /// <summary>
-        /// Decorate an expand tree using a select token.
-        /// </summary>
-        /// <param name="subExpand">the already built sub expand</param>
-        /// <param name="currentNavProp">the current navigation property</param>
-        /// <param name="select">the select token to use</param>
-        /// <param name="generatedProperties">list of properties generated in $compute/$apply</param>
-        /// <returns>A new SelectExpand clause decorated with the select token.</returns>
-        private SelectExpandClause DecorateExpandWithSelect(SelectExpandClause subExpand, IEdmNavigationProperty currentNavProp, SelectToken select, BindingState state)
-        {
+            // $search
+            SearchClause search = BindSearch(tokenIn.SearchOption, targetNavigationSource, elementTypeReference);
 
-            SelectBinder selectBinder = new SelectBinder(this.Model, currentNavProp.ToEntityType(), this.Settings.SelectExpandLimit, subExpand, this.configuration.Resolver, state);
-            return selectBinder.Bind(select);
-        }
+            // $select
+            List<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
+            parsedPath.AddRange(selectedPath);
+            SelectExpandClause selectExpand = BindSelectExpand(null, tokenIn.SelectOption, parsedPath, targetNavigationSource, elementTypeReference, generatedProperties);
 
-        /// <summary>
-        /// Build a expand clause for a nested expand.
-        /// </summary>
-        /// <returns>A new SelectExpandClause.</returns>
-        private static SelectExpandClause BuildDefaultSubExpand()
-        {
-            return new SelectExpandClause(new Collection<SelectItem>(), true);
+            return new PathSelectItem(new ODataSelectPath(selectedPath),
+                targetNavigationSource,
+                selectExpand,
+                filter,
+                orderBy,
+                tokenIn.TopOption,
+                tokenIn.SkipOption,
+                tokenIn.CountQueryOption,
+                search,
+                compute);
         }
 
         /// <summary>
@@ -236,85 +265,340 @@ namespace Microsoft.OData.UriParser
             }
 
             // Add the segments in select and expand to parsed segments
-            this.parsedSegments.AddRange(pathSoFar);
+            List<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
+            parsedPath.AddRange(pathSoFar);
 
             IEdmNavigationSource targetNavigationSource = null;
             if (this.NavigationSource != null)
             {
                 IEdmPathExpression bindingPath;
-                targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
+                targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp, BindingPathHelper.MatchBindingPath, parsedPath, out bindingPath);
             }
 
             NavigationPropertySegment navSegment = new NavigationPropertySegment(currentNavProp, targetNavigationSource);
             pathSoFar.Add(navSegment);
-            this.parsedSegments.Add(navSegment);   // Add the navigation property segment to parsed segments for future usage.
+            parsedPath.Add(navSegment); // Add the navigation property segment to parsed segments for future usage.
             ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
-            ApplyClause applyOption = null;
-            if (tokenIn.ApplyOptions != null)
-            {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
-                ApplyBinder applyBinder = new ApplyBinder(binder.Bind, binder.BindingState);
-                applyOption = applyBinder.BindApply(tokenIn.ApplyOptions);
-            }
+            // $apply
+            ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, targetNavigationSource);
 
-            ComputeClause computeOption = null;
-            if (tokenIn.ComputeOption != null)
-            {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
-                ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
-                computeOption = computeBinder.BindCompute(tokenIn.ComputeOption);
-            }
+            // $compute
+            ComputeClause computeOption = BindCompute(tokenIn.ComputeOption, targetNavigationSource);
 
             var generatedProperties = GetGeneratedProperties(computeOption, applyOption);
             bool collapsed = applyOption?.Transformations.Any(t => t.Kind == TransformationNodeKind.Aggregate || t.Kind == TransformationNodeKind.GroupBy) ?? false;
 
-            // call MetadataBinder to build the filter clause
-            FilterClause filterOption = null;
-            if (tokenIn.FilterOption != null)
-            {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource, generatedProperties, collapsed);
-                FilterBinder filterBinder = new FilterBinder(binder.Bind, binder.BindingState);
-                filterOption = filterBinder.BindFilter(tokenIn.FilterOption);
-            }
+            // $filter
+            FilterClause filterOption = BindFilter(tokenIn.FilterOption, targetNavigationSource, null, generatedProperties, collapsed);
 
-            // call MetadataBinder again to build the orderby clause
-            OrderByClause orderbyOption = null;
-            if (tokenIn.OrderByOptions != null)
-            {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource, generatedProperties, collapsed);
-                OrderByBinder orderByBinder = new OrderByBinder(binder.Bind);
-                orderbyOption = orderByBinder.BindOrderBy(binder.BindingState, tokenIn.OrderByOptions);
-            }
+            // $orderby
+            OrderByClause orderbyOption = BindOrderby(tokenIn.OrderByOptions, targetNavigationSource, null, generatedProperties, collapsed);
 
-            SearchClause searchOption = null;
-            if (tokenIn.SearchOption != null)
-            {
-                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
-                SearchBinder searchBinder = new SearchBinder(binder.Bind);
-                searchOption = searchBinder.BindSearch(tokenIn.SearchOption);
-            }
-
+            // $search
+            SearchClause searchOption = BindSearch(tokenIn.SearchOption, targetNavigationSource, null);
 
             if (isRef)
             {
                 return new ExpandedReferenceSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, computeOption, applyOption);
             }
 
-            SelectExpandClause subSelectExpand;
-            if (tokenIn.ExpandOption != null)
+            // $select & $expand
+            SelectExpandClause subSelectExpand = BindSelectExpand(tokenIn.ExpandOption, tokenIn.SelectOption, parsedPath, targetNavigationSource, null, generatedProperties, collapsed);
+
+            // $levels
+            LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
+
+            return new ExpandedNavigationSelectItem(pathToNavProp,
+                targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption, computeOption, applyOption);
+        }
+
+        /// <summary>
+        /// Bind the apply clause <see cref="ApplyClause"/> at this level.
+        /// </summary>
+        /// <param name="applyOptions">The apply options to visit.</param>
+        /// <returns>The null or the built apply clause.</returns>
+        private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource navigationSource)
+        {
+            if (applyToken != null && applyToken.Any())
             {
-                subSelectExpand = this.GenerateSubExpand(tokenIn);
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, null);
+                ApplyBinder applyBinder = new ApplyBinder(binder.Bind, binder.BindingState);
+                return applyBinder.BindApply(applyToken);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Bind the compute clause <see cref="ComputeToken"/> at this level.
+        /// </summary>
+        /// <param name="computeToken">The compute token to visit.</param>
+        /// <param name="navigationSource">The target navigation source.</param>
+        /// <param name="elementType">The target element type.</param>
+        /// <returns>The null or the built compute clause.</returns>
+        private ComputeClause BindCompute(ComputeToken computeToken, IEdmNavigationSource navigationSource, IEdmTypeReference elementType = null)
+        {
+            if (computeToken != null)
+            {
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, elementType);
+                ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
+                return computeBinder.BindCompute(computeToken);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Bind the filter clause <see cref="FilterClause"/> at this level.
+        /// </summary>
+        /// <param name="filterToken">The filter token to visit.</param>
+        /// <returns>The null or the built filter clause.</returns>
+        private FilterClause BindFilter(QueryToken filterToken, IEdmNavigationSource navigationSource,
+            IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
+        {
+            if (filterToken != null)
+            {
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, elementType, generatedProperties, collapsed);
+                FilterBinder filterBinder = new FilterBinder(binder.Bind, binder.BindingState);
+                return filterBinder.BindFilter(filterToken);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Bind the orderby clause <see cref="OrderByClause"/> at this level.
+        /// </summary>
+        /// <param name="orderByToken">The orderby token to visit.</param>
+        /// <returns>The null or the built orderby clause.</returns>
+        private OrderByClause BindOrderby(IEnumerable<OrderByToken> orderByToken, IEdmNavigationSource navigationSource,
+            IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
+        {
+            if (orderByToken != null && orderByToken.Any())
+            {
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, elementType, generatedProperties, collapsed);
+                OrderByBinder orderByBinder = new OrderByBinder(binder.Bind);
+                return orderByBinder.BindOrderBy(binder.BindingState, orderByToken);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Bind the search clause <see cref="SearchClause"/> at this level.
+        /// </summary>
+        /// <param name="searchToken">The search token to visit.</param>
+        /// <returns>The null or the built search clause.</returns>
+        private SearchClause BindSearch(QueryToken searchToken, IEdmNavigationSource navigationSource, IEdmTypeReference elementType)
+        {
+            if (searchToken != null)
+            {
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, elementType);
+                SearchBinder searchBinder = new SearchBinder(binder.Bind);
+                return searchBinder.BindSearch(searchToken);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Bind the select and expand clause <see cref="SelectExpandClause"/> at this level.
+        /// </summary>
+        /// <param name="expandToken">The expand token to visit.</param>
+        /// <param name="selectToken">The select token to visit.</param>
+        /// <param name="segments">The parsed segments to visit.</param>
+        /// <returns>The null or the built select and expand clause.</returns>
+        private SelectExpandClause BindSelectExpand(ExpandToken expandToken, SelectToken selectToken,
+            IList<ODataPathSegment> segments, IEdmNavigationSource navigationSource, IEdmTypeReference elementType,
+            HashSet < EndPathToken> generatedProperties = null, bool collapsed = false)
+        {
+            if (expandToken != null || selectToken != null)
+            {
+                BindingState binding = CreateBindingState(this.Configuration, navigationSource, elementType, generatedProperties, collapsed);
+
+                SelectExpandBinder selectExpandBinder = new SelectExpandBinder(this.Configuration,
+                new ODataPathInfo(new ODataPath(segments)), binding);
+
+                return selectExpandBinder.Bind(expandToken, selectToken);
             }
             else
             {
-                subSelectExpand = BuildDefaultSubExpand();
+                // It's better to return null for both Expand and Select are null.
+                // However, in order to be consistent, we returns the empty SelectExpandClause with AllSelected = true.
+                return new SelectExpandClause(new Collection<SelectItem>(), true);
+            }
+        }
+
+        /// <summary>
+        /// Process a <see cref="SelectTermToken"/> to identify whether it's a Wildcard path.
+        /// </summary>
+        /// <param name="selectToken">the select token to process.</param>
+        /// <param name="newSelectItem">the built select item to out.</param>
+        private bool ProcessWildcardTokenPath(SelectTermToken selectToken, out SelectItem newSelectItem)
+        {
+            newSelectItem = null;
+            if (selectToken == null || selectToken.PathToProperty == null)
+            {
+                return false;
             }
 
-            subSelectExpand = this.DecorateExpandWithSelect(subSelectExpand, currentNavProp, tokenIn.SelectOption, this.CreateBindingState(targetNavigationSource, generatedProperties, collapsed));
+            PathSegmentToken pathToken = selectToken.PathToProperty;
+            if (SelectPathSegmentTokenBinder.TryBindAsWildcard(pathToken, this.Model, out newSelectItem))
+            {
+                // * or Namespace.*
+                if (pathToken.NextToken != null)
+                {
+                    throw new ODataException(ODataErrorStrings.SelectExpandBinder_InvalidIdentifierAfterWildcard(pathToken.NextToken.Identifier));
+                }
 
-            LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
-            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption, computeOption, applyOption);
+                VerifyNoQueryOptionsNested(selectToken, pathToken.Identifier);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Process a <see cref="PathSegmentToken"/> following any type segments if necessary.
+        /// </summary>
+        /// <param name="tokenIn">the path token to process.</param>
+        private List<ODataPathSegment> ProcessSelectTokenPath(PathSegmentToken tokenIn)
+        {
+            Debug.Assert(tokenIn != null, "tokenIn != null");
+
+            List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
+            IEdmStructuredType currentLevelType = this.edmType;
+
+            // first, walk through all type segments in a row, converting them from tokens into segments.
+            if (tokenIn.IsNamespaceOrContainerQualified() && !UriParserHelper.IsAnnotation(tokenIn.Identifier))
+            {
+                PathSegmentToken firstNonTypeToken;
+                pathSoFar.AddRange(SelectExpandPathBinder.FollowTypeSegments(tokenIn, this.Model, this.Settings.SelectExpandLimit, this.configuration.Resolver, ref currentLevelType, out firstNonTypeToken));
+                Debug.Assert(firstNonTypeToken != null, "Did not get last token.");
+                tokenIn = firstNonTypeToken as NonSystemToken;
+                if (tokenIn == null)
+                {
+                    throw new ODataException(ODataErrorStrings.SelectExpandBinder_SystemTokenInSelect(firstNonTypeToken.Identifier));
+                }
+            }
+
+            // next, create a segment for the first non-type segment in the path.
+            ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.Model, currentLevelType, this.configuration.Resolver, this.state);
+
+            // next, create an ODataPath and add the segments to it.
+            if (lastSegment != null)
+            {
+                pathSoFar.Add(lastSegment);
+
+                // try create a complex type property path.
+                while (true)
+                {
+                    // no need to go on if the current property is not of complex type or collection of complex type,
+                    // unless the segment is a primitive type cast or a property on an open complex property.
+                    currentLevelType = lastSegment.EdmType as IEdmStructuredType;
+                    IEdmCollectionType collectionType = lastSegment.EdmType as IEdmCollectionType;
+                    IEdmPrimitiveType primitiveType = lastSegment.EdmType as IEdmPrimitiveType;
+                    DynamicPathSegment dynamicPath = lastSegment as DynamicPathSegment;
+                    if ((currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex)
+                        && (collectionType == null || collectionType.ElementType.TypeKind() != EdmTypeKind.Complex)
+                        && (primitiveType == null || primitiveType.TypeKind != EdmTypeKind.Primitive)
+                        && (dynamicPath == null || tokenIn.NextToken == null))
+                    {
+                        break;
+                    }
+
+                    NonSystemToken nextToken = tokenIn.NextToken as NonSystemToken;
+                    if (nextToken == null)
+                    {
+                        break;
+                    }
+
+                    if (UriParserHelper.IsAnnotation(nextToken.Identifier))
+                    {
+                        lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.Model,
+                            currentLevelType, this.configuration.Resolver, null);
+                    }
+                    else if (primitiveType == null && dynamicPath == null)
+                    {
+                        // This means last segment a collection of complex type,
+                        // current segment can only be type cast and cannot be property name.
+                        if (currentLevelType == null)
+                        {
+                            currentLevelType = collectionType.ElementType.Definition as IEdmStructuredType;
+                        }
+
+                        // If there is no collection type in the path yet, will try to bind property for the next token
+                        // first try bind the segment as property.
+                        lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.Model,
+                            currentLevelType, this.configuration.Resolver, null);
+                    }
+                    else
+                    {
+                        // determine whether we are looking at a type cast or a dynamic path segment.
+                        EdmPrimitiveTypeKind nextTypeKind = EdmCoreModel.Instance.GetPrimitiveTypeKind(nextToken.Identifier);
+                        IEdmPrimitiveType castType = EdmCoreModel.Instance.GetPrimitiveType(nextTypeKind);
+                        if (castType != null)
+                        {
+                            lastSegment = new TypeSegment(castType, castType, null);
+                        }
+                        else if (dynamicPath != null)
+                        {
+                            lastSegment = new DynamicPathSegment(nextToken.Identifier);
+                        }
+                        else
+                        {
+                            throw new ODataException(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+                        }
+                    }
+
+                    // then try bind the segment as type cast.
+                    if (lastSegment == null)
+                    {
+                        IEdmStructuredType typeFromNextToken =
+                            UriEdmHelpers.FindTypeFromModel(this.Model, nextToken.Identifier, this.configuration.Resolver) as
+                                IEdmStructuredType;
+
+                        if (typeFromNextToken.IsOrInheritsFrom(currentLevelType))
+                        {
+                            lastSegment = new TypeSegment(typeFromNextToken, /*entitySet*/null);
+                        }
+                    }
+
+                    // type cast failed too.
+                    if (lastSegment == null)
+                    {
+                        break;
+                    }
+
+                    // try move to and add next path segment.
+                    tokenIn = nextToken;
+                    pathSoFar.Add(lastSegment);
+                }
+            }
+
+            // non-navigation cases do not allow further segments in $select.
+            if (tokenIn.NextToken != null)
+            {
+                throw new ODataException(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            }
+
+            // Later, we can consider to create a "DynamicOperationSegment" to handle this.
+            // But now, Let's throw exception.
+            if (lastSegment == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_InvalidIdentifierInQueryOption(tokenIn.Identifier));
+            }
+
+            // navigation property is not allowed to append sub path in the selection.
+            NavigationPropertySegment navPropSegment = pathSoFar.LastOrDefault() as NavigationPropertySegment;
+            if (navPropSegment != null && tokenIn.NextToken != null)
+            {
+                throw new ODataException(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            }
+
+            return pathSoFar;
         }
 
         private static HashSet<EndPathToken> GetGeneratedProperties(ComputeClause computeOption, ApplyClause applyOption)
@@ -423,30 +707,137 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Build a new MetadataBinder to use for expand options.
         /// </summary>
-        /// <param name="targetNavigationSource">The navigation source being expanded.</param>
-        /// <returns>A new MetadataBinder ready to bind a Filter or Orderby clause.</returns>
-        private MetadataBinder BuildNewMetadataBinder(IEdmNavigationSource targetNavigationSource, HashSet<EndPathToken> generatedProperties = null, bool collapsed = false)
+        private static MetadataBinder BuildNewMetadataBinder(ODataUriParserConfiguration config,
+            IEdmNavigationSource targetNavigationSource,
+            IEdmTypeReference elementType,
+            HashSet<EndPathToken> generatedProperties = null,
+            bool collapsed = false)
         {
-            BindingState state = CreateBindingState(targetNavigationSource, generatedProperties, collapsed);
+            BindingState state = CreateBindingState(config, targetNavigationSource, elementType, generatedProperties, collapsed);
             return new MetadataBinder(state);
         }
 
-        private BindingState CreateBindingState(IEdmNavigationSource targetNavigationSource, HashSet<EndPathToken> generatedProperties, bool collapsed)
+        private static BindingState CreateBindingState(ODataUriParserConfiguration config,
+            IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType,
+            HashSet<EndPathToken> generatedProperties = null, bool collapsed = false)
         {
-            if (targetNavigationSource == null)
+            if (targetNavigationSource == null && elementType == null)
             {
                 return null;
             }
 
-            BindingState state = new BindingState(this.configuration)
+            BindingState state = new BindingState(config)
             {
                 ImplicitRangeVariable =
-                    NodeFactory.CreateImplicitRangeVariable(targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource)
+                    NodeFactory.CreateImplicitRangeVariable(elementType != null ? elementType :
+                        targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource)
             };
+
             state.RangeVariables.Push(state.ImplicitRangeVariable);
             state.AggregatedPropertyNames = generatedProperties;
             state.IsCollapsed = collapsed;
             return state;
+        }
+
+        private static void VerifySelectedPath(SelectTermToken selectedToken)
+        {
+            PathSegmentToken current = selectedToken.PathToProperty;
+            while (current != null)
+            {
+                if (current is SystemToken)
+                {
+                    // It's not allowed to set a system token in a select clause.
+                    throw new ODataException(ODataErrorStrings.SelectExpandBinder_SystemTokenInSelect(current.Identifier));
+                }
+
+                current = current.NextToken;
+            }
+        }
+
+        private static bool VerifySelectedNavigationProperty(IList<ODataPathSegment> selectedPath, SelectTermToken tokenIn)
+        {
+            NavigationPropertySegment navPropSegment = selectedPath.LastOrDefault() as NavigationPropertySegment;
+            if (navPropSegment != null)
+            {
+                // After navigation property, it's not allowed to nest query options
+                VerifyNoQueryOptionsNested(tokenIn, navPropSegment.Identifier);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void VerifyNoQueryOptionsNested(SelectTermToken selectToken, string identifier)
+        {
+            if (selectToken != null)
+            {
+                if (selectToken.ComputeOption != null ||
+                    selectToken.FilterOption != null ||
+                    selectToken.OrderByOptions != null ||
+                    selectToken.SearchOption != null ||
+                    selectToken.CountQueryOption != null ||
+                    selectToken.SelectOption != null ||
+                    selectToken.TopOption != null ||
+                    selectToken.SkipOption != null)
+                {
+                    throw new ODataException(ODataErrorStrings.SelectExpandBinder_InvalidQueryOptionNestedSelection(identifier));
+                }
+            }
+        }
+
+        internal static void AddToSelectedItems(SelectItem itemToAdd, List<SelectItem> selectItems)
+        {
+            if (itemToAdd == null)
+            {
+                return;
+            }
+
+            // ignore all property selection if there's a wildcard select item.
+            if (selectItems.Any(x => x is WildcardSelectItem) && IsStructuralOrNavigationPropertySelectionItem(itemToAdd))
+            {
+                return;
+            }
+
+            // if the selected item is a nav prop, then see if its already there before we add it.
+            PathSelectItem pathSelectItem = itemToAdd as PathSelectItem;
+            if (pathSelectItem != null)
+            {
+                NavigationPropertySegment trailingNavPropSegment = pathSelectItem.SelectedPath.LastSegment as NavigationPropertySegment;
+                if (trailingNavPropSegment != null)
+                {
+                    if (selectItems.OfType<PathSelectItem>().Any(i => i.SelectedPath.Equals(pathSelectItem.SelectedPath)))
+                    {
+                        return;
+                    }
+                }
+            }
+
+            // if the selected item is "*", filter the existing property selection.
+            if (itemToAdd is WildcardSelectItem)
+            {
+                var shouldFilter = selectItems.Where(s => IsStructuralSelectionItem(s)).ToList();
+                foreach (var filterItem in shouldFilter)
+                {
+                    selectItems.Remove(filterItem);
+                }
+            }
+
+            selectItems.Add(itemToAdd);
+        }
+
+        private static bool IsStructuralOrNavigationPropertySelectionItem(SelectItem selectItem)
+        {
+            PathSelectItem pathSelectItem = selectItem as PathSelectItem;
+            return pathSelectItem != null &&
+                (pathSelectItem.SelectedPath.LastSegment is NavigationPropertySegment ||
+                pathSelectItem.SelectedPath.LastSegment is PropertySegment);
+        }
+
+        private static bool IsStructuralSelectionItem(SelectItem selectItem)
+        {
+            PathSelectItem pathSelectItem = selectItem as PathSelectItem;
+            return pathSelectItem != null && (pathSelectItem.SelectedPath.LastSegment is PropertySegment);
         }
     }
 }

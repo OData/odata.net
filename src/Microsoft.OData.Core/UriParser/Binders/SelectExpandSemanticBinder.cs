@@ -29,13 +29,12 @@ namespace Microsoft.OData.UriParser
             ODataUriParserConfiguration configuration,
             BindingState state)
         {
-            ExpandToken unifiedSelectExpandToken = SelectExpandSyntacticUnifier.Combine(expandToken, selectToken);
-
-            ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
-            ExpandToken normalizedSelectExpandToken = expandTreeNormalizer.NormalizeExpandTree(unifiedSelectExpandToken);
+            ExpandToken normalizedExpand = ExpandTreeNormalizer.NormalizeExpandTree(expandToken);
+            SelectToken normalizedSelect = SelectTreeNormalizer.NormalizeSelectTree(selectToken);
 
             SelectExpandBinder selectExpandBinder = new SelectExpandBinder(configuration, odataPathInfo, state);
-            SelectExpandClause clause = selectExpandBinder.Bind(normalizedSelectExpandToken);
+
+            SelectExpandClause clause = selectExpandBinder.Bind(normalizedExpand, normalizedSelect);
 
             SelectExpandClauseFinisher.AddExplicitNavPropLinksWhereNecessary(clause);
 

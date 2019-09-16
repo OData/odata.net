@@ -67,7 +67,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// The properties according to which to expand in the results.
+        /// The properties according to which to select in the results.
         /// </summary>
         public IEnumerable<SelectTermToken> SelectTerms
         {

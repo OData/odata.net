@@ -976,9 +976,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\SearchBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\SearchBinder.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\SelectBinder.cs">
-      <Link>Microsoft\OData\Core\UriParser\Binders\SelectBinder.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\SelectExpandBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\SelectExpandBinder.cs</Link>
     </Compile>
@@ -990,9 +987,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\SelectExpandSemanticBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\SelectExpandSemanticBinder.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\SelectExpandSyntacticUnifier.cs">
-      <Link>Microsoft\OData\Core\UriParser\Binders\SelectExpandSyntacticUnifier.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\SelectPathSegmentTokenBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\SelectPathSegmentTokenBinder.cs</Link>
@@ -1473,9 +1467,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Visitors\SelectItemTranslator.cs">
       <Link>Microsoft\OData\Core\UriParser\Visitors\SelectItemTranslator.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Visitors\SelectPropertyVisitor.cs">
-      <Link>Microsoft\OData\Core\UriParser\Visitors\SelectPropertyVisitor.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs">
       <Link>Microsoft\OData\Core\UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs</Link>
