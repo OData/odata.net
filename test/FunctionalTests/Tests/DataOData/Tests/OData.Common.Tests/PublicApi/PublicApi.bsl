@@ -1688,6 +1688,21 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.Vocabularies.EdmTerm AddTerm (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind kind)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.Vocabularies.EdmTerm AddTerm (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.Vocabularies.EdmTerm AddTerm (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, string appliesTo, string defaultValue)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmType AsElementType (Microsoft.OData.Edm.IEdmType type)
 
 	[
