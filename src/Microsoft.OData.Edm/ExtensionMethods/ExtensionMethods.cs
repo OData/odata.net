@@ -1261,6 +1261,51 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Creates and adds a new instance of the <see cref="EdmTerm"/> class from a primitive type kind.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">The Namespace of the term.</param>
+        /// <param name="name">The name of the newly created term</param>
+        /// <param name="kind">The primitive type kind of the term.</param>
+        /// <returns>The created term.</returns>
+        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, string name, EdmPrimitiveTypeKind kind)
+        {
+            var term = new EdmTerm(namespaceName, name, kind);
+            model.AddElement(term);
+            return term;
+        }
+
+        /// <summary>
+        /// Creates and adds a new instance of the <see cref="EdmTerm"/> class from a type reference.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">The Namespace of the term.</param>
+        /// <param name="name">The name of the newly created term</param>
+        /// <param name="type">The type of the term.</param>
+        /// <returns>The created term.</returns>
+        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, string name, IEdmTypeReference type)
+        {
+            return model.AddTerm(namespaceName, name, type, null, null);
+        }
+
+        /// <summary>
+        /// Creates and adds a new instance of the <see cref="EdmTerm"/> class from a type reference.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">The Namespace of the term.</param>
+        /// <param name="name">The name of the newly created term</param>
+        /// <param name="type">The type of the term.</param>
+        /// <param name="appliesTo">The AppliesTo of the term.</param>
+        /// <param name="defaultValue">The DefaultValue of the term.</param>
+        /// <returns>The created term.</returns>
+        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, string name, IEdmTypeReference type, string appliesTo, string defaultValue)
+        {
+            var term = new EdmTerm(namespaceName, name, type, appliesTo, defaultValue);
+            model.AddElement(term);
+            return term;
+        }
+
+        /// <summary>
         /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to EntitySet
         /// </summary>
         /// <param name="model">The model to add annotation</param>
