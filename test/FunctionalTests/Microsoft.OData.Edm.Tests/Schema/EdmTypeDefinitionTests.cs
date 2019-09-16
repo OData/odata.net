@@ -41,6 +41,22 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
+        public void EdmModelAddTermTest()
+        {
+            var model = new EdmModel();
+            var term1 = model.AddTerm("NS", "Term1", EdmPrimitiveTypeKind.String);
+
+            var boolType = EdmCoreModel.Instance.GetBoolean(false);
+            var term2 = model.AddTerm("NS", "Term2", boolType);
+
+            var term3 = model.AddTerm("NS", "Term3", boolType, "entityset", "default value");
+
+            Assert.Equal(term1, model.FindDeclaredTerm("NS.Term1"));
+            Assert.Equal(term2, model.FindDeclaredTerm("NS.Term2"));
+            Assert.Equal(term3, model.FindDeclaredTerm("NS.Term3"));
+        }
+
+        [Fact]
         public void TestModelWithTypeDefinition()
         {
             var model = new EdmModel();
