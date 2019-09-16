@@ -91,7 +91,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             this.ApprovalVerifySelectAndExpandParser(
                 orderDetailBase,
                 "",
-                "AssociatedOrder($expand=CustomerForOrder($select=City)),AssociatedOrder,AssociatedOrder($select=*),AssociatedOrder($select=OrderDate),AssociatedOrder($expand=CustomerForOrder($expand=Orders($select=Microsoft.Test.Taupo.OData.WCFService.OrdersWithMoreThanTwoItems)))");
+                "AssociatedOrder($expand=CustomerForOrder($select=City)),AssociatedOrder,AssociatedOrder($select=*),AssociatedOrder($select=OrderDate),AssociatedOrder($expand=CustomerForOrder($expand=Orders))");
         }
 
         [TestMethod]

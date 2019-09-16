@@ -157,10 +157,7 @@ namespace Microsoft.OData.UriParser
             }
 
             IList<ODataPathSegment> selectedPath = ProcessSelectTokenPath(tokenIn.PathToProperty);
-            if (selectedPath.Count == 0)
-            {
-                return new PathSelectItem(new ODataSelectPath(selectedPath));
-            }
+            Debug.Assert(selectedPath.Count > 0);
 
             // Navigation property should be the last segment in select path.
             if (VerifySelectedNavigationProperty(selectedPath, tokenIn))
@@ -193,8 +190,8 @@ namespace Microsoft.OData.UriParser
             SearchClause search = BindSearch(tokenIn.SearchOption, targetNavigationSource, elementTypeReference);
 
             // $select
-            IList<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
-            parsedPath = parsedPath.Concat(selectedPath).ToList();
+            List<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
+            parsedPath.AddRange(selectedPath);
             SelectExpandClause selectExpand = BindSelectExpand(null, tokenIn.SelectOption, parsedPath, targetNavigationSource, elementTypeReference, generatedProperties);
 
             return new PathSelectItem(new ODataSelectPath(selectedPath),
@@ -269,7 +266,7 @@ namespace Microsoft.OData.UriParser
 
             // Add the segments in select and expand to parsed segments
             List<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
-            parsedPath = parsedPath.Concat(pathSoFar).ToList();
+            parsedPath.AddRange(pathSoFar);
 
             IEdmNavigationSource targetNavigationSource = null;
             if (this.NavigationSource != null)

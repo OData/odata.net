@@ -81,7 +81,21 @@ namespace Microsoft.OData.UriParser
                 if (nonSystem != null && nonSystem.NamedValues != null)
                 {
                     sb.Append("(");
-                    sb.Append(string.Join(",", nonSystem.NamedValues.Select(c => c.Name + "=" + c.Value.Value).ToArray()));
+                    bool first = true;
+                    foreach (var item in nonSystem.NamedValues)
+                    {
+                        if (first)
+                        {
+                            first = false;
+                        }
+                        else
+                        {
+                            sb.Append(",");
+                        }
+
+                        sb.Append(item.Name).Append("=").Append(item.Value.Value);
+                    }
+
                     sb.Append(")");
                 }
 
