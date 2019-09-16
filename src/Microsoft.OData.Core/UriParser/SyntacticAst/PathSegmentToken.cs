@@ -27,7 +27,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Get the NextToken in the path
         /// </summary>
-        public PathSegmentToken NextToken { get; private set; }
+        public PathSegmentToken NextToken { get; internal set; }
 
         /// <summary>
         /// The name of the property to access.
@@ -58,14 +58,5 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="visitor">An implementation of the visitor interface.</param>
         public abstract void Accept(IPathSegmentTokenVisitor visitor);
-
-        /// <summary>
-        /// internal setter for the next token.
-        /// </summary>
-        /// <param name="nextTokenIn">the next token to set.</param>
-        internal void SetNextToken(PathSegmentToken nextTokenIn)
-        {
-            NextToken = nextTokenIn;
-        }
     }
 }

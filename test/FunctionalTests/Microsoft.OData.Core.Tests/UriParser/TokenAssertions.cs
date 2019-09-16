@@ -137,17 +137,19 @@ namespace Microsoft.OData.Tests.UriParser
             return expandTermToken;
         }
 
-        public static SelectToken ShouldBeSelectToken(this QueryToken token, string[] propertyNames)
+        public static SelectTermToken ShouldBeSelectTermToken(this QueryToken token, string propertyName, bool checkNullParent)
         {
             Assert.NotNull(token);
-            SelectToken selectToken = Assert.IsType<SelectToken>(token);
-            if (propertyNames.Any())
+            SelectTermToken selectTermToken = Assert.IsType<SelectTermToken>(token);
+            Assert.Equal(QueryTokenKind.SelectTerm, selectTermToken.Kind);
+            Assert.Equal(propertyName, selectTermToken.PathToProperty.Identifier);
+
+            if (checkNullParent)
             {
-                Assert.Equal(propertyNames.Length, selectToken.Properties.Count());
-                Assert.Equal(propertyNames, selectToken.Properties.Select(p => p.Identifier));
+                Assert.Null(selectTermToken.PathToProperty.NextToken);
             }
 
-            return selectToken;
+            return selectTermToken;
         }
 
         public static NonSystemToken ShouldBeNonSystemToken(this PathSegmentToken token, string tokenIdentifier)

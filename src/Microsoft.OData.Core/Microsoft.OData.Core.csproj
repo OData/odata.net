@@ -427,12 +427,10 @@
     <Compile Include="UriParser\Binders\ParameterAliasBinder.cs" />
     <Compile Include="UriParser\Binders\RangeVariableBinder.cs" />
     <Compile Include="UriParser\Binders\SearchBinder.cs" />
-    <Compile Include="UriParser\Binders\SelectBinder.cs" />
     <Compile Include="UriParser\Binders\SelectExpandBinder.cs" />
     <Compile Include="UriParser\Binders\SelectExpandClauseFinisher.cs" />
     <Compile Include="UriParser\Binders\SelectExpandPathBinder.cs" />
     <Compile Include="UriParser\Binders\SelectExpandSemanticBinder.cs" />
-    <Compile Include="UriParser\Binders\SelectExpandSyntacticUnifier.cs" />
     <Compile Include="UriParser\Binders\SelectPathSegmentTokenBinder.cs" />
     <Compile Include="UriParser\Binders\SelectTreeNormalizer.cs" />
     <Compile Include="UriParser\Binders\UnaryOperatorBinder.cs" />
@@ -610,7 +608,6 @@
     <Compile Include="UriParser\Visitors\QueryNodeVisitor.cs" />
     <Compile Include="UriParser\Visitors\SelectItemHandler.cs" />
     <Compile Include="UriParser\Visitors\SelectItemTranslator.cs" />
-    <Compile Include="UriParser\Visitors\SelectPropertyVisitor.cs" />
     <Compile Include="UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs" />
     <Compile Include="UriParser\Visitors\SyntacticTreeVisitor.cs" />
     <Compile Include="UriUtils.cs" />

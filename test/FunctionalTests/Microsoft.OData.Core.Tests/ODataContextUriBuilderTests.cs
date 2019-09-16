@@ -90,7 +90,7 @@ namespace Microsoft.OData.Tests
         public void FeedContextUriWithSelect()
         {
             // Select single structure property
-            string selectClause = "Name,Name";
+            string selectClause = "Name";
             string expectClause = "Name";
             foreach (ODataVersion version in Versions)
             {
@@ -98,7 +98,7 @@ namespace Microsoft.OData.Tests
             }
 
             // Select single navigation property
-            selectClause = "Districts, Districts";
+            selectClause = "Districts";
             expectClause = "Districts";
             foreach (ODataVersion version in Versions)
             {

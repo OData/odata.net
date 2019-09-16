@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -15,87 +14,76 @@ using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
-    public class ExpandBinderTests
+    /// <summary>
+    /// Test cases related $expand and nested query options in $expand.
+    /// </summary>
+    public class ExpandBinderTests : SelectExpandBinderTests
     {
-        private readonly ODataUriParserConfiguration V4configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel);
-        private readonly SelectExpandBinder binderForPerson;
-        private readonly SelectExpandBinder binderForAddress;
-
-        public ExpandBinderTests()
-        {
-            this.binderForPerson = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()), null);
-            this.binderForAddress = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetAddressType(), null), null);
-        }
-
-        [Fact]
-        public void TopLevelEntityTypeCannotBeNull()
-        {
-            Action createWithNullTopLevelEntityType =
-                () => new SelectExpandBinder(this.V4configuration, new ODataPathInfo(null, HardCodedTestModel.GetPeopleSet()), null);
-            createWithNullTopLevelEntityType.ShouldThrow<Exception>(Error.ArgumentNull("topLevelEntityType").ToString());
-        }
-
-        [Fact]
-        public void TopLevelEntitySetCanBeNull()
-        {
-            SelectExpandBinder binder = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(ModelBuildingHelpers.BuildValidEntityType(), null), null);
-            binder.NavigationSource.Should().BeNull();
-        }
-
-        [Fact]
-        public void TopLevelEntityTypeIsSetCorrectly()
-        {
-            this.binderForPerson.EdmType.Should().Be(HardCodedTestModel.GetPersonType());
-        }
-
-        [Fact]
-        public void ModelIsSetCorrectly()
-        {
-            this.binderForPerson.Model.Should().Be(HardCodedTestModel.TestModel);
-        }
-
-        // $expand=MyDog($expand=MyPeople;)
         [Fact]
         public void BindingOnTreeWithWithMultipleNavPropPathsThrows()
         {
-            NonSystemToken topLevelSegment = new NonSystemToken("MyDog", null, null);
-            NonSystemToken navProp = new NonSystemToken("MyDog", null, topLevelSegment);
-            ExpandTermToken expandTerm = new ExpandTermToken(navProp);
-            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { expandTerm });
-            Action bindTreeWithMultipleNavPropPaths = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            bindTreeWithMultipleNavPropPaths.ShouldThrow<ODataException>()
-                                .WithMessage(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+            // Arrange: $expand=MyDog/MyPeople
+            NonSystemToken innerSegment = new NonSystemToken("MyPeople", null, null);
+            NonSystemToken navProp = new NonSystemToken("MyDog", null, innerSegment);
+            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(navProp) });
+
+            // Act & Assert
+            Action test = () => BinderForPerson.Bind(expandToken, null);
+            test.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
         }
 
         // $expand=MyDog
         [Fact]
         public void SingleLevelExpandTermTokenWorks()
         {
+            // Arrange
             ExpandTermToken expandTermToken = new ExpandTermToken(new NonSystemToken("MyDog", null, null));
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { expandTermToken });
-            var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).SelectAndExpand.AllSelected.Should().BeTrue();
+
+            // Act
+            SelectExpandClause clause = BinderForPerson.Bind(expandToken, null);
+
+            // Arrange
+            Assert.NotNull(clause);
+            SelectItem selectItem = Assert.Single(clause.SelectedItems);
+
+            ExpandedNavigationSelectItem expandedItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+            Assert.NotNull(expandedItem);
+            Assert.NotNull(expandedItem.SelectAndExpand);
         }
 
-        // $expand=MyDog($expand=MyPeople;)
         [Fact]
         public void MultiLevelExpandTermTokenWorks()
         {
+            // Arrange: $expand=MyDog($expand=MyPeople)
             ExpandTermToken innerExpandTerm = new ExpandTermToken(new NonSystemToken("MyPeople", null, null));
             ExpandTermToken outerExpandTerm = new ExpandTermToken(new NonSystemToken("MyDog", null, null), null,
                                                                   new ExpandToken(new ExpandTermToken[] { innerExpandTerm }));
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { outerExpandTerm });
-            var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            var subSelectExpand = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).SelectAndExpand;
-            subSelectExpand.AllSelected.Should().BeTrue();
-            subSelectExpand.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp())
-                .SelectAndExpand.AllSelected.Should().BeTrue();
+
+            // Act
+            SelectExpandClause clause = BinderForPerson.Bind(expandToken, null);
+
+            // Assert
+            Assert.True(clause.AllSelected);
+            SelectItem selectItem = Assert.Single(clause.SelectedItems);
+
+            ExpandedNavigationSelectItem expandedItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+
+            // sub-level
+            Assert.NotNull(expandedItem.SelectAndExpand);
+            Assert.True(expandedItem.SelectAndExpand.AllSelected);
+            selectItem = Assert.Single(expandedItem.SelectAndExpand.SelectedItems);
+            expandedItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp());
+
+            // sub-sub level
+            Assert.NotNull(expandedItem.SelectAndExpand);
         }
 
-        // $select=<foo>&$expand=MyDog($select=Color;$expand=MyPeople;)
         [Fact]
         public void SelectIsBasedOnTheCurrentLevel()
         {
+            // Arrange: $expand=MyDog($select=Color;$expand=MyPeople;)
             ExpandTermToken innerExpandTerm = new ExpandTermToken(new NonSystemToken("MyPeople", null, null));
             ExpandTermToken outerExpandTerm = new ExpandTermToken(new NonSystemToken("MyDog", null, null),
                                                                   new SelectToken(new List<PathSegmentToken>()
@@ -104,130 +92,133 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                       }),
                                                                   new ExpandToken(new ExpandTermToken[] { innerExpandTerm }));
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { outerExpandTerm });
-            var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            var subExpand =
-                item.SelectedItems.First()
-                    .ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp())
-                    .SelectAndExpand;
-            subExpand.AllSelected.Should().BeFalse();
-            subExpand.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp())
-                .SelectAndExpand.AllSelected.Should().BeTrue();
-            subExpand.SelectedItems.Last(x => x is PathSelectItem).ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
+
+            // Act
+            SelectExpandClause clause = BinderForPerson.Bind(expandToken, null);
+
+            // $expand=MyDog
+            Assert.True(clause.AllSelected);
+            SelectItem selectItem = Assert.Single(clause.SelectedItems);
+            ExpandedNavigationSelectItem expandedItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+
+            // Sub-level ($select=Color;$expand=MyPeople;)
+            SelectExpandClause subSelectExpand = expandedItem.SelectAndExpand;
+            Assert.False(subSelectExpand.AllSelected);
+            Assert.Equal(2, subSelectExpand.SelectedItems.Count());
+            selectItem = Assert.Single(subSelectExpand.SelectedItems, x => x is ExpandedNavigationSelectItem);
+            expandedItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp());
+
+            Assert.NotNull(expandedItem.SelectAndExpand);
         }
 
-        // $expand=Blah
         [Fact]
         public void NonexistentPropertyThrowsUsefulError()
         {
+            // Arrange: $expand=Blah
             ExpandToken expandToken = new ExpandToken(new[] { new ExpandTermToken(new NonSystemToken("Blah", null, null)) });
-            Action bind = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            bind.ShouldThrow<ODataException>()
-                               .WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType().FullName(), "Blah"));
+
+            // Act & Assert
+            Action test = () => BinderForPerson.Bind(expandToken, null);
+            test.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType().FullName(), "Blah"));
         }
 
-        // $expand=Shoe
         [Fact]
         public void NonNavigationPropertyThrowsUsefulErrorIfKnobIsNotFlipped()
         {
+            // Arrange: $expand=Shoe
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(new NonSystemToken("Shoe", null, null)) });
-            Action bind = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            bind.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty("Shoe", HardCodedTestModel.GetPersonType().FullName()));
+
+            // Act
+            Action test = () => BinderForPerson.Bind(expandToken, null);
+            test.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty("Shoe", HardCodedTestModel.GetPersonType().FullName()));
         }
 
-        // $select=<foo>&$expand=MyDog
         [Fact]
-        // ToDo: I think this is less necessary in V4 because the top level select doesn't effect anything below it, so we always know what's selected at a given level based on the expand token syntax.
         public void NestedExpandsAutomaticallySelectedInExpandOptionMode()
         {
+            // Arrange: $select=<foo>&$expand=MyDog
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[]
                 {
                     new ExpandTermToken(new NonSystemToken("MyDog", null, null))
                 });
-            var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            var myDogSelection =
-                item.SelectedItems.First()
-                    .ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp())
-                    .SelectAndExpand;
-            myDogSelection.AllSelected.Should().BeTrue(); // the inner expansion is all by default for the option-mode binder, as expected for this test.
-            myDogSelection.SelectedItems.Should().BeEmpty();
+
+            // Act
+            SelectExpandClause clause = BinderForPerson.Bind(expandToken, null);
+
+            // Assert
+            Assert.NotNull(clause);
+            SelectItem selectItem = Assert.Single(clause.SelectedItems);
+            ExpandedNavigationSelectItem expandedItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+
+            Assert.NotNull(expandedItem.SelectAndExpand);
+            Assert.True(expandedItem.SelectAndExpand.AllSelected);
+            Assert.Empty(expandedItem.SelectAndExpand.SelectedItems);
         }
 
         [Fact]
         public void TypeTokensAreProperlyRecognizedAndCollapsedIntoASingleProperty()
         {
+            // Arrange: $expand=Fully.Qualified.Namespace.Employee/MyDog
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[]
-                {
-                    new ExpandTermToken(new NonSystemToken("Fully.Qualified.Namespace.Employee", null,
-                                                      new NonSystemToken("MyDog", null, null)))
-                });
-            var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            var myDogExpansion = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).SelectAndExpand;
-            myDogExpansion.SelectedItems.Should().BeEmpty();
-            myDogExpansion.AllSelected.Should().BeTrue();
+            {
+                new ExpandTermToken(
+                    new NonSystemToken("Fully.Qualified.Namespace.Employee", null,
+                    new NonSystemToken("MyDog", null, null)))
+            });
+
+            // Act
+            SelectExpandClause clause =BinderForPerson.Bind(expandToken, null);
+
+            // Assert
+            Assert.NotNull(clause);
+            SelectItem selectItem = Assert.Single(clause.SelectedItems);
+            ExpandedNavigationSelectItem expandedItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+
+            Assert.NotNull(expandedItem.SelectAndExpand);
         }
 
-        // $select=<foo>&$expand=MyDog($expand=MyPeople;)
         [Fact]
         public void EntitySetCorrectlyPopulatedAtEachLevel()
         {
+            // Arrange: $expand=MyDog($expand=MyPeople;)
             ExpandTermToken innerExpandTerm = new ExpandTermToken(new NonSystemToken("MyPeople", null, null));
             ExpandTermToken outerExpandTerm = new ExpandTermToken(new NonSystemToken("MyDog", null, null),
                                                                   null,
                                                                   new ExpandToken(new ExpandTermToken[] { innerExpandTerm }));
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { outerExpandTerm });
-            var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            var myDogExpandItem = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
-            myDogExpandItem.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
-            var myPeopleExpandItem = myDogExpandItem.SelectAndExpand.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp());
-            myPeopleExpandItem.NavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
-            myPeopleExpandItem.SelectAndExpand.SelectedItems.Should().BeEmpty();
-        }
 
-        // $select=MyDog&$expand=MyDog
-        [Fact]
-        public void SelectedAndExpandedNavPropProduceExpandedNavPropSelectionItemAndPathSelectionItem()
-        {
-            ExpandTermToken innerExpandTermToken = new ExpandTermToken(new NonSystemToken("MyDog", null, null));
-            ExpandToken innerExpandToken = new ExpandToken(new ExpandTermToken[] { innerExpandTermToken });
-            ExpandTermToken topLevelExpandTermToken = new ExpandTermToken(new SystemToken(ExpressionConstants.It, /*nextToken*/null), new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("MyDog", /*namedValues*/null, /*nextToken*/null) }), innerExpandToken);
-            ExpandToken topLevelExpandToken = new ExpandToken(new ExpandTermToken[] { topLevelExpandTermToken });
-            var item = this.binderForPerson.Bind(topLevelExpandToken);
-            item.SelectedItems.Should().HaveCount(2);
-            item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
-            item.SelectedItems.Last().ShouldBePathSelectionItem(new ODataPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), HardCodedTestModel.GetPeopleSet())));
-        }
+            // Act
+            SelectExpandClause clause = BinderForPerson.Bind(expandToken, null);
 
-        [Fact]
-        public void CanSelectPropertyOnNonEntityType()
-        {
-            ExpandTermToken expandTermToken = new ExpandTermToken(new SystemToken(ExpressionConstants.It, null), new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("City", null, null) }), null);
-            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { expandTermToken });
-            var item = this.binderForAddress.Bind(expandToken);
-            item.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetAddressCityProperty())));
+            // Assert
+            SelectItem selectItem = Assert.Single(clause.SelectedItems);
+            ExpandedNavigationSelectItem myDogExpandItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+            Assert.Same(HardCodedTestModel.GetDogsSet(), myDogExpandItem.NavigationSource);
+
+            // Sub-level ($expand=MyPeople)
+            Assert.NotNull(myDogExpandItem.SelectAndExpand);
+            selectItem = Assert.Single(myDogExpandItem.SelectAndExpand.SelectedItems);
+            ExpandedNavigationSelectItem myPeopleExpandItem = selectItem.ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp());
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), myPeopleExpandItem.NavigationSource);
+
+            // Sub-sub-level
+            Assert.NotNull(myPeopleExpandItem.SelectAndExpand);
         }
 
         [Fact]
         public void LowerLevelEmptySelectedItemsListDoesNotThrow()
         {
+            // Arrange
             ExpandToken lowerLevelExpand = new ExpandToken(new List<ExpandTermToken>());
             ExpandTermToken topLevelExpandTermToken = new ExpandTermToken(new NonSystemToken("MyDog", /*namedValues*/null, /*nextToken*/null), null, lowerLevelExpand);
             ExpandToken topLevelExpand = new ExpandToken(new List<ExpandTermToken>() { topLevelExpandTermToken });
-            Action bindWithEmptySelectedItemsList = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(topLevelExpand));
-            bindWithEmptySelectedItemsList.ShouldNotThrow();
-        }
 
-        private static ExpandToken BuildUnifiedSelectExpandToken(ExpandToken expandToken)
-        {
-            return BuildUnifiedSelectExpandToken(expandToken, null);
-        }
+            // Act
+            Action bindWithEmptySelectedItemsList = () => BinderForPerson.Bind(topLevelExpand, null);
 
-        private static ExpandToken BuildUnifiedSelectExpandToken(ExpandToken expandToken, SelectToken selectToken)
-        {
-            return new ExpandToken(
-                new ExpandTermToken[]
-                {
-                    new ExpandTermToken(new NonSystemToken(ExpressionConstants.It, /*namedValues*/null, /*nextToken*/null), selectToken, expandToken)
-                });
+            // Assert
+            var ex = Record.Exception(bindWithEmptySelectedItemsList);
+            Assert.Null(ex);
         }
     }
 }

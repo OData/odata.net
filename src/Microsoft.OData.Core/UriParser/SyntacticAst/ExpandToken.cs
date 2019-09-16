@@ -27,7 +27,16 @@ namespace Microsoft.OData.UriParser
         private readonly IEnumerable<ExpandTermToken> expandTerms;
 
         /// <summary>
-        /// Create a ExpandToken given the property-accesses of the expand query.
+        /// Creates a new instance of <see cref="ExpandToken"/> given the property-accesses of the expand query.
+        /// </summary>
+        /// <param name="expandTerms">The properties according to which to expand the results.</param>
+        public ExpandToken(params ExpandTermToken[] expandTerms)
+            : this((IEnumerable<ExpandTermToken>)expandTerms)
+        {
+        }
+
+        /// <summary>
+        /// Create a new instance of <see cref="ExpandToken"/> given the property-accesses of the expand query.
         /// </summary>
         /// <param name="expandTerms">The properties according to which to expand the results.</param>
         public ExpandToken(IEnumerable<ExpandTermToken> expandTerms)

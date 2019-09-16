@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ExapndOptionFunctionalTests.cs" company="Microsoft">
+// <copyright file="ExpandOptionFunctionalTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -85,15 +85,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void SkipWithValidValue()
         {
+            // Arrange & Act
             var clause = this.Run("MyContainedDog($skip=21)", PersonType, PeopleSet);
-            clause.SkipOption.Should().Be(21);
+
+            // Assert
+            Assert.NotNull(clause.SkipOption);
+            Assert.Equal(21, clause.SkipOption);
         }
 
         [Fact]
         public void SkipWithInvalidValue()
         {
+            // Arrange & Act & Assert
             Action action = () => this.Run("MyContainedDog($skip=SKIP)", PersonType, PeopleSet);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_InvalidSkipOption("SKIP"));
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidSkipOption("SKIP"));
+        }
+
+        [Fact]
+        public void SkipOnSelectWithValidValue()
+        {
+            // Arrange & Act
+            var clause = this.RunSelect("PreviousAddresses($skip=21)", PersonType, PeopleSet);
+
+            // Assert
+            Assert.NotNull(clause.SkipOption);
+            Assert.Equal(21, clause.SkipOption);
         }
         #endregion $skip
 
@@ -108,11 +124,36 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void TopWithInvalidValue()
         {
+            // Arrange & Act & Assert
             Action action = () => this.Run("MyContainedDog($top=TOP)", PersonType, PeopleSet);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_InvalidTopOption("TOP"));
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidTopOption("TOP"));
 
+            // Arrange & Act & Assert
             action = () => this.Run("MyContainedDog($top=-1)", PersonType, PeopleSet);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_InvalidTopOption("-1"));
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidTopOption("-1"));
+        }
+
+        [Fact]
+        public void TopOnSelectWithValidValue()
+        {
+            // Arrange & Act
+            var clause = this.RunSelect("PreviousAddresses($top=22)", PersonType, PeopleSet);
+
+            // Assert
+            Assert.NotNull(clause.TopOption);
+            Assert.Equal(22, clause.TopOption);
+        }
+
+        [Fact]
+        public void TopOnSelectWithInvalidValue()
+        {
+            // Arrange & Act & Assert
+            Action action = () => this.RunSelect("PreviousAddresses($top=TOP)", PersonType, PeopleSet);
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidTopOption("TOP"));
+
+            // Arrange & Act & Assert
+            action = () => this.RunSelect("PreviousAddresses($top=-1)", PersonType, PeopleSet);
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidTopOption("-1"));
         }
         #endregion $top
 
@@ -262,12 +303,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         #region helper methods
         private ExpandedNavigationSelectItem Run(string expandStr, IEdmStructuredType elementType, IEdmNavigationSource navigationSource)
         {
-            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, elementType, navigationSource, new Dictionary<string, string> { { "$expand", expandStr } }).ParseSelectAndExpand().SelectedItems.First() as ExpandedNavigationSelectItem;
+            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, elementType, navigationSource, new Dictionary<string, string> { { "$expand", expandStr } })
+                .ParseSelectAndExpand().SelectedItems.First() as ExpandedNavigationSelectItem;
+        }
+
+        private PathSelectItem RunSelect(string selectStr, IEdmStructuredType elementType, IEdmNavigationSource navigationSource)
+        {
+            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, elementType, navigationSource, new Dictionary<string, string> { { "$select", selectStr } })
+                .ParseSelectAndExpand().SelectedItems.First() as PathSelectItem;
         }
 
         private ExpandedNavigationSelectItem RunWithLocalModel(string expandStr, IEdmStructuredType elementType, IEdmNavigationSource navigationSource)
         {
-            return new ODataQueryOptionParser(Model, elementType, navigationSource, new Dictionary<string, string> { { "$expand", expandStr } }).ParseSelectAndExpand().SelectedItems.First() as ExpandedNavigationSelectItem;
+            return new ODataQueryOptionParser(Model, elementType, navigationSource, new Dictionary<string, string> { { "$expand", expandStr } })
+                .ParseSelectAndExpand().SelectedItems.First() as ExpandedNavigationSelectItem;
         }
         #endregion helper methods
     }

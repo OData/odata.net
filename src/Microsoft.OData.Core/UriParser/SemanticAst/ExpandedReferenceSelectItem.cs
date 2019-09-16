@@ -143,7 +143,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the levels clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// Gets the search clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
         /// </summary>
         public SearchClause SearchOption
         {
