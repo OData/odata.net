@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Evaluation;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -286,6 +287,14 @@ namespace Microsoft.OData.Tests
             this.settings.SetServiceDocumentUri(new Uri("http://test.org"));
             var newSetting = this.settings.Clone();
             newSetting.MetadataDocumentUri.Should().Be(new Uri("http://test.org/$metadata"));
+        }
+
+        [Fact]
+        public void CopyConstructorShouldCopyMetadataSelector()
+        {
+            this.settings.MetadataSelector = new TestMetadataSelector() { PropertyToOmit = "TestProperty" };
+            var newSetting = this.settings.Clone();
+            (newSetting.MetadataSelector as TestMetadataSelector).PropertyToOmit.Should().Be("TestProperty");
         }
 
         [Fact]

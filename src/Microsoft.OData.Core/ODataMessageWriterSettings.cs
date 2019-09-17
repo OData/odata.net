@@ -418,6 +418,7 @@ namespace Microsoft.OData
             this.useFormat = other.useFormat;
             this.Version = other.Version;
             this.LibraryCompatibility = other.LibraryCompatibility;
+            this.MetadataSelector = other.MetadataSelector;
 
             this.validations = other.validations;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
