@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -18,13 +17,13 @@ namespace Microsoft.OData.Edm.Tests.Library
             action1.AddParameter("param", EdmCoreModel.Instance.GetBoolean(false));
             var function = new EdmFunction("DS2", "name2", EdmCoreModel.Instance.GetBoolean(false), true, new EdmPathExpression("path1"), true);
             AmbiguousOperationBinding ambigiousOperationBinding = new AmbiguousOperationBinding(action1, function);
-            ambigiousOperationBinding.Namespace.Should().Be("DS");
-            ambigiousOperationBinding.Name.Should().Be("name");
-            ambigiousOperationBinding.ReturnType.Should().BeNull();
-            ambigiousOperationBinding.Parameters.Should().HaveCount(1);
-            ambigiousOperationBinding.SchemaElementKind.Should().Be(EdmSchemaElementKind.Action);
-            ambigiousOperationBinding.IsBound.Should().BeFalse();
-            ambigiousOperationBinding.EntitySetPath.Should().BeNull();
+            Assert.Equal("DS", ambigiousOperationBinding.Namespace);
+            Assert.Equal("name", ambigiousOperationBinding.Name);
+            Assert.Null(ambigiousOperationBinding.ReturnType);
+            Assert.Single(ambigiousOperationBinding.Parameters);
+            Assert.Equal(EdmSchemaElementKind.Action, ambigiousOperationBinding.SchemaElementKind);
+            Assert.False(ambigiousOperationBinding.IsBound);
+            Assert.Null(ambigiousOperationBinding.EntitySetPath);
         }
     }
 }

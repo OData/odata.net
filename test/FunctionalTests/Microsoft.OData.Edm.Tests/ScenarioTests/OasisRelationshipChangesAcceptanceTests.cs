@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
@@ -101,106 +100,107 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.entitySet2 = container.FindEntitySet("EntitySet2");
             this.entityType = this.representativeModel.FindType("Test.EntityType") as IEdmEntityType;
 
-            this.entitySet1.Should().NotBeNull();
-            this.entitySet2.Should().NotBeNull();
-            this.entityType.Should().NotBeNull();
+            Assert.NotNull(this.entitySet1);
+            Assert.NotNull(this.entitySet2);
+            Assert.NotNull(this.entityType);
 
             this.navigation1 = this.entityType.FindProperty("navigation") as IEdmNavigationProperty;
             this.navigation2 = this.entityType.FindProperty("NAVIGATION") as IEdmNavigationProperty;
             nonKeyPrincipalNavigation = this.entityType.FindProperty("NonKeyPrincipalNavigation") as IEdmNavigationProperty;
 
             var derivedType = this.representativeModel.FindType("Test.DerivedEntityType") as IEdmEntityType;
-            derivedType.Should().NotBeNull();
+            Assert.NotNull(derivedType);
             this.derivedNavigation = derivedType.FindProperty("DerivedNavigation") as IEdmNavigationProperty;
 
-            this.navigation1.Should().NotBeNull();
-            this.navigation2.Should().NotBeNull();
-            this.derivedNavigation.Should().NotBeNull();
+            Assert.NotNull(this.navigation1);
+            Assert.NotNull(this.navigation2);
+            Assert.NotNull(this.derivedNavigation);
         }
 
         [Fact]
         public void RepresentativeModelShouldBeValid()
         {
             IEnumerable<EdmError> errors;
-            this.representativeModel.Validate(out errors).Should().BeTrue();
-            errors.Should().BeEmpty();
+            Assert.True(this.representativeModel.Validate(out errors));
+            Assert.Empty(errors);
         }
 
         [Fact]
         public void FindNavigationTargetShouldUseBinding()
         {
-            this.entitySet2.FindNavigationTarget(this.navigation2).Should().BeSameAs(this.entitySet2);
-            this.entitySet1.FindNavigationTarget(this.derivedNavigation).Should().BeSameAs(this.entitySet1);
+            Assert.Same(this.entitySet2, this.entitySet2.FindNavigationTarget(this.navigation2));
+            Assert.Same(this.entitySet1, this.entitySet1.FindNavigationTarget(this.derivedNavigation));
         }
 
         [Fact]
         public void ReferenceNavigationPropertyTypeShouldContinueToWork()
         {
-            this.navigation2.Type.Definition.Should().BeSameAs(this.entityType);
+            Assert.Same(this.entityType, this.navigation2.Type.Definition);
         }
 
         [Fact]
         public void CollectionNavigationPropertyTypeShouldContinueToWork()
         {
-            this.navigation1.Type.TypeKind().Should().Be(EdmTypeKind.Collection);
-            this.navigation1.Type.AsCollection().ElementType().Definition.Should().BeSameAs(this.entityType);
+            Assert.Equal(EdmTypeKind.Collection, this.navigation1.Type.TypeKind());
+            Assert.Same(this.entityType, this.navigation1.Type.AsCollection().ElementType().Definition);
         }
 
         [Fact]
         public void OnDeleteShouldContinueToWork()
         {
-            this.navigation1.OnDelete.Should().Be(EdmOnDeleteAction.Cascade);
-            this.navigation2.OnDelete.Should().Be(EdmOnDeleteAction.None);
+            Assert.Equal(EdmOnDeleteAction.Cascade, this.navigation1.OnDelete);
+            Assert.Equal(EdmOnDeleteAction.None, this.navigation2.OnDelete);
         }
 
         [Fact]
         public void ReferentialConstraintShouldContinueToWork()
         {
-            this.navigation1.DependentProperties().Should().BeNull();
-            this.navigation2.DependentProperties().Should().Contain(this.entityType.FindProperty("ForeignKeyId1") as IEdmStructuralProperty);
-            this.navigation2.DependentProperties().Should().Contain(this.entityType.FindProperty("ForeignKeyId2") as IEdmStructuralProperty);
+            Assert.Null(this.navigation1.DependentProperties());
+            var properties = this.navigation2.DependentProperties();
+            Assert.Contains(this.entityType.FindProperty("ForeignKeyId1") as IEdmStructuralProperty, properties);
+            Assert.Contains(this.entityType.FindProperty("ForeignKeyId2") as IEdmStructuralProperty, properties);
         }
 
         [Fact]
         public void ReferentialConstraintShouldWorkForNonKeyPrincipalProperties()
         {
-            this.nonKeyPrincipalNavigation.DependentProperties().Should().Contain(this.entityType.FindProperty("ForeignKeyProperty") as IEdmStructuralProperty);
+            Assert.Contains(this.entityType.FindProperty("ForeignKeyProperty") as IEdmStructuralProperty, this.nonKeyPrincipalNavigation.DependentProperties());
         }
 
         [Fact]
         public void IsPrincipalShouldContinueToWork()
         {
-            this.navigation1.IsPrincipal().Should().BeTrue();
-            this.navigation2.IsPrincipal().Should().BeFalse();
+            Assert.True(this.navigation1.IsPrincipal());
+            Assert.False(this.navigation2.IsPrincipal());
         }
 
         [Fact]
         public void PartnerShouldContinueToWork()
         {
-            this.navigation1.Partner.Should().BeSameAs(this.navigation2);
-            this.navigation2.Partner.Should().BeSameAs(this.navigation1);
+            Assert.Same(this.navigation2, this.navigation1.Partner);
+            Assert.Same(this.navigation1, this.navigation2.Partner);
         }
 
         [Fact]
         public void ContainsTargetShouldContinueToWork()
         {
-            this.navigation1.ContainsTarget.Should().BeTrue();
-            this.navigation2.ContainsTarget.Should().BeFalse();
+            Assert.True(this.navigation1.ContainsTarget);
+            Assert.False(this.navigation2.ContainsTarget);
         }
 
         [Fact]
         public void NavigationTargetMappingsShouldContainAllBindings()
         {
-            this.entitySet1.NavigationPropertyBindings.Should()
-                .HaveCount(4)
-                .And.Contain(m => m.NavigationProperty == this.navigation1 && m.Target == this.entitySet1)
-                .And.Contain(m => m.NavigationProperty == this.navigation2 && m.Target == this.entitySet1)
-                .And.Contain(m => m.NavigationProperty == this.derivedNavigation && m.Target == this.entitySet1);
-            this.entitySet2.NavigationPropertyBindings.Should()
-                .HaveCount(4)
-                .And.Contain(m => m.NavigationProperty == this.navigation1 && m.Target == this.entitySet2)
-                .And.Contain(m => m.NavigationProperty == this.navigation2 && m.Target == this.entitySet2)
-                .And.Contain(m => m.NavigationProperty == this.derivedNavigation && m.Target == this.entitySet2);
+            var bindings = this.entitySet1.NavigationPropertyBindings;
+            Assert.Equal(4, bindings.Count());
+            Assert.Contains(bindings, m => m.NavigationProperty == this.navigation1 && m.Target == this.entitySet1);
+            Assert.Contains(bindings, m => m.NavigationProperty == this.navigation2 && m.Target == this.entitySet1);
+            Assert.Contains(bindings, m => m.NavigationProperty == this.derivedNavigation && m.Target == this.entitySet1);
+            bindings = this.entitySet2.NavigationPropertyBindings;
+            Assert.Equal(4, bindings.Count());
+            Assert.Contains(bindings, m => m.NavigationProperty == this.navigation1 && m.Target == this.entitySet2);
+            Assert.Contains(bindings, m => m.NavigationProperty == this.navigation2 && m.Target == this.entitySet2);
+            Assert.Contains(bindings, m => m.NavigationProperty == this.derivedNavigation && m.Target == this.entitySet2);
         }
 
         [Fact]
@@ -210,8 +210,9 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             using (var writer = XmlWriter.Create(builder))
             {
                 IEnumerable<EdmError> errors;
-                CsdlWriter.TryWriteCsdl(this.representativeModel, writer, CsdlTarget.OData, out errors).Should().BeTrue();
-                errors.Should().BeEmpty();
+                var result = CsdlWriter.TryWriteCsdl(this.representativeModel, writer, CsdlTarget.OData, out errors);
+                Assert.True(result);
+                Assert.Empty(errors);
                 writer.Flush();
             }
 
@@ -219,7 +220,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             var actualXml = XElement.Parse(actual);
             var actualNormalized = actualXml.ToString();
 
-            actualNormalized.Should().Be(RepresentativeEdmxDocument);
+            Assert.Equal(RepresentativeEdmxDocument, actualNormalized);
         }
 
         [Fact]
@@ -479,9 +480,10 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             IEdmModel model = GetEnumAnnotationModel(@"<EnumMember>TestNS2.UnknownColor/Blue</EnumMember>");
             IEnumerable<EdmError> errors;
-            model.Validate(out errors).Should().BeFalse();
-            errors.Should().HaveCount(1);
-            errors.Should().Contain(e => e.ErrorCode == EdmErrorCode.BadUnresolvedEnumMember && e.ErrorMessage == ErrorStrings.Bad_UnresolvedEnumMember("Blue"));
+            Assert.False(model.Validate(out errors));
+            var error = Assert.Single(errors);
+            Assert.Equal(EdmErrorCode.BadUnresolvedEnumMember, error.ErrorCode);
+            Assert.Equal(ErrorStrings.Bad_UnresolvedEnumMember("Blue"), error.ErrorMessage);
         }
 
         [Fact]
@@ -496,9 +498,9 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             IEdmModel model = GetEnumAnnotationModel(@"<EnumMember>TestNS2.Color/UnknownMember</EnumMember>");
             IEnumerable<EdmError> errors;
-            model.Validate(out errors).Should().BeFalse();
-            errors.Should().HaveCount(2);
-            errors.Should().Contain(e => e.ErrorCode == EdmErrorCode.InvalidEnumMemberPath &&
+            Assert.False(model.Validate(out errors));
+            Assert.Equal(2, errors.Count());
+            Assert.Contains(errors, e => e.ErrorCode == EdmErrorCode.InvalidEnumMemberPath &&
             e.ErrorMessage == ErrorStrings.CsdlParser_InvalidEnumMemberPath("TestNS2.Color/UnknownMember"));
         }
 
@@ -507,7 +509,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             IEdmModel model = GetEnumAnnotationModel(@"<EnumMember>TestNS2.Color/Blue</EnumMember>");
             IEnumerable<EdmError> errors;
-            model.Validate(out errors).Should().BeTrue();
+            Assert.True(model.Validate(out errors));
         }
 
         private IEdmModel GetEnumAnnotationModel(string enumText)
@@ -538,7 +540,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            Assert.True(CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors));
             return model;
         }
 
@@ -548,13 +550,13 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            Assert.True(CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors));
 
-            model.Validate(out errors).Should().BeFalse();
-            errors.Should().HaveCount(messages.Length);
+            Assert.False(model.Validate(out errors));
+            Assert.Equal(messages.Length, errors.Count());
             foreach (var message in messages)
             {
-                errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
+                Assert.Contains(errors, e => e.ErrorCode == errorCode && e.ErrorMessage == message);
             }
         }
 
@@ -564,10 +566,10 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            Assert.True(CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors));
 
-            model.Validate(out errors).Should().BeTrue();
-            errors.ToList().Count.Should().Be(0);
+            Assert.True(model.Validate(out errors));
+            Assert.Empty(errors);
         }
 
         private void ValidateReferentialConstraintWithExpectedErrors(string referentialConstraintText, EdmErrorCode errorCode, params string[] messages)
@@ -595,13 +597,13 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            Assert.True(CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors));
 
-            model.Validate(out errors).Should().BeFalse();
-            errors.Should().HaveCount(messages.Length);
+            Assert.False(model.Validate(out errors));
+            Assert.Equal(messages.Length, errors.Count());
             foreach (var message in messages)
             {
-                errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
+                Assert.Contains(errors, e => e.ErrorCode == errorCode && e.ErrorMessage == message);
             }
         }
 
@@ -636,24 +638,24 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            Assert.True(CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors));
 
             bool result = model.Validate(out errors);
 
             if (errorCodes.Length > 0)
             {
-                result.Should().BeFalse();
+                Assert.False(result);
 
-                errors.Should().HaveCount(messages.Length);
+                Assert.Equal(messages.Length, errors.Count());
                 for (int i = 0; i < messages.Length; i++)
                 {
-                    errors.Should().Contain(e => e.ErrorCode == errorCodes[i] && e.ErrorMessage == messages[i]);
+                    Assert.Contains(errors, e => e.ErrorCode == errorCodes[i] && e.ErrorMessage == messages[i]);
                 }
             }
             else
             {
-                result.Should().BeTrue();
-                errors.Should().BeEmpty();
+                Assert.True(result);
+                Assert.Empty(errors);
             }
         }
 
@@ -677,11 +679,11 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
             if (errorCode != null)
             {
-                result.Should().BeFalse();
-                errors.Should().HaveCount(messages.Length);
+                Assert.False(result);
+                Assert.Equal(messages.Length, errors.Count());
                 foreach (var message in messages)
                 {
-                    errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
+                    Assert.Contains(errors, e => e.ErrorCode == errorCode && e.ErrorMessage == message);
                 }
             }
         }
@@ -714,11 +716,11 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
             if (errorCode != null)
             {
-                result.Should().BeFalse();
-                errors.Should().HaveCount(messages.Length);
+                Assert.False(result);
+                Assert.Equal(messages.Length, errors.Count());
                 foreach (var message in messages)
                 {
-                    errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
+                    Assert.Contains(errors, e => e.ErrorCode == errorCode && e.ErrorMessage == message);
                 }
             }
         }
@@ -730,7 +732,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
         private void ParseNavigationExpectedErrors(string navigationText, EdmErrorCode[] errorCodes, string[] messages)
         {
-            errorCodes.Length.Should().Be(messages.Length);
+            Assert.Equal(messages.Length, errorCodes.Length);
             const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
     <Schema Namespace=""Test"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -752,18 +754,18 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
             if (errorCodes.Length > 0)
             {
-                result.Should().BeFalse();
+                Assert.False(result);
 
-                errors.Should().HaveCount(messages.Length);
+                Assert.Equal(messages.Length, errors.Count());
                 for (int i = 0; i < messages.Length; i++)
                 {
-                    errors.Should().Contain(e => e.ErrorCode == errorCodes[i] && e.ErrorMessage == messages[i]);
+                    Assert.Contains(errors, e => e.ErrorCode == errorCodes[i] && e.ErrorMessage == messages[i]);
                 }
             }
             else
             {
-                result.Should().BeTrue();
-                errors.Should().BeEmpty();
+                Assert.True(result);
+                Assert.Empty(errors);
             }
         }
 

@@ -5,9 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
@@ -31,9 +29,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             {
                 Date? parsedDate;
                 var result = EdmValueWriter.DateAsXml(date);
-                EdmValueParser.TryParseDate(result, out parsedDate).Should().BeTrue();
+                Assert.True(EdmValueParser.TryParseDate(result, out parsedDate));
 
-                parsedDate.Should().Be(date);
+                Assert.Equal(date, parsedDate);
             }
         }
         #endregion
@@ -64,7 +62,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             foreach (var timeSpan in this.validTimeSpans)
             {
                 var result = EdmValueWriter.DurationAsXml(timeSpan);
-                EdmValueParser.DayTimeDurationValidator.IsMatch(result).Should().BeTrue();
+                Assert.True(EdmValueParser.DayTimeDurationValidator.IsMatch(result));
             }
         }
 
@@ -75,9 +73,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             {
                 TimeSpan? parsedTimeSpan;
                 var result = EdmValueWriter.DurationAsXml(timeSpan);
-                EdmValueParser.TryParseDuration(result, out parsedTimeSpan).Should().BeTrue();
+                Assert.True(EdmValueParser.TryParseDuration(result, out parsedTimeSpan));
 
-                parsedTimeSpan.Should().Be(timeSpan);
+                Assert.Equal(timeSpan, parsedTimeSpan);
             }
         }
         #endregion
@@ -100,9 +98,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             {
                 TimeOfDay? parsedTime;
                 var result = EdmValueWriter.TimeOfDayAsXml(time);
-                EdmValueParser.TryParseTimeOfDay(result, out parsedTime).Should().BeTrue();
+                Assert.True(EdmValueParser.TryParseTimeOfDay(result, out parsedTime));
 
-                parsedTime.Should().Be(time);
+                Assert.Equal(time, parsedTime);
             }
         }
         #endregion

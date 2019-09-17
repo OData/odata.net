@@ -7,7 +7,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -22,7 +21,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
         public CsdlSemanticsOperationImportTests()
         {
-            this.testLocation = new CsdlLocation(1, 3);         
+            this.testLocation = new CsdlLocation(1, 3);
         }
 
         [Fact]
@@ -37,12 +36,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
             var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
             var semanticActionImport = new CsdlSemanticsActionImport(csdlSemanticEntityContainer, actionImport, semanticAction);
-            semanticActionImport.Action.Should().NotBeNull();
-            semanticActionImport.Action.Name.Should().Be("Checkout");
+            Assert.NotNull(semanticActionImport.Action);
+            Assert.Equal("Checkout", semanticActionImport.Action.Name);
             var pathExpression = (IEdmPathExpression)semanticActionImport.EntitySet;
             var items = pathExpression.PathSegments.ToList();
-            items[0].Should().Be("Nav1");
-            items[1].Should().Be("Nav2");
+            Assert.Equal("Nav1", items[0]);
+            Assert.Equal("Nav2", items[1]);
         }
 
         [Fact]
@@ -57,12 +56,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
             var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
             var semanticActionImport = new CsdlSemanticsActionImport(csdlSemanticEntityContainer, actionImport, semanticAction);
-            semanticActionImport.Action.Should().NotBeNull();
-            semanticActionImport.Action.Name.Should().Be("Checkout");
-            semanticActionImport.Container.Name.Should().Be("Container");
-            semanticActionImport.Location().Should().Be(testLocation);
-            semanticActionImport.ContainerElementKind.Should().Be(EdmContainerElementKind.ActionImport);
-            semanticActionImport.EntitySet.Should().BeNull();
+            Assert.NotNull(semanticActionImport.Action);
+            Assert.Equal("Checkout", semanticActionImport.Action.Name);
+            Assert.Equal("Container", semanticActionImport.Container.Name);
+            Assert.Equal(testLocation, semanticActionImport.Location());
+            Assert.Equal(EdmContainerElementKind.ActionImport, semanticActionImport.ContainerElementKind);
+            Assert.Null(semanticActionImport.EntitySet);
         }
 
         [Fact]
@@ -79,13 +78,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
             var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
             var semanticActionImport = new CsdlSemanticsFunctionImport(csdlSemanticEntityContainer, functionImport, semanticFunction);
-            semanticActionImport.Function.Should().NotBeNull();
-            semanticActionImport.Function.Name.Should().Be("GetStuff");
-            semanticActionImport.Container.Name.Should().Be("Container");
-            semanticActionImport.Location().Should().Be(testLocation);
-            semanticActionImport.ContainerElementKind.Should().Be(EdmContainerElementKind.FunctionImport);
-            semanticActionImport.EntitySet.Should().BeNull();
-            semanticActionImport.IncludeInServiceDocument.Should().BeTrue();
+            Assert.NotNull(semanticActionImport.Function);
+            Assert.Equal("GetStuff", semanticActionImport.Function.Name);
+            Assert.Equal("Container", semanticActionImport.Container.Name);
+            Assert.Equal(testLocation, semanticActionImport.Location());
+            Assert.Equal(EdmContainerElementKind.FunctionImport, semanticActionImport.ContainerElementKind);
+            Assert.Null(semanticActionImport.EntitySet);
+            Assert.True(semanticActionImport.IncludeInServiceDocument);
         }
 
         private static CsdlSemanticsSchema CreateCsdlSemanticsSchema(CsdlEntityContainer csdlEntityContainer, params CsdlOperation[] operations)

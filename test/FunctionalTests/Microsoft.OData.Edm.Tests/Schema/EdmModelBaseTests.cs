@@ -6,8 +6,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
@@ -24,8 +22,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             model.Add(new EdmAction("n", "a2", null));
 
             var findResults = model.FindDeclaredOperations("n.a").ToList();
-            findResults.Should().HaveCount(1);
-            findResults[0].Name.Should().Be("a");
+            var result = Assert.Single(findResults);
+            Assert.Equal("a", result.Name);
         }
 
         [Fact]
@@ -36,7 +34,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             model.Add(new EdmAction("n2", "a", null));
 
             var findResults = model.FindDeclaredOperations("a").ToList();
-            findResults.Should().HaveCount(0);
+            Assert.Empty(findResults);
         }
 
         [Fact]
@@ -46,7 +44,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             model.Add(new EdmAction("n", "a", null));
             model.Add(new EdmAction("n2", "a", null));
 
-            var findResults = model.FindDeclaredOperations("a2").Should().HaveCount(0);
+            var findResults = model.FindDeclaredOperations("a2");
+            Assert.Empty(findResults);
         }
 
         [Fact]
@@ -56,7 +55,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             model.Add(new EdmAction("n", "a", null));
             model.Add(new EdmAction("n2", "a", null));
 
-            var findResults = model.FindDeclaredOperations("n.a2").Should().HaveCount(0);
+            var findResults = model.FindDeclaredOperations("n.a2");
+            Assert.Empty(findResults);
         }
         #endregion
 

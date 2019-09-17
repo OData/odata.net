@@ -7,8 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -20,7 +18,9 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void TestDateCtor()
         {
             Action test = () => new Date(-2013, 8, 12);
-            test.ShouldThrow<FormatException>().WithMessage(Strings.Date_InvalidDateParameters(-2013, 8, 12));
+
+            var exception = Assert.Throws<FormatException>(test);
+            Assert.Equal(Strings.Date_InvalidDateParameters(-2013, 8, 12), exception.Message);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(2013, 8, 12);
             DateTime dt = date;
-            dt.Should().Be(new DateTime(2013, 8, 12));
+            Assert.Equal(new DateTime(2013, 8, 12), dt);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             DateTime dateTime = new DateTime(2013, 8, 12);
             Date d = dateTime;
-            d.Should().Be(new Date(2013, 8, 12));
+            Assert.Equal(new Date(2013, 8, 12), d);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(2013, 8, 12);
             Date result = date.AddYears(100);
-            result.Should().Be(new Date(2113, 8, 12));
+            Assert.Equal(new Date(2113, 8, 12), result);
         }
 
         [Fact]
@@ -52,7 +52,9 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(2013, 8, 12);
             Action test = () => date.AddYears(-5000);
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value");
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
         }
 
         [Fact]
@@ -60,7 +62,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(2013, 8, 12);
             Action test = () => date.AddYears(12000);
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value");
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
         }
 
         [Fact]
@@ -68,7 +71,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(2013, 8, 12);
             Date result = date.AddMonths(1);
-            result.Should().Be(new Date(2013, 9, 12));
+            Assert.Equal(new Date(2013, 9, 12), result);
         }
 
         [Fact]
@@ -76,7 +79,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddMonths(-5000);
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value");
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
         }
 
         [Fact]
@@ -84,7 +88,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddMonths(120001);
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value");
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
         }
 
         [Fact]
@@ -92,7 +97,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(2013, 8, 12);
             Date result = date.AddDays(1);
-            result.Should().Be(new Date(2013, 8, 13));
+            Assert.Equal(new Date(2013, 8, 13), result);
         }
 
         [Fact]
@@ -100,7 +105,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddDays(-2);
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value");
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
         }
 
         [Fact]
@@ -108,21 +114,22 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddDays(999999999);
-            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value");
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
         }
 
         [Fact]
         public void TestMinDate()
         {
             Date date = Date.MinValue;
-            date.Should().Be(new Date(1, 1, 1));
+            Assert.Equal(new Date(1, 1, 1), date);
         }
 
         [Fact]
         public void TestMaxDate()
         {
             Date date = Date.MaxValue;
-            date.Should().Be(new Date(9999, 12, 31));
+            Assert.Equal(new Date(9999, 12, 31), date);
         }
 
         [Fact]
@@ -130,7 +137,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Date date = Date.Now;
             DateTime dt = DateTime.Now;
-            date.Should().Be(new Date(dt.Year, dt.Month, dt.Day));
+            Assert.Equal(new Date(dt.Year, dt.Month, dt.Day), date);
         }
 
         [Fact]
@@ -147,7 +154,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in lists)
             {
                 Date date = Date.Parse(tuple.Item1, CultureInfo.InvariantCulture);
-                date.Should().Be(tuple.Item2);
+                Assert.Equal(tuple.Item2, date);
             }
             #endregion
 
@@ -156,8 +163,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 Date date;
                 bool result = Date.TryParse(tuple.Item1, CultureInfo.InvariantCulture, out date);
-                result.Should().Be(true);
-                date.Should().Be(tuple.Item2);
+                Assert.True(result);
+                Assert.Equal(tuple.Item2, date);
             }
             #endregion
         }
@@ -179,7 +186,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in lists)
             {
                 Action test = () => Date.Parse(tuple.Item1, CultureInfo.InvariantCulture);
-                test.ShouldThrow<FormatException>().WithMessage(Strings.Date_InvalidParsingString(tuple.Item1));
+                var exception = Assert.Throws<FormatException>(test);
+                Assert.Equal(Strings.Date_InvalidParsingString(tuple.Item1), exception.Message);
             }
             #endregion
 
@@ -188,8 +196,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 Date date;
                 bool result = Date.TryParse(tuple.Item1, CultureInfo.InvariantCulture, out date);
-                result.Should().Be(false);
-                date.Should().Be(tuple.Item2);
+                Assert.False(result);
+                Assert.Equal(tuple.Item2, date);
             }
             #endregion
         }
@@ -210,7 +218,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in list)
             {
                 bool result = tuple.Item1.Equals(tuple.Item2);
-                result.Should().Be(tuple.Item3);
+                Assert.Equal(tuple.Item3, result);
             }
         }
 
@@ -226,7 +234,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in list)
             {
                 bool result = tuple.Item1.Equals(tuple.Item2);
-                result.Should().Be(tuple.Item3);
+                Assert.Equal(tuple.Item3, result);
             }
         }
 
@@ -251,7 +259,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in list)
             {
                 int result = tuple.Item1.CompareTo(tuple.Item2);
-                result.Should().Be(tuple.Item3);
+                Assert.Equal(tuple.Item3, result);
             }
         }
 
@@ -261,7 +269,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             DateTimeOffset now = DateTimeOffset.Now;
             Action test = () => date.CompareTo(now);
-            test.ShouldThrow<ArgumentException>().WithMessage(Strings.Date_InvalidCompareToTarget(now));
+
+            var exception = Assert.Throws<ArgumentException>(test);
+            Assert.Equal(Strings.Date_InvalidCompareToTarget(now), exception.Message);
         }
 
         [Fact]
@@ -348,7 +358,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in list)
             {
                 Action test = () => new TimeOfDay(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4);
-                test.ShouldThrow<FormatException>().WithMessage(Strings.TimeOfDay_InvalidTimeOfDayParameters(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4));
+                var exception = Assert.Throws<FormatException>(test);
+                Assert.Equal(Strings.TimeOfDay_InvalidTimeOfDayParameters(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4), exception.Message);
             }
         }
 
@@ -359,7 +370,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var value in list)
             {
                 Action test = () => new TimeOfDay(value);
-                test.ShouldThrow<FormatException>().WithMessage(Strings.TimeOfDay_TicksOutOfRange(value));
+                var exception = Assert.Throws<FormatException>(test);
+                Assert.Equal(Strings.TimeOfDay_TicksOutOfRange(value), exception.Message);
             }
         }
 
@@ -449,7 +461,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 TimeSpan timeSpan = new TimeSpan(value);
                 Action test = () => { TimeOfDay timeOfDay = timeSpan; };
-                test.ShouldThrow<FormatException>().WithMessage(Strings.TimeOfDay_ConvertErrorFromTimeSpan(timeSpan));
+                var exception = Assert.Throws<FormatException>(test);
+                Assert.Equal(Strings.TimeOfDay_ConvertErrorFromTimeSpan(timeSpan), exception.Message);
             }
         }
 
@@ -470,7 +483,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in list)
             {
                 bool result = tuple.Item1.Equals(tuple.Item2);
-                result.Should().Be(tuple.Item3);
+                Assert.Equal(tuple.Item3, result);
             }
         }
 
@@ -486,7 +499,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in list)
             {
                 bool result = tuple.Item1.Equals(tuple.Item2);
-                result.Should().Be(tuple.Item3);
+                Assert.Equal(tuple.Item3, result);
             }
         }
 
@@ -532,7 +545,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in list)
             {
                 int result = tuple.Item1.CompareTo(tuple.Item2);
-                result.Should().Be(tuple.Item3);
+                Assert.Equal(tuple.Item3, result);
             }
         }
 
@@ -580,7 +593,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in lists)
             {
                 TimeOfDay time = TimeOfDay.Parse(tuple.Item1);
-                time.Should().Be(tuple.Item2);
+                Assert.Equal(tuple.Item2, time);
             }
             #endregion
 
@@ -589,8 +602,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 TimeOfDay time;
                 bool result = TimeOfDay.TryParse(tuple.Item1, out time);
-                result.Should().Be(true);
-                time.Should().Be(tuple.Item2);
+                Assert.True(result);
+                Assert.Equal(tuple.Item2, time);
             }
             #endregion
         }
@@ -614,7 +627,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             foreach (var tuple in lists)
             {
                 Action test = () => TimeOfDay.Parse(tuple.Item1);
-                test.ShouldThrow<FormatException>().WithMessage(Strings.TimeOfDay_InvalidParsingString(tuple.Item1));
+                var exception = Assert.Throws<FormatException>(test);
+                Assert.Equal(Strings.TimeOfDay_InvalidParsingString(tuple.Item1), exception.Message);
             }
             #endregion
 
@@ -623,8 +637,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 TimeOfDay time;
                 bool result = TimeOfDay.TryParse(tuple.Item1, out time);
-                result.Should().Be(false);
-                time.Should().Be(tuple.Item2);
+                Assert.False(result);
+                Assert.Equal(tuple.Item2, time);
             }
             #endregion
         }
@@ -635,7 +649,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             TimeOfDay time = new TimeOfDay(0);
             DateTimeOffset now = DateTimeOffset.Now;
             Action test = () => time.CompareTo(now);
-            test.ShouldThrow<ArgumentException>().WithMessage(Strings.TimeOfDay_InvalidCompareToTarget(now));
+            var exception = Assert.Throws<ArgumentException>(test);
+            Assert.Equal(Strings.TimeOfDay_InvalidCompareToTarget(now), exception.Message);
         }
         [Fact]
         public void TestTimeOfDayOperator()

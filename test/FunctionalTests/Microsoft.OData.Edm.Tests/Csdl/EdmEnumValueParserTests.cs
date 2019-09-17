@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Xunit;
 
@@ -24,8 +23,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = "  Ns.Color/Blue  ";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeTrue();
-            parsedMember.Single().Should().Be(blue);
+            Assert.True(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
+            Assert.Equal(blue, parsedMember.Single());
         }
 
         [Fact]
@@ -38,10 +37,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = "       ";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeFalse();
+            Assert.False(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
 
             enumPath = "        /   ";
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeFalse();
+            Assert.False(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
         }
 
         [Fact]
@@ -51,10 +50,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = "Ns.Color/Blue Ns.Color/Red";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeTrue();
-            parsedMember.Count().Should().Be(2);
-            parsedMember.First().Name.Should().Be("Blue");
-            parsedMember.ElementAt(1).Name.Should().Be("Red");
+            Assert.True(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
+            Assert.Equal(2, parsedMember.Count());
+            Assert.Equal("Blue", parsedMember.First().Name);
+            Assert.Equal("Red", parsedMember.ElementAt(1).Name);
         }
 
         [Fact]
@@ -67,7 +66,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = "Ns.Color//Blue";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeFalse();
+            Assert.False(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
         }
 
         [Fact]
@@ -80,9 +79,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = "Ns.Colors/Blue";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeTrue();
-            parsedMember.Count().Should().Be(1);
-            parsedMember.First().Name.Should().Be("Blue");
+            Assert.True(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
+            var mem = Assert.Single(parsedMember);
+            Assert.Equal("Blue", mem.Name);
         }
 
         [Fact]
@@ -95,7 +94,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = "Ns.Color/Green";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeFalse();
+            Assert.False(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
         }
 
         [Fact]
@@ -108,10 +107,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = " Ns.Permission/Read   Ns.Permission/Write ";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeTrue();
-            parsedMember.Count().Should().Be(2);
-            parsedMember.First().Should().Be(read);
-            parsedMember.Last().Should().Be(write);
+            Assert.True(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
+            Assert.Equal(2, parsedMember.Count());
+            Assert.Equal(read, parsedMember.First());
+            Assert.Equal(write, parsedMember.Last());
         }
 
         [Fact]
@@ -124,7 +123,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = "Ns.Permission/Read Ns.Permission/Write";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeFalse();
+            Assert.False(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
         }
 
         [Fact]
@@ -138,9 +137,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string enumPath = "Ns.Permission/Read  Ns.Permission/Write  Ns.Permission/ReadWrite";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeTrue();
-            parsedMember.Count().Should().Be(3);
-            parsedMember.Should().Contain(read).And.Contain(write).And.Contain(readwrite);
+            Assert.True(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
+            Assert.Equal(3, parsedMember.Count());
+            Assert.Contains(read, parsedMember);
+            Assert.Contains(write, parsedMember);
+            Assert.Contains(readwrite, parsedMember);
         }
 
         private static IEdmModel BuildModelFromTypes(IEnumerable<IEdmSchemaType> types)

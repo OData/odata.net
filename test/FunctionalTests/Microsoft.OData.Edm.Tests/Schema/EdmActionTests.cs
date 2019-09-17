@@ -4,9 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -28,21 +25,21 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void EdmActionConstructorWithNullReturnTypeShouldNotThrow()
         {
             var edmAction = new EdmAction(defaultNamespaceName, checkout, null);
-            edmAction.Namespace.Should().Be(defaultNamespaceName);
-            edmAction.Name.Should().Be(checkout);
-            edmAction.ReturnType.Should().BeNull();
+            Assert.Equal(defaultNamespaceName, edmAction.Namespace);
+            Assert.Equal(checkout, edmAction.Name);
+            Assert.Null(edmAction.ReturnType);
         }
 
         [Fact]
         public void EdmActionConstructorShouldDefaultNonSpecifiedPropertiesCorrectly()
         {
             var edmAction = new EdmAction(defaultNamespaceName, checkout, this.boolType);
-            edmAction.Namespace.Should().Be(defaultNamespaceName);
-            edmAction.Name.Should().Be(checkout);
-            edmAction.ReturnType.Should().Be(this.boolType);
-            edmAction.EntitySetPath.Should().BeNull();
-            edmAction.IsBound.Should().BeFalse();
-            edmAction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Action);
+            Assert.Equal(defaultNamespaceName, edmAction.Namespace);
+            Assert.Equal(checkout, edmAction.Name);
+            Assert.Same(this.boolType, edmAction.ReturnType);
+            Assert.Null(edmAction.EntitySetPath);
+            Assert.False(edmAction.IsBound);
+            Assert.Equal(EdmSchemaElementKind.Action, edmAction.SchemaElementKind);
         }
 
         [Fact]
@@ -51,15 +48,15 @@ namespace Microsoft.OData.Edm.Tests.Library
             var entitySetPath = new EdmPathExpression("Param1/Nav");
             var edmAction = new EdmAction(defaultNamespaceName, checkout, this.boolType, true, entitySetPath);
             edmAction.AddParameter(new EdmOperationParameter(edmAction, "Param1", new EdmEntityTypeReference(personType, false)));
-            edmAction.Namespace.Should().Be(defaultNamespaceName);
-            edmAction.Name.Should().Be(checkout);
-            edmAction.ReturnType.Should().Be(this.boolType);
-            edmAction.EntitySetPath.Should().Be(entitySetPath);
-            edmAction.IsBound.Should().BeTrue();
-            edmAction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Action);
+            Assert.Equal(defaultNamespaceName, edmAction.Namespace);
+            Assert.Equal(checkout, edmAction.Name);
+            Assert.Same(this.boolType, edmAction.ReturnType);
+            Assert.Same(entitySetPath, edmAction.EntitySetPath);
+            Assert.True(edmAction.IsBound);
+            Assert.Equal(EdmSchemaElementKind.Action, edmAction.SchemaElementKind);
 
-            edmAction.Return.Should().NotBeNull();
-            edmAction.Return.Type.Should().BeSameAs(edmAction.ReturnType);
+            Assert.NotNull(edmAction.Return);
+            Assert.Same(edmAction.ReturnType, edmAction.Return.Type);
         }
     }
 }

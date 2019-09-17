@@ -5,9 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -30,10 +27,10 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             var edmAction = new EdmAction("DefaultNamespace", "Checkout", this.boolType);
             var edmActionImport = new EdmActionImport(this.entityContainer, "CheckoutImport", edmAction, null);
-            edmActionImport.Name.Should().Be("CheckoutImport");
-            edmActionImport.EntitySet.Should().BeNull();
-            edmActionImport.Container.Should().Be(this.entityContainer);
-            edmActionImport.Action.Should().Be(edmAction);
+            Assert.Equal("CheckoutImport", edmActionImport.Name);
+            Assert.Null(edmActionImport.EntitySet);
+            Assert.Same(this.entityContainer, edmActionImport.Container);
+            Assert.Same(edmAction, edmActionImport.Action);
         }
 
         [Fact]
@@ -45,17 +42,17 @@ namespace Microsoft.OData.Edm.Tests.Library
             
             var actionImportEntitySetPath = new EdmPathExpression("Param1/Nav2");
             var edmActionImport = new EdmActionImport(this.entityContainer, "checkoutImport", edmAction, actionImportEntitySetPath);
-            edmActionImport.Name.Should().Be("checkoutImport");
-            edmActionImport.Container.Should().Be(this.entityContainer);
-            edmActionImport.EntitySet.Should().Be(actionImportEntitySetPath);
-            edmActionImport.Action.Should().Be(edmAction);
+            Assert.Equal("checkoutImport", edmActionImport.Name);
+            Assert.Same(this.entityContainer, edmActionImport.Container);
+            Assert.Same(actionImportEntitySetPath, edmActionImport.EntitySet);
+            Assert.Same(edmAction, edmActionImport.Action);
         }
 
         [Fact]
         public void EdmActionImportConstructorWithNullActionShouldThrowArgmentException()
         {
             Action test = ()=> new EdmActionImport(this.entityContainer, "checkoutImport", (IEdmAction)null, null);
-            test.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: action");
+            Assert.Throws<ArgumentNullException>("action", test);
         }
     }
 }

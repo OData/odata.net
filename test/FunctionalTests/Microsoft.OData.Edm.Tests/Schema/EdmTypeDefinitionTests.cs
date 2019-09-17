@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -71,13 +69,13 @@ namespace Microsoft.OData.Edm.Tests.Library
 
             var addressTypeReference = new EdmTypeDefinitionReference(addressType, false);
             personType.AddStructuralProperty("Address", addressTypeReference);
-            addressTypeReference.Definition.Should().Be(addressType);
-            addressTypeReference.IsNullable.Should().BeFalse();
+            Assert.Same(addressType, addressTypeReference.Definition);
+            Assert.False(addressTypeReference.IsNullable);
 
             var weightTypeReference = new EdmTypeDefinitionReference(weightType, true);
             personType.AddStructuralProperty("Weight", weightTypeReference);
-            weightTypeReference.Definition.Should().Be(weightType);
-            weightTypeReference.IsNullable.Should().BeTrue();
+            Assert.Same(weightType, weightTypeReference.Definition);
+            Assert.True(weightTypeReference.IsNullable);
 
             var personId = personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
             personType.AddKeys(personId);
@@ -87,64 +85,64 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void TestEdmTypeDefinitionConstructorWithPrimitiveTypeKind()
         {
             var intAlias = new EdmTypeDefinition("MyNS", "TestInt", EdmPrimitiveTypeKind.Int32);
-            intAlias.Namespace.Should().Be("MyNS");
-            intAlias.Name.Should().Be("TestInt");
-            intAlias.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            intAlias.SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            intAlias.UnderlyingType.PrimitiveKind.Should().Be(EdmPrimitiveTypeKind.Int32);
+            Assert.Equal("MyNS", intAlias.Namespace);
+            Assert.Equal("TestInt", intAlias.Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, intAlias.TypeKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, intAlias.SchemaElementKind);
+            Assert.Equal(EdmPrimitiveTypeKind.Int32, intAlias.UnderlyingType.PrimitiveKind);
 
             var stringAlias = new EdmTypeDefinition("MyNamespace", "TestString", EdmPrimitiveTypeKind.String);
-            stringAlias.Namespace.Should().Be("MyNamespace");
-            stringAlias.Name.Should().Be("TestString");
-            stringAlias.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            stringAlias.SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            stringAlias.UnderlyingType.PrimitiveKind.Should().Be(EdmPrimitiveTypeKind.String);
+            Assert.Equal("MyNamespace", stringAlias.Namespace);
+            Assert.Equal("TestString", stringAlias.Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, stringAlias.TypeKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, stringAlias.SchemaElementKind);
+            Assert.Equal(EdmPrimitiveTypeKind.String, stringAlias.UnderlyingType.PrimitiveKind);
 
             var decimalAlias = new EdmTypeDefinition("TestNS", "TestDecimal", EdmPrimitiveTypeKind.Decimal);
-            decimalAlias.Namespace.Should().Be("TestNS");
-            decimalAlias.Name.Should().Be("TestDecimal");
-            decimalAlias.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            decimalAlias.SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            decimalAlias.UnderlyingType.PrimitiveKind.Should().Be(EdmPrimitiveTypeKind.Decimal);
+            Assert.Equal("TestNS", decimalAlias.Namespace);
+            Assert.Equal("TestDecimal", decimalAlias.Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, decimalAlias.TypeKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, decimalAlias.SchemaElementKind);
+            Assert.Equal(EdmPrimitiveTypeKind.Decimal, decimalAlias.UnderlyingType.PrimitiveKind);
 
             var booleanAlias = new EdmTypeDefinition("TestNamespace", "TestBoolean", EdmPrimitiveTypeKind.Boolean);
-            booleanAlias.Namespace.Should().Be("TestNamespace");
-            booleanAlias.Name.Should().Be("TestBoolean");
-            booleanAlias.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            booleanAlias.SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            booleanAlias.UnderlyingType.PrimitiveKind.Should().Be(EdmPrimitiveTypeKind.Boolean);
+            Assert.Equal("TestNamespace", booleanAlias.Namespace);
+            Assert.Equal("TestBoolean", booleanAlias.Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, booleanAlias.TypeKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, booleanAlias.SchemaElementKind);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, booleanAlias.UnderlyingType.PrimitiveKind);
         }
 
         [Fact]
         public void TestEdmTypeDefinitionConstructorWithPrimitiveType()
         {
             var intAlias = new EdmTypeDefinition("MyNS", "TestInt", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32));
-            intAlias.Namespace.Should().Be("MyNS");
-            intAlias.Name.Should().Be("TestInt");
-            intAlias.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            intAlias.SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            intAlias.UnderlyingType.Should().Be(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32));
+            Assert.Equal("MyNS", intAlias.Namespace);
+            Assert.Equal("TestInt", intAlias.Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, intAlias.TypeKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, intAlias.SchemaElementKind);
+            Assert.Equal(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), intAlias.UnderlyingType);
 
             var stringAlias = new EdmTypeDefinition("MyNamespace", "TestString", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String));
-            stringAlias.Namespace.Should().Be("MyNamespace");
-            stringAlias.Name.Should().Be("TestString");
-            stringAlias.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            stringAlias.SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            stringAlias.UnderlyingType.Should().Be(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String));
+            Assert.Equal("MyNamespace", stringAlias.Namespace);
+            Assert.Equal("TestString", stringAlias.Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, stringAlias.TypeKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, stringAlias.SchemaElementKind);
+            Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), stringAlias.UnderlyingType);
 
             var decimalAlias = new EdmTypeDefinition("TestNS", "TestDecimal", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal));
-            decimalAlias.Namespace.Should().Be("TestNS");
-            decimalAlias.Name.Should().Be("TestDecimal");
-            decimalAlias.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            decimalAlias.SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            decimalAlias.UnderlyingType.Should().Be(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal));
+            Assert.Equal("TestNS", decimalAlias.Namespace);
+            Assert.Equal("TestDecimal", decimalAlias.Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, decimalAlias.TypeKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, decimalAlias.SchemaElementKind);
+            Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal), decimalAlias.UnderlyingType);
 
             var booleanAlias = new EdmTypeDefinition("TestNamespace", "TestBoolean", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean));
-            booleanAlias.Namespace.Should().Be("TestNamespace");
-            booleanAlias.Name.Should().Be("TestBoolean");
-            booleanAlias.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            booleanAlias.SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            booleanAlias.UnderlyingType.Should().Be(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean));
+            Assert.Equal("TestNamespace", booleanAlias.Namespace);
+            Assert.Equal("TestBoolean", booleanAlias.Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, booleanAlias.TypeKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, booleanAlias.SchemaElementKind);
+            Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), booleanAlias.UnderlyingType);
         }
     }
 }

@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -29,9 +28,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             EdmAction action = new EdmAction("DS", "TestAction", EdmCoreModel.Instance.GetBoolean(false));
             var actionImport = container.AddActionImport(action);
 
-            actionImport.Action.Should().Be(action);
-            actionImport.Name.Should().Be(action.Name);
-            container.Elements.ToArray()[0].Should().Be(actionImport);
+            Assert.Same(action, actionImport.Action);
+            Assert.Equal(action.Name, actionImport.Name);
+            Assert.Same(actionImport, container.Elements.ToArray()[0]);
         }
 
         [Fact]
@@ -41,9 +40,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             EdmAction action = new EdmAction("DS", "TestAction", EdmCoreModel.Instance.GetBoolean(false));
             var actionImport = container.AddActionImport("OtherName", action);
 
-            actionImport.Action.Should().Be(action);
-            actionImport.Name.Should().Be("OtherName");
-            container.Elements.ToArray()[0].Should().Be(actionImport);
+            Assert.Same(action, actionImport.Action);
+            Assert.Equal("OtherName", actionImport.Name);
+            Assert.Same(actionImport, container.Elements.ToArray()[0]);
         }
 
         [Fact]
@@ -54,10 +53,10 @@ namespace Microsoft.OData.Edm.Tests.Library
             var entitySetExpression = new EdmPathExpression("EntitySet");
             var actionImport = container.AddActionImport("OtherName", action, entitySetExpression);
 
-            actionImport.Action.Should().Be(action);
-            actionImport.Name.Should().Be("OtherName");
-            actionImport.EntitySet.Should().Be(entitySetExpression);
-            container.Elements.ToArray()[0].Should().Be(actionImport);
+            Assert.Same(action, actionImport.Action);
+            Assert.Equal("OtherName", actionImport.Name);
+            Assert.Same(entitySetExpression, actionImport.EntitySet);
+            Assert.Same(actionImport, container.Elements.ToArray()[0]);
         }
         #endregion
 
@@ -69,9 +68,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             EdmFunction function = new EdmFunction("DS", "TestAction", EdmCoreModel.Instance.GetBoolean(false));
             var functionImport = container.AddFunctionImport(function);
 
-            functionImport.Function.Should().Be(function);
-            functionImport.Name.Should().Be(function.Name);
-            container.Elements.ToArray()[0].Should().Be(functionImport);
+            Assert.Same(function, functionImport.Function);
+            Assert.Equal(function.Name, functionImport.Name);
+            Assert.Same(functionImport, container.Elements.ToArray()[0]);
         }
 
         [Fact]
@@ -81,9 +80,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             EdmFunction function = new EdmFunction("DS", "TestAction", EdmCoreModel.Instance.GetBoolean(false));
             var functionImport = container.AddFunctionImport("OtherName", function);
 
-            functionImport.Function.Should().Be(function);
-            functionImport.Name.Should().Be("OtherName");
-            container.Elements.ToArray()[0].Should().Be(functionImport);
+            Assert.Same(function, functionImport.Function);
+            Assert.Equal("OtherName", functionImport.Name);
+            Assert.Same(functionImport, container.Elements.ToArray()[0]);
         }
 
         [Fact]
@@ -92,12 +91,12 @@ namespace Microsoft.OData.Edm.Tests.Library
             EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
             EdmAction action = new EdmAction("DS", "TestAction", EdmCoreModel.Instance.GetBoolean(false));
             var entitySetExpression = new EdmPathExpression("EntitySet");
-            var functionImport = container.AddActionImport("OtherName", action, entitySetExpression);
+            var actionImport = container.AddActionImport("OtherName", action, entitySetExpression);
 
-            functionImport.Action.Should().Be(action);
-            functionImport.Name.Should().Be("OtherName");
-            functionImport.EntitySet.Should().Be(entitySetExpression);
-            container.Elements.ToArray()[0].Should().Be(functionImport);
+            Assert.Same(action, actionImport.Action);
+            Assert.Equal("OtherName", actionImport.Name);
+            Assert.Same(entitySetExpression, actionImport.EntitySet);
+            Assert.Same(actionImport, container.Elements.ToArray()[0]);
         }
         #endregion
     }
