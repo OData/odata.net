@@ -6,8 +6,8 @@
 
 using System.IO;
 using System.Linq;
-using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             // Act
             var error = deserializer.ReadTopLevelError();
-            
+
             // Assert
             Assert.Equal("any target", error.Target);
             Assert.Equal(1, error.Details.Count);
@@ -112,6 +112,105 @@ namespace Microsoft.OData.Tests.JsonLight
             var property = Assert.Single(value.Properties);
             Assert.Equal("Sample", property.Name);
             Assert.Equal("sample value", property.Value);
+        }
+
+        [Fact]
+        public void ReadExtendedInnerError()
+        {
+            // Arrange
+            const string payload =
+                    "{\"error\":{" +
+                        "\"code\":\"\",\"message\":\"\"," +
+                        "\"target\":\"any target\"," +
+                        "\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}]," +
+                        "\"innererror\":{" +
+                            "\"stacktrace\":\"NormalString\"," +
+                            "\"message\":\"\"," +
+                            "\"type\":\"\"," +
+                            "\"innererror\":{" +
+                                    "\"stacktrace\":\"InnerError\"," +
+                                    "\"MyNewObject\":{" +
+                                        "\"StringProperty\":\"newProperty\"," +
+                                        "\"IntProperty\": 1," +
+                                        "\"BooleanProperty\": true," +
+                                        "\"type\":\"\"," +
+                                        "\"NestedNull\":{" +
+                                           "\"InnerMostPropertyName\":\"InnerMostPropertyValue\"," +
+                                           "\"InnerMostNull\":null" +
+                                         "}" +
+                                     "}" +
+                                 "}" +
+                            "}" +
+                       "}}";
+                    
+            var context = GetInputContext(payload, GetEdmModel());
+            var deserializer = new ODataJsonLightErrorDeserializer(context);
+
+            // Act
+            var error = deserializer.ReadTopLevelError();
+
+            // Assert Top Level properties
+            Assert.Equal("any target", error.Target);
+            Assert.Equal(1, error.Details.Count);
+            var detail = error.Details.Single();
+            Assert.Equal("500", detail.ErrorCode);
+            Assert.Equal("any target", detail.Target);
+            Assert.Equal("any msg", detail.Message);
+
+            //Assert Inner Error properties
+            Assert.NotNull(error.InnerError);
+            Assert.True(error.InnerError.Properties.ContainsKey("innererror"));
+            var objectValue =
+                (error.InnerError.Properties["innererror"] as ODataResourceValue).Properties
+                .FirstOrDefault(p => p.Name == "MyNewObject").ODataValue as ODataResourceValue;
+            Assert.NotNull(objectValue);
+
+            ODataResourceValue nestedInnerObject = error.InnerError.Properties["innererror"] as ODataResourceValue;
+            ODataResourceValue nestedMyNewObject    = nestedInnerObject.Properties.FirstOrDefault(p => p.Name == "MyNewObject").ODataValue as ODataResourceValue;
+
+            Assert.Equal(5, nestedMyNewObject.Properties.Count());
+            Assert.Equal("StringProperty", nestedMyNewObject.Properties.ElementAt(0).Name);
+            Assert.Equal("newProperty", nestedMyNewObject.Properties.ElementAt(0).Value);
+
+            Assert.Equal("IntProperty", nestedMyNewObject.Properties.ElementAt(1).Name);
+            Assert.Equal(1, nestedMyNewObject.Properties.ElementAt(1).Value);
+
+            Assert.Equal("BooleanProperty", nestedMyNewObject.Properties.ElementAt(2).Name);
+            Assert.Equal(true, nestedMyNewObject.Properties.ElementAt(2).Value);
+
+            Assert.Equal("type", nestedMyNewObject.Properties.ElementAt(3).Name);
+            Assert.Equal("", nestedMyNewObject.Properties.ElementAt(3).Value);
+
+            Assert.Equal("NestedNull", nestedMyNewObject.Properties.ElementAt(4).Name);
+
+            ODataResourceValue innerValue = nestedMyNewObject.Properties.ElementAt(4).Value as ODataResourceValue;
+            
+            Assert.NotNull(innerValue);
+
+            Assert.Equal(2,innerValue.Properties.Count());
+            Assert.Equal("InnerMostPropertyName",innerValue.Properties.ElementAt(0).Name);
+            Assert.Equal("InnerMostPropertyValue",innerValue.Properties.ElementAt(0).Value);
+
+            Assert.Equal("InnerMostNull", innerValue.Properties.ElementAt(1).Name);
+            Assert.Equal(null, innerValue.Properties.ElementAt(1).Value);
+        }
+
+        [Fact]
+        public void ReadErrorWithCollectionInInnerError()
+        {
+            // Arrange
+            const string payload = "{\"error\":{\"code\":\"\",\"message\":\"\",\"target\":\"any target\",\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg\"}],\"innererror\":{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\",\"ResourceValue\":{\"PropertyName\":\"PropertyValue\",\"NullProperty\":null},\"NullProperty\":null,\"CollectionValue\":[null,\"CollectionValue\",1]}}}";
+
+            var context = GetInputContext(payload, GetEdmModel());
+            var deserializer = new ODataJsonLightErrorDeserializer(context);
+
+            // Act
+            var error = deserializer.ReadTopLevelError();
+
+            //Assert Inner Error properties
+            Assert.NotNull(error.InnerError);
+            Assert.True(error.InnerError.Properties.ContainsKey("CollectionValue"));
+            Assert.Equal(3, (error.InnerError.Properties["CollectionValue"] as ODataCollectionValue).Items.Count());
         }
 
         private ODataJsonLightInputContext GetInputContext(string payload, IEdmModel model = null)
