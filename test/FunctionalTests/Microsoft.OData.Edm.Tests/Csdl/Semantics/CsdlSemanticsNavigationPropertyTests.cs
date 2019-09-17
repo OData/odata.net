@@ -5,8 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -48,193 +46,203 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             var semanticModel = new CsdlSemanticsModel(csdlModel, new EdmDirectValueAnnotationsManager(), Enumerable.Empty<IEdmModel>());
 
             this.semanticEntityType = semanticModel.FindType("FQ.NS.EntityType") as CsdlSemanticsEntityTypeDefinition;
-            this.semanticEntityType.Should().NotBeNull();
+            Assert.NotNull(this.semanticEntityType);
 
             this.semanticCollectionNavigation = this.semanticEntityType.FindProperty("Collection") as CsdlSemanticsNavigationProperty;
             this.semanticReferenceNavigation = this.semanticEntityType.FindProperty("Reference") as CsdlSemanticsNavigationProperty;
             this.semanticNavigationWithoutPartner = this.semanticEntityType.FindProperty("WithoutPartner") as CsdlSemanticsNavigationProperty;
 
-            this.semanticCollectionNavigation.Should().NotBeNull();
-            this.semanticReferenceNavigation.Should().NotBeNull();
-            this.semanticNavigationWithoutPartner.Should().NotBeNull();
+            Assert.NotNull(this.semanticCollectionNavigation);
+            Assert.NotNull(this.semanticReferenceNavigation);
+            Assert.NotNull(this.semanticNavigationWithoutPartner);
         }
 
         [Fact]
         public void NavigationPartnerShouldWorkIfExplicitlySpecified()
         {
-            this.collectionProperty.PartnerPath.Path.Should().Be("Reference"); // ensure that the test configuration is unchanged.
-            this.semanticCollectionNavigation.Partner.Should().BeSameAs(this.semanticReferenceNavigation);
+            Assert.Equal("Reference", this.collectionProperty.PartnerPath.Path); // ensure that the test configuration is unchanged.
+            Assert.Same(this.semanticReferenceNavigation, this.semanticCollectionNavigation.Partner);
         }
 
         [Fact]
         public void NavigationPartnerShouldWorkIfAnotherPropertyOnTheTargetTypeHasThisPropertyExplicitlySpecified()
         {
-            this.referenceProperty.PartnerPath.Should().BeNull(); // ensure that the test configuration is unchanged.
-            this.semanticReferenceNavigation.Partner.Should().BeSameAs(this.semanticCollectionNavigation);
+            Assert.Null(this.referenceProperty.PartnerPath); // ensure that the test configuration is unchanged.
+            Assert.Same(this.semanticCollectionNavigation, this.semanticReferenceNavigation.Partner);
         }
 
         [Fact]
         public void NavigationPartnerShouldBeNullIfItDoesNotHaveOne()
         {
-            this.semanticNavigationWithoutPartner.Partner.Should().BeNull();
+            Assert.Null(this.semanticNavigationWithoutPartner.Partner);
         }
 
         [Fact]
         public void NavigationPartnerShouldHaveErrorIfItCannotBeResolved()
         {
             var testSubject = this.ParseAndGetPartner("Nonexistent", "FQ.NS.EntityType");
-            testSubject.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            testSubject.As<UnresolvedNavigationPropertyPath>().Errors
-                .Should().HaveCount(1)
-                .And.Contain(e => e.ErrorCode == EdmErrorCode.BadUnresolvedNavigationPropertyPath && e.ErrorMessage.Contains("Nonexistent"));
+            var unNpPath = Assert.IsType<UnresolvedNavigationPropertyPath>(testSubject);
+            var error = Assert.Single(unNpPath.Errors);
+            Assert.Equal(EdmErrorCode.BadUnresolvedNavigationPropertyPath, error.ErrorCode);
+            Assert.Contains("Nonexistent", error.ErrorMessage);
         }
 
         [Fact]
         public void NavigationPartnerShouldHaveErrorIfTheTargetTypeCannotBeResolved()
         {
             var testSubject = this.ParseAndGetPartner("Navigation", "Fake.Fake");
-            testSubject.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            testSubject.As<UnresolvedNavigationPropertyPath>().Errors
-                .Should().HaveCount(1)
-                .And.Contain(e => e.ErrorCode == EdmErrorCode.BadUnresolvedNavigationPropertyPath && e.ErrorMessage.Contains("Navigation"));
-            testSubject.DeclaringEntityType().Should().BeAssignableTo<BadEntityType>();
-            testSubject.DeclaringEntityType().FullName().Should().Be("Fake.Fake");
-            testSubject.Type.Definition.Should().BeAssignableTo<BadType>();
+            var unNpPath = Assert.IsType<UnresolvedNavigationPropertyPath>(testSubject);
+            var error = Assert.Single(unNpPath.Errors);
+            Assert.Equal(EdmErrorCode.BadUnresolvedNavigationPropertyPath, error.ErrorCode);
+            Assert.Contains("Navigation", error.ErrorMessage);
+            Assert.IsType<UnresolvedEntityType>(testSubject.DeclaringEntityType());
+            Assert.Equal("Fake.Fake", testSubject.DeclaringEntityType().FullName());
+            Assert.IsType<BadType>(testSubject.Type.Definition);
         }
 
         [Fact]
         public void PropertyShouldNotBePrincipalIfItHasAConstraint()
         {
             // assert test setup matches expectation
-            this.collectionProperty.ReferentialConstraints.Should().NotBeEmpty();
-            this.referenceProperty.ReferentialConstraints.Should().BeEmpty();
-            this.semanticCollectionNavigation.IsPrincipal().Should().BeFalse();
+            Assert.NotEmpty(this.collectionProperty.ReferentialConstraints);
+            Assert.Empty(this.referenceProperty.ReferentialConstraints);
+            Assert.False(this.semanticCollectionNavigation.IsPrincipal());
         }
 
         [Fact]
         public void PropertyShouldNotBePrincipalIfPartnerIsNull()
         {
-            this.semanticNavigationWithoutPartner.IsPrincipal().Should().BeFalse();
+            Assert.False(this.semanticNavigationWithoutPartner.IsPrincipal());
         }
 
         [Fact]
         public void PropertyShouldBePrincipalIfItsPartnerHasAConstraint()
         {
             // assert test setup matches expectation
-            this.collectionProperty.ReferentialConstraints.Should().NotBeEmpty();
-            this.referenceProperty.ReferentialConstraints.Should().BeEmpty();
-            this.semanticReferenceNavigation.IsPrincipal().Should().BeTrue();
+            Assert.NotEmpty(this.collectionProperty.ReferentialConstraints);
+            Assert.Empty(this.referenceProperty.ReferentialConstraints);
+            Assert.True(this.semanticReferenceNavigation.IsPrincipal());
         }
 
         [Fact]
         public void ConstraintShouldBeNullIfNotPresentInCsdl()
         {
-            this.semanticReferenceNavigation.ReferentialConstraint.Should().BeNull();
+            Assert.Null(this.semanticReferenceNavigation.ReferentialConstraint);
         }
 
         [Fact]
         public void ConstraintShouldBePopulatedIfPresentInCsdl()
         {
-            this.semanticCollectionNavigation.ReferentialConstraint.Should().NotBeNull();
-            this.semanticCollectionNavigation.ReferentialConstraint.PropertyPairs
-                .Should().HaveCount(1)
-                .And.Contain(p => p.DependentProperty.Name == "FK" && !(p.DependentProperty is BadProperty)
-                    && p.PrincipalProperty.Name == "ID" && !(p.PrincipalProperty is BadProperty));
+            Assert.NotNull(this.semanticCollectionNavigation.ReferentialConstraint);
+            var property = Assert.Single(this.semanticCollectionNavigation.ReferentialConstraint.PropertyPairs);
+            Assert.Equal("FK", property.DependentProperty.Name);
+            Assert.False(property.DependentProperty is BadProperty);
+            Assert.Equal("ID", property.PrincipalProperty.Name);
+            Assert.False(property.PrincipalProperty is BadProperty);
         }
 
         [Fact]
         public void ConstraintShouldHaveUnresolvedPrincipalPropertyIfPropertyDoesNotExist()
         {
             var result = this.ParseSingleConstraint("FK", "NonExistent");
-            result.ReferentialConstraint.PropertyPairs.Should().HaveCount(1).And.Contain(r => r.PrincipalProperty is UnresolvedProperty);
+            var property = Assert.Single(result.ReferentialConstraint.PropertyPairs);
+            Assert.IsType<UnresolvedProperty>(property.PrincipalProperty);
         }
 
         [Fact]
         public void ConstraintShouldHaveUnresolvedPrincipalPropertyIfPropertyIsEmpty()
         {
             var result = this.ParseSingleConstraint("FK", string.Empty);
-            result.ReferentialConstraint.PropertyPairs.Should().HaveCount(1).And.Contain(r => r.PrincipalProperty is UnresolvedProperty);
+            var property = Assert.Single(result.ReferentialConstraint.PropertyPairs);
+            Assert.IsType<UnresolvedProperty>(property.PrincipalProperty);
         }
 
         [Fact]
         public void ConstraintShouldHaveUnresolvedDependentPropertyIfPropertyDoesNotExist()
         {
             var result = this.ParseSingleConstraint("NonExistent", "ID");
-            result.DependentProperties().Should().HaveCount(1).And.Contain(p => p is UnresolvedProperty && p.Name == "NonExistent");
+            var property = Assert.Single(result.DependentProperties());
+            Assert.IsType<UnresolvedProperty>(property);
+            Assert.Equal("NonExistent", property.Name);
         }
 
         [Fact]
         public void ConstraintShouldHaveUnresolvedDependentPropertyIfPropertyIsEmpty()
         {
             var result = this.ParseSingleConstraint(string.Empty, "ID");
-            result.DependentProperties().Should().HaveCount(1).And.Contain(p => p is UnresolvedProperty);
+            var property = Assert.Single(result.DependentProperties());
+            Assert.IsType<UnresolvedProperty>(property);
         }
 
         [Fact]
         public void NavigationPropertyShouldNotAllowPrimitiveType()
         {
             var testSubject = this.ParseNavigation("Edm.Int32", null);
-            testSubject.Errors().Should().HaveCount(1).And.Contain(e => e.ErrorCode == EdmErrorCode.BadUnresolvedEntityType);
+            var error = Assert.Single(testSubject.Errors());
+            Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, error.ErrorCode);
         }
 
         [Fact]
         public void NavigationPropertyShouldNotAllowNullabilityOnCollectionType()
         {
             var testSubject = this.ParseNavigation("Collection(FQ.NS.EntityType)", false);
-            testSubject.Errors().Should().HaveCount(1).And.Contain(e => e.ErrorCode == EdmErrorCode.NavigationPropertyWithCollectionTypeCannotHaveNullableAttribute);
+            var error = Assert.Single(testSubject.Errors());
+            Assert.Equal(EdmErrorCode.NavigationPropertyWithCollectionTypeCannotHaveNullableAttribute, error.ErrorCode);
         }
 
         [Fact]
         public void NavigationPropertyShouldRespectNullableAttributeWhenFalse()
         {
             var testSubject = this.ParseNavigation("FQ.NS.EntityType", false);
-            testSubject.Type.IsNullable.Should().BeFalse();
+            Assert.False(testSubject.Type.IsNullable);
         }
 
         [Fact]
         public void NavigationPropertyShouldRespectNullableAttributeWhenTrue()
         {
             var testSubject = this.ParseNavigation("FQ.NS.EntityType", true);
-            testSubject.Type.IsNullable.Should().BeTrue();
+            Assert.True(testSubject.Type.IsNullable);
         }
 
         [Fact]
         public void NavigationPropertyNullabilityShouldBeDefaultWhenUnspecified()
         {
             var testSubject = this.ParseNavigation("FQ.NS.EntityType", null);
-            testSubject.Type.IsNullable.Should().Be(CsdlConstants.Default_Nullable);
+            Assert.Equal(CsdlConstants.Default_Nullable, testSubject.Type.IsNullable);
         }
 
         [Fact]
         public void NavigationPropertyTypeParsingShouldWorkForEntityType()
         {
             var testSubject = this.ParseNavigation("FQ.NS.EntityType", null);
-            testSubject.Type.Definition.Should().BeSameAs(this.semanticEntityType);
+            Assert.Same(this.semanticEntityType, testSubject.Type.Definition);
         }
 
         [Fact]
         public void NavigationPropertyTypeParsingShouldWorkForEntityCollectionType()
         {
             var testSubject = this.ParseNavigation("Collection(FQ.NS.EntityType)", null);
-            testSubject.Type.IsCollection().Should().BeTrue();
-            testSubject.Type.AsCollection().ElementType().Definition.Should().BeSameAs(this.semanticEntityType);
+            Assert.True(testSubject.Type.IsCollection());
+            Assert.Same(this.semanticEntityType, testSubject.Type.AsCollection().ElementType().Definition);
         }
 
         [Fact]
         public void NavigationPropertyTypeParsingShouldProduceErrorIfMalformedCollectionType()
         {
             var testSubject = this.ParseNavigation("Collection(FQ.NS.EntityType", null);
-            testSubject.Errors().Should().HaveCount(1).And.Contain(e => e.ErrorCode == EdmErrorCode.BadUnresolvedEntityType);
-            testSubject.Type.FullName().Should().Be("Collection(FQ.NS.EntityType");
+            var error = Assert.Single(testSubject.Errors());
+            Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, error.ErrorCode);
+            Assert.Equal("Collection(FQ.NS.EntityType", testSubject.Type.FullName());
         }
 
         [Fact]
         public void NavigationPropertyTypeParsingShouldProduceErrorIfElementTypeCannotBeFound()
         {
             var testSubject = this.ParseNavigation("Collection(Fake.NonExistent)", null);
-            testSubject.Errors().Should().HaveCount(1).And.Contain(e => e.ErrorCode == EdmErrorCode.BadUnresolvedEntityType);
-            testSubject.Type.IsCollection().Should().BeTrue();
-            testSubject.Type.AsCollection().ElementType().FullName().Should().Be("Fake.NonExistent");
+            var error = Assert.Single(testSubject.Errors());
+            Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, error.ErrorCode);
+            Assert.True(testSubject.Type.IsCollection());
+            Assert.Equal("Fake.NonExistent", testSubject.Type.AsCollection().ElementType().FullName());
         }
 
         private IEdmNavigationProperty ParseSingleConstraint(string property, string referencedProperty, CsdlLocation location = null)

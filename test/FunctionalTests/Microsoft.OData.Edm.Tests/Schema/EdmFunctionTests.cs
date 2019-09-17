@@ -5,9 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -29,30 +26,30 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void EdmFunctionShouldThrowIfReturnTypeIsNull()
         {
             Action test = () => new EdmFunction(defaultNamespaceName, checkout, null);
-            test.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("returnType", test);
         }
 
         [Fact]
         public void EdmFunctionConstructorWithNullReturnTypeShouldNotThrow()
         {
             var edmFunction = new EdmFunction(defaultNamespaceName, checkout, this.boolType);
-            edmFunction.Namespace.Should().Be(defaultNamespaceName);
-            edmFunction.Name.Should().Be(checkout);
-            edmFunction.ReturnType.Should().Be(this.boolType);
-            edmFunction.IsComposable.Should().BeFalse();
+            Assert.Equal(defaultNamespaceName, edmFunction.Namespace);
+            Assert.Equal(checkout, edmFunction.Name);
+            Assert.Same(this.boolType, edmFunction.ReturnType);
+            Assert.False(edmFunction.IsComposable);
         }
 
         [Fact]
         public void EdmFunctionConstructorShouldDefaultNonSpecifiedPropertiesCorrectly()
         {
             var edmFunction = new EdmFunction(defaultNamespaceName, checkout, this.boolType);
-            edmFunction.Namespace.Should().Be(defaultNamespaceName);
-            edmFunction.Name.Should().Be(checkout);
-            edmFunction.ReturnType.Should().Be(this.boolType);
-            edmFunction.EntitySetPath.Should().BeNull();
-            edmFunction.IsBound.Should().BeFalse();
-            edmFunction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Function);
-            edmFunction.IsComposable.Should().BeFalse();
+            Assert.Equal(defaultNamespaceName, edmFunction.Namespace);
+            Assert.Equal(checkout, edmFunction.Name);
+            Assert.Same(this.boolType, edmFunction.ReturnType);
+            Assert.Null(edmFunction.EntitySetPath);
+            Assert.False(edmFunction.IsBound);
+            Assert.Equal(EdmSchemaElementKind.Function, edmFunction.SchemaElementKind);
+            Assert.False(edmFunction.IsComposable);
         }
 
         [Fact]
@@ -61,16 +58,16 @@ namespace Microsoft.OData.Edm.Tests.Library
             var entitySetPath = new EdmPathExpression("Param1/Nav");
             var edmFunction = new EdmFunction(defaultNamespaceName, checkout, this.boolType, true, entitySetPath, true /*IsComposable*/);
             edmFunction.AddParameter(new EdmOperationParameter(edmFunction, "Param1", new EdmEntityTypeReference(personType, false)));
-            edmFunction.Namespace.Should().Be(defaultNamespaceName);
-            edmFunction.Name.Should().Be(checkout);
-            edmFunction.ReturnType.Should().Be(this.boolType);
-            edmFunction.EntitySetPath.Should().Be(entitySetPath);
-            edmFunction.IsBound.Should().BeTrue();
-            edmFunction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Function);
-            edmFunction.IsComposable.Should().BeTrue();
+            Assert.Equal(defaultNamespaceName, edmFunction.Namespace);
+            Assert.Equal(checkout, edmFunction.Name);
+            Assert.Same(this.boolType, edmFunction.ReturnType);
+            Assert.Same(entitySetPath, edmFunction.EntitySetPath);
+            Assert.True(edmFunction.IsBound);
+            Assert.Equal(EdmSchemaElementKind.Function, edmFunction.SchemaElementKind);
+            Assert.True(edmFunction.IsComposable);
 
-            edmFunction.Return.Should().NotBeNull();
-            edmFunction.Return.Type.Should().BeSameAs(edmFunction.ReturnType);
+            Assert.NotNull(edmFunction.Return);
+            Assert.Same(edmFunction.ReturnType, edmFunction.Return.Type);
         }
     }
 }

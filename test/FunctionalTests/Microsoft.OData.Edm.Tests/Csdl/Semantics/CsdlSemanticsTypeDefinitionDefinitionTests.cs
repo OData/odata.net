@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -19,11 +18,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         {
             CsdlTypeDefinition typeDefinition = new CsdlTypeDefinition("Length", "Edm.String", new CsdlLocation(5, 6));
             CsdlSemanticsTypeDefinitionDefinition typeDefinitionDefinition = new CsdlSemanticsTypeDefinitionDefinition(null, typeDefinition);
-            ((IEdmTypeDefinition)typeDefinitionDefinition).UnderlyingType.PrimitiveKind.Should().Be(EdmPrimitiveTypeKind.String);
-            ((IEdmSchemaElement)typeDefinitionDefinition).SchemaElementKind.Should().Be(EdmSchemaElementKind.TypeDefinition);
-            ((IEdmNamedElement)typeDefinitionDefinition).Name.Should().Be("Length");
-            typeDefinitionDefinition.TypeKind.Should().Be(EdmTypeKind.TypeDefinition);
-            typeDefinitionDefinition.Element.Should().Be(typeDefinition);
+            Assert.Equal(EdmPrimitiveTypeKind.String, ((IEdmTypeDefinition)typeDefinitionDefinition).UnderlyingType.PrimitiveKind);
+            Assert.Equal(EdmSchemaElementKind.TypeDefinition, ((IEdmSchemaElement)typeDefinitionDefinition).SchemaElementKind);
+            Assert.Equal("Length", ((IEdmNamedElement)typeDefinitionDefinition).Name);
+            Assert.Equal(EdmTypeKind.TypeDefinition, typeDefinitionDefinition.TypeKind);
+            Assert.Equal(typeDefinition, typeDefinitionDefinition.Element);
         }
     }
 }

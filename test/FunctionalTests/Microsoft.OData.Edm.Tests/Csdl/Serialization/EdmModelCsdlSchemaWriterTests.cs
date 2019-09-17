@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Xml;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Vocabularies;
@@ -88,7 +87,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmIntegerConstant(EdmCoreModel.Instance.GetInt32(true), 1));
 
             Action errorTest = () => CreateEdmModelCsdlSchemaWriterForErrorTest().WriteActionImportElementHeader(actionImport);
-            errorTest.ShouldThrow<InvalidOperationException>().WithMessage(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(actionImport.Name));
+
+            var exception = Assert.Throws<InvalidOperationException>(errorTest);
+            Assert.Equal(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(actionImport.Name), exception.Message);
         }
 
         private void TestWriteActionImportElementHeaderMethod(IEdmActionImport actionImport, string expected)

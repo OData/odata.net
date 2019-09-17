@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests
@@ -21,14 +19,14 @@ namespace Microsoft.OData.Edm.Tests
             var function = new EdmFunction("d.s", "testFunction", EdmCoreModel.Instance.GetString(true));
             function.AddParameter("param1", EdmCoreModel.Instance.GetString(false));
             var functionImport = new EdmFunctionImport(new EdmEntityContainer("d.s", "container"), "testFunction", function);
-            EdmUtil.FullyQualifiedName(functionImport).Should().Be("d.s.container/testFunction");
+            Assert.Equal("d.s.container/testFunction", EdmUtil.FullyQualifiedName(functionImport));
         }
 
         [Fact]
         public void EntitySetShouldProduceCorrectFullyQualifiedName()
         {
             var entitySet = new EdmEntitySet(new EdmEntityContainer("d.s", "container"), "entitySet", new EdmEntityType("foo", "type"));
-            EdmUtil.FullyQualifiedName(entitySet).Should().Be("d.s.container/entitySet");
+            Assert.Equal("d.s.container/entitySet", EdmUtil.FullyQualifiedName(entitySet));
         }
     }
 }

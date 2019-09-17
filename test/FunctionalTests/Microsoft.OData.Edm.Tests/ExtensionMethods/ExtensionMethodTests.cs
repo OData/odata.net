@@ -7,13 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Tests;
 using Microsoft.OData.Edm.Tests.Validation;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
@@ -42,7 +39,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             EdmAction action = new EdmAction("n", "a", null, true, null);
             action.AddParameter("bindingParameter", DefaultValidEntityTypeRef);
-            action.HasEquivalentBindingType(DefaultValidEntityType).Should().BeTrue();
+            Assert.True(action.HasEquivalentBindingType(DefaultValidEntityType));
         }
 
         [Fact]
@@ -50,7 +47,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             EdmAction action = new EdmAction("n", "a", null, true, null);
             action.AddParameter("bindingParameter", DefaultValidCollectionEntityTypeRef);
-            action.HasEquivalentBindingType(DefaultValidCollectionEntityTypeRef.Definition).Should().BeTrue();
+            Assert.True(action.HasEquivalentBindingType(DefaultValidCollectionEntityTypeRef.Definition));
         }
 
         [Fact]
@@ -58,7 +55,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             EdmAction action = new EdmAction("n", "a", null, true, null);
             action.AddParameter("bindingParameter", DefaultDerivedValidEntityTypeRef);
-            action.HasEquivalentBindingType(DefaultValidEntityType).Should().BeFalse();
+            Assert.False(action.HasEquivalentBindingType(DefaultValidEntityType));
         }
 
         [Fact]
@@ -66,7 +63,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             EdmAction action = new EdmAction("n", "a", null, true, null);
             action.AddParameter("bindingParameter", DefaultDerivedValidCollectionEntityTypeRef);
-            action.HasEquivalentBindingType(DefaultValidCollectionEntityTypeRef.Definition).Should().BeFalse();
+            Assert.False(action.HasEquivalentBindingType(DefaultValidCollectionEntityTypeRef.Definition));
         }
 
         #endregion
@@ -75,7 +72,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         public void ForceFilterByFullNameShouldReturnNoOperations()
         {
             EdmAction action = new EdmAction("namespace", "action", null);
-            new IEdmOperation[] { action }.FilterByName(true, "action").Should().BeEmpty();
+            Assert.Empty(new IEdmOperation[] { action }.FilterByName(true, "action"));
         }
 
         [Fact]
@@ -83,15 +80,15 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             EdmAction action = new EdmAction("namespace", "action", null);
             Action test = () => new IEdmOperation[] { action }.FilterByName(true, null);
-            test.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("operationName", test);
         }
 
         [Fact]
         public void FilterByNameShouldThrowIfSequenceNull()
         {
             EdmAction action = new EdmAction("namespace", "action", null);
-            Action test = () => Microsoft.OData.Edm.ExtensionMethods.FilterByName(null, true, "action");
-            test.ShouldThrow<ArgumentNullException>();
+            Action test = () => Edm.ExtensionMethods.FilterByName(null, true, "action");
+            Assert.Throws<ArgumentNullException>("operations", test);
         }
 
         [Fact]
@@ -99,7 +96,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             EdmAction action = new EdmAction("namespace", "action", null);
             EdmAction action2 = new EdmAction("namespace2", "action", null);
-            new IEdmOperation[] { action, action2 }.FilterByName(false, "action").Should().HaveCount(2);
+            Assert.Equal(2, new IEdmOperation[] { action, action2 }.FilterByName(false, "action").Count());
         }
 
         [Fact]
@@ -108,8 +105,8 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             EdmAction action = new EdmAction("namespace", "action", null);
             EdmAction action2 = new EdmAction("namespace2", "action", null);
             var filteredResults = new IEdmOperation[] { action, action2 }.FilterByName(false, "namespace.action").ToList();
-            filteredResults.Should().HaveCount(1);
-            filteredResults[0].Should().Be(action);
+            var filter = Assert.Single(filteredResults);
+            Assert.Same(action, filter);
         }
 
         #endregion
@@ -121,14 +118,14 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             string stringOfExpectedShortQualifiedName = String.Format("{0}.{1}", DefaultNamespace, DefaultName);
 
             var stringOfObservedShortQualifiedName = edmComplexType.ShortQualifiedName();
-            stringOfObservedShortQualifiedName.Should().Be(stringOfExpectedShortQualifiedName);
+            Assert.Equal(stringOfExpectedShortQualifiedName, stringOfObservedShortQualifiedName);
 
             stringOfObservedShortQualifiedName = edmEntityType.ShortQualifiedName();
-            stringOfObservedShortQualifiedName.Should().Be(stringOfExpectedShortQualifiedName);
+            Assert.Equal(stringOfExpectedShortQualifiedName, stringOfObservedShortQualifiedName);
 
             var edmEntityContainer = new EdmEntityContainer(DefaultNamespace, DefaultName);
             stringOfObservedShortQualifiedName = edmEntityContainer.ShortQualifiedName();
-            stringOfObservedShortQualifiedName.Should().Be(stringOfExpectedShortQualifiedName);
+            Assert.Equal(stringOfExpectedShortQualifiedName, stringOfObservedShortQualifiedName);
         }
 
         [Fact]
@@ -136,11 +133,11 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var iEdmCollectionTypeReference = EdmCoreModel.GetCollection(new EdmComplexTypeReference(edmComplexType, true));
             var stringOfObservedShortQualifiedName = iEdmCollectionTypeReference.ShortQualifiedName();
-            stringOfObservedShortQualifiedName.Should().BeNull();
+            Assert.Null(stringOfObservedShortQualifiedName);
 
             iEdmCollectionTypeReference = EdmCoreModel.GetCollection(new EdmEntityTypeReference(edmEntityType, true));
             stringOfObservedShortQualifiedName = iEdmCollectionTypeReference.ShortQualifiedName();
-            stringOfObservedShortQualifiedName.Should().BeNull();
+            Assert.Null(stringOfObservedShortQualifiedName);
         }
 
         [Fact]
@@ -151,9 +148,9 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 if (EdmPrimitiveTypeKind.None == edmPrimitiveTypeKind)
                     continue;
                 var stringOfExpectedShortQualifiedName = Enum.GetName(typeof(EdmPrimitiveTypeKind), edmPrimitiveTypeKind);
-                stringOfExpectedShortQualifiedName.ToUpper().Should().NotContain("EDM.");
+                Assert.DoesNotContain("EDM.", stringOfExpectedShortQualifiedName.ToUpper());
                 var stringOfObservedShortQualifiedName = EdmCoreModel.Instance.GetPrimitiveType(edmPrimitiveTypeKind).ShortQualifiedName();
-                stringOfObservedShortQualifiedName.Should().Be(stringOfExpectedShortQualifiedName);
+                Assert.Equal(stringOfExpectedShortQualifiedName, stringOfObservedShortQualifiedName);
             }
         }
 
@@ -165,13 +162,13 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 if (EdmPrimitiveTypeKind.None == edmPrimitiveTypeKind)
                     continue;
                 var stringOfName = Enum.GetName(typeof(EdmPrimitiveTypeKind), edmPrimitiveTypeKind);
-                stringOfName.ToUpper().Should().NotContain("EDM.");
+                Assert.DoesNotContain("EDM.", stringOfName.ToUpper());
 
                 var iEdmPrimitiveType = EdmCoreModel.Instance.GetPrimitiveType(edmPrimitiveTypeKind);
                 var edmCollectionType = EdmCoreModel.GetCollection(new EdmPrimitiveTypeReference(iEdmPrimitiveType, true));
 
                 var stringOfObservedShortQualifiedName = edmCollectionType.ShortQualifiedName();
-                stringOfObservedShortQualifiedName.Should().BeNull();
+                Assert.Null(stringOfObservedShortQualifiedName);
             }
         }
         #endregion
@@ -180,7 +177,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         public void FullTypeNameAndFullNameIEdmTypeReferenceShouldBeEqual()
         {
             var enumType = new EdmEnumTypeReference(new EdmEnumType("n", "enumtype"), false);
-            enumType.FullName().Should().Be(enumType.Definition.FullTypeName());
+            Assert.Equal(enumType.Definition.FullTypeName(), enumType.FullName());
         }
 
         #region IEdmType FullName tests
@@ -189,42 +186,42 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         public void CollectionUnNamedStructuralType()
         {
             var fakeStructuredCollectionType = EdmCoreModel.GetCollection(new FakeEdmStructuredTypeReference(new FakeStructuredType(false, false, null)));
-            fakeStructuredCollectionType.Definition.FullTypeName().Should().BeNull();
+            Assert.Null(fakeStructuredCollectionType.Definition.FullTypeName());
         }
 
         [Fact]
         public void UnNamedStructuralType()
         {
             var fakeStructuredType = new FakeEdmStructuredTypeReference(new FakeStructuredType(false, false, null));
-            fakeStructuredType.Definition.FullTypeName().Should().BeNull();
+            Assert.Null(fakeStructuredType.Definition.FullTypeName());
         }
 
         [Fact]
         public void EnumTypeReferenceFullNameTest()
         {
             var enumType = new EdmEnumType("n", "enumtype");
-            enumType.FullTypeName().Should().Be("n.enumtype");
+            Assert.Equal("n.enumtype", enumType.FullTypeName());
         }
 
         [Fact]
         public void CollectionPrimitiveTypeReferenceFullNameTest()
         {
             var collectionPrimitives = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt16(true));
-            collectionPrimitives.Definition.FullTypeName().Should().Be("Collection(Edm.Int16)");
+            Assert.Equal("Collection(Edm.Int16)", collectionPrimitives.Definition.FullTypeName());
         }
 
         [Fact]
         public void CollectionEntityTypeTypeReferenceFullNameTest()
         {
             var entityTypeCollection = EdmCoreModel.GetCollection(new EdmEntityTypeReference(new EdmEntityType("n", "type"), false));
-            entityTypeCollection.Definition.FullTypeName().Should().Be("Collection(n.type)");
+            Assert.Equal("Collection(n.type)", entityTypeCollection.Definition.FullTypeName());
         }
 
         [Fact]
         public void PrimitiveTypeReferenceFullNameTest()
         {
             var primitiveTypeReference = EdmCoreModel.Instance.GetInt16(true);
-            primitiveTypeReference.Definition.FullTypeName().Should().Be("Edm.Int16");
+            Assert.Equal("Edm.Int16", primitiveTypeReference.Definition.FullTypeName());
         }
 
         [Fact]
@@ -243,7 +240,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         public void EntityTypeTypeReferenceFullNameTest()
         {
             var entityType = new EdmEntityType("n", "type");
-            entityType.FullTypeName().Should().Be("n.type");
+            Assert.Equal("n.type", entityType.FullTypeName());
         }
 
         #endregion
@@ -252,8 +249,8 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         public void EdmFunctionShouldBeFunction()
         {
             var function = new EdmFunction("d.s", "checkout", EdmCoreModel.Instance.GetString(true));
-            function.IsAction().Should().BeFalse();
-            function.IsFunction().Should().BeTrue();
+            Assert.False(function.IsAction());
+            Assert.True(function.IsFunction());
         }
 
         [Fact]
@@ -261,8 +258,8 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var action = new EdmAction("d.s", "checkout", null);
             var actionImport = new EdmActionImport(new EdmEntityContainer("d", "c"), "checkout", action);
-            actionImport.IsActionImport().Should().BeTrue();
-            actionImport.IsFunctionImport().Should().BeFalse();
+            Assert.True(actionImport.IsActionImport());
+            Assert.False(actionImport.IsFunctionImport());
 
         }
 
@@ -271,8 +268,8 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var function = new EdmFunction("d.s", "checkout", EdmCoreModel.Instance.GetString(true));
             var functionImport = new EdmFunctionImport(new EdmEntityContainer("d", "c"), "checkout", function);
-            functionImport.IsActionImport().Should().BeFalse();
-            functionImport.IsFunctionImport().Should().BeTrue();
+            Assert.False(functionImport.IsActionImport());
+            Assert.True(functionImport.IsFunctionImport());
         }
 
         [Fact]
@@ -295,8 +292,11 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             };
 
             EdmNavigationProperty navProp = type.AddUnidirectionalNavigation(navInfo1);
-            navProp.PrincipalProperties().Should().NotBeNull();
-            navProp.PrincipalProperties().ShouldAllBeEquivalentTo(new[] { key, notKey });
+            Assert.NotNull(navProp.PrincipalProperties());
+            var properties = navProp.PrincipalProperties();
+            Assert.Equal(2, properties.Count());
+            Assert.Same(key, properties.First());
+            Assert.Same(notKey, properties.Last());
         }
 
         [Fact]
@@ -304,7 +304,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             EdmTypeDefinition typeDef = new EdmTypeDefinition("NS", "Length", EdmPrimitiveTypeKind.Int32);
             EdmTypeDefinitionReference typeRef = new EdmTypeDefinitionReference(typeDef, true);
-            typeRef.TypeDefinition().Should().Be(typeDef);
+            Assert.Same(typeDef, typeRef.TypeDefinition());
         }
 
         #region TryGetRelativeEntitySet OperationaImport Tests
@@ -322,10 +322,11 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             IEdmOperationParameter operationParameter = null;
             Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
 
-            functionImport.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out errorsFound).Should().BeFalse();
-            errorsFound.ToList().Should().HaveCount(0);
-            operationParameter.Should().BeNull();
-            navigationProperties.Should().BeNull();
+            var result = functionImport.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out errorsFound);
+            Assert.False(result);
+            Assert.Empty(errorsFound);
+            Assert.Null(operationParameter);
+            Assert.Null(navigationProperties);
         }
 
         [Fact]
@@ -341,12 +342,12 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             IEdmOperationParameter operationParameter = null;
             Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
 
-            functionImport.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out errorsFound).Should().BeTrue();
-            errorsFound.ToList().Should().HaveCount(0);
-            operationParameter.Should().NotBeNull();
-            navigationProperties.Should().HaveCount(0);
+            var result = functionImport.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out errorsFound);
+            Assert.True(result);
+            Assert.Empty(errorsFound);
+            Assert.NotNull(operationParameter);
+            Assert.Empty(navigationProperties);
         }
-
 
         #endregion
 
@@ -365,10 +366,11 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
             IEdmEntityType entityType = null;
 
-            function.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound).Should().BeFalse();
-            errorsFound.Should().HaveCount(0);
-            operationParameter.Should().BeNull();
-            navigationProperties.Should().BeNull();
+            var result = function.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound);
+            Assert.False(result);
+            Assert.Empty(errorsFound);
+            Assert.Null(operationParameter);
+            Assert.Null(navigationProperties);
         }
 
         [Fact]
@@ -384,11 +386,12 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
             IEdmEntityType entityType = null;
 
-            function.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound).Should().BeTrue();
-            errorsFound.Should().HaveCount(0);
-            operationParameter.Should().NotBeNull();
-            navigationProperties.Should().HaveCount(0);
-            entityType.Should().Be(DefaultValidEntityTypeRef.Definition);
+            var result = function.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound);
+            Assert.True(result);
+            Assert.Empty(errorsFound);
+            Assert.NotNull(operationParameter);
+            Assert.Empty(navigationProperties);
+            Assert.Same(DefaultValidEntityTypeRef.Definition, entityType);
         }
 
         [Fact]
@@ -416,11 +419,12 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties;
             IEdmEntityType entityType;
             IEnumerable<EdmError> errors;
-            semanticAction.TryGetRelativeEntitySetPath(semanticSchema.Model, out edmParameter, out navigationProperties, out entityType, out errors).Should().BeTrue();
-            edmParameter.Name.Should().Be("entity");
-            navigationProperties.Should().BeEmpty();
-            entityType.FullName().Should().Be("FQ.NS.EntityType");
-            errors.Should().BeEmpty();
+            var result = semanticAction.TryGetRelativeEntitySetPath(semanticSchema.Model, out edmParameter, out navigationProperties, out entityType, out errors);
+            Assert.True(result);
+            Assert.Equal("entity", edmParameter.Name);
+            Assert.Empty(navigationProperties);
+            Assert.Equal("FQ.NS.EntityType", entityType.FullName());
+            Assert.Empty(errors);
         }
 
         [Fact]
@@ -715,7 +719,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             IEdmEntityType entityType = null;
 
             operation.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound);
-            errorsFound.Should().HaveCount(0);
+            Assert.Empty(errorsFound);
         }
 
         private static void ValidateError(IEdmModel model, IEdmOperation operation, EdmErrorCode expectedErrorCode, string expectedError)
@@ -726,10 +730,9 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             IEdmEntityType entityType = null;
 
             operation.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound);
-            errorsFound.Should().HaveCount(1);
-            var errorsFoundList = errorsFound.ToList();
-            errorsFoundList[0].ErrorCode.Should().Be(expectedErrorCode);
-            errorsFoundList[0].ErrorMessage.Should().Be(expectedError);
+            var error = Assert.Single(errorsFound);
+            Assert.Equal(expectedErrorCode, error.ErrorCode);
+            Assert.Equal(expectedError, error.ErrorMessage);
         }
 
         private static void ValidateErrorInList(IEdmModel model, IEdmOperation operation, EdmErrorCode expectedErrorCode, string expectedError)
@@ -741,112 +744,111 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             operation.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound);
             var error = errorsFound.SingleOrDefault(e => e.ErrorCode == expectedErrorCode);
-            error.Should().NotBeNull();
-            error.ErrorMessage.Should().Be(expectedError);
+            Assert.NotNull(error);
+            Assert.Equal(expectedError, error.ErrorMessage);
         }
 
         #endregion
 
-        #region 
         [Fact]
         public void CheckExistingContainer()
         {
-            TestModel.Instance.Model.ExistsContainer(TestModel.Instance.Container.Name).Should().BeTrue();
+            Assert.True(TestModel.Instance.Model.ExistsContainer(TestModel.Instance.Container.Name));
         }
 
         [Fact]
         public void CheckExistingContainerWithQualifiedName()
         {
-            TestModel.Instance.Model.ExistsContainer(TestModel.Instance.Container.ShortQualifiedName()).Should().BeTrue();
+            Assert.True(TestModel.Instance.Model.ExistsContainer(TestModel.Instance.Container.ShortQualifiedName()));
         }
 
         [Fact]
         public void CheckNonExistingContainer()
         {
             var containerName = "NonExistingContainer";
-            TestModel.Instance.Model.ExistsContainer(containerName).Should().BeFalse();
+            Assert.False(TestModel.Instance.Model.ExistsContainer(containerName));
         }
 
         [Fact]
         public void FindDeclaredEntitySet()
         {
             var entitySet = TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.EntitySet.Name);
-            entitySet.Should().NotBeNull();
-            entitySet.EntityType().Should().Equals(TestModel.Instance.EntitySet.EntityType());
+            Assert.NotNull(entitySet);
+            Assert.Same(TestModel.Instance.EntitySet.EntityType(), entitySet.EntityType());
         }
 
         [Fact]
         public void FindDeclaredEntitySetWithContainerName()
         {
             var entitySet = TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.Container.Name + "." + TestModel.Instance.EntitySet.Name);
-            entitySet.Should().NotBeNull();
-            entitySet.EntityType().Should().Equals(TestModel.Instance.EntitySet.EntityType());
+            Assert.NotNull(entitySet);
+            Assert.Same(TestModel.Instance.EntitySet.EntityType(), entitySet.EntityType());
         }
 
         [Fact]
         public void FindDeclaredEntitySetWithContainerQualifiedName()
         {
             var entitySet = TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.Container.ShortQualifiedName() + "." + TestModel.Instance.EntitySet.Name);
-            entitySet.Should().NotBeNull();
-            entitySet.EntityType().Should().Equals(TestModel.Instance.EntitySet.EntityType());
+            Assert.NotNull(entitySet);
+            Assert.Same(TestModel.Instance.EntitySet.EntityType(), entitySet.EntityType());
         }
 
         [Fact]
         public void FindDeclaredEntitySetWithNonExistingEntitySetName()
         {
             var entitySetName = "NonExistingEntitySet";
-            TestModel.Instance.Model.FindDeclaredEntitySet(entitySetName).Should().BeNull();
+            Assert.Null(TestModel.Instance.Model.FindDeclaredEntitySet(entitySetName));
         }
 
         [Fact]
         public void FindDeclaredEntitySetWithSingletonName()
         {
-            TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.Singleton.Name).Should().BeNull();
+            Assert.Null(TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.Singleton.Name));
         }
 
         [Fact]
         public void FindDeclaredSingleton()
         {
             var singleton = TestModel.Instance.Model.FindDeclaredSingleton(TestModel.Instance.Singleton.Name);
-            singleton.Should().NotBeNull();
-            singleton.EntityType().Should().Equals(TestModel.Instance.Singleton.EntityType());
+            Assert.NotNull(singleton);
+            Assert.Same(TestModel.Instance.Singleton.EntityType(), singleton.EntityType());
         }
 
         [Fact]
         public void FindDeclaredSingletonWithContainerName()
         {
             var singleton = TestModel.Instance.Model.FindDeclaredSingleton(TestModel.Instance.Container.Name + "." + TestModel.Instance.Singleton.Name);
-            singleton.Should().NotBeNull();
-            singleton.EntityType().Should().Equals(TestModel.Instance.Singleton.EntityType());
+            Assert.NotNull(singleton);
+            Assert.Same(TestModel.Instance.Singleton.EntityType(), singleton.EntityType());
         }
 
         [Fact]
         public void FindDeclaredSingletonWithContainerQualifiedName()
         {
             var singleton = TestModel.Instance.Model.FindDeclaredSingleton(TestModel.Instance.Container.ShortQualifiedName() + "." + TestModel.Instance.Singleton.Name);
-            singleton.Should().NotBeNull();
-            singleton.EntityType().Should().Equals(TestModel.Instance.Singleton.EntityType());
+            Assert.NotNull(singleton);
+            Assert.Same(TestModel.Instance.Singleton.EntityType(), singleton.EntityType());
         }
 
         [Fact]
         public void FindDeclaredSingletonWithNonExistingSingletonName()
         {
             var singletonName = "NonExistingSingleton";
-            TestModel.Instance.Model.FindDeclaredSingleton(singletonName).Should().BeNull();
+            Assert.Null(TestModel.Instance.Model.FindDeclaredSingleton(singletonName));
         }
 
         [Fact]
         public void FindDeclaredSingletonWithEntitySetName()
         {
-            TestModel.Instance.Model.FindDeclaredSingleton(TestModel.Instance.EntitySet.Name).Should().BeNull();
+            Assert.Null(TestModel.Instance.Model.FindDeclaredSingleton(TestModel.Instance.EntitySet.Name));
         }
 
         [Fact]
         public void FindDeclaredOperationImports()
         {
             var operationImport = TestModel.Instance.Model.FindDeclaredOperationImports(TestModel.Instance.functionImport.Name);
-            operationImport.Should().HaveCount(1);
-            operationImport.ElementAt(0).IsFunctionImport().Should().BeTrue();
+            Assert.Single(operationImport);
+            Assert.True(operationImport.ElementAt(0).IsFunctionImport());
         }
 
         [Fact]
@@ -854,8 +856,8 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var operationImportName = TestModel.Instance.Container.Name + "." + TestModel.Instance.functionImport.Name;
             var operationImport = TestModel.Instance.Model.FindDeclaredOperationImports(operationImportName);
-            operationImport.Should().NotBeNull();
-            operationImport.ElementAt(0).IsFunctionImport().Should().BeTrue();
+            Assert.NotNull(operationImport);
+            Assert.True(operationImport.ElementAt(0).IsFunctionImport());
         }
 
         [Fact]
@@ -863,51 +865,52 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var operationImportName = TestModel.Instance.Container.ShortQualifiedName() + "." + TestModel.Instance.functionImport.Name;
             var operationImport = TestModel.Instance.Model.FindDeclaredOperationImports(operationImportName);
-            operationImport.Should().NotBeNull();
-            operationImport.ElementAt(0).IsFunctionImport().Should().BeTrue();
+            Assert.NotNull(operationImport);
+            Assert.True(operationImport.ElementAt(0).IsFunctionImport());
         }
 
         [Fact]
         public void FindDeclaredOperationImportsWithNonExistingOperationImportsName()
         {
             var operationImportName = "NonExistingOperationImports";
-            TestModel.Instance.Model.FindDeclaredOperationImports(operationImportName).Should().HaveCount(0);
+            var result = TestModel.Instance.Model.FindDeclaredOperationImports(operationImportName);
+            Assert.Empty(result);
         }
 
         [Fact]
         public void FindTypeByAliasName()
         {
-            TestModel.Instance.Model.FindType("TestModelAlias.T1").FullName().Should().Be("TestModelNameSpace.T1");
+            Assert.Equal("TestModelNameSpace.T1", TestModel.Instance.Model.FindType("TestModelAlias.T1").FullName());
         }
 
         [Fact]
         public void FindTypeBySinglePartNamespaceQualifiedName()
         {
-            TestModel.Instance.Model.FindType("TestModelNameSpace.T1").FullName().Should().Be("TestModelNameSpace.T1");
+            Assert.Equal("TestModelNameSpace.T1", TestModel.Instance.Model.FindType("TestModelNameSpace.T1").FullName());
         }
 
         [Fact]
         public void FindTypeByMultiPartAliasQualfiedName()
         {
-            TestModel.Instance.Model.FindType("MultipartTestModelAlias.E1").FullName().Should().Be("Multi.Part.TestModelNameSpace.E1");
+            Assert.Equal("Multi.Part.TestModelNameSpace.E1", TestModel.Instance.Model.FindType("MultipartTestModelAlias.E1").FullName());
         }
 
         [Fact]
         public void FindUndefinedAliasQualifiedNameReturnsNull()
         {
-            TestModel.Instance.Model.FindType("MultipartTestModelAlias.T1").Should().BeNull();
+            Assert.Null(TestModel.Instance.Model.FindType("MultipartTestModelAlias.T1"));
         }
 
         [Fact]
         public void FindUndefinedSinglePartNamespaceQualifiedNameReturnsNull()
         {
-            TestModel.Instance.Model.FindType("TestModelNameSpace.E1").Should().BeNull();
+            Assert.Null(TestModel.Instance.Model.FindType("TestModelNameSpace.E1"));
         }
 
         [Fact]
         public void FindUndefinedNamespaceQualifiedNameReturnsNull()
         {
-            TestModel.Instance.Model.FindType("Multi.Part.TestModelNameSpace.T1").Should().BeNull();
+            Assert.Null(TestModel.Instance.Model.FindType("Multi.Part.TestModelNameSpace.T1"));
         }
 
         [Fact]
@@ -990,7 +993,6 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             public EdmFunction functionImport { get; private set; }
         }
-        #endregion
 
         internal class FakeStructuredType : EdmStructuredType
         {

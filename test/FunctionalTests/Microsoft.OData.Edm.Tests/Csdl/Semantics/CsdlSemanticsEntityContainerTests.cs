@@ -5,8 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -30,24 +28,23 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             var schema = CsdlBuilder.Schema("FQ.NS", csdlEntityContainers: new CsdlEntityContainer[] { csdlEntityContainer });
             var csdlModel = new CsdlModel();
             csdlModel.AddSchema(schema);
-            
+
             var semanticSchema = new CsdlSemanticsSchema(new CsdlSemanticsModel(csdlModel, new EdmDirectValueAnnotationsManager(), Enumerable.Empty<IEdmModel>()), schema);
 
             CsdlSemanticsEntityContainer container = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
             var imports = container.OperationImports().ToList();
-            imports.Should().HaveCount(1);
-            var csdlFunctionImport = (IEdmFunctionImport)imports[0];
-            csdlFunctionImport.Name.Should().Be("GetStuff");
-            csdlFunctionImport.Operation.GetType().Should().Be(typeof(UnresolvedFunction));
-            var errors = csdlFunctionImport.Operation.As<BadElement>().Errors.ToList();
-            errors.Should().HaveCount(1);
-            errors.First().ErrorMessage.Should().Be(Strings.Bad_UnresolvedOperation("FQ.NS.GetStuff"));
-            csdlFunctionImport.Container.Name.Should().Be("Container");
-            csdlFunctionImport.Location().Should().Be(testLocation);
-            csdlFunctionImport.ContainerElementKind.Should().Be(EdmContainerElementKind.FunctionImport);
-            csdlFunctionImport.EntitySet.Should().BeNull();
-            csdlFunctionImport.IncludeInServiceDocument.Should().BeTrue();
-            csdlFunctionImport.Function.IsComposable.Should().BeFalse();
+            var csdlFunctionImport = Assert.Single(imports) as IEdmFunctionImport;
+            Assert.Equal("GetStuff", csdlFunctionImport.Name);
+            Assert.IsType<UnresolvedFunction>(csdlFunctionImport.Operation);
+            var errors = (csdlFunctionImport.Operation as BadElement).Errors.ToList();
+            var error = Assert.Single(errors);
+            Assert.Equal(Strings.Bad_UnresolvedOperation("FQ.NS.GetStuff"), error.ErrorMessage);
+            Assert.Equal("Container", csdlFunctionImport.Container.Name);
+            Assert.Equal(testLocation, csdlFunctionImport.Location());
+            Assert.Equal(EdmContainerElementKind.FunctionImport, csdlFunctionImport.ContainerElementKind);
+            Assert.Null(csdlFunctionImport.EntitySet);
+            Assert.True(csdlFunctionImport.IncludeInServiceDocument);
+            Assert.False(csdlFunctionImport.Function.IsComposable);
         }
 
         [Fact]
@@ -62,16 +59,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             
             CsdlSemanticsEntityContainer container = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
             var imports = container.OperationImports().ToList();
-            imports.Should().HaveCount(1);
-            imports[0].Name.Should().Be("Action");
-            imports[0].Operation.GetType().Should().Be(typeof(UnresolvedAction));
-            var errors = imports[0].Operation.As<BadElement>().Errors.ToList();
-            errors.Should().HaveCount(1);
-            errors.First().ErrorMessage.Should().Be(Strings.Bad_UnresolvedOperation("FQ.NS.Action"));
-            imports[0].Container.Name.Should().Be("Container");
-            imports[0].Location().Should().Be(testLocation);
-            imports[0].ContainerElementKind.Should().Be(EdmContainerElementKind.ActionImport);
-            imports[0].EntitySet.Should().BeNull();
+            Assert.Single(imports);
+            Assert.Equal("Action", imports[0].Name);
+            Assert.IsType<UnresolvedAction>(imports[0].Operation);
+            var errors = (imports[0].Operation as BadElement).Errors.ToList();
+            var error = Assert.Single(errors);
+            Assert.Equal(Strings.Bad_UnresolvedOperation("FQ.NS.Action"), error.ErrorMessage);
+            Assert.Equal("Container", imports[0].Container.Name);
+            Assert.Equal(testLocation, imports[0].Location());
+            Assert.Equal(EdmContainerElementKind.ActionImport, imports[0].ContainerElementKind);
+            Assert.Null(imports[0].EntitySet);
         }
     }
 }

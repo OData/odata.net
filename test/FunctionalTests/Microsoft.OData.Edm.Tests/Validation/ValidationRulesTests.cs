@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
@@ -360,7 +358,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
 
             ValidationRules.OperationImportEntitySetExpressionIsInvalid.Evaluate(context, edmFunctionImport);
             var errors = context.Errors.ToList();
-            errors.Should().HaveCount(0);
+            Assert.Empty(errors);
         }
 
         #endregion
@@ -1426,7 +1424,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             ValidationContext context = new ValidationContext(model, (object o) => false);
             validationRule.Evaluate(context, item);
             var errors = context.Errors.ToList();
-            errors.Should().HaveCount(0);
+            Assert.Empty(errors);
         }
 
         private static void ValidateError<T>(ValidationRule<T> validationRule, IEdmModel model, T item, EdmErrorCode expectedErrorCode, string expectedError) where T : IEdmElement
@@ -1434,9 +1432,9 @@ namespace Microsoft.OData.Edm.Tests.Validation
             ValidationContext context = new ValidationContext(model, (object o) => false);
             validationRule.Evaluate(context, item);
             var errors = context.Errors.ToList();
-            errors.Should().HaveCount(1);
-            errors[0].ErrorCode.Should().Be(expectedErrorCode);
-            errors[0].ErrorMessage.Should().Be(expectedError);
+            var error = Assert.Single(errors);
+            Assert.Equal(expectedErrorCode, error.ErrorCode);
+            Assert.Equal(expectedError, error.ErrorMessage);
         }
 
         private static void ValidateExactErrorsInList<T>(ValidationRule<T> validationRule, IEdmModel model, T item, params Tuple<EdmErrorCode,string> [] expectedErrors) where T : IEdmElement
@@ -1446,12 +1444,12 @@ namespace Microsoft.OData.Edm.Tests.Validation
             int currentIndex = 0;
             foreach(var actualError in context.Errors)
             {
-                actualError.ErrorCode.Should().Be(expectedErrors[currentIndex].Item1);
-                actualError.ErrorMessage.Should().Be(expectedErrors[currentIndex].Item2);
+                Assert.Equal(expectedErrors[currentIndex].Item1, actualError.ErrorCode);
+                Assert.Equal(expectedErrors[currentIndex].Item2, actualError.ErrorMessage);
                 currentIndex++;
             }
 
-            context.Errors.ToList().Count.Should().Be(expectedErrors.Length);
+            Assert.Equal(expectedErrors.Length, context.Errors.ToList().Count);
         }
 
         private static void ValidateErrorInList<T>(ValidationRule<T> validationRule, IEdmModel model, T item, EdmErrorCode expectedErrorCode, string expectedError) where T : IEdmElement
@@ -1459,8 +1457,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
             ValidationContext context = new ValidationContext(model, (object o) => false);
             validationRule.Evaluate(context, item);
             var error = context.Errors.SingleOrDefault(e=>e.ErrorCode == expectedErrorCode);
-            error.Should().NotBeNull();
-            error.ErrorMessage.Should().Be(expectedError);
+            Assert.NotNull(error);
+            Assert.Equal(expectedError, error.ErrorMessage);
         }
 
         private static void ValidateError<T>(ValidationRule<T> validationRule, T item, EdmErrorCode expectedErrorCode, string expectedError) where T:IEdmElement

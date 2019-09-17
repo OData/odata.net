@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Xunit;
@@ -19,9 +18,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing.Ast
             var loc = new CsdlLocation(17, 4);
             var type = new CsdlTypeDefinition("Length", "Edm.Int32", loc);
 
-            type.Location.Should().Be(loc);
-            type.Name.Should().Be("Length");
-            type.UnderlyingTypeName.Should().Be("Edm.Int32");
+            Assert.Equal(loc, type.Location);
+            Assert.Equal("Length", type.Name);
+            Assert.Equal("Edm.Int32", type.UnderlyingTypeName);
         }
     }
 }

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Validation;
@@ -192,15 +191,15 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var setA = model.FindDeclaredNavigationSource("Root");
             var target = setA.NavigationPropertyBindings.First().Target;
             Assert.True(target is IEdmContainedEntitySet);
-            target.Name.Should().Be("SetB");
+            Assert.Equal("SetB", target.Name);
             var targetSegments = target.Path.PathSegments.ToList();
-            targetSegments.Count().Should().Be(2);
-            targetSegments[0].Should().Be("Root");
-            targetSegments[1].Should().Be("SetB");
+            Assert.Equal(2, targetSegments.Count());
+            Assert.Equal("Root", targetSegments[0]);
+            Assert.Equal("SetB", targetSegments[1]);
             var pathSegments = setA.NavigationPropertyBindings.First().Path.PathSegments.ToList();
-            pathSegments.Count().Should().Be(2);
-            pathSegments[0].Should().Be("EntityA");
-            pathSegments[1].Should().Be("EntityAToB");
+            Assert.Equal(2, pathSegments.Count());
+            Assert.Equal("EntityA", pathSegments[0]);
+            Assert.Equal("EntityAToB", pathSegments[1]);
         }
 
         [Fact]
@@ -238,25 +237,26 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors).Should().BeTrue();
-            errors.Count().Should().Be(0);
+            var result = CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.Empty(errors);
             model.Validate(out errors);
-            errors.Count().Should().Be(0);
+            Assert.Empty(errors);
 
             var educationSingleton = model.FindDeclaredNavigationSource("education");
             var navPropBinding = educationSingleton.NavigationPropertyBindings.First();
             var target = navPropBinding.Target;
-            target.Should().NotBeNull();
+            Assert.NotNull(target);
             Assert.True(target is IEdmContainedEntitySet);
-            target.Name.Should().Be("users");
+            Assert.Equal("users", target.Name);
             var targetSegments = target.Path.PathSegments.ToList();
-            targetSegments.Count().Should().Be(2);
-            targetSegments[0].Should().Be("education");
-            targetSegments[1].Should().Be("users");
+            Assert.Equal(2, targetSegments.Count());
+            Assert.Equal("education", targetSegments[0]);
+            Assert.Equal("users", targetSegments[1]);
             var pathSegments = navPropBinding.Path.PathSegments.ToList();
-            pathSegments.Count().Should().Be(2);
-            pathSegments[0].Should().Be("classes");
-            pathSegments[1].Should().Be("members");
+            Assert.Equal(2, pathSegments.Count());
+            Assert.Equal("classes", pathSegments[0]);
+            Assert.Equal("members", pathSegments[1]);
         }
 
         [Fact]
@@ -537,8 +537,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   </edmx:DataServices>
 </edmx:Edmx>";
             Action parseAction = () => CsdlReader.Parse(XElement.Parse(EdmxwithMultipleEntityContainers).CreateReader());
-            parseAction.ShouldThrow<EdmParseException>().Where(e => e.Message.Contains(
-                Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer)).And.Errors.Should().HaveCount(1);
+            var exception = Assert.Throws<EdmParseException>(parseAction);
+            Assert.Contains(Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer, exception.Message);
+            Assert.Equal(1, exception.Errors.Count);
         }
 
         [Fact]
@@ -786,14 +787,17 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         private void RunValidTest(Func<XmlReader, IEdmModel> parse)
         {
             var result = parse(this.validReader);
-            result.Should().NotBeNull();
-            result.EntityContainer.FullName().Should().Be("Test.Container");
+            Assert.NotNull(result);
+            Assert.Equal("Test.Container", result.EntityContainer.FullName());
         }
 
         private void RunInvalidTest(Func<XmlReader, IEdmModel> parse)
         {
             Action parseAction = () => parse(this.invalidReader);
-            parseAction.ShouldThrow<EdmParseException>().WithMessage(ErrorStrings.EdmParseException_ErrorsEncounteredInEdmx(ErrorMessage)).And.Errors.Should().OnlyContain(e => e.ToString() == ErrorMessage);
+
+            EdmParseException exception = Assert.Throws<EdmParseException>(parseAction);
+            Assert.Equal(ErrorStrings.EdmParseException_ErrorsEncounteredInEdmx(ErrorMessage), exception.Message);
+            Assert.Single(exception.Errors, e => e.ToString() == ErrorMessage);
         }
 
         private static IEdmModel GetEdmModel(string types = "", string properties = "")

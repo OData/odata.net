@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -51,9 +50,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             this.semanticContainer = new CsdlSemanticsEntityContainer(this.semanticSchema, this.csdlContainer);
 
             this.semanticEntityType = semanticModel.FindType("FQ.NS.EntityType") as CsdlSemanticsEntityTypeDefinition;
-            this.semanticEntityType.Should().NotBeNull();
+            Assert.NotNull(this.semanticEntityType);
             this.navigationProperty = this.semanticEntityType.FindProperty("Navigation") as CsdlSemanticsNavigationProperty;
-            this.navigationProperty.Should().NotBeNull();
+            Assert.NotNull(this.navigationProperty);
         }
 
         [Fact]
@@ -62,9 +61,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             var nonExistentBinding = new CsdlNavigationPropertyBinding("Navigation", "NonExistent", new CsdlLocation(1, 1));
             var testSubject = new CsdlSemanticsEntitySet(this.semanticContainer, new CsdlEntitySet("Fake", "FQ.NS.EntityType", new[] { nonExistentBinding }, null));
             var result = testSubject.FindNavigationTarget(this.navigationProperty);
-            result.Should().BeAssignableTo<UnresolvedEntitySet>();
-            result.As<UnresolvedEntitySet>().Name.Should().Be("NonExistent");
-            result.Errors().Should().Contain(e => e.ErrorLocation == nonExistentBinding.Location && e.ErrorCode == EdmErrorCode.BadUnresolvedEntitySet);
+            var entitySet = Assert.IsType<UnresolvedEntitySet>(result);
+            Assert.Equal("NonExistent", entitySet.Name);
+            Assert.Contains(result.Errors(), e => e.ErrorLocation == nonExistentBinding.Location && e.ErrorCode == EdmErrorCode.BadUnresolvedEntitySet);
         }
 
         [Fact]
@@ -79,9 +78,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         {
             var testSubject = new CsdlSemanticsEntitySet(this.semanticContainer, this.csdlEntitySet);
             var result = testSubject.FindNavigationTarget(this.navigationProperty);
-            result.Should().BeAssignableTo<CsdlSemanticsEntitySet>();
-            result.As<CsdlSemanticsEntitySet>().Name.Should().Be("EntitySet");
-            result.Errors().Should().BeEmpty();
+            var entitySet = Assert.IsType<CsdlSemanticsEntitySet>(result);
+            Assert.Equal("EntitySet", entitySet.Name);
+            Assert.Empty(result.Errors());
         }
 
         [Fact]
@@ -90,13 +89,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             var location = new CsdlLocation(1, 1);
             var result = this.ParseSingleBinding("NonExistentPath", "NonExistentSet", location);
 
-            result.Target.Should().BeAssignableTo<UnresolvedEntitySet>();
-            result.Target.As<UnresolvedEntitySet>().Name.Should().Be("NonExistentSet");
-            result.Target.Errors().Should().Contain(e => e.ErrorLocation == location && e.ErrorCode == EdmErrorCode.BadUnresolvedEntitySet);
+            var entitySet = Assert.IsType<UnresolvedEntitySet>(result.Target);
+            Assert.Equal("NonExistentSet", entitySet.Name);
+            Assert.Contains(result.Target.Errors(), e => e.ErrorLocation == location && e.ErrorCode == EdmErrorCode.BadUnresolvedEntitySet);
 
-            result.NavigationProperty.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            result.NavigationProperty.As<UnresolvedNavigationPropertyPath>().Name.Should().Be("NonExistentPath");
-            result.NavigationProperty.Errors().Should().Contain(e => e.ErrorLocation == location && e.ErrorCode == EdmErrorCode.BadUnresolvedNavigationPropertyPath);
+            var npPath = Assert.IsType<UnresolvedNavigationPropertyPath>(result.NavigationProperty);
+            Assert.Equal("NonExistentPath", npPath.Name);
+            Assert.Contains(result.NavigationProperty.Errors(), e => e.ErrorLocation == location && e.ErrorCode == EdmErrorCode.BadUnresolvedNavigationPropertyPath);
         }
 
         [Fact]
@@ -104,12 +103,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         {
             var result = this.ParseSingleBinding("FQ.NS.DerivedEntityType/DerivedNavigation", "EntitySet");
 
-            result.Target.Should().BeAssignableTo<CsdlSemanticsEntitySet>();
-            result.Target.Name.Should().Be("EntitySet");
+            Assert.IsType<CsdlSemanticsEntitySet>(result.Target);
+            Assert.Equal("EntitySet", result.Target.Name);
 
-            result.NavigationProperty.Should().BeAssignableTo<CsdlSemanticsNavigationProperty>();
-            result.NavigationProperty.Name.Should().Be("DerivedNavigation");
-            result.NavigationProperty.DeclaringEntityType().FullName().Should().Be("FQ.NS.DerivedEntityType");
+            Assert.IsType<CsdlSemanticsNavigationProperty>(result.NavigationProperty);
+            Assert.Equal("DerivedNavigation", result.NavigationProperty.Name);
+            Assert.Equal("FQ.NS.DerivedEntityType", result.NavigationProperty.DeclaringEntityType().FullName());
         }
 
         [Fact]
@@ -117,9 +116,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         {
             var result = this.ParseSingleBinding("FQ.NS.EntityType/Navigation", "EntitySet");
 
-            result.NavigationProperty.Should().BeAssignableTo<CsdlSemanticsNavigationProperty>();
-            result.NavigationProperty.Name.Should().Be("Navigation");
-            result.NavigationProperty.DeclaringEntityType().FullName().Should().Be("FQ.NS.EntityType");
+            Assert.IsType<CsdlSemanticsNavigationProperty>(result.NavigationProperty);
+            Assert.Equal("Navigation", result.NavigationProperty.Name);
+            Assert.Equal("FQ.NS.EntityType", result.NavigationProperty.DeclaringEntityType().FullName());
         }
 
         [Fact]
@@ -127,9 +126,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         {
             var result = this.ParseSingleBinding("FQ.NS.DerivedEntityType/Navigation", "EntitySet");
 
-            result.NavigationProperty.Should().BeAssignableTo<CsdlSemanticsNavigationProperty>();
-            result.NavigationProperty.Name.Should().Be("Navigation");
-            result.NavigationProperty.DeclaringEntityType().FullName().Should().Be("FQ.NS.EntityType");
+            Assert.IsType<CsdlSemanticsNavigationProperty>(result.NavigationProperty);
+            Assert.Equal("Navigation", result.NavigationProperty.Name);
+            Assert.Equal("FQ.NS.EntityType", result.NavigationProperty.DeclaringEntityType().FullName());
         }
 
         [Fact]
@@ -138,8 +137,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             const string pathWithMultipleSlashes = "FQ.NS.DerivedEntityType/DerivedNavigation/";
             var result = this.ParseSingleBinding(pathWithMultipleSlashes, "EntitySet");
 
-            result.NavigationProperty.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            result.NavigationProperty.Name.Should().Be(pathWithMultipleSlashes);
+            Assert.IsType<UnresolvedNavigationPropertyPath>(result.NavigationProperty);
+            Assert.Equal(pathWithMultipleSlashes, result.NavigationProperty.Name);
         }
 
         [Fact]
@@ -148,8 +147,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             const string pathStartingWithSlash = "/DerivedNavigation";
             var result = this.ParseSingleBinding(pathStartingWithSlash, "EntitySet");
 
-            result.NavigationProperty.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            result.NavigationProperty.Name.Should().Be(pathStartingWithSlash);
+            Assert.IsType<UnresolvedNavigationPropertyPath>(result.NavigationProperty);
+            Assert.Equal(pathStartingWithSlash, result.NavigationProperty.Name);
         }
 
         [Fact]
@@ -158,8 +157,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             const string pathEndingWithSlash = "FQ.NS.DerivedEntityType/";
             var result = this.ParseSingleBinding(pathEndingWithSlash, "EntitySet");
 
-            result.NavigationProperty.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            result.NavigationProperty.Name.Should().Be(pathEndingWithSlash);
+            Assert.IsType<UnresolvedNavigationPropertyPath>(result.NavigationProperty);
+            Assert.Equal(pathEndingWithSlash, result.NavigationProperty.Name);
         }
 
         [Fact]
@@ -168,8 +167,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             const string pathWithNonExistentType = "FQ.NS.UnrelatedEntityType/DerivedNavigation";
             var result = this.ParseSingleBinding(pathWithNonExistentType, "EntitySet");
 
-            result.NavigationProperty.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            result.NavigationProperty.Name.Should().Be(pathWithNonExistentType);
+            Assert.IsType<UnresolvedNavigationPropertyPath>(result.NavigationProperty);
+            Assert.Equal(pathWithNonExistentType, result.NavigationProperty.Name);
         }
 
         [Fact]
@@ -178,8 +177,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             const string pathWithNonExistentType = "NonExistentType/DerivedNavigation";
             var result = this.ParseSingleBinding(pathWithNonExistentType, "EntitySet");
 
-            result.NavigationProperty.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            result.NavigationProperty.Name.Should().Be(pathWithNonExistentType);
+            Assert.IsType<UnresolvedNavigationPropertyPath>(result.NavigationProperty);
+            Assert.Equal(pathWithNonExistentType, result.NavigationProperty.Name);
         }
 
         [Fact]
@@ -187,8 +186,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         {
             var result = this.ParseSingleBinding(string.Empty, "EntitySet");
 
-            result.NavigationProperty.Should().BeAssignableTo<UnresolvedNavigationPropertyPath>();
-            result.NavigationProperty.Name.Should().BeEmpty();
+            Assert.IsType<UnresolvedNavigationPropertyPath>(result.NavigationProperty);
+            Assert.Empty(result.NavigationProperty.Name);
         }
 
         private IEdmNavigationPropertyBinding ParseSingleBinding(string path, string target, CsdlLocation location = null)
@@ -196,8 +195,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             var binding = new CsdlNavigationPropertyBinding(path, target, location);
             var testSubject = new CsdlSemanticsEntitySet(this.semanticContainer, new CsdlEntitySet("Fake", "FQ.NS.EntityType", new[] { binding }, null));
 
-            testSubject.NavigationPropertyBindings.Should().HaveCount(1);
-            var result = testSubject.NavigationPropertyBindings.Single();
+            var result = Assert.Single(testSubject.NavigationPropertyBindings);
             return result;
         }
     }

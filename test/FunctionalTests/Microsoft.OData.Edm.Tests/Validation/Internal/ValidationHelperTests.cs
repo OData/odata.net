@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
@@ -29,7 +28,7 @@ namespace Microsoft.OData.Edm.Tests.Validation.Internal
             model.AddElement(edmFunction);
             model.AddReferencedModel(otherModel);
 
-            model.OperationOrNameExistsInReferencedModel(edmFunction, edmFunction.FullName()).Should().BeTrue();
+            Assert.True(model.OperationOrNameExistsInReferencedModel(edmFunction, edmFunction.FullName()));
         }
 
         [Fact]
@@ -44,7 +43,7 @@ namespace Microsoft.OData.Edm.Tests.Validation.Internal
             otherModel.AddElement(edmTerm);
             model.AddReferencedModel(otherModel);
 
-            model.OperationOrNameExistsInReferencedModel(edmFunction, edmFunction.FullName()).Should().BeTrue();
+            Assert.True(model.OperationOrNameExistsInReferencedModel(edmFunction, edmFunction.FullName()));
         }
 
         [Fact]
@@ -59,7 +58,7 @@ namespace Microsoft.OData.Edm.Tests.Validation.Internal
             otherModel.AddElement(container);
             model.AddReferencedModel(otherModel);
 
-            model.OperationOrNameExistsInReferencedModel(edmFunction, edmFunction.FullName()).Should().BeTrue();
+            Assert.True(model.OperationOrNameExistsInReferencedModel(edmFunction, edmFunction.FullName()));
         }
 
         [Fact]
@@ -74,7 +73,7 @@ namespace Microsoft.OData.Edm.Tests.Validation.Internal
             model.AddElement(edmFunction);
             model.AddReferencedModel(otherModel);
 
-            model.OperationOrNameExistsInReferencedModel(edmFunction, edmFunction.FullName()).Should().BeFalse();
+            Assert.False(model.OperationOrNameExistsInReferencedModel(edmFunction, edmFunction.FullName()));
         }
     }
 }
