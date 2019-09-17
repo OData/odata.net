@@ -425,6 +425,16 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Unable to serialize an object in a collection as it is not an ODataPrimitve or ODataResourceValue."
+        /// </summary>
+        internal static string ODataJsonWriter_UnsupportedValueInCollection
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonWriter_UnsupportedValueInCollection);
+            }
+        }
+
+        /// <summary>
         /// A string like "An error occurred while processing the OData message."
         /// </summary>
         internal static string ODataException_GeneralError {

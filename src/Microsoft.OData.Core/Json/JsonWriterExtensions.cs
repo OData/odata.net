@@ -8,13 +8,12 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
-    using System.Diagnostics;
-    using System.Collections.Generic;
     using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
-    using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
     #endregion Namespaces
 
     /// <summary>
@@ -155,6 +154,69 @@ namespace Microsoft.OData.Json
             }
 
             throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName));
+        }
+
+        /// <summary>
+        /// Writes the ODataValue (primitive, collection or resource value) to the underlying json writer.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
+        /// <param name="odataValue">value to write.</param>
+        internal static void WriteODataValue(this IJsonWriter jsonWriter, ODataValue odataValue)
+        {
+            if (odataValue == null || odataValue is ODataNullValue)
+            {
+                jsonWriter.WriteValue((string)null);
+                return;
+            }
+
+            object objectValue = odataValue.FromODataValue();
+            if (EdmLibraryExtensions.IsPrimitiveType(objectValue.GetType()))
+            {
+                jsonWriter.WritePrimitiveValue(objectValue);
+                return;
+            }
+
+            ODataResourceValue resourceValue = odataValue as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                jsonWriter.StartObjectScope();
+
+                foreach (ODataProperty property in resourceValue.Properties)
+                {
+                    jsonWriter.WriteName(property.Name);
+                    jsonWriter.WriteODataValue(property.ODataValue);
+                }
+
+                jsonWriter.EndObjectScope();
+                return;
+            }
+
+            ODataCollectionValue collectionValue = odataValue as ODataCollectionValue;
+            if (collectionValue != null)
+            {
+                jsonWriter.StartArrayScope();
+
+                foreach (object item in collectionValue.Items)
+                {
+                    // Will not be able to accurately serialize complex objects unless they are ODataValues.
+                    ODataValue collectionItem = item as ODataValue;
+                    if (item != null)
+                    {
+                        jsonWriter.WriteODataValue(collectionItem);
+                    }
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
+                    }
+                }
+
+                jsonWriter.EndArrayScope();
+
+                return;
+            }
+
+            throw new ODataException(
+                ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(odataValue.GetType().FullName));
         }
 
         /// <summary>
