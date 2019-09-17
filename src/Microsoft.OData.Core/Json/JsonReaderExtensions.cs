@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Json
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -313,6 +314,56 @@ namespace Microsoft.OData.Json
             {
                 RawValue = builder.ToString(),
             };
+        }
+
+        internal static ODataValue ReadODataValue(this IJsonReader jsonReader)
+        {
+            if (jsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            {
+                object primitiveValue = jsonReader.ReadPrimitiveValue();
+
+                return primitiveValue.ToODataValue();
+            }
+            else if (jsonReader.NodeType == JsonNodeType.StartObject)
+            {
+                jsonReader.ReadStartObject();
+                ODataResourceValue resourceValue = new ODataResourceValue();
+                IList<ODataProperty> propertyList = new List<ODataProperty>();
+
+                while (jsonReader.NodeType != JsonNodeType.EndObject)
+                {
+                    ODataProperty property = new ODataProperty();
+                    property.Name = jsonReader.ReadPropertyName();
+                    property.Value = jsonReader.ReadODataValue();
+                    propertyList.Add(property);
+                }
+
+                resourceValue.Properties = propertyList;
+
+                jsonReader.ReadEndObject();
+
+                return resourceValue;
+            }
+            else if (jsonReader.NodeType == JsonNodeType.StartArray)
+            {
+                jsonReader.ReadStartArray();
+                ODataCollectionValue collectionValue = new ODataCollectionValue();
+                IList<object> propertyList = new List<object>();
+
+                while (jsonReader.NodeType != JsonNodeType.EndArray)
+                {
+                    propertyList.Add(jsonReader.ReadODataValue());
+                }
+
+                collectionValue.Items = propertyList;
+                jsonReader.ReadEndArray();
+
+                return collectionValue;
+            }
+            else
+            {
+                return jsonReader.ReadAsUntypedOrNullValue();
+            }
         }
 
         /// <summary>

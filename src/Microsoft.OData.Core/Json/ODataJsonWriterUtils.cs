@@ -11,7 +11,9 @@ namespace Microsoft.OData.Json
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text;
     using Microsoft.OData.JsonLight;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
     /// <summary>
@@ -220,24 +222,30 @@ namespace Microsoft.OData.Json
 
             ValidationUtils.IncreaseAndValidateRecursionDepth(ref recursionDepth, maxInnerErrorDepth);
 
-            // "innererror": {
+            // "innererror":
             jsonWriter.WriteName(innerErrorPropertyName);
             jsonWriter.StartObjectScope();
 
-            //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
-            ////       to stay compatible with Astoria.
+            if (innerError.Properties != null)
+            {
+                foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
+                {
+                    jsonWriter.WriteName(pair.Key);
 
-            // "message": "<message>"
-            jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorMessageName);
-            jsonWriter.WriteValue(innerError.Message ?? string.Empty);
-
-            // "type": "<typename">
-            jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorTypeNameName);
-            jsonWriter.WriteValue(innerError.TypeName ?? string.Empty);
-
-            // "stacktrace": "<stacktrace>"
-            jsonWriter.WriteName(JsonConstants.ODataErrorInnerErrorStackTraceName);
-            jsonWriter.WriteValue(innerError.StackTrace ?? string.Empty);
+                    if (pair.Value is ODataNullValue &&
+                        (pair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
+                        pair.Key == JsonConstants.ODataErrorInnerErrorStackTraceName ||
+                        pair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName))
+                    {
+                        // Write empty string for null values in stacktrace, type and message properties of inner error.
+                        jsonWriter.WriteODataValue(new ODataPrimitiveValue(string.Empty));
+                    }
+                    else
+                    {
+                        jsonWriter.WriteODataValue(pair.Value);
+                    }
+                }
+            }
 
             if (innerError.InnerError != null)
             {
@@ -247,6 +255,90 @@ namespace Microsoft.OData.Json
 
             // }
             jsonWriter.EndObjectScope();
+        }
+
+        internal static void ODataValueToString(StringBuilder sb, ODataValue value)
+        {
+            if (value == null || value is ODataNullValue)
+            {
+                sb.Append("null");
+            }
+
+            ODataCollectionValue collectionValue = value as ODataCollectionValue;
+            if (collectionValue != null)
+            {
+                ODataCollectionValueToString(sb, collectionValue);
+            }
+
+            ODataResourceValue resourceValue = value as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                ODataResourceValueToString(sb, resourceValue);
+            }
+
+            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
+            if (primitiveValue != null)
+            {
+                if (primitiveValue.FromODataValue() is string)
+                {
+                    sb.Append("\"" + JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()) + "\"");
+                }
+                else
+                {
+                    sb.Append(JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()));
+                }
+            }
+        }
+
+        private static void ODataCollectionValueToString(StringBuilder sb, ODataCollectionValue value)
+        {
+            bool isFirst = true;
+            sb.Append("[");
+            foreach (object item in value.Items)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                ODataValue odataValue = item as ODataValue;
+                if (odataValue != null)
+                {
+                    ODataValueToString(sb, odataValue);
+                }
+                else
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
+                }
+            }
+
+            sb.Append("]");
+        }
+
+        private static void ODataResourceValueToString(StringBuilder sb, ODataResourceValue value)
+        {
+            bool isFirst = true;
+            sb.Append("{");
+            foreach (ODataProperty property in value.Properties)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                sb.Append("\"").Append(property.Name).Append("\"").Append(":");
+                ODataValueToString(sb, property.ODataValue);
+            }
+
+            sb.Append("}");
         }
     }
 }
