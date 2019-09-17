@@ -5,8 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
 
@@ -333,7 +331,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             var context = ExecuteDuplicateOperationValidator(model);
 
             var errors = context.Errors.ToList();
-            errors.Should().HaveCount(0);
+            Assert.Empty(errors);
         }
 
         private static ValidationContext ExecuteDuplicateOperationValidator(IEdmModel model)
@@ -351,9 +349,9 @@ namespace Microsoft.OData.Edm.Tests.Validation
         {
             var context = ExecuteDuplicateOperationValidator(model);
             var errors = context.Errors.ToList();
-            errors.Should().HaveCount(1);
-            errors[0].ErrorCode.Should().Be(expectedErrorCode);
-            errors[0].ErrorMessage.Should().Be(expectedError);
+            Assert.Single(errors);
+            Assert.Equal(expectedErrorCode, errors[0].ErrorCode);
+            Assert.Equal(expectedError, errors[0].ErrorMessage);
         }
     }
 }

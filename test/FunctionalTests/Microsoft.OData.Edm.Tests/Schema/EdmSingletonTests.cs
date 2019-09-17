@@ -5,8 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
@@ -32,9 +30,9 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void EdmSingletonBasicAttributeTest()
         {
             EdmSingleton singleton = new EdmSingleton(this.entityContainer, "VIP", customerType);
-            singleton.Container.Should().Be(this.entityContainer);
-            singleton.ContainerElementKind.Should().Be(EdmContainerElementKind.Singleton);
-            singleton.EntityType().Should().Be(customerType);          
+            Assert.Same(this.entityContainer, singleton.Container);
+            Assert.Equal(EdmContainerElementKind.Singleton, singleton.ContainerElementKind);
+            Assert.Same(customerType, singleton.EntityType());
         }
 
         [Fact]
@@ -52,23 +50,23 @@ namespace Microsoft.OData.Edm.Tests.Library
 
             var vipCustomer = new EdmSingleton(this.entityContainer, "VIP", this.customerType);
 
-            vipCustomer.NavigationPropertyBindings.Should().HaveCount(0);
+            Assert.Empty(vipCustomer.NavigationPropertyBindings);
 
             vipCustomer.AddNavigationTarget(internalOrderProperty, orderSet);
             vipCustomer.AddNavigationTarget(externalOrderProperty, orderSet);
             vipCustomer.AddNavigationTarget(customerProductProperty, productSet);
 
-            vipCustomer.NavigationPropertyBindings.Should().HaveCount(3)
-                .And.Contain(m => m.NavigationProperty == internalOrderProperty && m.Target == orderSet)
-                .And.Contain(m => m.NavigationProperty == externalOrderProperty && m.Target == orderSet)
-                .And.Contain(m=>m.NavigationProperty ==  customerProductProperty && m.Target == productSet);
+            Assert.Equal(3, vipCustomer.NavigationPropertyBindings.Count());
+            Assert.Contains(vipCustomer.NavigationPropertyBindings, m => m.NavigationProperty == internalOrderProperty && m.Target == orderSet);
+            Assert.Contains(vipCustomer.NavigationPropertyBindings, m => m.NavigationProperty == externalOrderProperty && m.Target == orderSet);
+            Assert.Contains(vipCustomer.NavigationPropertyBindings, m => m.NavigationProperty ==  customerProductProperty && m.Target == productSet);
 
-            vipCustomer.FindNavigationTarget(internalOrderProperty).Should().Be(orderSet);
-            vipCustomer.FindNavigationTarget(externalOrderProperty).Should().Be(orderSet);
-            vipCustomer.FindNavigationTarget(customerProductProperty).Should().Be(productSet);
+            Assert.Same(orderSet, vipCustomer.FindNavigationTarget(internalOrderProperty));
+            Assert.Same(orderSet, vipCustomer.FindNavigationTarget(externalOrderProperty));
+            Assert.Same(productSet, vipCustomer.FindNavigationTarget(customerProductProperty));
 
             productSet.AddNavigationTarget(customerProductProperty.Partner, vipCustomer);
-            productSet.FindNavigationTarget(customerProductProperty.Partner).Should().Be(vipCustomer);
+            Assert.Same(vipCustomer, productSet.FindNavigationTarget(customerProductProperty.Partner));
         }
 
         [Fact]
@@ -154,29 +152,29 @@ namespace Microsoft.OData.Edm.Tests.Library
             s.AddNavigationTarget(btocNavProp, sa2bda1bc, new EdmPathExpression("a2/b/TestNS.dType/a1/b/c"));
 
             var foundSc = s.FindNavigationTarget(stocNavProp);
-            foundSc.Should().Be(sc);
+            Assert.Same(sc, foundSc);
             var foundSb = s.FindNavigationTarget(stobNavProp);
             Assert.True(foundSb is IEdmContainedEntitySet);
             var foundSbc = foundSb.FindNavigationTarget(btocNavProp);
-            foundSbc.Should().Be(sbc);
+            Assert.Same(sbc, foundSbc);
             var foundSa1 = s.FindNavigationTarget(stoa1NavProp);
             Assert.True(foundSa1 is IEdmContainedEntitySet);
             var foundSa1b = foundSa1.FindNavigationTarget(atobNavProp);
             Assert.True(foundSa1b is IEdmContainedEntitySet);
             var foundSa1bc = foundSa1b.FindNavigationTarget(btocNavProp);
-            foundSa1bc.Should().Be(sa1bc);
+            Assert.Same(sa1bc, foundSa1bc);
             var foundSa2 = s.FindNavigationTarget(stoa2NavProp);
             Assert.True(foundSa2 is IEdmContainedEntitySet);
             var foundSa2b = foundSa2.FindNavigationTarget(atobNavProp);
             Assert.True(foundSa2b is IEdmContainedEntitySet);
             var foundSa2bc = foundSa2b.FindNavigationTarget(btocNavProp);
-            foundSa2bc.Should().Be(sa2bc);
+            Assert.Same(sa2bc, foundSa2bc);
             var foundSa2bda1 = foundSa2b.FindNavigationTarget(dtoa1NavProp, new EdmPathExpression("TestNS.dType/a1"));
             Assert.True(foundSa2bda1 is IEdmContainedEntitySet);
             var foundSa2bda1b = foundSa2bda1.FindNavigationTarget(atobNavProp);
             Assert.True(foundSa2bda1b is IEdmContainedEntitySet);
             var foundSa2bda1bc = foundSa2bda1b.FindNavigationTarget(btocNavProp);
-            foundSa2bda1bc.Should().Be(sa2bda1bc);
+            Assert.Same(sa2bda1bc, foundSa2bda1bc);
         }
 
         [Fact]

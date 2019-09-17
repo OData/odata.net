@@ -10,11 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
@@ -90,8 +88,8 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             {
                 this.RepresentativeModel = CsdlReader.Parse(XElement.Parse(RepresentativeEdmxDocument).CreateReader());
                 this.EntityContainer = this.RepresentativeModel.EntityContainer;
-                this.EntityContainer.Should().NotBeNull();
-                this.EntityContainer.Name.Should().Be("Container");
+                Assert.NotNull(this.EntityContainer);
+                Assert.Equal("Container", this.EntityContainer.Name);
 
                 this.AddAction = (IEdmAction)this.RepresentativeModel.FindDeclaredOperations("Test.Add").Single();
                 this.OtherAction = (IEdmAction)this.RepresentativeModel.FindDeclaredOperations("Test.Other").Single();
@@ -110,10 +108,10 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                 this.Get3FunctionImportWithNoParams = (IEdmFunctionImport)get3Imports[1];
 
                 this.PersonType = this.RepresentativeModel.FindDeclaredType("Test.Person") as IEdmEntityType;
-                this.PersonType.Should().NotBeNull();
+                Assert.NotNull(this.PersonType);
 
                 this.CarType = this.RepresentativeModel.FindDeclaredType("Test.Car") as IEdmEntityType;
-                this.CarType.Should().NotBeNull();
+                Assert.NotNull(this.CarType);
             }
 
             public IEdmModel RepresentativeModel { get; private set; }
@@ -165,8 +163,8 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             IEnumerable<EdmError> errors;
             bool valid = this.TestModel.RepresentativeModel.Validate(out errors);
-            valid.Should().BeTrue();
-            errors.Should().BeEmpty();
+            Assert.True(valid);
+            Assert.Empty(errors);
         }
 
         [Fact]
@@ -212,28 +210,27 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             var edmModel = CsdlReader.Parse(XElement.Parse(testCsdl).CreateReader());
             var operations = edmModel.SchemaElements.OfType<IEdmOperation>().ToList();
-            operations.Should().HaveCount(6);
+            Assert.Equal(6, operations.Count());
             var container = edmModel.EntityContainer;
             var operationImports = container.OperationImports().ToList();
-            
+
             // Notice there are only two defined above but there are 4, this is by design.
-            operationImports.Count.Should().Be(4);
-            operationImports[0].Name.Should().Be("Post1");
-            operationImports[0].Operation.Name.Should().Be("Post1");
-            operationImports[0].Operation.Parameters.Count().Should().Be(0);
+            Assert.Equal(4, operationImports.Count);
+            Assert.Equal("Post1", operationImports[0].Name);
+            Assert.Equal("Post1", operationImports[0].Operation.Name);
+            Assert.Empty(operationImports[0].Operation.Parameters);
 
-            operationImports[1].Name.Should().Be("Post1");
-            operationImports[1].Operation.Name.Should().Be("Post1");
-            operationImports[1].Operation.Parameters.Count().Should().Be(1);
+            Assert.Equal("Post1", operationImports[1].Name);
+            Assert.Equal("Post1", operationImports[1].Operation.Name);
+            Assert.Single(operationImports[1].Operation.Parameters);
 
-            operationImports[2].Name.Should().Be("Get1");
-            operationImports[2].Operation.Name.Should().Be("Get1");
-            operationImports[2].Operation.Parameters.Count().Should().Be(0);
+            Assert.Equal("Get1", operationImports[2].Name);
+            Assert.Equal("Get1", operationImports[2].Operation.Name);
+            Assert.Empty(operationImports[2].Operation.Parameters);
 
-            operationImports[3].Name.Should().Be("Get1");
-            operationImports[3].Operation.Name.Should().Be("Get1");
-            operationImports[3].Operation.Parameters.Count().Should().Be(1);
-
+            Assert.Equal("Get1", operationImports[3].Name);
+            Assert.Equal("Get1", operationImports[3].Operation.Name);
+            Assert.Single(operationImports[3].Operation.Parameters);
         }
 
         [Fact]
@@ -273,69 +270,69 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             var edmModel = CsdlReader.Parse(XElement.Parse(testCsdl).CreateReader());
             var operations = edmModel.SchemaElements.OfType<IEdmOperation>().ToList();
-            operations.Should().HaveCount(8);
+            Assert.Equal(8, operations.Count());
 
             // Functions
-            operations[0].Should().BeAssignableTo<IEdmFunction>();
-            operations[0].Name.Should().Be("FunctionWithComplexReturnType");
-            operations[0].ReturnType.FullName().Should().Be("Test.Complex");
-            operations[0].ReturnType.IsNullable.Should().BeFalse();
+            Assert.True(operations[0] is IEdmFunction);
+            Assert.Equal("FunctionWithComplexReturnType", operations[0].Name);
+            Assert.Equal("Test.Complex", operations[0].ReturnType.FullName());
+            Assert.False(operations[0].ReturnType.IsNullable);
 
-            operations[1].Should().BeAssignableTo<IEdmFunction>();
-            operations[1].Name.Should().Be("FunctionWithComplexCollectionReturnType");
-            operations[1].ReturnType.FullName().Should().Be("Collection(Test.Complex)");
-            operations[1].ReturnType.AsCollection().ElementType().IsNullable.Should().BeFalse();
+            Assert.True(operations[1] is IEdmFunction);
+            Assert.Equal("FunctionWithComplexCollectionReturnType", operations[1].Name);
+            Assert.Equal("Collection(Test.Complex)", operations[1].ReturnType.FullName());
+            Assert.False(operations[1].ReturnType.AsCollection().ElementType().IsNullable);
 
-            operations[2].Should().BeAssignableTo<IEdmFunction>();
-            operations[2].Name.Should().Be("FunctionWithPrimitiveReturnType");
-            operations[2].ReturnType.FullName().Should().Be("Edm.String");
-            operations[2].ReturnType.IsNullable.Should().BeFalse();
-            operations[2].ReturnType.AsString().MaxLength.Should().Be(10);
+            Assert.True(operations[2] is IEdmFunction);
+            Assert.Equal("FunctionWithPrimitiveReturnType", operations[2].Name);
+            Assert.Equal("Edm.String", operations[2].ReturnType.FullName());
+            Assert.False(operations[2].ReturnType.IsNullable);
+            Assert.Equal(10, operations[2].ReturnType.AsString().MaxLength);
 
-            operations[3].Should().BeAssignableTo<IEdmFunction>();
-            operations[3].Name.Should().Be("FunctionWithPrimitiveCollectionReturnType");
-            operations[3].ReturnType.FullName().Should().Be("Collection(Edm.String)");
-            operations[3].ReturnType.AsCollection().ElementType().IsNullable.Should().BeFalse();
-            operations[3].ReturnType.AsCollection().ElementType().AsString().MaxLength.Should().Be(20);
+            Assert.True(operations[3] is IEdmFunction);
+            Assert.Equal("FunctionWithPrimitiveCollectionReturnType", operations[3].Name);
+            Assert.Equal("Collection(Edm.String)", operations[3].ReturnType.FullName());
+            Assert.False(operations[3].ReturnType.AsCollection().ElementType().IsNullable);
+            Assert.Equal(20, operations[3].ReturnType.AsCollection().ElementType().AsString().MaxLength);
 
             // Actions
-            operations[4].Should().BeAssignableTo<IEdmAction>();
-            operations[4].Name.Should().Be("ActionWithComplexReturnType");
-            operations[4].ReturnType.FullName().Should().Be("Test.Complex");
-            operations[4].ReturnType.IsNullable.Should().BeFalse();
+            Assert.True(operations[4] is IEdmAction);
+            Assert.Equal("ActionWithComplexReturnType", operations[4].Name);
+            Assert.Equal("Test.Complex", operations[4].ReturnType.FullName());
+            Assert.False(operations[4].ReturnType.IsNullable);
 
-            operations[5].Should().BeAssignableTo<IEdmAction>();
-            operations[5].Name.Should().Be("ActionWithComplexCollectionReturnType");
-            operations[5].ReturnType.FullName().Should().Be("Collection(Test.Complex)");
-            operations[5].ReturnType.AsCollection().ElementType().IsNullable.Should().BeFalse();
+            Assert.True(operations[5] is IEdmAction);
+            Assert.Equal("ActionWithComplexCollectionReturnType", operations[5].Name);
+            Assert.Equal("Collection(Test.Complex)", operations[5].ReturnType.FullName());
+            Assert.False(operations[5].ReturnType.AsCollection().ElementType().IsNullable);
 
-            operations[6].Should().BeAssignableTo<IEdmAction>();
-            operations[6].Name.Should().Be("ActionWithPrimitiveReturnType");
-            operations[6].ReturnType.FullName().Should().Be("Edm.String");
-            operations[6].ReturnType.IsNullable.Should().BeFalse();
-            operations[6].ReturnType.AsString().MaxLength.Should().Be(10);
+            Assert.True(operations[6] is IEdmAction);
+            Assert.Equal("ActionWithPrimitiveReturnType", operations[6].Name);
+            Assert.Equal("Edm.String", operations[6].ReturnType.FullName());
+            Assert.False(operations[6].ReturnType.IsNullable);
+            Assert.Equal(10, operations[6].ReturnType.AsString().MaxLength);
 
-            operations[7].Should().BeAssignableTo<IEdmAction>();
-            operations[7].Name.Should().Be("ActionWithPrimitiveCollectionReturnType");
-            operations[7].ReturnType.FullName().Should().Be("Collection(Edm.String)");
-            operations[7].ReturnType.AsCollection().ElementType().IsNullable.Should().BeFalse();
-            operations[7].ReturnType.AsCollection().ElementType().AsString().MaxLength.Should().Be(20);
+            Assert.True(operations[7] is IEdmAction);
+            Assert.Equal("ActionWithPrimitiveCollectionReturnType", operations[7].Name);
+            Assert.Equal("Collection(Edm.String)", operations[7].ReturnType.FullName());
+            Assert.False(operations[7].ReturnType.AsCollection().ElementType().IsNullable);
+            Assert.Equal(20, operations[7].ReturnType.AsCollection().ElementType().AsString().MaxLength);
         }
 
         [Fact]
         public void ReturnTypePathReturnsCorrectly()
         {
-            this.TestModel.RemoveBadCarAction.ReturnType.Should().NotBeNull();
+            Assert.NotNull(this.TestModel.RemoveBadCarAction.ReturnType);
             var personType = this.TestModel.RemoveBadCarAction.ReturnType.AsCollection().ElementType().Definition;
-            personType.Should().Be(this.TestModel.CarType);
+            Assert.Equal(this.TestModel.CarType, personType);
         }
 
         [Fact]
         public void EntitySetPathReturnsCorrectly()
         {
             var paths = this.TestModel.RemoveBadCarAction.EntitySetPath.PathSegments.ToList();
-            paths[0].Should().Be("People");
-            paths[1].Should().Be("Cars");
+            Assert.Equal("People", paths[0]);
+            Assert.Equal("Cars", paths[1]);
         }
 
         [Fact]
@@ -354,11 +351,11 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             IEdmModel model = null;
             IEnumerable<EdmError> errors = null;
             var errorParsing = CsdlReader.TryParse(XElement.Parse(errorDocument).CreateReader(), out model, out errors);
-            errorParsing.Should().BeFalse();
+            Assert.False(errorParsing);
             var errorsList = errors.ToList();
-            errorsList.Should().HaveCount(1);
-            errorsList[0].ErrorCode.Should().Be(EdmErrorCode.InvalidEntitySetPath);
-            errorsList[0].ErrorMessage.Should().Be(Strings.CsdlParser_InvalidEntitySetPathWithUnboundAction(CsdlConstants.Element_Action, "Add"));
+            var error = Assert.Single(errorsList);
+            Assert.Equal(EdmErrorCode.InvalidEntitySetPath, error.ErrorCode);
+            Assert.Equal(Strings.CsdlParser_InvalidEntitySetPathWithUnboundAction(CsdlConstants.Element_Action, "Add"), error.ErrorMessage);
         }
 
         [Fact]
@@ -379,8 +376,8 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             model.Validate(out errors);
 
             var errorsList = errors.ToList();
-            errorsList.Count.Should().Be(1);
-            errorsList[0].ErrorCode.Should().Be(EdmErrorCode.BadUnresolvedOperation);
+            var error = Assert.Single(errorsList);
+            Assert.Equal(EdmErrorCode.BadUnresolvedOperation, error.ErrorCode);
         }
 
         [Fact]
@@ -395,9 +392,10 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
+
             Action test = () => CsdlReader.Parse(XElement.Parse(errorDocument).CreateReader());
-            test.ShouldThrow<EdmParseException>().Where(e => e.Message.Contains(
-                Strings.XmlParser_MissingAttribute("Action", "ActionImport")));
+            var exception = Assert.Throws<EdmParseException>(test);
+            Assert.Contains(Strings.XmlParser_MissingAttribute("Action", "ActionImport"), exception.Message);
         }
 
         [Fact]
@@ -407,8 +405,8 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             using (var writer = XmlWriter.Create(builder))
             {
                 IEnumerable<EdmError> errors;
-                CsdlWriter.TryWriteCsdl(this.TestModel.RepresentativeModel, writer, CsdlTarget.OData, out errors).Should().BeTrue();
-                errors.Should().BeEmpty();
+                Assert.True(CsdlWriter.TryWriteCsdl(this.TestModel.RepresentativeModel, writer, CsdlTarget.OData, out errors));
+                Assert.Empty(errors);
                 writer.Flush();
             }
 
@@ -416,7 +414,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             var actualXml = XElement.Parse(actual);
             var actualNormalized = actualXml.ToString();
 
-            actualNormalized.Should().Be(DefaultTestModel.RepresentativeEdmxDocument);
+            Assert.Equal(DefaultTestModel.RepresentativeEdmxDocument, actualNormalized);
         }
     }
 }

@@ -5,9 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
@@ -19,21 +17,21 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void ParseDateNullShouldThrowFormatException()
         {
             Date? result;
-            EdmValueParser.TryParseDate(null, out result).Should().BeFalse();
+            Assert.False(EdmValueParser.TryParseDate(null, out result));
         }
 
         [Fact]
         public void ParseDateWithEmptyStringShouldThrowFormatException()
         {
             Date? result;
-            EdmValueParser.TryParseDate(string.Empty, out result).Should().BeFalse();
+            Assert.False(EdmValueParser.TryParseDate(string.Empty, out result));
         }
 
         [Fact]
         public void ParseDateWithSpaceShouldThrowFormatException()
         {
             Date? result;
-            EdmValueParser.TryParseDate(" ", out result).Should().BeFalse();
+            Assert.False(EdmValueParser.TryParseDate(" ", out result));
         }
 
         [Fact]
@@ -64,7 +62,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             foreach (var invalidDate in invalidDates)
             {
                 Date? result;
-                EdmValueParser.TryParseDate(invalidDate, out result).Should().BeFalse();
+                Assert.False(EdmValueParser.TryParseDate(invalidDate, out result));
             }
         }
 
@@ -72,8 +70,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseDateWithValidParameterShouldParseCorrectly()
         {
             Date? result;
-            EdmValueParser.TryParseDate("2012-07-28", out result).Should().BeTrue();
-            result.Should().Be(new Date(2012, 07, 28));
+            Assert.True(EdmValueParser.TryParseDate("2012-07-28", out result));
+            Assert.Equal(new Date(2012, 07, 28), result);
         }
         #endregion
 
@@ -85,24 +83,24 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseDateTimeOffsetThatProvidesEverythingShouldParseCorrectly()
         {
             DateTimeOffset? result;
-            EdmValueParser.TryParseDateTimeOffset("2012-07-28T13:22:16.123-07:15", out result).Should().BeTrue();
-            result.Should().Be(new DateTimeOffset(2012, 7, 28, 13, 22, 16, 123, new TimeSpan(-7, -15, 0)));
+            Assert.True(EdmValueParser.TryParseDateTimeOffset("2012-07-28T13:22:16.123-07:15", out result));
+            Assert.Equal(new DateTimeOffset(2012, 7, 28, 13, 22, 16, 123, new TimeSpan(-7, -15, 0)), result);
         }
 
         [Fact]
         public void TryParseDateTimeOffsetWithInvalidFormatShouldReturnFalse()
         {
             DateTimeOffset? result;
-            EdmValueParser.TryParseDateTimeOffset("0001+01+01T00:00:00.000+00:01", out result).Should().BeFalse();
-            result.Should().BeNull();
+            Assert.False(EdmValueParser.TryParseDateTimeOffset("0001+01+01T00:00:00.000+00:01", out result));
+            Assert.Null(result);
         }
 
         [Fact]
         public void TryParseDateTimeOffsetThatOverFlowsShouldReturnFalse()
         {
             DateTimeOffset? result;
-            EdmValueParser.TryParseDateTimeOffset("0001-01-01T00:00:00.000+00:01", out result).Should().BeFalse();
-            result.Should().BeNull();
+            Assert.False(EdmValueParser.TryParseDateTimeOffset("0001-01-01T00:00:00.000+00:01", out result));
+            Assert.Null(result);
         }
         #endregion
 
@@ -116,49 +114,49 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void ParseDurationWith1DecimalPlaceShouldNotLosePrecision()
         {
             TimeSpan result = EdmValueParser.ParseDuration("PT0.9S");
-            result.Should().Be(new TimeSpan(9000000));
+            Assert.Equal(new TimeSpan(9000000), result);
         }
 
         [Fact]
         public void ParseDurationWith2DecimalPlacesShouldNotLosePrecision()
         {
             TimeSpan result = EdmValueParser.ParseDuration("PT0.09S");
-            result.Should().Be(new TimeSpan(900000));
+            Assert.Equal(new TimeSpan(900000), result);
         }
 
         [Fact]
         public void ParseDurationWith3DecimalPlacesShouldNotLosePrecision()
         {
             TimeSpan result = EdmValueParser.ParseDuration("PT0.009S");
-            result.Should().Be(new TimeSpan(90000));
+            Assert.Equal(new TimeSpan(90000), result);
         }
 
         [Fact]
         public void ParseDurationWith4DecimalPlacesShouldNotLosePrecision()
         {
             TimeSpan result = EdmValueParser.ParseDuration("PT0.0009S");
-            result.Should().Be(new TimeSpan(9000));
+            Assert.Equal(new TimeSpan(9000), result);
         }
 
         [Fact]
         public void ParseDurationWith5DecimalPlacesShouldNotLosePrecision()
         {
             TimeSpan result = EdmValueParser.ParseDuration("PT0.00009S");
-            result.Should().Be(new TimeSpan(900));
+            Assert.Equal(new TimeSpan(900), result);
         }
 
         [Fact]
         public void ParseDurationWith6DecimalPlacesShouldNotLosePrecision()
         {
             TimeSpan result = EdmValueParser.ParseDuration("PT0.000009S");
-            result.Should().Be(new TimeSpan(90));
+            Assert.Equal(new TimeSpan(90), result);
         }
 
         [Fact]
         public void ParseDurationWith7DecimalPlacesShouldNotLosePrecision()
         {
             TimeSpan result = EdmValueParser.ParseDuration("PT0.0000009S");
-            result.Should().Be(new TimeSpan(9));
+            Assert.Equal(new TimeSpan(9), result);
         }
 
         [Fact]
@@ -166,49 +164,49 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
             // 12 is the max precison supported in OData protocol, but Clr TimeSpan only supports up to 7 decimal places
             TimeSpan result = EdmValueParser.ParseDuration("PT0.123456789012S");
-            result.Should().Be(new TimeSpan(1234567));
+            Assert.Equal(new TimeSpan(1234567), result);
         }
 
         [Fact]
         public void ParseDurationWithTrailingSpaces()
         {
             TimeSpan result = EdmValueParser.ParseDuration("PT1S  ");
-            result.Should().Be(new TimeSpan(0, 0, 1));
+            Assert.Equal(new TimeSpan(0, 0, 1), result);
         }
 
         [Fact]
         public void ParseDurationWithLeadingSpaces()
         {
             TimeSpan result = EdmValueParser.ParseDuration("  PT1S");
-            result.Should().Be(new TimeSpan(0, 0, 1));
+            Assert.Equal(new TimeSpan(0, 0, 1), result);
         }
 
         [Fact]
         public void ParseDurationWithMaxValueShouldReturnCorrectTimeSpan()
         {
             TimeSpan result = EdmValueParser.ParseDuration("P10675199DT2H48M5.4775807S");
-            result.ShouldBeEquivalentTo(TimeSpan.MaxValue);
+            Assert.Equal(TimeSpan.MaxValue, result);
         }
 
         [Fact]
         public void ParseDurationWithMaxValueMinusOneShouldReturnCorrectTimeSpan()
         {
             TimeSpan result = EdmValueParser.ParseDuration("P10675199DT2H48M5.4775806S");
-            result.ShouldBeEquivalentTo(TimeSpan.MaxValue - new TimeSpan(1));
+            Assert.Equal(TimeSpan.MaxValue - new TimeSpan(1), result);
         }
 
         [Fact]
         public void ParseDurationWithMinValueShouldReturnCorrectTimeSpan()
         {
             TimeSpan result = EdmValueParser.ParseDuration("-P10675199DT2H48M5.4775808S");
-            result.ShouldBeEquivalentTo(TimeSpan.MinValue);
+            Assert.Equal(TimeSpan.MinValue, result);
         }
 
         [Fact]
         public void ParseDurationWithMinValuePlusOneShouldReturnCorrectTimeSpan()
         {
             TimeSpan result = EdmValueParser.ParseDuration("-P10675199DT2H48M5.4775807S");
-            result.ShouldBeEquivalentTo(TimeSpan.MinValue + new TimeSpan(1));
+            Assert.Equal(TimeSpan.MinValue + new TimeSpan(1), result);
         }
         #endregion
 
@@ -220,7 +218,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 TimeSpan result = EdmValueParser.ParseDuration(null);
             };
 
-            parseDuration.ShouldThrow<FormatException>();
+            Assert.Throws<FormatException>(parseDuration);
         }
 
         [Fact]
@@ -231,7 +229,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 TimeSpan result = EdmValueParser.ParseDuration(string.Empty);
             };
 
-            parseDuration.ShouldThrow<FormatException>();
+            Assert.Throws<FormatException>(parseDuration);
         }
 
         [Fact]
@@ -242,7 +240,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 TimeSpan result = EdmValueParser.ParseDuration(" ");
             };
 
-            parseDuration.ShouldThrow<FormatException>();
+            Assert.Throws<FormatException>(parseDuration);
         }
 
         [Fact]
@@ -275,7 +273,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     TimeSpan result = EdmValueParser.ParseDuration(invalidDuration);
                 };
 
-                parseDuration.ShouldThrow<FormatException>();
+                Assert.Throws<FormatException>(parseDuration);
             }
         }
 
@@ -309,7 +307,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     TimeSpan result = EdmValueParser.ParseDuration(invalidDuration);
                 };
 
-                parseDuration.ShouldThrow<FormatException>();
+                Assert.Throws<FormatException>(parseDuration);
             }
         }
 
@@ -343,7 +341,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     TimeSpan result = EdmValueParser.ParseDuration(invalidDuration);
                 };
 
-                parseDuration.ShouldThrow<FormatException>();
+                Assert.Throws<FormatException>(parseDuration);
             }
         }
 
@@ -355,7 +353,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 TimeSpan result = EdmValueParser.ParseDuration("+P1D");
             };
 
-            parseDuration.ShouldThrow<FormatException>();
+            Assert.Throws<FormatException>(parseDuration);
         }
 
         [Fact]
@@ -366,31 +364,31 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 TimeSpan result = EdmValueParser.ParseDuration("P10675199DT2H48M5.4775808S");
             };
 
-            tryParseDuration.ShouldThrow<OverflowException>();
+            Assert.Throws<OverflowException>(tryParseDuration);
         }
 
         [Fact]
         public void TryParseDurationWithInvalidDurationShouldBeFalse()
         {
             TimeSpan? result;
-            EdmValueParser.TryParseDuration(null, out result).Should().BeFalse();
-            result.Should().NotHaveValue();
+            Assert.False(EdmValueParser.TryParseDuration(null, out result));
+            Assert.Null(result);
         }
 
         [Fact]
         public void TryParseDurationWithValidDurationShouldBeTrue()
         {
             TimeSpan? result;
-            EdmValueParser.TryParseDuration(string.Empty, out result).Should().BeFalse();
-            result.Should().NotHaveValue();
+            Assert.False(EdmValueParser.TryParseDuration(string.Empty, out result));
+            Assert.Null(result);
         }
 
         [Fact]
         public void TryParseDurationThatOverflowsShouldBeFalse()
         {
             TimeSpan? result;
-            EdmValueParser.TryParseDuration("P10675199DT2H48M5.4775808S", out result).Should().BeFalse();
-            result.Should().NotHaveValue();
+            Assert.False(EdmValueParser.TryParseDuration("P10675199DT2H48M5.4775808S", out result));
+            Assert.Null(result);
         }
         #endregion
 
@@ -399,40 +397,40 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseIntThatOverFlowsShouldBeFalse()
         {
             int? result;
-            EdmValueParser.TryParseInt("-2147483648", out result).Should().BeTrue();
-            result.Should().Be(int.MinValue);
-            EdmValueParser.TryParseInt("-2147483649", out result).Should().BeFalse();
-            result.Should().NotHaveValue();
+            Assert.True(EdmValueParser.TryParseInt("-2147483648", out result));
+            Assert.Equal(int.MinValue, result);
+            Assert.False(EdmValueParser.TryParseInt("-2147483649", out result));
+            Assert.Null(result);
         }
 
         [Fact]
         public void TryParseLongThatOverFlowsShouldBeFalse()
         {
             long? result;
-            EdmValueParser.TryParseLong("9223372036854775807", out result).Should().BeTrue();
-            result.Should().Be(long.MaxValue);
-            EdmValueParser.TryParseLong("9223372036854775808", out result).Should().BeFalse();
-            result.Should().NotHaveValue();
+            Assert.True(EdmValueParser.TryParseLong("9223372036854775807", out result));
+            Assert.Equal(long.MaxValue, result);
+            Assert.False(EdmValueParser.TryParseLong("9223372036854775808", out result));
+            Assert.Null(result);
         }
 
         [Fact]
         public void TryParseDecimalThatOverFlowsShouldBeFalse()
         {
             decimal? result;
-            EdmValueParser.TryParseDecimal("-79228162514264337593543950335", out result).Should().BeTrue();
-            result.Should().Be(decimal.MinValue);
-            EdmValueParser.TryParseDecimal("-79228162514264337593543950336", out result).Should().BeFalse();
-            result.Should().NotHaveValue();
+            Assert.True(EdmValueParser.TryParseDecimal("-79228162514264337593543950335", out result));
+            Assert.Equal(decimal.MinValue, result);
+            Assert.False(EdmValueParser.TryParseDecimal("-79228162514264337593543950336", out result));
+            Assert.Null(result);
         }
 
         [Fact]
         public void TryParseFloatThatOverFlowsShouldBeFalse()
         {
             double? result;
-            EdmValueParser.TryParseFloat("1.7976931348623157E+308", out result).Should().BeTrue();
-            result.Should().Be(double.MaxValue);
-            EdmValueParser.TryParseFloat("1.7976931348623157E+309", out result).Should().BeFalse();
-            result.Should().NotHaveValue();
+            Assert.True(EdmValueParser.TryParseFloat("1.7976931348623157E+308", out result));
+            Assert.Equal(double.MaxValue, result);
+            Assert.False(EdmValueParser.TryParseFloat("1.7976931348623157E+309", out result));
+            Assert.Null(result);
         }
         #endregion Decimal
 
@@ -441,21 +439,21 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void ParseTimeOfDayNullShouldThrowFormatException()
         {
             TimeOfDay? result;
-            EdmValueParser.TryParseTimeOfDay(null, out result).Should().BeFalse();
+            Assert.False(EdmValueParser.TryParseTimeOfDay(null, out result));
         }
 
         [Fact]
         public void ParseTimeOfDayWithEmptyStringShouldThrowFormatException()
         {
             TimeOfDay? result;
-            EdmValueParser.TryParseTimeOfDay(string.Empty, out result).Should().BeFalse();
+            Assert.False(EdmValueParser.TryParseTimeOfDay(string.Empty, out result));
         }
 
         [Fact]
         public void ParseTimeOfDayWithSpaceShouldThrowFormatException()
         {
             TimeOfDay? result;
-            EdmValueParser.TryParseTimeOfDay(" ", out result).Should().BeFalse();
+            Assert.False(EdmValueParser.TryParseTimeOfDay(" ", out result));
         }
 
         [Fact]
@@ -472,7 +470,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             foreach (var invalidTimeOfDay in invalidTimeOfDays)
             {
                 TimeOfDay? result;
-                EdmValueParser.TryParseTimeOfDay(invalidTimeOfDay, out result).Should().BeFalse();
+                Assert.False(EdmValueParser.TryParseTimeOfDay(invalidTimeOfDay, out result));
             }
         }
 
@@ -480,8 +478,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseTimeOfDayWithValidParameterShouldParseCorrectly()
         {
             TimeOfDay? result;
-            EdmValueParser.TryParseTimeOfDay("1:12:5.009000", out result).Should().BeTrue();
-            result.Should().Be(new TimeOfDay(1, 12, 5, 9));
+            Assert.True(EdmValueParser.TryParseTimeOfDay("1:12:5.009000", out result));
+            Assert.Equal(new TimeOfDay(1, 12, 5, 9), result);
         }
         #endregion
     }

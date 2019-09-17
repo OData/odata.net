@@ -6,8 +6,6 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -44,68 +42,75 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void CreateReferentialConstraintShouldSucceedForSinglePropertyKey()
         {
             var testSubject = EdmReferentialConstraint.Create(new[] {this.otherTypeProperty1}, this.typeWithOneKey.Key());
-            testSubject.PropertyPairs.Should().HaveCount(1)
-                .And.Contain(p => p.DependentProperty == this.otherTypeProperty1 && p.PrincipalProperty == this.key1_1);
+            var pair = Assert.Single(testSubject.PropertyPairs);
+            Assert.Same(this.otherTypeProperty1, pair.DependentProperty);
+            Assert.Same(this.key1_1, pair.PrincipalProperty);
         }
 
         [Fact]
         public void CreateReferentialConstraintShouldSucceedForTwoPropertyKey()
         {
             var testSubject = EdmReferentialConstraint.Create(new[] {this.otherTypeProperty1, this.otherTypeProperty2}, this.typeWithTwoKeys.Key());
-            testSubject.PropertyPairs.Should().HaveCount(2)
-                .And.Contain(p => p.DependentProperty == this.otherTypeProperty1 && p.PrincipalProperty == this.key2_1)
-                .And.Contain(p => p.DependentProperty == this.otherTypeProperty2 && p.PrincipalProperty == this.key2_2);
+            Assert.Equal(2, testSubject.PropertyPairs.Count());
+
+            Assert.Contains(testSubject.PropertyPairs, p => p.DependentProperty == this.otherTypeProperty1 && p.PrincipalProperty == this.key2_1);
+            Assert.Contains(testSubject.PropertyPairs, p => p.DependentProperty == this.otherTypeProperty2 && p.PrincipalProperty == this.key2_2);
         }
 
         [Fact]
         public void CreateReferentialConstraintShouldSucceedForNonKeyPrincipalProperty()
         {
             var testSubject = EdmReferentialConstraint.Create(new[] { this.otherTypeProperty1 }, new []{ this.property1 });
-            testSubject.PropertyPairs.Should().HaveCount(1).And.Contain(p => p.DependentProperty == this.otherTypeProperty1 && p.PrincipalProperty == property1);
+            var pair = Assert.Single(testSubject.PropertyPairs);
+            Assert.Same(this.otherTypeProperty1, pair.DependentProperty);
+            Assert.Same(this.property1, pair.PrincipalProperty);
         }
 
         [Fact]
         public void CreateReferentialConstraintShouldNotChangeOrderOfProperties()
         {
             var testSubject = EdmReferentialConstraint.Create(new[] {this.otherTypeProperty2, this.otherTypeProperty1}, this.typeWithTwoKeys.Key());
-            testSubject.PropertyPairs.Should().HaveCount(2)
-                .And.Contain(p => p.DependentProperty == this.otherTypeProperty2 && p.PrincipalProperty == this.key2_1)
-                .And.Contain(p => p.DependentProperty == this.otherTypeProperty1 && p.PrincipalProperty == this.key2_2);
+            Assert.Equal(2, testSubject.PropertyPairs.Count());
+            Assert.Contains(testSubject.PropertyPairs, p => p.DependentProperty == this.otherTypeProperty2 && p.PrincipalProperty == this.key2_1);
+            Assert.Contains(testSubject.PropertyPairs, p => p.DependentProperty == this.otherTypeProperty1 && p.PrincipalProperty == this.key2_2);
         }
 
         [Fact]
         public void CreateReferentialConstraintShouldFailIfTooFewPropertiesAreGiven()
         {
             Action createWithTooFewProperties = () => EdmReferentialConstraint.Create(new[] { this.otherTypeProperty1 }, this.typeWithTwoKeys.Key());
-            createWithTooFewProperties.ShouldThrow<ArgumentException>().WithMessage(Strings.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(2, 1));
+
+            var exception = Assert.Throws<ArgumentException>(createWithTooFewProperties);
+            Assert.Equal(Strings.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(2, 1), exception.Message);
         }
 
         [Fact]
         public void CreateReferentialConstraintShouldFailIfTooManyPropertiesAreGiven()
         {
             Action createWithTooManyProperties = () => EdmReferentialConstraint.Create(new[] { this.otherTypeProperty1, this.otherTypeProperty2 }, this.typeWithOneKey.Key());
-            createWithTooManyProperties.ShouldThrow<ArgumentException>().WithMessage(Strings.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(1, 2));
+            var exception = Assert.Throws<ArgumentException>(createWithTooManyProperties);
+            Assert.Equal(Strings.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(1, 2), exception.Message);
         }
 
         [Fact]
         public void CreateReferentialConstraintShouldFailIfPropertiesAreNull()
         {
             Action createWithNullProperties = () => EdmReferentialConstraint.Create(null, this.typeWithOneKey.Key());
-            createWithNullProperties.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("dependentProperties"));
+            Assert.Throws<ArgumentNullException>("dependentProperties", createWithNullProperties);
         }
 
         [Fact]
         public void CreateReferentialConstraintShouldFailIfPrincipalPropertiesAreNull()
         {
             Action createWithNullProperties = () => EdmReferentialConstraint.Create(Enumerable.Empty<IEdmStructuralProperty>(), null);
-            createWithNullProperties.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("principalProperties"));
+            Assert.Throws<ArgumentNullException>("principalProperties", createWithNullProperties);
         }
 
         [Fact]
         public void ReferentialConstraintConstructorShouldFailIfPairsAreNull()
         {
             Action constructWithNullPairs = () => new EdmReferentialConstraint(null);
-            constructWithNullPairs.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("propertyPairs"));
+            Assert.Throws<ArgumentNullException>("propertyPairs", constructWithNullPairs);
         }
 
     }
