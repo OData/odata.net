@@ -7,12 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Tests.Evaluation;
-using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
 using Microsoft.OData.Tests.UriParser;
 
@@ -110,8 +108,8 @@ namespace Microsoft.OData.Tests.JsonLight
             resource.AddFunction(function);
             resource.AddAction(action);
 
-            resource.MetadataBuilder.Should().BeSameAs(resourceMetadataBuilder);
-            
+            Assert.Same(resourceMetadataBuilder, resource.MetadataBuilder);
+
             //metadataselector only allows for two HasHat functions to be written as metadata
             Assert.True(resource.Functions.Count() == 3);
             Assert.True(resource.Actions.Count() == 1);
@@ -141,7 +139,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
 
             fullMetadataLevel.InjectMetadataBuilder(resource, resourceMetadataBuilder);
-            resource.MetadataBuilder.Should().BeSameAs(resourceMetadataBuilder);
+            Assert.Same(resourceMetadataBuilder, resource.MetadataBuilder);
 
             int count = 0;
             while (resource.MetadataBuilder.GetNextUnprocessedNavigationLink() != null)
@@ -174,7 +172,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*settings*/ settings);
 
             fullMetadataLevel.InjectMetadataBuilder(resource, resourceMetadataBuilder);
-            resource.MetadataBuilder.Should().BeSameAs(resourceMetadataBuilder);
+            Assert.Same(resourceMetadataBuilder, resource.MetadataBuilder);
 
             int count = 0;
             while (resource.MetadataBuilder.GetNextUnprocessedNavigationLink() != null)
@@ -208,7 +206,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*settings*/ settings);
 
             fullMetadataLevel.InjectMetadataBuilder(resource, resourceMetadataBuilder);
-            resource.MetadataBuilder.Should().BeSameAs(resourceMetadataBuilder);
+            Assert.Same(resourceMetadataBuilder, resource.MetadataBuilder);
 
             int count = 0;
             while (resource.MetadataBuilder.GetNextUnprocessedStreamProperty() != null)

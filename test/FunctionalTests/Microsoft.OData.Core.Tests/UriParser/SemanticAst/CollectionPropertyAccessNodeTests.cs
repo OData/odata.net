@@ -5,11 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -24,35 +22,35 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void SourceIsSet()
         {
             var node = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
-            node.Source.Should().BeSameAs(this.fakeDogSource);
+            Assert.Same(node.Source, this.fakeDogSource);
         }
 
         [Fact]
         public void PropertyIsSet()
-        {   
+        {
             var node = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
-            node.Property.Should().BeSameAs(HardCodedTestModel.GetDogNicknamesProperty());
+            Assert.Same(node.Property, HardCodedTestModel.GetDogNicknamesProperty());
         }
 
         [Fact]
         public void SourceCannotBeNull()
         {
             Action createWithNullSource = () => new CollectionPropertyAccessNode(null, HardCodedTestModel.GetPersonShoeProp());
-            createWithNullSource.ShouldThrow<Exception>(Error.ArgumentNull("source").ToString());
+            Assert.Throws<ArgumentNullException>("source", createWithNullSource);
         }
 
         [Fact]
         public void PropertyCannotBeNull()
         {
             Action createWithNullProperty = () => new CollectionPropertyAccessNode(new ConstantNode(1), null);
-            createWithNullProperty.ShouldThrow<Exception>(Error.ArgumentNull("property").ToString());
+            Assert.Throws<ArgumentNullException>("property", createWithNullProperty);
         }
 
         [Fact]
         public void CollectionPropertyAccessNodesCanUseGeography()
         {
             CollectionPropertyAccessNode propertyAccessNode = new CollectionPropertyAccessNode(new ConstantNode(2), HardCodedTestModel.GetPersonGeographyCollectionProp());
-            propertyAccessNode.Property.Should().Be(HardCodedTestModel.GetPersonGeographyCollectionProp());
+            Assert.Same(propertyAccessNode.Property, HardCodedTestModel.GetPersonGeographyCollectionProp());
         }
 
         [Fact]
@@ -60,35 +58,35 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ConstantNode constant = new ConstantNode(2);
             CollectionPropertyAccessNode propertyAccessNode = new CollectionPropertyAccessNode(constant, HardCodedTestModel.GetPersonGeometryCollectionProp());
-            propertyAccessNode.Property.Should().Be(HardCodedTestModel.GetPersonGeometryCollectionProp());
+            Assert.Same(propertyAccessNode.Property, HardCodedTestModel.GetPersonGeometryCollectionProp());
         }
 
         [Fact]
         public void CollectionPropertyAccessCannotTakeANavigationProperty()
         {
             Action create = () => new CollectionPropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetDogMyPeopleNavProp());
-            create.ShouldThrow<ArgumentException>().WithMessage(Strings.Nodes_PropertyAccessShouldBeNonEntityProperty("MyPeople"));
+            create.Throws<ArgumentException>(Strings.Nodes_PropertyAccessShouldBeNonEntityProperty("MyPeople"));
         }
 
         [Fact]
         public void CollectionPropertyAccessCannotTakeANonCollectionProperty()
         {
             Action create = () => new CollectionPropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetDogColorProp());
-            create.ShouldThrow<ArgumentException>().WithMessage(Strings.Nodes_PropertyAccessTypeMustBeCollection("Color"));
+            create.Throws<ArgumentException>(Strings.Nodes_PropertyAccessTypeMustBeCollection("Color"));
         }
 
         [Fact]
         public void CollectionPropertyAccessShouldSetItemTypeFromProperty()
         {
             var node = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
-            node.ItemType.Should().BeSameAs(HardCodedTestModel.GetDogNicknamesProperty().Type.AsCollection().CollectionDefinition().ElementType);
+            Assert.Same(node.ItemType, HardCodedTestModel.GetDogNicknamesProperty().Type.AsCollection().CollectionDefinition().ElementType);
         }
 
         [Fact]
         public void CollectionPropertyAccessShouldSetCollectionTypeFromProperty()
         {
             var node = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
-            node.CollectionType.Should().BeSameAs(HardCodedTestModel.GetDogNicknamesProperty().Type.AsCollection());
+            Assert.Same(node.CollectionType, HardCodedTestModel.GetDogNicknamesProperty().Type.AsCollection());
         }
     }
 }

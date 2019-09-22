@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Xunit;
@@ -30,7 +29,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntityReferenceCannotAppearAfterMetadata()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("$metadata/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$metadata"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$metadata/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$metadata"));
         }
 
         [Fact]
@@ -39,21 +38,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var path = PathFunctionalTestsUtil.RunParsePath("Boss/$ref");
 
             ReferenceSegment referenceSegment = path.LastSegment as ReferenceSegment;
-            referenceSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetBossSingleton());
-            referenceSegment.SingleResult.Should().BeTrue();
+            Assert.Same(referenceSegment.TargetEdmNavigationSource, HardCodedTestModel.GetBossSingleton());
+            Assert.True(referenceSegment.SingleResult);
         }
 
         [Fact]
         public void EntityReferenceCannotAppearAfterBatch()
         {
             // Note: Case where $ref is after batch reference is in PathFunctionaltests.cs (EntityReferenceCannotAppearAfterBatchReference)
-            PathFunctionalTestsUtil.RunParseErrorPath("$batch/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.BatchSegment));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$batch/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.BatchSegment));
         }
 
         [Fact]
         public void KeyLookupCannotAppearAfterCountAfterEntityReference()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/MyPeople/$ref/$count(1)", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("Dogs(1)/MyPeople/$ref/$count(1)", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
@@ -65,13 +64,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntityReferenceCannotAppearAfterProperty()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/SSN/$ref", ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("SSN", "$ref"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/SSN/$ref", ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("SSN", "$ref"));
         }
 
         [Fact]
         public void CountCannotAppearAfterEntityReferenceCollectionProperties()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/MyPeople/$ref/$count", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("Dogs(1)/MyPeople/$ref/$count", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
@@ -105,7 +104,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntityReferenceCannotAppearAfterAValueSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/$value/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/$value/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
         }
 
         [Fact]
@@ -118,7 +117,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntityReferenceCannotAppearAfterReferenceSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People/$ref/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$ref"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People/$ref/$ref", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$ref"));
         }
 
         [Fact]
@@ -182,7 +181,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CannotGoToPropetyOnEntityReference()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(7)/MyDog/$ref/Color", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(7)/MyDog/$ref/Color", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
         [Fact]
@@ -195,6 +194,5 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
             path[2].ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetPersonMyDogNavProp());
         }
-
     }
 }

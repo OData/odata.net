@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -71,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void OperationCannotBeNull()
         {
             Action createWithNullServiceOperations = () => new OperationImportSegment((IEdmOperationImport)null, HardCodedTestModel.GetPeopleSet());
-            createWithNullServiceOperations.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("operation"));
+            Assert.Throws<ArgumentNullException>("operationImport", createWithNullServiceOperations);
         }
 
         [Fact]
@@ -80,7 +79,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             Action createWithNullServiceOperations = () => new OperationImportSegment((List<IEdmOperationImport>)null, HardCodedTestModel.GetPeopleSet());
 
             // bad error message as a result of making OperationSegment take IEnumerable... but its still thrown by us so I don't care.
-            createWithNullServiceOperations.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("operations"));
+            Assert.Throws<ArgumentNullException>("operationImports", createWithNullServiceOperations);
         }
 
         [Fact]
@@ -89,28 +88,36 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             OperationImportSegment segment = new OperationImportSegment(new List<IEdmOperationImport>() { HardCodedTestModel.GetFunctionImportForGetCoolestPerson() },
                 HardCodedTestModel.GetPeopleSet(),
                 new[] { new OperationSegmentParameter("stuff", new ConstantNode(new ODataPrimitiveValue(true))), });
-            segment.ShouldHaveConstantParameter("stuff", new ODataPrimitiveValue(true));
+
+            OperationSegmentParameter parameter = segment.Parameters.SingleOrDefault(p => p.Name == "stuff");
+            Assert.NotNull(parameter);
+
+            ConstantNode constantNode = Assert.IsType<ConstantNode>(parameter.Value);
+
+            var actual = Assert.IsType<ODataPrimitiveValue>(constantNode.Value);
+            Assert.Equal(true, actual.Value);
         }
 
         [Fact]
         public void SingleOperationSetCorrectly()
         {
             OperationImportSegment segment = new OperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolestPerson(), HardCodedTestModel.GetPeopleSet());
-            segment.OperationImports.Single().Should().BeSameAs(HardCodedTestModel.GetFunctionImportForGetCoolestPerson());
+            Assert.Same(HardCodedTestModel.GetFunctionImportForGetCoolestPerson(), segment.OperationImports.Single());
         }
 
         [Fact]
         public void CandidateServiceOperationsSetCorrectly()
         {
             OperationImportSegment segment = new OperationImportSegment(new List<IEdmOperationImport>() { HardCodedTestModel.GetFunctionImportForGetCoolestPerson() }, HardCodedTestModel.GetPeopleSet());
-            segment.OperationImports.Should().OnlyContain(x => x.Name == HardCodedTestModel.GetFunctionImportForGetCoolestPerson().Name);
+            var operationImport = Assert.Single(segment.OperationImports);
+            Assert.Equal(HardCodedTestModel.GetFunctionImportForGetCoolestPerson().Name, operationImport.Name);
         }
 
         [Fact]
         public void EntitySetIsCorrect()
         {
             OperationImportSegment segment = new OperationImportSegment(new List<IEdmOperationImport>() { HardCodedTestModel.GetFunctionImportForGetCoolestPerson() }, HardCodedTestModel.GetPeopleSet());
-            segment.EntitySet.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), segment.EntitySet);
         }
 
         [Fact]
@@ -119,14 +126,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var operations = new List<IEdmOperationImport>();
             Action create = () => new OperationImportSegment(operations, null);
 
-            create.ShouldThrow<ArgumentException>().Where(e => e.Message.Contains("operations"));
+            Assert.Throws<ArgumentException>("operations", create);
         }
 
         [Fact]
         public void EdmTypeComputedFromOperationReturnTypeForSingleOperation()
         {
             OperationImportSegment segment = new OperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolestPerson(), HardCodedTestModel.GetPeopleSet());
-            segment.EdmType.Should().BeSameAs(HardCodedTestModel.GetFunctionImportForGetCoolestPerson().Operation.ReturnType.Definition);
+            Assert.Same(HardCodedTestModel.GetFunctionImportForGetCoolestPerson().Operation.ReturnType.Definition, segment.EdmType);
         }
 
         [Fact]
@@ -141,7 +148,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var segment = new OperationImportSegment(operations, null);
 
             // All operations in the list return int, so we can set the return type to that.
-            segment.EdmType.ShouldBeEquivalentTo(operations.First().Operation.ReturnType.Definition);
+            Assert.Same(operations.First().Operation.ReturnType.Definition, segment.EdmType);
         }
 
         [Fact]
@@ -163,7 +170,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             }
             catch (ODataException e)
             {
-                e.Message.Should().Be("No type could be computed for this Segment since there were multiple possible operations with varying return types.");
+                Assert.Equal("No type could be computed for this Segment since there were multiple possible operations with varying return types.", e.Message);
             }
         }
 
@@ -171,36 +178,36 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void IfEntitySetSpecifiedThenComputedtypeMustBeEntityOrUnknown()
         {
             Action create = () => new OperationImportSegment(HardCodedTestModel.GetAllFunctionImportsForGetMostImportantPerson()[0], HardCodedTestModel.GetDogsSet());
-            create.ShouldThrow<ODataException>().WithMessage("The return type from the operation is not possible with the given entity set.");
+            create.Throws<ODataException>("The return type from the operation is not possible with the given entity set.");
         }
 
         [Fact]
         public void ComputedTypeMustBeRelatedToEntitySet()
         {
             Action create = () => new OperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolestPerson(), HardCodedTestModel.GetDogsSet());
-            create.ShouldThrow<ODataException>().WithMessage("The return type from the operation is not possible with the given entity set.");
+            create.Throws<ODataException>("The return type from the operation is not possible with the given entity set.");
         }
 
         [Fact]
         public void ComputedTypeCanBeRelatedToEntitySetByInheritance()
         {
             OperationImportSegment segment = new OperationImportSegment(HardCodedTestModel.GetFunctionImportForGetBestManager(), HardCodedTestModel.GetPeopleSet());
-            segment.EdmType.Should().BeSameAs(HardCodedTestModel.GetManagerType());
-            segment.EntitySet.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            Assert.Same(HardCodedTestModel.GetManagerType(), segment.EdmType);
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), segment.EntitySet);
         }
 
         [Fact]
         public void ComputedTypeInsideCollectionShouldBeUsedWhenComparingToSet()
         {
             Action create = () => new OperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolPeople(), HardCodedTestModel.GetPeopleSet());
-            create.ShouldNotThrow();
+            create.DoesNotThrow();
         }
 
         [Fact]
         public void OperationWithTypeShouldNotAllowEntitySet()
         {
             Action create = () => new OperationImportSegment(HardCodedTestModel.GetFunctionImportForResetAllData(), HardCodedTestModel.GetPeopleSet());
-            create.ShouldThrow<ODataException>().WithMessage("The return type from the operation is not possible with the given entity set.");
+            create.Throws<ODataException>("The return type from the operation is not possible with the given entity set.");
         }
 
         [Fact]
@@ -208,7 +215,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             OperationImportSegment segment1 = new OperationImportSegment(new List<IEdmOperationImport>() { HardCodedTestModel.GetFunctionImportForGetCoolestPerson() }, HardCodedTestModel.GetPeopleSet());
             OperationImportSegment segment2 = new OperationImportSegment(new List<IEdmOperationImport>() { HardCodedTestModel.GetFunctionImportForGetCoolestPerson() }, HardCodedTestModel.GetPeopleSet());
-            segment1.Equals(segment2).Should().BeTrue();
+            Assert.True(segment1.Equals(segment2));
         }
 
         [Fact]
@@ -218,9 +225,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             OperationImportSegment operationSegment2 = new OperationImportSegment(new List<IEdmOperationImport>() { HardCodedTestModel.GetFunctionImportForGetCoolestPerson() }, null);
             OperationImportSegment operationSegment3 = new OperationImportSegment(new List<IEdmOperationImport>() { HardCodedTestModel.GetFunctionImportForGetCoolPeople() }, HardCodedTestModel.GetPeopleSet());
             BatchSegment segment = BatchSegment.Instance;
-            operationSegment1.Equals(operationSegment2).Should().BeFalse();
-            operationSegment1.Equals(operationSegment3).Should().BeFalse();
-            operationSegment1.Equals(segment).Should().BeFalse();
+            Assert.False(operationSegment1.Equals(operationSegment2));
+            Assert.False(operationSegment1.Equals(operationSegment3));
+            Assert.False(operationSegment1.Equals(segment));
         }
     }
 }

@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -18,7 +17,7 @@ namespace Microsoft.OData.Tests
         {
             ODataProperty property = null;
             Action action = () => property.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("property"));
+            Assert.Throws<ArgumentNullException>("property", action);
         }
 
         [Fact]
@@ -27,7 +26,7 @@ namespace Microsoft.OData.Tests
             ODataProperty property = new ODataProperty();
             ODataPropertySerializationInfo serializationInfo = new ODataPropertySerializationInfo();
             property.SetSerializationInfo(serializationInfo);
-            property.SerializationInfo.Should().BeSameAs(serializationInfo);
+            Assert.Same(serializationInfo, property.SerializationInfo);
         }
 
         [Fact]
@@ -37,7 +36,7 @@ namespace Microsoft.OData.Tests
             ODataPropertySerializationInfo serializationInfo = new ODataPropertySerializationInfo();
             property.SerializationInfo = serializationInfo;
             property.SetSerializationInfo(null);
-            property.SerializationInfo.Should().BeNull();
+            Assert.Null(property.SerializationInfo);
         }
         #endregion ODataProperty
 
@@ -47,7 +46,7 @@ namespace Microsoft.OData.Tests
         {
             ODataResourceSet resourceCollection = null;
             Action action = () => resourceCollection.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("resourceSet"));
+            Assert.Throws<ArgumentNullException>("resourceSet", action);
         }
 
         [Fact]
@@ -56,7 +55,7 @@ namespace Microsoft.OData.Tests
             ODataResourceSet resourceCollection = new ODataResourceSet();
             ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             resourceCollection.SetSerializationInfo(serializationInfo);
-            resourceCollection.SerializationInfo.Should().BeSameAs(serializationInfo);
+            Assert.Same(serializationInfo, resourceCollection.SerializationInfo);
         }
 
         [Fact]
@@ -66,7 +65,7 @@ namespace Microsoft.OData.Tests
             ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             resourceCollection.SerializationInfo = serializationInfo;
             resourceCollection.SetSerializationInfo(null);
-            resourceCollection.SerializationInfo.Should().BeNull();
+            Assert.Null(resourceCollection.SerializationInfo);
         }
         #endregion ODataFeed
 
@@ -76,7 +75,7 @@ namespace Microsoft.OData.Tests
         {
             ODataResource entry = null;
             Action action = () => entry.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("resource"));
+            Assert.Throws<ArgumentNullException>("resource", action);
         }
 
         [Fact]
@@ -85,7 +84,7 @@ namespace Microsoft.OData.Tests
             ODataResource entry = new ODataResource();
             ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             entry.SetSerializationInfo(serializationInfo);
-            entry.SerializationInfo.Should().BeSameAs(serializationInfo);
+            Assert.Same(serializationInfo, entry.SerializationInfo);
         }
 
         [Fact]
@@ -95,7 +94,7 @@ namespace Microsoft.OData.Tests
             ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             entry.SerializationInfo = serializationInfo;
             entry.SetSerializationInfo(null);
-            entry.SerializationInfo.Should().BeNull();
+            Assert.Null(entry.SerializationInfo);
         }
         #endregion ODataResource
 
@@ -105,7 +104,7 @@ namespace Microsoft.OData.Tests
         {
             ODataCollectionStart collectionStart = null;
             Action action = () => collectionStart.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("collectionStart"));
+            Assert.Throws<ArgumentNullException>("collectionStart", action);
         }
 
         [Fact]
@@ -114,7 +113,7 @@ namespace Microsoft.OData.Tests
             ODataCollectionStart collectionStart = new ODataCollectionStart();
             ODataCollectionStartSerializationInfo serializationInfo = new ODataCollectionStartSerializationInfo { CollectionTypeName = "Collection(Edm.String)" };
             collectionStart.SetSerializationInfo(serializationInfo);
-            collectionStart.SerializationInfo.Should().BeSameAs(serializationInfo);
+            Assert.Same(serializationInfo, collectionStart.SerializationInfo);
         }
 
         [Fact]
@@ -124,7 +123,7 @@ namespace Microsoft.OData.Tests
             ODataCollectionStartSerializationInfo serializationInfo = new ODataCollectionStartSerializationInfo { CollectionTypeName = "Collection(Edm.String)" };
             collectionStart.SerializationInfo = serializationInfo;
             collectionStart.SetSerializationInfo(null);
-            collectionStart.SerializationInfo.Should().BeNull();
+            Assert.Null(collectionStart.SerializationInfo);
         }
         #endregion ODataCollectionStart
     }

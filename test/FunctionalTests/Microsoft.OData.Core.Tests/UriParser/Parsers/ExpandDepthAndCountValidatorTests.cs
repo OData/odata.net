@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
@@ -148,7 +147,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var testSubject = new ExpandDepthAndCountValidator(maxDepth, maxCount);
             Action validate = () => testSubject.Validate(selectExpandClause);
-            validate.ShouldThrow<ODataException>().WithMessage(expectedMessage);
+            validate.Throws<ODataException>(expectedMessage);
         }
 
         private static void ValidatorShouldNotThrow(SelectExpandClause selectExpandClause, int maxDepth = 100, int maxCount = 100)

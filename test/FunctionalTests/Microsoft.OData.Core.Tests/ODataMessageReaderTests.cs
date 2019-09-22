@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -21,7 +20,7 @@ namespace Microsoft.OData.Tests
         public void CreateMessageReaderShouldNotSetAnnotationFilterWhenODataAnnotationsIsNotSetOnPreferenceAppliedHeader()
         {
             ODataMessageReader reader = new ODataMessageReader((IODataResponseMessage)new InMemoryMessage(), new ODataMessageReaderSettings());
-            reader.Settings.ShouldIncludeAnnotation.Should().BeNull();
+            Assert.Null(reader.Settings.ShouldIncludeAnnotation);
         }
 
         [Fact]
@@ -30,7 +29,7 @@ namespace Microsoft.OData.Tests
             IODataResponseMessage responseMessage = new InMemoryMessage();
             responseMessage.PreferenceAppliedHeader().AnnotationFilter = "*";
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings());
-            reader.Settings.ShouldIncludeAnnotation.Should().NotBeNull();
+            Assert.NotNull(reader.Settings.ShouldIncludeAnnotation);
         }
 
         [Fact]
@@ -40,7 +39,7 @@ namespace Microsoft.OData.Tests
             responseMessage.PreferenceAppliedHeader().AnnotationFilter = "*";
             Func<string, bool> shouldWrite = name => false;
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings { ShouldIncludeAnnotation = shouldWrite });
-            reader.Settings.ShouldIncludeAnnotation.Should().BeSameAs(shouldWrite);
+            Assert.Same(reader.Settings.ShouldIncludeAnnotation, shouldWrite);
         }
 
         [Fact]
@@ -63,7 +62,8 @@ namespace Microsoft.OData.Tests
 #endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
-            reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "Length", EdmPrimitiveTypeKind.Int32), true)).Should().Be(123);
+            var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "Length", EdmPrimitiveTypeKind.Int32), true));
+            Assert.Equal(123, result);
         }
 
         [Fact]
@@ -76,7 +76,8 @@ namespace Microsoft.OData.Tests
 #endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
-            reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true)).Should().Be(new Date(2014, 1, 3));
+            var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true));
+            Assert.Equal(new Date(2014, 1, 3), result);
         }
 
         [Fact]
@@ -89,7 +90,8 @@ namespace Microsoft.OData.Tests
 #endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
-            reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true)).Should().Be(new Date(2014, 1, 3));
+            var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true));
+            Assert.Equal(new Date(2014, 1, 3), result);
         }
 
         [Fact]
@@ -102,7 +104,8 @@ namespace Microsoft.OData.Tests
 #endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
-            reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true)).Should().Be(new TimeOfDay(12, 30, 4, 998));
+            var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true));
+            Assert.Equal(new TimeOfDay(12, 30, 4, 998), result);
         }
 
         [Fact]
@@ -115,7 +118,8 @@ namespace Microsoft.OData.Tests
 #endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
-            reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true)).Should().Be(new TimeOfDay(12, 30, 4, 998));
+            var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true));
+            Assert.Equal(new TimeOfDay(12, 30, 4, 998), result);
         }
 
         [Fact]
@@ -143,7 +147,7 @@ namespace Microsoft.OData.Tests
                 "UnexpectedXmlElement : The schema element 'Invalid' was not expected in the given context. : (6, 8)\r\n";
 
             Action test = () => reader.ReadMetadataDocument();
-            test.ShouldThrow<ODataException>().Where(e => e.Message.Equals(expectedErrorMessage));
+            test.Throws<ODataException>(expectedErrorMessage);
         }
 
         [Fact]
@@ -171,7 +175,7 @@ namespace Microsoft.OData.Tests
                 "UnexpectedXmlElement : The schema element 'Invalid' was not expected in the given context. : (1, 250)\r\n";
 
             Action test = () => reader.ReadMetadataDocument();
-            test.ShouldThrow<ODataException>().Where(e => e.Message.Equals(expectedErrorMessage));
+            test.Throws<ODataException>(expectedErrorMessage);
         }
 
         [Fact]
@@ -232,7 +236,7 @@ namespace Microsoft.OData.Tests
 
             ODataMessageReader reader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings(), model);
             Action read = () => reader.ReadProperty(model.GetUInt32("MyNS", false));
-            read.ShouldNotThrow();
+            read.DoesNotThrow();
         }
     }
 }

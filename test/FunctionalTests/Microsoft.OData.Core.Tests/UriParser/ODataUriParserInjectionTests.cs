@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Tests.UriParser.Binders;
@@ -484,7 +483,7 @@ namespace Microsoft.OData.Tests.UriParser
             Uri fullUri = new Uri("https://serviceRoot/drive/recent?$count=true");
             ODataPath odataPath;
             var uriParser = ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(fullUri, out odataPath);
-            uriParser.ParseCount().Should().BeTrue();
+            Assert.True(uriParser.ParseCount());
         }
 
         private ODataPath ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(Uri fullUri, ODataUrlKeyDelimiter uriConventions = null)

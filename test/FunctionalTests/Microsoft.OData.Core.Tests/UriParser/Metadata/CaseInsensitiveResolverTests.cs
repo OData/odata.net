@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
@@ -386,7 +385,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     IList<QueryNode> parameters = filter.Expression
                        .ShouldBeSingleValueFunctionCallQueryNode("startswith", EdmCoreModel.Instance.GetBoolean(false))
                        .Parameters.ToList();
-                    parameters.Count.Should().Be(2);
+                    Assert.Equal(2, parameters.Count);
                     parameters[0].ShouldBeSingleValuePropertyAccessQueryNode(ZipCodeProperty);
                     parameters[1].ShouldBeConstantQueryNode("2");
                 },

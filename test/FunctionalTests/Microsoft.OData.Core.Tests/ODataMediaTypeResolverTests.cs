@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -126,7 +125,7 @@ namespace Microsoft.OData.Tests
 
                 var expected = MediaTypeCollection[(int)payloadKind];
                 var actual = resolver.GetMediaTypeFormats(payloadKind);
-                actual.ShouldBeEquivalentTo(expected);
+                VerifyMediaTypeFormats(actual, expected);
             }
         }
 
@@ -145,7 +144,7 @@ namespace Microsoft.OData.Tests
                 expected.Insert(0, MyFormat.MediaTypeWithFormatA);
 
                 var actual = resolver.GetMediaTypeFormats(payloadKind);
-                actual.ShouldBeEquivalentTo(expected);
+                VerifyMediaTypeFormats(actual, expected);
             }
         }
 
@@ -175,11 +174,27 @@ namespace Microsoft.OData.Tests
                 ODataPayloadKind selectedPayloadKind;
                 ODataFormat actual = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { payloadKind }, resolver, out mediaType, out encoding, out selectedPayloadKind);
 
-                actual.ShouldBeEquivalentTo(MyFormat.Instance);
-                mediaType.ShouldBeEquivalentTo(expectedMediaType);
-                encoding.ShouldBeEquivalentTo(payloadKind == ODataPayloadKind.BinaryValue ? null : Encoding.UTF8);
-                selectedPayloadKind.ShouldBeEquivalentTo(payloadKind);
+                Assert.Equal(MyFormat.Instance, actual);
+                Assert.Equal(expectedMediaType.FullTypeName, mediaType.FullTypeName);
+                Assert.Equal(payloadKind == ODataPayloadKind.BinaryValue ? null : Encoding.UTF8, encoding);
+                Assert.Equal(payloadKind, selectedPayloadKind);
             }
+        }
+
+        private static void VerifyMediaTypeFormats(IEnumerable<ODataMediaTypeFormat> actual, IList<ODataMediaTypeFormat> expect)
+        {
+            Assert.Equal(actual.Count(), expect.Count);
+            int index = 0;
+            foreach (var item in actual)
+            {
+                VerifyMediaTypeFormat(item, expect[index++]);
+            }
+        }
+
+        private static void VerifyMediaTypeFormat(ODataMediaTypeFormat actual, ODataMediaTypeFormat expect)
+        {
+            Assert.Same(expect.Format, actual.Format);
+            Assert.Equal(expect.MediaType.FullTypeName, actual.MediaType.FullTypeName);
         }
 
         private class MyFormat : ODataFormat

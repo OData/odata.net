@@ -7,7 +7,6 @@
 using System;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
@@ -31,8 +30,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void OrderByAndFilterShouldPopulateBothProperties()
         {
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=true&$orderby=Shoe", this.edmModel);
-            semanticTree.Filter.Should().NotBeNull();
-            semanticTree.OrderBy.Should().NotBeNull();
+            Assert.NotNull(semanticTree.Filter);
+            Assert.NotNull(semanticTree.OrderBy);
         }
 
         [Fact]
@@ -47,7 +46,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 s => s.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp())
             });
 
-            semanticTree.Filter.ItemType.Definition.Should().Be(HardCodedTestModel.GetPersonType());
+            Assert.Same(HardCodedTestModel.GetPersonType(), semanticTree.Filter.ItemType.Definition);
         }
 
         [Fact]
@@ -56,8 +55,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/Fully.Qualified.Namespace.Dog/Color eq 'Black'", this.edmModel);
 
             var cmp = this.edmModel.FindType("Fully.Qualified.Namespace.Dog");
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As
-                <SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmp);
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var castNode = Assert.IsType<SingleResourceCastNode>(propertyAccessNode.Source);
+            Assert.Same(castNode.StructuredTypeReference.Definition, cmp);
         }
 
         [Fact]
@@ -66,22 +67,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=Fully.Qualified.Namespace.Employee/WorkEmail eq 'bob@yahoo.com'", this.edmModel);
 
             var cmp = this.edmModel.FindType("Fully.Qualified.Namespace.Employee");
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As
-                <SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmp);
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var castNode = Assert.IsType<SingleResourceCastNode>(propertyAccessNode.Source);
+            Assert.Same(castNode.StructuredTypeReference.Definition, cmp);
         }
 
         [Fact]
         public void InvalidCastInFilterShouldFail()
         {
             Action test = () => HardCodedTestModel.ParseUri("People?$filter=Fully.Qualified.Namespace.Dog/Color eq 'White'", this.edmModel);
-            test.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(test);
         }
 
         [Fact]
         public void InvalidPropertyShouldFailUnderCastInFilter()
         {
             Action test = () => HardCodedTestModel.ParseUri("People?$filter=Fully.Qualified.Namespace.Person/WorkEmail eq 'crimson@harvard.edu'", this.edmModel);
-            test.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(test);
         }
 
         [Fact]
@@ -89,7 +92,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Person/Shoe eq 'Sketchers'", this.edmModel);
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpPerson);
+
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var castNode = Assert.IsType<SingleResourceCastNode>(propertyAccessNode.Source);
+            Assert.Same(castNode.StructuredTypeReference.Definition, cmpPerson);
         }
 
         [Fact]
@@ -97,19 +104,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/MyPeople/any(a: a/Fully.Qualified.Namespace.Employee/Shoe eq 'Calvin Klein' )", this.edmModel);
             var cmpEmployee = this.edmModel.FindType("Fully.Qualified.Namespace.Employee");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpEmployee);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyNode.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var castNode = Assert.IsType<SingleResourceCastNode>(propertyAccessNode.Source);
+            Assert.Same(castNode.StructuredTypeReference.Definition, cmpEmployee);
         }
 
         [Fact]
         public void CastMayLeadAny()
         {
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/MyPeople/Fully.Qualified.Namespace.Employee/any(a: a/Shoe eq 'Calvin Klein' )", this.edmModel);
-            semanticTree.Filter.Expression.ShouldBeAnyQueryNode().
+            Assert.Same(semanticTree.Filter.Expression.ShouldBeAnyQueryNode().
                 Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
                 Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonShoeProp()).
                 Source.ShouldBeResourceRangeVariableReferenceNode("a").
-                TypeReference.Definition.Should().Be(HardCodedTestModel.GetEmployeeType());
+                TypeReference.Definition, HardCodedTestModel.GetEmployeeType());
         }
 
         [Fact]
@@ -118,10 +129,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=Fully.Qualified.Namespace.Person/Fully.Qualified.Namespace.Person/Fully.Qualified.Namespace.Employee/WorkEmail eq 'foobarstu@ucla.edu'", this.edmModel);
             var cmpEmployee = this.edmModel.FindType("Fully.Qualified.Namespace.Employee");
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
-            semanticTree.Filter.Expression.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpEmployee);
-            semanticTree.Filter.Expression.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpPerson);
+
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var castNode = Assert.IsType<SingleResourceCastNode>(propertyAccessNode.Source);
+            Assert.Same(castNode.StructuredTypeReference.Definition, cmpEmployee);
+
+            var castCastNode = Assert.IsType<SingleResourceCastNode>(castNode.Source);
+            Assert.Same(castCastNode.StructuredTypeReference.Definition, cmpPerson);
         }
 
         [Fact]
@@ -137,8 +152,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/any(a: a/Shoe eq 'Adidas')", this.edmModel);
             var cmpLeft = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Property.DeclaringType.Should().Be(cmpLeft);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyNode.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            Assert.Same(propertyAccessNode.Property.DeclaringType, cmpLeft);
         }
 
         [Fact]
@@ -146,8 +164,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/any(a: a/Shoe eq $it/Color)", this.edmModel);
             var cmpRight = this.edmModel.FindType("Fully.Qualified.Namespace.Dog");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Right.As<SingleValuePropertyAccessNode>().Property.DeclaringType.Should().Be(cmpRight);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyNode.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Right);
+            Assert.Same(propertyAccessNode.Property.DeclaringType, cmpRight);
         }
 
         [Fact]
@@ -155,8 +176,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/all(a: a/Shoe eq 'Adidas' )", this.edmModel);
             var cmpLeft = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
-            semanticTree.Filter.Expression.As<AllNode>().Body.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Property.DeclaringType.Should().Be(cmpLeft);
+
+            var allNode = Assert.IsType<AllNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(allNode.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            Assert.Same(propertyAccessNode.Property.DeclaringType, cmpLeft);
         }
 
         [Fact]
@@ -174,7 +198,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Repro for: Syntactic parser assumes any token which matches the name of a previously used range variable is also a range variable, even after the scope has been exited
             Action parse = () => HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/all(a: true) and a ne null", this.edmModel);
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Dog", "a"));
+            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Dog", "a"));
         }
 
         [Fact]
@@ -182,7 +206,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Repro for: Semantic binding fails with useless error message when a range variable is redefined within a nested any/all
             Action parse = () => HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/all(a: a/MyPaintings/any(a:true))", this.edmModel);
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("a"));
+            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("a"));
         }
 
         [Fact]
@@ -246,8 +270,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/any(Shoe: Shoe/Shoe eq 'Adidas' )", this.edmModel);
             var cmpLeft = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Property.DeclaringType.Should().Be(cmpLeft);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyNode.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            Assert.Same(propertyAccessNode.Property.DeclaringType, cmpLeft);
         }
 
         [Fact]
@@ -256,12 +283,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/MyPeople/any(a: a/MyDog/Color eq 'Simba' )", this.edmModel);
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
             var cmpDog = this.edmModel.FindType("Fully.Qualified.Namespace.Dog");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleNavigationNode>().TypeReference.As
-                <IEdmEntityTypeReference>().Definition.Should().Be(cmpDog);
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleNavigationNode>().Source.As<SingleValueNode>().TypeReference.As
-                <IEdmEntityTypeReference>().Definition.Should().Be(cmpPerson);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyNode.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var navNode = Assert.IsType<SingleNavigationNode>(propertyAccessNode.Source);
+            var typeReference = navNode.TypeReference as IEdmEntityTypeReference;
+            Assert.NotNull(typeReference);
+            Assert.Same(typeReference.Definition, cmpDog);
+
+            var valueNode = Assert.IsType<ResourceRangeVariableReferenceNode>(navNode.Source);
+            typeReference = valueNode.TypeReference as IEdmEntityTypeReference;
+            Assert.NotNull(typeReference);
+            Assert.Same(typeReference.Definition, cmpPerson);
         }
 
         [Fact]
@@ -270,12 +304,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/any(a: a/MyDog/MyPeople/any(b: b/Shoe eq a/Shoe) )", this.edmModel);
 
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<ResourceRangeVariableReferenceNode>().
-                TypeReference.Definition.Should().Be(cmpPerson);
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Right.As<SingleValuePropertyAccessNode>().Source.As<ResourceRangeVariableReferenceNode>().
-                TypeReference.Definition.Should().Be(cmpPerson);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var anyBody = Assert.IsType<AnyNode>(anyNode.Body);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyBody.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var refNode = Assert.IsType<ResourceRangeVariableReferenceNode>(propertyAccessNode.Source);
+            Assert.Same(refNode.TypeReference.Definition, cmpPerson);
+
+            propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Right);
+            refNode = Assert.IsType<ResourceRangeVariableReferenceNode>(propertyAccessNode.Source);
+            Assert.Same(refNode.TypeReference.Definition, cmpPerson);
         }
 
         [Fact]
@@ -285,26 +324,37 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
             var cmpDog = this.edmModel.FindType("Fully.Qualified.Namespace.Dog");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<ResourceRangeVariableReferenceNode>().
-                TypeReference.Definition.Should().Be(cmpPerson);
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Right.As<SingleValuePropertyAccessNode>().Source.As<ResourceRangeVariableReferenceNode>().
-                TypeReference.Definition.Should().Be(cmpDog);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyNode.Body);
+            var leftAnyNode = Assert.IsType<AnyNode>(bon.Left);
+            var leftBody = Assert.IsType<BinaryOperatorNode>(leftAnyNode.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(leftBody.Left);
+            var refNode = Assert.IsType<ResourceRangeVariableReferenceNode>(propertyAccessNode.Source);
+            Assert.Same(refNode.TypeReference.Definition, cmpPerson);
+
+            propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(leftBody.Right);
+            refNode = Assert.IsType<ResourceRangeVariableReferenceNode>(propertyAccessNode.Source);
+            Assert.Same(refNode.TypeReference.Definition, cmpDog);
         }
 
         [Fact]
         public void FilterShouldHandleEmptyArgument()
         {
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/any()", this.edmModel);
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<ConstantNode>().Value.Should().Be(true);
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var constNode = Assert.IsType<ConstantNode>(anyNode.Body);
+            Assert.Equal(true, constNode.Value);
         }
 
         [Fact]
         public void OrderbyShouldHandleEmptyArgument()
         {
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$orderby=MyPeople/any()", this.edmModel);
-            semanticTree.OrderBy.Expression.As<AnyNode>().Body.As<ConstantNode>().Value.Should().Be(true);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.OrderBy.Expression);
+            var constNode = Assert.IsType<ConstantNode>(anyNode.Body);
+            Assert.Equal(true, constNode.Value);
         }
 
         [Fact]
@@ -312,8 +362,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("Dogs?$orderby=MyPeople/any(a: a/Shoe eq $it/Color)", this.edmModel);
             var anyNode = semanticTree.OrderBy.Expression.ShouldBeAnyQueryNode();
-            anyNode.RangeVariables.Count.Should().Be(2);
-            anyNode.RangeVariables.Should().Contain(n => n.Name == "a");
+            Assert.Equal(2, anyNode.RangeVariables.Count);
+            Assert.Contains(anyNode.RangeVariables, n => n.Name == "a");
             anyNode.Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
         }
 
@@ -329,7 +379,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             foreach (var arg in args)
             {
                 Action test = () => HardCodedTestModel.ParseUri(arg, this.edmModel);
-                test.ShouldThrow<ODataException>();
+                Assert.Throws<ODataException>(test);
             }
         }
 
@@ -347,8 +397,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             {
                 //Ensure $-sign is required.
                 parser.EnableNoDollarQueryOptions = false;
-                test.ShouldThrow<ODataException>()
-                    .WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$count"));
+                test.Throws<ODataException>(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$count"));
             }
             finally
             {
@@ -362,8 +411,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/Color eq 'Magenta'", this.edmModel);
 
             var cmpDog = this.edmModel.FindType("Fully.Qualified.Namespace.Dog");
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As
-                <SingleValuePropertyAccessNode>().Source.As<SingleNavigationNode>().TypeReference.Definition.Should().Be(cmpDog);
+
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var navNode = Assert.IsType<SingleNavigationNode>(propertyAccessNode.Source);
+            Assert.Same(navNode.TypeReference.Definition, cmpDog);
         }
 
         [Fact]
@@ -381,13 +433,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var semanticTree = HardCodedTestModel.ParseUri(uri, this.edmModel);
 
-            var node = semanticTree.Filter.Expression.As<UnaryOperatorNode>();
+            var node = Assert.IsType<UnaryOperatorNode>(semanticTree.Filter.Expression);
             for (int i = 0; i < nestingLevel - 1; i++)
             {
-                node = node.Operand.As<UnaryOperatorNode>();
+                node = Assert.IsType<UnaryOperatorNode>(node.Operand);
             }
 
-            node.Operand.As<ConstantNode>().Value.Should().Be(true);
+            var constNode = Assert.IsType<ConstantNode>(node.Operand);
+            Assert.Equal(true, constNode.Value);
         }
 
         [Fact]
@@ -416,17 +469,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var personType = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
 
-            var node = semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As<SingleValueFunctionCallNode>();
+            var node = (semanticTree.Filter.Expression as BinaryOperatorNode).Left as SingleValueFunctionCallNode;
             for (int i = 0; i < nestingLevel - 1; i++)
             {
-                node = node.Parameters.Single().As<SingleValueFunctionCallNode>();
+                node = node.Parameters.Single() as SingleValueFunctionCallNode;
             }
 
-            node.Parameters.Single()
-                .As<SingleValuePropertyAccessNode>()
-                .Source.As<ResourceRangeVariableReferenceNode>()
-                .TypeReference.Definition.Should().Be(personType);
-
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(node.Parameters.Single());
+            var refNode = Assert.IsType<ResourceRangeVariableReferenceNode>(propertyAccessNode.Source);
+            Assert.Same(refNode.TypeReference.Definition, personType);
         }
 
         [Fact]
@@ -436,22 +487,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var personType = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
 
-            semanticTree
-                .Filter.Expression.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                .Left.As<BinaryOperatorNode>()
-                 .Left.As<SingleValuePropertyAccessNode>()
-                .Source.As<ResourceRangeVariableReferenceNode>()
-               .TypeReference.Definition.Should().Be(personType);
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var left1 = Assert.IsType<BinaryOperatorNode>(bon.Left);
+            var left2 = Assert.IsType<BinaryOperatorNode>(left1.Left);
+            var left3 = Assert.IsType<BinaryOperatorNode>(left2.Left);
+            var left4 = Assert.IsType<BinaryOperatorNode>(left3.Left);
+            var left5 = Assert.IsType<BinaryOperatorNode>(left4.Left);
+            var left6 = Assert.IsType<BinaryOperatorNode>(left5.Left);
+            var left7 = Assert.IsType<BinaryOperatorNode>(left6.Left);
+            var left8 = Assert.IsType<BinaryOperatorNode>(left7.Left);
+            var left9 = Assert.IsType<BinaryOperatorNode>(left8.Left);
+            var left10 = Assert.IsType<BinaryOperatorNode>(left9.Left);
+            var left11 = Assert.IsType<BinaryOperatorNode>(left10.Left);
+
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(left11.Left);
+            var refNode = Assert.IsType<ResourceRangeVariableReferenceNode>(propertyAccessNode.Source);
+            Assert.Same(refNode.TypeReference.Definition, personType);
         }
 
         [Fact]
@@ -459,8 +510,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/Color eq 'Magenta'", this.edmModel);
 
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As
-                <SingleValuePropertyAccessNode>().Source.As<SingleNavigationNode>().TargetMultiplicity.Should().Be(EdmMultiplicity.ZeroOrOne);
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var navigationNode = Assert.IsType<SingleNavigationNode>(propertyAccessNode.Source);
+            Assert.Equal(navigationNode.TargetMultiplicity, EdmMultiplicity.ZeroOrOne);
         }
 
         [Fact]
@@ -483,8 +536,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyAddress/City eq 'Tacoma'", this.edmModel);
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
+
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var complexNode = Assert.IsType<SingleComplexNode>(propertyAccessNode.Source);
+            Assert.Same(complexNode.TypeReference.Definition, cmpAddress);
         }
 
         [Fact]
@@ -493,10 +549,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyAddress/NextHome/NextHome/City eq 'Tacoma'", this.edmModel);
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
+
+            var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var complexNode = Assert.IsType<SingleComplexNode>(propertyAccessNode.Source);
+            Assert.Same(complexNode.TypeReference.Definition, cmpAddress);
+
+            var complexSource = Assert.IsType<SingleComplexNode>(complexNode.Source);
+            Assert.Same(complexSource.TypeReference.Definition, cmpAddress);
         }
 
         [Fact]
@@ -505,8 +565,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/MyPeople/any(a: a/MyAddress/City eq 'Renton')", this.edmModel);
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyNode.Body);
+            var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
+            var complexNode = Assert.IsType<SingleComplexNode>(propertyAccessNode.Source);
+            Assert.Same(complexNode.TypeReference.Definition, cmpAddress);
         }
 
         [Fact]
@@ -515,22 +579,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyAddress/MyNeighbors/any(a: a eq 'Christy' )", this.edmModel);
 
             var cmp = this.edmModel.FindType("Edm.String");
-            semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<NonResourceRangeVariableReferenceNode>().TypeReference.Definition.Should().Be(cmp);
+
+            var anyNode = Assert.IsType<AnyNode>(semanticTree.Filter.Expression);
+            var bon = Assert.IsType<BinaryOperatorNode>(anyNode.Body);
+            var refNode = Assert.IsType<NonResourceRangeVariableReferenceNode>(bon.Left);
+            Assert.Same(refNode.TypeReference.Definition, cmp);
         }
 
         [Fact]
         public void FilterThroughMissingNavigationOrComplexPropertyShouldThrowOurException()
         {
             Action parse = () => HardCodedTestModel.ParseUri("People?$filter=Missing/ID eq 1", this.edmModel);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Missing"));
+            parse.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Missing"));
         }
 
         [Fact]
         public void FilterThroughMissingPropertyShouldThrowOurException()
         {
             Action parse = () => HardCodedTestModel.ParseUri("People?$filter=Missing eq 1", this.edmModel);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Missing"));
+            parse.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Missing"));
         }
     }
 }

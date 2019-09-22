@@ -5,11 +5,9 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -276,8 +274,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Verify that the extension method gets the same result as the path extractor.
                 string selectTextFromOM, expandTextFromOM;
                 expandClause.GetSelectExpandPaths(version, out selectTextFromOM, out expandTextFromOM);
-                selectTextFromOM.Should().Be(expectedSelectClauseFromOM ?? (selectClauseText ?? string.Empty));
-                expandTextFromOM.Should().Be(expectedExpandClauseFromOM ?? (expandClauseText ?? string.Empty));
+                Assert.Equal(expectedSelectClauseFromOM ?? selectClauseText ?? string.Empty, selectTextFromOM);
+                Assert.Equal(expectedExpandClauseFromOM ?? expandClauseText ?? string.Empty, expandTextFromOM);
             }
         }
     }

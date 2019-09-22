@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -22,21 +21,21 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void NewODataCollectionStartShouldContainNullSerializationInfo()
         {
-            this.collectionStart.SerializationInfo.Should().BeNull();
+            Assert.Null(this.collectionStart.SerializationInfo);
         }
 
         [Fact]
         public void SerializationInfoShouldBeValidatedByTheSetter()
         {
             Action action = () => this.collectionStart.SerializationInfo = new ODataCollectionStartSerializationInfo();
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.CollectionTypeName"));
+            Assert.Throws<ArgumentNullException>("serializationInfo.CollectionTypeName", action);
         }
 
         [Fact]
         public void ShouldBeAbleToSetSerializationInfo()
         {
             this.collectionStart.SerializationInfo = new ODataCollectionStartSerializationInfo { CollectionTypeName = "Collection(Edm.String)" };
-            this.collectionStart.SerializationInfo.CollectionTypeName.Should().Be("Collection(Edm.String)");
+            Assert.Equal("Collection(Edm.String)", this.collectionStart.SerializationInfo.CollectionTypeName);
         }
     }
 }

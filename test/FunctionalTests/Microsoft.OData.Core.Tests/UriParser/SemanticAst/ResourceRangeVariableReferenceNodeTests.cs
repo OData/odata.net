@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -22,7 +21,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ResourceRangeVariable rangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Action createWithNullName = () => new ResourceRangeVariableReferenceNode(null, rangeVariable);
-            createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
+            Assert.Throws<ArgumentNullException>("name", createWithNullName);
         }
 
         [Fact]
@@ -30,7 +29,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ResourceRangeVariable rangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.RangeVariable.ShouldBeResourceRangeVariable(HardCodedTestModel.GetDogTypeReference()).NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
+            Assert.Same(referenceNode.RangeVariable.ShouldBeResourceRangeVariable(HardCodedTestModel.GetDogTypeReference()).NavigationSource, HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
@@ -38,7 +37,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ResourceRangeVariable rangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
+            Assert.Same(HardCodedTestModel.GetDogsSet(), referenceNode.NavigationSource);
         }
 
         [Fact]
@@ -46,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ResourceRangeVariable rangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.TypeReference.FullName().Should().Be(HardCodedTestModel.GetDogTypeReference().FullName());
+            Assert.Equal(HardCodedTestModel.GetDogTypeReference().FullName(), referenceNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -54,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ResourceRangeVariable rangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.TypeReference.Should().BeOfType<EdmEntityTypeReference>();
+            Assert.IsType<EdmEntityTypeReference>(referenceNode.TypeReference);
         }
 
         [Fact]
@@ -62,7 +61,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ResourceRangeVariable rangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.StructuredTypeReference.Should().BeSameAs(referenceNode.TypeReference);
+            Assert.Same(referenceNode.TypeReference, referenceNode.StructuredTypeReference);
         }
 
         [Fact]
@@ -70,7 +69,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ResourceRangeVariable rangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.InternalKind.Should().Be(InternalQueryNodeKind.ResourceRangeVariableReference);
+            Assert.Equal(InternalQueryNodeKind.ResourceRangeVariableReference, referenceNode.InternalKind);
         }
     }
 }

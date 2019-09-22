@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -34,7 +33,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var tokens = new List<OrderByToken>();
             var result = orderbyBinder.BindOrderBy(this.bindingState, tokens);
-            result.Should().BeNull();
+            Assert.Null(result);
         }
 
         [Fact]
@@ -46,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 };
 
             var result = orderbyBinder.BindOrderBy(this.bindingState, tokens);
-            result.Direction.Should().Be(OrderByDirection.Ascending);
+            Assert.Equal(OrderByDirection.Ascending, result.Direction);
 
             tokens = new List<OrderByToken>
                 {
@@ -54,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 };
 
             result = orderbyBinder.BindOrderBy(this.bindingState, tokens);
-            result.Direction.Should().Be(OrderByDirection.Descending);
+            Assert.Equal(OrderByDirection.Descending, result.Direction);
         }
 
         [Fact]
@@ -64,7 +63,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             this.orderbyBinder = new OrderByBinder(metadataBinder.Bind);
             var tokens = GetDummyOrderbyTokenList(7);
             var result = orderbyBinder.BindOrderBy(this.bindingState, tokens);
-            result.ThenBy.ThenBy.ThenBy.ThenBy.ThenBy.ThenBy.ThenBy.Should().BeNull();
+            Assert.Null(result.ThenBy.ThenBy.ThenBy.ThenBy.ThenBy.ThenBy.ThenBy);
         }
 
         [Fact]

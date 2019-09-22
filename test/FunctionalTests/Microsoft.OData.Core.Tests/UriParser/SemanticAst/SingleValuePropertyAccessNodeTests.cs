@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
@@ -22,28 +21,28 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             var source = new ConstantNode(null);
             var node = new SingleValuePropertyAccessNode(source, HardCodedTestModel.GetDogColorProp());
-            node.Source.Should().BeSameAs(source);
+            Assert.Same(source, node.Source);
         }
 
         [Fact]
         public void PropertyIsSet()
         {
             var node = new SingleValuePropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetDogColorProp());
-            node.Property.Should().BeSameAs(HardCodedTestModel.GetDogColorProp());
+            Assert.Same(HardCodedTestModel.GetDogColorProp(), node.Property);
         }
 
         [Fact]
         public void SourceCannotBeNull()
         {
             Action createWithNullSource = () => new SingleValuePropertyAccessNode(null, HardCodedTestModel.GetDogColorProp());
-            createWithNullSource.ShouldThrow<Exception>(Error.ArgumentNull("source").ToString());
+            Assert.Throws<ArgumentNullException>("source", createWithNullSource);
         }
 
         [Fact]
         public void PropertyCannotBeNull()
         {
             Action createWithNullProperty = () => new SingleValuePropertyAccessNode(new ConstantNode(1), null);
-            createWithNullProperty.ShouldThrow<Exception>(Error.ArgumentNull("property").ToString());
+            Assert.Throws<ArgumentNullException>("property", createWithNullProperty);
         }
 
         [Fact]
@@ -51,7 +50,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ConstantNode constant = new ConstantNode(2);
             SingleValuePropertyAccessNode accessNode = new SingleValuePropertyAccessNode(constant, HardCodedTestModel.GetPersonGeographyPointProp());
-            accessNode.Property.Should().Be(HardCodedTestModel.GetPersonGeographyPointProp());
+            Assert.Same(HardCodedTestModel.GetPersonGeographyPointProp(), accessNode.Property);
         }
 
         [Fact]
@@ -59,21 +58,21 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ConstantNode constant = new ConstantNode(2);
             SingleValuePropertyAccessNode accessNode = new SingleValuePropertyAccessNode(constant, HardCodedTestModel.GetPersonGeometryPointProp());
-            accessNode.Property.Should().Be(HardCodedTestModel.GetPersonGeometryPointProp());
+            Assert.Same(HardCodedTestModel.GetPersonGeometryPointProp(), accessNode.Property);
         }
 
         [Fact]
         public void SingleValuePropertyAccessCannotTakeANavigationProperty()
         {
             Action create = () => new SingleValuePropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetPersonMyDogNavProp());
-            create.ShouldThrow<ArgumentException>().WithMessage(Strings.Nodes_PropertyAccessShouldBeNonEntityProperty("MyDog"));
+            create.Throws<ArgumentException>(Strings.Nodes_PropertyAccessShouldBeNonEntityProperty("MyDog"));
         }
 
         [Fact]
         public void SingleValuePropertyAccessCannotTakeACollectionProperty()
         {
             Action create = () => new SingleValuePropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetDogNicknamesProperty());
-            create.ShouldThrow<ArgumentException>().WithMessage(Strings.Nodes_PropertyAccessTypeShouldNotBeCollection("Nicknames"));
+            create.Throws<ArgumentException>(Strings.Nodes_PropertyAccessTypeShouldNotBeCollection("Nicknames"));
         }
     }
 }

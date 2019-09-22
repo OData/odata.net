@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.Metadata;
@@ -21,8 +20,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var nodeToIterationOver = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             var resultNode = NodeFactory.CreateParameterNode("a", nodeToIterationOver);
-            resultNode.ShouldBeResourceRangeVariable(HardCodedTestModel.GetPersonTypeReference())
-                .CollectionResourceNode.NavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
+            var ns = resultNode.ShouldBeResourceRangeVariable(HardCodedTestModel.GetPersonTypeReference())
+                .CollectionResourceNode.NavigationSource;
+            Assert.Same(ns, HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var nodeToIterationOver = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             var resultNode = NodeFactory.CreateParameterNode("PARAM_name!@#", nodeToIterationOver);
-            resultNode.Name.Should().Be("PARAM_name!@#");
+            Assert.Equal("PARAM_name!@#", resultNode.Name);
         }
 
         [Fact]
@@ -45,7 +45,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var type = EdmCoreModel.Instance.GetString(false);
             var resultNode = NodeFactory.CreateImplicitRangeVariable(type, null);
-            resultNode.ShouldBeNonentityRangeVariable(ExpressionConstants.It).TypeReference.Should().Be(type);
+            var typeReference = resultNode.ShouldBeNonentityRangeVariable(ExpressionConstants.It).TypeReference;
+            Assert.True(typeReference.IsEquivalentTo(type));
         }
 
         [Fact]
@@ -59,7 +60,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CreateImplicitParameterNodeShouldHaveRightName()
         {
             var resultNode = NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetPersonType().ToTypeReference(), HardCodedTestModel.GetPeopleSet());
-            resultNode.Name.Should().Be(ExpressionConstants.It);
+            Assert.Equal(ExpressionConstants.It, resultNode.Name);
         }
 
         [Fact]
@@ -73,8 +74,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CreateImplicitParameterNodeFromNonEntityCollectionShouldCreateNonResourceRangeVariableReferenceNode()
         {
             var resultNode = NodeFactory.CreateImplicitRangeVariable(new ODataPath(new[] {new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp())}));
-            resultNode.ShouldBeResourceRangeVariable(ExpressionConstants.It).TypeReference.Definition.Should().Be(HardCodedTestModel.GetAddressType());
-            resultNode.Name.Should().Be(ExpressionConstants.It);
+            Assert.Same(resultNode.ShouldBeResourceRangeVariable(ExpressionConstants.It).TypeReference.Definition, HardCodedTestModel.GetAddressType());
+            Assert.Equal(ExpressionConstants.It, resultNode.Name);
         }
 
         [Fact]
@@ -86,8 +87,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             RangeVariable rangeVariable = new ResourceRangeVariable("bob", HardCodedTestModel.GetPersonTypeReference(), parent);
             var resultNode = NodeFactory.CreateLambdaNode(bindingState, parent, expression, rangeVariable, QueryTokenKind.Any);
             var node = resultNode.ShouldBeAnyQueryNode();
-            node.Body.Should().BeSameAs(expression);
-            node.Source.Should().BeSameAs(parent);
+            Assert.Same(expression, node.Body);
+            Assert.Same(parent, node.Source);
         }
 
         [Fact]
@@ -100,8 +101,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var resultNode = NodeFactory.CreateLambdaNode(bindingState, parent, expression, rangeVariable, QueryTokenKind.All);
 
             var node = resultNode.ShouldBeAllQueryNode();
-            node.Body.Should().BeSameAs(expression);
-            node.Source.Should().BeSameAs(parent);
+            Assert.Same(expression, node.Body);
+            Assert.Same(parent, node.Source);
         }
     }
 }

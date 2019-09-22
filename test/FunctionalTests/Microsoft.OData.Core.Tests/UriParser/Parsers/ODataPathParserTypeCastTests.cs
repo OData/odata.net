@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // ~/Me/NS.Customer
             var path = pathParser.ParsePath(new[] { "Me", "NS." + typeCastName });
-            path[1].ShouldBeTypeSegment(customer, targetType);
+            path[1].ShouldBeTypeSegment(targetType, customer);
         }
 
         [Theory]
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the positive type cast:  ~/Me/NS.VipCustomer
             path = pathParser.ParsePath(new[] { "Me", "NS.VipCustomer" });
-            path[1].ShouldBeTypeSegment(customer, vipCustomer);
+            path[1].ShouldBeTypeSegment(vipCustomer, customer);
 
             // verify the negative type cast: ~/Me/NS.NormalCustomer
             Action parsePath = () => pathParser.ParsePath(new[] { "Me", "NS.NormalCustomer" });
@@ -145,11 +145,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // ~/Customers/NS.Customer
             var path = pathParser.ParsePath(new[] { "Customers", "NS." + typeCastName });
-            path[1].ShouldBeTypeSegment(collectionCustomerType, collectionCastType);
+            path[1].ShouldBeTypeSegment(collectionCastType, collectionCustomerType);
 
             // ~/Customers(1)/NS.Customer
             path = pathParser.ParsePath(new[] { "Customers(1)", "NS." + typeCastName });
-            path[2].ShouldBeTypeSegment(customer, castType);
+            path[2].ShouldBeTypeSegment(castType, customer);
         }
 
         [Theory]
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
                 // verify the positive type cast:  ~/Customers/NS.VipCustomer
                 path = pathParser.ParsePath(new[] { segment, "NS.VipCustomer" });
-                path[index].ShouldBeTypeSegment(actualType, expectVipCustomerType);
+                path[index].ShouldBeTypeSegment(expectVipCustomerType, actualType);
 
                 // verify the negative type cast: ~/Customers/NS.NormalCustomer
                 Action parsePath = () => pathParser.ParsePath(new[] { segment, "NS.NormalCustomer" });
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // ~/Customers(1)/{propertyName}/{typeCast}
             var path = pathParser.ParsePath(new[] { "Customers(1)", propertyName, typeCast });
-            path[3].ShouldBeTypeSegment(property.Type.Definition, expectType);
+            path[3].ShouldBeTypeSegment(expectType, property.Type.Definition);
         }
 
         [Theory]
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
                 // verify the positive type cast
                 path = pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.UsAddress" });
-                path[3].ShouldBeTypeSegment(actualType, expectUsAddressType);
+                path[3].ShouldBeTypeSegment(expectUsAddressType, actualType);
 
                 // verify the negative type cast
                 Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.CnAddress" });
@@ -367,7 +367,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // ~/Customers(1)/{propertyName}/{typeCast}
             var path = pathParser.ParsePath(new[] { "Customers(1)", propertyName + key, typeCast });
-            path[index].ShouldBeTypeSegment(actualType, expectedType);
+            path[index].ShouldBeTypeSegment(expectedType, actualType);
         }
 
         [Theory]
@@ -402,7 +402,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
                 // verify the positive type cast
                 path = pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.VipCustomer" });
-                path[3].ShouldBeTypeSegment(actualType, expectedVipCustomerType);
+                path[3].ShouldBeTypeSegment(expectedVipCustomerType, actualType);
 
                 // verify the negative type cast
                 Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", segment, "NS.NormalCustomer" });
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the positive type cast
             path = pathParser.ParsePath(new[] { "Customers(1)", "SubCustomers(1)", "NS.VipCustomer" });
-            path[4].ShouldBeTypeSegment(customer, vipCustomer);
+            path[4].ShouldBeTypeSegment(vipCustomer, customer);
 
             // verify the negative type cast
             Action parsePath = () => pathParser.ParsePath(new[] { "Customers(1)", "SubCustomers(1)", "NS.NormalCustomer" });
@@ -588,7 +588,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the positive type cast on itself: ~/Customers/NS.Customer/NS.Image()
             var path = pathParser.ParsePath(new[] { "Customers", "NS." + typeCastName, "NS.Image()" });
-            path[1].ShouldBeTypeSegment(collectionCustomerType, collectionExpectedType);
+            path[1].ShouldBeTypeSegment(collectionExpectedType, collectionCustomerType);
         }
 
         [Theory]
@@ -618,7 +618,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify the positive type cast: ~/Customers(1)/NS.VipCustomer/NS.Image()
             path = pathParser.ParsePath(new[] { "Customers", "NS.VipCustomer", "NS.Image()" });
-            path[1].ShouldBeTypeSegment(collectionCustomerType, collectionVipCustomerType);
+            path[1].ShouldBeTypeSegment(collectionVipCustomerType, collectionCustomerType);
 
             // verify the negative type cast: ~/Customers(1)/NS.NormalCustomer/NS.Image()
             Action parsePath = () => pathParser.ParsePath(new[] { "Customers", "NS.NormalCustomer", "NS.Image()" });

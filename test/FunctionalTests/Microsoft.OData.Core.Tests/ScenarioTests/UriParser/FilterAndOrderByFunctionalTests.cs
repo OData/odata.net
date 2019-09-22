@@ -928,8 +928,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var parameters = filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).Parameters;
             var paramNode = Assert.IsType<NamedFunctionParameterNode>(Assert.Single(parameters));
             var constantNode = Assert.IsType<ConstantNode>(paramNode.Value);
-            constantNode.Value.ShouldBeODataCollectionValue();
-            var collectionValue = constantNode.Value as ODataCollectionValue;
+            var collectionValue = constantNode.Value.ShouldBeODataCollectionValue();
             collectionValue.ItemsShouldBeAssignableTo<string>();
             Assert.Equal(2, collectionValue.Items.Count());
         }

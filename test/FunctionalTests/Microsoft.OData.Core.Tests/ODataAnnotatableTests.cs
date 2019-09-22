@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -23,14 +22,16 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void GetInstanceAnnotationsShouldReturnNonNullCollectionAtConstruction()
         {
-            this.annotatable.GetInstanceAnnotations().Should().BeEmpty().And.Should().NotBeNull();
+            var annotations = this.annotatable.GetInstanceAnnotations();
+            Assert.NotNull(annotations);
+            Assert.Empty(annotations);
         }
 
         [Fact]
         public void SetInstanceAnnotationsShouldThrowOnNull()
         {
             Action test = () => this.annotatable.SetInstanceAnnotations(null);
-            test.ShouldThrow<ArgumentNullException>("Value cannot be null.\r\nParameter name: instanceAnnotations");
+            Assert.Throws<ArgumentNullException>("value", test);
         }
 
         [Fact]
@@ -38,7 +39,8 @@ namespace Microsoft.OData.Tests
         {
             var instanceAnnotations = new List<ODataInstanceAnnotation>();
             this.annotatable.SetInstanceAnnotations(instanceAnnotations);
-            this.annotatable.GetInstanceAnnotations().As<object>().Should().BeSameAs(instanceAnnotations);
+            var annotations = this.annotatable.GetInstanceAnnotations();
+            Assert.Same(annotations, instanceAnnotations);
         }
     }
 }

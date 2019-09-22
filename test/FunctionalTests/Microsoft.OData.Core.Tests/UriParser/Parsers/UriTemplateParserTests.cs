@@ -182,7 +182,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmFunction function = HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(f => f.Parameters.Count() == 2)as IEdmFunction;
             Assert.NotNull(function);
             var path = uriParser.ParsePath();
-            OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationSegment(function).And.Parameters.Single();
+            OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationSegment(function).Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("onCat", new UriTemplateExpression { LiteralText = "{why555}", ExpectedType = function.Parameters.Last().Type });
         }
 
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperationImport operationImport = HardCodedTestModel.TestModel.EntityContainer.FindOperationImports("GetPetCount").Single();
             var path = uriParser.ParsePath();
-            OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationImportSegment(operationImport).And.Parameters.Single();
+            OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationImportSegment(operationImport).Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("colorPattern", new UriTemplateExpression { LiteralText = "{COLOR}", ExpectedType = operationImport.Operation.Parameters.Single().Type });
         }
 
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var typesDic = operation.Parameters.ToDictionary(_ => _.Name, _ => _.Type);
 
             var path = uriParser.ParsePath();
-            IList<OperationSegmentParameter> parameters = path.LastSegment.ShouldBeOperationSegment(operation).And.Parameters.ToList();
+            IList<OperationSegmentParameter> parameters = path.LastSegment.ShouldBeOperationSegment(operation).Parameters.ToList();
             parameters[0].ShouldBeConstantParameterWithValueType("name", new UriTemplateExpression { LiteralText = "{NAME}", ExpectedType = typesDic["name"] });
             parameters[1].ShouldBeConstantParameterWithValueType("inOffice", new UriTemplateExpression { LiteralText = "{INOFFICE}", ExpectedType = typesDic["inOffice"] });
         }
@@ -236,7 +236,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmFunctionImport functionImport = HardCodedTestModel.TestModel.EntityContainer.FindOperationImports("IsAddressGood").Single() as IEdmFunctionImport;
             Assert.NotNull(functionImport);
             var path = uriParser.ParsePath();
-            OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationImportSegment(functionImport).And.Parameters.Single();
+            OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationImportSegment(functionImport).Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("address", new UriTemplateExpression { LiteralText = "{ADDR}", ExpectedType = functionImport.Function.Parameters.Single().Type });
         }
         #endregion
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Equal("ID", keypair.Key);
             var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
             keypair.Value.ShouldBeUriTemplateExpression("{KEY}", edmTypeReference);
-            IList<OperationSegmentParameter> parameters = path.LastSegment.ShouldBeOperationSegment(operation).And.Parameters.ToList();
+            IList<OperationSegmentParameter> parameters = path.LastSegment.ShouldBeOperationSegment(operation).Parameters.ToList();
             parameters[0].ShouldBeConstantParameterWithValueType("name", new UriTemplateExpression { LiteralText = "{NAME}", ExpectedType = typesDic["name"] });
             parameters[1].ShouldBeConstantParameterWithValueType("inOffice", new UriTemplateExpression { LiteralText = "{INOFFICE}", ExpectedType = typesDic["inOffice"] });
         }
@@ -345,7 +345,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 };
 
                 var path = uriParser.ParsePath();
-                OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationSegment(function).And.Parameters.Single();
+                OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationSegment(function).Parameters.Single();
                 parameter.ShouldBeConstantParameterWithValueType("onCat", new UriTemplateExpression { LiteralText = input, ExpectedType = function.Parameters.Last().Type });
             }
 

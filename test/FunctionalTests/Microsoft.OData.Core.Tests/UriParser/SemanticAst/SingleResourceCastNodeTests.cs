@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -20,38 +19,38 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         private readonly ResourceRangeVariableReferenceNode singleEntityNode = new ResourceRangeVariableReferenceNode("a", new ResourceRangeVariable("a", new EdmEntityTypeReference(HardCodedTestModel.GetPersonType(), false), HardCodedTestModel.GetPeopleSet()));
 
         [Fact]
-        public void EntityTypeCannotBeNull()
+        public void StructuredTypeCannotBeNull()
         {
             Action createWithNullEntityType = () => new SingleResourceCastNode(this.singleEntityNode, null);
-            createWithNullEntityType.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
+            Assert.Throws<ArgumentNullException>("structuredType", createWithNullEntityType);
         }
 
         [Fact]
         public void SourceIsSetCorrectly()
         {
             SingleResourceCastNode singleEntityCast = new SingleResourceCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
-            singleEntityCast.Source.Should().Be(this.singleEntityNode);
+            Assert.Same(this.singleEntityNode, singleEntityCast.Source);
         }
 
         [Fact]
         public void TypeReferenceIsSetCorrectly()
         {
             SingleResourceCastNode singleEntityCast = new SingleResourceCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
-            singleEntityCast.TypeReference.FullName().Should().Be(HardCodedTestModel.GetPersonType().FullName());
+            Assert.Equal(singleEntityCast.TypeReference.FullName(), HardCodedTestModel.GetPersonType().FullName());
         }
 
         [Fact]
         public void EntityTypeReferenceIsSameAsTypeReference()
         {
             SingleResourceCastNode singleEntityCast = new SingleResourceCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
-            singleEntityCast.StructuredTypeReference.Should().BeSameAs(singleEntityCast.TypeReference);
+            Assert.Same(singleEntityCast.StructuredTypeReference, singleEntityCast.TypeReference);
         }
 
         [Fact]
         public void KindIsSingleResourceCastNode()
         {
             SingleResourceCastNode singleEntityCast = new SingleResourceCastNode(this.singleEntityNode, HardCodedTestModel.GetDogType());
-            singleEntityCast.InternalKind.Should().Be(InternalQueryNodeKind.SingleResourceCast);
+            Assert.Equal(InternalQueryNodeKind.SingleResourceCast, singleEntityCast.InternalKind);
         }
     }
 }

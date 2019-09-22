@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Xunit;
 
@@ -35,9 +34,9 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(ReservedODataAnnotationNames.Length, ODataAnnotationNames.KnownODataAnnotationNames.Count);
             foreach (string annotationName in ReservedODataAnnotationNames)
             {
-                ODataAnnotationNames.IsODataAnnotationName(annotationName).Should().BeTrue();
-                ODataAnnotationNames.KnownODataAnnotationNames.Contains(annotationName).Should().BeTrue();
-                ODataAnnotationNames.KnownODataAnnotationNames.Contains(annotationName.ToUpperInvariant()).Should().BeFalse();
+                Assert.True(ODataAnnotationNames.IsODataAnnotationName(annotationName));
+                Assert.True(ODataAnnotationNames.KnownODataAnnotationNames.Contains(annotationName));
+                Assert.False(ODataAnnotationNames.KnownODataAnnotationNames.Contains(annotationName.ToUpperInvariant()));
             }
         }
 #endif
@@ -45,32 +44,33 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void IsODataAnnotationNameShouldReturnTrueForAnnotationNamesUnderODataNamespace()
         {
-            ODataAnnotationNames.IsODataAnnotationName("odata.unknown").Should().BeTrue();
+            Assert.True(ODataAnnotationNames.IsODataAnnotationName("odata.unknown"));
         }
 
-        [Fact]
-        public void IsODataAnnotationNameShouldReturnFalseForAnnotationNamesNotUnderODataNamespace()
+        [Theory]
+        [InlineData("odataa.unknown")]
+        [InlineData("oodata.unknown")]
+        [InlineData("custom.unknown")]
+        [InlineData("OData.unknown")]
+        public void IsODataAnnotationNameShouldReturnFalseForAnnotationNamesNotUnderODataNamespace(string annotationName)
         {
-            ODataAnnotationNames.IsODataAnnotationName("odataa.unknown").Should().BeFalse();
-            ODataAnnotationNames.IsODataAnnotationName("oodata.unknown").Should().BeFalse();
-            ODataAnnotationNames.IsODataAnnotationName("custom.unknown").Should().BeFalse();
-            ODataAnnotationNames.IsODataAnnotationName("OData.unknown").Should().BeFalse();
+            Assert.False(ODataAnnotationNames.IsODataAnnotationName(annotationName));
         }
 
         [Fact]
         public void IsUnknownODataAnnotationNameShouldReturnFalseOnPropertyName()
         {
-            ODataAnnotationNames.IsUnknownODataAnnotationName("odataPropertyName").Should().BeFalse();
+            Assert.False(ODataAnnotationNames.IsUnknownODataAnnotationName("odataPropertyName"));
         }
 
         [Fact]
         public void IsUnknownODataAnnotationNameShouldReturnFalseOnCustomAnnotationName()
         {
-            ODataAnnotationNames.IsUnknownODataAnnotationName("custom.annotation").Should().BeFalse();
+            Assert.False(ODataAnnotationNames.IsUnknownODataAnnotationName("custom.annotation"));
             foreach (string annotationName in ReservedODataAnnotationNames)
             {
                 // We match the "odata." namespace case sensitive.
-                ODataAnnotationNames.IsUnknownODataAnnotationName(annotationName.ToUpperInvariant()).Should().BeFalse();
+                Assert.False(ODataAnnotationNames.IsUnknownODataAnnotationName(annotationName.ToUpperInvariant()));
             }
         }
 
@@ -79,14 +79,14 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             foreach (string annotationName in ReservedODataAnnotationNames)
             {
-                ODataAnnotationNames.IsUnknownODataAnnotationName(annotationName).Should().BeFalse();
-            }            
+                Assert.False(ODataAnnotationNames.IsUnknownODataAnnotationName(annotationName));
+            }
         }
 
         [Fact]
         public void IsUnknownODataAnotationNameShouldReturnTrueOnUnknownODataAnnotationName()
         {
-            ODataAnnotationNames.IsUnknownODataAnnotationName("odata.unknown").Should().BeTrue();
+            Assert.True(ODataAnnotationNames.IsUnknownODataAnnotationName("odata.unknown"));
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.JsonLight
             foreach(string annotationName in ReservedODataAnnotationNames)
             {
                 Action test = () => ODataAnnotationNames.ValidateIsCustomAnnotationName(annotationName);
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(annotationName));
+                test.Throws<ODataException>(Strings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(annotationName));
             }
         }
     }

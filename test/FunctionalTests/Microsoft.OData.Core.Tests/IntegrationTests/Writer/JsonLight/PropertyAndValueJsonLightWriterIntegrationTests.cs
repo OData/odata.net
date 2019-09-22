@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -140,7 +139,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"CDecimalId\":1.0}" +
                 "}";
 
-            outputPayload.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, outputPayload);
         }
 
         [Fact]
@@ -216,7 +215,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Address\":{\"CountryRegion\":\"China\"}" +
                 "}";
 
-            outputPayload.Should().Be(expectedMinimalPayload);
+            Assert.Equal(expectedMinimalPayload, outputPayload);
 
             outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true, (writer)
                 =>
@@ -240,7 +239,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Address\":{\"CountryRegion\":\"China\"}" +
                 "}";
 
-            outputPayload.Should().Be(expectedFullPayload);
+            Assert.Equal(expectedFullPayload, outputPayload);
         }
 
         [Fact]
@@ -323,7 +322,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Address\":{\"CountryRegion\":\"China\"}" +
                 "}";
 
-            outputPayload.Should().Be(expectedMinimalPayload);
+            Assert.Equal(expectedMinimalPayload, outputPayload);
 
             outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true, (writer)
                 =>
@@ -348,7 +347,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Address\":{\"CountryRegion\":\"China\"}" +
                 "}";
 
-            outputPayload.Should().Be(expectedFullPayload);
+            Assert.Equal(expectedFullPayload, outputPayload);
         }
 
         [Fact]
@@ -381,7 +380,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             };
 
             Action write = () => this.WriterEntry(model, entry, entitySet, entityType);
-            write.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.String", "True", "NS.Weight", "False"));
+            write.Throws<ODataException>(Strings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.String", "True", "NS.Weight", "False"));
         }
 
         [Fact]
@@ -418,7 +417,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Guid\":18446744073709551615" +
                 "}";
 
-            outputPayload.Should().Be(expectedMinimalPayload);
+            Assert.Equal(expectedMinimalPayload, outputPayload);
 
             outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true);
 
@@ -432,7 +431,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Guid\":18446744073709551615" +
                 "}";
 
-            outputPayload.Should().Be(expectedFullPayload);
+            Assert.Equal(expectedFullPayload, outputPayload);
         }
 
         [Fact]
@@ -468,12 +467,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Id\":1," +
                 "\"Name\":\"\\u0438\\n\\u044f\"" +
                 "}";
-            outputPayload.Should().Be(expectedEscapedNonAsciiPayload);
+            Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
 
             // 2. With EscapeNonAscii escape option
             outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, ODataStringEscapeOption.EscapeNonAscii);
 
-            outputPayload.Should().Be(expectedEscapedNonAsciiPayload);
+            Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
 
             // 3. With EscapeOnlyControls escape option
             outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
@@ -485,7 +484,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Id\":1," +
                 "\"Name\":\"и\\nя\"" +
                 "}";
-            outputPayload.Should().Be(expectedEscapedOnlyControlPayload);
+            Assert.Equal(expectedEscapedOnlyControlPayload, outputPayload);
         }
 
         [Fact]
@@ -521,7 +520,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "\"Id\":1," +
                 "\"Name\":\"и\\nя\"" +
                 "}";
-            outputPayload.Should().Be(expectedMinimalPayload);
+            Assert.Equal(expectedMinimalPayload, outputPayload);
         }
 
         [Fact]
@@ -549,7 +548,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             };
 
             Action write = () => this.WriterEntry(model, entry, entitySet, entityType);
-            write.ShouldThrow<ODataException>().WithMessage("The value of type 'System.UInt64' is not supported and cannot be converted to a JSON representation.");
+            write.Throws<ODataException>("The value of type 'System.UInt64' is not supported and cannot be converted to a JSON representation.");
         }
 
         private string WriterEntry(IEdmModel userModel, ODataResource entry, EdmEntitySet entitySet, IEdmEntityType entityType,

@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 
@@ -172,7 +171,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             if (errorMessage != null)
             {
                 Action action = () => parse(getCaseInsensitiveParser());
-                action.ShouldThrow<ODataException>().WithMessage(errorMessage);
+                action.Throws<ODataException>(errorMessage);
             }
             else
             {
@@ -204,7 +203,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
 
             // Original case should fail with CaseInsensitive parser with errorMessage
             Action action = () => parse(new ODataUriParser(model, originalCase) { Resolver = resolver });
-            action.ShouldThrow<ODataException>().WithMessage(conflictMessage);
+            action.Throws<ODataException>(conflictMessage);
         }
 
         protected void TestNotExist<TResult>(
@@ -219,13 +218,13 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             // Original case should fail with message
             ODataUriParser parser = new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
             Action action = () => parse(parser);
-            action.ShouldThrow<ODataException>().WithMessage(message);
+            action.Throws<ODataException>(message);
 
             // Original case should fail with CaseInsensitive parser with same errorMessage
             parser = new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = true } };
             parserSet(parser);
             action = () => parse(parser);
-            action.ShouldThrow<ODataException>().WithMessage(message);
+            action.Throws<ODataException>(message);
         }
         #endregion
     }

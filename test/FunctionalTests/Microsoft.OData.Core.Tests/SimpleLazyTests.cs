@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -21,11 +20,12 @@ namespace Microsoft.OData.Tests
                 factoryCallCount++;
                 return 1;
             });
-            factoryCallCount.Should().Be(0);
-            lazy.Value.Should().Be(1);
-            factoryCallCount.Should().Be(1);
-            lazy.Value.Should().Be(1);
-            factoryCallCount.Should().Be(1);
+
+            Assert.Equal(0, factoryCallCount);
+            Assert.Equal(1, lazy.Value);
+            Assert.Equal(1, factoryCallCount);
+            Assert.Equal(1, lazy.Value);
+            Assert.Equal(1, factoryCallCount);
         }
 
         [Fact]
@@ -38,11 +38,12 @@ namespace Microsoft.OData.Tests
                 return "foo";
             },
             true /*isThreadSafe*/);
-            factoryCallCount.Should().Be(0);
-            lazy.Value.Should().Be("foo");
-            factoryCallCount.Should().Be(1);
-            lazy.Value.Should().Be("foo");
-            factoryCallCount.Should().Be(1);
+
+            Assert.Equal(0, factoryCallCount);
+            Assert.Equal("foo", lazy.Value);
+            Assert.Equal(1, factoryCallCount);
+            Assert.Equal("foo", lazy.Value);
+            Assert.Equal(1, factoryCallCount);
         }
 
         [Fact]
@@ -55,11 +56,12 @@ namespace Microsoft.OData.Tests
                 factoryCallCount++;
                 return abcpqr;
             }, false /*isThreadSafe*/);
-            factoryCallCount.Should().Be(0);
-            lazy.Value.Should().Be(abcpqr);
-            factoryCallCount.Should().Be(1);
-            lazy.Value.Should().Be(abcpqr);
-            factoryCallCount.Should().Be(1);
+
+            Assert.Equal(0, factoryCallCount);
+            Assert.Equal(abcpqr, lazy.Value);
+            Assert.Equal(1, factoryCallCount);
+            Assert.Equal(abcpqr, lazy.Value);
+            Assert.Equal(1, factoryCallCount);
         }
     }
 }

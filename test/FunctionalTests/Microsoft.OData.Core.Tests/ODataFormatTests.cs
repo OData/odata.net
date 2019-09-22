@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -14,7 +13,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void JsonLightFormatToStringShouldReturnJsonLight()
         {
-            ODataFormat.Json.ToString().Should().Be("JsonLight");
+            Assert.Equal("JsonLight", ODataFormat.Json.ToString());
         }
     }
 }

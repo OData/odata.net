@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Xunit;
@@ -25,8 +24,8 @@ namespace Microsoft.OData.Tests.JsonLight
             }";
 
             var reader = CreateReorderingReaderPositionedOnFirstProperty(json);
-            reader.ReadPropertyName().Should().Be("@odata.type");
-            reader.ReadPrimitiveValue().Should().Be("SomeEntityType");
+            Assert.Equal("@odata.type", reader.ReadPropertyName());
+            Assert.Equal("SomeEntityType", reader.ReadPrimitiveValue());
         }
 
         [Fact]
@@ -40,8 +39,8 @@ namespace Microsoft.OData.Tests.JsonLight
             }";
 
             var reader = CreateReorderingReaderPositionedOnFirstProperty(json);
-            reader.ReadPropertyName().Should().Be("@odata.etag");
-            reader.ReadPrimitiveValue().Should().Be("etag-val");
+            Assert.Equal("@odata.etag", reader.ReadPropertyName());
+            Assert.Equal("etag-val", reader.ReadPrimitiveValue());
         }
 
         [Fact]
@@ -55,8 +54,8 @@ namespace Microsoft.OData.Tests.JsonLight
             }";
 
             var reader = CreateReorderingReaderPositionedOnFirstProperty(json);
-            reader.ReadPropertyName().Should().Be("@odata.id");
-            reader.ReadPrimitiveValue().Should().Be(42);
+            Assert.Equal("@odata.id", reader.ReadPropertyName());
+            Assert.Equal(42, reader.ReadPrimitiveValue());
         }
 
         [Fact]
@@ -75,15 +74,15 @@ namespace Microsoft.OData.Tests.JsonLight
             var reader = CreateReorderingReaderPositionedOnFirstProperty(json);
 
             // Expect type name first.
-            reader.ReadPropertyName().Should().Be("@odata.type");
-            reader.ReadPrimitiveValue().Should().Be("SomeEntityType");
+            Assert.Equal("@odata.type", reader.ReadPropertyName());
+            Assert.Equal("SomeEntityType", reader.ReadPrimitiveValue());
 
             // Per the protocol, odata.id and odata.etag can be in either order relative to each other,
             // but we'll (arbitarily) lock down "id" before "etag" for our reordering reader.
-            reader.ReadPropertyName().Should().Be("@odata.id");
-            reader.ReadPrimitiveValue().Should().Be(42);
-            reader.ReadPropertyName().Should().Be("@odata.etag");
-            reader.ReadPrimitiveValue().Should().Be("etag-val");
+            Assert.Equal("@odata.id", reader.ReadPropertyName());
+            Assert.Equal(42, reader.ReadPrimitiveValue());
+            Assert.Equal("@odata.etag", reader.ReadPropertyName());
+            Assert.Equal("etag-val", reader.ReadPrimitiveValue());
         }
 
         /// <summary>
@@ -97,11 +96,11 @@ namespace Microsoft.OData.Tests.JsonLight
             var innerReader = new JsonReader(stringReader, isIeee754Compatible: true);
             var reader = new ReorderingJsonReader(innerReader, maxInnerErrorDepth: 0);
 
-            reader.NodeType.Should().Be(JsonNodeType.None);
+            Assert.Equal(JsonNodeType.None, reader.NodeType);
             reader.Read();
-            reader.NodeType.Should().Be(JsonNodeType.StartObject);
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
             reader.Read();
-            reader.NodeType.Should().Be(JsonNodeType.Property);
+            Assert.Equal(JsonNodeType.Property, reader.NodeType);
             return reader;
         }
     }

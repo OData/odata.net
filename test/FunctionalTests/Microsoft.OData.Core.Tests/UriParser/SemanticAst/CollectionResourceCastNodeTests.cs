@@ -5,11 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -24,51 +22,51 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ItemTypeReferenceShouldBeCreatedFromConstructorParameter()
         {
             var node = new CollectionResourceCastNode(fakeSource, HardCodedTestModel.GetEmployeeType());
-            node.ItemType.Definition.Should().BeSameAs(HardCodedTestModel.GetEmployeeType());
-            node.ItemType.IsNullable.Should().BeFalse();
+            Assert.Same(node.ItemType.Definition, HardCodedTestModel.GetEmployeeType());
+            Assert.False(node.ItemType.IsNullable);
         }
 
         [Fact]
         public void CollectionTypeShouldBeCreatedFromItemType()
         {
             var node = new CollectionResourceCastNode(fakeSource, HardCodedTestModel.GetEmployeeType());
-            node.CollectionType.FullName().Should().Be("Collection(Fully.Qualified.Namespace.Employee)");
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", node.CollectionType.FullName());
         }
 
         [Fact]
         public void CollectionTypeShouldBeSaved()
         {
             var node = new CollectionResourceCastNode(fakeSource, HardCodedTestModel.GetEmployeeType());
-            node.CollectionType.Should().BeSameAs(node.CollectionType);
+            Assert.Same(node.CollectionType, node.CollectionType);
         }
 
         [Fact]
         public void ItemTypeShouldBeSaved()
         {
             var node = new CollectionResourceCastNode(fakeSource, HardCodedTestModel.GetEmployeeType());
-            node.ItemType.Should().BeSameAs(node.ItemType);
+            Assert.Same(node.ItemType, node.ItemType);
         }
 
         [Fact]
         public void EntityItemTypeShouldBeSameAsItemType()
         {
             var node = new CollectionResourceCastNode(fakeSource, HardCodedTestModel.GetEmployeeType());
-            node.ItemStructuredType.Should().BeSameAs(node.ItemType);
+            Assert.Same(node.ItemStructuredType, node.ItemType);
         }
 
         [Fact]
         public void SourceCannotBeNull()
         {
             Action createWithNullSource = () => new CollectionResourceCastNode(null, HardCodedTestModel.GetDogType());
-            createWithNullSource.ShouldThrow<Exception>(Error.ArgumentNull("source").ToString());
+            Assert.Throws<ArgumentNullException>("source", createWithNullSource);
         }
 
         [Fact]
-        public void EntityTypeCannotBeNull()
+        public void StructuredTypeCannotBeNull()
         {
             CollectionResourceNode source = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             Action createWithNullEntityType = () => new CollectionResourceCastNode(source, null);
-            createWithNullEntityType.ShouldThrow<Exception>(Error.ArgumentNull("entityType").ToString());
+            Assert.Throws<ArgumentNullException>("structuredType", createWithNullEntityType);
         }
 
         [Fact]
@@ -84,7 +82,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntitySetNode source = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             CollectionResourceCastNode collectionResourceCastNode = new CollectionResourceCastNode(source, HardCodedTestModel.GetDogType());
-            collectionResourceCastNode.ItemType.Should().BeOfType<EdmEntityTypeReference>();
+            Assert.IsType<EdmEntityTypeReference>(collectionResourceCastNode.ItemType);
         }
 
         [Fact]
@@ -92,7 +90,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntitySetNode source = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             CollectionResourceCastNode collectionResourceCastNode = new CollectionResourceCastNode(source, HardCodedTestModel.GetDogType());
-            collectionResourceCastNode.ItemStructuredType.Should().BeSameAs(collectionResourceCastNode.ItemType);
+            Assert.Same(collectionResourceCastNode.ItemStructuredType, collectionResourceCastNode.ItemType);
         }
 
         [Fact]
@@ -100,7 +98,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntitySetNode source = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             CollectionResourceCastNode collectionResourceCastNode = new CollectionResourceCastNode(source, HardCodedTestModel.GetDogType());
-            collectionResourceCastNode.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
+            Assert.Same(collectionResourceCastNode.NavigationSource, HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
@@ -108,7 +106,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntitySetNode source = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             CollectionResourceCastNode collectionResourceCastNode = new CollectionResourceCastNode(source, HardCodedTestModel.GetDogType());
-            collectionResourceCastNode.InternalKind.Should().Be(InternalQueryNodeKind.CollectionResourceCast);
+            Assert.Equal(collectionResourceCastNode.InternalKind, InternalQueryNodeKind.CollectionResourceCast);
         }
     }
 }

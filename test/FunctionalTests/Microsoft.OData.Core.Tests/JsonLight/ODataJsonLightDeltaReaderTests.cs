@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Microsoft.Test.OData.DependencyInjection;
@@ -426,7 +425,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 var tuples = this.ReadItem(payload, this.Model, customers, customer, isResponse);
                 this.ValidateTuples(tuples);
             };
-            readAction.ShouldThrow<ODataException>().Where(e => e.Message.Contains("Id shouldn't be a string"));
+            var exception = Assert.Throws<ODataException>(readAction);
+            Assert.Contains("Id shouldn't be a string", exception.Message);
         }
 
         #endregion
@@ -532,7 +532,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("Customers/1", UriKind.Relative));
+            Assert.Equal(new Uri("Customers/1", UriKind.Relative), deletedResource.Id);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -554,9 +554,9 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value.Should().Be(1);
-            deletedResource.Properties.Count().Should().Be(1);
-            deletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
+            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
+            Assert.Equal(1, deletedResource.Properties.Count());
+            Assert.Equal(1, deletedResource.Properties.First(p => p.Name == "Id").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -578,7 +578,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Properties.FirstOrDefault(p=>p.Name == "Id").Value.Should().Be(1);
+            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p=>p.Name == "Id").Value);
        }
 
         [InlineData(/*isResponse*/true)]
@@ -600,7 +600,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value.Should().Be(1);
+            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -622,7 +622,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value.Should().Be(1);
+            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -644,7 +644,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value.Should().Be(1);
+            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -666,10 +666,10 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Properties.Count().Should().Be(2);
-            deletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
-            deletedResource.Properties.First(p => p.Name=="ContactName").Value.Should().Be("Samantha Stones");
-            deletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Changed);
+            Assert.Equal(2, deletedResource.Properties.Count());
+            Assert.Equal(1, deletedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Samantha Stones", deletedResource.Properties.First(p => p.Name=="ContactName").Value);
+            Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -691,8 +691,8 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Id.Should().Be(new Uri("Customers('BOTTM')", UriKind.Relative));
-            deletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
+            Assert.Equal(new Uri("Customers('BOTTM')", UriKind.Relative), deletedResource.Id);
+            Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -724,11 +724,11 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deletedResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
+            Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
             Assert.NotNull(nestedResource);
-            nestedResource.Properties.Count().Should().Be(2);
-            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
-            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Scissors");
+            Assert.Equal(2, nestedResource.Properties.Count());
+            Assert.Equal(10, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Scissors", nestedResource.Properties.First(p => p.Name == "Name").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -760,7 +760,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deletedResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
+            Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
             Assert.Null(nestedResource);
         }
 
@@ -796,15 +796,15 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deltaResource);
-            deltaResource.Properties.Count().Should().Be(2);
-            deltaResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
-            deltaResource.Properties.First(p => p.Name == "ContactName").Value.Should().Be("Samantha Stones");
+            Assert.Equal(2, deltaResource.Properties.Count());
+            Assert.Equal(1, deltaResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Samantha Stones", deltaResource.Properties.First(p => p.Name == "ContactName").Value);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
+            Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
             Assert.NotNull(nestedResource);
-            nestedResource.Properties.Count().Should().Be(2);
-            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
-            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Scissors");
+            Assert.Equal(2, nestedResource.Properties.Count());
+            Assert.Equal(10, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Scissors", nestedResource.Properties.First(p => p.Name == "Name").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -840,12 +840,12 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deletedResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
+            Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
             Assert.NotNull(nestedResource);
-            nestedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedResource.Properties.Count().Should().Be(2);
-            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
-            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Scissors");
+            Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedResource.Reason);
+            Assert.Equal(2, nestedResource.Properties.Count());
+            Assert.Equal(10, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Scissors", nestedResource.Properties.First(p => p.Name == "Name").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -881,14 +881,14 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deletedResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
+            Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
             Assert.NotNull(nestedResource);
-            nestedResource.TypeName.Should().Be("MyNS.PhysicalProduct");
-            nestedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedResource.Properties.Count().Should().Be(3);
-            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
-            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("car");
-            nestedResource.Properties.First(p => p.Name == "Material").Value.Should().Be("gold");
+            Assert.Equal("MyNS.PhysicalProduct", nestedResource.TypeName);
+            Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedResource.Reason);
+            Assert.Equal(3, nestedResource.Properties.Count());
+            Assert.Equal(10, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("car", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal("gold", nestedResource.Properties.First(p => p.Name == "Material").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -920,12 +920,12 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deltaResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
+            Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
             Assert.NotNull(nestedDeletedResource);
-            nestedDeletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedDeletedResource.Properties.Count().Should().Be(2);
-            nestedDeletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
-            nestedDeletedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Scissors");
+            Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedDeletedResource.Reason);
+            Assert.Equal(2, nestedDeletedResource.Properties.Count());
+            Assert.Equal(10, nestedDeletedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Scissors", nestedDeletedResource.Properties.First(p => p.Name == "Name").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -974,21 +974,21 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deletedResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("FavouriteProducts");
+            Assert.Equal("FavouriteProducts", nestedResourceInfo.Name);
             Assert.NotNull(nestedDeltaResourceSet);
             if (isResponse)
             {
-                nestedDeltaResourceSet.Count.Should().Be(5);
-                nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+                Assert.Equal(5, nestedDeltaResourceSet.Count);
+                Assert.Equal(new Uri("http://host/service/Customers?$skipToken=5"), nestedDeltaResourceSet.NextPageLink);
             }
             Assert.NotNull(nestedResource);
-            nestedResource.Properties.Count().Should().Be(2);
-            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
-            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Car");
+            Assert.Equal(2, nestedResource.Properties.Count());
+            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
             Assert.NotNull(nestedDeletedResource);
-            nestedDeletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedDeletedResource.Properties.Count().Should().Be(1);
-            nestedDeletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
+            Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedDeletedResource.Reason);
+            Assert.Single(nestedDeletedResource.Properties);
+            Assert.Equal(10, nestedDeletedResource.Properties.First(p => p.Name == "Id").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1025,12 +1025,12 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deletedResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("FavouriteProducts");
+            Assert.Equal("FavouriteProducts", nestedResourceInfo.Name);
             Assert.NotNull(nestedDeltaResourceSet);
             if (isResponse)
             {
-                nestedDeltaResourceSet.Count.Should().Be(2);
-                nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+                Assert.Equal(2, nestedDeltaResourceSet.Count);
+                Assert.Equal(new Uri("http://host/service/Customers?$skipToken=5"), nestedDeltaResourceSet.NextPageLink);
             }
         }
 
@@ -1080,21 +1080,21 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deltaResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("FavouriteProducts");
+            Assert.Equal("FavouriteProducts", nestedResourceInfo.Name);
             Assert.NotNull(nestedDeltaResourceSet);
             if (isResponse)
             {
-                nestedDeltaResourceSet.Count.Should().Be(5);
-                nestedDeltaResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+                Assert.Equal(5, nestedDeltaResourceSet.Count);
+                Assert.Equal(new Uri("http://host/service/Customers?$skipToken=5"), nestedDeltaResourceSet.NextPageLink);
             }
             Assert.NotNull(nestedResource);
-            nestedResource.Properties.Count().Should().Be(2);
-            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
-            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Car");
+            Assert.Equal(2, nestedResource.Properties.Count());
+            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
             Assert.NotNull(nestedDeletedResource);
-            nestedDeletedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
-            nestedDeletedResource.Properties.Count().Should().Be(1);
-            nestedDeletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
+            Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedDeletedResource.Reason);
+            Assert.Single(nestedDeletedResource.Properties);
+            Assert.Equal(10, nestedDeletedResource.Properties.First(p => p.Name == "Id").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1140,20 +1140,20 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deletedResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("FavouriteProducts");
+            Assert.Equal("FavouriteProducts", nestedResourceInfo.Name);
             Assert.NotNull(nestedResourceSet);
             if (isResponse)
             {
-                nestedResourceSet.Count.Should().Be(5);
-                nestedResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+                Assert.Equal(5, nestedResourceSet.Count);
+                Assert.Equal(new Uri("http://host/service/Customers?$skipToken=5"), nestedResourceSet.NextPageLink);
             }
             Assert.NotNull(nestedResource);
-            nestedResource.Properties.Count().Should().Be(2);
-            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
-            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Car");
+            Assert.Equal(2, nestedResource.Properties.Count());
+            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
             Assert.NotNull(nestedResource2);
-            nestedResource2.Properties.Count().Should().Be(1);
-            nestedResource2.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
+            Assert.Single(nestedResource2.Properties);
+            Assert.Equal(10, nestedResource2.Properties.First(p => p.Name == "Id").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1200,20 +1200,20 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deltaResource);
             Assert.NotNull(nestedResourceInfo);
-            nestedResourceInfo.Name.Should().Be("FavouriteProducts");
+            Assert.Equal("FavouriteProducts", nestedResourceInfo.Name);
             Assert.NotNull(nestedResourceSet);
             if (isResponse)
             {
-                nestedResourceSet.Count.Should().Be(5);
-                nestedResourceSet.NextPageLink.Should().Be("http://host/service/Customers?$skipToken=5");
+                Assert.Equal(5, nestedResourceSet.Count);
+                Assert.Equal(new Uri("http://host/service/Customers?$skipToken=5"), nestedResourceSet.NextPageLink);
             }
             Assert.NotNull(nestedResource);
-            nestedResource.Properties.Count().Should().Be(2);
-            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
-            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("Car");
+            Assert.Equal(2, nestedResource.Properties.Count());
+            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
             Assert.NotNull(nestedResource2);
-            nestedResource2.Properties.Count().Should().Be(1);
-            nestedResource2.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
+            Assert.Single(nestedResource2.Properties);
+            Assert.Equal(10, nestedResource2.Properties.First(p => p.Name == "Id").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1235,8 +1235,9 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Properties.Count().Should().Be(1);
-            deletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
+            var property = Assert.Single(deletedResource.Properties);
+            Assert.Equal("Id", property.Name);
+            Assert.Equal(1, property.Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1258,10 +1259,10 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            deletedResource.Properties.Count().Should().Be(2);
-            deletedResource.TypeName.Should().Be("MyNS.PreferredCustomer");
-            deletedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(1);
-            deletedResource.Properties.First(p => p.Name == "HonorLevel").Value.Should().Be("Gold");
+            Assert.Equal(2, deletedResource.Properties.Count());
+            Assert.Equal("MyNS.PreferredCustomer", deletedResource.TypeName);
+            Assert.Equal(1, deletedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("Gold", deletedResource.Properties.First(p => p.Name == "HonorLevel").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1279,7 +1280,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 }
             };
 
-            readAction.ShouldThrow<ODataException>().WithMessage(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet("http://host/service/$metadata#Customers/$deletedEntity","MyNS.Example30.Customers", "MyNS.Example30.Customers.Orders"));
+            readAction.Throws<ODataException>(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet("http://host/service/$metadata#Customers/$deletedEntity","MyNS.Example30.Customers", "MyNS.Example30.Customers.Orders"));
         }
 
         #endregion

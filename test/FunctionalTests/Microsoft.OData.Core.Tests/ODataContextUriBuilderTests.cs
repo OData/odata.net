@@ -7,13 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.OData.Tests
 {
@@ -51,20 +49,20 @@ namespace Microsoft.OData.Tests
         public void BuildContextUrlforUnsupportedPayloadKindShouldThrowException()
         {
             Action action = () => this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.MetadataDocument);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_UnsupportedPayloadKind(ODataPayloadKind.MetadataDocument.ToString()));
+            action.Throws<ODataException>(Strings.ODataContextUriBuilder_UnsupportedPayloadKind(ODataPayloadKind.MetadataDocument.ToString()));
         }
 
         [Fact]
         public void WriteServiceDocumentUri()
         {
-            this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.ServiceDocument).OriginalString.Should().Be(BuildExpectedContextUri(""));
+            Assert.Equal(this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.ServiceDocument).OriginalString, BuildExpectedContextUri(""));
         }
 
         [Fact]
         public void ShouldRequireMetadataDocumentUriInResponses()
         {
             Action action = () => ODataContextUriBuilder.Create(null, true);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataOutputContext_MetadataDocumentUriMissing);
+            action.Throws<ODataException>(Strings.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         #region context uri with $select and $expand
@@ -73,7 +71,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(default(string), null, null, null,version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities"));
+                Assert.Equal(this.CreateFeedContextUri(default(string), null, null, null,version).OriginalString, BuildExpectedContextUri("#Cities"));
             }
         }
 
@@ -82,7 +80,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(string.Empty, null, null, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, string.Empty));
+                Assert.Equal(this.CreateFeedContextUri(string.Empty, null, null, null, version).OriginalString, BuildExpectedContextUri("#Cities", false, string.Empty));
             }
         }
 
@@ -94,7 +92,7 @@ namespace Microsoft.OData.Tests
             string expectClause = "Name";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(selectClause, null, null, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectClause));
+                Assert.Equal(this.CreateFeedContextUri(selectClause, null, null, null, version).OriginalString, BuildExpectedContextUri("#Cities", false, expectClause));
             }
 
             // Select single navigation property
@@ -102,7 +100,7 @@ namespace Microsoft.OData.Tests
             expectClause = "Districts";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(selectClause, null, null, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectClause));
+                Assert.Equal(this.CreateFeedContextUri(selectClause, null, null, null, version).OriginalString, BuildExpectedContextUri("#Cities", false, expectClause));
             }
         }
 
@@ -112,7 +110,7 @@ namespace Microsoft.OData.Tests
             string expectClause = "Districts($apply=aggregate($count as Count))";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, expectClause, null, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, "Districts(Count)"));
+                Assert.Equal(this.CreateFeedContextUri(null, expectClause, null, null, version).OriginalString, BuildExpectedContextUri("#Cities", false, "Districts(Count)"));
             }
         }
 
@@ -122,7 +120,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "aggregate(Id with sum as TotalId)";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(TotalId)");
+                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(TotalId)");
             }
         }
 
@@ -137,7 +135,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "aggregate(DynamicProperty with " + method + " as DynamicPropertyTotal)";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(DynamicPropertyTotal)");
+                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(DynamicPropertyTotal)");
             }
         }
 
@@ -147,7 +145,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "groupby((Name, Address/Street))";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,Address(Street))");
+                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Name,Address(Street))");
             }
         }
 
@@ -157,7 +155,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "groupby((Name, DynamicProperty, Address/Street))";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,DynamicProperty,Address(Street))");
+                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Name,DynamicProperty,Address(Street))");
             }
         }
 
@@ -167,7 +165,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "filter(Id eq 1)";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities");
+                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities");
             }
         }
         [Fact]
@@ -176,7 +174,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "groupby((Name), aggregate(Id with sum as TotalId))";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,TotalId)");
+                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Name,TotalId)");
             }
         }
 
@@ -186,7 +184,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "groupby((Name), aggregate(Id with sum as TotalId))";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri("Name", null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name)");
+                Assert.Equal(this.CreateFeedContextUri("Name", null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Name)");
             }
         }
 
@@ -196,7 +194,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "expand(Districts, filter(true))";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities");
+                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities");
             }
         }
 
@@ -207,7 +205,7 @@ namespace Microsoft.OData.Tests
             string computeClause = "compute('Test' as NewColumn)";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, computeClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities");
+                Assert.Equal(this.CreateFeedContextUri(null, null, computeClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities");
             }
         }
 
@@ -217,7 +215,7 @@ namespace Microsoft.OData.Tests
             string computeClause = "compute('Test' as NewColumn)";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri("Id,Name,NewColumn", null, computeClause, null, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Id,Name,NewColumn)");
+                Assert.Equal(this.CreateFeedContextUri("Id,Name,NewColumn", null, computeClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Id,Name,NewColumn)");
             }
         }
 
@@ -227,7 +225,7 @@ namespace Microsoft.OData.Tests
             string computeClause = "'Test' as NewColumn";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(null, null, null, computeClause, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities");
+                Assert.Equal(this.CreateFeedContextUri(null, null, null, computeClause, version).OriginalString, MetadataDocumentUriString + "#Cities");
             }
         }
 
@@ -237,7 +235,7 @@ namespace Microsoft.OData.Tests
             string computeClause = "'Test' as NewColumn";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri("Id,Name,NewColumn", null, null, computeClause, version).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Id,Name,NewColumn)");
+                Assert.Equal(this.CreateFeedContextUri("Id,Name,NewColumn", null, null, computeClause, version).OriginalString, MetadataDocumentUriString + "#Cities(Id,Name,NewColumn)");
             }
         }
 
@@ -248,7 +246,7 @@ namespace Microsoft.OData.Tests
             const string expectClause = "*";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(selectClause, null, null, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectClause));
+                Assert.Equal(this.CreateFeedContextUri(selectClause, null, null, null, version).OriginalString, BuildExpectedContextUri("#Cities", false, expectClause));
             }
         }
 
@@ -257,7 +255,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateEntryContextUri(default(string), null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true));
+                Assert.Equal(this.CreateEntryContextUri(default(string), null, version).OriginalString, BuildExpectedContextUri("#Cities", true));
             }
         }
 
@@ -266,7 +264,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateEntryContextUri(string.Empty, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, string.Empty));
+                Assert.Equal(this.CreateEntryContextUri(string.Empty, null, version).OriginalString, BuildExpectedContextUri("#Cities", true, string.Empty));
             }
         }
 
@@ -277,7 +275,7 @@ namespace Microsoft.OData.Tests
             const string expectClause = "*";
             foreach (ODataVersion version in Versions)
             {
-                this.CreateEntryContextUri(selectClause, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectClause));
+                Assert.Equal(this.CreateEntryContextUri(selectClause, null, version).OriginalString, BuildExpectedContextUri("#Cities", true, expectClause));
             }
         }
 
@@ -292,7 +290,9 @@ namespace Microsoft.OData.Tests
         public void FeedContextUriWithSingleExpandString(string expandClause, string expectedClause)
         {
             foreach (ODataVersion version in Versions)
-            this.CreateFeedContextUri("", expandClause, null, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
+            {
+                Assert.Equal(this.CreateFeedContextUri("", expandClause, null, null, version).OriginalString, BuildExpectedContextUri("#Cities", false, expectedClause));
+            }
         }
 
         [Theory]
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 string uriString = this.CreateFeedContextUri(selectClause, expandClause, null, null, version).OriginalString;
-                uriString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
+                Assert.Equal(uriString, BuildExpectedContextUri("#Cities", false, expectedClause));
             }
         }
 
@@ -324,13 +324,13 @@ namespace Microsoft.OData.Tests
                 string selectClause = "";
                 string expandClause = "Districts($select=Name,Zip)";
                 string expectedClause = "Districts(Name,Zip)";
-                this.CreateEntryContextUri(selectClause, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
+                Assert.Equal(this.CreateEntryContextUri(selectClause, expandClause, version).OriginalString, BuildExpectedContextUri("#Cities", true, expectedClause));
 
                 // With $select in same level, $select=A&$expand=A($select=B,C)
                 selectClause = "Districts";
                 expandClause = "Districts($select=Name,Zip)";
                 expectedClause = "Districts,Districts(Name,Zip)";
-                this.CreateEntryContextUri(selectClause, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
+                Assert.Equal(this.CreateEntryContextUri(selectClause, expandClause, version).OriginalString, BuildExpectedContextUri("#Cities", true, expectedClause));
             }
         }
 
@@ -343,22 +343,22 @@ namespace Microsoft.OData.Tests
             string expandClause = "Districts($expand=City($expand=Districts))";
             string expectedClause = "Districts(City(Districts()))";
             string urlString = this.CreateEntryContextUri(null, expandClause, version).OriginalString;
-            urlString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
+            Assert.Equal(urlString, BuildExpectedContextUri("#Cities", true, expectedClause));
 
             // With inner $select, $expand=A($expand=B($select=C))
             expandClause = "Districts($expand=City($select=Districts))";
             expectedClause = "Districts(City(Districts))";
-            this.CreateEntryContextUri(null, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
+            Assert.Equal(this.CreateEntryContextUri(null, expandClause, version).OriginalString, BuildExpectedContextUri("#Cities", true, expectedClause));
 
             // With inner $expand, $expand=A($expand=C($select=D)))
             expandClause = "Districts($expand=City($select=Districts))";
             expectedClause = "Districts(City(Districts))";
-            this.CreateEntryContextUri(null, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
+            Assert.Equal(this.CreateEntryContextUri(null, expandClause, version).OriginalString, BuildExpectedContextUri("#Cities", true, expectedClause));
 
             // With inner $select and $expand, $expand=A($select=B;$expand=C($select=D)))
             expandClause = "Districts($select=Name;$expand=City($select=Districts))";
             expectedClause = "Districts(Name,City(Districts))";
-            this.CreateEntryContextUri(null, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
+            Assert.Equal(this.CreateEntryContextUri(null, expandClause, version).OriginalString, BuildExpectedContextUri("#Cities", true, expectedClause));
         }
 
         [Theory]
@@ -369,7 +369,7 @@ namespace Microsoft.OData.Tests
             const string selectClause = "Size,Name";
             const string expandClause = "Districts($select=Zip,City;$expand=City($expand=Districts;$select=Name))";
             const string expectedClause = "Size,Name,Districts(Zip,City,City(Name,Districts()))";
-            this.CreateFeedContextUri(selectClause, expandClause, null, null, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
+            Assert.Equal(this.CreateFeedContextUri(selectClause, expandClause, null, null, version).OriginalString, BuildExpectedContextUri("#Cities", false, expectedClause));
         }
         #endregion context uri with $select and $expand
 
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(this.responseCityTypeContextWithoutSerializationInfo, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities"));
+                Assert.Equal(this.CreateFeedContextUri(this.responseCityTypeContextWithoutSerializationInfo, version).OriginalString, BuildExpectedContextUri("#Cities"));
             }
         }
 
@@ -388,7 +388,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(this.responseCapitolCityTypeContextWithoutSerializationInfo, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/TestModel.CapitolCity"));
+                Assert.Equal(this.CreateFeedContextUri(this.responseCapitolCityTypeContextWithoutSerializationInfo, version).OriginalString, BuildExpectedContextUri("#Cities/TestModel.CapitolCity"));
             }
         }
 
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 Action test = () => this.CreateFeedContextUri(ResponseTypeContextWithoutTypeInfo, version);
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+                test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
             }
         }
 
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateFeedContextUri(RequestTypeContextWithoutTypeInfo, version, false).Should().BeNull();
+                Assert.Null(this.CreateFeedContextUri(RequestTypeContextWithoutTypeInfo, version, false));
             }
         }
 
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateEntryContextUri(this.responseCityTypeContextWithoutSerializationInfo, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true));
+                Assert.Equal(this.CreateEntryContextUri(this.responseCityTypeContextWithoutSerializationInfo, version).OriginalString, BuildExpectedContextUri("#Cities", true));
             }
         }
 
@@ -450,7 +450,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateEntryContextUri(this.responseCapitolCityTypeContextWithoutSerializationInfo, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/TestModel.CapitolCity", true));
+                Assert.Equal(this.CreateEntryContextUri(this.responseCapitolCityTypeContextWithoutSerializationInfo, version).OriginalString, BuildExpectedContextUri("#Cities/TestModel.CapitolCity", true));
             }
         }
 
@@ -460,7 +460,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 Action test = () => this.CreateEntryContextUri(ResponseTypeContextWithoutTypeInfo, version);
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+                test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
             }
         }
 
@@ -469,7 +469,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateEntryContextUri(RequestTypeContextWithoutTypeInfo, version, false).Should().BeNull();
+                Assert.Null(this.CreateEntryContextUri(RequestTypeContextWithoutTypeInfo, version, false));
             }
         }
 
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 var singletonTypeContextWithModel = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.singletonCity, this.cityType, this.cityType, throwIfMissingTypeInfo: true);
-                this.CreateEntryContextUri(singletonTypeContextWithModel, version).OriginalString.Should().Be(BuildExpectedContextUri("#SingletonCity", false));
+                Assert.Equal(this.CreateEntryContextUri(singletonTypeContextWithModel, version).OriginalString, BuildExpectedContextUri("#SingletonCity", false));
             }
         }
 
@@ -490,7 +490,7 @@ namespace Microsoft.OData.Tests
             var requestSingletonTypeContextWithoutModel = ODataResourceTypeContext.Create(serializationInfo, /*navigationSource*/null, /*navigationSourceEntityType*/null, /*expectedEntityType*/null, true);
             foreach (ODataVersion version in Versions)
             {
-                this.CreateEntryContextUri(requestSingletonTypeContextWithoutModel, version).OriginalString.Should().Be(BuildExpectedContextUri("#Boss", false));
+                Assert.Equal(this.CreateEntryContextUri(requestSingletonTypeContextWithoutModel, version).OriginalString, BuildExpectedContextUri("#Boss", false));
             }
         }
 
@@ -511,7 +511,7 @@ namespace Microsoft.OData.Tests
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(this.districtSet, "TestModel.District", true, odataUri, ODataVersion.V4);
 
             Uri uri = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.Resource, info);
-            uri.OriginalString.Should().Be(BuildExpectedContextUri("#Districts/$entity", false));
+            Assert.Equal(uri.OriginalString, BuildExpectedContextUri("#Districts/$entity", false));
         }
 
         #endregion entry context uri
@@ -520,13 +520,13 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldWriteLinkContextUriWithoutSerializationInfo()
         {
-            this.CreateEntityReferenceLinkContextUri().OriginalString.Should().Be(BuildExpectedContextUri("#$ref"));
+            Assert.Equal(this.CreateEntityReferenceLinkContextUri().OriginalString, BuildExpectedContextUri("#$ref"));
         }
 
         [Fact]
         public void ShouldWriteLinkContextUriWithSerializationInfo()
         {
-            this.CreateEntityReferenceLinkContextUri().OriginalString.Should().Be(BuildExpectedContextUri(ODataConstants.SingleEntityReferencesContextUrlSegment));
+            Assert.Equal(this.CreateEntityReferenceLinkContextUri().OriginalString, BuildExpectedContextUri(ODataConstants.SingleEntityReferencesContextUrlSegment));
         }
         #endregion link context uri
 
@@ -534,13 +534,13 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldWriteLinksContextUriWithoutSerializationInfo()
         {
-            this.CreateEntityReferenceLinksContextUri().OriginalString.Should().Be(BuildExpectedContextUri(ODataConstants.CollectionOfEntityReferencesContextUrlSegment));
+            Assert.Equal(this.CreateEntityReferenceLinksContextUri().OriginalString, BuildExpectedContextUri(ODataConstants.CollectionOfEntityReferencesContextUrlSegment));
         }
 
         [Fact]
         public void ShouldWriteLinksContextUriWithSerializationInfo()
         {
-            this.CreateEntityReferenceLinksContextUri().OriginalString.Should().Be(BuildExpectedContextUri(ODataConstants.CollectionOfEntityReferencesContextUrlSegment));
+            Assert.Equal(this.CreateEntityReferenceLinksContextUri().OriginalString, BuildExpectedContextUri(ODataConstants.CollectionOfEntityReferencesContextUrlSegment));
         }
         #endregion links context uri
 
@@ -552,7 +552,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 var contextUri = this.CreatePropertyContextUri(1, version);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#Edm.Int32"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#Edm.Int32"));
             }
         }
 
@@ -562,7 +562,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 var contextUri = this.CreatePropertyContextUri(GeometryPoint.Create(1, 2), version);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#Edm.GeometryPoint"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#Edm.GeometryPoint"));
             }
         }
 
@@ -575,7 +575,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 var contextUri = this.CreateEntryContextUri(typeContext, version, true);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#TestModel.Address"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#TestModel.Address"));
             }
         }
 
@@ -586,7 +586,7 @@ namespace Microsoft.OData.Tests
             {
                 ODataCollectionValue value = new ODataCollectionValue { TypeName = "FQNS.FakeType" };
                 var contextUri = this.CreatePropertyContextUri(value, version);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FakeType"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#FQNS.FakeType"));
             }
         }
 
@@ -600,7 +600,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 var contextUri = this.CreateEntryContextUri(typeContext, version, true);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#TestModel.Address"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#TestModel.Address"));
             }
         }
 
@@ -612,7 +612,7 @@ namespace Microsoft.OData.Tests
                 ODataCollectionValue value = new ODataCollectionValue { TypeName = "FQNS.FakeType" };
                 value.TypeAnnotation = new ODataTypeAnnotation();
                 var contextUri = this.CreatePropertyContextUri(value, version);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FakeType"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#FQNS.FakeType"));
             }
         }
 
@@ -624,7 +624,7 @@ namespace Microsoft.OData.Tests
                 ODataValue value = new ODataPrimitiveValue(1);
                 value.TypeAnnotation = new ODataTypeAnnotation();
                 var contextUri = this.CreatePropertyContextUri(value, version);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#Edm.Int32"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#Edm.Int32"));
             }
         }
 
@@ -636,7 +636,7 @@ namespace Microsoft.OData.Tests
                 ODataCollectionValue value = new ODataCollectionValue { TypeName = "FQNS.FromObject" };
                 value.TypeAnnotation = new ODataTypeAnnotation("FQNS.FromAnnotation");
                 var contextUri = this.CreatePropertyContextUri(value, version);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FromAnnotation"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#FQNS.FromAnnotation"));
             }
         }
 
@@ -648,7 +648,7 @@ namespace Microsoft.OData.Tests
                 ODataValue value = new ODataPrimitiveValue(1);
                 value.TypeAnnotation = new ODataTypeAnnotation("FQNS.FromAnnotation");
                 var contextUri = this.CreatePropertyContextUri(value, version);
-                contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FromAnnotation"));
+                Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#FQNS.FromAnnotation"));
             }
         }
 
@@ -658,7 +658,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 Action withStream = () => this.CreatePropertyContextUri(new ODataCollectionValue(), version);
-                withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
+                withStream.Throws<ODataException>(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
             }
         }
 
@@ -668,7 +668,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 Action withStream = () => this.CreatePropertyContextUri(new ODataStreamReferenceValue(), version);
-                withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
+                withStream.Throws<ODataException>(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
             }
         }
         #endregion value context uri
@@ -677,21 +677,21 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldWriteCollectionContextUri()
         {
-            this.CreateCollectionContextUri(null, EdmCoreModel.Instance.GetString(isNullable: false)).OriginalString.Should().Be(BuildExpectedContextUri("#Collection(Edm.String)"));
+            Assert.Equal(this.CreateCollectionContextUri(null, EdmCoreModel.Instance.GetString(isNullable: false)).OriginalString, BuildExpectedContextUri("#Collection(Edm.String)"));
         }
 
         [Fact]
         public void CollectionSerializationInfoShouldOverrideEdmMetadata()
         {
             var collectionStartSerializationInfo1 = new ODataCollectionStartSerializationInfo { CollectionTypeName = "Collection(Edm.Guid)" };
-            this.CreateCollectionContextUri(collectionStartSerializationInfo1, EdmCoreModel.Instance.GetString(isNullable: false)).OriginalString.Should().Be(BuildExpectedContextUri("#Collection(Edm.Guid)"));
+            Assert.Equal(this.CreateCollectionContextUri(collectionStartSerializationInfo1, EdmCoreModel.Instance.GetString(isNullable: false)).OriginalString, BuildExpectedContextUri("#Collection(Edm.Guid)"));
         }
 
         [Fact]
         public void ShouldThrowIfTypeNameIsMissingOnCollectionResponse()
         {
-            Action action = () => this.CreateCollectionContextUri(serializationInfo: null, itemTypeReference: null).OriginalString.Should().Be(BuildExpectedContextUri("#Collection(Edm.Guid)"));
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_TypeNameMissingForTopLevelCollection);
+            Action action = () => Assert.Equal(this.CreateCollectionContextUri(serializationInfo: null, itemTypeReference: null).OriginalString, BuildExpectedContextUri("#Collection(Edm.Guid)"));
+            action.Throws<ODataException>(Strings.ODataContextUriBuilder_TypeNameMissingForTopLevelCollection);
         }
         #endregion collection context uri
 
@@ -703,7 +703,7 @@ namespace Microsoft.OData.Tests
             {
                 const string name = "IAmName";
                 ODataValue value = name.ToODataValue();
-                this.CreateIndividualPropertyContextUri(value, "Cities(9)/Name", version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities(9)/Name"));
+                Assert.Equal(this.CreateIndividualPropertyContextUri(value, "Cities(9)/Name", version).OriginalString, BuildExpectedContextUri("#Cities(9)/Name"));
             }
         }
 
@@ -713,7 +713,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 ODataValue value = new ODataCollectionValue();
-                this.CreateIndividualPropertyContextUri(value, "Cities(9)/Restaurants", version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities(9)/Restaurants"));
+                Assert.Equal(this.CreateIndividualPropertyContextUri(value, "Cities(9)/Restaurants", version).OriginalString, BuildExpectedContextUri("#Cities(9)/Restaurants"));
             }
         }
         #endregion individual property context uri
@@ -724,8 +724,8 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.ResourceSet, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/$delta"));
-                this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.ResourceSet, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/TestModel.CapitolCity/$delta"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.ResourceSet, version).OriginalString, BuildExpectedContextUri("#Cities/$delta"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.ResourceSet, version).OriginalString, BuildExpectedContextUri("#Cities/TestModel.CapitolCity/$delta"));
             }
         }
 
@@ -734,8 +734,8 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.Resource, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/$entity"));
-                this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.Resource, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/TestModel.CapitolCity/$entity"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.Resource, version).OriginalString, BuildExpectedContextUri("#Cities/$entity"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.Resource, version).OriginalString, BuildExpectedContextUri("#Cities/TestModel.CapitolCity/$entity"));
             }
         }
 
@@ -744,8 +744,8 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.DeletedEntry, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/$deletedEntity"));
-                this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.DeletedEntry, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/$deletedEntity"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.DeletedEntry, version).OriginalString, BuildExpectedContextUri("#Cities/$deletedEntity"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.DeletedEntry, version).OriginalString, BuildExpectedContextUri("#Cities/$deletedEntity"));
             }
         }
 
@@ -754,8 +754,8 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.Link, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/$link"));
-                this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.Link, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/$link"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.Link, version).OriginalString, BuildExpectedContextUri("#Cities/$link"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.Link, version).OriginalString, BuildExpectedContextUri("#Cities/$link"));
             }
         }
 
@@ -764,8 +764,8 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.DeletedLink, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/$deletedLink"));
-                this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.DeletedLink, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities/$deletedLink"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCityTypeContextWithoutSerializationInfo, ODataDeltaKind.DeletedLink, version).OriginalString, BuildExpectedContextUri("#Cities/$deletedLink"));
+                Assert.Equal(this.CreateDeltaResponseContextUri(responseCapitolCityTypeContextWithoutSerializationInfo, ODataDeltaKind.DeletedLink, version).OriginalString, BuildExpectedContextUri("#Cities/$deletedLink"));
             }
         }
         #endregion delta context uri
@@ -774,8 +774,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldNotRequireContextUriInResponsesForNoMetadata()
         {
-            ODataContextUriBuilder.Create(null, false).Should().NotBeNull();
-
+            Assert.NotNull(ODataContextUriBuilder.Create(null, false));
         }
 
         [Fact]
@@ -785,7 +784,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
-                this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.ResourceSet, ODataContextUrlInfo.Create(typeContext, version, false)).Should().BeNull();
+                Assert.Null(this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.ResourceSet, ODataContextUrlInfo.Create(typeContext, version, false)));
             }
         }
 
@@ -796,7 +795,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
-                this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.Resource, ODataContextUrlInfo.Create(typeContext, version, true)).Should().BeNull();
+                Assert.Null(this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.Resource, ODataContextUrlInfo.Create(typeContext, version, true)));
             }
         }
 
@@ -804,7 +803,7 @@ namespace Microsoft.OData.Tests
         public void CollectionContextUriShouldNotBeWrittenIfNotProvided()
         {
             var contextInfo = ODataContextUrlInfo.Create(new ODataCollectionStartSerializationInfo { CollectionTypeName = "Collection(Edm.Guid)" }, EdmCoreModel.Instance.GetString(false));
-            this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.Collection, contextInfo).Should().BeNull();
+            Assert.Null(this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.Collection, contextInfo));
         }
 
         [Fact]
@@ -813,26 +812,26 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 var contextInfo = ODataContextUrlInfo.Create(new ODataProperty().ODataValue, version);
-                this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.Property, contextInfo).Should().BeNull();
+                Assert.Null(this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.Property, contextInfo));
             }
         }
 
         [Fact]
         public void LinkContextUriShouldNotBeWrittenIfNotProvided()
         {
-            this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.EntityReferenceLink).Should().BeNull();
+            Assert.Null(this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.EntityReferenceLink));
         }
 
         [Fact]
         public void LinksContextUriShouldNotBeWrittenIfNotProvided()
         {
-            this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.EntityReferenceLinks).Should().BeNull();
+            Assert.Null(this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.EntityReferenceLinks));
         }
 
         [Fact]
         public void ServiceDocumentContextUriShouldNotBeWrittenIfNotProvided()
         {
-            this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.ServiceDocument).Should().BeNull();
+            Assert.Null(this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.ServiceDocument));
         }
         #endregion NoMetadata
 
@@ -908,7 +907,7 @@ namespace Microsoft.OData.Tests
         {
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(serializationInfo, itemTypeReference);
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.Collection, info);
-            contextUrl.Should().NotBeNull();
+            Assert.NotNull(contextUrl);
             return contextUrl;
         }
 
@@ -917,7 +916,7 @@ namespace Microsoft.OData.Tests
             ODataProperty property = new ODataProperty() { Value = value };
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(property.ODataValue, version);
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.Property, info);
-            contextUrl.Should().NotBeNull();
+            Assert.NotNull(contextUrl);
             return contextUrl;
         }
 
@@ -925,7 +924,7 @@ namespace Microsoft.OData.Tests
         {
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(value, version, new ODataUri() { Path = new ODataUriParser(edmModel, new Uri(ServiceDocumentUriString), new Uri(ServiceDocumentUriString + resourcePath)).ParsePath() });
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.IndividualProperty, info);
-            contextUrl.Should().NotBeNull();
+            Assert.NotNull(contextUrl);
             return contextUrl;
         }
 
@@ -993,14 +992,14 @@ namespace Microsoft.OData.Tests
         private Uri CreateEntityReferenceLinkContextUri()
         {
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.EntityReferenceLink);
-            contextUrl.Should().NotBeNull();
+            Assert.NotNull(contextUrl);
             return contextUrl;
         }
 
         private Uri CreateEntityReferenceLinksContextUri()
         {
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.EntityReferenceLinks);
-            contextUrl.Should().NotBeNull();
+            Assert.NotNull(contextUrl);
             return contextUrl;
         }
 
@@ -1008,7 +1007,7 @@ namespace Microsoft.OData.Tests
         {
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(typeContext, version, kind);
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.Delta, info);
-            contextUrl.Should().NotBeNull();
+            Assert.NotNull(contextUrl);
             return contextUrl;
         }
 

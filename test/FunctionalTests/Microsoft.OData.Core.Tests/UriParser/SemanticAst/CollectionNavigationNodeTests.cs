@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -21,7 +20,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForDog();
             var node = new CollectionNavigationNode(source, HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyPeople"));
 
-            node.Source.Should().BeSameAs(source);
+            Assert.Same(source, node.Source);
         }
 
         [Fact]
@@ -30,7 +29,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForDog();
             var node = new CollectionNavigationNode(source, HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyPeople"));
 
-            node.ItemType.Should().BeSameAs(HardCodedTestModel.GetDogMyPeopleNavProp().Type.AsCollection().CollectionDefinition().ElementType);
+            Assert.Same(node.ItemType, HardCodedTestModel.GetDogMyPeopleNavProp().Type.AsCollection().CollectionDefinition().ElementType);
         }
 
         [Fact]
@@ -39,7 +38,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForDog();
             var node = new CollectionNavigationNode(source, HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyPeople"));
 
-            node.CollectionType.Should().BeSameAs(HardCodedTestModel.GetDogMyPeopleNavProp().Type.AsCollection());
+            Assert.Same(node.CollectionType, HardCodedTestModel.GetDogMyPeopleNavProp().Type.AsCollection());
         }
 
         [Fact]
@@ -48,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForDog();
             var node = new CollectionNavigationNode(source, HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyPeople"));
 
-            node.EntityItemType.Should().BeSameAs(node.ItemType);
+            Assert.Same(node.EntityItemType, node.ItemType);
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForDog();
             var node = new CollectionNavigationNode(source, HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyPeople"));
 
-            node.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            Assert.Same(node.NavigationSource, HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]
@@ -66,7 +65,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = new FakeSingleEntityNode(HardCodedTestModel.GetDogTypeReference(), null);
             var collectionCastNode = new CollectionNavigationNode(source, HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyPeople"));
 
-            collectionCastNode.NavigationSource.Should().BeNull();
+            Assert.Null(collectionCastNode.NavigationSource);
         }
 
         [Fact]
@@ -74,7 +73,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             var collectionCastNode = new CollectionNavigationNode((IEdmNavigationSource)null, HardCodedTestModel.GetDogMyPeopleNavProp(), null);
 
-            collectionCastNode.NavigationSource.Should().BeNull();
+            Assert.Null(collectionCastNode.NavigationSource);
         }
 
         [Fact]
@@ -83,14 +82,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForPerson();
             Action create = () => new CollectionNavigationNode(source, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
 
-            create.ShouldThrow<ArgumentException>().WithMessage(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveManyMultiplicity);
+            create.Throws<ArgumentException>(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveManyMultiplicity);
         }
 
         [Fact]
         public void CollectionNavigationNodeOnSingletonShouldWork()
         {
             var collectionCastNode = new CollectionNavigationNode(HardCodedTestModel.GetBossSingleton(), HardCodedTestModel.GetPersonMyPaintingsNavProp(), new EdmPathExpression("MyPaintings"));
-            collectionCastNode.NavigationSource.Should().Be(HardCodedTestModel.GetPaintingsSet());
+            Assert.Same(collectionCastNode.NavigationSource, HardCodedTestModel.GetPaintingsSet());
         }
     }
 }

@@ -217,7 +217,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void FunctionImportShouldWork()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "FindMyOwner(dogsName='fido')" });
-            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
+            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).Parameters.Single();
             var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
             var node = Assert.IsType<ConstantNode>(segmentParameter.Value);
             Assert.Equal("fido", node.Value);
@@ -227,7 +227,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void FunctionImportShouldWorkWithNumericChar()
         {
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "FindMyOwner(dogsName='000110011E0124221929')" });
-            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
+            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).Parameters.Single();
 
             var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
             var node = Assert.IsType<ConstantNode>(segmentParameter.Value);
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NormalFunctionImportShouldWorkWithTemplateParser()
         {
             IList<ODataPathSegment> path = this.templateParser.ParsePath(new[] { "FindMyOwner(dogsName='fido')" });
-            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
+            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).Parameters.Single();
 
             var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
             var node = Assert.IsType<ConstantNode>(segmentParameter.Value);
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IEdmFunction operation = HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters();
             IList<ODataPathSegment> path = this.templateParser.ParsePath(new[] { "Boss", "Fully.Qualified.Namespace.HasDog(inOffice={fido})" });
-            OperationSegmentParameter parameter = path[1].ShouldBeOperationSegment(operation).And.Parameters.Single();
+            OperationSegmentParameter parameter = path[1].ShouldBeOperationSegment(operation).Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("inOffice", new UriTemplateExpression { LiteralText = "{fido}", ExpectedType = operation.Parameters.Last().Type });
         }
 
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IEdmOperationImport operationImport = HardCodedTestModel.GetFunctionImportForFindMyOwner();
             IList<ODataPathSegment> path = this.templateParser.ParsePath(new[] { "FindMyOwner(dogsName={fido})" });
-            OperationSegmentParameter parameter = path[0].ShouldBeOperationImportSegment(operationImport).And.Parameters.Single();
+            OperationSegmentParameter parameter = path[0].ShouldBeOperationImportSegment(operationImport).Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("dogsName", new UriTemplateExpression { LiteralText = "{fido}", ExpectedType = operationImport.Operation.Parameters.Single().Type });
         }
 
@@ -345,7 +345,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NormalFunctionImportShouldWorkWithTemplateParserWhenKeyAsSegmentShouldWork()
         {
             IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "FindMyOwner(dogsName='fido')" });
-            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
+            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).Parameters.Single();
             var node = Assert.IsType<ConstantNode>(Assert.IsType<OperationSegmentParameter>(parameter).Value);
             Assert.Equal("fido", node.Value);
         }
@@ -355,7 +355,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IEdmFunction operation = HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters();
             IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "Boss", "Fully.Qualified.Namespace.HasDog(inOffice={fido})" });
-            OperationSegmentParameter parameter = path[1].ShouldBeOperationSegment(operation).And.Parameters.Single();
+            OperationSegmentParameter parameter = path[1].ShouldBeOperationSegment(operation).Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("inOffice", new UriTemplateExpression { LiteralText = "{fido}", ExpectedType = operation.Parameters.Last().Type });
         }
 
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             IEdmOperationImport operationImport = HardCodedTestModel.GetFunctionImportForFindMyOwner();
             IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "FindMyOwner(dogsName={fido})" });
-            OperationSegmentParameter parameter = path[0].ShouldBeOperationImportSegment(operationImport).And.Parameters.Single();
+            OperationSegmentParameter parameter = path[0].ShouldBeOperationImportSegment(operationImport).Parameters.Single();
             parameter.ShouldBeConstantParameterWithValueType("dogsName", new UriTemplateExpression { LiteralText = "{fido}", ExpectedType = operationImport.Operation.Parameters.Single().Type });
         }
         #endregion

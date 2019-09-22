@@ -8,16 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using FluentAssertions;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight;
-using Microsoft.OData.Tests.UriParser;
-using Xunit;
 using Microsoft.Spatial;
-using Xunit.Sdk;
+using Xunit;
 
 namespace Microsoft.OData.Tests.Metadata
 {
@@ -92,7 +87,8 @@ namespace Microsoft.OData.Tests.Metadata
         public void FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingTypeShouldNotFilterIfBindingIsNotStructuralType()
         {
             EdmAction action = new EdmAction("namespace", "action", null);
-            new IEdmOperation[] { action }.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(EdmCoreModel.Instance.GetSingle(true).Definition).Should().HaveCount(1);
+            var result = new IEdmOperation[] { action }.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(EdmCoreModel.Instance.GetSingle(true).Definition);
+            Assert.Single(result);
         }
 
         [Fact]
@@ -106,8 +102,8 @@ namespace Microsoft.OData.Tests.Metadata
             EdmAction action2 = new EdmAction("namespace", "action", null, true, null);
             action2.AddParameter("bindingParameter", new EdmEntityTypeReference(bType, false));
             var filteredResults = new IEdmOperation[] { action, action2 }.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(cType).ToList();
-            filteredResults.Should().HaveCount(1);
-            filteredResults[0].Should().BeSameAs(action2);
+            var result = Assert.Single(filteredResults);
+            Assert.Same(action2, result);
         }
 
         [Fact]
@@ -121,8 +117,8 @@ namespace Microsoft.OData.Tests.Metadata
             EdmAction action2 = new EdmAction("namespace", "action", null, true, null);
             action2.AddParameter("bindingParameter", EdmCoreModel.GetCollection(new EdmEntityTypeReference(bType, false)));
             var filteredResults = new IEdmOperation[] { action, action2 }.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(EdmCoreModel.GetCollection(new EdmEntityTypeReference(cType, false)).Definition).ToList();
-            filteredResults.Should().HaveCount(1);
-            filteredResults[0].Should().BeSameAs(action2);
+            var result = Assert.Single(filteredResults);
+            Assert.Same(action2, result);
         }
 
         [Fact]
@@ -136,8 +132,8 @@ namespace Microsoft.OData.Tests.Metadata
             EdmAction action2 = new EdmAction("namespace", "action2", null, true, null);
             action2.AddParameter("bindingParameter", new EdmEntityTypeReference(aType, false));
             var filteredResults = new IEdmOperation[] { action, action2 }.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(aType).ToList();
-            filteredResults.Should().HaveCount(1);
-            filteredResults[0].Should().BeSameAs(action2);
+            var result = Assert.Single(filteredResults);
+            Assert.Same(action2, result);
         }
 
         [Fact]
@@ -147,7 +143,7 @@ namespace Microsoft.OData.Tests.Metadata
             EdmAction action = new EdmAction("namespace", "action", null, false, null);
             action.AddParameter("bindingParameter", new EdmEntityTypeReference(aType, false));
             var filteredResults = new IEdmOperation[] { action }.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(aType).ToList();
-            filteredResults.Should().HaveCount(0);
+            Assert.Empty(filteredResults);
         }
 
         [Fact]
@@ -156,7 +152,7 @@ namespace Microsoft.OData.Tests.Metadata
             EdmEntityType aType = new EdmEntityType("N", "A");
             EdmAction action = new EdmAction("namespace", "action", null, false, null);
             var filteredResults = new IEdmOperation[] { action }.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(aType).ToList();
-            filteredResults.Should().HaveCount(0);
+            Assert.Empty(filteredResults);
         }
 
         #endregion
@@ -175,7 +171,7 @@ namespace Microsoft.OData.Tests.Metadata
 
             var functions = new EdmOperation[] { function, functionOverload1, functionOverload2 };
             var resolvedFunction = functions.FilterOperationsByParameterNames(new string[] { "foo" }, false);
-            resolvedFunction.First().Should().BeSameAs(functionOverload1);
+            Assert.Same(resolvedFunction.First(), functionOverload1);
         }
 
         [Fact]
@@ -188,7 +184,7 @@ namespace Microsoft.OData.Tests.Metadata
             var functions = new EdmOperation[] { function, function1 };
 
             var selectedFunctions = functions.FilterOperationsByParameterNames(new string[] { "param1" }, false);
-            selectedFunctions.Count().Should().Be(2);
+            Assert.Equal(2, selectedFunctions.Count());
         }
 
         #endregion
@@ -202,8 +198,8 @@ namespace Microsoft.OData.Tests.Metadata
             var function = new EdmFunction("ds", "function1", EdmCoreModel.Instance.GetSingle(false));
             model.AddElement(function);
             var returnedOperations = model.ResolveOperations("ds.function1", false /*allowParameterTypeNames*/).ToList();
-            returnedOperations.Count.Should().Be(1);
-            returnedOperations[0].Should().BeSameAs(function);
+            var result = Assert.Single(returnedOperations);
+            Assert.Same(result, function);
         }
 
         [Fact]
@@ -213,8 +209,8 @@ namespace Microsoft.OData.Tests.Metadata
             var function = new EdmFunction("ds", "function1", EdmCoreModel.Instance.GetSingle(false));
             model.AddElement(function);
             var returnedOperations = model.ResolveOperations("ds.function1", false /*allowParameterTypeNames*/).ToList();
-            returnedOperations.Count.Should().Be(1);
-            returnedOperations[0].Should().BeSameAs(function);
+            var result = Assert.Single(returnedOperations);
+            Assert.Same(result, function);
         }
 
         [Fact]
@@ -233,8 +229,8 @@ namespace Microsoft.OData.Tests.Metadata
             model.AddElement(function);
             model.AddElement(functionOverload1);
             var returnedOperations = model.ResolveOperations("ds.function1(param1)", true /*allowParameterTypeNames*/).ToList();
-            returnedOperations.Count.Should().Be(1);
-            returnedOperations[0].Should().BeSameAs(function);
+            var result = Assert.Single(returnedOperations);
+            Assert.Same(result, function);
         }
 
         [Fact]
@@ -253,8 +249,8 @@ namespace Microsoft.OData.Tests.Metadata
             model.AddElement(function);
             model.AddElement(functionOverload1);
             var returnedOperations = model.ResolveOperations("ds.function1(param1)", true /*allowParameterTypeNames*/).ToList();
-            returnedOperations.Count.Should().Be(1);
-            returnedOperations[0].Should().BeSameAs(function);
+            var result = Assert.Single(returnedOperations);
+            Assert.Same(result, function);
         }
         #endregion
 
@@ -269,7 +265,7 @@ namespace Microsoft.OData.Tests.Metadata
                 operationImportWithOverloadAnd5Params
             };
             string result = operationImports.OperationImportGroupFullName();
-            result.Should().Be("Default.FunctionImportWithOverload");
+            Assert.Equal("Default.FunctionImportWithOverload", result);
         }
 
         [Fact]
@@ -277,7 +273,7 @@ namespace Microsoft.OData.Tests.Metadata
         {
             var action = new EdmAction("d.s", "checkout", null);
             action.AddParameter("param1", EdmCoreModel.Instance.GetString(true));
-            action.NameWithParameters().Should().Be("checkout(Edm.String)");
+            Assert.Equal("checkout(Edm.String)", action.NameWithParameters());
         }
 
         [Fact]
@@ -285,63 +281,63 @@ namespace Microsoft.OData.Tests.Metadata
         {
             var action = new EdmAction("d.s", "checkout", null);
             action.AddParameter("param1", EdmCoreModel.Instance.GetString(true));
-            action.FullNameWithParameters().Should().Be("d.s.checkout(Edm.String)");
+            Assert.Equal("d.s.checkout(Edm.String)", action.FullNameWithParameters());
         }
 
         [Fact]
         public void ResolveEntitySetFromModelShouldReturnNullWhenEntitySetNameIsNullOrEmpty()
         {
-            this.model.EntityContainer.FindEntitySet(null).Should().BeNull();
-            this.model.EntityContainer.FindEntitySet(null).Should().BeNull();
+            Assert.Null(this.model.EntityContainer.FindEntitySet(null));
+            Assert.Null(this.model.EntityContainer.FindEntitySet(null));
         }
 
         [Fact]
         public void ResolveEntitySetFromModelShouldReturnNullWhenEntitySetNameIsNotEntitySetName()
         {
-            this.model.EntityContainer.FindEntitySet(".Products").Should().BeNull();
-            this.model.EntityContainer.FindEntitySet("Default.").Should().BeNull();
-            this.model.EntityContainer.FindEntitySet("Default.Products").Should().BeNull();
-            this.model.EntityContainer.FindEntitySet("TestModel.Default.Products").Should().BeNull();
+            Assert.Null(this.model.EntityContainer.FindEntitySet(".Products"));
+            Assert.Null(this.model.EntityContainer.FindEntitySet("Default."));
+            Assert.Null(this.model.EntityContainer.FindEntitySet("Default.Products"));
+            Assert.Null(this.model.EntityContainer.FindEntitySet("TestModel.Default.Products"));
         }
 
         [Fact]
         public void ResolveEntitySetFromModelShouldReturnNullWhenContainerIsNotFound()
         {
-            this.model.EntityContainer.FindEntitySet("UnknownContainer.Products").Should().BeNull();
+            Assert.Null(this.model.EntityContainer.FindEntitySet("UnknownContainer.Products"));
         }
 
         [Fact]
         public void ResolveEntitySetFromModelShouldReturnEntitySetWhenNameIsEntitySetNameAndFound()
         {
-            this.productsSet.Should().NotBeNull();
-            this.model.EntityContainer.FindEntitySet("Products").Should().Be(this.productsSet);
+            Assert.NotNull(this.productsSet);
+            Assert.Same(this.productsSet, this.model.EntityContainer.FindEntitySet("Products"));
         }
 
         [Fact]
         public void ResolveFunctionImportFromModelShouldReturnNullWhenFunctionImportNameIsNullOrEmpty()
         {
-            this.defaultContainer.ResolveOperationImports(null).Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports(string.Empty).Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports(null));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports(string.Empty));
         }
 
         [Fact]
         public void ResolveFunctionImportFromModelShouldReturnNullWhenFunctionImportNameIsNotFullyQualified()
         {
-            this.defaultContainer.ResolveOperationImports(".SimpleAction").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("Default.").Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports(".SimpleAction"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("Default."));
         }
 
         [Fact]
         public void ResolveFunctionImportFromModelShouldReturnNullWhenContainerIsNotFound()
         {
-            this.defaultContainer.ResolveOperationImports("UnknownContainer.SimpleAction").Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("UnknownContainer.SimpleAction"));
         }
 
         [Fact]
         public void ResolveFunctionImportFromModelShouldReturnNullWhenThereIsMoreThan1Overload()
         {
-            this.defaultContainer.ResolveOperationImports("Default.SimpleFunctionWithOverload").Count().Should().Be(2);
-            this.defaultContainer.ResolveOperationImports("TestModel.Default.SimpleFunctionWithOverload").Count().Should().Be(2);
+            Assert.Equal(2, this.defaultContainer.ResolveOperationImports("Default.SimpleFunctionWithOverload").Count());
+            Assert.Equal(2, this.defaultContainer.ResolveOperationImports("TestModel.Default.SimpleFunctionWithOverload").Count());
         }
 
         [Fact]
@@ -350,38 +346,38 @@ namespace Microsoft.OData.Tests.Metadata
             IEdmOperationImport action1 = this.defaultContainer.ResolveOperationImports("Default.SimpleAction").Single();
             IEdmOperationImport action2 = this.defaultContainer.ResolveOperationImports("TestModel.Default.SimpleAction").Single();
             IEdmOperationImport action3 = this.defaultContainer.ResolveOperationImports("SimpleAction").Single();
-            action1.Should().NotBeNull();
-            action1.Should().Be(action2);
-            action2.FullName().Should().Be("Default.SimpleAction");
-            action3.Should().Be(action2);
+            Assert.NotNull(action1);
+            Assert.Same(action1, action2);
+            Assert.Equal("Default.SimpleAction", action2.FullName());
+            Assert.Same(action3, action2);
         }
 
         [Fact]
         public void ResolveFunctionImportFromModelForFunctionImportWithOverloadAnd5Param()
         {
             IEdmOperationImport function = this.defaultContainer.ResolveOperationImports("Default.FunctionImportWithOverload(Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType))", true /*allowParameterTypes*/).Single();
-            function.Should().Be(this.operationImportWithOverloadAnd5Params);
+            Assert.Same(this.operationImportWithOverloadAnd5Params, function);
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerShouldReturnNullWhenFunctionImportNameIsNullOrEmpty()
         {
-            this.defaultContainer.ResolveOperationImports(null).Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports(string.Empty).Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports(null));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports(string.Empty));
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerShouldReturnNullWhenFunctionImportIsNotFound()
         {
-            this.defaultContainer.ResolveOperationImports("UnknownAction").Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("UnknownAction"));
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerShouldReturnNullWhenThereIsMoreThan1Overload()
         {
             IEnumerable<IEdmOperationImport> functionGroup = this.defaultContainer.ResolveOperationImports("SimpleFunctionWithOverload");
-            functionGroup.Should().NotBeNull();
-            functionGroup.Count().Should().Be(2);
+            Assert.NotNull(functionGroup);
+            Assert.Equal(2, functionGroup.Count());
             functionGroup.All(f => f.Name == "SimpleFunctionWithOverload");
         }
 
@@ -389,72 +385,72 @@ namespace Microsoft.OData.Tests.Metadata
         public void ResolveFunctionImportFromContainerShouldReturnFunctionImportWhenNameIsFound()
         {
             IEdmOperationImport action = this.defaultContainer.ResolveOperationImports("SimpleAction").Single();
-            action.Should().NotBeNull();
-            action.FullName().Should().Be("Default.SimpleAction");
+            Assert.NotNull(action);
+            Assert.Equal("Default.SimpleAction", action.FullName());
 
             action = this.defaultContainer.ResolveOperationImports("SimpleAction()").Single();
-            action.Should().NotBeNull();
-            action.FullName().Should().Be("Default.SimpleAction");
+            Assert.NotNull(action);
+            Assert.Equal("Default.SimpleAction", action.FullName());
 
-            this.defaultContainer.ResolveOperationImports("SimpleAction( )").Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("SimpleAction( )"));
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerForFunctionImportWithNoOverload()
         {
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithNoOverload").Single().Should().Be(this.operationImportWithNoOverload);
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithNoOverload()").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithNoOverload(Edm.Int32)").Single().Should().Be(this.operationImportWithNoOverload);
+            Assert.Same(this.defaultContainer.ResolveOperationImports("FunctionImportWithNoOverload").Single(), this.operationImportWithNoOverload);
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithNoOverload()"));
+            Assert.Same(this.defaultContainer.ResolveOperationImports("FunctionImportWithNoOverload(Edm.Int32)").Single(), this.operationImportWithNoOverload);
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerForFunctionImportWithOverloadFunctionGroup()
         {
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload").Count().Should().Be(4);
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload").All(f => f.Name == "FunctionImportWithOverload").Should().BeTrue();
+            Assert.Equal(4, this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload").Count());
+            Assert.True(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload").All(f => f.Name == "FunctionImportWithOverload"));
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerForFunctionImportWithOverloadAnd0Param()
         {
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload()").Single().Should().Be(this.operationImportWithOverloadAnd0Param);
+            Assert.Same(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload()").Single(), this.operationImportWithOverloadAnd0Param);
 
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload( )").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload ()").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload() ").Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload( )"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload ()"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload() "));
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerForFunctionImportWithOverloadAnd1Param()
         {
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Edm.Int32)").Single().Should().Be(this.operationImportWithOverloadAnd1Param);
+            Assert.Same(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Edm.Int32)").Single(), this.operationImportWithOverloadAnd1Param);
 
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload( Edm.Int32 )").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload (Edm.Int32)").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Edm.Int32) ").Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload( Edm.Int32 )"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload (Edm.Int32)"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Edm.Int32) "));
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerForFunctionImportWithOverloadAnd2Param()
         {
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(TestModel.Product,Edm.String)").Single().Should().Be(this.operationImportWithOverloadAnd2Params);
+            Assert.Same(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(TestModel.Product,Edm.String)").Single(), this.operationImportWithOverloadAnd2Params);
 
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload( TestModel.Product , Edm.String )").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload (TestModel.Product,Edm.String)").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(TestModel.Product,Edm.String) ").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(TestModel.Product,Edm.String").Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload( TestModel.Product , Edm.String )"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload (TestModel.Product,Edm.String)"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(TestModel.Product,Edm.String) "));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(TestModel.Product,Edm.String"));
         }
 
         [Fact]
         public void ResolveFunctionImportFromContainerForFunctionImportWithOverloadAnd5Param()
         {
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType))").Single().Should().Be(this.operationImportWithOverloadAnd5Params);
+            Assert.Same(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType))").Single(), this.operationImportWithOverloadAnd5Params);
 
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload( Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType) )").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Collection(TestModel.Product), Collection(Edm.String), Edm.String, TestModel.MyComplexType, Collection(TestModel.MyComplexType))").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload (Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType))").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType)) ").Should().BeEmpty();
-            this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType)").Should().BeEmpty();
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload( Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType) )"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Collection(TestModel.Product), Collection(Edm.String), Edm.String, TestModel.MyComplexType, Collection(TestModel.MyComplexType))"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload (Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType))"));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType)) "));
+            Assert.Empty(this.defaultContainer.ResolveOperationImports("FunctionImportWithOverload(Collection(TestModel.Product),Collection(Edm.String),Edm.String,TestModel.MyComplexType,Collection(TestModel.MyComplexType)"));
         }
 
         [Fact]
@@ -530,19 +526,20 @@ namespace Microsoft.OData.Tests.Metadata
         [Fact]
         public void FunctionImportNameWithNoParameters()
         {
-            this.operationImportWithOverloadAnd0Param.NameWithParameters().Should().Be("FunctionImportWithOverload()");
+            Assert.Equal("FunctionImportWithOverload()", this.operationImportWithOverloadAnd0Param.NameWithParameters());
         }
 
         [Fact]
         public void FunctionImportNameWithOneParameter()
         {
-            this.operationImportWithOverloadAnd1Param.NameWithParameters().Should().Be("FunctionImportWithOverload(Edm.Int32)");
+            Assert.Equal("FunctionImportWithOverload(Edm.Int32)", this.operationImportWithOverloadAnd1Param.NameWithParameters());
         }
 
         [Fact]
         public void FunctionImportNameWithManyParameters()
         {
-            this.operationImportWithOverloadAnd2Params.NameWithParameters().Should().Be("FunctionImportWithOverload(TestModel.Product,Edm.String)");
+            Assert.Equal("FunctionImportWithOverload(TestModel.Product,Edm.String)",
+                this.operationImportWithOverloadAnd2Params.NameWithParameters());
         }
 
         [Fact]
@@ -551,7 +548,7 @@ namespace Microsoft.OData.Tests.Metadata
             var tempModel = new EdmModel();
             var container = new EntityContainerThatThrowsOnLookup("Fake", "Container");
             tempModel.AddElement(new EntityContainerThatThrowsOnLookup("Fake", "Container"));
-            container.ResolveOperationImports("Action()", false).Should().BeEmpty();
+            Assert.Empty(container.ResolveOperationImports("Action()", false));
         }
 
         [Fact]
@@ -565,7 +562,7 @@ namespace Microsoft.OData.Tests.Metadata
 
             var stringOfExpectedShortQulifiedName = String.Format("Collection({0}.{1})", stringOfNamespaceName, stringOfComplexTypeName);
             var stringOfObservedShortQulifiedName = edmCollectionType.ODataShortQualifiedName();
-            stringOfObservedShortQulifiedName.Should().Be(stringOfExpectedShortQulifiedName);
+            Assert.Equal(stringOfExpectedShortQulifiedName, stringOfObservedShortQulifiedName);
 
             const string stringEntityTypeName = "MyEntityType";
             var edmEntityType = new EdmEntityType(stringOfNamespaceName, stringEntityTypeName);
@@ -573,7 +570,7 @@ namespace Microsoft.OData.Tests.Metadata
 
             stringOfExpectedShortQulifiedName = String.Format("Collection({0}.{1})", stringOfNamespaceName, stringEntityTypeName);
             stringOfObservedShortQulifiedName = edmCollectionType.ODataShortQualifiedName();
-            stringOfObservedShortQulifiedName.Should().Be(stringOfExpectedShortQulifiedName);
+            Assert.Equal(stringOfExpectedShortQulifiedName, stringOfObservedShortQulifiedName);
         }
 
         [Fact]
@@ -584,13 +581,13 @@ namespace Microsoft.OData.Tests.Metadata
                 if (EdmPrimitiveTypeKind.None == edmPrimitiveTypeKind)
                     continue;
                 var stringOfName = Enum.GetName(typeof(EdmPrimitiveTypeKind), edmPrimitiveTypeKind);
-                stringOfName.ToUpper().Should().NotContain("EDM.");
+                Assert.DoesNotContain("EDM.", stringOfName.ToUpper());
 
                 var stringOfExpectedShortQulifiedName = String.Format("Collection({0})", stringOfName);
                 var iEdmPrimitiveType = EdmCoreModel.Instance.GetPrimitiveType(edmPrimitiveTypeKind);
                 var edmCollectionType=new EdmCollectionType(new EdmPrimitiveTypeReference(iEdmPrimitiveType,true));
                 var stringOfObservedShortQulifiedName = edmCollectionType.ODataShortQualifiedName();
-                stringOfObservedShortQulifiedName.Should().Be(stringOfExpectedShortQulifiedName);
+                Assert.Equal(stringOfExpectedShortQulifiedName, stringOfObservedShortQulifiedName);
             }
         }
 
@@ -598,7 +595,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void AsCollectionOrNullForNonCollectionShouldBeNull()
         {
             IEdmCollectionTypeReference collectionTypeReference = EdmLibraryExtensions.AsCollectionOrNull((IEdmTypeReference)productTypeReference);
-            collectionTypeReference.Should().BeNull();
+            Assert.Null(collectionTypeReference);
         }
 
         [Fact]
@@ -606,7 +603,7 @@ namespace Microsoft.OData.Tests.Metadata
         {
             IEdmTypeReference typeReference = new EdmCollectionTypeReference(new EdmCollectionType(productTypeReference));
             IEdmCollectionTypeReference collectionTypeReference = typeReference.AsCollectionOrNull();
-            collectionTypeReference.Should().BeNull();
+            Assert.Null(collectionTypeReference);
         }
 
         [Theory]
@@ -618,7 +615,7 @@ namespace Microsoft.OData.Tests.Metadata
         [InlineData(EdmPrimitiveTypeKind.Geometry)]
         public void BaseTypeForBuiltInPrimitiveTypesShouldBeNull(EdmPrimitiveTypeKind kind)
         {
-            EdmCoreModel.Instance.GetPrimitiveType(kind).BaseType().Should().BeNull();
+            Assert.Null(EdmCoreModel.Instance.GetPrimitiveType(kind).BaseType());
         }
 
         [Theory]
@@ -639,7 +636,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void BaseTypeForSpatialTypesShouldBeSameAsExpect(EdmPrimitiveTypeKind kind, EdmPrimitiveTypeKind expect)
         {
             var baseType = EdmCoreModel.Instance.GetPrimitiveType(expect);
-            EdmCoreModel.Instance.GetPrimitiveType(kind).BaseType().Should().BeSameAs(baseType);
+            Assert.Same(baseType, EdmCoreModel.Instance.GetPrimitiveType(kind).BaseType());
         }
 
         [Theory]
@@ -656,13 +653,13 @@ namespace Microsoft.OData.Tests.Metadata
             var secondType = EdmCoreModel.Instance.GetPrimitiveType(second);
             var commonBaseType = EdmCoreModel.Instance.GetPrimitiveType(commonBase);
             var actual = firstType.GetCommonBaseType(secondType);
-            actual.Should().BeSameAs(commonBaseType);
+            Assert.Same(commonBaseType, actual);
         }
 
         [Fact]
         public void CloneForNullShouldBeNull()
         {
-            EdmLibraryExtensions.Clone(null, false).Should().BeNull();
+            Assert.Null(EdmLibraryExtensions.Clone(null, false));
         }
 
         [Theory]
@@ -671,8 +668,8 @@ namespace Microsoft.OData.Tests.Metadata
         public void CloneForEntityShouldBeExpect(bool nullable)
         {
             IEdmTypeReference typeReference = productTypeReference.Clone(nullable);
-            typeReference.Should().BeOfType<EdmEntityTypeReference>();
-            typeReference.IsNullable.Should().Be(nullable);
+            Assert.IsType<EdmEntityTypeReference>(typeReference);
+            Assert.Equal(nullable, typeReference.IsNullable);
         }
 
         [Theory]
@@ -685,10 +682,10 @@ namespace Microsoft.OData.Tests.Metadata
             IEdmTypeReference typeReference = new EdmCollectionTypeReference(new EdmCollectionType(complexTypeReference));
 
             IEdmTypeReference clonedType = typeReference.Clone(nullable);
-            clonedType.Should().BeOfType<EdmCollectionTypeReference>();
-            clonedType.IsNullable.Should().Be(nullable);
+            Assert.IsType<EdmCollectionTypeReference>(clonedType);
+            Assert.Equal(nullable, clonedType.IsNullable);
 
-            clonedType.AsCollection().ElementType().IsNullable.Should().Be(nullable);
+            Assert.Equal(nullable, clonedType.AsCollection().ElementType().IsNullable);
         }
 
         [Theory]
@@ -700,22 +697,22 @@ namespace Microsoft.OData.Tests.Metadata
             EdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, isNullable: nullable);
 
             IEdmTypeReference clonedType = enumTypeReference.Clone(nullable);
-            clonedType.Should().BeOfType<EdmEnumTypeReference>();
-            clonedType.IsNullable.Should().Be(nullable);
+            Assert.IsType<EdmEnumTypeReference>(clonedType);
+            Assert.Equal(nullable, clonedType.IsNullable);
         }
 
         [Fact]
         public void IsUserModelForUserModelShouldBeTrue()
         {
             bool result = model.IsUserModel();
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
         public void IsUserModelForCoreModelShouldBeFalse()
         {
             bool result = EdmCoreModel.Instance.IsUserModel();
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Theory]
@@ -730,7 +727,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void IsPrimitiveTypeForSupportedTypesShouldBeTrue(Type type)
         {
             bool result = EdmLibraryExtensions.IsPrimitiveType(type);
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Theory]
@@ -739,7 +736,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void IsPrimitiveTypeForUnsupportedTypesShouldBeFalse(Type type)
         {
             bool result = EdmLibraryExtensions.IsPrimitiveType(type);
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Theory]
@@ -761,7 +758,7 @@ namespace Microsoft.OData.Tests.Metadata
         {
             IEdmPrimitiveType primitiveType = EdmCoreModel.Instance.GetPrimitiveType(kind);
             Type actual = EdmLibraryExtensions.GetPrimitiveClrType(primitiveType, nullable);
-            actual.Should().Be(expect);
+            Assert.Equal(expect, actual);
         }
 
         private static void ValidateAssignableToType(bool isAssignableExpectedResult, EdmPrimitiveTypeKind isAssignableToTypeKind, params EdmPrimitiveTypeKind[] subTypeKinds)

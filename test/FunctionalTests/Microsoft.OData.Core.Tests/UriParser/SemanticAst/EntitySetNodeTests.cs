@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -16,28 +16,28 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ItemTypeReturnsEdmEntityTypeReference()
         {
             var node = new EntitySetNode(HardCodedTestModel.GetLionSet());
-            node.ItemType.ShouldBeEquivalentTo(HardCodedTestModel.GetLionTypeReference());
+            Assert.True(node.ItemType.IsEquivalentTo(HardCodedTestModel.GetLionTypeReference()));
         }
 
         [Fact]
         public void EntityItemTypeIsSameAsItemType()
         {
             var node = new EntitySetNode(HardCodedTestModel.GetLionSet());
-            node.EntityItemType.Should().BeSameAs(node.ItemType);
+            Assert.Same(node.ItemType, node.EntityItemType);
         }
 
         [Fact]
         public void EntitySetComesFromSource()
         {
             var node = new EntitySetNode(HardCodedTestModel.GetLionSet());
-            node.NavigationSource.Should().Be(HardCodedTestModel.GetLionSet());
+            Assert.Same(HardCodedTestModel.GetLionSet(), node.NavigationSource);
         }
 
         [Fact]
         public void KindIsEntitySet()
         {
             var node = new EntitySetNode(HardCodedTestModel.GetLionSet());
-            node.InternalKind.Should().Be(InternalQueryNodeKind.EntitySet);
+            Assert.Equal(InternalQueryNodeKind.EntitySet, node.InternalKind);
         }
     }
 }

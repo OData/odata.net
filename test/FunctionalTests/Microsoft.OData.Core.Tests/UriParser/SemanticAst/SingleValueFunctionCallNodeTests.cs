@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
+using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.OData.Utils.Metadata;
@@ -23,21 +23,21 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NameCannotBeNull()
         {
             Action createWithNullName = () => new SingleValueFunctionCallNode(null, null, EdmCoreModel.Instance.GetInt32(true));
-            createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
+            Assert.Throws<ArgumentNullException>("name", createWithNullName);
         }
 
         [Fact]
         public void ReturnTypeCanBeNull()
         {
             Action createWithNullReturnType = () => new SingleValueFunctionCallNode("stuff", null, null);
-            createWithNullReturnType.ShouldNotThrow();
+            createWithNullReturnType.DoesNotThrow();
         }
 
         [Fact]
         public void NameIsSetCorrectly()
         {
             SingleValueFunctionCallNode singleValueFunction = new SingleValueFunctionCallNode("stuff", null, EdmCoreModel.Instance.GetInt32(true));
-            singleValueFunction.Name.Should().Be("stuff");
+            Assert.Equal("stuff", singleValueFunction.Name);
         }
 
         [Fact]
@@ -52,42 +52,49 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     new ConstantNode(5) 
                 };
             SingleValueFunctionCallNode singleValueFunction = new SingleValueFunctionCallNode("stuff", args, EdmCoreModel.Instance.GetInt32(true));
-            singleValueFunction.Parameters.Should().BeEquivalentTo(args);
+
+            Assert.Equal(5, singleValueFunction.Parameters.Count());
+            int index = 1;
+            foreach (var parameter in singleValueFunction.Parameters)
+            {
+                var constantNode = Assert.IsType<ConstantNode>(parameter);
+                Assert.Equal(index++, constantNode.Value);
+            }
         }
 
         [Fact]
         public void TypeReferenceIsSetCorrectly()
         {
             SingleValueFunctionCallNode singleValueFunction = new SingleValueFunctionCallNode("stuff", null, EdmCoreModel.Instance.GetInt32(true));
-            singleValueFunction.TypeReference.FullName().Should().Be(EdmCoreModel.Instance.GetInt32(true).FullName());
+            Assert.Equal(singleValueFunction.TypeReference.FullName(), EdmCoreModel.Instance.GetInt32(true).FullName());
         }
 
         [Fact]
         public void TypeReferenceShouldNotBeCollection()
         {
             Action createWithCollectionReturnType = () => new SingleValueFunctionCallNode("stuff", null, new EdmCollectionType(EdmCoreModel.Instance.GetInt32(true)).ToTypeReference().AsCollection());
-            createWithCollectionReturnType.ShouldThrow<ArgumentException>().WithMessage(ODataErrorStrings.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+            createWithCollectionReturnType.Throws<ArgumentException>(ODataErrorStrings.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
         }
 
         [Fact]
         public void TypeReferenceShouldNotBeEntity()
         {
             Action createWithCollectionReturnType = () => new SingleValueFunctionCallNode("stuff", null, ModelBuildingHelpers.BuildValidEntityType().ToTypeReference().AsEntity());
-            createWithCollectionReturnType.ShouldThrow<ArgumentException>().WithMessage(ODataErrorStrings.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+            createWithCollectionReturnType.Throws<ArgumentException>(ODataErrorStrings.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
         }
 
         [Fact]
         public void KindIsSingleValueFunctionCall()
         {
             SingleValueFunctionCallNode singleValueFunction = new SingleValueFunctionCallNode("stuff", null, EdmCoreModel.Instance.GetInt32(true));
-            singleValueFunction.InternalKind.Should().Be(InternalQueryNodeKind.SingleValueFunctionCall);
+            Assert.Equal(InternalQueryNodeKind.SingleValueFunctionCall, singleValueFunction.InternalKind);
         }
 
         [Fact]
         public void ArgumentsBeConvertedToEmptyCollection()
         {
             SingleValueFunctionCallNode singleValueFunction = new SingleValueFunctionCallNode("stuff", null, EdmCoreModel.Instance.GetInt32(true));
-            singleValueFunction.Parameters.Should().BeEmpty();
+            Assert.Empty(singleValueFunction.Parameters);
         }
     }
 }

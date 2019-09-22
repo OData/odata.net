@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -30,46 +29,46 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void GetKindExpectCorrectKind()
         {
-            this.node.InternalKind.Should().Be(InternalQueryNodeKind.SingleValueOpenPropertyAccess);
+            Assert.Equal(InternalQueryNodeKind.SingleValueOpenPropertyAccess, this.node.InternalKind);
         }
 
         [Fact]
         public void GetNameExpectInitialName()
         {
-            this.node.Name.Should().Be(ExpectedPropertyName);
+            Assert.Equal(ExpectedPropertyName, this.node.Name);
         }
 
         [Fact]
         public void GetTypeReferenceExpectNull()
         {
-            this.node.TypeReference.Should().BeNull();
+            Assert.Null(this.node.TypeReference);
         }
 
         [Fact]
         public void CreateWithNullNameExpectException()
         {
             Action ctor = () => new SingleValueOpenPropertyAccessNode(this.sourceNode,  null);
-            ctor.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>("openPropertyName", ctor);
         }
 
         [Fact]
         public void CreateWithEmptyNameExpectException()
         {
             Action ctor = () => new SingleValueOpenPropertyAccessNode(this.sourceNode, String.Empty);
-            ctor.ShouldThrow<ArgumentException>();
+            Assert.Throws<ArgumentNullException>("openPropertyName", ctor);
         }
 
         [Fact]
         public void GetSourceExpectInitialSource()
         {
-            this.node.Source.Should().BeSameAs(this.sourceNode);
+            Assert.Same(this.sourceNode, this.node.Source);
         }
 
         [Fact]
         public void CreateWithNullSourceExpectException()
         {
             Action ctor = () => new SingleValueOpenPropertyAccessNode(null, ExpectedPropertyName);
-            ctor.ShouldThrow<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(ctor);
         }
     }
 }

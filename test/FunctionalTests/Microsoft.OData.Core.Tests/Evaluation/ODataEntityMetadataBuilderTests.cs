@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Evaluation;
 using Xunit;
 
@@ -54,64 +53,64 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void BaseBuilderShouldReturnNullAssociationLink()
         {
-            this.builder.GetAssociationLinkUri("Fake", null, false).Should().BeNull();
-            this.builder.GetAssociationLinkUri("Fake", null, true).Should().BeNull();
+            Assert.Null(this.builder.GetAssociationLinkUri("Fake", null, false));
+            Assert.Null(this.builder.GetAssociationLinkUri("Fake", null, true));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullNavigationLink()
         {
-            this.builder.GetNavigationLinkUri("Fake", null, false).Should().BeNull();
-            this.builder.GetNavigationLinkUri("Fake", null, true).Should().BeNull();
+            Assert.Null(this.builder.GetNavigationLinkUri("Fake", null, false));
+            Assert.Null(this.builder.GetNavigationLinkUri("Fake", null, true));
         }
         [Fact]
         public void BaseBuilderShouldReturnNullAssociationLinkEvenWhenNonComputedLinkIsAvailable()
         {
-            this.builder.GetAssociationLinkUri("Fake", new Uri("http://example.com/override"), false).Should().BeNull();
-            this.builder.GetAssociationLinkUri("Fake", new Uri("http://example.com/override"), true).Should().BeNull();
+            Assert.Null(this.builder.GetAssociationLinkUri("Fake", new Uri("http://example.com/override"), false));
+            Assert.Null(this.builder.GetAssociationLinkUri("Fake", new Uri("http://example.com/override"), true));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullNavigationLinkEvenWhenNonComputedLinkIsAvailable()
         {
-            this.builder.GetNavigationLinkUri("Fake", new Uri("http://example.com/override"), false).Should().BeNull();
-            this.builder.GetNavigationLinkUri("Fake", new Uri("http://example.com/override"), true).Should().BeNull();
+            Assert.Null(this.builder.GetNavigationLinkUri("Fake", new Uri("http://example.com/override"), false));
+            Assert.Null(this.builder.GetNavigationLinkUri("Fake", new Uri("http://example.com/override"), true));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullOperationTarget()
         {
-            this.builder.GetOperationTargetUri("Fake", null, null).Should().BeNull();
+            Assert.Null(this.builder.GetOperationTargetUri("Fake", null, null));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullOperationTitle()
         {
-            this.builder.GetOperationTitle("Fake").Should().BeNull();
+            Assert.Null(this.builder.GetOperationTitle("Fake"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullStreamEditLinkForStreamProperty()
         {
-            this.builder.GetStreamEditLink("Fake").Should().BeNull();
+            Assert.Null(this.builder.GetStreamEditLink("Fake"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullStreamEditLinkForDefaultStream()
         {
-            this.builder.GetStreamEditLink(null).Should().BeNull();
+            Assert.Null(this.builder.GetStreamEditLink(null));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullStreamReadLinkForStreamProperty()
         {
-            this.builder.GetStreamReadLink("Fake").Should().BeNull();
+            Assert.Null(this.builder.GetStreamReadLink("Fake"));
         }
 
         [Fact]
         public void BaseBuilderShouldReturnNullStreamReadLinkForDefaultStream()
         {
-            this.builder.GetStreamReadLink(null).Should().BeNull();
+            Assert.Null(this.builder.GetStreamReadLink(null));
         }
 
         private class TestBuilder : ODataResourceMetadataBuilder

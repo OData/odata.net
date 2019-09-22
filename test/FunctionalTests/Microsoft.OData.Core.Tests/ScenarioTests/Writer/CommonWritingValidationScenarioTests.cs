@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -33,7 +32,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
                     odataWriter.WriteEnd();
                 };
 
-                test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_UnrecognizedTypeName("DefaultNamespace.FakeType"));
+                test.Throws<ODataException>(Strings.ValidationUtils_UnrecognizedTypeName("DefaultNamespace.FakeType"));
             }
         }
 
@@ -54,7 +53,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
                     odataWriter.WriteEnd();
                 };
 
-                test.ShouldNotThrow();
+                test.DoesNotThrow();
             }
         }
 
@@ -75,7 +74,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
                     odataWriter.WriteEnd();
                 };
 
-                test.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+                test.Throws<ODataException>(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
             }
         }
 
@@ -97,7 +96,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
                         odataWriter.WriteEnd();
                     };
 
-                    test.ShouldNotThrow();
+                    test.DoesNotThrow();
                 }
             }
         }
@@ -134,7 +133,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
                     odataWriter.WriteEnd();
                 };
 
-                test.ShouldNotThrow();
+                test.DoesNotThrow();
             }
         }
 

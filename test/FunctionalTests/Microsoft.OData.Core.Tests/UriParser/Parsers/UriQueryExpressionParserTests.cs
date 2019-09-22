@@ -7,7 +7,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
@@ -24,7 +23,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Repro for: Syntactic parsing for Any/All allows an arbitrary token between range variable and expression
             Action parse = () => this.testSubject.ParseFilter("Things/any(a,true)");
-            parse.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ExpressionLexer_SyntaxError("13", "Things/any(a,true)"));
+            parse.Throws<ODataException>(ErrorStrings.ExpressionLexer_SyntaxError("13", "Things/any(a,true)"));
         }
 
         [Fact]
@@ -32,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Repro for: Syntactic parser fails to block $it as a range variable name
             Action parse = () => this.testSubject.ParseFilter("Things/any($it:true)");
-            parse.ShouldThrow<ODataException>().WithMessage(ErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("$it"));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("$it"));
         }
 
         [Fact]
@@ -40,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Repro for: Semantic binding fails with useless error message when a range variable is redefined within a nested any/all
             Action parse = () => this.testSubject.ParseFilter("Things/any(o:o/Things/any(o:true))");
-            parse.ShouldThrow<ODataException>().WithMessage(ErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("o"));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("o"));
         }
 
         [Fact]
@@ -83,62 +82,65 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseUnclosedGeographyPolygonShouldThrowWithReason()
+        public void ParseUnclosedGeographyPolygonThrowsWithReason()
         {
             Action parse = () => this.testSubject.ParseFilter("geo.intersects(GeoTag, geography'POLYGON((-148.734375 71.459124,-43.265625 71.459124,-43.265625 -8.109371,-148.734375 -8.109371))')");
-            parse.ShouldThrow<ODataException>().Where(e => e.Message.Contains("Invalid spatial data"));
+            var exception = Assert.Throws<ODataException>(parse);
+            Assert.Contains("Invalid spatial data", exception.Message);
         }
 
         [Fact]
-        public void ParseUnclosedGeometryPolygonShouldThrowWithReason()
+        public void ParseUnclosedGeometryPolygonThrowsWithReason()
         {
             Action parse = () => this.testSubject.ParseFilter("geo.intersects(GeoTag, geometry'POLYGON((-148.734375 71.459124,-43.265625 71.459124,-43.265625 -8.109371,-148.734375 -8.109371))')");
-            parse.ShouldThrow<ODataException>().Where(e => e.Message.Contains("Invalid spatial data"));
+            var exception = Assert.Throws<ODataException>(parse);
+            Assert.Contains("Invalid spatial data", exception.Message);
         }
 
         [Fact]
-        public void ParseGeometryPolygonWithBadPrefixShouldThrowWithoutReason()
+        public void ParseGeometryPolygonWithBadPrefixThrowsWithoutReason()
         {
             Action parse = () => this.testSubject.ParseFilter("geo.intersects(GeoTag, geometr'POLYGON((-148.734375 71.459124,-43.265625 71.459124,-43.265625 -8.109371,-148.734375 -8.109371))')");
-            parse.ShouldThrow<ODataException>().Where(e => !e.Message.Contains("with reason"));
-        }   
-        
+            var exception = Assert.Throws<ODataException>(parse);
+            Assert.Contains("Unrecognized 'Edm.String' literal 'geometr'POLYGON((-148.734375 71.4591", exception.Message);
+        }
+
         private static void VerifyAggregateExpressionToken(string expectedEndPathIdentifier, AggregationMethodDefinition expectedVerb, string expectedAlias, AggregateExpressionToken actual)
         {
-            actual.Expression.Should().NotBeNull();
+            Assert.NotNull(actual.Expression);
 
             EndPathToken expression = actual.Expression as EndPathToken;
-            expression.Should().NotBeNull();
-            expression.Identifier.Should().Be(expectedEndPathIdentifier);
+            Assert.NotNull(expression);
+            Assert.Equal(expectedEndPathIdentifier, expression.Identifier);
 
-            actual.MethodDefinition.MethodLabel.Should().Be(expectedVerb.MethodLabel);
-            actual.MethodDefinition.MethodKind.Should().Be(expectedVerb.MethodKind);
+            Assert.Equal(expectedVerb.MethodLabel, actual.MethodDefinition.MethodLabel);
+            Assert.Equal(expectedVerb.MethodKind, actual.MethodDefinition.MethodKind);
 
-            actual.Alias.Should().Be(expectedAlias);
+            Assert.Equal(expectedAlias, actual.Alias);
         }
 
         [Fact]
         public void ParseApplyWithEmptyStringShouldReturnEmptyCollection()
         {
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(string.Empty);
-            actual.Should().NotBeNull();
-            actual.Should().BeEmpty();
+            Assert.NotNull(actual);
+            Assert.Empty(actual);
         }
 
         [Fact]
-        public void ParseApplyWithInvalidTransformationIdentifierShouldThrow()
+        public void ParseApplyWithInvalidTransformationIdentifierThrows()
         {
             string apply = "invalid(UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby|compute|expand", 0,apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby|compute|expand", 0,apply));
         }
 
         [Fact]
-        public void ParseApplyWithTrailingNotSlashShouldThrow()
+        public void ParseApplyWithTrailingNotSlashThrows()
         {
             string apply = "aggregate(UnitPrice with sum as TotalPrice),";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.ExpressionLexer_SyntaxError(apply.Length, apply));
+            parse.Throws<ODataException>(ErrorStrings.ExpressionLexer_SyntaxError(apply.Length, apply));
         }
 
         [Fact]
@@ -147,14 +149,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "aggregate(UnitPrice with sum as TotalPrice)";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            var token = Assert.Single(actual);
 
-            AggregateToken aggregate = actual.First() as AggregateToken;
-            aggregate.Should().NotBeNull();
-            aggregate.AggregateExpressions.Should().HaveCount(1);
+            AggregateToken aggregate = Assert.IsType<AggregateToken>(token);
+            var aggregateExpr = Assert.Single(aggregate.AggregateExpressions);
 
-            VerifyAggregateExpressionToken("UnitPrice", AggregationMethodDefinition.Sum, "TotalPrice", aggregate.AggregateExpressions.First() as AggregateExpressionToken);
+            VerifyAggregateExpressionToken("UnitPrice", AggregationMethodDefinition.Sum, "TotalPrice", aggregateExpr as AggregateExpressionToken);
             
         }
 
@@ -164,12 +165,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "aggregate(UnitPrice with Custom.Aggregate as CustomAggregate)";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             AggregateToken aggregate = actual.First() as AggregateToken;
-            aggregate.Should().NotBeNull();
-            aggregate.AggregateExpressions.Should().HaveCount(1);
+            Assert.NotNull(aggregate);
+            Assert.Single(aggregate.AggregateExpressions);
 
             VerifyAggregateExpressionToken("UnitPrice", AggregationMethodDefinition.Custom("Custom.Aggregate"), "CustomAggregate", aggregate.AggregateExpressions.First() as AggregateExpressionToken);
         }
@@ -180,12 +181,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "aggregate(CustomerId with sum as Total, SharePrice with countdistinct as SharePriceDistinctCount)";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             AggregateToken aggregate = actual.First() as AggregateToken;
-            aggregate.Should().NotBeNull();
-            aggregate.AggregateExpressions.Should().HaveCount(2);
+            Assert.NotNull(aggregate);
+            Assert.Equal(2, aggregate.AggregateExpressions.Count());
 
             List<AggregateTokenBase> statements = aggregate.AggregateExpressions.ToList();
             
@@ -199,12 +200,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "aggregate($count as Count)";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             AggregateToken aggregate = actual.First() as AggregateToken;
-            aggregate.Should().NotBeNull();
-            aggregate.AggregateExpressions.Should().HaveCount(1);
+            Assert.NotNull(aggregate);
+            Assert.Single(aggregate.AggregateExpressions);
 
             VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", aggregate.AggregateExpressions.First() as AggregateExpressionToken);
         }
@@ -215,7 +216,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "aggregate($count with sum as Count)";
 
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(17, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_AsExpected(17, apply));
         }
 
         [Fact]
@@ -224,12 +225,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "aggregate($count as Count, SharePrice with countdistinct as SharePriceDistinctCount)";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             AggregateToken aggregate = actual.First() as AggregateToken;
-            aggregate.Should().NotBeNull();
-            aggregate.AggregateExpressions.Should().HaveCount(2);
+            Assert.NotNull(aggregate);
+            Assert.Equal(2, aggregate.AggregateExpressions.Count());
 
             List<AggregateTokenBase> statements = aggregate.AggregateExpressions.ToList();
 
@@ -238,98 +239,98 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyWithAggregateMissingOpenParenShouldThrow()
+        public void ParseApplyWithAggregateMissingOpenParenThrows()
         {
             string apply = "aggregate UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(10, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(10, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateMissingCloseParenShouldThrow()
+        public void ParseApplyWithAggregateMissingCloseParenThrows()
         {
             string apply = "aggregate(UnitPrice with sum as TotalPrice";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateMissingStatementShouldThrow()
+        public void ParseApplyWithAggregateMissingStatementThrows()
         {
             string apply = "aggregate()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateAfterGroupByMissingStatementShouldThrow()
+        public void ParseApplyWithAggregateAfterGroupByMissingStatementThrows()
         {
             string apply = "groupby((UnitPrice))/aggregate()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateExpressionMissingWithShouldThrow()
+        public void ParseApplyWithAggregateExpressionMissingWithThrows()
         {
             string apply = "aggregate(UnitPrice sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_WithExpected(20, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_WithExpected(20, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateExpressionWithInvalidAggregateExpressionWithShouldThrow()
+        public void ParseApplyWithAggregateExpressionWithInvalidAggregateExpressionWithThrows()
         {
             string apply = "aggregate(UnitPrice mul with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_WithExpected(29, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_WithExpected(29, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateExpressionWithInvalidVerbShouldThrow()
+        public void ParseApplyWithAggregateExpressionWithInvalidVerbThrows()
         {
             string apply = "aggregate(UnitPrice with invalid as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod("invalid", 25, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod("invalid", 25, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateExpressionMissingAsShouldThrow()
+        public void ParseApplyWithAggregateExpressionMissingAsThrows()
         {
             string apply = "aggregate(UnitPrice with sum TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateExpressionMissingAliasShouldThrow()
+        public void ParseApplyWithAggregateExpressionMissingAliasThrows()
         {
             string apply = "aggregate(UnitPrice with sum as)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
         }
 
         private static void VerifyGroupByTokenProperties(IEnumerable<string> expectedEndPathIdentifiers, GroupByToken actual)
         {
-            actual.Should().NotBeNull();
+            Assert.NotNull(actual);
 
             if (expectedEndPathIdentifiers == null || !expectedEndPathIdentifiers.Any() )
             {
-                actual.Properties.Should().HaveCount(0);
+                Assert.Empty(actual.Properties);
             }
             else
-            {                
-                actual.Properties.Should().HaveCount(expectedEndPathIdentifiers.Count());
+            {
+                Assert.Equal(actual.Properties.Count(), expectedEndPathIdentifiers.Count());
 
                 List<string> expectedIdentifierList = expectedEndPathIdentifiers.ToList();
                 int i = 0;
                 foreach (EndPathToken actualProperty in actual.Properties)
                 {
-                    actualProperty.Should().NotBeNull();
+                    Assert.NotNull(actualProperty);
 
                     EndPathToken endPathToken = actualProperty as EndPathToken;
-                    endPathToken.Should().NotBeNull();
-                    endPathToken.Identifier.Should().Be(expectedIdentifierList[i]);
+                    Assert.NotNull(endPathToken);
+                    Assert.Equal(endPathToken.Identifier, expectedIdentifierList[i]);
                     i++;
                 }
             }
@@ -342,11 +343,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "groupby((UnitPrice))";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             GroupByToken groupBy = actual.First() as GroupByToken;
-            groupBy.Should().NotBeNull();
+            Assert.NotNull(groupBy);
 
             VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
         }
@@ -357,8 +358,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "groupby((UnitPrice, SharePrice, ReservedPrice))";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             GroupByToken groupBy = actual.First() as GroupByToken;
 
@@ -371,90 +372,90 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "groupby((UnitPrice), aggregate(SalesPrice with average as RetailPrice))";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             GroupByToken groupBy = actual.First() as GroupByToken;
 
             VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
 
-            groupBy.Child.Should().NotBeNull();
+            Assert.NotNull(groupBy.Child);
 
             AggregateToken aggregate = groupBy.Child as AggregateToken;
-            aggregate.AggregateExpressions.Should().HaveCount(1);
+            Assert.Single(aggregate.AggregateExpressions);
 
             VerifyAggregateExpressionToken("SalesPrice", AggregationMethodDefinition.Average, "RetailPrice", aggregate.AggregateExpressions.First() as AggregateExpressionToken);      
         }
 
         [Fact]
-        public void ParseApplyWithGroupByMissingOpenParenShouldThrow()
+        public void ParseApplyWithGroupByMissingOpenParenThrows()
         {
             string apply = "groupby (UnitPrice))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(9, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(9, apply));
         }
 
         [Fact]
-        public void ParseApplyWithGroupByMissingCloseParenShouldThrow()
+        public void ParseApplyWithGroupByMissingCloseParenThrows()
         {
             string apply = "groupby((UnitPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
         }
 
         [Fact]
-        public void ParseApplyWithGroupByAndAggregateMissingCloseParenShouldThrow()
+        public void ParseApplyWithGroupByAndAggregateMissingCloseParenThrows()
         {
             string apply = "groupBy((UnitPrice), aggregate(UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby|compute|expand", 0, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby|compute|expand", 0, apply));
         }
 
         [Fact]
-        public void ParseApplyWithGroupByMissingGroupingShouldThrow()
+        public void ParseApplyWithGroupByMissingGroupingThrows()
         {
             string apply = "groupby()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
         }
 
         [Fact]
-        public void ParseApplyWithGroupByMissingGroupingParensShouldThrow()
+        public void ParseApplyWithGroupByMissingGroupingParensThrows()
         {
             string apply = "groupby(UnitPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
         }
 
         [Fact]
-        public void ParseApplyWithGroupByWithEmptyGroupingShouldThrow()
+        public void ParseApplyWithGroupByWithEmptyGroupingThrows()
         {
             string apply = "groupby(())";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(9, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(9, apply));
         }
 
         [Fact]
-        public void ParseApplyWithGroupByWithChildGroupShouldThrow()
+        public void ParseApplyWithGroupByWithChildGroupThrows()
         {
             string apply = "groupby((UnitPrice), groupby((UnitPrice)))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate", 21, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate", 21, apply));
         }
 
 
         private static void VerifyBinaryOperatorToken<T>(string expectedEndPathIdentifier, BinaryOperatorKind expectedOperator, T expectedLiteralValue, BinaryOperatorToken actual)
         {
-            actual.Should().NotBeNull();
-            actual.OperatorKind.Should().Be(expectedOperator);
+            Assert.NotNull(actual);
+            Assert.Equal(actual.OperatorKind, expectedOperator);
 
             EndPathToken left = actual.Left as EndPathToken;
-            left.Should().NotBeNull();
-            left.Identifier.Should().Be(expectedEndPathIdentifier);
+            Assert.NotNull(left);
+            Assert.Equal(left.Identifier, expectedEndPathIdentifier);
 
             LiteralToken right = actual.Right as LiteralToken;
-            right.Should().NotBeNull();
-            right.Value.Should().Be(expectedLiteralValue);
+            Assert.NotNull(right);
+            Assert.Equal(right.Value, expectedLiteralValue);
         }
 
         [Fact]
@@ -463,43 +464,43 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "filter(UnitPrice eq 5)";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             BinaryOperatorToken filter = actual.First() as BinaryOperatorToken;
             VerifyBinaryOperatorToken<int>("UnitPrice", BinaryOperatorKind.Equal, 5, filter);
         }
 
         [Fact]
-        public void ParseApplyWithFilterMissingOpenParenShouldThrow()
+        public void ParseApplyWithFilterMissingOpenParenThrows()
         {
             string apply = "filter UnitPrice eq 5)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(7, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(7, apply));
         }
 
         [Fact]
-        public void ParseApplyWithFilterMissingCloseParenShouldThrow()
+        public void ParseApplyWithFilterMissingCloseParenThrows()
         {
             string apply = "filter(UnitPrice eq 5";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(apply.Length, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(apply.Length, apply));
         }
 
         [Fact]
-        public void ParseApplyWithFilterMissingExpressionShouldThrow()
+        public void ParseApplyWithFilterMissingExpressionThrows()
         {
             string apply = "filter()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(7, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(7, apply));
         }
 
         [Fact]
-        public void ParseApplyWithFilterInvalidExpressionShouldThrow()
+        public void ParseApplyWithFilterInvalidExpressionThrows()
         {
             string apply = "filter(UnitPrice eq)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
         }
 
 
@@ -509,23 +510,22 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "groupby((UnitPrice), aggregate(SalesPrice with average as RetailPrice))/filter(UnitPrice eq 5)/aggregate(CustomerId with sum as Total, SharePrice with countdistinct as SharePriceDistinctCount)";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(3);
+            Assert.NotNull(actual);
+            Assert.Equal(3, actual.Count());
 
             List<QueryToken> transformations = actual.ToList();
 
             // verify groupby
             GroupByToken groupBy = transformations[0] as GroupByToken;
-            groupBy.Should().NotBeNull();
+            Assert.NotNull(groupBy);
 
             VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
 
-            
-            groupBy.Properties.Should().HaveCount(1);
-            groupBy.Child.Should().NotBeNull();
+            Assert.Single(groupBy.Properties);
+            Assert.NotNull(groupBy.Child);
 
             AggregateToken groupByAggregate = groupBy.Child as AggregateToken;
-            groupByAggregate.AggregateExpressions.Should().HaveCount(1);
+            Assert.Single(groupByAggregate.AggregateExpressions);
             VerifyAggregateExpressionToken("SalesPrice", AggregationMethodDefinition.Average, "RetailPrice", groupByAggregate.AggregateExpressions.First() as AggregateExpressionToken);
 
             // verify filter
@@ -535,8 +535,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // verify aggregate
             AggregateToken aggregate = transformations[2] as AggregateToken;
-            aggregate.Should().NotBeNull();
-            aggregate.AggregateExpressions.Should().HaveCount(2);
+            Assert.NotNull(aggregate);
+            Assert.Equal(2, aggregate.AggregateExpressions.Count());
 
             List<AggregateTokenBase> aggregateExpressions = aggregate.AggregateExpressions.ToList();
 
@@ -550,25 +550,25 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "groupby((UnitPrice), aggregate(Sales($count as Count)))";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             List<QueryToken> transformations = actual.ToList();
 
             // verify groupby
             GroupByToken groupBy = transformations[0] as GroupByToken;
-            groupBy.Should().NotBeNull();
+            Assert.NotNull(groupBy);
 
             VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
 
-            groupBy.Properties.Should().HaveCount(1);
-            groupBy.Child.Should().NotBeNull();
+            Assert.Single(groupBy.Properties);
+            Assert.NotNull(groupBy.Child);
 
             AggregateToken groupByAggregate = groupBy.Child as AggregateToken;
-            groupByAggregate.AggregateExpressions.Should().HaveCount(1);
+            Assert.Single(groupByAggregate.AggregateExpressions);
 
             EntitySetAggregateToken entitySetAggregate = groupByAggregate.AggregateExpressions.First() as EntitySetAggregateToken;
-            entitySetAggregate.Should().NotBeNull();
+            Assert.NotNull(entitySetAggregate);
 
             entitySetAggregate.EntitySet.ShouldBeEndPathToken("Sales");
             VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", entitySetAggregate.Expressions.First() as AggregateExpressionToken);
@@ -580,37 +580,37 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "groupby((UnitPrice), aggregate(Sales($count as Count),  cast(SalesPrice, Edm.Decimal)  with average as RetailPrice))";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             List<QueryToken> transformations = actual.ToList();
 
             // verify groupby
             GroupByToken groupBy = transformations[0] as GroupByToken;
-            groupBy.Should().NotBeNull();
+            Assert.NotNull(groupBy);
 
             VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
 
-            groupBy.Properties.Should().HaveCount(1);
-            groupBy.Child.Should().NotBeNull();
+            Assert.Single(groupBy.Properties);
+            Assert.NotNull(groupBy.Child);
 
             AggregateToken groupByAggregate = groupBy.Child as AggregateToken;
-            groupByAggregate.AggregateExpressions.Should().HaveCount(2);
+            Assert.Equal(2, groupByAggregate.AggregateExpressions.Count());
 
             EntitySetAggregateToken entitySetAggregate = groupByAggregate.AggregateExpressions.First() as EntitySetAggregateToken;
-            entitySetAggregate.Should().NotBeNull();
+            Assert.NotNull(entitySetAggregate);
 
             entitySetAggregate.EntitySet.ShouldBeEndPathToken("Sales");
             VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", entitySetAggregate.Expressions.First() as AggregateExpressionToken);
 
             AggregateExpressionToken funcAggregate = groupByAggregate.AggregateExpressions.Last() as AggregateExpressionToken;
-            funcAggregate.Should().NotBeNull();
-            funcAggregate.Alias.ShouldBeEquivalentTo("RetailPrice");
-            funcAggregate.Method.Should().Equals(AggregationMethodDefinition.Average);
+            Assert.NotNull(funcAggregate);
+            Assert.Equal("RetailPrice", funcAggregate.Alias);
+            Assert.Equal(AggregationMethod.Average, funcAggregate.Method);
 
             FunctionCallToken funcToken = funcAggregate.Expression as FunctionCallToken;
-            funcToken.Should().NotBeNull();
-            funcToken.Name.ShouldBeEquivalentTo("cast");
+            Assert.NotNull(funcToken);
+            Assert.Equal("cast", funcToken.Name);
         }
 
         [Fact]
@@ -619,38 +619,38 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "groupby((UnitPrice), aggregate(Sales($count as Count,  cast(SalesPrice, Edm.Decimal)  with average as RetailPrice)))";
 
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             List<QueryToken> transformations = actual.ToList();
 
             // verify groupby
             GroupByToken groupBy = transformations[0] as GroupByToken;
-            groupBy.Should().NotBeNull();
+            Assert.NotNull(groupBy);
 
             VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
 
-            groupBy.Properties.Should().HaveCount(1);
-            groupBy.Child.Should().NotBeNull();
+            Assert.Single(groupBy.Properties);
+            Assert.NotNull(groupBy.Child);
 
             AggregateToken groupByAggregate = groupBy.Child as AggregateToken;
-            groupByAggregate.AggregateExpressions.Should().HaveCount(1);
+            Assert.Single(groupByAggregate.AggregateExpressions);
 
             EntitySetAggregateToken entitySetAggregate = groupByAggregate.AggregateExpressions.First() as EntitySetAggregateToken;
-            entitySetAggregate.Should().NotBeNull();
+            Assert.NotNull(entitySetAggregate);
 
             entitySetAggregate.EntitySet.ShouldBeEndPathToken("Sales");
-            entitySetAggregate.Expressions.Should().HaveCount(2);
+            Assert.Equal(2, entitySetAggregate.Expressions.Count());
             VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", entitySetAggregate.Expressions.First() as AggregateExpressionToken);
 
             AggregateExpressionToken funcAggregate = entitySetAggregate.Expressions.Last() as AggregateExpressionToken;
-            funcAggregate.Should().NotBeNull();
-            funcAggregate.Alias.ShouldBeEquivalentTo("RetailPrice");
-            funcAggregate.Method.Should().Equals(AggregationMethodDefinition.Average);
+            Assert.NotNull(funcAggregate);
+            Assert.Equal("RetailPrice", funcAggregate.Alias);
+            Assert.Equal(AggregationMethod.Average, funcAggregate.Method);
 
             FunctionCallToken funcToken = funcAggregate.Expression as FunctionCallToken;
-            funcToken.Should().NotBeNull();
-            funcToken.Name.ShouldBeEquivalentTo("cast");
+            Assert.NotNull(funcToken);
+            Assert.Equal("cast", funcToken.Name);
         }
 
         [Fact]
@@ -658,23 +658,23 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string compute = "compute(Prop1 mul Prop2 as Product,Prop1 div Prop2 as Ratio,Prop2 mod Prop2 as Remainder)";
             ComputeToken token = this.testSubject.ParseApply(compute).First() as ComputeToken;
-            token.Kind.ShouldBeEquivalentTo(QueryTokenKind.Compute);
+            Assert.Equal(QueryTokenKind.Compute, token.Kind);
             List<ComputeExpressionToken> tokens = token.Expressions.ToList();
-            tokens.Count.Should().Be(3);
-            tokens[0].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
-            tokens[1].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
-            tokens[2].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
-            tokens[0].Alias.ShouldBeEquivalentTo("Product");
-            tokens[1].Alias.ShouldBeEquivalentTo("Ratio");
-            tokens[2].Alias.ShouldBeEquivalentTo("Remainder");
-            (tokens[0].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Multiply);
-            (tokens[1].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Divide);
-            (tokens[2].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Modulo);
+            Assert.Equal(3, tokens.Count);
+            Assert.Equal(QueryTokenKind.ComputeExpression, tokens[0].Kind);
+            Assert.Equal(QueryTokenKind.ComputeExpression, tokens[1].Kind);
+            Assert.Equal(QueryTokenKind.ComputeExpression, tokens[2].Kind);
+            Assert.Equal("Product", tokens[0].Alias);
+            Assert.Equal("Ratio", tokens[1].Alias);
+            Assert.Equal("Remainder", tokens[2].Alias);
+            Assert.Equal(BinaryOperatorKind.Multiply, (tokens[0].Expression as BinaryOperatorToken).OperatorKind);
+            Assert.Equal(BinaryOperatorKind.Divide, (tokens[1].Expression as BinaryOperatorToken).OperatorKind);
+            Assert.Equal(BinaryOperatorKind.Modulo, (tokens[2].Expression as BinaryOperatorToken).OperatorKind);
 
             Action accept1 = () => tokens[0].Accept<ComputeExpression>(null);
-            accept1.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(accept1);
             Action accept2 = () => token.Accept<ComputeExpression>(null);
-            accept2.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(accept2);
         }
 
         [Fact]
@@ -682,23 +682,23 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string compute = "Prop1 mul Prop2 as Product,Prop1 div Prop2 as Ratio,Prop2 mod Prop2 as Remainder";
             ComputeToken token = this.testSubject.ParseCompute(compute);
-            token.Kind.ShouldBeEquivalentTo(QueryTokenKind.Compute);
+            Assert.Equal(QueryTokenKind.Compute, token.Kind);
             List<ComputeExpressionToken> tokens = token.Expressions.ToList();
-            tokens.Count.Should().Be(3);
-            tokens[0].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
-            tokens[1].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
-            tokens[2].Kind.ShouldBeEquivalentTo(QueryTokenKind.ComputeExpression);
-            tokens[0].Alias.ShouldBeEquivalentTo("Product");
-            tokens[1].Alias.ShouldBeEquivalentTo("Ratio");
-            tokens[2].Alias.ShouldBeEquivalentTo("Remainder");
-            (tokens[0].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Multiply);
-            (tokens[1].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Divide);
-            (tokens[2].Expression as BinaryOperatorToken).OperatorKind.ShouldBeEquivalentTo(BinaryOperatorKind.Modulo);
+            Assert.Equal(3, tokens.Count);
+            Assert.Equal(QueryTokenKind.ComputeExpression, tokens[0].Kind);
+            Assert.Equal(QueryTokenKind.ComputeExpression, tokens[1].Kind);
+            Assert.Equal(QueryTokenKind.ComputeExpression, tokens[2].Kind);
+            Assert.Equal("Product", tokens[0].Alias);
+            Assert.Equal("Ratio", tokens[1].Alias);
+            Assert.Equal("Remainder", tokens[2].Alias);
+            Assert.Equal(BinaryOperatorKind.Multiply, (tokens[0].Expression as BinaryOperatorToken).OperatorKind);
+            Assert.Equal(BinaryOperatorKind.Divide, (tokens[1].Expression as BinaryOperatorToken).OperatorKind);
+            Assert.Equal(BinaryOperatorKind.Modulo, (tokens[2].Expression as BinaryOperatorToken).OperatorKind);
 
             Action accept1 = () => tokens[0].Accept<ComputeExpression>(null);
-            accept1.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(accept1);
             Action accept2 = () => token.Accept<ComputeExpression>(null);
-            accept2.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(accept2);
         }
 
         [Fact]
@@ -706,7 +706,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.Length - 1, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.Length - 1, apply));
         }
 
         [Fact]
@@ -714,19 +714,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales, filter(Amount gt 3))/aggregate($count as Count)";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(2);
+            Assert.NotNull(actual);
+            Assert.Equal(2, actual.Count());
 
             ExpandToken expand = (ExpandToken)actual.First();
-            expand.ExpandTerms.Should().HaveCount(1);
+            Assert.Single(expand.ExpandTerms);
 
             ExpandTermToken expandTerm = expand.ExpandTerms.First();
-            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
-            expandTerm.FilterOption.Should().NotBeNull();
+            Assert.Equal(QueryTokenKind.ExpandTerm, expandTerm.Kind);
+            Assert.Equal("Sales", expandTerm.PathToNavigationProp.Identifier);
+            Assert.NotNull(expandTerm.FilterOption);
 
             AggregateToken aggregate = (AggregateToken)actual.Last();
-            aggregate.AggregateExpressions.Should().HaveCount(1);
+            Assert.Single(aggregate.AggregateExpressions);
         }
 
         [Fact]
@@ -734,16 +734,16 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales, filter(Amount gt 3))";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             ExpandToken expand = (ExpandToken)actual.First();
-            expand.ExpandTerms.Should().HaveCount(1);
+            Assert.Single(expand.ExpandTerms);
 
             ExpandTermToken expandTerm = expand.ExpandTerms.First();
-            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
-            expandTerm.FilterOption.Should().NotBeNull();
+            Assert.Equal(QueryTokenKind.ExpandTerm, expandTerm.Kind);
+            Assert.Equal("Sales", expandTerm.PathToNavigationProp.Identifier);
+            Assert.NotNull(expandTerm.FilterOption);
         }
 
         [Fact]
@@ -751,21 +751,21 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales, expand(Customers, filter(City eq 'Seattle')))";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             ExpandToken expand = (ExpandToken)actual.First();
-            expand.ExpandTerms.Should().HaveCount(1);
+            Assert.Single(expand.ExpandTerms);
 
             ExpandTermToken expandTerm = expand.ExpandTerms.First();
-            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
-            expandTerm.ExpandOption.Should().NotBeNull();
-            expandTerm.ExpandOption.ExpandTerms.Should().HaveCount(1);
+            Assert.Equal(QueryTokenKind.ExpandTerm, expandTerm.Kind);
+            Assert.Equal("Sales", expandTerm.PathToNavigationProp.Identifier);
+            Assert.NotNull(expandTerm.ExpandOption);
+            Assert.Single(expandTerm.ExpandOption.ExpandTerms);
             expandTerm = expandTerm.ExpandOption.ExpandTerms.First();
-            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customers");
-            expandTerm.FilterOption.Should().NotBeNull();
+            Assert.Equal(QueryTokenKind.ExpandTerm, expandTerm.Kind);
+            Assert.Equal("Customers", expandTerm.PathToNavigationProp.Identifier);
+            Assert.NotNull(expandTerm.FilterOption);
         }
 
         [Fact]
@@ -773,16 +773,16 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales, expand(Customers))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.Length - 2, apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.Length - 2, apply));
         }
 
 
         [Fact]
-        public void ParseApplyWithMultipleNestedExpandsOnlyShouldThrowOnFirstLeaf()
+        public void ParseApplyWithMultipleNestedExpandsOnlyThrowsOnFirstLeaf()
         {
             string apply = "expand(Sales, expand(Customers), expand(Cashiers))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.IndexOf(")"), apply));
+            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.IndexOf(")"), apply));
 
         }
 
@@ -791,32 +791,31 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales, expand(Customers, filter(City eq 'Redmond')), expand(Cashiers, expand(Stores, filter(City eq 'Seattle'))))";
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
-            actual.Should().NotBeNull();
-            actual.Should().HaveCount(1);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
 
             ExpandToken expand = (ExpandToken)actual.First();
-            expand.ExpandTerms.Should().HaveCount(1);
+            Assert.Single(expand.ExpandTerms);
 
             ExpandTermToken expandTerm = expand.ExpandTerms.First();
-            expandTerm.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Sales");
-            expandTerm.ExpandOption.Should().NotBeNull();
-            expandTerm.ExpandOption.ExpandTerms.Should().HaveCount(2);
+            Assert.Equal(QueryTokenKind.ExpandTerm, expandTerm.Kind);
+            Assert.Equal("Sales", expandTerm.PathToNavigationProp.Identifier);
+            Assert.NotNull(expandTerm.ExpandOption);
+            Assert.Equal(2, expandTerm.ExpandOption.ExpandTerms.Count());
             ExpandTermToken expandTerm1 = expandTerm.ExpandOption.ExpandTerms.First();
-            expandTerm1.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm1.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Customers");
-            expandTerm1.FilterOption.Should().NotBeNull();
+            Assert.Equal(QueryTokenKind.ExpandTerm, expandTerm1.Kind);
+            Assert.Equal("Customers", expandTerm1.PathToNavigationProp.Identifier);
+            Assert.NotNull(expandTerm1.FilterOption);
 
             ExpandTermToken expandTerm2 = expandTerm.ExpandOption.ExpandTerms.Last();
-            expandTerm2.Kind.ShouldBeEquivalentTo(QueryTokenKind.ExpandTerm);
-            expandTerm2.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Cashiers");
-            expandTerm2.ExpandOption.Should().NotBeNull();
+            Assert.Equal(QueryTokenKind.ExpandTerm, expandTerm2.Kind);
+            Assert.Equal("Cashiers", expandTerm2.PathToNavigationProp.Identifier);
+            Assert.NotNull(expandTerm2.ExpandOption);
 
-            expandTerm2.ExpandOption.ExpandTerms.Should().HaveCount(1);
+            Assert.Single(expandTerm2.ExpandOption.ExpandTerms);
             ExpandTermToken expandTerm3 = expandTerm2.ExpandOption.ExpandTerms.First();
-            expandTerm3.PathToNavigationProp.Identifier.ShouldBeEquivalentTo("Stores");
-            expandTerm3.FilterOption.Should().NotBeNull();
-
+            Assert.Equal("Stores", expandTerm3.PathToNavigationProp.Identifier);
+            Assert.NotNull(expandTerm3.FilterOption);
         }
     }
 }

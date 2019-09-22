@@ -6,7 +6,6 @@
 
 using System;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -20,9 +19,9 @@ namespace Microsoft.OData.Tests
         public void CreateInstanceAnnotationsFilterShouldTranslateFilterStringToFunc()
         {
             Func<string, bool> filter = ODataUtils.CreateAnnotationFilter("*,-ns.*");
-            filter.Should().NotBeNull();
-            filter("ns.name").Should().BeFalse();
-            filter("foo.bar").Should().BeTrue();
+            Assert.NotNull(filter);
+            Assert.False(filter("ns.name"));
+            Assert.True(filter("foo.bar"));
         }
 
         [Fact]
@@ -182,7 +181,7 @@ namespace Microsoft.OData.Tests
         public void TestServiceDocumentWhenNoContainer()
         {
             Action action = () => (new EdmModel()).GenerateServiceDocument();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataUtils_ModelDoesNotHaveContainer);
+            action.Throws<ODataException>(Strings.ODataUtils_ModelDoesNotHaveContainer);
         }
 
         private IEdmModel CreateTestModel()
@@ -235,50 +234,56 @@ namespace Microsoft.OData.Tests
         public void UriInvariantInsensitiveIsBaseOf_RelativeSecondUrlIsNotAllowed()
         {
             Action method = () => UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/One/"), new Uri("/One/Two", UriKind.Relative));
-            method.ShouldThrow<InvalidOperationException>();
+            Assert.Throws<InvalidOperationException>(method);
         }
 
         [Fact]
         public void UriInvariantInsensitiveIsBaseOf_RelativeFirstUrlIsNotAllowed()
         {
             Action method = () => UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("/One/", UriKind.Relative), new Uri("http://www.example.com/One/Two"));
-            method.ShouldThrow<InvalidOperationException>();
+            Assert.Throws<InvalidOperationException>(method);
         }
 
         [Fact]
         public void UriInvariantInsensitiveIsBaseOf_SameBaseShouldReturnTrue()
         {
-            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/One/"), new Uri("http://www.example.com/One/Two")).Should().BeTrue();
+            var result = UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/One/"), new Uri("http://www.example.com/One/Two"));
+            Assert.True(result);
         }
 
         [Fact]
         public void UriInvariantInsensitiveIsBaseOf_IdenticalUrisShouldReturnTrue()
         {
-            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/One/"), new Uri("http://www.example.com/One/")).Should().BeTrue();
+            var result = UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/One/"), new Uri("http://www.example.com/One/"));
+            Assert.True(result);
         }
 
         [Fact]
         public void UriInvariantInsensitiveIsBaseOf_ShouldBeCaseInsensitive()
         {
-            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("HTTP://WwW.ExAmPlE.cOm/OnE/"), new Uri("http://www.example.com/One/")).Should().BeTrue();
+            var result = UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("HTTP://WwW.ExAmPlE.cOm/OnE/"), new Uri("http://www.example.com/One/"));
+            Assert.True(result);
         }
 
         [Fact]
         public void UriInvariantInsensitiveIsBaseOf_ShouldIgnoreHostAndSchemeAndPort()
         {
-            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("https://different.org:1234/One/"), new Uri("http://www.example.com:4567/One/Two")).Should().BeTrue();
+            var result = UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("https://different.org:1234/One/"), new Uri("http://www.example.com:4567/One/Two"));
+            Assert.True(result);
         }
 
         [Fact]
         public void UriInvariantInsensitiveIsBaseOf_ShouldIgnoreStuffAfterFinalSlash()
         {
-            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/OData.svc"), new Uri("http://www.example.com/One/Two")).Should().BeTrue();
+            var result = UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/OData.svc"), new Uri("http://www.example.com/One/Two"));
+            Assert.True(result);
         }
 
         [Fact]
         public void UriInvariantInsensitiveIsBaseOf_DifferentBaseShouldReturnFalse()
         {
-            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/OData.svc/"), new Uri("http://www.example.com/One/Two")).Should().BeFalse();
+            var result = UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/OData.svc/"), new Uri("http://www.example.com/One/Two"));
+            Assert.False(result);
         }
     }
 }

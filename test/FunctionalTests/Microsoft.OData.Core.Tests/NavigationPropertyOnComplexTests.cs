@@ -133,7 +133,7 @@ namespace Microsoft.OData.Tests
             var paths = expandItem.PathToNavigationProperty.ToList();
             paths[0].ShouldBePropertySegment(addressProperty);
             paths[1].ShouldBePropertySegment(workAddressProperty);
-            paths[2].ShouldBeTypeSegment(workAddressType, addressType);
+            paths[2].ShouldBeTypeSegment(workAddressType, workAddressType);
             paths[3].ShouldBeNavigationPropertySegment(city2);
 
             // test

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -35,17 +34,17 @@ namespace Microsoft.OData.Tests.UriParser
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri);
             uriParser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             var path = uriParser.ParsePath();
-            path.Should().HaveCount(1);
+            Assert.Single(path);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            uriParser.ParseFilter().Should().BeNull();
-            uriParser.ParseSelectAndExpand().Should().BeNull();
-            uriParser.ParseOrderBy().Should().BeNull();
-            uriParser.ParseTop().Should().Be(null);
-            uriParser.ParseSkip().Should().Be(null);
-            uriParser.ParseCount().Should().Be(null);
-            uriParser.ParseSearch().Should().BeNull();
-            uriParser.ParseSkipToken().Should().BeNull();
-            uriParser.ParseDeltaToken().Should().BeNull();
+            Assert.Null(uriParser.ParseFilter());
+            Assert.Null(uriParser.ParseSelectAndExpand());
+            Assert.Null(uriParser.ParseOrderBy());
+            Assert.Null(uriParser.ParseTop());
+            Assert.Null(uriParser.ParseSkip());
+            Assert.Null(uriParser.ParseCount());
+            Assert.Null(uriParser.ParseSearch());
+            Assert.Null(uriParser.ParseSkipToken());
+            Assert.Null(uriParser.ParseDeltaToken());
         }
 
         [Theory]
@@ -57,25 +56,25 @@ namespace Microsoft.OData.Tests.UriParser
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, relativeUriString));
             uriParser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             var path = uriParser.ParsePath();
-            path.Should().HaveCount(1);
+            Assert.Single(path);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            uriParser.ParseFilter().Should().BeNull();
+            Assert.Null(uriParser.ParseFilter());
             var results = uriParser.ParseSelectAndExpand();
-            results.AllSelected.Should().BeTrue();
-            results.SelectedItems.Should().HaveCount(0);
-            uriParser.ParseOrderBy().Should().BeNull();
+            Assert.True(results.AllSelected);
+            Assert.Empty(results.SelectedItems);
+            Assert.Null(uriParser.ParseOrderBy());
             Action action = () => uriParser.ParseTop();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
+            action.Throws<ODataException>(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
             action = () => uriParser.ParseSkip();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidSkipQueryOptionValue(""));
+            action.Throws<ODataException>(Strings.SyntacticTree_InvalidSkipQueryOptionValue(""));
             action = () => uriParser.ParseIndex();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidIndexQueryOptionValue(""));
+            action.Throws<ODataException>(Strings.SyntacticTree_InvalidIndexQueryOptionValue(""));
             action = () => uriParser.ParseCount();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataUriParser_InvalidCount(""));
+            action.Throws<ODataException>(Strings.ODataUriParser_InvalidCount(""));
             action = () => uriParser.ParseSearch();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
-            uriParser.ParseSkipToken().Should().BeEmpty();
-            uriParser.ParseDeltaToken().Should().BeEmpty();
+            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
+            Assert.Empty(uriParser.ParseSkipToken());
+            Assert.Empty(uriParser.ParseDeltaToken());
         }
 
         [Fact]
@@ -87,17 +86,17 @@ namespace Microsoft.OData.Tests.UriParser
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(entitySetUri, filterClauseString));
             uriParser.EnableNoDollarQueryOptions = true;
             var path = uriParser.ParsePath();
-            path.Should().HaveCount(1);
+            Assert.Single(path);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPaintingsSet());
             var filterResult = uriParser.ParseFilter();
-            filterResult.Should().NotBeNull();
-            filterResult.Expression.Kind.Should().Be(QueryNodeKind.BinaryOperator);
-            (filterResult.Expression as BinaryOperatorNode).Should().NotBeNull();
-            (filterResult.Expression as BinaryOperatorNode).Left.Should().NotBeNull();
-            (filterResult.Expression as BinaryOperatorNode).Right.Should().NotBeNull();
+            Assert.NotNull(filterResult);
+            Assert.Equal(QueryNodeKind.BinaryOperator, filterResult.Expression.Kind);
+            var bon = Assert.IsType<BinaryOperatorNode>(filterResult.Expression);
+            Assert.NotNull(bon.Left);
+            Assert.NotNull(bon.Right);
 
             var selectExpandResult = uriParser.ParseSelectAndExpand();
-            selectExpandResult.Should().BeNull();
+            Assert.Null(selectExpandResult);
         }
 
         [Fact]
@@ -108,10 +107,10 @@ namespace Microsoft.OData.Tests.UriParser
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, filterClauseString));
             uriParser.EnableNoDollarQueryOptions = true;
             var path = uriParser.ParsePath();
-            path.Should().HaveCount(1);
+            Assert.Single(path);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             Action action  = () => uriParser.ParseFilter();
-            action.ShouldThrow<ODataException>().WithMessage(
+            action.Throws<ODataException>(
                 ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "@my.annotation"));
         }
 
@@ -134,8 +133,7 @@ namespace Microsoft.OData.Tests.UriParser
                         new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
                 var nonODataqueryOptions = uriParserProcessingDupCustomQuery.CustomQueryOptions;
 
-                action.ShouldThrow<ODataException>()
-                    .WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
+                action.Throws<ODataException>(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
                 Assert.Equal(nonODataqueryOptions.Count, 2);
                 Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") &&
                             nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
@@ -152,14 +150,14 @@ namespace Microsoft.OData.Tests.UriParser
         public void ModelCannotBeNull()
         {
             Action createWithNullModel = () => new ODataUriParser(null, ServiceRoot, FullUri);
-            createWithNullModel.ShouldThrow<Exception>(Error.ArgumentNull("model").ToString());
+            Assert.Throws<ArgumentNullException>("model", createWithNullModel);
         }
 
         [Fact]
         public void ModelIsSetCorrectly()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri);
-            parser.Model.Should().Be(HardCodedTestModel.TestModel);
+            Assert.Same(HardCodedTestModel.TestModel, parser.Model);
         }
 
         [Fact]
@@ -167,7 +165,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var serviceRoot = new Uri("http://example.com/Foo/");
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, FullUri);
-            parser.ServiceRoot.Should().BeSameAs(serviceRoot);
+            Assert.Equal(serviceRoot, parser.ServiceRoot);
         }
 
         [Fact]
@@ -175,25 +173,25 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var serviceRoot = new Uri("one/two/three", UriKind.Relative);
             Action create = () => new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, new Uri("test", UriKind.Relative));
-            create.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(create);
 
             serviceRoot = new Uri("one/two/three", UriKind.RelativeOrAbsolute);
             create = () => new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, new Uri("test", UriKind.Relative));
-            create.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(create);
         }
 
         [Fact]
         public void MaxExpandDepthCannotBeNegative()
         {
             Action setNegative = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).Settings.MaximumExpansionDepth = -1;
-            setNegative.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_NegativeLimit);
+            setNegative.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
         }
 
         [Fact]
         public void MaxExpandCountCannotBeNegative()
         {
             Action setNegative = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).Settings.MaximumExpansionCount = -1;
-            setNegative.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_NegativeLimit);
+            setNegative.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
         }
         #endregion
 
@@ -202,7 +200,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void FilterLimitIsSettable()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { FilterLimit = 3 } };
-            parser.Settings.FilterLimit.Should().Be(3);
+            Assert.Equal(3, parser.Settings.FilterLimit);
         }
 
         [Theory]
@@ -214,7 +212,7 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { FilterLimit = 0 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseFilter();
-            parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
         [Theory]
@@ -226,21 +224,21 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { FilterLimit = 5 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseFilter();
-            parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void NegativeFilterLimitThrows()
         {
             Action negativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { FilterLimit = -98798 } };
-            negativeLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_NegativeLimit);
+            negativeLimit.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
         }
 
         [Fact]
         public void OrderbyLimitIsSettable()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { OrderByLimit = 3 } };
-            parser.Settings.OrderByLimit.Should().Be(3);
+            Assert.Equal(3, parser.Settings.OrderByLimit);
         }
 
         [Theory]
@@ -252,7 +250,7 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { OrderByLimit = 0 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseOrderBy();
-            parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
         [Theory]
@@ -264,21 +262,21 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { OrderByLimit = 5 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseOrderBy();
-            parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void OrderByLimitCannotBeNegative()
         {
             Action parseWithNegativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { OrderByLimit = -9879 } };
-            parseWithNegativeLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_NegativeLimit);
+            parseWithNegativeLimit.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
         }
 
         [Fact]
         public void PathLimitIsSettable()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { PathLimit = 3 } };
-            parser.Settings.PathLimit.Should().Be(3);
+            Assert.Equal(3, parser.Settings.PathLimit);
         }
 
         [Fact]
@@ -286,21 +284,21 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/", UriKind.Absolute), new Uri("http://gobbldygook/path/to/something", UriKind.Absolute)) { Settings = { PathLimit = 0 } };
             Action parseWithLimit = () => parser.ParsePath();
-            parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryPathParser_TooManySegments);
+            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryPathParser_TooManySegments);
         }
 
         [Fact]
         public void PathLimitCannotBeNegative()
         {
             Action parseWithNegativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { PathLimit = -8768 } };
-            parseWithNegativeLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_NegativeLimit);
+            parseWithNegativeLimit.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
         }
 
         [Fact]
         public void SelectExpandLimitIsSettable()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { SelectExpandLimit = 3 } };
-            parser.Settings.SelectExpandLimit.Should().Be(3);
+            Assert.Equal(3, parser.Settings.SelectExpandLimit);
         }
 
         [Theory]
@@ -312,14 +310,14 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { SelectExpandLimit = 0 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseSelectAndExpand();
-            parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void NegativeSelectExpandLimitIsRespected()
         {
             Action parseWithNegativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { SelectExpandLimit = -87657 } };
-            parseWithNegativeLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_NegativeLimit);
+            parseWithNegativeLimit.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
         }
         #endregion
 
@@ -327,33 +325,33 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void DefaultKeyDelimiterShouldBeSlash()
         {
-            new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter.Should().BeSameAs(ODataUrlKeyDelimiter.Slash);
+            Assert.Same(ODataUrlKeyDelimiter.Slash, new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter);
         }
 
         [Fact]
         public void ODataUrlKeyDelimiterCannotBeSetToNull()
         {
             Action setToNull = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter = null;
-            setToNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("UrlKeyDelimiter"));
+            Assert.Throws<ArgumentNullException>("UrlKeyDelimiter", setToNull);
         }
 
         [Fact]
         public void DefaultEnableTemplateParsingShouldBeFalse()
         {
-            new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).EnableUriTemplateParsing.Should().BeFalse();
+            Assert.False(new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).EnableUriTemplateParsing);
         }
 
         [Fact]
         public void DefaultEnableCaseInsensitiveBuiltinIdentifierShouldBeFalse()
         {
-            new ODataUriResolver().EnableCaseInsensitive.Should().BeFalse();
+            Assert.False(new ODataUriResolver().EnableCaseInsensitive);
         }
 
         [Fact]
         public void DefaultParameterAliasNodesShouldBeEmtpy()
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People"));
-            uriParser.ParameterAliasNodes.Count.Should().Be(0);
+            Assert.Empty(uriParser.ParameterAliasNodes);
         }
         #endregion
 
@@ -369,8 +367,8 @@ namespace Microsoft.OData.Tests.UriParser
             IEnumerator<SelectItem> enumerator = containedSelectExpandClause.SelectedItems.GetEnumerator();
             enumerator.MoveNext();
             ExpandedNavigationSelectItem expandedNavigationSelectItem = enumerator.Current as ExpandedNavigationSelectItem;
-            expandedNavigationSelectItem.Should().NotBeNull();
-            (expandedNavigationSelectItem.NavigationSource is IEdmContainedEntitySet).Should().BeTrue();
+            Assert.NotNull(expandedNavigationSelectItem);
+            Assert.True((expandedNavigationSelectItem.NavigationSource is IEdmContainedEntitySet));
         }
 
         #region Relative full path smoke test
@@ -378,7 +376,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void AbsoluteUriInConstructorShouldThrow()
         {
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/People(1)"));
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriParser_RelativeUriMustBeRelative);
+            action.Throws<ODataException>(Strings.UriParser_RelativeUriMustBeRelative);
         }
 
         [Fact]
@@ -389,7 +387,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            pathSegment.Should().HaveCount(2);
+            Assert.Equal(2, pathSegment.Count);
             pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
             pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("SocialSN", "1"));
         }
@@ -403,7 +401,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            pathSegment.Should().HaveCount(2);
+            Assert.Equal(2, pathSegment.Count);
             pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
             pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("NameAlias", "anyName"), new KeyValuePair<string, object>("FirstNameAlias", "anyFirst"));
         }
@@ -417,7 +415,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.ShouldThrow<ODataException>().WithMessage("Bad Request - Error in query syntax.");
+            action.Throws<ODataException>("Bad Request - Error in query syntax.");
         }
 
         [Fact]
@@ -429,8 +427,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.ShouldThrow<ODataException>()
-                .WithMessage(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
@@ -442,14 +439,14 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new ODataUriResolver()
             }.ParsePath();
 
-            action.ShouldThrow<ODataException>().WithMessage("Bad Request - Error in query syntax.");
+            action.Throws<ODataException>("Bad Request - Error in query syntax.");
         }
 
         [Fact]
         public void ParsePathShouldWork()
         {
             var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People", UriKind.Relative)).ParsePath();
-            path.Should().HaveCount(1);
+            Assert.Single(path);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
         }
 
@@ -461,15 +458,15 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
-            parser.ParseSelectAndExpand().Should().NotBeNull();
-            parser.ParseFilter().Should().NotBeNull();
-            parser.ParseOrderBy().Should().NotBeNull();
-            parser.ParseTop().Should().Be(1);
-            parser.ParseSkip().Should().Be(2);
-            parser.ParseCount().Should().Be(true);
-            parser.ParseSearch().Should().NotBeNull();
-            parser.ParseSkipToken().Should().Be("abc");
-            parser.ParseDeltaToken().Should().Be("def");
+            Assert.NotNull(parser.ParseSelectAndExpand());
+            Assert.NotNull(parser.ParseFilter());
+            Assert.NotNull(parser.ParseOrderBy());
+            Assert.Equal(1, parser.ParseTop());
+            Assert.Equal(2, parser.ParseSkip());
+            Assert.True(parser.ParseCount());
+            Assert.NotNull(parser.ParseSearch());
+            Assert.Equal("abc", parser.ParseSkipToken());
+            Assert.Equal("def", parser.ParseDeltaToken());
         }
 
         [Theory]
@@ -480,7 +477,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
-            parser.ParseIndex().Should().Be(42);
+            Assert.Equal(42, parser.ParseIndex());
         }
 
         [Theory]
@@ -497,13 +494,13 @@ namespace Microsoft.OData.Tests.UriParser
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             parser.Resolver.EnableCaseInsensitive = caseInsensitive;
             var selectExpand = parser.ParseSelectAndExpand();
-            selectExpand.Should().NotBeNull();
+            Assert.NotNull(selectExpand);
             PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
-            selectItem.Should().NotBeNull();
+            Assert.NotNull(selectItem);
             AnnotationSegment annotationSegment = selectItem.SelectedPath.FirstSegment as AnnotationSegment;
-            annotationSegment.Should().NotBeNull();
-            annotationSegment.Term.FullName().Should().Be(termName);
-            annotationSegment.Term.Type.FullName().Should().Be(typeName);
+            Assert.NotNull(annotationSegment);
+            Assert.Equal(termName, annotationSegment.Term.FullName());
+            Assert.Equal(typeName, annotationSegment.Term.Type.FullName());
         }
 
         [Theory]
@@ -513,7 +510,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             Action action = () => parser.ParseSelectAndExpand();
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_TermIsNotValid(term));
+            action.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid(term));
         }
 
         [Fact]
@@ -522,16 +519,16 @@ namespace Microsoft.OData.Tests.UriParser
             string relativeUriString = "People?$select=Name/@Fully.Qualified.Namespace.PrimitiveTerm";
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             var selectExpand = parser.ParseSelectAndExpand();
-            selectExpand.Should().NotBeNull();
+            Assert.NotNull(selectExpand);
             PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
-            selectItem.Should().NotBeNull();
+            Assert.NotNull(selectItem);
             List<ODataPathSegment> segments = selectItem.SelectedPath.ToList();
-            segments.Count.Should().Be(2);
+            Assert.Equal(2, segments.Count);
             PropertySegment propertySegment = segments[0] as PropertySegment;
-            propertySegment.Property.Name.Should().Be("Name");
+            Assert.Equal("Name", propertySegment.Property.Name);
             AnnotationSegment annotationSegment = segments[1] as AnnotationSegment;
-            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.PrimitiveTerm");
-            annotationSegment.Term.Type.TypeKind().Should().Be(EdmTypeKind.Primitive);
+            Assert.Equal("Fully.Qualified.Namespace.PrimitiveTerm", annotationSegment.Term.FullName());
+            Assert.Equal(EdmTypeKind.Primitive, annotationSegment.Term.Type.TypeKind());
         }
 
         [Fact]
@@ -540,15 +537,15 @@ namespace Microsoft.OData.Tests.UriParser
             string relativeUriString = "People?$select=@Fully.Qualified.Namespace.ComplexTerm/Street";
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             var selectExpand = parser.ParseSelectAndExpand();
-            selectExpand.Should().NotBeNull();
+            Assert.NotNull(selectExpand);
             PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
             List<ODataPathSegment> segments = selectItem.SelectedPath.ToList();
-            segments.Count.Should().Be(2);
+            Assert.Equal(2, segments.Count);
             AnnotationSegment annotationSegment = segments[0] as AnnotationSegment;
-            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.ComplexTerm");
-            annotationSegment.Term.Type.FullName().Should().Be("Fully.Qualified.Namespace.Address");
+            Assert.Equal("Fully.Qualified.Namespace.ComplexTerm", annotationSegment.Term.FullName());
+            Assert.Equal("Fully.Qualified.Namespace.Address", annotationSegment.Term.Type.FullName());
             PropertySegment propertySegment = segments[1] as PropertySegment;
-            propertySegment.Property.Name.Should().Be("Street");
+            Assert.Equal("Street", propertySegment.Property.Name);
         }
 
         [Fact]
@@ -562,15 +559,15 @@ namespace Microsoft.OData.Tests.UriParser
                 // Ensure $-sign is required.
                 parser.EnableNoDollarQueryOptions = false;
 
-                parser.ParseFilter().Should().BeNull();
-                parser.ParseSelectAndExpand().Should().BeNull();
-                parser.ParseOrderBy().Should().BeNull();
-                parser.ParseTop().Should().Be(null);
-                parser.ParseSkip().Should().Be(null);
-                parser.ParseCount().Should().Be(null);
-                parser.ParseSearch().Should().BeNull();
-                parser.ParseSkipToken().Should().BeNull();
-                parser.ParseDeltaToken().Should().BeNull();
+                Assert.Null(parser.ParseFilter());
+                Assert.Null(parser.ParseSelectAndExpand());
+                Assert.Null(parser.ParseOrderBy());
+                Assert.Null(parser.ParseTop());
+                Assert.Null(parser.ParseSkip());
+                Assert.Null(parser.ParseCount());
+                Assert.Null(parser.ParseSearch());
+                Assert.Null(parser.ParseSkipToken());
+                Assert.Null(parser.ParseDeltaToken());
             }
             finally
             {
@@ -613,12 +610,12 @@ namespace Microsoft.OData.Tests.UriParser
 
             if (shouldThrow)
             {
-                action.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+                action.Throws<ODataException>(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
                     enableNoDollarQueryOptions ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", queryOptionName) : queryOptionName));
             }
             else
             {
-                action.ShouldNotThrow<ODataException>();
+                action.DoesNotThrow();
             }
         }
 
@@ -633,7 +630,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             parser.EnableNoDollarQueryOptions = true;
-            parser.ParseSelectAndExpand().Should().NotBeNull();
+            Assert.NotNull(parser.ParseSelectAndExpand());
         }
 
         [Theory]
@@ -644,7 +641,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
-            parser.ParseDeltaToken().Should().Be("Start@Next_Chunk:From&$To=Here!?()* +,1-._~;");
+            Assert.Equal("Start@Next_Chunk:From&$To=Here!?()* +,1-._~;", parser.ParseDeltaToken());
         }
 
         #endregion
@@ -654,20 +651,20 @@ namespace Microsoft.OData.Tests.UriParser
         public void ParsePathExceptionDataTestWithInvalidEntitySet()
         {
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People1(1)/MyDog/Color", UriKind.Relative)).ParsePath();
-            ODataUnrecognizedPathException ex = action.ShouldThrow<ODataUnrecognizedPathException>().And;
-            ex.ParsedSegments.As<IEnumerable<ODataPathSegment>>().Count().Should().Be(0);
-            ex.CurrentSegment.Should().Be("People1(1)");
-            ex.UnparsedSegments.As<IEnumerable<string>>().Count().Should().Be(2);
+            ODataUnrecognizedPathException ex = Assert.Throws<ODataUnrecognizedPathException>(action);
+            Assert.Empty(ex.ParsedSegments);
+            Assert.Equal("People1(1)", ex.CurrentSegment);
+            Assert.Equal(2, ex.UnparsedSegments.Count());
         }
 
         [Fact]
         public void ParsePathExceptionDataTestWithInvalidContainedNavigationProperty()
         {
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People(1)/MyDog1/Color", UriKind.Relative)).ParsePath();
-            ODataUnrecognizedPathException ex = action.ShouldThrow<ODataUnrecognizedPathException>().And;
-            ex.ParsedSegments.As<IEnumerable<ODataPathSegment>>().Count().Should().Be(2);
-            ex.CurrentSegment.Should().Be("MyDog1");
-            ex.UnparsedSegments.As<IEnumerable<string>>().Count().Should().Be(1);
+            ODataUnrecognizedPathException ex = Assert.Throws<ODataUnrecognizedPathException>(action);
+            Assert.Equal(2, ex.ParsedSegments.Count());
+            Assert.Equal("MyDog1", ex.CurrentSegment);
+            Assert.Single(ex.UnparsedSegments);
         }
 
         [Fact]
@@ -675,11 +672,11 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People(1)/MyDog/Color1", UriKind.Relative));
             Action action = () => parser.ParsePath();
-            ODataUnrecognizedPathException ex = action.ShouldThrow<ODataUnrecognizedPathException>().And;
-            ex.ParsedSegments.As<IEnumerable<ODataPathSegment>>().Count().Should().Be(3);
-            ex.CurrentSegment.Should().Be("Color1");
-            ex.UnparsedSegments.As<IEnumerable<string>>().Count().Should().Be(0);
-            parser.ParameterAliasNodes.Count.Should().Be(0);
+            ODataUnrecognizedPathException ex = Assert.Throws<ODataUnrecognizedPathException>(action);
+            Assert.Equal(3, ex.ParsedSegments.Count());
+            Assert.Equal("Color1", ex.CurrentSegment);
+            Assert.Empty(ex.UnparsedSegments);
+            Assert.Empty(parser.ParameterAliasNodes);
         }
 
         [Fact]
@@ -687,13 +684,13 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("GetCoolestPersonWithStyle(styleID=@p1)/UndeclaredProperty?@p1=32", UriKind.Relative));
             Action action = () => parser.ParsePath();
-            ODataUnrecognizedPathException ex = action.ShouldThrow<ODataUnrecognizedPathException>().And;
-            ex.ParsedSegments.As<IEnumerable<ODataPathSegment>>().Count().Should().Be(1);
-            ex.CurrentSegment.Should().Be("UndeclaredProperty");
-            ex.UnparsedSegments.As<IEnumerable<string>>().Count().Should().Be(0);
+            ODataUnrecognizedPathException ex = Assert.Throws<ODataUnrecognizedPathException>(action);
+            Assert.Single(ex.ParsedSegments);
+            Assert.Equal("UndeclaredProperty", ex.CurrentSegment);
+            Assert.Empty(ex.UnparsedSegments);
 
             var aliasNode = parser.ParameterAliasNodes;
-            aliasNode.Count.Should().Be(1);
+            Assert.Single(aliasNode);
             aliasNode["@p1"].ShouldBeConstantQueryNode(32);
         }
         #endregion
@@ -838,7 +835,7 @@ namespace Microsoft.OData.Tests.UriParser
             var parser = new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/getCurrentCustomer()/detail"));
             var path = parser.ParsePath();
             var pathSegmentList = path.ToList();
-            pathSegmentList.Count.Should().Be(2);
+            Assert.Equal(2, pathSegmentList.Count);
             pathSegmentList[0].ShouldBeOperationImportSegment(getCurrentCustomerImport);
             pathSegmentList[1].ShouldBeNavigationPropertySegment(customerDetail);
         }
@@ -918,7 +915,7 @@ namespace Microsoft.OData.Tests.UriParser
             Uri url = new Uri("http://host/Paintings?$compute=nonsense");
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, url);
             Action action = () => parser.ParseCompute();
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_AsExpected(8, "nonsense"));
+            action.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_AsExpected(8, "nonsense"));
         }
 
         [Fact]
@@ -927,7 +924,7 @@ namespace Microsoft.OData.Tests.UriParser
             Uri url = new Uri("http://host/Paintings?$compute=nonsense as");
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, url);
             Action action = () => parser.ParseCompute();
-            action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null or empty.\r\nParameter name: alias");
+            action.Throws<ArgumentNullException>("Value cannot be null or empty.\r\nParameter name: alias");
         }
 
         [Fact]
@@ -950,18 +947,18 @@ namespace Microsoft.OData.Tests.UriParser
             // parse and validate
             ComputeClause clause = parser.ParseCompute();
             List<ComputeExpression> items = clause.ComputedItems.ToList();
-            items.Count().Should().Be(2);
-            items[0].Alias.ShouldBeEquivalentTo("Property1AsString");
+            Assert.Equal(2, items.Count());
+            Assert.Equal("Property1AsString", items[0].Alias);
             items[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
-            items[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
-            items[1].Alias.ShouldBeEquivalentTo("Property1Lower");
+            Assert.True(items[0].Expression.TypeReference.IsEquivalentTo(typeReference));
+            Assert.Equal("Property1Lower", items[1].Alias);
             items[1].Expression.ShouldBeSingleValueFunctionCallQueryNode();
-            items[1].Expression.TypeReference.FullName().ShouldBeEquivalentTo("Edm.String");
-            items[1].Expression.TypeReference.IsNullable.ShouldBeEquivalentTo(true); // tolower is built in function that allows nulls.
+            Assert.Equal("Edm.String", items[1].Expression.TypeReference.FullName());
+            Assert.True(items[1].Expression.TypeReference.IsNullable); // tolower is built in function that allows nulls.
 
             ComputeExpression copy = new ComputeExpression(items[0].Expression, items[0].Alias, null);
-            copy.Expression.Should().NotBeNull();
-            copy.TypeReference.Should().BeNull();
+            Assert.NotNull(copy.Expression);
+            Assert.Null(copy.TypeReference);
             ComputeClause varied = new ComputeClause(null);
         }
 
@@ -992,13 +989,13 @@ namespace Microsoft.OData.Tests.UriParser
             // parse and validate
             SelectExpandClause clause = parser.ParseSelectAndExpand();
             List<SelectItem> items = clause.SelectedItems.ToList();
-            items.Count.Should().Be(1);
+            Assert.Single(items);
             ExpandedNavigationSelectItem expanded = items[0] as ExpandedNavigationSelectItem;
             List<ComputeExpression> computes = expanded.ComputeOption.ComputedItems.ToList();
-            computes.Count.Should().Be(1);
-            computes[0].Alias.ShouldBeEquivalentTo("NavProperty1AsString");
+            Assert.Single(computes);
+            Assert.Equal("NavProperty1AsString", computes[0].Alias);
             computes[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
-            computes[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
+            Assert.True(computes[0].Expression.TypeReference.IsEquivalentTo(typeReference));
         }
 
         [Fact]
@@ -1046,34 +1043,31 @@ namespace Microsoft.OData.Tests.UriParser
 
             // validate top compute
             List<ComputeExpression> items = computeClause.ComputedItems.ToList();
-            items.Count().Should().Be(2);
-            items[0].Alias.ShouldBeEquivalentTo("Property1AsString");
+            Assert.Equal(2, items.Count());
+            Assert.Equal("Property1AsString", items[0].Alias);
             items[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
-            items[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
-            items[1].Alias.ShouldBeEquivalentTo("Property1Lower");
+            Assert.True(items[0].Expression.TypeReference.IsEquivalentTo(typeReference));
+            Assert.Equal("Property1Lower", items[1].Alias);
             items[1].Expression.ShouldBeSingleValueFunctionCallQueryNode();
-            items[1].Expression.TypeReference.FullName().ShouldBeEquivalentTo("Edm.String");
-            items[1].Expression.TypeReference.IsNullable.ShouldBeEquivalentTo(true); // tolower is built in function that allows nulls.
+            Assert.Equal("Edm.String", items[1].Expression.TypeReference.FullName());
+            Assert.True(items[1].Expression.TypeReference.IsNullable); // tolower is built in function that allows nulls.
 
             // validate level 1 expand compute
             List<SelectItem> selectItems = selectClause.SelectedItems.ToList();
-            selectItems.Count.Should().Be(1);
+            Assert.Single(selectItems);
             ExpandedNavigationSelectItem expanded = selectItems[0] as ExpandedNavigationSelectItem;
-            List<ComputeExpression> computes = expanded.ComputeOption.ComputedItems.ToList();
-            computes.Count.Should().Be(1);
-            computes[0].Alias.ShouldBeEquivalentTo("NavProperty1AsString");
-            computes[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
-            computes[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
+            var compute = Assert.Single(expanded.ComputeOption.ComputedItems);
+            Assert.Equal("NavProperty1AsString", compute.Alias);
+            compute.Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            Assert.True(compute.Expression.TypeReference.IsEquivalentTo(typeReference));
 
             // validate level 2 expand compute
-            List<SelectItem> subSelectItems = expanded.SelectAndExpand.SelectedItems.ToList();
-            subSelectItems.Count.Should().Be(1);
-            ExpandedNavigationSelectItem subExpanded = subSelectItems[0] as ExpandedNavigationSelectItem;
-            List<ComputeExpression> subComputes = subExpanded.ComputeOption.ComputedItems.ToList();
-            subComputes.Count.Should().Be(1);
-            subComputes[0].Alias.ShouldBeEquivalentTo("SubNavProperty1AsString");
-            subComputes[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
-            subComputes[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
+            var subSelectItem = Assert.Single(expanded.SelectAndExpand.SelectedItems);
+            ExpandedNavigationSelectItem subExpanded = Assert.IsType<ExpandedNavigationSelectItem>(subSelectItem);
+            var subCompute = Assert.Single(subExpanded.ComputeOption.ComputedItems);
+            Assert.Equal("SubNavProperty1AsString", subCompute.Alias);
+            subCompute.Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            Assert.True(subCompute.Expression.TypeReference.IsEquivalentTo(typeReference));
         }
         #endregion
 

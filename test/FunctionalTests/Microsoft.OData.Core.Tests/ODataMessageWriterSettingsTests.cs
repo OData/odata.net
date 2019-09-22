@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
@@ -28,7 +27,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void AnnotationFilterShouldBeNullByDefault()
         {
-            this.settings.ShouldIncludeAnnotation.Should().BeNull();
+            Assert.Null(this.settings.ShouldIncludeAnnotation);
         }
 
         [Fact]
@@ -37,14 +36,14 @@ namespace Microsoft.OData.Tests
             Func<string, bool> filter = name => true;
 
             this.settings.ShouldIncludeAnnotation = filter;
-            this.settings.ShouldIncludeAnnotation.Should().Be(filter);
+            Assert.Same(this.settings.ShouldIncludeAnnotation, filter);
         }
 
         [Fact]
         public void ShouldSkipAnnotationsByDefaultForV4()
         {
             this.settings.Version = ODataVersion.V4;
-            this.settings.ShouldSkipAnnotation("any.any").Should().BeTrue();
+            Assert.True(this.settings.ShouldSkipAnnotation("any.any"));
         }
 
         [Fact]
@@ -52,8 +51,8 @@ namespace Microsoft.OData.Tests
         {
             this.settings.Version = ODataVersion.V4;
             this.settings.ShouldIncludeAnnotation = name => name.StartsWith("ns1.");
-            this.settings.ShouldSkipAnnotation("any.any").Should().BeTrue();
-            this.settings.ShouldSkipAnnotation("ns1.any").Should().BeFalse();
+            Assert.True(this.settings.ShouldSkipAnnotation("any.any"));
+            Assert.False(this.settings.ShouldSkipAnnotation("ns1.any"));
         }
 
         #region metadata document uri tests
@@ -62,10 +61,10 @@ namespace Microsoft.OData.Tests
         {
             var settings = new ODataMessageWriterSettings();
             settings.SetServiceDocumentUri(ServiceDocumentUri);
-            settings.MetadataDocumentUri.Should().Equals(ServiceDocumentUri + "/$metadata");
+            Assert.Equal(settings.MetadataDocumentUri, new Uri(ServiceDocumentUri + "/$metadata"));
 
             settings.SetServiceDocumentUri(null);
-            settings.MetadataDocumentUri.Should().BeNull();
+            Assert.Null(settings.MetadataDocumentUri);
         }
 
         [Fact]
@@ -87,12 +86,12 @@ namespace Microsoft.OData.Tests
 
             setting.SetServiceDocumentUri(ServiceDocumentUri);
             setting.ODataUri = new ODataUri() { SelectAndExpand = result };
-            setting.MetadataDocumentUri.Should().Equals(ServiceDocumentUri + "/$metadata");
+            Assert.Null(setting.MetadataDocumentUri);
             string select, expand;
             foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
             {
                 setting.SelectExpandClause.GetSelectExpandPaths(version, out select, out expand);
-                select.Should().Be("*");
+                Assert.Equal("*", select);
             }
         }
         #endregion metadata document uri tests
@@ -101,85 +100,85 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BaseUriShouldBeNullByDefault()
         {
-            this.settings.BaseUri.Should().BeNull();
+            Assert.Null(this.settings.BaseUri);
         }
 
         [Fact]
         public void CheckCharactersShouldBeFalseByDefault()
         {
-            this.settings.EnableCharactersCheck.Should().BeFalse();
+            Assert.False(this.settings.EnableCharactersCheck);
         }
 
         [Fact]
         public void EnableMessageStreamDisposalShouldBeTrueByDefault()
         {
-            this.settings.EnableMessageStreamDisposal.Should().BeTrue();
+            Assert.True(this.settings.EnableMessageStreamDisposal);
         }
 
         [Fact]
         public void JsonPCallbackShouldBeNullByDefault()
         {
-            this.settings.JsonPCallback.Should().BeNull();
+            Assert.Null(this.settings.JsonPCallback);
         }
 
         [Fact]
         public void LibraryCompatibilityShouldBeLatestByDefault()
         {
-            this.settings.LibraryCompatibility.Should().Be(ODataLibraryCompatibility.Latest);
+            Assert.Equal(this.settings.LibraryCompatibility, ODataLibraryCompatibility.Latest);
         }
 
         [Fact]
         public void VersionShouldBeNullByDefault()
         {
-            this.settings.Version.Should().BeNull();
+            Assert.Null(this.settings.Version);
         }
 
         [Fact]
         public void MaxReceivedMessageSizeShouldBeSetByDefault()
         {
-            this.settings.MessageQuotas.MaxReceivedMessageSize.Should().Be(1024 * 1024);
+            Assert.Equal(this.settings.MessageQuotas.MaxReceivedMessageSize, 1024 * 1024);
         }
 
         [Fact]
         public void MaxPartsPerBatchShouldBeSetByDefault()
         {
-            this.settings.MessageQuotas.MaxPartsPerBatch.Should().Be(100);
+            Assert.Equal(this.settings.MessageQuotas.MaxPartsPerBatch, 100);
         }
 
         [Fact]
         public void MaxOperationsPerChangesetShouldBeSetByDefault()
         {
-            this.settings.MessageQuotas.MaxOperationsPerChangeset.Should().Be(1000);
+            Assert.Equal(this.settings.MessageQuotas.MaxOperationsPerChangeset, 1000);
         }
 
         [Fact]
         public void MaxNestingDepthShouldBeSetByDefault()
         {
-            this.settings.MessageQuotas.MaxNestingDepth.Should().Be(100);
+            Assert.Equal(this.settings.MessageQuotas.MaxNestingDepth, 100);
         }
 
         [Fact]
         public void ODataUriShouldBeNotNullByDefault()
         {
-            this.settings.ODataUri.Should().NotBeNull();
+            Assert.NotNull(this.settings.ODataUri);
         }
 
         [Fact]
         public void IsIndividualPropertyShouldBeFalseByDefault()
         {
-            this.settings.IsIndividualProperty.Should().Be(false);
+            Assert.False(this.settings.IsIndividualProperty);
         }
 
         [Fact]
         public void SelectExpandClauseBeNullByDefault()
         {
-            this.settings.SelectExpandClause.Should().Be(null);
+            Assert.Null(this.settings.SelectExpandClause);
         }
 
         [Fact]
         public void AllowDuplicatePropertyNamesShouldBeFalseByDefault()
         {
-            this.settings.ThrowOnDuplicatePropertyNames.Should().BeTrue();
+            Assert.True(this.settings.ThrowOnDuplicatePropertyNames);
         }
 
         #endregion Default settings tests
@@ -190,28 +189,28 @@ namespace Microsoft.OData.Tests
         {
             var baseUri = new Uri("http://otherservice.svc");
             this.settings.BaseUri = baseUri;
-            this.settings.Clone().BaseUri.Should().BeSameAs(baseUri);
+            Assert.Same(this.settings.Clone().BaseUri, baseUri);
         }
 
         [Fact]
         public void CopyConstructorShouldCopyCheckCharacters()
         {
             this.settings.EnableCharactersCheck = true;
-            this.settings.Clone().EnableCharactersCheck.Should().BeTrue();
+            Assert.True(this.settings.Clone().EnableCharactersCheck);
         }
 
         [Fact]
         public void CopyConstructorShouldCopyEnableMessageStreamDisposal()
         {
             this.settings.EnableMessageStreamDisposal = false;
-            this.settings.Clone().EnableMessageStreamDisposal.Should().BeFalse();
+            Assert.False(this.settings.Clone().EnableMessageStreamDisposal);
         }
 
         [Fact]
         public void CopyConstructorShouldCopyJsonPCallback()
         {
             this.settings.JsonPCallback = "jsonp";
-            this.settings.Clone().JsonPCallback.Should().Be("jsonp");
+            Assert.Equal(this.settings.Clone().JsonPCallback, "jsonp");
         }
 
         [Fact]
@@ -229,24 +228,24 @@ namespace Microsoft.OData.Tests
 
             var copiedQuotas = this.settings.Clone().MessageQuotas;
 
-            copiedQuotas.MaxNestingDepth.Should().Be(originalQuotas.MaxNestingDepth);
-            copiedQuotas.MaxOperationsPerChangeset.Should().Be(originalQuotas.MaxOperationsPerChangeset);
-            copiedQuotas.MaxPartsPerBatch.Should().Be(originalQuotas.MaxPartsPerBatch);
-            copiedQuotas.MaxReceivedMessageSize.Should().Be(originalQuotas.MaxReceivedMessageSize);
+            Assert.Equal(copiedQuotas.MaxNestingDepth, originalQuotas.MaxNestingDepth);
+            Assert.Equal(copiedQuotas.MaxOperationsPerChangeset, originalQuotas.MaxOperationsPerChangeset);
+            Assert.Equal(copiedQuotas.MaxPartsPerBatch, originalQuotas.MaxPartsPerBatch);
+            Assert.Equal(copiedQuotas.MaxReceivedMessageSize, originalQuotas.MaxReceivedMessageSize);
         }
 
         [Fact]
         public void CopyConstructorShouldCopyVersion()
         {
             this.settings.Version = ODataVersion.V4;
-            this.settings.Clone().Version.Should().Be(ODataVersion.V4);
+            Assert.Equal(this.settings.Clone().Version, ODataVersion.V4);
         }
 
         [Fact]
         public void CopyConstructorShouldCopyLibraryCompatibility()
         {
             this.settings.LibraryCompatibility = ODataLibraryCompatibility.Version6;
-            this.settings.Clone().LibraryCompatibility.Should().Be(ODataLibraryCompatibility.Version6);
+            Assert.Equal(this.settings.Clone().LibraryCompatibility, ODataLibraryCompatibility.Version6);
         }
 
         [Fact]
@@ -255,21 +254,21 @@ namespace Microsoft.OData.Tests
             Func<string, bool> filter = name => true;
 
             this.settings.ShouldIncludeAnnotation = filter;
-            this.settings.Clone().ShouldIncludeAnnotation.Should().Be(filter);
+            Assert.Same(this.settings.Clone().ShouldIncludeAnnotation, filter);
         }
 
         [Fact]
         public void CopyConstructorShouldCopyMetadataDocumentUri()
         {
             this.settings.SetServiceDocumentUri(new Uri("http://example.com"));
-            this.settings.Clone().MetadataDocumentUri.Should().Be(new Uri("http://example.com/$metadata"));
+            Assert.Equal(this.settings.Clone().MetadataDocumentUri, new Uri("http://example.com/$metadata"));
         }
 
         [Fact]
         public void CopyConstructorShouldCopyFormat()
         {
             this.settings.SetContentType(ODataFormat.Metadata);
-            this.settings.Clone().Format.Should().Be(ODataFormat.Metadata);
+            Assert.Equal(this.settings.Clone().Format, ODataFormat.Metadata);
         }
 
         [Fact]
@@ -277,8 +276,8 @@ namespace Microsoft.OData.Tests
         {
             this.settings.SetContentType("application/json,application/atom+xml", "iso-8859-5, unicode-1-1;q=0.8");
             var copiedSettings = this.settings.Clone();
-            copiedSettings.AcceptableCharsets.Should().Be("iso-8859-5, unicode-1-1;q=0.8");
-            copiedSettings.AcceptableMediaTypes.Should().Be("application/json,application/atom+xml");
+            Assert.Equal(copiedSettings.AcceptableCharsets, "iso-8859-5, unicode-1-1;q=0.8");
+            Assert.Equal(copiedSettings.AcceptableMediaTypes, "application/json,application/atom+xml");
         }
 
         [Fact]
@@ -286,7 +285,7 @@ namespace Microsoft.OData.Tests
         {
             this.settings.SetServiceDocumentUri(new Uri("http://test.org"));
             var newSetting = this.settings.Clone();
-            newSetting.MetadataDocumentUri.Should().Be(new Uri("http://test.org/$metadata"));
+            Assert.Equal(newSetting.MetadataDocumentUri, new Uri("http://test.org/$metadata"));
         }
 
         [Fact]
@@ -294,7 +293,7 @@ namespace Microsoft.OData.Tests
         {
             this.settings.MetadataSelector = new TestMetadataSelector() { PropertyToOmit = "TestProperty" };
             var newSetting = this.settings.Clone();
-            (newSetting.MetadataSelector as TestMetadataSelector).PropertyToOmit.Should().Be("TestProperty");
+            Assert.Equal((newSetting.MetadataSelector as TestMetadataSelector).PropertyToOmit, "TestProperty");
         }
 
         [Fact]
@@ -321,15 +320,15 @@ namespace Microsoft.OData.Tests
             };
 
             var newSetting = this.settings.Clone();
-            newSetting.MetadataDocumentUri.Should().Be(new Uri("http://test.org/$metadata"));
-            newSetting.ODataUri.Path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses).Should().Be("Cities(1)/Name");
-            newSetting.IsIndividualProperty.Should().BeTrue();
+            Assert.Equal(newSetting.MetadataDocumentUri, new Uri("http://test.org/$metadata"));
+            Assert.Equal(newSetting.ODataUri.Path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses), "Cities(1)/Name");
+            Assert.True(newSetting.IsIndividualProperty);
 
             string select, expand;
             foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
             {
                 newSetting.SelectExpandClause.GetSelectExpandPaths(version, out select, out expand);
-                select.Should().Be("*");
+                Assert.Equal(select, "*");
             }
         }
         #endregion Copy constructor tests
@@ -361,15 +360,15 @@ namespace Microsoft.OData.Tests
                 LibraryCompatibility = library,
             };
 
-            this.settings.ThrowOnDuplicatePropertyNames.Should().BeFalse();
-            this.settings.BaseUri.Should().BeSameAs(baseUri);
-            this.settings.EnableCharactersCheck.Should().BeTrue();
-            this.settings.EnableMessageStreamDisposal.Should().BeFalse();
-            this.settings.MessageQuotas.MaxPartsPerBatch.Should().Be(maxPartsPerBatch);
-            this.settings.MessageQuotas.MaxOperationsPerChangeset.Should().Be(maxOperationsPerChangeset);
-            this.settings.MessageQuotas.MaxNestingDepth.Should().Be(maxNestingDepth);
-            this.settings.Version.Should().Be(version);
-            this.settings.LibraryCompatibility.Should().Be(library);
+            Assert.False(this.settings.ThrowOnDuplicatePropertyNames);
+            Assert.Same(this.settings.BaseUri, baseUri);
+            Assert.True(this.settings.EnableCharactersCheck);
+            Assert.False(this.settings.EnableMessageStreamDisposal);
+            Assert.Equal(this.settings.MessageQuotas.MaxPartsPerBatch, maxPartsPerBatch);
+            Assert.Equal(this.settings.MessageQuotas.MaxOperationsPerChangeset, maxOperationsPerChangeset);
+            Assert.Equal(this.settings.MessageQuotas.MaxNestingDepth, maxNestingDepth);
+            Assert.Equal(this.settings.Version, version);
+            Assert.Equal(this.settings.LibraryCompatibility, library);
         }
 
         [Fact]
@@ -381,13 +380,13 @@ namespace Microsoft.OData.Tests
             };
 
             var t = setting.BaseUri.ToString();
-            setting.BaseUri.ToString().Should().BeEquivalentTo("http://example.org/odata.svc/");
+            Assert.Equal(setting.BaseUri.ToString(), "http://example.org/odata.svc/");
 
             setting = new ODataMessageWriterSettings()
             {
                 BaseUri = new Uri("http://example.org/odata.svc/"),
             };
-            setting.BaseUri.ToString().Should().BeEquivalentTo("http://example.org/odata.svc/");
+            Assert.Equal(setting.BaseUri.ToString(), "http://example.org/odata.svc/");
         }
         #endregion Property getters and setters tests
 
@@ -397,21 +396,24 @@ namespace Microsoft.OData.Tests
         public void MaxPartsPerBatchShouldThrowIfSetToNegativeNumber()
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxPartsPerBatch = -1;
-            testSubject.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.Message.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1)));
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(testSubject);
+            Assert.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1), exception.Message);
         }
 
         [Fact]
         public void MaxOperationsPerChangesetShouldThrowIfSetToNegativeNumber()
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxOperationsPerChangeset = -1;
-            testSubject.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.Message.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1)));
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(testSubject);
+            Assert.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1), exception.Message);
         }
 
         [Fact]
         public void MaxNestingDepthShouldThrowIfSetToNonPositiveNumber()
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxNestingDepth = 0;
-            testSubject.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.Message.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerPositive(0)));
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(testSubject);
+            Assert.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerPositive(0), exception.Message);
         }
         #endregion Error tests
 
@@ -421,48 +423,48 @@ namespace Microsoft.OData.Tests
         {
             settings.SetContentType("application/xml", null);
             ODataMessageWriterSettings copyOfSettings = settings.Clone();
-            settings.Format.Should().BeNull();
-            copyOfSettings.Format.Should().BeNull();
-            settings.AcceptableMediaTypes.Should().Be("application/xml");
-            copyOfSettings.AcceptableMediaTypes.Should().Be("application/xml");
-            settings.AcceptableCharsets.Should().BeNull();
-            copyOfSettings.AcceptableCharsets.Should().BeNull();
+            Assert.Null(settings.Format);
+            Assert.Null(copyOfSettings.Format);
+            Assert.Equal(settings.AcceptableMediaTypes, "application/xml");
+            Assert.Equal(copyOfSettings.AcceptableMediaTypes, "application/xml");
+            Assert.Null(settings.AcceptableCharsets);
+            Assert.Null(copyOfSettings.AcceptableCharsets);
 
             settings.SetContentType("application/json", "utf8");
             copyOfSettings = settings.Clone();
-            settings.Format.Should().BeNull();
-            copyOfSettings.Format.Should().BeNull();
-            settings.AcceptableMediaTypes.Should().Be("application/json");
-            copyOfSettings.AcceptableMediaTypes.Should().Be("application/json");
-            settings.AcceptableCharsets.Should().Be("utf8");
-            copyOfSettings.AcceptableCharsets.Should().Be("utf8");
+            Assert.Null(settings.Format);
+            Assert.Null(copyOfSettings.Format);
+            Assert.Equal(settings.AcceptableMediaTypes, "application/json");
+            Assert.Equal(copyOfSettings.AcceptableMediaTypes, "application/json");
+            Assert.Equal(settings.AcceptableCharsets, "utf8");
+            Assert.Equal(copyOfSettings.AcceptableCharsets, "utf8");
 
             settings.SetContentType(null, "utf8");
             copyOfSettings = settings.Clone();
-            settings.Format.Should().BeNull();
-            copyOfSettings.Format.Should().BeNull();
-            settings.AcceptableMediaTypes.Should().BeNull();
-            copyOfSettings.AcceptableMediaTypes.Should().BeNull();
-            settings.AcceptableCharsets.Should().Be("utf8");
-            copyOfSettings.AcceptableCharsets.Should().Be("utf8");
+            Assert.Null(settings.Format);
+            Assert.Null(copyOfSettings.Format);
+            Assert.Null(settings.AcceptableMediaTypes);
+            Assert.Null(copyOfSettings.AcceptableMediaTypes);
+            Assert.Equal(settings.AcceptableCharsets, "utf8");
+            Assert.Equal(copyOfSettings.AcceptableCharsets, "utf8");
 
             settings.SetContentType(string.Empty, "utf8");
             copyOfSettings = settings.Clone();
-            settings.Format.Should().BeNull();
-            copyOfSettings.Format.Should().BeNull();
-            settings.AcceptableMediaTypes.Should().BeEmpty();
-            copyOfSettings.AcceptableMediaTypes.Should().BeEmpty();
-            settings.AcceptableCharsets.Should().Be("utf8");
-            copyOfSettings.AcceptableCharsets.Should().Be("utf8");
+            Assert.Null(settings.Format);
+            Assert.Null(copyOfSettings.Format);
+            Assert.Empty(settings.AcceptableMediaTypes);
+            Assert.Empty(copyOfSettings.AcceptableMediaTypes);
+            Assert.Equal(settings.AcceptableCharsets, "utf8");
+            Assert.Equal(copyOfSettings.AcceptableCharsets, "utf8");
 
             settings.SetContentType("json", "utf8");
             copyOfSettings = settings.Clone();
-            settings.Format.Should().BeNull();
-            copyOfSettings.Format.Should().BeNull();
-            settings.AcceptableMediaTypes.Should().Be("application/json");
-            copyOfSettings.AcceptableMediaTypes.Should().Be("application/json");
-            settings.AcceptableCharsets.Should().Be("utf8");
-            copyOfSettings.AcceptableCharsets.Should().Be("utf8");
+            Assert.Null(settings.Format);
+            Assert.Null(copyOfSettings.Format);
+            Assert.Equal(settings.AcceptableMediaTypes, "application/json");
+            Assert.Equal(copyOfSettings.AcceptableMediaTypes, "application/json");
+            Assert.Equal(settings.AcceptableCharsets, "utf8");
+            Assert.Equal(copyOfSettings.AcceptableCharsets, "utf8");
         }
         #endregion Set content type tests
     }

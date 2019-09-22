@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
@@ -25,7 +24,7 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings { JsonPCallback = "functionName" };
             Action constructorCall = () => new ODataMessageWriter(new DummyRequestMessage(), settings);
-            constructorCall.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
+            constructorCall.Throws<ODataException>(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
         }
 
         [Fact]
@@ -34,7 +33,7 @@ namespace Microsoft.OData.Tests
             var settings = new ODataMessageWriterSettings();
             settings.SetContentType(ODataFormat.Json);
             var writer = new ODataMessageWriter(new DummyRequestMessage(), settings, new EdmModel());
-            writer.CreateODataCollectionWriter(null).Should().BeOfType<ODataJsonLightCollectionWriter>();
+            Assert.IsType<ODataJsonLightCollectionWriter>(writer.CreateODataCollectionWriter(null));
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace Microsoft.OData.Tests
             var writer = new ODataMessageWriter(new DummyRequestMessage());
             var entityElementType = new EdmEntityTypeReference(new EdmEntityType("Fake", "Fake"), true);
             Action createWriterWithEntityCollectionType = () => writer.CreateODataCollectionWriter(entityElementType);
-            createWriterWithEntityCollectionType.ShouldThrow<ODataException>().WithMessage(Strings.ODataMessageWriter_NonCollectionType("Fake.Fake"));
+            createWriterWithEntityCollectionType.Throws<ODataException>(Strings.ODataMessageWriter_NonCollectionType("Fake.Fake"));
         }
 
         [Fact]
@@ -68,7 +67,7 @@ namespace Microsoft.OData.Tests
         public void CreateMessageWriterShouldNotSetAnnotationFilterWhenODataAnnotationsIsNotSetOnPreferenceAppliedHeader()
         {
             ODataMessageWriter writer = new ODataMessageWriter((IODataResponseMessage)new InMemoryMessage(), new ODataMessageWriterSettings());
-            writer.Settings.ShouldIncludeAnnotation.Should().BeNull();
+            Assert.Null(writer.Settings.ShouldIncludeAnnotation);
         }
 
         [Fact]
@@ -77,7 +76,7 @@ namespace Microsoft.OData.Tests
             IODataResponseMessage responseMessage = new InMemoryMessage();
             responseMessage.PreferenceAppliedHeader().AnnotationFilter = "*";
             ODataMessageWriter writer = new ODataMessageWriter(responseMessage, new ODataMessageWriterSettings());
-            writer.Settings.ShouldIncludeAnnotation.Should().NotBeNull();
+            Assert.NotNull(writer.Settings.ShouldIncludeAnnotation);
         }
 
         [Fact]
@@ -95,11 +94,11 @@ namespace Microsoft.OData.Tests
                 Name = "Id",
                 Value = (UInt32)123
             });
-            write.ShouldNotThrow();
+            write.DoesNotThrow();
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
-            output.Should().Be("{\"@odata.context\":\"http://host/service/$metadata#MyNS.UInt32\",\"value\":123}");
+            Assert.Equal(output, "{\"@odata.context\":\"http://host/service/$metadata#MyNS.UInt32\",\"value\":123}");
         }
 
         [Theory]
@@ -128,11 +127,11 @@ namespace Microsoft.OData.Tests
                 Name = "Name",
                 Value = "ия"
             });
-            write.ShouldNotThrow();
+            write.DoesNotThrow();
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
-            output.Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"\\u0438\\u044f\"}");
+            Assert.Equal(output, "{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"\\u0438\\u044f\"}");
         }
 
         [Fact]
@@ -157,11 +156,11 @@ namespace Microsoft.OData.Tests
                 Name = "Name",
                 Value = "ия"
             });
-            write.ShouldNotThrow();
+            write.DoesNotThrow();
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
-            output.Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"ия\"}");
+            Assert.Equal(output, "{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"ия\"}");
         }
 
         [Fact]
@@ -172,7 +171,7 @@ namespace Microsoft.OData.Tests
             model.GetUInt32("MyNS", false);
             var writer = new ODataMessageWriter(new DummyRequestMessage(), settings, model);
             Action write = () => writer.WriteValue((UInt32)123);
-            write.ShouldNotThrow();
+            write.DoesNotThrow();
         }
 
         [Fact]
@@ -183,7 +182,7 @@ namespace Microsoft.OData.Tests
             model.GetUInt32("MyNS", false);
             var writer = new ODataMessageWriter(new DummyRequestMessage(), settings, model);
             Action write = () => writer.WriteValue((UInt16)123);
-            write.ShouldThrow<ODataException>().WithMessage("The value of type 'System.UInt16' could not be converted to a raw string.");
+            write.Throws<ODataException>("The value of type 'System.UInt16' could not be converted to a raw string.");
         }
     }
 }

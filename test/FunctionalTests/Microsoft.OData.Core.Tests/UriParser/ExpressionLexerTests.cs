@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -36,65 +35,65 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnTrueIfNumericToken()
         {
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.DecimalLiteral).Should().BeTrue();
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.IntegerLiteral).Should().BeTrue();
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.DoubleLiteral).Should().BeTrue();
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.Int64Literal).Should().BeTrue();
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.SingleLiteral).Should().BeTrue();
+            Assert.True(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.DecimalLiteral));
+            Assert.True(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.IntegerLiteral));
+            Assert.True(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.DoubleLiteral));
+            Assert.True(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.Int64Literal));
+            Assert.True(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.SingleLiteral));
         }
 
         [Fact]
         public void ShouldReturnFalseIfNotNumericToken()
         {
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.Colon).Should().BeFalse();
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.DateTimeLiteral).Should().BeFalse();
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.GeographyLiteral).Should().BeFalse();
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.Identifier).Should().BeFalse();
-            ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.Unknown).Should().BeFalse();
+            Assert.False(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.Colon));
+            Assert.False(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.DateTimeLiteral));
+            Assert.False(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.GeographyLiteral));
+            Assert.False(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.Identifier));
+            Assert.False(ExpressionLexerUtils.IsNumeric(ExpressionTokenKind.Unknown));
         }
 
         // internal static Boolean IsLiteralType(ExpressionTokenKind tokenKind)
         [Fact]
         public void ShouldReturnTrueIfLiteralToken()
         {
-            ExpressionTokenKind.BooleanLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.DateTimeLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.DecimalLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.DoubleLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.GuidLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.Int64Literal.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.IntegerLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.NullLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.SingleLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.StringLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.TimeOfDayLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.DateLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.DateTimeOffsetLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.DurationLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.GeographyLiteral.IsLiteralType().Should().BeTrue();
-            ExpressionTokenKind.GeometryLiteral.IsLiteralType().Should().BeTrue();
+            Assert.True(ExpressionTokenKind.BooleanLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.DateTimeLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.DecimalLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.DoubleLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.GuidLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.Int64Literal.IsLiteralType());
+            Assert.True(ExpressionTokenKind.IntegerLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.NullLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.SingleLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.StringLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.TimeOfDayLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.DateLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.DateTimeOffsetLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.DurationLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.GeographyLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.GeometryLiteral.IsLiteralType());
         }
 
         [Fact]
         public void ShouldReturnFalseIfNotLiteralToken()
         {
-            ExpressionTokenKind.Colon.IsLiteralType().Should().BeFalse();
-            ExpressionTokenKind.Slash.IsLiteralType().Should().BeFalse();
-            ExpressionTokenKind.OpenParen.IsLiteralType().Should().BeFalse();
-            ExpressionTokenKind.Identifier.IsLiteralType().Should().BeFalse();
-            ExpressionTokenKind.Unknown.IsLiteralType().Should().BeFalse();
+            Assert.False(ExpressionTokenKind.Colon.IsLiteralType());
+            Assert.False(ExpressionTokenKind.Slash.IsLiteralType());
+            Assert.False(ExpressionTokenKind.OpenParen.IsLiteralType());
+            Assert.False(ExpressionTokenKind.Identifier.IsLiteralType());
+            Assert.False(ExpressionTokenKind.Unknown.IsLiteralType());
         }
 
         [Fact]
         public void CommaTokenIsKeyValueShouldReturnFalse()
         {
-            CommaToken.IsKeyValueToken.Should().BeFalse();
+            Assert.False(CommaToken.IsKeyValueToken);
         }
 
         [Fact]
         public void CommaTokenIsFunctionParameterTokenShouldReturnFalse()
         {
-            CommaToken.IsFunctionParameterToken.Should().BeFalse();
+            Assert.False(CommaToken.IsFunctionParameterToken);
         }
 
         // internal static bool IsInfinityOrNaNDouble(string tokenText)
@@ -102,35 +101,35 @@ namespace Microsoft.OData.Tests.UriParser
         public void IsInfinityOrNaNDoubleShouldReturnTrueForINF()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNaNDouble("INF");
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
         public void IsInfinityOrNaNDoubleShouldReturnTrueForNaN()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNaNDouble("NaN");
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
         public void IsInfinityOrNaNDoubleShouldReturnFalseForInz()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNaNDouble("Inz");
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
         public void IsInfinityOrNaNDoubleShouldReturnFalseForNaB()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNaNDouble("NaB");
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
         public void IsInfinityOrNaNDoubleShouldReturnFalseForBlarg()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNaNDouble("Blarg");
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         // internal static bool IsInfinityLiteralDouble(string text)
@@ -138,51 +137,50 @@ namespace Microsoft.OData.Tests.UriParser
         public void IsInfinityLiteralDoubleShouldReturnTrueForINF()
         {
             bool result = ExpressionLexerUtils.IsInfinityLiteralDouble("INF");
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
         public void IsInfinityLiteralDoubleShouldReturnTrueForINz()
         {
             bool result = ExpressionLexerUtils.IsInfinityLiteralDouble("INz");
-            result.Should().BeFalse();
+            Assert.False(result);
         }
-
 
         // internal static bool IsInfinityOrNanSingle(string tokenText)
         [Fact]
         public void IsInfinityOrNanSingleShouldReturnTrueForINFf()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNanSingle("INFf");
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
         public void IsInfinityOrNaNSingleShouldReturnTrueForNaNF()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNanSingle("NaNF");
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
         public void IsInfinityOrNaNSingleShouldReturnFalseForInzf()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNanSingle("Inzf");
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
         public void IsInfinityOrNaNSingleShouldReturnFalseForNaBf()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNanSingle("NaBf");
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         [Fact]
         public void IsInfinityOrNaNSingleShouldReturnFalseForBlarg()
         {
             bool result = ExpressionLexerUtils.IsInfinityOrNanSingle("Blarg");
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         // internal static bool IsInfinityLiteralSingle(string text)
@@ -190,14 +188,14 @@ namespace Microsoft.OData.Tests.UriParser
         public void IsInfinityLiteralSingleShouldReturnTrueForINF()
         {
             bool result = ExpressionLexerUtils.IsInfinityLiteralSingle("INFf");
-            result.Should().BeTrue();
+            Assert.True(result);
         }
 
         [Fact]
         public void IsInfinityLiteralSingleShouldReturnTrueForINz()
         {
             bool result = ExpressionLexerUtils.IsInfinityLiteralSingle("INzf");
-            result.Should().BeFalse();
+            Assert.False(result);
         }
 
         // internal bool TryPeekNextToken(out ExpressionToken resultToken, out Exception error)
@@ -208,10 +206,10 @@ namespace Microsoft.OData.Tests.UriParser
             ExpressionToken resultToken;
             Exception error = null;
             bool result = lexer.TryPeekNextToken(out resultToken, out error);
-            lexer.CurrentToken.Should().NotBe(resultToken);
-            result.Should().BeTrue();
-            resultToken.Kind.Should().Be(ExpressionTokenKind.NullLiteral);
-            error.Should().BeNull();
+            Assert.NotEqual(resultToken, lexer.CurrentToken);
+            Assert.True(result);
+            Assert.Equal(ExpressionTokenKind.NullLiteral, resultToken.Kind);
+            Assert.Null(error);
         }
 
         [Fact]
@@ -221,9 +219,9 @@ namespace Microsoft.OData.Tests.UriParser
             ExpressionToken resultToken;
             Exception error = null;
             bool result = lexer.TryPeekNextToken(out resultToken, out error);
-            result.Should().BeFalse();
-            error.Should().NotBeNull();
-            error.Message.Should().Be(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"));
+            Assert.False(result);
+            Assert.NotNull(error);
+            Assert.Equal(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"), error.Message);
         }
 
         // internal ExpressionToken NextToken()
@@ -233,9 +231,9 @@ namespace Microsoft.OData.Tests.UriParser
             ExpressionLexer lexer = new ExpressionLexer("5", false, false);
 
             ExpressionToken result = lexer.NextToken();
-            result.Kind.Should().Be(ExpressionTokenKind.IntegerLiteral);
-            lexer.CurrentToken.Should().Be(result);
-            result.Text.Should().Be("5");
+            Assert.Equal(ExpressionTokenKind.IntegerLiteral, result.Kind);
+            Assert.Equal(result, lexer.CurrentToken);
+            Assert.Equal("5", result.Text);
         }
 
         [Fact]
@@ -243,7 +241,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("#$*@#", false, false);
             Action nextToken = () => lexer.NextToken();
-            nextToken.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"));
+            nextToken.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"));
         }
 
         // internal object ReadLiteralToken()
@@ -252,7 +250,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("5", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<int>().And.Be(5);
+            int intResult = Assert.IsType<int>(result);
+            Assert.Equal(5, intResult);
         }
 
         [Fact]
@@ -260,9 +259,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("2014-09-19T12:13:14+00:00", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should()
-                .BeOfType<DateTimeOffset>()
-                .And.Be(new DateTimeOffset(2014, 9, 19, 12, 13, 14, new TimeSpan(0, 0, 0)));
+            var dto = Assert.IsType<DateTimeOffset>(result);
+            Assert.Equal(new DateTimeOffset(2014, 9, 19, 12, 13, 14, new TimeSpan(0, 0, 0)), dto);
         }
 
         [Fact]
@@ -270,7 +268,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("2014-09-19", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<Date>().And.Be(new Date(2014, 9, 19));
+            var date = Assert.IsType<Date>(result);
+            Assert.Equal(new Date(2014, 9, 19), date);
         }
 
         [Fact]
@@ -278,7 +277,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("12:30:03.900", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<TimeOfDay>().And.Be((new TimeOfDay(12, 30, 3, 900)));
+            var timeOfDay = Assert.IsType<TimeOfDay>(result);
+            Assert.Equal(new TimeOfDay(12, 30, 3, 900), timeOfDay);
         }
 
         [Fact]
@@ -286,7 +286,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("12:30:03", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<TimeOfDay>().And.Be((new TimeOfDay(12, 30, 3, 0)));
+            var timeOfDay = Assert.IsType<TimeOfDay>(result);
+            Assert.Equal(new TimeOfDay(12, 30, 3, 0), timeOfDay);
         }
 
         [Fact]
@@ -294,7 +295,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer(int.MaxValue + "000", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<long>().And.Be(((long)int.MaxValue) * 1000);
+            var longValue = Assert.IsType<long>(result);
+            Assert.Equal(((long)int.MaxValue) * 1000, longValue);
         }
 
         [Fact]
@@ -303,7 +305,8 @@ namespace Microsoft.OData.Tests.UriParser
             // significant figures: float is 7, double is 15/16, decimal is 28
             ExpressionLexer lexer = new ExpressionLexer("123.001", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<float>().And.Be(123.001f);
+            var floatValue = Assert.IsType<float>(result);
+            Assert.Equal(123.001f, floatValue);
         }
 
         [Fact]
@@ -312,7 +315,8 @@ namespace Microsoft.OData.Tests.UriParser
             // significant figures: float is 7, double is 15/16, decimal is 28
             ExpressionLexer lexer = new ExpressionLexer("1234567.001", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<double>().And.Be(1234567.001d);
+            var doubleValue = Assert.IsType<double>(result);
+            Assert.Equal(1234567.001d, doubleValue);
         }
 
         [Fact]
@@ -320,7 +324,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("3258.678765765489753678965390", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<decimal>().And.Be(3258.678765765489753678965390m);
+            var decimalValue = Assert.IsType<decimal>(result);
+            Assert.Equal(3258.678765765489753678965390m, decimalValue);
         }
 
         [Fact]
@@ -328,7 +333,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("potato", false, false);
             Action read = () => lexer.ReadLiteralToken();
-            read.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_ExpectedLiteralToken("potato"));
+            read.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_ExpectedLiteralToken("potato"));
         }
 
         // internal string ReadDottedIdentifier()
@@ -337,7 +342,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("misomethingk", true, false);
             string result = lexer.ReadDottedIdentifier(false);
-            result.Should().Be("misomethingk");
+            Assert.Equal("misomethingk", result);
         }
 
         [Fact]
@@ -345,7 +350,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("m.i.something.k", true, false);
             string result = lexer.ReadDottedIdentifier(false);
-            result.Should().Be("m.i.something.k");
+            Assert.Equal("m.i.something.k", result);
         }
 
         [Fact]
@@ -353,7 +358,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("    m.i.something.k", true, false);
             string result = lexer.ReadDottedIdentifier(false);
-            result.Should().Be("m.i.something.k");
+            Assert.Equal("m.i.something.k", result);
         }
 
         [Fact]
@@ -361,7 +366,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("2.43", false, false);
             Action read = () => lexer.ReadDottedIdentifier(false);
-            read.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_SyntaxError("0", "2.43"));
+            read.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("0", "2.43"));
         }
 
         [Fact]
@@ -369,7 +374,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("m.*", true, false);
             string result = lexer.ReadDottedIdentifier(true);
-            result.Should().Be("m.*");
+            Assert.Equal("m.*", result);
         }
 
         [Fact]
@@ -377,7 +382,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("m.*", true, false);
             Action read = () => lexer.ReadDottedIdentifier(false);
-            read.ShouldThrow<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("2", "m.*"));
+            read.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("3", "m.*"));
         }
 
         [Fact]
@@ -385,7 +390,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("m.*.blah", true, false);
             Action read = () => lexer.ReadDottedIdentifier(true);
-            read.ShouldThrow<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("2", "m.*.blah"));
+            read.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("3", "m.*.blah"));
         }
 
         // internal ExpressionToken PeekNextToken()
@@ -394,8 +399,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("null", false, false);
             ExpressionToken result = lexer.PeekNextToken();
-            lexer.CurrentToken.Should().NotBe(result);
-            result.Kind.Should().Be(ExpressionTokenKind.NullLiteral);
+            Assert.NotEqual(result, lexer.CurrentToken);
+            Assert.Equal(ExpressionTokenKind.NullLiteral, result.Kind);
         }
 
         [Fact]
@@ -403,7 +408,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("#$*@#", false, false);
             Action peek = () => lexer.PeekNextToken();
-            peek.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"));
+            peek.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"));
         }
 
         // internal void ValidateToken(ExpressionTokenKind t)
@@ -412,7 +417,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("null", true, false);
             Action validate = () => lexer.ValidateToken(ExpressionTokenKind.NullLiteral);
-            validate.ShouldNotThrow();
+            validate.DoesNotThrow();
         }
 
         [Fact]
@@ -420,7 +425,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("null", true, false);
             Action validate = () => lexer.ValidateToken(ExpressionTokenKind.Question);
-            validate.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_SyntaxError(4, "null"));
+            validate.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(4, "null"));
         }
 
         [Fact]
@@ -681,21 +686,21 @@ namespace Microsoft.OData.Tests.UriParser
         public void ExpressionLexerShouldFailByDefaultForAtSymbol()
         {
             Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimiter: false);
-            lex.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
+            lex.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
         }
 
         [Fact]
         public void ExpressionLexerShouldFailAtSymbolIsLastCharacter()
         {
             Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-            lex.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
+            lex.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
         }
 
         [Fact]
         public void ExpressionLexerShouldExpectIdentifierStartAfterAtSymbol()
         {
             Action lex = () => new ExpressionLexer("@1", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-            lex.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_InvalidCharacter("1", 1, "@1"));
+            lex.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("1", 1, "@1"));
         }
 
         [Fact]
@@ -859,9 +864,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc;def");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("abc");
-            lexer.Position.Should().Be(3);
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.SemiColon);
+            Assert.Equal("abc", result);
+            Assert.Equal(3, lexer.Position);
+            Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -869,9 +874,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc)def");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("abc");
-            lexer.Position.Should().Be(3);
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.CloseParen);
+            Assert.Equal("abc", result);
+            Assert.Equal(3, lexer.Position);
+            Assert.Equal(ExpressionTokenKind.CloseParen, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -879,8 +884,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("entirestring");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("entirestring");
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.End);
+            Assert.Equal("entirestring", result);
+            Assert.Equal(ExpressionTokenKind.End, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -888,8 +893,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("foo;");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("foo");
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.SemiColon);
+            Assert.Equal("foo", result);
+            Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -897,9 +902,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc()def;");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("abc()def");
-            lexer.Position.Should().Be(8);
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.SemiColon);
+            Assert.Equal("abc()def", result);
+            Assert.Equal(8, lexer.Position);
+            Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -907,9 +912,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc(())def;");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("abc(())def");
-            lexer.Position.Should().Be(10);
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.SemiColon);
+            Assert.Equal("abc(())def", result);
+            Assert.Equal(10, lexer.Position);
+            Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -917,9 +922,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc(()))");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("abc(())");
-            lexer.Position.Should().Be(7);
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.CloseParen);
+            Assert.Equal("abc(())", result);
+            Assert.Equal(7, lexer.Position);
+            Assert.Equal(ExpressionTokenKind.CloseParen, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -927,9 +932,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc(;;;)def;next");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("abc(;;;)def");
-            lexer.Position.Should().Be(11);
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.SemiColon);
+            Assert.Equal("abc(;;;)def", result);
+            Assert.Equal(11, lexer.Position);
+            Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -937,8 +942,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("prop(inner(a=b;c=d(e=deep)))");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("prop(inner(a=b;c=d(e=deep)))");
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.End);
+            Assert.Equal("prop(inner(a=b;c=d(e=deep)))", result);
+            Assert.Equal(ExpressionTokenKind.End, lexer.CurrentToken.Kind);
         }
 
         [Fact]
@@ -946,7 +951,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc(q(w(e)r)");
             Action advance = () => lexer.AdvanceThroughExpandOption();
-            advance.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(advance);
         }
 
         [Fact]
@@ -954,9 +959,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest("'str with ; and () in it' eq StringProperty)");
             string result = lexer.AdvanceThroughExpandOption();
-            result.Should().Be("'str with ; and () in it' eq StringProperty");
-            lexer.Position.Should().Be(43);
-            lexer.CurrentToken.Text.Should().StartWith(")");
+            Assert.Equal("'str with ; and () in it' eq StringProperty", result);
+            Assert.Equal(43, lexer.Position);
+            Assert.StartsWith(")", lexer.CurrentToken.Text);
         }
 
         // TODO: more unit tests for this method
@@ -965,10 +970,10 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("(expression)next", moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: false);
             string result = lexer.AdvanceThroughBalancedParentheticalExpression();
-            result.Should().Be("(expression)");
+            Assert.Equal("(expression)", result);
             // TODO: the state of the lexer is weird right now, see note in AdvanceThroughBalancedParentheticalExpression.
 
-            lexer.NextToken().Text.Should().Be("next");
+            Assert.Equal("next", lexer.NextToken().Text);
         }
 
 #if !NETCOREAPP1_0
@@ -1044,7 +1049,7 @@ namespace Microsoft.OData.Tests.UriParser
                 }
             };
 
-            test.ShouldThrow<T>().WithMessage(message);
+            test.Throws<T>(message);
         }
 
         private static void ValidateTokenSequence(string expression, params ExpressionToken[] expectTokens)

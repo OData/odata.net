@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
@@ -24,94 +23,94 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         [Fact]
         public void PrimitiveTypeIsNotOpen()
         {
-            this.edmPrimitiveType.IsOpen().Should().BeFalse();
+            Assert.False(this.edmPrimitiveType.IsOpen());
         }
 
         [Fact]
         public void NonOpenEntityTypeIsNotOpen()
         {
-            this.nonOpenEdmEntityType.IsOpen().Should().BeFalse();
+            Assert.False(this.nonOpenEdmEntityType.IsOpen());
         }
 
         [Fact]
         public void NonOpenComplexTypeIsNotOpen()
         {
-            this.nonOpenEdmComplexType.IsOpen().Should().BeFalse();
+            Assert.False(this.nonOpenEdmComplexType.IsOpen());
         }
 
         [Fact]
         public void OpenEntityTypeIsOpen()
         {
-            this.openEdmEntityType.IsOpen().Should().BeTrue();
+            Assert.True(this.openEdmEntityType.IsOpen());
         }
 
         [Fact]
         public void OpenComplexTypeIsOpen()
         {
-            this.openEdmComplexType.IsOpen().Should().BeTrue();
+            Assert.True(this.openEdmComplexType.IsOpen());
         }
 
         [Fact]
         public void PrimitiveCollectionTypeIsNotOpen()
         {
-            this.ToCollection(this.edmPrimitiveType).IsOpen().Should().BeFalse();
+            Assert.False(this.ToCollection(this.edmPrimitiveType).IsOpen());
         }
 
         [Fact]
         public void NonOpenEntityCollectionTypeIsNotOpen()
         {
-            this.ToCollection(this.nonOpenEdmEntityType).IsOpen().Should().BeFalse();
+            Assert.False(this.ToCollection(this.nonOpenEdmEntityType).IsOpen());
         }
 
         [Fact]
         public void NonOpenComplexCollectionTypeIsNotOpen()
         {
-            this.ToCollection(this.nonOpenEdmComplexType).IsOpen().Should().BeFalse();
+            Assert.False(this.ToCollection(this.nonOpenEdmComplexType).IsOpen());
         }
 
         [Fact]
         public void OpenEntityCollectionTypeIsOpen()
         {
             // TODO: when SingleResult is removed from the semantic path parser, change this to return false.
-             this.ToCollection(this.openEdmEntityType).IsOpen().Should().BeTrue();
+            Assert.True(this.ToCollection(this.openEdmEntityType).IsOpen());
         }
 
         [Fact]
         public void OpenComplexCollectionTypeIsOpen()
         {
-            this.ToCollection(this.openEdmComplexType).IsOpen().Should().BeTrue();
+            Assert.True(this.ToCollection(this.openEdmComplexType).IsOpen());
         }
 
         [Fact]
         public void EntityTypeIsAnEntityType()
         {
             IEdmEntityType result;
-            this.nonOpenEdmEntityType.IsEntityOrEntityCollectionType(out result).Should().BeTrue();
-            result.Should().BeSameAs(this.nonOpenEdmEntityType);
+            Assert.True(this.nonOpenEdmEntityType.IsEntityOrEntityCollectionType(out result));
+            Assert.Same(this.nonOpenEdmEntityType, result);
         }
 
         [Fact]
         public void EntityCollectionTypeIsAnEntityType()
         {
             IEdmEntityType result;
-            this.ToCollection(this.nonOpenEdmEntityType).IsEntityOrEntityCollectionType(out result).Should().BeTrue();
-            result.Should().BeSameAs(this.nonOpenEdmEntityType);
+            Assert.True(this.ToCollection(this.nonOpenEdmEntityType).IsEntityOrEntityCollectionType(out result));
+            Assert.Same(this.nonOpenEdmEntityType, result);
         }
 
         [Fact]
         public void ComplexTypeIsNotAnEntityType()
         {
             IEdmEntityType result;
-            this.nonOpenEdmComplexType.IsEntityOrEntityCollectionType(out result).Should().BeFalse();
-            result.Should().BeNull();
+            Assert.False(this.nonOpenEdmComplexType.IsEntityOrEntityCollectionType(out result));
+            Assert.Null(result);
         }
 
         [Fact]
         public void ComplexCollectionTypeIsNotAnEntityType()
         {
             IEdmEntityType result;
-            this.ToCollection(this.nonOpenEdmComplexType).IsEntityOrEntityCollectionType(out result).Should().BeFalse();
-            result.Should().BeNull();
+            Assert.False(this.ToCollection(this.nonOpenEdmComplexType).IsEntityOrEntityCollectionType(out result));
+            Assert.Null(result);
         }
 
         [Fact]
@@ -123,7 +122,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var entitySet = container.AddEntitySet("EntitySet", new EdmEntityType("Fake", "EntityType"));
             var function = new EdmFunction("Fake", "FakeFunction", new EdmEntityTypeReference(entitySet.EntityType(), false));
             var operationImport = container.AddFunctionImport("FakeAction", function, new EdmPathExpression(entitySet.Name));
-            operationImport.GetTargetEntitySet(null, model).Should().BeSameAs(entitySet);
+            Assert.Same(entitySet, operationImport.GetTargetEntitySet(null, model));
         }
 
         [Fact]
@@ -135,14 +134,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var function = new EdmFunction("Fake", "FakeFunction", new EdmEntityTypeReference(new EdmEntityType("Fake", "EntityType"), false));
             var expression = new EdmPathExpression("p1/Navigation1");
             var operationImport = container.AddFunctionImport("FakeAction", function, expression);
-            operationImport.GetTargetEntitySet(null, model).Should().BeNull();
+            Assert.Null(operationImport.GetTargetEntitySet(null, model));
         }
 
         [Fact]
         public void GetTargetEntitySetForFunctionWithPath()
         {
             IEdmEntitySet targetEntitySet;
-            GetTargetEntitySet(new EdmPathExpression("p1/Navigation1/Navigation2"), out targetEntitySet, addParameters: true).Should().BeSameAs(targetEntitySet);
+            Assert.Same(GetTargetEntitySet(new EdmPathExpression("p1/Navigation1/Navigation2"), out targetEntitySet, addParameters: true), targetEntitySet);
         }
 
         [Fact]
@@ -157,28 +156,28 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         {
             IEdmEntitySet targetEntitySet;
             Action getTargetSet = () => GetTargetEntitySet(new EdmPathExpression("p2/Navigation1"), out targetEntitySet, addParameters: true);
-            getTargetSet.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(getTargetSet);
         }
 
         [Fact]
         public void GetTargetEntitySetForFunctionWithNeitherPathNorStaticSetShouldBeNull()
         {
             IEdmEntitySet targetEntitySet;
-            GetTargetEntitySet(null, out targetEntitySet).Should().BeNull();
+            Assert.Null(GetTargetEntitySet(null, out targetEntitySet));
         }
 
         [Fact]
         public void GetTargetEntitySetForFunctionWithPathButNoParametersShouldBeNull()
         {
             IEdmEntitySet targetEntitySet;
-            GetTargetEntitySet(new EdmPathExpression("p2/Navigation1"), out targetEntitySet).Should().BeNull();
+            Assert.Null(GetTargetEntitySet(new EdmPathExpression("p2/Navigation1"), out targetEntitySet));
         }
 
         [Fact]
         public void GetTargetEntitySetForNonBinadbleFunctionWithPathShouldBeNull()
         {
             IEdmEntitySet targetEntitySet;
-            GetTargetEntitySet(new EdmPathExpression("p1/Navigation1/Navigation2"), out targetEntitySet, isBindable: false, addParameters: true).Should().BeNull();
+            Assert.Null(GetTargetEntitySet(new EdmPathExpression("p1/Navigation1/Navigation2"), out targetEntitySet, isBindable: false, addParameters: true));
         }
 
         [Fact]
@@ -194,7 +193,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var function = new EdmFunction("Fake", "FakeFunction", new EdmEntityTypeReference(edmEntityType, false), true, new EdmPathExpression("bindingparameter"), false);
             function.AddParameter("bindingparameter", new EdmEntityTypeReference(edmEntityType, false));
             var target = function.GetTargetEntitySet(singleton, model);
-            target.Should().BeNull();
+            Assert.Null(target);
         }
 
         private static IEdmEntitySetBase GetTargetEntitySet(EdmPathExpression edmPathExpression, out IEdmEntitySet targetEntitySet, bool addParameters = false, bool isBindable = true)

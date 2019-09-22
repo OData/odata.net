@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Evaluation;
@@ -82,159 +81,159 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void BuildEntitySetShouldWorkWithBaseUriWithTrailingSlash()
         {
-            this.builder.BuildEntitySetUri(new Uri("http://odata.org/base/"), "EntitySet").Should().Be(new Uri("http://odata.org/base/EntitySet"));
+            Assert.Equal(this.builder.BuildEntitySetUri(new Uri("http://odata.org/base/"), "EntitySet"), new Uri("http://odata.org/base/EntitySet"));
         }
 
         [Fact]
         public void BuildEntitySetShouldWorkWithBaseUriWithoutTrailingSlash()
         {
-            this.builder.BuildEntitySetUri(new Uri("http://odata.org/base"), "EntitySet").Should().Be(new Uri("http://odata.org/base/EntitySet"));
+            Assert.Equal(this.builder.BuildEntitySetUri(new Uri("http://odata.org/base"), "EntitySet"), new Uri("http://odata.org/base/EntitySet"));
         }
 
         [Fact]
         public void BuildEntityInstanceUriShouldWorkWithSingleKey()
         {
-            this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("Id", 42) }, this.defaultProductInstance.Type.FullName())
-                .Should().Be(new Uri("http://odata.org/base/Products(42)"));
+            Assert.Equal(this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("Id", 42) }, this.defaultProductInstance.Type.FullName()),
+                new Uri("http://odata.org/base/Products(42)"));
         }
 
         [Fact]
         public void BuildEntityInstanceUriShouldEscapeKeyValue()
         {
-            this.GetEntityInstanceUriForStringKey("%").Should().EndWith("('%25')");
+            Assert.EndsWith("('%25')", this.GetEntityInstanceUriForStringKey("%"));
         }
 
         [Fact]
         public void BuildEntityInstanceUriShouldEscapeKeyValueEvenIfAlreadyEscaped()
         {
             // regression coverage for: [XTable blocker] ODataLib does not escape literal values in ID/Edit link, which causes issues with key values like '%25' versus '%'.
-            this.GetEntityInstanceUriForStringKey("%25").Should().EndWith("('%2525')");
+            Assert.EndsWith("('%2525')", this.GetEntityInstanceUriForStringKey("%25"));
         }
 
         [Fact]
         public void BuildEntityInstanceUriShouldWorkWithMultipleKeys()
         {
-            this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/MultipleKeys"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("KeyA", "keya"), new KeyValuePair<string, object>("KeyB", 1) }, this.defaultMultipleKeyInstance.Type.FullName())
-                .Should().Be(new Uri("http://odata.org/base/MultipleKeys(KeyA='keya',KeyB=1)"));
+            Assert.Equal(this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/MultipleKeys"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("KeyA", "keya"), new KeyValuePair<string, object>("KeyB", 1) }, this.defaultMultipleKeyInstance.Type.FullName()),
+                new Uri("http://odata.org/base/MultipleKeys(KeyA='keya',KeyB=1)"));
         }
 
         [Fact]
         public void BuildEntityInstanceUriShouldFailOnTypeWithNoKeyProperties()
         {
             Action action = () => this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/MultipleKeys"), new Collection<KeyValuePair<string, object>>(), "TestModel.EntityTypeWithNoKeys");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties("TestModel.EntityTypeWithNoKeys"));
+            action.Throws<ODataException>(Strings.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties("TestModel.EntityTypeWithNoKeys"));
         }
 
         [Fact]
         public void BuildEntityInstanceUriShouldFailWithNullKeyValueKind()
         {
             Action action = () => this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("Id", null) }, "TestModel.Product");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataConventionalUriBuilder_NullKeyValue("Id", "TestModel.Product"));
+            action.Throws<ODataException>(Strings.ODataConventionalUriBuilder_NullKeyValue("Id", "TestModel.Product"));
         }
 
         [Fact]
         public void BuildStreamEditLinkUriForDefaultStreamShouldWorkWithBaseUriWithTrailingSlash()
         {
-            this.builder.BuildStreamEditLinkUri(new Uri("http://odata.org/base/Products/"), null)
-                .Should().Be(new Uri("http://odata.org/base/Products/$value"));
+            Assert.Equal(this.builder.BuildStreamEditLinkUri(new Uri("http://odata.org/base/Products/"), null),
+                new Uri("http://odata.org/base/Products/$value"));
         }
 
         [Fact]
         public void BuildStreamEditLinkUriForDefaultStreamShouldWorkWithBaseUriWithoutTrailingSlash()
         {
-            this.builder.BuildStreamEditLinkUri(new Uri("http://odata.org/base/Products"), null)
-                .Should().Be(new Uri("http://odata.org/base/Products/$value"));
+            Assert.Equal(this.builder.BuildStreamEditLinkUri(new Uri("http://odata.org/base/Products"), null),
+                new Uri("http://odata.org/base/Products/$value"));
         }
 
         [Fact]
         public void BuildStreamEditLinkUriForStreamPropertyShouldWorkWithBaseUriWithTrailingSlash()
         {
-            this.builder.BuildStreamEditLinkUri(new Uri("http://odata.org/base/Products/"), "StreamProperty")
-                .Should().Be(new Uri("http://odata.org/base/Products/StreamProperty"));
+            Assert.Equal(this.builder.BuildStreamEditLinkUri(new Uri("http://odata.org/base/Products/"), "StreamProperty"),
+                new Uri("http://odata.org/base/Products/StreamProperty"));
         }
 
         [Fact]
         public void BuildStreamEditLinkUriForStreamPropertyShouldWorkWithBaseUriWithoutTrailingSlash()
         {
-            this.builder.BuildStreamEditLinkUri(new Uri("http://odata.org/base/Products"), "StreamProperty")
-                .Should().Be(new Uri("http://odata.org/base/Products/StreamProperty"));
+            Assert.Equal(this.builder.BuildStreamEditLinkUri(new Uri("http://odata.org/base/Products"), "StreamProperty"),
+                new Uri("http://odata.org/base/Products/StreamProperty"));
         }
 
         [Fact]
         public void BuildStreamReadLinkUriForStreamPropertyShouldWorkWithBaseUriWithTrailingSlash()
         {
-            this.builder.BuildStreamReadLinkUri(new Uri("http://odata.org/base/Products/"), "StreamProperty")
-                .Should().Be(new Uri("http://odata.org/base/Products/StreamProperty"));
+            Assert.Equal(this.builder.BuildStreamReadLinkUri(new Uri("http://odata.org/base/Products/"), "StreamProperty"),
+                new Uri("http://odata.org/base/Products/StreamProperty"));
         }
 
         [Fact]
         public void BuildStreamReadLinkUriForStreamPropertyShouldWorkWithBaseUriWithoutTrailingSlash()
         {
-            this.builder.BuildStreamReadLinkUri(new Uri("http://odata.org/base/Products"), "StreamProperty")
-                .Should().Be(new Uri("http://odata.org/base/Products/StreamProperty"));
+            Assert.Equal(this.builder.BuildStreamReadLinkUri(new Uri("http://odata.org/base/Products"), "StreamProperty"),
+                new Uri("http://odata.org/base/Products/StreamProperty"));
         }
 
         [Fact]
         public void BuildStreamReadLinkUriForDefaultStreanShouldWorkWithBaseUriWithTrailingSlash()
         {
-            this.builder.BuildStreamReadLinkUri(new Uri("http://odata.org/base/Products/"), null)
-                .Should().Be(new Uri("http://odata.org/base/Products/$value"));
+            Assert.Equal(this.builder.BuildStreamReadLinkUri(new Uri("http://odata.org/base/Products/"), null),
+                new Uri("http://odata.org/base/Products/$value"));
         }
 
         [Fact]
         public void BuildStreamReadLinkUriForDefaultStreamShouldWorkWithBaseUriWithoutTrailingSlash()
         {
-            this.builder.BuildStreamReadLinkUri(new Uri("http://odata.org/base/Products"), null)
-                .Should().Be(new Uri("http://odata.org/base/Products/$value"));
+            Assert.Equal(this.builder.BuildStreamReadLinkUri(new Uri("http://odata.org/base/Products"), null),
+                new Uri("http://odata.org/base/Products/$value"));
         }
 
         [Fact]
         public void BuildNavigationLinkUriShouldWorkWithBaseUriWithTrailingSlash()
         {
-            this.builder.BuildNavigationLinkUri(new Uri("http://odata.org/base/Products/"), "NavigationProperty")
-                .Should().Be(new Uri("http://odata.org/base/Products/NavigationProperty"));
+            Assert.Equal(this.builder.BuildNavigationLinkUri(new Uri("http://odata.org/base/Products/"), "NavigationProperty"),
+                new Uri("http://odata.org/base/Products/NavigationProperty"));
         }
 
         [Fact]
         public void BuildNavigationLinkUriShouldWorkWithBaseUriWithoutTrailingSlash()
         {
-            this.builder.BuildNavigationLinkUri(new Uri("http://odata.org/base/Products(1)"), "NavigationProperty")
-                .Should().Be(new Uri("http://odata.org/base/Products(1)/NavigationProperty"));
+            Assert.Equal(this.builder.BuildNavigationLinkUri(new Uri("http://odata.org/base/Products(1)"), "NavigationProperty"),
+                new Uri("http://odata.org/base/Products(1)/NavigationProperty"));
         }
 
         [Fact]
         public void BuildAssociationLinkUriShouldWorkWithBaseUriWithTrailingSlash()
         {
-            this.builder.BuildAssociationLinkUri(new Uri("http://odata.org/base/Products/"), "NavigationProperty")
-                .Should().Be(new Uri("http://odata.org/base/Products/NavigationProperty/$ref"));
+            Assert.Equal(this.builder.BuildAssociationLinkUri(new Uri("http://odata.org/base/Products/"), "NavigationProperty"),
+                new Uri("http://odata.org/base/Products/NavigationProperty/$ref"));
         }
 
         [Fact]
         public void BuildAssociationLinkUriShouldWorkWithBaseUriWithoutTrailingSlash()
         {
-            this.builder.BuildAssociationLinkUri(new Uri("http://odata.org/base/Products(1)"), "NavigationProperty")
-                .Should().Be(new Uri("http://odata.org/base/Products(1)/NavigationProperty/$ref"));
+            Assert.Equal(this.builder.BuildAssociationLinkUri(new Uri("http://odata.org/base/Products(1)"), "NavigationProperty"),
+                new Uri("http://odata.org/base/Products(1)/NavigationProperty/$ref"));
         }
 
         [Fact]
         public void BuildOperationTargetUriShouldWorkWithBaseUriWithTrailingSlash()
         {
-            this.builder.BuildOperationTargetUri(new Uri("http://odata.org/base/Products/"), "OperationName", null, null)
-                .Should().Be(new Uri("http://odata.org/base/Products/OperationName"));
+            Assert.Equal(this.builder.BuildOperationTargetUri(new Uri("http://odata.org/base/Products/"), "OperationName", null, null),
+                new Uri("http://odata.org/base/Products/OperationName"));
         }
 
         [Fact]
         public void BuildOperationTargetUriShouldWorkWithBaseUriWithoutTrailingSlash()
         {
-            this.builder.BuildOperationTargetUri(new Uri("http://odata.org/base/Products(1)"), "OperationName", null, null)
-                .Should().Be(new Uri("http://odata.org/base/Products(1)/OperationName"));
+            Assert.Equal(this.builder.BuildOperationTargetUri(new Uri("http://odata.org/base/Products(1)"), "OperationName", null, null),
+                new Uri("http://odata.org/base/Products(1)/OperationName"));
         }
 
         [Fact]
         public void BuildOperationTargetUriShouldNotEscapeParameterTypeName()
         {
-            this.builder.BuildOperationTargetUri(new Uri("http://base.org/"), "op", null, " +&?")
-                .Should().Be(new Uri("http://base.org/op( +&?=@ +&?)"));
+            Assert.Equal(this.builder.BuildOperationTargetUri(new Uri("http://base.org/"), "op", null, " +&?"),
+                new Uri("http://base.org/op( +&?=@ +&?)"));
         }
 
         [Fact]
@@ -266,7 +265,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             string entitySetName = "$注文#";
             string expectedUri = this.defaultBaseUri + Uri.EscapeDataString(entitySetName) + "/$ref";
-            this.builder.BuildAssociationLinkUri(this.defaultBaseUri, entitySetName).OriginalString.Should().Be(expectedUri);
+            Assert.Equal(this.builder.BuildAssociationLinkUri(this.defaultBaseUri, entitySetName).OriginalString, expectedUri);
         }
 
         [Fact]
@@ -285,14 +284,14 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             string entitySetName = "$注文#";
             string expectedUri = this.defaultBaseUri + Uri.EscapeDataString(entitySetName);
-            buildUri(this.builder, this.defaultBaseUri, entitySetName).OriginalString.Should().Be(expectedUri);
+            Assert.Equal(buildUri(this.builder, this.defaultBaseUri, entitySetName).OriginalString, expectedUri);
         }
 
         private void RunCharacterNonEscapingBuilderTest(Func<ODataConventionalUriBuilder, Uri, string, Uri> buildUri)
         {
             string entitySetName = "$注文#";
             string expectedUri = this.defaultBaseUri + entitySetName;
-            buildUri(this.builder, this.defaultBaseUri, entitySetName).OriginalString.Should().Be(expectedUri);
+            Assert.Equal(buildUri(this.builder, this.defaultBaseUri, entitySetName).OriginalString, expectedUri);
         }
 
         private string GetEntityInstanceUriForStringKey(string keyValue)
