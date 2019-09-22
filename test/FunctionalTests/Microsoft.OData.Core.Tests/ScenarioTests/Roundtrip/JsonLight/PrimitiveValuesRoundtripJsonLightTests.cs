@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
@@ -521,7 +520,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
             StreamReader reader = new StreamReader(stream);
             string payload = reader.ReadToEnd();
-            payload.Should().Be("{\"@odata.context\":\"http://host/service/$metadata#People/$entity\",\"ID\":\"18446744073709551615\",\"Name\":\"Foo\",\"FavoriteNumber\":250.0,\"Age\":123,\"Guid\":-9223372036854775808,\"Weight\":123.45,\"Money\":79228162514264337593543950335}");
+            Assert.Equal(payload, "{\"@odata.context\":\"http://host/service/$metadata#People/$entity\",\"ID\":\"18446744073709551615\",\"Name\":\"Foo\",\"FavoriteNumber\":250.0,\"Age\":123,\"Guid\":-9223372036854775808,\"Weight\":123.45,\"Money\":79228162514264337593543950335}");
 
 #if NETCOREAPP1_0
             stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes(payload));
@@ -556,7 +555,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             {
                 foreach (object clrValue in clrValues)
                 {
-                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, string.Format("JSON Light roundtrip value {0} of type {1}.", clrValue, edmTypeDefinitionName), isIeee754Compatible: true);
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, isIeee754Compatible: true);
                 }
             }
         }
@@ -568,7 +567,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             {
                 foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
                 {
-                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, string.Format("JSON Light roundtrip value {0} of type {1}.", clrValue, edmTypeName), isIeee754Compatible: true);
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version,isIeee754Compatible: true);
                 }
             }
         }
@@ -578,7 +577,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType(edmTypeName), true);
 
-            clrValues.Length.Should().Be(expectedValues.Length);
+            Assert.Equal(clrValues.Length, expectedValues.Length);
 
             for (int iterator = 0; iterator < clrValues.Length; iterator++)
             {
@@ -586,7 +585,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 object expectedValue = expectedValues.GetValue(iterator);
                 foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
                 {
-                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, string.Format("JSON Light roundtrip value {0} of type {1} of expected value {2}.", clrValue, edmTypeName, expectedValue), isIeee754Compatible: true, expectedValue: expectedValue);
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, isIeee754Compatible: true, expectedValue: expectedValue);
                 }
             }
         }
@@ -597,7 +596,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             {
                 foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
                 {
-                    this.VerifyPrimitiveValueRoundtrips(clrValue, null, version, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: true);
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, null, version, isIeee754Compatible: true);
                 }
             }
         }
@@ -608,7 +607,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             {
                 foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
                 {
-                    this.VerifyPrimitiveValueDoesNotRoundtrip(clrValue, null, version, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: true);
+                    this.VerifyPrimitiveValueDoesNotRoundtrip(clrValue, null, version, isIeee754Compatible: true);
                 }
             }
         }
@@ -619,7 +618,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             {
                 foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
                 {
-                    this.VerifyPrimitiveValueDoesNotRoundtrip(clrValue, null, version, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: false);
+                    this.VerifyPrimitiveValueDoesNotRoundtrip(clrValue, null, version, isIeee754Compatible: false);
                 }
             }
         }
@@ -631,36 +630,52 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             {
                 foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
                 {
-                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: false);
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, isIeee754Compatible: false);
                 }
             }
         }
 
-        private void VerifyPrimitiveValueRoundtrips(object clrValue, IEdmTypeReference typeReference, ODataVersion version, string description, bool isIeee754Compatible)
+        private void VerifyPrimitiveValueRoundtrips(object clrValue, IEdmTypeReference typeReference, ODataVersion version, bool isIeee754Compatible)
         {
-            VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, description, isIeee754Compatible, clrValue);
+            VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, isIeee754Compatible, clrValue);
         }
 
-        private void VerifyPrimitiveValueRoundtrips(object clrValue, IEdmTypeReference typeReference, ODataVersion version, string description, bool isIeee754Compatible, object expectedValue)
+        private void VerifyPrimitiveValueRoundtrips(object clrValue, IEdmTypeReference typeReference, ODataVersion version, bool isIeee754Compatible, object expectedValue)
         {
             var actualValue = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible);
 
             if (expectedValue is byte[])
             {
-                ((byte[])actualValue).Should().Equal((byte[])expectedValue, description);
+                Assert.Equal((byte[])actualValue, (byte[])expectedValue);
             }
             else
             {
-                actualValue.GetType().Should().Be(expectedValue.GetType(), description);
-                actualValue.Should().Be(expectedValue, description);
+                Assert.Equal(actualValue.GetType(), expectedValue.GetType());
+                Assert.Equal(actualValue, expectedValue);
             }
         }
 
-        private void VerifyPrimitiveValueDoesNotRoundtrip(object clrValue, IEdmTypeReference typeReference, ODataVersion version, string description, bool isIeee754Compatible)
+        private void VerifyPrimitiveValueDoesNotRoundtrip(object clrValue, IEdmTypeReference typeReference, ODataVersion version, bool isIeee754Compatible)
         {
             var actualValue = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible);
 
-            actualValue.Should().NotBe(clrValue, description);
+            if (clrValue != null && clrValue is byte[])
+            {
+                if (actualValue != null && actualValue is byte[])
+                {
+                    Assert.NotEqual((byte[])actualValue, (byte[])clrValue);
+                }
+                else if (actualValue != null)
+                {
+                    Assert.NotEqual(actualValue.GetType(), clrValue.GetType());
+                }
+
+                Assert.True(true);
+            }
+            else
+            {
+                Assert.NotEqual(actualValue, clrValue);
+            }
         }
 
         private object WriteThenReadValue(object clrValue, IEdmTypeReference typeReference, ODataVersion version, bool isIeee754Compatible)

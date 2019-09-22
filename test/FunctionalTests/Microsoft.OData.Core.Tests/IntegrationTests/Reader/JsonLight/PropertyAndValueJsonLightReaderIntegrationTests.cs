@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
@@ -84,25 +83,46 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     }
                 });
             Assert.Equal(2, entries.Count);
-            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
-            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(34.98f, "value should be in correct type.");
-            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(56.01d, "value should be in correct type.");
-            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(78.62m, "value should be in correct type.");
+            Assert.Equal(12L, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal(34.98f, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatId", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal(56.01d, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleId", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal(78.62m, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalId", StringComparison.OrdinalIgnoreCase)).Value);
 
             var complextProperty = entries[1];
-            complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
-            complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1.0F, "value should be in correct type.");
-            complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CDoubleId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(-1.0D, "value should be in correct type.");
-            complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CDecimalId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(0.0M, "value should be in correct type.");
+            Assert.Equal(1L, complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal(1.0F, complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal(-1.0D, complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CDoubleId", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal(0.0M, complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CDecimalId", StringComparison.OrdinalIgnoreCase)).Value);
 
-            var longCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
-            longCollection.Items.Should().Contain(-1L).And.Contain(long.MinValue).And.Contain(long.MaxValue);
-            var floatCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
-            floatCollection.Items.Should().Contain(-1F).And.Contain(float.MinValue).And.Contain(float.MaxValue).And.Contain(float.PositiveInfinity).And.Contain(float.NegativeInfinity).And.Contain(float.NaN);
-            var doubleCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
-            doubleCollection.Items.Should().Contain(1.0D).And.Contain(double.MinValue).And.Contain(double.MaxValue).And.Contain(double.PositiveInfinity).And.Contain(double.NegativeInfinity).And.Contain(double.NaN);
-            var decimalCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
-            decimalCollection.Items.Should().Contain(0M).And.Contain(decimal.MinValue).And.Contain(decimal.MaxValue);
+            var longCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongNumbers", StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            Assert.NotNull(longCollection);
+            Assert.Contains(-1L, longCollection.Items);
+            Assert.Contains(long.MinValue, longCollection.Items);
+            Assert.Contains(long.MaxValue, longCollection.Items);
+
+            var floatCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatNumbers", StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            Assert.NotNull(floatCollection);
+            Assert.Contains(-1F, floatCollection.Items);
+            Assert.Contains(float.MinValue, floatCollection.Items);
+            Assert.Contains(float.MaxValue, floatCollection.Items);
+            Assert.Contains(float.PositiveInfinity, floatCollection.Items);
+            Assert.Contains(float.NegativeInfinity, floatCollection.Items);
+            Assert.Contains(float.NaN, floatCollection.Items);
+
+            var doubleCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleNumbers", StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            Assert.NotNull(doubleCollection);
+            Assert.Contains(1.0D, doubleCollection.Items);
+            Assert.Contains(double.MinValue, doubleCollection.Items);
+            Assert.Contains(double.MaxValue, doubleCollection.Items);
+            Assert.Contains(double.PositiveInfinity, doubleCollection.Items);
+            Assert.Contains(double.NegativeInfinity, doubleCollection.Items);
+            Assert.Contains(double.NaN, doubleCollection.Items);
+
+            var decimalCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalNumbers", StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            Assert.NotNull(decimalCollection);
+            Assert.Contains(0M, decimalCollection.Items);
+            Assert.Contains(decimal.MinValue, decimalCollection.Items);
+            Assert.Contains(decimal.MaxValue, decimalCollection.Items);
         }
 
         [Fact]
@@ -136,7 +156,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 s => string.Equals(
                     s.Name,
                     "NullableIntNumbers",
-                    StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+                    StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            Assert.NotNull(intCollection);
             var list = new List<int?>();
             foreach (var val in intCollection.Items)
             {
@@ -207,7 +228,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 s => string.Equals(
                     s.Name,
                     "OpenPrimitiveCollection",
-                    StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+                    StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            Assert.NotNull(intCollection);
             var list = new List<int?>();
             foreach (var val in intCollection.Items)
             {
@@ -222,7 +244,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             foreach (var val in complexCollection)
             {
-                val.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
+                Assert.Equal(1L, val.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
             }
         }
 
@@ -256,7 +278,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
             ODataResource entry = null;
             Action test = () => this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, false);
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
+            test.Throws<ODataException>(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
         }
 
         [Fact]
@@ -282,7 +304,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
             ODataResource entry = null;
             Action test = () => this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Decimal"));
+            test.Throws<ODataException>(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Decimal"));
         }
 
         [Fact]
@@ -345,12 +367,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Assert.Equal(2, entries.Count);
 
             IList<ODataProperty> propertyList = entries[0].Properties.ToList();
-            propertyList[1].Name.Should().Be("Weight");
-            propertyList[1].Value.Should().Be(60.5);
+            Assert.Equal("Weight", propertyList[1].Name);
+            Assert.Equal(60.5, propertyList[1].Value);
 
-            navigationLink.Name.Should().Be("Address");
+            Assert.Equal("Address", navigationLink.Name);
             var address = entries[1];
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
         }
 
         [Fact]
@@ -416,15 +438,15 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Assert.Equal(2, entries.Count);
 
             IList<ODataProperty> propertyList = entries[0].Properties.ToList();
-            propertyList[1].Name.Should().Be("Weight");
-            propertyList[1].Value.Should().Be(60);
+            Assert.Equal("Weight", propertyList[1].Name);
+            Assert.Equal(60, propertyList[1].Value);
 
-            propertyList[2].Name.Should().Be("Height");
-            propertyList[2].Value.Should().Be(180);
+            Assert.Equal("Height", propertyList[2].Name);
+            Assert.Equal(180, propertyList[2].Value);
 
-            navigationLink.Name.Should().Be("Address");
+            Assert.Equal("Address", navigationLink.Name);
             var address = entries[1];
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
         }
 
         [Fact]
@@ -494,12 +516,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Assert.Equal(2, entries.Count);
 
             IList<ODataProperty> propertyList = entries[0].Properties.ToList();
-            propertyList[1].Name.Should().Be("Weight");
-            propertyList[1].Value.Should().Be(60.5);
+            Assert.Equal("Weight", propertyList[1].Name);
+            Assert.Equal(60.5, propertyList[1].Value);
 
-            navigationLink.Name.Should().Be("Address");
+            Assert.Equal("Address", navigationLink.Name);
             var address = entries[1];
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
         }
 
         [Fact]
@@ -566,12 +588,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Assert.Equal(2, entries.Count);
 
             IList<ODataProperty> propertyList = entries[0].Properties.ToList();
-            propertyList[1].Name.Should().Be("Weight");
-            propertyList[1].Value.Should().Be(60.5);
+            Assert.Equal("Weight", propertyList[1].Name);
+            Assert.Equal(60.5, propertyList[1].Value);
 
-            navigationLink.Name.Should().Be("Address");
+            Assert.Equal("Address", navigationLink.Name);
             var address = entries[1];
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
         }
 
         [Fact]
@@ -606,7 +628,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatibleType("Edm.String", "NS.Weight"));
+            read.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("Edm.String", "NS.Weight"));
         }
 
         [Fact]
@@ -643,7 +665,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatibleType("NS.Height", "NS.Weight"));
+            read.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("NS.Height", "NS.Weight"));
         }
 
         [Fact]
@@ -674,7 +696,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatibleType("NS.Weight", "Edm.Int32"));
+            read.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("NS.Weight", "Edm.Int32"));
         }
 
         [Fact]
@@ -700,7 +722,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.ShouldThrow<ODataException>().WithMessage("A null value was found for the property named 'Test', which has the expected type 'Collection(Edm.String)[Nullable=False]'. The expected type 'Collection(Edm.String)[Nullable=False]' does not allow null values.");
+            read.Throws<ODataException>("A null value was found for the property named 'Test', which has the expected type 'Collection(Edm.String)[Nullable=False]'. The expected type 'Collection(Edm.String)[Nullable=False]' does not allow null values.");
         }
 
         [Fact]
@@ -770,7 +792,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.ShouldThrow<ODataException>().WithMessage("A null value was found for the property named 'CountriesOrRegions', which has the expected type 'Collection(Edm.String)[Nullable=False]'. The expected type 'Collection(Edm.String)[Nullable=False]' does not allow null values.");
+            read.Throws<ODataException>("A null value was found for the property named 'CountriesOrRegions', which has the expected type 'Collection(Edm.String)[Nullable=False]'. The expected type 'Collection(Edm.String)[Nullable=False]' does not allow null values.");
         }
 
         [Fact]
@@ -808,7 +830,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                         resources.Add(reader.Item);
                     }
                 });
-            test.ShouldThrow<ODataException>().WithMessage("A null value was found with the expected type 'NS.Door[Nullable=False]'. The expected type 'NS.Door[Nullable=False]' does not allow null values.");
+            test.Throws<ODataException>("A null value was found with the expected type 'NS.Door[Nullable=False]'. The expected type 'NS.Door[Nullable=False]' does not allow null values.");
         }
 
         [Fact]
@@ -845,7 +867,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                         resources.Add(reader.Item);
                     }
                 });
-            test.ShouldThrow<ODataException>().WithMessage("A null value was found with the expected type 'Edm.Int32[Nullable=False]'. The expected type 'Edm.Int32[Nullable=False]' does not allow null values.");
+            test.Throws<ODataException>("A null value was found with the expected type 'Edm.Int32[Nullable=False]'. The expected type 'Edm.Int32[Nullable=False]' does not allow null values.");
         }
 
         [Fact]
@@ -889,7 +911,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                         resources.Add(reader.Item);
                     }
                 });
-            test.ShouldThrow<ODataException>().WithMessage("A null value was found with the expected type 'NS.ColorFlags[Nullable=False]'. The expected type 'NS.ColorFlags[Nullable=False]' does not allow null values.");
+            test.Throws<ODataException>("A null value was found with the expected type 'NS.ColorFlags[Nullable=False]'. The expected type 'NS.ColorFlags[Nullable=False]' does not allow null values.");
         }
 
         [Fact]
@@ -955,8 +977,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
             var birthday = propertyList[1].Value as DateTimeOffset?;
-            birthday.HasValue.Should().BeTrue();
-            birthday.Value.Should().Be(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero));
+            Assert.True(birthday.HasValue);
+            Assert.Equal(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero), birthday.Value);
         }
 
         private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType, Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider container = null)

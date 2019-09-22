@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -23,7 +22,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         public void DefaultEnableCaseInsensitiveShouldbeFalse()
         {
             ODataQueryOptionParser parser2 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>()) { Resolver = new ODataUriResolver() };
-            parser2.Resolver.EnableCaseInsensitive.Should().BeFalse();
+            Assert.False(parser2.Resolver.EnableCaseInsensitive);
         }
 
         [Fact]
@@ -33,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             ODataQueryOptionParser parser1 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>());
             ODataQueryOptionParser parser2 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>());
             parser1.Resolver.EnableCaseInsensitive = true;
-            parser2.Resolver.EnableCaseInsensitive.Should().BeTrue();
+            Assert.True(parser2.Resolver.EnableCaseInsensitive);
         }
 
         #region Enum vesus string
@@ -105,7 +104,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, query) { Resolver = new MiscPromotionResolver() };
             var clause = parser.ParseOrderBy();
             var node = clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add);
-            node.TypeReference.IsBinary().Should().BeTrue();
+            Assert.True(node.TypeReference.IsBinary());
             node.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonFavoriteDateProp());
             node.Right.ShouldBeConstantQueryNode("3");
         }
@@ -148,10 +147,12 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             };
 
             var path = uriParser.ParsePath();
-            path.LastSegment
-                .ShouldBeOperationImportSegment(GetColorCmykImport)
-                .And.ShouldHaveParameterCount(1)
-                .And.Parameters.Single().Value.As<ConstantNode>().Value.ShouldBeODataEnumValue("TestNS.Color", "Blue");
+            var parameters = path.LastSegment.ShouldBeOperationImportSegment(GetColorCmykImport)
+                .ShouldHaveParameterCount(1)
+                .Parameters;
+            var parameter = Assert.Single(parameters);
+            var constantNode = Assert.IsType<ConstantNode>(parameter.Value);
+            constantNode.Value.ShouldBeODataEnumValue("TestNS.Color", "Blue");
         }
 
         [Fact]
@@ -168,8 +169,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var path = uriParser.ParsePath();
             path.LastSegment
                 .ShouldBeOperationImportSegment(GetColorCmykImport)
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter<object>("co", null);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter<object>("co", null);
         }
 
         [Fact]
@@ -185,16 +186,17 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             };
 
             var path = uriParser.ParsePath();
-            var node = path.LastSegment
-                .ShouldBeOperationImportSegment(GetMixedColor)
-                .And.ShouldHaveParameterCount(1)
-                .And.Parameters.Single().Value.As<ConstantNode>();
-            var values = node.Value.ShouldBeODataCollectionValue().And;
+            var parameters = path.LastSegment.ShouldBeOperationImportSegment(GetMixedColor)
+                .ShouldHaveParameterCount(1)
+                .Parameters;
+            var parameter = Assert.Single(parameters);
+            var node = Assert.IsType<ConstantNode>(parameter.Value);
+            var values = node.Value.ShouldBeODataCollectionValue();
 
             var items = values.Items.Cast<object>().ToList();
-            items.Count.Should().Be(2);
+            Assert.Equal(2, items.Count);
             items[0].ShouldBeODataEnumValue("TestNS.Color", "Blue");
-            items[1].Should().BeNull();
+            Assert.Null(items[1]);
         }
         #endregion
 
@@ -208,10 +210,10 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 parser => parser.ParsePath(),
                 path =>
                 {
-                    var keyInfo = path.LastSegment.As<KeySegment>().Keys.Single();
-                    keyInfo.Key.Should().Be("color");
-                    keyInfo.Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
-                    keyInfo.Value.As<ODataEnumValue>().Value.Should().Be("2");
+                    var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
+                    var keyInfo = Assert.Single(keySegment.Keys);
+                    Assert.Equal("color", keyInfo.Key);
+                    keyInfo.Value.ShouldBeODataEnumValue("TestNS.Color", "2");
                 },
                 Strings.RequestUriProcessor_SyntaxError);
         }
@@ -228,10 +230,10 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 },
                 path =>
                 {
-                    var keyInfo = path.LastSegment.As<KeySegment>().Keys.Single();
-                    keyInfo.Key.Should().Be("color");
-                    keyInfo.Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
-                    keyInfo.Value.As<ODataEnumValue>().Value.Should().Be("2");
+                    var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
+                    var keyInfo = Assert.Single(keySegment.Keys);
+                    Assert.Equal("color", keyInfo.Key);
+                    keyInfo.Value.ShouldBeODataEnumValue("TestNS.Color", "2");
                 },
                 Strings.RequestUriProcessor_SyntaxError);
         }
@@ -245,15 +247,15 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 parser => parser.ParsePath(),
                 path =>
                 {
-                    var keyList = path.LastSegment.As<KeySegment>().Keys.ToList();
-                    keyList.Count.Should().Be(2);
+                    var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
+                    var keyList = keySegment.Keys.ToList();
+                    Assert.Equal(2, keyList.Count);
                     var keyInfo = keyList[0];
-                    keyInfo.Key.Should().Be("color");
-                    keyInfo.Value.As<ODataEnumValue>().TypeName.Should().Be("TestNS.Color");
-                    keyInfo.Value.As<ODataEnumValue>().Value.Should().Be("2");
+                    Assert.Equal("color", keyInfo.Key);
+                    keyInfo.Value.ShouldBeODataEnumValue("TestNS.Color", "2");
                     var keyInfo1 = keyList[1];
-                    keyInfo1.Key.Should().Be("id");
-                    keyInfo1.Value.Should().Be(1);
+                    Assert.Equal("id", keyInfo1.Key);
+                    Assert.Equal(1, keyInfo1.Value);
                 },
                 Strings.RequestUriProcessor_SyntaxError);
         }

@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -15,7 +14,7 @@ namespace Microsoft.OData.Tests
         public void PropertyKindShouldBeUnspecifiedOnCreation()
         {
             var serializationInfo = new ODataPropertySerializationInfo();
-            serializationInfo.PropertyKind.Should().Be(ODataPropertyKind.Unspecified);
+            Assert.Equal(ODataPropertyKind.Unspecified, serializationInfo.PropertyKind);
         }
     }
 }

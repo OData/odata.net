@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser
@@ -14,25 +13,25 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void DefaultInstanceIsSingleton()
         {
-            ODataUrlKeyDelimiter.Parentheses.Should().BeSameAs(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Same(ODataUrlKeyDelimiter.Parentheses, ODataUrlKeyDelimiter.Parentheses);
         }
 
         [Fact]
         public void KeyAsSegmentInstanceIsSingleton()
         {
-            ODataUrlKeyDelimiter.Slash.Should().BeSameAs(ODataUrlKeyDelimiter.Slash);
+            Assert.Same(ODataUrlKeyDelimiter.Slash, ODataUrlKeyDelimiter.Slash);
         }
 
         [Fact]
         public void DefaultInstanceShouldHaveCorrectInternalRepresentation()
         {
-            ODataUrlKeyDelimiter.Parentheses.EnableKeyAsSegment.Should().BeFalse();
+            Assert.False(ODataUrlKeyDelimiter.Parentheses.EnableKeyAsSegment);
         }
 
         [Fact]
         public void KeyAsSegmentInstanceShouldHaveCorrectInternalRepresentation()
         {
-            ODataUrlKeyDelimiter.Slash.EnableKeyAsSegment.Should().BeTrue();
+            Assert.True(ODataUrlKeyDelimiter.Slash.EnableKeyAsSegment);
         }
     }
 }

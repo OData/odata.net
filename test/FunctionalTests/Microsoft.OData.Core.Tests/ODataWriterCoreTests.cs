@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -112,7 +111,7 @@ namespace Microsoft.OData.Tests
                 entitySetWriter.WriteEnd();
                 str2 = Encoding.UTF8.GetString(stream.ToArray());
             }
-            str1.Should().Be(str2);
+            Assert.Equal(str1, str2);
         }
 
         [Fact]
@@ -125,7 +124,7 @@ namespace Microsoft.OData.Tests
 
             var entry = new ODataResource() { TypeName = "DefaultNamespace.Person" };
             var entityType = coreWriter.GetEntityType2(entry);
-            entityType.Should().BeSameAs(model.FindDeclaredType("DefaultNamespace.Person"));
+            Assert.Same(model.FindDeclaredType("DefaultNamespace.Person"), entityType);
         }
 
         [Fact]
@@ -139,7 +138,7 @@ namespace Microsoft.OData.Tests
 
             var entry = new ODataResource();
             var entityType = coreWriter.GetEntityType2(entry);
-            entityType.Should().BeSameAs(objectType);
+            Assert.Same(objectType, entityType);
         }
 
         [Fact]
@@ -153,7 +152,7 @@ namespace Microsoft.OData.Tests
 
             var entry = new ODataResource();
             var entityType = coreWriter.GetEntityType2(entry);
-            entityType.Should().BeSameAs(personType);
+            Assert.Same(personType, entityType);
         }
 
         [Fact]
@@ -165,7 +164,7 @@ namespace Microsoft.OData.Tests
             var entry = new ODataResource();
             Action test = () => coreWriter.GetEntityType2(entry);
 
-            test.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+            test.Throws<ODataException>(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
         }
 
         private static EdmModel CreateTestModel()

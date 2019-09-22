@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -23,22 +22,22 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void InstanceAnnotationsPropertyShouldNotBeNullAtCreation()
         {
-            this.odataError.InstanceAnnotations.Should().NotBeNull();
+            Assert.NotNull(this.odataError.InstanceAnnotations);
         }
 
         [Fact]
         public void InstanceAnnotationsPropertyShouldReturnAWritableCollectionAtCreation()
         {
-            this.odataError.InstanceAnnotations.Should().NotBeNull();
+            Assert.NotNull(this.odataError.InstanceAnnotations);
             this.odataError.InstanceAnnotations.Add(new ODataInstanceAnnotation("namespace.name", new ODataPrimitiveValue("value")));
-            this.odataError.InstanceAnnotations.Count.Should().Be(1);
+            Assert.Single(this.odataError.InstanceAnnotations);
         }
 
         [Fact]
         public void SetNullValueToInstanceAnnotationsPropertyShouldThrow()
         {
             Action test = () => this.odataError.InstanceAnnotations = null;
-            test.ShouldThrow<ArgumentException>().WithMessage("Value cannot be null.\r\nParameter name: value");
+            Assert.Throws<ArgumentNullException>("value", test);
         }
 
         [Fact]
@@ -47,13 +46,15 @@ namespace Microsoft.OData.Tests
             ICollection<ODataInstanceAnnotation> initialCollection = this.odataError.InstanceAnnotations;
             ICollection<ODataInstanceAnnotation> newCollection = new List<ODataInstanceAnnotation>();
             this.odataError.InstanceAnnotations = newCollection;
-            this.odataError.InstanceAnnotations.As<object>().Should().BeSameAs(newCollection).And.NotBeSameAs(initialCollection);
+            Assert.Same(this.odataError.InstanceAnnotations, newCollection);
+            Assert.NotSame(this.odataError.InstanceAnnotations, initialCollection);
         }
 
         [Fact]
         public void GetInstanceAnnotationsForWritingShouldReturnEmptyInstanceAnnotationsFromNewODataError()
         {
-            this.odataError.InstanceAnnotations.Should().NotBeNull().And.BeEmpty();
+            Assert.NotNull(this.odataError.InstanceAnnotations);
+            Assert.Empty(this.odataError.InstanceAnnotations);
         }
 
         [Fact]
@@ -61,7 +62,8 @@ namespace Microsoft.OData.Tests
         {
             ODataInstanceAnnotation instanceAnnotation = new ODataInstanceAnnotation("namespace.name", new ODataPrimitiveValue("value"));
             this.odataError.InstanceAnnotations.Add(instanceAnnotation);
-            this.odataError.InstanceAnnotations.Should().Contain(instanceAnnotation).And.HaveCount(1);
+            var annotation = Assert.Single(this.odataError.InstanceAnnotations);
+            Assert.Same(annotation, instanceAnnotation);
         }
     }
 }

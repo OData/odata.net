@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -22,48 +21,48 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void AllPropertiesShouldBeNullOnCreation()
         {
-            this.testSubject.CollectionTypeName.Should().BeNull();
+            Assert.Null(this.testSubject.CollectionTypeName);
         }
 
         [Fact]
         public void SettingNullCollectionTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.CollectionTypeName = null;
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("CollectionTypeName"));
+            Assert.Throws<ArgumentNullException>("CollectionTypeName", action);
         }
 
         [Fact]
         public void SettingEmptyCollectionTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.CollectionTypeName = "";
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("CollectionTypeName"));
+            Assert.Throws<ArgumentNullException>("CollectionTypeName", action);
         }
 
         [Fact]
         public void SettingTypeNameWithoutCollectionWrapperToCollectionTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.CollectionTypeName = "Edm.String";
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_InvalidCollectionTypeName("Edm.String"));
+            action.Throws<ODataException>(Strings.ValidationUtils_InvalidCollectionTypeName("Edm.String"));
         }
 
         [Fact]
         public void ShouldBeAbleToSetCollectionTypeName()
         {
             this.testSubject.CollectionTypeName = "Collection(ns.foo)";
-            this.testSubject.CollectionTypeName.Should().Be("Collection(ns.foo)");
+            Assert.Equal("Collection(ns.foo)", this.testSubject.CollectionTypeName);
         }
 
         [Fact]
         public void ValidateNullSerializationInfoShouldReturnNull()
         {
-            ODataCollectionStartSerializationInfo.Validate(null).Should().BeNull();
+            Assert.Null(ODataCollectionStartSerializationInfo.Validate(null));
         }
 
         [Fact]
         public void ValidatingSerializationInfoShouldThrowIfCollectionTypeNameNotSet()
         {
             Action action = () => ODataCollectionStartSerializationInfo.Validate(new ODataCollectionStartSerializationInfo());
-            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.CollectionTypeName"));
+            Assert.Throws<ArgumentNullException>("serializationInfo.CollectionTypeName", action);
         }
     }
 }

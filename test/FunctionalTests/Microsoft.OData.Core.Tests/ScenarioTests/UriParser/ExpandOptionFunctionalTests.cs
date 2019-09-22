@@ -7,12 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -118,7 +116,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void TopWithValidValue()
         {
             var clause = this.Run("MyContainedDog($top=22)", PersonType, PeopleSet);
-            clause.TopOption.Should().Be(22);
+            Assert.Equal(22, clause.TopOption);
         }
 
         [Fact]
@@ -162,17 +160,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void CountWithValidValue()
         {
             var clause = this.Run("MyContainedDog($count=true)", PersonType, PeopleSet);
-            clause.CountOption.Should().BeTrue();
+            Assert.True(clause.CountOption);
         }
 
         [Fact]
         public void CountWithInvalidValue()
         {
             Action action = () => this.Run("MyContainedDog($count=COUNT)", PersonType, PeopleSet);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_InvalidCountOption("COUNT"));
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidCountOption("COUNT"));
 
             action = () => this.Run("MyContainedDog($count=-2)", PersonType, PeopleSet);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_InvalidCountOption("-2"));
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidCountOption("-2"));
         }
         #endregion $count
 
@@ -181,44 +179,44 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void LevelsWithValueMax()
         {
             var clause = this.Run("Fully.Qualified.Namespace.Manager/DirectReports($levels=max)", PersonType, PeopleSet);
-            clause.LevelsOption.IsMaxLevel.Should().BeTrue();
+            Assert.True(clause.LevelsOption.IsMaxLevel);
         }
 
         [Fact]
         public void LevelsWithPositiveValue()
         {
             var clause = this.Run("Fully.Qualified.Namespace.Manager/DirectReports($levels=6)", PersonType, PeopleSet);
-            clause.LevelsOption.IsMaxLevel.Should().BeFalse();
-            clause.LevelsOption.Level.Should().Be(6);
+            Assert.False(clause.LevelsOption.IsMaxLevel);
+            Assert.Equal(6, clause.LevelsOption.Level);
         }
 
         [Fact]
         public void LevelsWithZeroValueShouldWork()
         {
             var clause = this.Run("Fully.Qualified.Namespace.Manager/DirectReports($levels=0)", PersonType, PeopleSet);
-            clause.LevelsOption.IsMaxLevel.Should().BeFalse();
-            clause.LevelsOption.Level.Should().Be(0);
+            Assert.False(clause.LevelsOption.IsMaxLevel);
+            Assert.Equal(0, clause.LevelsOption.Level);
         }
 
         [Fact]
         public void LevelsWithNegativeValueShouldThrow()
         {
             Action action = () => this.Run("Fully.Qualified.Namespace.Manager/DirectReports($levels=-1)", PersonType, PeopleSet);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_InvalidLevelsOption("-1"));
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidLevelsOption("-1"));
         }
 
         [Fact]
         public void LevelsWithInvalidValue()
         {
             Action action = () => this.Run("Fully.Qualified.Namespace.Manager/DirectReports($levels=LEVEL)", PersonType, PeopleSet);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriSelectParser_InvalidLevelsOption("LEVEL"));
+            action.Throws<ODataException>(Strings.UriSelectParser_InvalidLevelsOption("LEVEL"));
         }
 
         [Fact]
         public void LevelsOnInvalidNavigationProperty()
         {
             Action action = () => this.Run("MyPaintings($levels=6)", PersonType, PeopleSet);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType("MyPaintings", "Fully.Qualified.Namespace.Painting", "Fully.Qualified.Namespace.Person"));
+            action.Throws<ODataException>(Strings.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType("MyPaintings", "Fully.Qualified.Namespace.Painting", "Fully.Qualified.Namespace.Person"));
         }
         #endregion $levels
 
@@ -227,42 +225,42 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void LevelsOnNavigationPropertyOfBaseType()
         {
             var clause = this.RunWithLocalModel("Nav21($levels=1)", T2Type, T2Set);
-            clause.LevelsOption.Level.Should().Be(1);
+            Assert.Equal(1, clause.LevelsOption.Level);
         }
 
         [Fact]
         public void LevelsOnNavigationPropertyOfSameType()
         {
             var clause = this.RunWithLocalModel("Nav22($levels=2)", T2Type, T2Set);
-            clause.LevelsOption.Level.Should().Be(2);
+            Assert.Equal(2, clause.LevelsOption.Level);
         }
 
         [Fact]
         public void LevelsOnNavigationPropertyOfDerivedType()
         {
             var clause = this.RunWithLocalModel("Nav23($levels=3)", T2Type, T2Set);
-            clause.LevelsOption.Level.Should().Be(3);
+            Assert.Equal(3, clause.LevelsOption.Level);
         }
 
         [Fact]
         public void LevelsOnNavigationPropertyOfBaseTypeWithTypeCast()
         {
             var clause = this.RunWithLocalModel("NS.T3/Nav21($levels=4)", T2Type, T2Set);
-            clause.LevelsOption.Level.Should().Be(4);
+            Assert.Equal(4, clause.LevelsOption.Level);
         }
 
         [Fact]
         public void LevelsOnNavigationPropertyOfSameTypeWithTypeCast()
         {
             var clause = this.RunWithLocalModel("NS.T3/Nav22($levels=5)", T2Type, T2Set);
-            clause.LevelsOption.Level.Should().Be(5);
+            Assert.Equal(5, clause.LevelsOption.Level);
         }
 
         [Fact]
         public void LevelsOnNavigationPropertyOfDerivedTypeWithTypeCast()
         {
             var clause = this.RunWithLocalModel("NS.T2/Nav23($levels=6)", T3Type, T3Set);
-            clause.LevelsOption.Level.Should().Be(6);
+            Assert.Equal(6, clause.LevelsOption.Level);
         }
         #endregion
 

@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests
             var asyncWriter = this.TestInit();
             asyncWriter.CreateResponseMessage();
             Action test = () => asyncWriter.CreateResponseMessage();
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataAsyncWriter_CannotCreateResponseMoreThanOnce);
+            test.Throws<ODataException>(Strings.ODataAsyncWriter_CannotCreateResponseMoreThanOnce);
         }
 
         private ODataAsynchronousWriter TestInit()

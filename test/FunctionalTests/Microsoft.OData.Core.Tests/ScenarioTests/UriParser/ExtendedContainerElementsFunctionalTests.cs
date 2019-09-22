@@ -9,12 +9,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
 
@@ -110,7 +108,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             path.LastSegment.ShouldBeOperationImportSegment(operationImports);
             IEdmOperationImport operationImport = operationImports.Single();
             var expression = operationImport.EntitySet as IEdmPathExpression;
-            expression.PathSegments.Single().Should().Be("EntitySet1");
+            Assert.Equal("EntitySet1", expression.PathSegments.Single());
         }
 
         [Fact]
@@ -122,7 +120,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             path.LastSegment.ShouldBeNavigationPropertySegment(nav);
             var set0 = model.FindDeclaredEntitySet("EntitySet0");
             var set1 = model.FindDeclaredEntitySet("EntitySet1");
-            set0.FindNavigationTarget(nav).Should().Be(set1);
+            Assert.Same(set1, set0.FindNavigationTarget(nav));
         }
 
         internal static ODataPath RunParsePath(string path)

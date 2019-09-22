@@ -6,31 +6,38 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
+using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser
 {
     public static class ODataValueAssertions
     {
-        public static AndConstraint<ODataCollectionValue> ShouldBeODataCollectionValue(this object value)
+        public static ODataCollectionValue ShouldBeODataCollectionValue(this object value)
         {
-            value.Should().BeAssignableTo<ODataCollectionValue>();
-            return new AndConstraint<ODataCollectionValue>(value.As<ODataCollectionValue>());
+            Assert.NotNull(value);
+            var collectionValue = value as ODataCollectionValue;
+            return Assert.IsType<ODataCollectionValue>(value);
         }
 
-        public static AndConstraint<IEnumerable<TValue>> ItemsShouldBeAssignableTo<TValue>(this ODataCollectionValue value)
+        public static IEnumerable<TValue> ItemsShouldBeAssignableTo<TValue>(this ODataCollectionValue value)
         {
-            value.Items.Cast<object>().Should().ContainItemsAssignableTo<TValue>();
-            return new AndConstraint<IEnumerable<TValue>>(value.Items.Cast<TValue>());
+            Assert.NotNull(value);
+            Assert.NotNull(value.Items);
+            foreach (var item in value.Items)
+            {
+                Assert.IsType<TValue>(item);
+            }
+
+            return value.Items.Cast<TValue>();
         }
 
-        public static AndConstraint<ODataEnumValue> ShouldBeODataEnumValue(this object value, string typeName, string val)
+        public static ODataEnumValue ShouldBeODataEnumValue(this object value, string typeName, string val)
         {
-            value.Should().BeAssignableTo<ODataEnumValue>();
-            var enumVal = value.As<ODataEnumValue>();
-            enumVal.TypeName.Should().Be(typeName);
-            enumVal.Value.Should().Be(val);
-            return new AndConstraint<ODataEnumValue>(enumVal);
+            Assert.NotNull(value);
+            var enumVal = Assert.IsType<ODataEnumValue>(value);
+            Assert.Equal(typeName, enumVal.TypeName);
+            Assert.Equal(val, enumVal.Value);
+            return enumVal;
         }
     }
 }

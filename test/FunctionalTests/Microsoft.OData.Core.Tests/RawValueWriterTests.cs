@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
@@ -34,7 +32,7 @@ namespace Microsoft.OData.Tests
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             target.Start();
-            this.StreamAsString(target).Should().BeEmpty();
+            Assert.Empty(this.StreamAsString(target));
         }
 
         [Fact]
@@ -43,7 +41,7 @@ namespace Microsoft.OData.Tests
             this.settings.JsonPCallback = "foo";
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             target.Start();
-            this.StreamAsString(target).Should().Be("foo(");
+            Assert.Equal("foo(", this.StreamAsString(target));
         }
 
         [Fact]
@@ -51,7 +49,7 @@ namespace Microsoft.OData.Tests
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             target.End();
-            this.StreamAsString(target).Should().BeEmpty();
+            Assert.Empty(this.StreamAsString(target));
         }
 
         [Fact]
@@ -60,7 +58,7 @@ namespace Microsoft.OData.Tests
             this.settings.JsonPCallback = "foo";
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             target.End();
-            this.StreamAsString(target).Should().Be(")");
+            Assert.Equal(")", this.StreamAsString(target));
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             const string value = "string value";
             target.WriteRawValue(value);
-            this.StreamAsString(target).Should().Be(value);
+            Assert.Equal(value, this.StreamAsString(target));
         }
 
         // <summary>
@@ -84,7 +82,7 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             Date value = new Date(2014, 9, 18);
             target.WriteRawValue(value);
-            this.StreamAsString(target).Should().Be("2014-09-18");
+            Assert.Equal("2014-09-18", this.StreamAsString(target));
         }
 
         // <summary>
@@ -96,7 +94,7 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             TimeOfDay value = new TimeOfDay(9, 47, 5, 900);
             target.WriteRawValue(value);
-            this.StreamAsString(target).Should().Be("09:47:05.9000000");
+            Assert.Equal("09:47:05.9000000", this.StreamAsString(target));
         }
 
         /// <summary>
@@ -108,7 +106,7 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             var value = GeographyPoint.Create(22.2, 22.2);
             target.WriteRawValue(value);
-            this.StreamAsString(target).Should().Be(@"{""type"":""Point"",""coordinates"":[22.2,22.2],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}");
+            Assert.Equal(this.StreamAsString(target), @"{""type"":""Point"",""coordinates"":[22.2,22.2],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}");
         }
 
         /// <summary>
@@ -120,7 +118,7 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             var value = GeometryPoint.Create(1.2, 3.16);
             target.WriteRawValue(value);
-            this.StreamAsString(target).Should().Be(@"{""type"":""Point"",""coordinates"":[1.2,3.16],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:0""}}}");
+            Assert.Equal(this.StreamAsString(target), @"{""type"":""Point"",""coordinates"":[1.2,3.16],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:0""}}}");
         }
 
         private string StreamAsString(RawValueWriter target)

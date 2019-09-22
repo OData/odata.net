@@ -10,7 +10,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.MultipartMixed;
@@ -1035,7 +1034,7 @@ Content-Type: application/json;odata.metadata=none
             }
             catch (ODataException e)
             {
-                e.Message.Should().Contain("is not matching any of the request Id and atomic group Id seen so far");
+                Assert.Contains("is not matching any of the request Id and atomic group Id seen so far", e.Message);
                 return;
             }
 
@@ -1056,7 +1055,7 @@ Content-Type: application/json;odata.metadata=none
             }
             catch (ODataException e)
             {
-                e.Message.Should().Contain(dependsOnIdNotFound);
+                Assert.Contains(dependsOnIdNotFound, e.Message);
                 return;
             }
 
@@ -1077,7 +1076,7 @@ Content-Type: application/json;odata.metadata=none
             }
             catch (ODataException e)
             {
-                e.Message.Should().Contain("Therefore dependsOn property should refer to atomic group Id");
+                Assert.Contains("Therefore dependsOn property should refer to atomic group Id", e.Message);
                 return;
             }
 

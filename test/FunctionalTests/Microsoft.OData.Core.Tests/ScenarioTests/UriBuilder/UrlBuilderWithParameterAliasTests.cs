@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
 
-            odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
+            odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
 
-            OperationSegmentParameter p = odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPetCount()).And.Parameters.First();
+            OperationSegmentParameter p = odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPetCount()).Parameters.First();
             Assert.Equal("colorPattern", p.Name);
             var node = Assert.IsType<ParameterAliasNode>(p.Value);
             Assert.Equal("@p1", node.Alias);
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
 
-            odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
+            odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
             odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDecimal(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
+            odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
             aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);

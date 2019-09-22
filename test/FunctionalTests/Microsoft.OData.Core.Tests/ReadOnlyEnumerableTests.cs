@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
 
@@ -18,44 +17,47 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void EmptyOfTShouldAlwaysReturnTheSameInstance()
         {
-            ReadOnlyEnumerable<ODataAction>.Empty().As<object>().Should().BeSameAs(ReadOnlyEnumerable<ODataAction>.Empty());
-            ReadOnlyEnumerable<ODataAction>.Empty().As<object>().Should().NotBeSameAs(ReadOnlyEnumerable<ODataFunction>.Empty());
+            Assert.Same(ReadOnlyEnumerable<ODataAction>.Empty(), ReadOnlyEnumerable<ODataAction>.Empty());
+            Assert.NotSame(ReadOnlyEnumerable<ODataAction>.Empty(), ReadOnlyEnumerable<ODataFunction>.Empty());
         }
 
         [Fact]
         public void AddToSourceListShouldThrowForEmptySource()
         {
             Action test = () => ReadOnlyEnumerable<int>.Empty().AddToSourceList(1);
-            test.ShouldThrow<NotSupportedException>().WithMessage("Collection is read-only.");
+            test.Throws<NotSupportedException>("Collection is read-only.");
         }
 
         [Fact]
         public void AddToSourceListShouldAddToTheSourceList()
         {
             ReadOnlyEnumerable<int> enumerable = new ReadOnlyEnumerable<int>();
-            enumerable.Should().BeEmpty();
+            Assert.Empty(enumerable);
             enumerable.AddToSourceList(1);
-            enumerable.Count().Should().Be(1);
-            enumerable.Should().OnlyContain(i => i == 1);
+            int value = Assert.Single(enumerable);
+            Assert.Equal(1, value);
         }
 
         [Fact]
         public void IsEmptyReadOnlyEnumerableShouldFailForNullSource()
         {
             IEnumerable<int> enumerable = null;
-            enumerable.IsEmptyReadOnlyEnumerable().Should().BeFalse();
+            var result = enumerable.IsEmptyReadOnlyEnumerable();
+            Assert.False(result);
         }
 
         [Fact]
         public void IsEmptyReadOnlyEnumerableShouldFailForNewReadOnlyEnumerable()
         {
-            (new ReadOnlyEnumerable<int>()).IsEmptyReadOnlyEnumerable().Should().BeFalse();
+            var result = (new ReadOnlyEnumerable<int>()).IsEmptyReadOnlyEnumerable();
+            Assert.False(result);
         }
 
         [Fact]
         public void IsEmptyReadOnlyEnumerableShouldPassForReadOnlyEnumerableDotEmpty()
         {
-            ReadOnlyEnumerable<int>.Empty().IsEmptyReadOnlyEnumerable().Should().BeTrue();
+            var result = ReadOnlyEnumerable<int>.Empty().IsEmptyReadOnlyEnumerable();
+            Assert.True(result);
         }
 
         [Fact]
@@ -63,20 +65,21 @@ namespace Microsoft.OData.Tests
         {
             IEnumerable<int> enumerable = null;
             Action test = () => enumerable.ToReadOnlyEnumerable("Integers");
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
+            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
         }
 
         [Fact]
         public void ToReadOnlyEnumerableShouldThrowForListSource()
         {
             Action test = () => (new List<int>()).ToReadOnlyEnumerable("Integers");
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
+            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
         }
 
         [Fact]
         public void ToReadOnlyEnumerableShouldNotThrowForReadOnlyEnumerableSource()
         {
-            (new ReadOnlyEnumerable<int>().ToReadOnlyEnumerable("Integers")).Should().BeEmpty();
+            var result = new ReadOnlyEnumerable<int>().ToReadOnlyEnumerable("Integers");
+            Assert.Empty(result);
         }
 
         [Fact]
@@ -84,14 +87,14 @@ namespace Microsoft.OData.Tests
         {
             IEnumerable<int> enumerable = null;
             Action test = () => enumerable.GetOrCreateReadOnlyEnumerable("Integers");
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
+            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
         }
 
         [Fact]
         public void GetOrCreateReadOnlyEnumerableShouldThrowForListSource()
         {
             Action test = () => (new List<int>()).GetOrCreateReadOnlyEnumerable("Integers");
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
+            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
         }
 
         [Fact]
@@ -99,8 +102,8 @@ namespace Microsoft.OData.Tests
         {
             var enumerable = ReadOnlyEnumerable<int>.Empty();
             var enumerable2 = enumerable.GetOrCreateReadOnlyEnumerable("Integers");
-            enumerable2.As<object>().Should().NotBeSameAs(ReadOnlyEnumerable<int>.Empty());
-            enumerable2.Should().NotBeNull();
+            Assert.NotSame(enumerable2, ReadOnlyEnumerable<int>.Empty());
+            Assert.NotNull(enumerable2);
         }
 
         [Fact]
@@ -108,8 +111,8 @@ namespace Microsoft.OData.Tests
         {
             var enumerable = new ReadOnlyEnumerable<int>();
             var enumerable2 = enumerable.GetOrCreateReadOnlyEnumerable("Integers");
-            enumerable2.As<object>().Should().NotBeSameAs(ReadOnlyEnumerable<int>.Empty());
-            enumerable2.As<object>().Should().BeSameAs(enumerable);
+            Assert.NotSame(enumerable2, ReadOnlyEnumerable<int>.Empty());
+            Assert.Same(enumerable2, enumerable);
         }
 
         [Fact]
@@ -117,14 +120,14 @@ namespace Microsoft.OData.Tests
         {
             IEnumerable<ODataProperty> enumerable = null;
             Action test = () => enumerable.ConcatToReadOnlyEnumerable("Properties", new ODataProperty());
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderUtils_EnumerableModified("Properties"));
+            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Properties"));
         }
 
         [Fact]
         public void ConcatToReadOnlyEnumerableShouldThrowForListSource()
         {
             Action test = () => new List<ODataProperty>().ConcatToReadOnlyEnumerable("Properties", new ODataProperty());
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderUtils_EnumerableModified("Properties"));
+            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Properties"));
         }
 
         [Fact]
@@ -132,57 +135,57 @@ namespace Microsoft.OData.Tests
         {
             var enumerable = ReadOnlyEnumerable<ODataProperty>.Empty();
             var enumerable2 = enumerable.ConcatToReadOnlyEnumerable("Properties", new ODataProperty());
-            enumerable2.As<object>().Should().NotBeSameAs(enumerable);
-            enumerable2.Count().Should().Be(1);
+            Assert.NotSame(enumerable2, enumerable);
+            Assert.Single(enumerable2);
         }
 
         [Fact]
         public void ConcatToReadOnlyEnumerableShouldAddForReadOnlyEnumerableSource()
         {
             var enumerable = new ReadOnlyEnumerable<ODataProperty>();
-            enumerable.Count().Should().Be(0);
+            Assert.Empty(enumerable);
             enumerable.ConcatToReadOnlyEnumerable("Properties", new ODataProperty());
-            enumerable.Count().Should().Be(1);
+            Assert.Single(enumerable);
         }
 
         [Fact]
         public void AddActionShouldAddActionToEntry()
         {
             ODataResource entry = ReaderUtils.CreateNewResource();
-            entry.Actions.Count().Should().Be(0);
+            Assert.Empty(entry.Actions);
             entry.AddAction(new ODataAction());
-            entry.Actions.Count().Should().Be(1);
+            Assert.Single(entry.Actions);
         }
 
         [Fact]
         public void AddFunctionShouldAddFunctionToEntry()
         {
             ODataResource entry = ReaderUtils.CreateNewResource();
-            entry.Functions.Count().Should().Be(0);
+            Assert.Empty(entry.Functions);
             entry.AddFunction(new ODataFunction());
-            entry.Functions.Count().Should().Be(1);
+            Assert.Single(entry.Functions);
         }
 
         [Fact]
         public void AddActionShouldAddActionToFeed()
         {
             ODataResourceSet feed = new ODataResourceSet();
-            feed.Actions.Count().Should().Be(0);
+            Assert.Empty(feed.Actions);
             feed.AddAction(new ODataAction());
-            feed.Actions.Count().Should().Be(1);
+            Assert.Single(feed.Actions);
             feed.AddAction(new ODataAction());
-            feed.Actions.Count().Should().Be(2);
+            Assert.Equal(2, feed.Actions.Count());
         }
 
         [Fact]
         public void AddFunctionShouldAddFunctionToFeed()
         {
             ODataResourceSet feed = new ODataResourceSet();
-            feed.Functions.Count().Should().Be(0);
+            Assert.Empty(feed.Functions);
             feed.AddFunction(new ODataFunction());
-            feed.Functions.Count().Should().Be(1);
+            Assert.Single(feed.Functions);
             feed.AddFunction(new ODataFunction());
-            feed.Functions.Count().Should().Be(2);
+            Assert.Equal(2, feed.Functions.Count());
         }
     }
 }

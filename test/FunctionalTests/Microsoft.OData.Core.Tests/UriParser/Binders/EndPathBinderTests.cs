@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var token = new EndPathToken("Color", new RangeVariableToken("notInScope"));
             Action bind = () => this.propertyBinder.BindEndPath(token);
 
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_ParameterNotInScope("notInScope"));
+            bind.Throws<ODataException>(Strings.MetadataBinder_ParameterNotInScope("notInScope"));
         }
 
         [Fact]
@@ -173,7 +172,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var state = new BindingState(this.configuration);
             Action createparent = () => EndPathBinder.CreateParentFromImplicitRangeVariable(state);
-            createparent.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_PropertyAccessWithoutParentParameter);
+            createparent.Throws<ODataException>(Strings.MetadataBinder_PropertyAccessWithoutParentParameter);
         }
 
         [Fact]
@@ -181,7 +180,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             SingleValueNode parent = EndPathBinder.CreateParentFromImplicitRangeVariable(this.bindingState);
             ResourceRangeVariableReferenceNode entityRangeVariableReferenceNode = (ResourceRangeVariableReferenceNode)parent;
-            entityRangeVariableReferenceNode.RangeVariable.Should().BeSameAs(this.bindingState.ImplicitRangeVariable);
+            Assert.Same(entityRangeVariableReferenceNode.RangeVariable, this.bindingState.ImplicitRangeVariable);
         }
 
         [Fact]
@@ -238,7 +237,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action getQueryNode = () => endPathBinder.GeneratePropertyAccessQueryForOpenType(
                 token, parentNode);
 
-            getQueryNode.ShouldThrow<ODataException>().WithMessage(
+            getQueryNode.Throws<ODataException>(
                 Strings.MetadataBinder_PropertyNotDeclared(parentNode.GetEdmTypeReference().FullName(),
                                                                                     token.Identifier));
         }
@@ -266,8 +265,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         /// </summary>
         internal SingleValueNode BindMethod(QueryToken queryToken)
         {
-            queryToken.Should().BeOfType<RangeVariableToken>();
-            return RangeVariableBinder.BindRangeVariableToken(queryToken.As<RangeVariableToken>(), this.bindingState) as SingleValueNode;
+            Assert.IsType<RangeVariableToken>(queryToken);
+            return RangeVariableBinder.BindRangeVariableToken(queryToken as RangeVariableToken, this.bindingState) as SingleValueNode;
         }
 
         /// <summary>
@@ -277,7 +276,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         /// <returns></returns>
         private BindingState GetBindingStateForTest(IEdmEntityTypeReference typeReference, IEdmEntitySet type)
         {
-            type.Should().NotBeNull();
+            Assert.NotNull(type);
             CollectionResourceNode entityCollectionNode = new EntitySetNode(type);
             var implicitRangeVariable = new ResourceRangeVariable(ExpressionConstants.It, typeReference, entityCollectionNode);
             var state = new BindingState(this.configuration) { ImplicitRangeVariable = implicitRangeVariable };

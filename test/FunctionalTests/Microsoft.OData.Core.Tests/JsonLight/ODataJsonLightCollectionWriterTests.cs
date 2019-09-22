@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -83,7 +82,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             }
                         }))));
             var str = Encoding.UTF8.GetString(stream.ToArray());
-            str.Should().Be(
+            Assert.Equal(str,
                 "{" +
                     "\"@odata.context\":\"http://svc/$metadata#EntitySet/$entity\"," +
                     "\"ID\":1," +
@@ -191,7 +190,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             stream.Seek(0, SeekOrigin.Begin);
             string payload = (new StreamReader(stream)).ReadToEnd();
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(payload, expectedPayload);
         }
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel model, bool writingResponse = true, bool synchronous = true)

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -50,28 +49,28 @@ namespace Microsoft.OData.Tests
         public void ShouldBeAbleToSetAndClearIdOnEntityReferenceLink()
         {
             ODataEntityReferenceLink referencelink = new ODataEntityReferenceLink();
-            referencelink.Url.Should().BeNull();
+            Assert.Null(referencelink.Url);
             referencelink.Url = new Uri("http://my/Id");
-            referencelink.Url.ToString().Should().Be("http://my/Id");
+            Assert.Equal(new Uri("http://my/Id"), referencelink.Url);
             referencelink.Url = null;
-            referencelink.Url.Should().BeNull();
+            Assert.Null(referencelink.Url);
         }
 
         [Fact]
         public void InstanceAnnotationsPropertyShouldNotBeNullAtCreation()
         {
             ODataEntityReferenceLink referencelink = new ODataEntityReferenceLink();
-            referencelink.InstanceAnnotations.Should().NotBeNull();
-            referencelink.InstanceAnnotations.Count.Should().Be(0);
+            Assert.NotNull(referencelink.InstanceAnnotations);
+            Assert.Empty(referencelink.InstanceAnnotations);
         }
 
         [Fact]
         public void InstanceAnnotationsPropertyShouldReturnAWritableCollectionAtCreation()
         {
             ODataEntityReferenceLink referencelink = new ODataEntityReferenceLink();
-            referencelink.InstanceAnnotations.Should().NotBeNull();
+            Assert.NotNull(referencelink.InstanceAnnotations);
             referencelink.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue("value")));
-            referencelink.InstanceAnnotations.Count.Should().Be(1);
+            Assert.Equal(1, referencelink.InstanceAnnotations.Count);
         }
 
         [Fact]
@@ -79,7 +78,7 @@ namespace Microsoft.OData.Tests
         {
             ODataEntityReferenceLink referencelink = new ODataEntityReferenceLink();
             Action test = () => referencelink.InstanceAnnotations = null;
-            test.ShouldThrow<ArgumentException>().WithMessage("Value cannot be null.\r\nParameter name: value");
+            Assert.Throws<ArgumentNullException>("value", test);
         }
 
         [Fact]
@@ -99,7 +98,7 @@ namespace Microsoft.OData.Tests
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}");
             ODataEntityReferenceLink link = deserializer.ReadEntityReferenceLink();
-            link.Url.ToString().Should().Be("http://host/Customers(1)");
+            Assert.Equal(link.Url.ToString(), "http://host/Customers(1)");
             Assert.Equal(2, link.InstanceAnnotations.Count);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), link.InstanceAnnotations.Single(ia => ia.Name == "TestNamespace.unknown").Value);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(456), link.InstanceAnnotations.Single(ia => ia.Name == "custom.annotation").Value);
@@ -110,7 +109,7 @@ namespace Microsoft.OData.Tests
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.id\":\"http://host/Customers(1)\",\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}");
             Action readResult = () => deserializer.ReadEntityReferenceLink();
-            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
+            readResult.Throws<ODataException>(ODataErrorStrings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
         }
 
         [Fact]
@@ -119,7 +118,7 @@ namespace Microsoft.OData.Tests
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odataa.unknown\":123}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLink();
-            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+            readResult.Throws<ODataException>(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
         }
 
         [Fact]
@@ -128,7 +127,7 @@ namespace Microsoft.OData.Tests
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\"}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLink();
-            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+            readResult.Throws<ODataException>(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
         }
 
         [Fact]
@@ -137,7 +136,7 @@ namespace Microsoft.OData.Tests
             string payload = "{}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLink();
-            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
+            readResult.Throws<ODataException>(ODataErrorStrings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
         }
 
         [Fact]
@@ -146,7 +145,7 @@ namespace Microsoft.OData.Tests
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@TestNamespace.unknown\":123,\"@odata.id\":\"http://host/Customers(1)\",\"@custom.annotation\":456}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLink();
-            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+            readResult.Throws<ODataException>(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
         }
 
         [Fact]
@@ -155,7 +154,7 @@ namespace Microsoft.OData.Tests
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\",\"@TestNamespace.unknown\":123,\"@TestNamespace.unknown\":456}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLink();
-            readResult.ShouldNotThrow();
+            readResult.DoesNotThrow();
         }
 
         [Fact]
@@ -169,9 +168,9 @@ namespace Microsoft.OData.Tests
             referencelink.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.unknown", new ODataPrimitiveValue(456)));
             string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\",\"@TestNamespace.unknown\":123,\"@TestNamespace.unknown\":456}";
             Action writeResult = () => WriteAndValidate(referencelink, expectedPayload, writingResponse: false);
-            writeResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.unknown"));
+            writeResult.Throws<ODataException>(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.unknown"));
             writeResult = () => WriteAndValidate(referencelink, expectedPayload, writingResponse: true);
-            writeResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.unknown"));
+            writeResult.Throws<ODataException>(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.unknown"));
         }
 
         [Fact]
@@ -201,10 +200,10 @@ namespace Microsoft.OData.Tests
 
         private static void SameEntityReferenceLink(ODataEntityReferenceLink link1, ODataEntityReferenceLink link2)
         {
-            link1.Should().NotBeNull();
-            link2.Should().NotBeNull();
-            link1.Url.ToString().Should().Be(link2.Url.ToString());
-            link1.InstanceAnnotations.Count.Should().Equals(link2.InstanceAnnotations.Count);
+            Assert.NotNull(link1);
+            Assert.NotNull(link2);
+            Assert.Equal(link1.Url.ToString(), link2.Url.ToString());
+            Assert.Equal(link1.InstanceAnnotations.Count, link2.InstanceAnnotations.Count);
             foreach (ODataInstanceAnnotation instanceannotation in link1.InstanceAnnotations)
             {
                 TestUtils.AssertODataValueAreEqual(instanceannotation.Value, link2.InstanceAnnotations.Single(ia => ia.Name == instanceannotation.Name.ToString()).Value);
@@ -223,7 +222,7 @@ namespace Microsoft.OData.Tests
         private static void WriteAndValidate(ODataEntityReferenceLink referencelink, string expectedPayload, bool writingResponse = true, bool synchronous = true)
         {
             string payload = WriteToString(referencelink, writingResponse, synchronous);
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(payload, expectedPayload);
         }
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)

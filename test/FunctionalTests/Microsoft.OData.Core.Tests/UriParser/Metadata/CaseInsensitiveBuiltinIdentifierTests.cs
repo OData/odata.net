@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
@@ -131,21 +130,21 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$top=1&$skip=2&$count=true",
                 "People?$toP=1&$skIp=2&$COUnt=true",
                 uriParser => uriParser.ParseTop(),
-                val => val.Should().Be(1),
+                val => Assert.Equal(1, val),
                 /*errorMessage*/ null);
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$top=1&$skip=2&$count=true",
                "People?$toP=1&$skIp=2&$COUnt=true",
                uriParser => uriParser.ParseSkip(),
-               val => val.Should().Be(2),
+               val => Assert.Equal(2, val),
                 /*errorMessage*/ null);
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$top=1&$skip=2&$count=true",
                "People?$toP=1&$skIp=2&$COUnt=true",
                uriParser => uriParser.ParseCount(),
-               val => val.Should().Be(true),
+               val => Assert.True(val),
                 /*errorMessage*/ null);
         }
 
@@ -156,7 +155,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(0)/RelatedIDs?$index=4",
                 "People(0)/RelatedIDs?$iNDex=4",
                 uriParser => uriParser.ParseIndex(),
-                val => val.Should().Be(4),
+                val => Assert.Equal(4, val),
                 /*errorMessage*/ null);
         }
 
@@ -167,7 +166,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(0)/MyPaintings/$ref?$id=../../Paintings(3)",
                 "People(0)/MyPaintings/$ref?$ID=../../Paintings(3)",
                 uriParser => uriParser.ParseEntityId(),
-                clause => clause.Id.ShouldBeEquivalentTo(new Uri("Paintings(3)", UriKind.Relative)),
+                clause => Assert.Equal(clause.Id, new Uri("Paintings(3)", UriKind.Relative)),
                 /*errorMessage*/ null);
         }
 
@@ -177,7 +176,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($select=Name)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($SELECT=Name)",
-                uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().SelectAndExpand,
+                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).SelectAndExpand,
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                 new ODataPathSegment[]
                 {
@@ -188,7 +187,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveBuiltIn(
               "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($expand=MyDog)",
               "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($EXPAND=MyDog)",
-              uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().SelectAndExpand,
+              uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).SelectAndExpand,
               clause => clause.SelectedItems.Single().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()),
               Strings.UriSelectParser_TermIsNotValid("($EXPAND=MyDog)"));
         }
@@ -199,14 +198,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($filter=Name eq 'su')",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($FILTER=Name eq 'su')",
-                uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().FilterOption,
+                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).FilterOption,
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal),
                 Strings.UriSelectParser_TermIsNotValid("($FILTER=Name eq 'su')"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($orderby=Name)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($orderBY=Name)",
-                uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().OrderByOption,
+                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).OrderByOption,
                 orderby => orderby.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp()),
                 Strings.UriSelectParser_TermIsNotValid("($orderBY=Name)"));
         }
@@ -217,7 +216,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($search=Name)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($SEARCH=Name)",
-                uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().SearchOption,
+                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).SearchOption,
                 clause => clause.Expression.ShouldBeSearchTermNode("Name"),
                 Strings.UriSelectParser_TermIsNotValid("($SEARCH=Name)"));
         }
@@ -228,22 +227,22 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($top=1;$skip=2;$count=true)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($toP=1;$skIp=2;$COUnt=true)",
-                uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().TopOption,
-                val => val.Should().Be(1),
+                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).TopOption,
+                val => Assert.Equal(1, val),
                 Strings.UriSelectParser_TermIsNotValid("($toP=1;$skIp=2;$COUnt=true)"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($top=1;$skip=2;$count=true)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($toP=1;$skIp=2;$COUnt=true)",
-               uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().SkipOption,
-               val => val.Should().Be(2),
+               uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).SkipOption,
+               val => Assert.Equal(2, val),
                Strings.UriSelectParser_TermIsNotValid("($toP=1;$skIp=2;$COUnt=true)"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($top=1;$skip=2;$count=true)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($toP=1;$skIp=2;$COUnt=true)",
-               uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().CountOption,
-               val => val.Should().Be(true),
+               uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).CountOption,
+               val => Assert.True(val),
                Strings.UriSelectParser_TermIsNotValid("($toP=1;$skIp=2;$COUnt=true)"));
         }
 
@@ -253,15 +252,15 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($levels=3)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($LEVELS=3)",
-                uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().LevelsOption,
-                clause => clause.Level.Should().Be(3),
+                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).LevelsOption,
+                clause => Assert.Equal(3, clause.Level),
                 Strings.UriSelectParser_TermIsNotValid("($LEVELS=3)"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($levels=max)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($LEVELS=MAX)",
-                uriParser => uriParser.ParseSelectAndExpand().SelectedItems.Single().As<ExpandedNavigationSelectItem>().LevelsOption,
-                clause => clause.IsMaxLevel.Should().BeTrue(),
+                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).LevelsOption,
+                clause => Assert.True(clause.IsMaxLevel),
                 Strings.UriSelectParser_TermIsNotValid("($LEVELS=MAX)"));
         }
 
@@ -272,7 +271,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$skiptoken=var1",
                 "People?$SKIPTOKEN=var1",
                 uriParser => uriParser.ParseSkipToken(),
-                val => val.Should().Be("var1"),
+                val => Assert.Equal("var1", val),
                 /*errorMessage*/ null);
         }
 
@@ -283,7 +282,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$deltatoken=var1",
                 "People?$DELTATOKEN=var1",
                 uriParser => uriParser.ParseDeltaToken(),
-                val => val.Should().Be("var1"),
+                val => Assert.Equal("var1", val),
                 /*errorMessage*/ null);
         }
         #endregion
@@ -582,14 +581,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=Name asc",
                 "People?$orderby=Name aSC",
                 uriParser => uriParser.ParseOrderBy(),
-                orderby => orderby.Direction.Should().Be(OrderByDirection.Ascending),
+                orderby => Assert.Equal(OrderByDirection.Ascending, orderby.Direction),
                 Strings.ExpressionLexer_SyntaxError("8", "Name aSC"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$orderby=Name desc",
                 "People?$orderby=Name DESC",
                 uriParser => uriParser.ParseOrderBy(),
-                orderby => orderby.Direction.Should().Be(OrderByDirection.Descending),
+                orderby => Assert.Equal(OrderByDirection.Descending, orderby.Direction),
                 Strings.ExpressionLexer_SyntaxError("9", "Name DESC"));
         }
 

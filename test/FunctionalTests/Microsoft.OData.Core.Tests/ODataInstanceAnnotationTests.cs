@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -18,7 +17,7 @@ namespace Microsoft.OData.Tests
             foreach (string name in new[] { null, string.Empty, "" })
             {
                 Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-                test.ShouldThrow<ArgumentNullException>().WithMessage(Strings.ExceptionUtils_ArgumentStringNullOrEmpty + "\r\nParameter name: annotationName");
+                Assert.Throws<ArgumentNullException>("annotationName", test);
             }
         }
 
@@ -28,7 +27,7 @@ namespace Microsoft.OData.Tests
             foreach (string name in new[] { "foo", ".foo", "foo." })
             {
                 Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-                test.ShouldThrow<ArgumentException>().WithMessage(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
+                test.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
             }
         }
 
@@ -38,7 +37,7 @@ namespace Microsoft.OData.Tests
             foreach (string name in new[] { "@foo.bar", "foo.b@ar", "foo.bar@" })
             {
                 Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-                test.ShouldThrow<ArgumentException>().WithMessage(Strings.ODataInstanceAnnotation_BadTermName(name));
+                test.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_BadTermName(name));
             }
         }
 
@@ -48,7 +47,7 @@ namespace Microsoft.OData.Tests
             foreach (string name in new[] { "#foo.bar", "foo.b#ar", "foo.bar#" })
             {
                 Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-                test.ShouldThrow<ArgumentException>().WithMessage(Strings.ODataInstanceAnnotation_BadTermName(name));
+                test.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_BadTermName(name));
             }
         }
 
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests
         {
             const string annotationName = "odata.unknown";
             Action add = () => new ODataInstanceAnnotation(annotationName, new ODataPrimitiveValue("value"));
-            add.ShouldThrow<ArgumentException>().WithMessage(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(annotationName, "odata."));
+            add.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(annotationName, "odata."));
         }
 
         [Fact]
@@ -65,21 +64,21 @@ namespace Microsoft.OData.Tests
         {
             const string name = "instance.annotation";
             var annotation = new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-            annotation.Name.Should().Be(name);
+            Assert.Equal(name, annotation.Name);
         }
 
         [Fact]
         public void SetValueToNullShouldThrowArgumentNullException()
         {
             Action test = () => new ODataInstanceAnnotation("namespace.name", null);
-            test.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: value");
+            Assert.Throws<ArgumentNullException>("value", test);
         }
 
         [Fact]
         public void SetValueToODataStreamReferenceValueShouldThrowArgumentException()
         {
             Action test = () => new ODataInstanceAnnotation("namespace.name", new ODataStreamReferenceValue());
-            test.ShouldThrow<ArgumentException>().WithMessage(Strings.ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue + "\r\nParameter name: value");
+            Assert.Throws<ArgumentException>("value", test);
         }
 
         [Fact]
@@ -88,7 +87,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataValue value in new ODataValue[] { new ODataNullValue(), new ODataPrimitiveValue(1), new ODataResourceValue(), new ODataCollectionValue() })
             {
                 var annotation = new ODataInstanceAnnotation("namespace.name", value);
-                annotation.Value.Should().BeSameAs(value);
+                Assert.Same(value, annotation.Value);
             }
         }
     }

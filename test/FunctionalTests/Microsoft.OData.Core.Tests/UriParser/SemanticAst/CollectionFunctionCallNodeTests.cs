@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.Metadata;
@@ -34,57 +33,57 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NameCannotBeNull()
         {
             Action createWithNullName = () => new CollectionFunctionCallNode(null, null, new QueryNode[] { }, collectionTypeReference, null);
-            createWithNullName.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("name"));
+            Assert.Throws<ArgumentNullException>("name", createWithNullName);
         }
 
         [Fact]
         public void CollectionTypeReferenceCannotBeNull()
         {
             Action createWithNullType = () => new CollectionFunctionCallNode("stuff", new List<IEdmFunction>() { HardCodedTestModel.GetFunctionForHasJob() }, new QueryNode[] { }, null, null);
-            createWithNullType.ShouldThrow<ArgumentNullException>().Where(e => e.Message.IndexOf("collectionType", StringComparison.OrdinalIgnoreCase) >= 0);
+            Assert.Throws<ArgumentNullException>("returnedCollectionType", createWithNullType);
         }
 
         [Fact]
         public void FunctionImportsAreSetCorrectly()
         {
             var collectionFunctionCallNode = new CollectionFunctionCallNode("stuff", HardCodedTestModel.GetHasDogOverloads(), null, collectionTypeReference, null);
-            collectionFunctionCallNode.Functions.Should().ContainExactly(HardCodedTestModel.GetHasDogOverloads());
+            collectionFunctionCallNode.Functions.ContainExactly(HardCodedTestModel.GetHasDogOverloads());
         }
 
         [Fact]
         public void NameIsSetCorrectly()
         {
             var collectionFunctionCallNode = new CollectionFunctionCallNode("stuff", HardCodedTestModel.GetHasDogOverloads(), null, collectionTypeReference, null);
-            collectionFunctionCallNode.Name.Should().Be("stuff");
+            Assert.Equal("stuff", collectionFunctionCallNode.Name);
         }
 
         [Fact]
         public void ArgumentsSetCorrectly()
         {
             var collectionFunctionCallNode = new CollectionFunctionCallNode("stuff", new List<IEdmFunction>() { HardCodedTestModel.GetFunctionForHasJob() }, new QueryNode[] { new ConstantNode(1) }, collectionTypeReference, null);
-            collectionFunctionCallNode.Parameters.Should().HaveCount(1);
-            collectionFunctionCallNode.Parameters.ElementAt(0).ShouldBeConstantQueryNode(1);
+            var parameter = Assert.Single(collectionFunctionCallNode.Parameters);
+            parameter.ShouldBeConstantQueryNode(1);
         }
 
         [Fact]
         public void ItemTypeSetCorrectly()
         {
             var collectionFunctionCallNode = new CollectionFunctionCallNode("stuff", new List<IEdmFunction>() { HardCodedTestModel.GetFunctionForHasJob() }, new QueryNode[] { new ConstantNode(1) }, collectionTypeReference, null);
-            collectionFunctionCallNode.ItemType.Should().BeSameAs(this.itemTypeReference);
+            Assert.Same(this.itemTypeReference, collectionFunctionCallNode.ItemType);
         }
 
         [Fact]
         public void KindIsSetCorrectly()
         {
             var collectionFunctionCallNode = new CollectionFunctionCallNode("stuff", new List<IEdmFunction>() { HardCodedTestModel.GetFunctionForHasJob() }, new QueryNode[] { new ConstantNode(1) }, collectionTypeReference, null);
-            collectionFunctionCallNode.Kind.Should().Be(QueryNodeKind.CollectionFunctionCall);
+            Assert.Equal(QueryNodeKind.CollectionFunctionCall, collectionFunctionCallNode.Kind);
         }
 
         [Fact]
         public void ItemTypeMustBePrimitiveOrComplex()
         {
             Action createWithEntityCollectionType = () => new CollectionFunctionCallNode("stuff", new List<IEdmFunction>() { HardCodedTestModel.GetFunctionForHasJob() }, new QueryNode[] { new ConstantNode(1) }, new EdmCollectionTypeReference(new EdmCollectionType(ModelBuildingHelpers.BuildValidEntityType().ToTypeReference())), null);
-            createWithEntityCollectionType.ShouldThrow<ArgumentException>().WithMessage(ODataErrorStrings.Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+            createWithEntityCollectionType.Throws<ArgumentException>(ODataErrorStrings.Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
         }
     }
 }

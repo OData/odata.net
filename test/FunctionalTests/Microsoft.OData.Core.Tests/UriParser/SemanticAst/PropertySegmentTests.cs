@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -18,30 +17,30 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void PropertyCannotBeNull()
         {
             Action createWithNullProperty = () => new PropertySegment(null);
-            createWithNullProperty.ShouldThrow<Exception>(Error.ArgumentNull("property").ToString());
+            Assert.Throws<ArgumentNullException>("property", createWithNullProperty);
         }
 
         [Fact]
         public void IdentifierSetToPropertyName()
         {
             PropertySegment propertySegment = new PropertySegment(HardCodedTestModel.GetPersonNameProp());
-            propertySegment.Identifier.Should().Be(HardCodedTestModel.GetPersonNameProp().Name);
+            Assert.Equal(HardCodedTestModel.GetPersonNameProp().Name, propertySegment.Identifier);
         }
         
         [Fact]
         public void TargetEdmTypeIsPropertyTypeDefinition()
         {
             PropertySegment propertySegment = new PropertySegment(HardCodedTestModel.GetPersonNameProp());
-            propertySegment.TargetEdmType.Should().BeSameAs(HardCodedTestModel.GetPersonNameProp().Type.Definition);
+            Assert.Same(HardCodedTestModel.GetPersonNameProp().Type.Definition, propertySegment.TargetEdmType);
         }
 
         [Fact]
         public void SingleResultIsSetCorrectly()
         {
             PropertySegment propertySegment1 = new PropertySegment(HardCodedTestModel.GetPersonNameProp());
-            propertySegment1.SingleResult.Should().BeTrue();
+            Assert.True(propertySegment1.SingleResult);
             PropertySegment propertySegment2 = new PropertySegment(HardCodedTestModel.GetPersonGeometryCollectionProp());
-            propertySegment2.SingleResult.Should().BeFalse();
+            Assert.False(propertySegment2.SingleResult);
         }
 
         [Fact]
@@ -49,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             IEdmStructuralProperty prop = ModelBuildingHelpers.BuildValidPrimitiveProperty();
             PropertySegment segment = new PropertySegment(prop);
-            segment.Property.Should().Be(prop);
+            Assert.Same(segment.Property, prop);
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             PropertySegment propertySegment1 = new PropertySegment(HardCodedTestModel.GetPersonNameProp());
             PropertySegment propertySegment2 = new PropertySegment(HardCodedTestModel.GetPersonNameProp());
-            propertySegment1.Equals(propertySegment2).Should().BeTrue();
+            Assert.True(propertySegment1.Equals(propertySegment2));
         }
 
         [Fact]
@@ -66,8 +65,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             PropertySegment propertySegment1 = new PropertySegment(HardCodedTestModel.GetPersonNameProp());
             PropertySegment propertySegment2 = new PropertySegment(HardCodedTestModel.GetPersonShoeProp());
             BatchSegment batchSegment = BatchSegment.Instance;
-            propertySegment1.Equals(propertySegment2).Should().BeFalse();
-            propertySegment1.Equals(batchSegment).Should().BeFalse();
+            Assert.False(propertySegment1.Equals(propertySegment2));
+            Assert.False(propertySegment1.Equals(batchSegment));
         }
     }
 }

@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -24,22 +23,22 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void InstanceAnnotationsPropertyShouldNotBeNullAtCreation()
         {
-            this.odataFeed.InstanceAnnotations.Should().NotBeNull();
+            Assert.NotNull(this.odataFeed.InstanceAnnotations);
         }
 
         [Fact]
         public void InstanceAnnotationsPropertyShouldReturnAWritableCollectionAtCreation()
         {
-            this.odataFeed.InstanceAnnotations.Should().NotBeNull();
+            Assert.NotNull(this.odataFeed.InstanceAnnotations);
             this.odataFeed.InstanceAnnotations.Add(new ODataInstanceAnnotation("namespace.name", new ODataPrimitiveValue("value")));
-            this.odataFeed.InstanceAnnotations.Count.Should().Be(1);
+            Assert.Single(this.odataFeed.InstanceAnnotations);
         }
 
         [Fact]
         public void SetNullValueToInstanceAnnotationsPropertyShouldThrow()
         {
             Action test = () => this.odataFeed.InstanceAnnotations = null;
-            test.ShouldThrow<ArgumentException>().WithMessage("Value cannot be null.\r\nParameter name: value");
+            Assert.Throws<ArgumentNullException>("value", test);
         }
 
         [Fact]
@@ -48,13 +47,14 @@ namespace Microsoft.OData.Tests
             ICollection<ODataInstanceAnnotation> initialCollection = this.odataFeed.InstanceAnnotations;
             ICollection<ODataInstanceAnnotation> newCollection = new List<ODataInstanceAnnotation>();
             this.odataFeed.InstanceAnnotations = newCollection;
-            this.odataFeed.InstanceAnnotations.As<object>().Should().BeSameAs(newCollection).And.NotBeSameAs(initialCollection);
+            Assert.Same(this.odataFeed.InstanceAnnotations, newCollection);
+            Assert.NotSame(this.odataFeed.InstanceAnnotations, initialCollection);
         }
 
         [Fact]
         public void DeltaLinkPropertyShouldBeNullAtCreation()
         {
-            this.odataFeed.DeltaLink.Should().BeNull();
+            Assert.Null(this.odataFeed.DeltaLink);
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests
         {
             Uri deltaLink = new Uri("http://www.example.com/deltaLink");
             this.odataFeed.DeltaLink = deltaLink;
-            this.odataFeed.DeltaLink.Should().BeSameAs(deltaLink);
+            Assert.Same(deltaLink, this.odataFeed.DeltaLink);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests
         {
             this.odataFeed.NextPageLink = new Uri("http://www.example.com/nextPageLink");
             Action test = () => this.odataFeed.DeltaLink = new Uri("http://www.example.com/deltaLink");
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
+            test.Throws<ODataException>(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
         }
 
         [Fact]
@@ -78,27 +78,27 @@ namespace Microsoft.OData.Tests
         {
             this.odataFeed.DeltaLink = new Uri("http://www.example.com/deltaLink");
             Action test = () => this.odataFeed.NextPageLink = new Uri("http://www.example.com/nextPageLink");
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
+            test.Throws<ODataException>(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
         }
 
         [Fact]
         public void NewODataFeedShouldContainNullSerializationInfo()
         {
-            this.odataFeed.SerializationInfo.Should().BeNull();
+            Assert.Null(this.odataFeed.SerializationInfo);
         }
 
         [Fact]
         public void ShouldBeAbleToSetSerializationInfo()
         {
             this.odataFeed.SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
-            this.odataFeed.SerializationInfo.NavigationSourceName.Should().Be("Set");
+            Assert.Equal("Set", this.odataFeed.SerializationInfo.NavigationSourceName);
         }
 
         [Fact]
         public void ShouldBeAbleToSetSerializationInfoWithEdmUnknowEntitySet()
         {
             this.odataFeed.SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = null, NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet, NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
-            this.odataFeed.SerializationInfo.NavigationSourceName.Should().BeNull();
+            Assert.Null(this.odataFeed.SerializationInfo.NavigationSourceName);
         }
     }
 }

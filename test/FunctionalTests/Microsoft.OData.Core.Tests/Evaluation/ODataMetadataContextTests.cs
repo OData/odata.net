@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Evaluation;
@@ -36,7 +35,7 @@ namespace Microsoft.OData.Tests.Evaluation
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
             ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
             Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree), NavigationSource = set }, false);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
+            action.Throws<ODataException>(Strings.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
         }
 
         [Fact]
@@ -52,7 +51,7 @@ namespace Microsoft.OData.Tests.Evaluation
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
             ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
             Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode("*", null, null), NavigationSource = set }, false);
-            action.ShouldNotThrow();
+            action.DoesNotThrow();
         }
 
         [Fact]
@@ -68,8 +67,9 @@ namespace Microsoft.OData.Tests.Evaluation
                 this.edmModel,
                 null /*metadataDocumentUri*/,
                 null /*requestUri*/);
-            context.OperationsBoundToStructuredTypeMustBeContainerQualified(closedType).Should().BeFalse();
-            context.OperationsBoundToStructuredTypeMustBeContainerQualified(openType).Should().BeTrue();
+
+            Assert.False(context.OperationsBoundToStructuredTypeMustBeContainerQualified(closedType));
+            Assert.True(context.OperationsBoundToStructuredTypeMustBeContainerQualified(openType));
         }
     }
 }

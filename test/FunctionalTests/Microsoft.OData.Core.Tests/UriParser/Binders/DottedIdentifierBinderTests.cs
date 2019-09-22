@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -45,8 +44,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.Employee", new DummyToken());
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetEmployeeTypeReference())
-                .Source.Should().BeSameAs(FakeBindMethods.FakePersonNode);
+            var source = resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetEmployeeTypeReference()).Source;
+            Assert.Same(FakeBindMethods.FakePersonNode, source);
         }
 
         [Fact]
@@ -55,8 +54,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.Person", new DummyToken());
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetPersonTypeReference())
-                .Source.Should().BeSameAs(FakeBindMethods.FakePersonNode);
+            var source = resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetPersonTypeReference()).Source;
+            Assert.Same(FakeBindMethods.FakePersonNode, source);
         }
 
         [Fact]
@@ -67,8 +66,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.Employee", new DummyToken());
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            resultNode.ShouldBeCollectionCastNode(HardCodedTestModel.GetEmployeeTypeReference())
-                .Source.Should().BeSameAs(FakeBindMethods.FakeEntityCollectionNode);
+            var source = resultNode.ShouldBeCollectionCastNode(HardCodedTestModel.GetEmployeeTypeReference()).Source;
+            Assert.Same(FakeBindMethods.FakeEntityCollectionNode, source);
         }
 
         [Fact]
@@ -79,8 +78,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.Person", new DummyToken());
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            resultNode.ShouldBeCollectionCastNode(HardCodedTestModel.GetPersonTypeReference())
-                .Source.Should().BeSameAs(FakeBindMethods.FakeEntityCollectionNode);
+            var source = resultNode.ShouldBeCollectionCastNode(HardCodedTestModel.GetPersonTypeReference()).Source;
+            Assert.Same(FakeBindMethods.FakeEntityCollectionNode, source);
         }
 
         [Fact]
@@ -111,7 +110,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // NonFlagShape can't OR 2 member values 'Rectangle,foursquare'
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.NonFlagShape'Rectangle,foursquare'", new DummyToken());
             Action parse = () => this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.Binder_IsNotValidEnumConstant("Fully.Qualified.Namespace.NonFlagShape'Rectangle,foursquare'"));
+            parse.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant("Fully.Qualified.Namespace.NonFlagShape'Rectangle,foursquare'"));
         }
 
         [Fact]
@@ -120,8 +119,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.Lion", null);
             Action bind = () => this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_HierarchyNotFollowed(HardCodedTestModel.GetLionType().FullName(), HardCodedTestModel.GetPersonType().FullName())));
+            bind.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed(HardCodedTestModel.GetLionType().FullName(), HardCodedTestModel.GetPersonType().FullName()));
 
         }
 
@@ -133,9 +131,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.Lion", new EndPathToken("Critics", new DummyToken()));
             Action bind = () => this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage((Strings.MetadataBinder_HierarchyNotFollowed(HardCodedTestModel.GetLionType().FullName(), "<null>")));
-
+            bind.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed(HardCodedTestModel.GetLionType().FullName(), "<null>"));
         }
 
         [Fact]
@@ -144,8 +140,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Missing.Type", null);
             Action bind = () => this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            bind.ShouldThrow<ODataException>().
-                WithMessage(Strings.CastBinder_ChildTypeIsNotEntity("Missing.Type"));
+            bind.Throws<ODataException>(Strings.CastBinder_ChildTypeIsNotEntity("Missing.Type"));
         }
 
         [Fact]

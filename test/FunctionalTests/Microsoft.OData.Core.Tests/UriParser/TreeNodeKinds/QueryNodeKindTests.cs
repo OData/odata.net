@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -23,7 +22,7 @@ namespace Microsoft.OData.Tests.UriParser.TreeNodeKinds
             var queryNodesThatAreInternalQueryNodes =
                 queryNodeKindFields.Select(f => internalQueryNodeKindFields.Contains(f));
 
-            queryNodesThatAreInternalQueryNodes.Should().HaveCount(queryNodeKindFields.Count());
+            Assert.Equal(queryNodesThatAreInternalQueryNodes.Count(), queryNodeKindFields.Count());
         }
 
         [Fact]
@@ -36,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.TreeNodeKinds
             int i = 0;
             foreach (var queryNodeKind in queryNodeKindFields)
             {
-                internalQueryNodeKindFields.ElementAt(i).Name.Should().Be(queryNodeKind.Name);
+                Assert.Equal(queryNodeKind.Name, internalQueryNodeKindFields.ElementAt(i).Name);
                 i++;
             }
         }

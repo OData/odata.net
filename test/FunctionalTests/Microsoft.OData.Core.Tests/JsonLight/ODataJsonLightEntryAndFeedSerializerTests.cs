@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -33,7 +32,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     },
                     new DuplicatePropertyNameChecker()));
 
-            jsonResult.Should().Contain("NavigationProperty@odata.associationLink\":\"http://example.com/association");
+            Assert.Contains("NavigationProperty@odata.associationLink\":\"http://example.com/association", jsonResult);
         }
 
         [Fact]
@@ -49,7 +48,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     },
                     new DuplicatePropertyNameChecker()));
 
-            jsonResult.Should().Contain("NavigationProperty@odata.navigationLink\":\"http://example.com/navigation");
+            Assert.Contains("NavigationProperty@odata.navigationLink\":\"http://example.com/navigation", jsonResult);
         }
 
         [Fact]
@@ -60,7 +59,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 var context = this.CreateJsonLightOutputContext(stream, writingResponse: false);
                 var serializer = new ODataJsonLightResourceSerializer(context);
                 Action test = () => serializer.WriteOperations(new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) } }, /*isAction*/true);
-                test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.WriterValidationUtils_OperationInRequest("#foo"));
+                test.Throws<ODataException>(ErrorStrings.WriterValidationUtils_OperationInRequest("#foo"));
             }
         }
 
@@ -69,7 +68,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             IEnumerable<ODataOperation> operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("foo", UriKind.Relative) } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null, true, false /*setMetadataDocumentUri*/);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataOutputContext_MetadataDocumentUriMissing);
+            test.Throws<ODataException>(ErrorStrings.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         [Fact]
@@ -125,7 +124,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
+            test.Throws<ODataException>(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
         }
 
         [Fact]
@@ -133,7 +132,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
+            test.Throws<ODataException>(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
         }
 
         [Fact]
@@ -141,7 +140,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget("#foo", "http://www.example.com/foo"));
+            test.Throws<ODataException>(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget("#foo", "http://www.example.com/foo"));
         }
 
         [Fact]

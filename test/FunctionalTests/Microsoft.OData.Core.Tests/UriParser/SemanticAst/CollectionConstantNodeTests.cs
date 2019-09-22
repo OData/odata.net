@@ -5,11 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using System.Collections.Generic;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -35,7 +34,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new ConstantNode(3, "3", EdmCoreModel.Instance.GetInt32(false)),
             };
 
-            collectionConstantNode.Collection.ShouldBeEquivalentTo(expectedList);
+            VerifyCollectionConstantNode(collectionConstantNode.Collection, expectedList);
         }
 
         [Fact]
@@ -55,7 +54,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new ConstantNode("ghi", "ghi", EdmCoreModel.Instance.GetString(true)),
             };
 
-            collectionConstantNode.Collection.ShouldBeEquivalentTo(expectedList);
+            VerifyCollectionConstantNode(collectionConstantNode.Collection, expectedList);
         }
 
         [Fact]
@@ -75,7 +74,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new ConstantNode(null, "null", EdmCoreModel.Instance.GetString(true)),
             };
 
-            collectionConstantNode.Collection.ShouldBeEquivalentTo(expectedList);
+            VerifyCollectionConstantNode(collectionConstantNode.Collection, expectedList);
         }
 
         [Fact]
@@ -89,7 +88,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
                 (literalToken.Value as ODataCollectionValue)?.Items, text, expectedType);
 
-            collectionConstantNode.LiteralText.Should().Be(text);
+            Assert.Equal(text, collectionConstantNode.LiteralText);
         }
 
         [Fact]
@@ -103,7 +102,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
                 (literalToken.Value as ODataCollectionValue)?.Items, text, expectedType);
 
-            collectionConstantNode.ItemType.FullName().Should().Be("Edm.Int32");
+            Assert.Equal("Edm.Int32", collectionConstantNode.ItemType.FullName());
         }
 
         [Fact]
@@ -117,7 +116,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
                 (literalToken.Value as ODataCollectionValue)?.Items, text, expectedType);
 
-            collectionConstantNode.CollectionType.FullName().Should().Be("Collection(Edm.Int32)");
+            Assert.Equal("Collection(Edm.Int32)", collectionConstantNode.CollectionType.FullName());
         }
 
         [Fact]
@@ -131,7 +130,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
                 (literalToken.Value as ODataCollectionValue)?.Items, text, expectedType);
 
-            collectionConstantNode.InternalKind.Should().Be(InternalQueryNodeKind.CollectionConstant);
+            Assert.Equal(InternalQueryNodeKind.CollectionConstant, collectionConstantNode.InternalKind);
         }
 
         [Fact]
@@ -143,7 +142,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             Action target = () => new CollectionConstantNode(null, text, expectedType);
-            target.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("objectCollection"));
+            Assert.Throws<ArgumentNullException>("objectCollection", target);
         }
 
         [Fact]
@@ -155,7 +154,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             Action target = () => new CollectionConstantNode((literalToken.Value as ODataCollectionValue)?.Items, null, expectedType);
-            target.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("literalText"));
+            Assert.Throws<ArgumentNullException>("literalText", target);
         }
 
         [Fact]
@@ -167,7 +166,22 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             Action target = () => new CollectionConstantNode((literalToken.Value as ODataCollectionValue)?.Items, text, null);
-            target.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("collectionType"));
+            Assert.Throws<ArgumentNullException>("collectionType", target);
+        }
+
+        private static void VerifyCollectionConstantNode(IList<ConstantNode> actual, ConstantNode[] expected)
+        {
+            Assert.NotNull(actual);
+            Assert.Equal(actual.Count, expected.Length);
+
+            int index = 0;
+            foreach (var node in actual)
+            {
+                Assert.Equal(expected[index].LiteralText, node.LiteralText);
+                Assert.Equal(expected[index].Value, node.Value);
+                Assert.True(node.TypeReference.IsEquivalentTo(expected[index].TypeReference));
+                index++;
+            }
         }
     }
 }

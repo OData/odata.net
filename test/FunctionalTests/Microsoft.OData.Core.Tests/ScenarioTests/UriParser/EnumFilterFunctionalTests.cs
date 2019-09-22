@@ -6,11 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
@@ -332,7 +330,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 this.GetColorType(this.userModel),
                 (int)(Color.White));
 
-            binaryNode.Right.As<ConstantNode>().TypeReference.IsEnum();
+            var constantNode = Assert.IsType<ConstantNode>(binaryNode.Right);
+            Assert.True(constantNode.TypeReference.IsEnum());
         }
 
         [Fact]
@@ -359,14 +358,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 this.GetColorType(this.userModel),
                 -132534290);
 
-            binaryNode.Right.As<ConstantNode>().TypeReference.IsEnum();
+            var constantNode = Assert.IsType<ConstantNode>(binaryNode.Right);
+            Assert.True(constantNode.TypeReference.IsEnum());
         }
 
         [Fact]
         public void ParseFilterWithEmptyEnumValue()
         {
             Action parse = () => ParseFilter("Color has NS.Color''", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.Binder_IsNotValidEnumConstant("NS.Color''"));
+            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.Color''"));
         }
 
         [Fact]
@@ -375,23 +375,28 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("Color eq null", this.userModel, this.entityType, this.entitySet);
             var binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             binaryNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
-            binaryNode.Right.As<ConvertNode>().Source.ShouldBeConstantQueryNode((object)null);
+
+            var convertNode = Assert.IsType<ConvertNode>(binaryNode.Right);
+            convertNode.Source.ShouldBeConstantQueryNode((object)null);
         }
 
         [Fact]
         public void ParseFilterCastMethod1()
         {
             var filter = ParseFilter("cast(NS.Color'Green', 'Edm.String') eq 'blue'", this.userModel, this.entityType, this.entitySet);
-            filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                Left.As<ConvertNode>().Source.As<SingleValueFunctionCallNode>().Name.Should().Be("cast"); // ConvertNode is because cast() result's nullable=false.
+            var bon = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            var convertNode = Assert.IsType<ConvertNode>(bon.Left);
+            var functionCallNode = Assert.IsType<SingleValueFunctionCallNode>(convertNode.Source);
+            Assert.Equal("cast", functionCallNode.Name); // ConvertNode is because cast() result's nullable=false.
         }
 
         [Fact]
         public void ParseFilterCastMethod2()
         {
             var filter = ParseFilter("cast('Green', 'NS.Color') eq NS.Color'Green'", this.userModel, this.entityType, this.entitySet);
-            filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                Left.As<SingleValueFunctionCallNode>().Name.Should().Be("cast");
+            var bon = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            var functionCallNode = Assert.IsType<SingleValueFunctionCallNode>(bon.Left);
+            Assert.Equal("cast", functionCallNode.Name);
         }
 
         //to do: verify the exceptions for the Mismatch cases.
@@ -399,91 +404,91 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterEnumTypesMismatch1()
         {
             Action parse = () => ParseFilter("Color'Green' eq NS.ColorFlags'Green'", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(parse);
         }
 
         [Fact]
         public void ParseFilterEnumTypesMismatch2()
         {
             Action parse = () => ParseFilter("NS.Color'Green' eq NS.ColorFlags'Green'", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(parse);
         }
 
         [Fact]
         public void ParseFilterEnumTypesMismatch3()
         {
             Action parse = () => ParseFilter("NS.Color'Green' has ColorFlags", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(parse);
         }
 
         [Fact]
         public void ParseFilterEnumTypesMismatch4()
         {
             Action parse = () => ParseFilter("NS.Color'Green' has NS.ColorFlags'2'", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>();
+            Assert.Throws<ODataException>(parse);
         }
 
         [Fact]
         public void ParseFilterEnumTypesUndefined1()
         {
             Action parse = () => ParseFilter("NS1234.Color'Green' eq Color", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.Binder_IsNotValidEnumConstant("NS1234.Color'Green'"));
+            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS1234.Color'Green'"));
         }
 
         [Fact]
         public void ParseFilterEnumTypesUndefined2()
         {
             Action parse = () => ParseFilter("NS.BadColor'Green' eq Color", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.Binder_IsNotValidEnumConstant("NS.BadColor'Green'"));
+            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.BadColor'Green'"));
         }
 
         [Fact]
         public void ParseFilterEnumMemberUndefined1()
         {
             Action parse = () => ParseFilter("NS.Color'_54' has NS.Color'Green'", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.Binder_IsNotValidEnumConstant("NS.Color'_54'"));
+            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.Color'_54'"));
         }
 
         [Fact]
         public void ParseFilterEnumMemberUndefined2()
         {
             Action parse = () => ParseFilter("NS.ColorFlags'GreenYellow' has NS.ColorFlags'Green'", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'GreenYellow'"));
+            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'GreenYellow'"));
         }
 
         [Fact]
         public void ParseFilterEnumMemberUndefined3()
         {
             Action parse = () => ParseFilter("NS.ColorFlags'Green,Yellow' has NS.ColorFlags'Green'", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'Green,Yellow'"));
+            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'Green,Yellow'"));
         }
 
         [Fact]
         public void ParseFilterEnumMemberUndefined4()
         {
             Action parse = () => ParseFilter("ColorFlags has NS.ColorFlags'Red,2'", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'Red,2'"));
+            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'Red,2'"));
         }
 
         [Fact]
         public void ParseFilterEnumTypesWrongCast1()
         {
             Action parse = () => ParseFilter("cast(NS.ColorFlags'Green', 'Edm.Int64') eq 2", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.CastBinder_EnumOnlyCastToOrFromString);
+            parse.Throws<ODataException>(Strings.CastBinder_EnumOnlyCastToOrFromString);
         }
 
         [Fact]
         public void ParseFilterEnumTypesWrongCast2()
         {
             Action parse = () => ParseFilter("cast(321, 'NS.ColorFlags') eq 2", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.CastBinder_EnumOnlyCastToOrFromString);
+            parse.Throws<ODataException>(Strings.CastBinder_EnumOnlyCastToOrFromString);
         }
 
         [Fact]
         public void ParseFilterEnumTypesWrongCast3()
         {
             Action parse = () => ParseFilter("cast(321, 'NS.NotExistingColorFlags') eq 2", this.userModel, this.entityType, this.entitySet);
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
+            parse.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
         private IEdmStructuralProperty GetColorProp(IEdmModel model)

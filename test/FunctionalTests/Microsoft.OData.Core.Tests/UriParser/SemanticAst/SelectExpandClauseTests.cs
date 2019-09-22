@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using FluentAssertions;
+using System.Linq;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ConstructorSetsAllSeletedProperty()
         {
             var clause = new SelectExpandClause(null, false);
-            clause.AllSelected.Should().BeFalse();
+            Assert.False(clause.AllSelected);
         }
     
         [Fact]
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             var expansions = new List<ExpandedNavigationSelectItem>();
             var clause = new SelectExpandClause(expansions, true);
-            clause.SelectedItems.Should().NotBeNull();
+            Assert.NotNull(clause.SelectedItems);
         }
 
         [Fact]
@@ -39,7 +39,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var clause = new SelectExpandClause(new List<ExpandedNavigationSelectItem>(), false);
             clause.AddToSelectedItems(new PathSelectItem(personShoePath));
             clause.AddToSelectedItems(new PathSelectItem(personNamePath));
-            clause.SelectedItems.Should().HaveCount(2).And.Contain(x => x is PathSelectItem && x.As<PathSelectItem>().SelectedPath == personNamePath).And.Contain(x => x is PathSelectItem && x.As<PathSelectItem>().SelectedPath == personShoePath);
+            Assert.Equal(2, clause.SelectedItems.Count());
+            Assert.Contains(clause.SelectedItems, x => x is PathSelectItem && ((PathSelectItem)x).SelectedPath == personNamePath);
+            Assert.Contains(clause.SelectedItems, x => x is PathSelectItem && ((PathSelectItem)x).SelectedPath == personShoePath);
         }
     }
 }

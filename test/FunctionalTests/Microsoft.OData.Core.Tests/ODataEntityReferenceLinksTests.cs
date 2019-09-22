@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -50,16 +49,16 @@ namespace Microsoft.OData.Tests
         public void TheNewEntityReferenceLinksShouldNotBeNull()
         {
             ODataEntityReferenceLinks referencelinks = new ODataEntityReferenceLinks();
-            referencelinks.Should().NotBeNull();
-            referencelinks.Links.Should().BeNull();
+            Assert.NotNull(referencelinks);
+            Assert.Null(referencelinks.Links);
         }
 
         [Fact]
         public void InstanceAnnotationsPropertyShouldNotBeNullAtCreation()
         {
             ODataEntityReferenceLinks referencelinks = new ODataEntityReferenceLinks();
-            referencelinks.InstanceAnnotations.Should().NotBeNull();
-            referencelinks.InstanceAnnotations.Count.Should().Be(0);
+            Assert.NotNull(referencelinks.InstanceAnnotations);
+            Assert.Empty(referencelinks.InstanceAnnotations);
         }
 
         [Fact]
@@ -73,9 +72,10 @@ namespace Microsoft.OData.Tests
             {
                 Links = new[] { link }
             };
-            referencelinks.Should().NotBeNull();
-            referencelinks.Links.Should().NotBeNull();
-            referencelinks.Links.Count().Should().Be(1);
+
+            Assert.NotNull(referencelinks);
+            Assert.NotNull(referencelinks.Links);
+            Assert.Equal(1, referencelinks.Links.Count());
         }
 
         [Fact]
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Tests
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"@TestNamespace.name\":654,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}]}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLinks();
-            readResult.ShouldNotThrow();
+            readResult.DoesNotThrow();
         }
 
         [Fact]
@@ -249,9 +249,9 @@ namespace Microsoft.OData.Tests
             referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(654)));
             string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"@TestNamespace.name\":654,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}]}";
             Action writeResult = () => WriteAndValidate(referencelinks, expectedPayload, writingResponse: false);
-            writeResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.name"));
+            writeResult.Throws<ODataException>(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.name"));
             writeResult = () => WriteAndValidate(referencelinks, expectedPayload, writingResponse: true);
-            writeResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.name"));
+            writeResult.Throws<ODataException>(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.name"));
         }
 
         [Fact]
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Tests
                 this.CreateJsonLightEntryAndFeedDeserializer(payload);
 
             ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
-            links.Count.Should().Be(2);
+            Assert.Equal(2, links.Count);
         }
 
         [Fact]
@@ -335,7 +335,7 @@ namespace Microsoft.OData.Tests
                 this.CreateJsonLightEntryAndFeedDeserializer(payload);
 
             ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
-            links.NextPageLink.Should().Be("http://odata.org/nextpage");
+            Assert.Equal(new Uri("http://odata.org/nextpage"), links.NextPageLink);
         }
 
         [Fact]
@@ -407,22 +407,22 @@ namespace Microsoft.OData.Tests
 
         private static void SameInstanceAnnotations(ICollection<ODataInstanceAnnotation> InstanceAnnotations1, ICollection<ODataInstanceAnnotation> InstanceAnnotations2)
         {
-            InstanceAnnotations1.Count.Should().Equals(InstanceAnnotations2.Count);
+            Assert.Equal(InstanceAnnotations1.Count, InstanceAnnotations2.Count);
             foreach (ODataInstanceAnnotation instanceannotation in InstanceAnnotations1)
             {
                 ODataInstanceAnnotation annotation = InstanceAnnotations2.SingleOrDefault(ia => ia.Name == instanceannotation.Name.ToString());
-                annotation.Should().NotBeNull();
+                Assert.NotNull(annotation);
                 TestUtils.AssertODataValueAreEqual(instanceannotation.Value, annotation.Value);
             }
         }
 
         private static void SameEntityReferenceLinks(ODataEntityReferenceLinks links1, ODataEntityReferenceLinks links2)
         {
-            links1.Should().NotBeNull();
-            links2.Should().NotBeNull();
-            links1.Links.Should().NotBeNull();
-            links2.Links.Should().NotBeNull();
-            links1.Links.Count().Should().Equals(links2.Links.Count());
+            Assert.NotNull(links1);
+            Assert.NotNull(links2);
+            Assert.NotNull(links1.Links);
+            Assert.NotNull(links2.Links);
+            Assert.Equal(links1.Links.Count(), links2.Links.Count());
             for (var i = 0; i < links1.Links.Count(); ++i)
             {
                 SameEntityReferenceLink(links1.Links.ElementAt(i), links2.Links.ElementAt(i));
@@ -432,9 +432,9 @@ namespace Microsoft.OData.Tests
 
         private static void SameEntityReferenceLink(ODataEntityReferenceLink link1, ODataEntityReferenceLink link2)
         {
-            link1.Should().NotBeNull();
-            link2.Should().NotBeNull();
-            link1.Url.ToString().Should().Be(link2.Url.ToString());
+            Assert.NotNull(link1);
+            Assert.NotNull(link2);
+            Assert.Equal(link1.Url.ToString(), link2.Url.ToString());
             SameInstanceAnnotations(link1.InstanceAnnotations, link2.InstanceAnnotations);
         }
 
@@ -452,7 +452,7 @@ namespace Microsoft.OData.Tests
             string payload = WriteToString(referencelinks, writingResponse, synchronous);
             Console.WriteLine(payload);
             Console.WriteLine(expectedPayload);
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, payload);
         }
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)

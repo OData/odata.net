@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -44,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void NextTokenSetCorrectly()
         {
             DummyPathSegmentToken token = new DummyPathSegmentToken(new SystemToken("bob", null));
-            token.NextToken.ShouldBeSystemToken("bob").NextToken.Should().BeNull();
+            Assert.Null(token.NextToken.ShouldBeSystemToken("bob").NextToken);
         }
     }
 }

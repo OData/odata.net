@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -33,9 +32,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -46,9 +45,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "One", "Two(1)", "Three" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -60,9 +59,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "One", "Three" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -73,9 +72,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "EntitySet('stringkey')" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -86,9 +85,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "EntitySet('string", "key')" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -99,9 +98,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "S p a c e" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -115,9 +114,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "Newline" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -128,9 +127,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "Space " };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -141,9 +140,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "Tab\t" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -154,9 +153,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "Newline\n" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -167,9 +166,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "CarriageReturn\r" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -180,9 +179,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "One", "Two" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -193,9 +192,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string[] expectedListOrder = new[] { "One", "Two" };
 
 #if NETCOREAPP1_0
-            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+            Assert.True(list.SequenceEqual(expectedListOrder));
 #else
-            list.Should().ContainExactly(expectedListOrder);
+            list.ContainExactly(expectedListOrder);
 #endif
         }
 
@@ -267,8 +266,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var absoluteUri = new Uri("http://www.example.com/EntitySet/");
 
             Action enumerate = () => this.pathParser.ParsePathIntoSegments(absoluteUri, this.baseUri);
-            enumerate.ShouldThrow<ODataException>().WithMessage(
-                Strings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(absoluteUri, baseUri));
+            enumerate.Throws<ODataException>(Strings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(absoluteUri, baseUri));
         }
 
         [Fact]
@@ -276,7 +274,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             this.pathParser = new UriPathParser(new ODataUriParserSettings() { PathLimit = 2});
             Action enumerate = () => this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two/Three"), this.baseUri);
-            enumerate.ShouldThrow<ODataException>(Strings.UriQueryPathParser_TooManySegments);
+            enumerate.Throws<ODataException>(Strings.UriQueryPathParser_TooManySegments);
         }
 
         [Fact]
@@ -286,9 +284,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => s.Should().Be("one"),
-                s => s.Should().Be("two"),
-                s => s.Should().Be("three")
+                s => Assert.Equal(s, "one"),
+                s => Assert.Equal(s, "two"),
+                s => Assert.Equal(s, "three")
             });
         }
 
@@ -299,7 +297,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => s.Should().Be("EntitySet('KeyValue')"),
+                s => Assert.Equal(s, "EntitySet('KeyValue')"),
             });
         }
 
@@ -310,7 +308,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => s.Should().Be("EntitySet(first=1,second=2)"),
+                s => Assert.Equal(s, "EntitySet(first=1,second=2)"),
             });
         }
 
@@ -321,42 +319,42 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => s.Should().Be("one"),
+                s => Assert.Equal(s, "one"),
             });
         }
 
         [Fact]
         public void IsCharHexDigitTest()
         {
-            UriParserHelper.IsCharHexDigit(' ').Should().BeFalse();
-            UriParserHelper.IsCharHexDigit('0').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit('1').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit('9').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit(':').Should().BeFalse();
-            UriParserHelper.IsCharHexDigit('A').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit('B').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit('F').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit('G').Should().BeFalse();
-            UriParserHelper.IsCharHexDigit('a').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit('b').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit('f').Should().BeTrue();
-            UriParserHelper.IsCharHexDigit('g').Should().BeFalse();
+            Assert.False(UriParserHelper.IsCharHexDigit(' '));
+            Assert.True(UriParserHelper.IsCharHexDigit('0'));
+            Assert.True(UriParserHelper.IsCharHexDigit('1'));
+            Assert.True(UriParserHelper.IsCharHexDigit('9'));
+            Assert.False(UriParserHelper.IsCharHexDigit(':'));
+            Assert.True(UriParserHelper.IsCharHexDigit('A'));
+            Assert.True(UriParserHelper.IsCharHexDigit('B'));
+            Assert.True(UriParserHelper.IsCharHexDigit('F'));
+            Assert.False(UriParserHelper.IsCharHexDigit('G'));
+            Assert.True(UriParserHelper.IsCharHexDigit('a'));
+            Assert.True(UriParserHelper.IsCharHexDigit('b'));
+            Assert.True(UriParserHelper.IsCharHexDigit('f'));
+            Assert.False(UriParserHelper.IsCharHexDigit('g'));
         }
 
         [Fact]
         public void TryRemoveQuotesTest()
         {
             string test = "' '";
-            UriParserHelper.TryRemoveQuotes(ref test).Should().BeTrue();
-            test.Should().Be(" ");
+            Assert.True(UriParserHelper.TryRemoveQuotes(ref test));
+            Assert.Equal(test, " ");
 
             test = "invalid";
-            UriParserHelper.TryRemoveQuotes(ref test).Should().BeFalse();
-            test.Should().Be("invalid");
+            Assert.False(UriParserHelper.TryRemoveQuotes(ref test));
+            Assert.Equal(test, "invalid");
 
             test = "'invalid";
-            UriParserHelper.TryRemoveQuotes(ref test).Should().BeFalse();
-            test.Should().Be("'invalid");
+            Assert.False(UriParserHelper.TryRemoveQuotes(ref test));
+            Assert.Equal(test, "'invalid");
         }
 
         /// <summary>
@@ -364,7 +362,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         /// </summary>
         private void VerifyPath(IEnumerable<string> path, Action<string>[] segmentVerifiers)
         {
-            path.Count().Should().Be(segmentVerifiers.Count());
+            Assert.Equal(path.Count(), segmentVerifiers.Count());
 
             var i = 0;
             foreach (var segment in path)

@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -22,14 +21,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             Action createWithNullName = () => new NonResourceRangeVariableReferenceNode(null, rangeVariable);
-            createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
+            Assert.Throws<ArgumentNullException>("name", createWithNullName);
         }
 
         [Fact]
         public void RangeVariableCannotBeNull()
         {
             Action createWithNullRangeVariable = () => new NonResourceRangeVariableReferenceNode("suff", null);
-            createWithNullRangeVariable.ShouldThrow<Exception>(Error.ArgumentNull("rangeVariable").ToString());
+            Assert.Throws<ArgumentNullException>("rangeVariable", createWithNullRangeVariable);
         }
 
         [Fact]
@@ -37,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
-            nonentityRangeVariableReferenceNode.Name.Should().Be("stuff");
+            Assert.Equal("stuff", nonentityRangeVariableReferenceNode.Name);
         }
 
         [Fact]
@@ -45,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
-            nonentityRangeVariableReferenceNode.TypeReference.FullName().Should().Be(EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true).FullName());
+            Assert.Equal(EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true).FullName(), nonentityRangeVariableReferenceNode.TypeReference.FullName());
         }
 
         [Fact]
@@ -61,7 +60,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
-            nonentityRangeVariableReferenceNode.InternalKind.Should().Be(InternalQueryNodeKind.NonResourceRangeVariableReference);
+            Assert.Equal(nonentityRangeVariableReferenceNode.InternalKind, InternalQueryNodeKind.NonResourceRangeVariableReference);
         }
     }
 }
