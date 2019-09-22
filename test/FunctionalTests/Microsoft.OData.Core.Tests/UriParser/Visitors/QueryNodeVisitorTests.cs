@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -23,7 +22,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitAllNode = () => visitor.Visit(new AllNode(null, null));
-            visitAllNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitAllNode);
         }
 
         [Fact]
@@ -31,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitAnyNode = () => visitor.Visit(new AnyNode(null, null));
-            visitAnyNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitAnyNode);
         }
 
         [Fact]
@@ -39,7 +38,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitBinaryOperatorNode = () => visitor.Visit(new BinaryOperatorNode(BinaryOperatorKind.Equal, new ConstantNode(1), new ConstantNode(2)));
-            visitBinaryOperatorNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitBinaryOperatorNode);
         }
 
         [Fact]
@@ -47,7 +46,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitCollectionNavigationNode = () => visitor.Visit(new CollectionNavigationNode(HardCodedTestModel.GetPeopleSet(), ModelBuildingHelpers.BuildCollectionNavigationProperty(), new EdmPathExpression("Reference")));
-            visitCollectionNavigationNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitCollectionNavigationNode);
         }
 
         [Fact]
@@ -55,7 +54,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitCollectionPropertyAccessNode = () => visitor.Visit(new CollectionPropertyAccessNode(new ConstantNode(1), HardCodedTestModel.GetPersonGeographyCollectionProp()));
-            visitCollectionPropertyAccessNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitCollectionPropertyAccessNode);
         }
 
         [Fact]
@@ -63,7 +62,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitConstantNode = () => visitor.Visit(new ConstantNode(null));
-            visitConstantNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitConstantNode);
         }
 
         [Fact]
@@ -71,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitConvertNode = () => visitor.Visit(new ConvertNode(new ConstantNode(1), EdmCoreModel.Instance.GetBinary(true)));
-            visitConvertNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitConvertNode);
         }
 
         [Fact]
@@ -79,7 +78,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitCollectionResourceCastNode = () => visitor.Visit(new CollectionResourceCastNode(new EntitySetNode(HardCodedTestModel.GetPeopleSet()), HardCodedTestModel.GetPersonType()));
-            visitCollectionResourceCastNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitCollectionResourceCastNode);
         }
 
         [Fact]
@@ -87,7 +86,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitResourceRangeVariableReferenceNode = () => visitor.Visit(new ResourceRangeVariableReferenceNode("stuff", new ResourceRangeVariable("stuff", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet())));
-            visitResourceRangeVariableReferenceNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitResourceRangeVariableReferenceNode);
         }
 
         [Fact]
@@ -98,7 +97,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             NonResourceRangeVariable nonentityRangeVariable = new NonResourceRangeVariable("dummy", constNode.TypeReference, null);
             NonResourceRangeVariableReferenceNode nonResourceRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode(nonentityRangeVariable.Name, nonentityRangeVariable);
             Action visitNonResourceRangeVariableReferenceNode = () => visitor.Visit(nonResourceRangeVariableReferenceNode);
-            visitNonResourceRangeVariableReferenceNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitNonResourceRangeVariableReferenceNode);
         }
 
         [Fact]
@@ -106,7 +105,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitSingleResourceCastNode = () => visitor.Visit(new SingleResourceCastNode(null, ModelBuildingHelpers.BuildValidEntityType()));
-            visitSingleResourceCastNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitSingleResourceCastNode);
         }
 
         [Fact]
@@ -114,7 +113,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitSingleNavigationNode = () => visitor.Visit(new SingleNavigationNode(HardCodedTestModel.GetPeopleSet(), ModelBuildingHelpers.BuildValidNavigationProperty(), new EdmPathExpression("Reference")));
-            visitSingleNavigationNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitSingleNavigationNode);
         }
 
         [Fact]
@@ -122,7 +121,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitSingleResourceFunctionCallNode = () => visitor.Visit(new SingleResourceFunctionCallNode("stuff", null, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
-            visitSingleResourceFunctionCallNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitSingleResourceFunctionCallNode);
         }
 
         [Fact]
@@ -130,7 +129,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitSingleValueFunctionCallNode = () => visitor.Visit(new SingleValueFunctionCallNode("stuff", null, EdmCoreModel.Instance.GetInt32(true)));
-            visitSingleValueFunctionCallNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitSingleValueFunctionCallNode);
         }
 
         [Fact]
@@ -138,7 +137,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitSingleValueOpenPropertyAccessNode = () => visitor.Visit(new SingleValueOpenPropertyAccessNode(new ConstantNode(1), "stuff"));
-            visitSingleValueOpenPropertyAccessNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitSingleValueOpenPropertyAccessNode);
         }
 
         [Fact]
@@ -146,7 +145,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitSingleValuePropertyAccessNode = () => visitor.Visit(new SingleValuePropertyAccessNode(new ConstantNode(1), ModelBuildingHelpers.BuildValidPrimitiveProperty()));
-            visitSingleValuePropertyAccessNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitSingleValuePropertyAccessNode);
         }
 
         [Fact]
@@ -154,7 +153,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorNode = () => visitor.Visit(new UnaryOperatorNode(UnaryOperatorKind.Not, new ConstantNode(1)));
-            visitUnaryOperatorNode.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitUnaryOperatorNode);
         }
     }
 }

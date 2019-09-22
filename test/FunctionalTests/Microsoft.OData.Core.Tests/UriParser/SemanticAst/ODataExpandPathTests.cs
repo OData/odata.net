@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
@@ -22,42 +21,42 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ExpandPathShouldNotAllowCountSegment()
         {
             Action createWithCountSegment = () => new ODataExpandPath(CountSegment.Instance, this.navigationSegment);
-            createWithCountSegment.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment("CountSegment"));
+            createWithCountSegment.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment("CountSegment"));
         }
 
         [Fact]
         public void ExpandPathShouldNotAllowValueSegment()
         {
             Action createWithValueSegment = () => new ODataExpandPath(new ValueSegment(HardCodedTestModel.GetPersonType()), this.navigationSegment);
-            createWithValueSegment.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment("ValueSegment"));
+            createWithValueSegment.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment("ValueSegment"));
         }
 
         [Fact]
         public void ExpandPathShouldNotAllowTypeSegmentToBeLast()
         {
             Action createWithTypeSegmentLast = () => new ODataExpandPath(this.typeSegment);
-            createWithTypeSegmentLast.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+            createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
         }
 
         [Fact]
         public void ExpandPathShouldNotAllowMultipleNavigations()
         {
             Action createWithTypeSegmentLast = () => new ODataExpandPath(this.navigationSegment, this.navigationSegment);
-            createWithTypeSegmentLast.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+            createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
         }
 
         [Fact]
         public void ExpandPathShouldWorkForSingleNavigation()
         {
             List<ODataPathSegment> segments = new List<ODataPathSegment>() { this.navigationSegment };
-            new ODataExpandPath(segments).Should().ContainExactly(segments.ToArray());
+            new ODataExpandPath(segments).ContainExactly(segments.ToArray());
         }
 
         [Fact]
         public void ExpandPathShouldWorkForMultipleTypeSegmentsFollowedByANavigation()
         {
             List<ODataPathSegment> segments = new List<ODataPathSegment>() { this.typeSegment, this.typeSegment, this.navigationSegment };
-            new ODataExpandPath(segments).Should().ContainExactly(segments.ToArray());
+            new ODataExpandPath(segments).ContainExactly(segments.ToArray());
         }
     }
 }

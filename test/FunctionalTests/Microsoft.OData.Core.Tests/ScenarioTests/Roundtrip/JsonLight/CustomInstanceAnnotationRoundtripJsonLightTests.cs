@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
@@ -37,7 +36,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         public void ZeroCustomInstanceAnnotationsOnErrorShouldRoundtrip()
         {
             ODataError error = this.WriteThenReadErrorWithInstanceAnnotation(new KeyValuePair<string, ODataValue>[] { });
-            error.Should().NotBeNull();
+            Assert.NotNull(error);
         }
 
         [Fact]
@@ -67,39 +66,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var error = this.WriteThenReadErrorWithInstanceAnnotation(originalInt, originalDouble, originalDate, originalDateTimeOffset, originaltime, originalTimeSpan, originalGeography, originalNull, originalResource);
 
             var annotation = RunBasicVerificationAndGetAnnotationValue("int.error", error);
-            annotation.Should().BeOfType<ODataPrimitiveValue>();
-            annotation.As<ODataPrimitiveValue>().Value.Should().Be(1);
+            var primitiveValue = Assert.IsType<ODataPrimitiveValue>(annotation);
+            Assert.Equal(1, primitiveValue.Value);
 
             annotation = RunBasicVerificationAndGetAnnotationValue("double.error", error);
-            annotation.Should().BeOfType<ODataPrimitiveValue>();
-            annotation.As<ODataPrimitiveValue>().Value.Should().Be(double.NaN);
+            primitiveValue = Assert.IsType<ODataPrimitiveValue>(annotation);
+            Assert.Equal(double.NaN, primitiveValue.Value);
 
             annotation = RunBasicVerificationAndGetAnnotationValue("Date.error", error);
-            annotation.Should().BeOfType<ODataPrimitiveValue>();
-            annotation.As<ODataPrimitiveValue>().Value.Should().Be(date);
+            primitiveValue = Assert.IsType<ODataPrimitiveValue>(annotation);
+            Assert.Equal(date, primitiveValue.Value);
 
             annotation = RunBasicVerificationAndGetAnnotationValue("DateTimeOffset.error", error);
-            annotation.Should().BeOfType<ODataPrimitiveValue>();
-            annotation.As<ODataPrimitiveValue>().Value.Should().Be(dateTimeOffset);
+            primitiveValue = Assert.IsType<ODataPrimitiveValue>(annotation);
+            Assert.Equal(dateTimeOffset, primitiveValue.Value);
 
             annotation = RunBasicVerificationAndGetAnnotationValue("TimeOfDay.error", error);
-            annotation.Should().BeOfType<ODataPrimitiveValue>();
-            annotation.As<ODataPrimitiveValue>().Value.Should().Be(time);
+            primitiveValue = Assert.IsType<ODataPrimitiveValue>(annotation);
+            Assert.Equal(time, primitiveValue.Value);
 
             annotation = RunBasicVerificationAndGetAnnotationValue("TimeSpan.error", error);
-            annotation.Should().BeOfType<ODataPrimitiveValue>();
-            annotation.As<ODataPrimitiveValue>().Value.Should().Be(timeSpan);
+            primitiveValue = Assert.IsType<ODataPrimitiveValue>(annotation);
+            Assert.Equal(timeSpan, primitiveValue.Value);
 
             annotation = RunBasicVerificationAndGetAnnotationValue("Geography.error", error);
-            annotation.Should().BeOfType<ODataPrimitiveValue>();
-            annotation.As<ODataPrimitiveValue>().Value.Should().Be(geographyPoint);
+            primitiveValue = Assert.IsType<ODataPrimitiveValue>(annotation);
+            Assert.Equal(geographyPoint, primitiveValue.Value);
 
             annotation = RunBasicVerificationAndGetAnnotationValue("null.error", error);
-            annotation.Should().BeOfType<ODataNullValue>();
+            Assert.IsType<ODataNullValue>(annotation);
 
             annotation = RunBasicVerificationAndGetAnnotationValue("sample.error", error);
-            annotation.Should().BeOfType<ODataResourceValue>();
-            annotation.As<ODataResourceValue>().Properties.First().Value.Should().Be("inner property value");
+            var value = Assert.IsType<ODataResourceValue>(annotation);
+            Assert.Equal("inner property value", value.Properties.First().Value);
         }
 
         [Fact]
@@ -113,8 +112,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var original = new KeyValuePair<string, ODataValue>("sample.error", originalResourceValue);
             var error = this.WriteThenReadErrorWithInstanceAnnotation(original);
             var annotation = RunBasicVerificationAndGetAnnotationValue("sample.error", error);
-            annotation.Should().BeOfType<ODataResourceValue>();
-            annotation.As<ODataResourceValue>().Properties.First().Value.Should().Be("inner property value");
+            var value = Assert.IsType<ODataResourceValue>(annotation);
+            Assert.Equal("inner property value", value.Properties.First().Value);
         }
 
         [Fact]
@@ -128,20 +127,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var original = new KeyValuePair<string, ODataValue>("sample.error", originalCollectionValue);
             var error = this.WriteThenReadErrorWithInstanceAnnotation(original);
             var annotation = RunBasicVerificationAndGetAnnotationValue("sample.error", error);
-            annotation.Should().BeOfType<ODataCollectionValue>();
-            annotation.As<ODataCollectionValue>().Items.Cast<string>().Count().Should().Be(2);
+            var collectionValue = Assert.IsType<ODataCollectionValue>(annotation);
+            Assert.Equal(2, collectionValue.Items.Count());
         }
 
         #region Test Helpers
 
         private static ODataValue RunBasicVerificationAndGetAnnotationValue(string name, ODataError error)
         {
-            error.Should().NotBeNull();
+            Assert.NotNull(error);
             var instanceAnnotations = error.InstanceAnnotations;
-            instanceAnnotations.Should().NotBeNull("there was an instance annotation in the payload.");
-            instanceAnnotations.Should().NotBeEmpty("there was an instance annotation in the payload.");
+            Assert.NotNull(instanceAnnotations);
+            Assert.NotEmpty(instanceAnnotations);
             var annotation = instanceAnnotations.Where(instanceAnnotation => instanceAnnotation.Name.Equals(name)).FirstOrDefault();
-            annotation.Should().NotBeNull("an instance annotation with the requested name was in the payload.");
+            Assert.NotNull(annotation);
             return annotation.Value;
         }
 

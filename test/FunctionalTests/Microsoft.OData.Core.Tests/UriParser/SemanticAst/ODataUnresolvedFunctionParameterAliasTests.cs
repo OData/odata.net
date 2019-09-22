@@ -4,9 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -20,8 +17,8 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUnresolvedFunctionParameterAlias alias = new ODataUnresolvedFunctionParameterAlias(
                 "alias", HardCodedTestModel.GetPersonAddressProp().Type);
 
-            alias.Alias.Should().Be("alias");
-            alias.Type.Should().Be(HardCodedTestModel.GetPersonAddressProp().Type);
+            Assert.Equal("alias", alias.Alias);
+            Assert.Same(alias.Type, HardCodedTestModel.GetPersonAddressProp().Type);
         }
     }
 }

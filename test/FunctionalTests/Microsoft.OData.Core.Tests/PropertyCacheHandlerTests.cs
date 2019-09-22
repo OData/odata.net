@@ -6,7 +6,6 @@
 
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
@@ -47,12 +46,12 @@ namespace Microsoft.OData.Tests
 
             // Create a PropertySerializationInfo for ComplexProp.IntProp
             var info1 = handler.GetProperty(model, "IntProp", complexType);
-            info1.Should().NotBeNull();
+            Assert.NotNull(info1);
 
             // Get a second PropertySerializationInfo for ComplexProp.IntProp; it should be the same.
             PropertySerializationInfo info2 = handler.GetProperty(model, "IntProp", complexType);
-            info2.Should().NotBeNull();
-            info2.Should().BeSameAs(info1);
+            Assert.NotNull(info2);
+            Assert.Same(info2, info1);
         }
 
         [Fact]
@@ -75,12 +74,12 @@ namespace Microsoft.OData.Tests
 
             // Create a PropertySerializationInfo for ComplexProp.IntProp
             var info1 = handler.GetProperty(model, "IntProp", null);
-            info1.Should().NotBeNull();
+            Assert.NotNull(info1);
 
             // Get a second PropertySerializationInfo for ComplexProp.IntProp; it should be the same.
             PropertySerializationInfo info2 = handler.GetProperty(model, "IntProp", null);
-            info2.Should().NotBeNull();
-            info2.Should().BeSameAs(info1);
+            Assert.NotNull(info2);
+            Assert.Same(info2, info1);
         }
 
         [Fact]
@@ -114,12 +113,12 @@ namespace Microsoft.OData.Tests
 
             // Create a PropertySerializationInfo for ComplexProp1.Prop1
             var info1 = handler.GetProperty(model, "Prop1", complexType1);
-            info1.Should().NotBeNull();
+            Assert.NotNull(info1);
 
             // Create a PropertySerializationInfo for ComplexProp2.Prop1; they shoudl be different.
             var info2 = handler.GetProperty(model, "Prop1", complexType2);
-            info2.Should().NotBeNull();
-            info2.Should().NotBeSameAs(info1);
+            Assert.NotNull(info2);
+            Assert.NotSame(info2, info1);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="nextToken">The NextToken token to access the property on. </param>
         public EndPathToken(string identifier, QueryToken nextToken)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(identifier, "Identifier");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(identifier, "identifier");
 
             this.identifier = identifier;
             this.nextToken = nextToken;

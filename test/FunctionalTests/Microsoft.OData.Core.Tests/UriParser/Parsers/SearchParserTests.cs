@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -113,28 +112,28 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SearchUnMatchedParenthesisTest()
         {
             Action action = ()=>searchParser.ParseSearch("(A BC DEF");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_CloseParenOrOperatorExpected(9,"(A BC DEF"));
+            action.Throws<ODataException>(Strings.UriQueryExpressionParser_CloseParenOrOperatorExpected(9,"(A BC DEF"));
         }
 
         [Fact]
         public void SearchOperandMissingTest()
         {
             Action action = () => searchParser.ParseSearch("A AND");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_ExpressionExpected(5, "A AND"));
+            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(5, "A AND"));
         }
 
         [Fact]
         public void SearchOperandMissingInParenthesisTest()
         {
             Action action = () => searchParser.ParseSearch("(A AND)");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_ExpressionExpected(6, "(A AND)"));
+            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(6, "(A AND)"));
         }
 
         [Fact]
         public void SearchEmptyPhrase()
         {
             Action action = () => searchParser.ParseSearch("A \"\"");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_IdentifierExpected(2));
+            action.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected(2));
         }
     }
 }

@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -17,7 +16,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void NameCannotBeNull()
         {
             Action createWithNullName = () => new EndPathToken(null, new LiteralToken(1));
-            createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
+            Assert.Throws<ArgumentNullException>("identifier", createWithNullName);
         }
 
         [Fact]
@@ -31,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void NameSetCorrectly()
         {
             EndPathToken endPathToken = new EndPathToken("stuff", new LiteralToken(1));
-            endPathToken.Identifier.Should().Be("stuff");
+            Assert.Equal("stuff", endPathToken.Identifier);
         }
 
 
@@ -39,7 +38,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void KindIsInnerPath()
         {
             EndPathToken endPathToken = new EndPathToken("stuff", new LiteralToken(1));
-            endPathToken.Kind.Should().Be(QueryTokenKind.EndPath);
+            Assert.Equal(QueryTokenKind.EndPath, endPathToken.Kind);
         }
     }
 }

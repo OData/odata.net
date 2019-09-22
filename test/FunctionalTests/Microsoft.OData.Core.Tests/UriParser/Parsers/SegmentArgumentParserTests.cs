@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -21,7 +20,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             SegmentArgumentParser key;
             SegmentArgumentParser.TryParseKeysFromUri("ID=0", out key, false);
             key.AddNamedValue("ID", "10");
-            key.NamedValues.Should().Contain("ID", "0");
+            Assert.Contains("ID", key.NamedValues.Keys);
+            Assert.Contains("0", key.NamedValues.Values);
         }
 
         [Fact]
@@ -30,8 +30,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             SegmentArgumentParser key;
             SegmentArgumentParser.TryParseKeysFromUri("ID=0", out key, false);
             key.AddNamedValue("ID1", "10");
-            key.NamedValues.Should().Contain("ID", "0")
-                .And.Contain("ID1", "10");
+
+            Assert.Contains("ID", key.NamedValues.Keys);
+            Assert.Contains("0", key.NamedValues.Values);
+
+            Assert.Contains("ID1", key.NamedValues.Keys);
+            Assert.Contains("10", key.NamedValues.Values);
         }
 
         [Fact]
@@ -40,22 +44,26 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             SegmentArgumentParser key;
             SegmentArgumentParser.TryParseKeysFromUri("", out key, false);
             key.AddNamedValue("ID", "10");
-            key.NamedValues.Should().Contain("ID", "10");
+            Assert.Contains("ID", key.NamedValues.Keys);
+            Assert.Contains("10", key.NamedValues.Values);
         }
 
         [Fact]
         public void TestTemplateKeyParsing()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("ID={K0}", out key, true).Should().BeTrue();
-            key.NamedValues.Should().Contain("ID", "{K0}");
+            var result = SegmentArgumentParser.TryParseKeysFromUri("ID={K0}", out key, true);
+            Assert.True(result);
+            Assert.Contains("ID", key.NamedValues.Keys);
+            Assert.Contains("{K0}", key.NamedValues.Values);
         }
 
         [Fact]
         public void TestTemplateKeyParsingWithTemplateParsingDisabled()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("ID={K0}", out key, false).Should().BeFalse();
+            var result = SegmentArgumentParser.TryParseKeysFromUri("ID={K0}", out key, false);
+            Assert.False(result);
         }
     }
 }

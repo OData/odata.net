@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -108,14 +106,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                     {
                         case ODataReaderState.ResourceSetStart:
                         case ODataReaderState.ResourceSetEnd:
-                            odataReader.Item.As<ODataResourceSet>().InstanceAnnotations.Should().BeEmpty();
+                            var resourceSet = Assert.IsType<ODataResourceSet>(odataReader.Item);
+                            Assert.Empty(resourceSet.InstanceAnnotations);
                             break;
                         case ODataReaderState.NestedResourceInfoStart:
                         case ODataReaderState.NestedResourceInfoEnd:
                             break;
                         case ODataReaderState.ResourceStart:
                         case ODataReaderState.ResourceEnd:
-                            odataReader.Item.As<ODataResource>().InstanceAnnotations.Should().BeEmpty();
+                            Assert.Empty((odataReader.Item as ODataResource).InstanceAnnotations);
                             break;
                     }
                 }
@@ -150,7 +149,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                     {
                         case ODataReaderState.ResourceSetStart:
                             odataItems.Push(odataReader.Item);
-                            instanceAnnotations = odataItems.Peek().As<ODataResourceSet>().InstanceAnnotations;
+                            instanceAnnotations = (odataItems.Peek() as ODataResourceSet).InstanceAnnotations;
 
                             // TODO: We only support instance annotation at the top level feed at the moment. Will remove the if statement when support on inline feed is added.
                             if (odataItems.Count == 1)
@@ -158,28 +157,28 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                                 // Note that in streaming mode, the collection should be populated with instance annotations read so far before the beginning of the first entry.
                                 // We are currently in non-streaming mode. The reader will buffer the payload and read ahead till the
                                 // end of the feed to read all instance annotations.
-                                instanceAnnotations.Should().HaveCount(1);
+                                Assert.Single(instanceAnnotations);
                                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.ResourceSetStartAnnotation").Value);
                             }
                             else
                             {
-                                instanceAnnotations.Should().BeEmpty();
+                                Assert.Empty(instanceAnnotations);
                             }
 
                             break;
                         case ODataReaderState.ResourceSetEnd:
-                            instanceAnnotations = odataItems.Peek().As<ODataResourceSet>().InstanceAnnotations;
+                            instanceAnnotations = (odataItems.Peek() as ODataResourceSet).InstanceAnnotations;
 
                             // TODO: We only support instance annotation at the top level feed at the moment. Will remove the if statement when support on inline feed is added.
                             if (odataItems.Count == 1)
                             {
-                                instanceAnnotations.Should().HaveCount(2);
+                                Assert.Equal(2, instanceAnnotations.Count());
                                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.ResourceSetStartAnnotation").Value);
                                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.FeedEndAnnotation").Value);
                             }
                             else
                             {
-                                instanceAnnotations.Should().BeEmpty();
+                                Assert.Empty(instanceAnnotations);
                             }
 
                             odataItems.Pop();
@@ -189,8 +188,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                             if (navigationLink.Name == "ResourceSetNavigationProperty")
                             {
                                 // The collection should be populated with instance annotations read so far before the "ResourceSetNavigationProperty".
-                                instanceAnnotations = odataItems.Peek().As<ODataResource>().InstanceAnnotations;
-                                instanceAnnotations.Should().HaveCount(2);
+                                instanceAnnotations = (odataItems.Peek() as ODataResource).InstanceAnnotations;
+                                Assert.Equal(2, instanceAnnotations.Count());
                                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryStartAnnotation").Value);
                                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryMiddleAnnotation").Value);
                             }
@@ -202,14 +201,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                             odataItems.Push(odataReader.Item);
 
                             // The collection should be populated with instance annotations read so far before the first navigation/association link or before the end of the entry.
-                            instanceAnnotations = odataItems.Peek().As<ODataResource>().InstanceAnnotations;
-                            instanceAnnotations.Should().HaveCount(1);
+                            instanceAnnotations = (odataItems.Peek() as ODataResource).InstanceAnnotations;
+                            Assert.Single(instanceAnnotations);
                             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryStartAnnotation").Value);
                             break;
 
                         case ODataReaderState.ResourceEnd:
-                            instanceAnnotations = odataItems.Peek().As<ODataResource>().InstanceAnnotations;
-                            instanceAnnotations.Should().HaveCount(3);
+                            instanceAnnotations = (odataItems.Peek() as ODataResource).InstanceAnnotations;
+                            Assert.Equal(3, instanceAnnotations.Count());
                             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryStartAnnotation").Value);
                             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryMiddleAnnotation").Value);
                             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryEndAnnotation").Value);
@@ -218,7 +217,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                     }
                 }
 
-                instanceAnnotations.Should().HaveCount(2);
+                Assert.Equal(2, instanceAnnotations.Count());
                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.ResourceSetStartAnnotation").Value);
                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.FeedEndAnnotation").Value);
             }
@@ -301,7 +300,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             stream.Position = 0;
             string payload = (new StreamReader(stream)).ReadToEnd();
 
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(payload, expectedPayload);
         }
 
         #endregion Feed and entry with custom instance annotations.
@@ -330,7 +329,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             using (var messageReader = new ODataMessageReader(messageToRead, readerSettings, Model))
             {
                 ODataError error = messageReader.ReadError();
-                error.InstanceAnnotations.Should().HaveCount(1).And.Contain(ia => ia.Name == "instance.annotation");
+                var annotation = Assert.Single(error.InstanceAnnotations);
+                Assert.Equal("instance.annotation", annotation.Name);
             }
         }
 
@@ -363,7 +363,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
             stream.Position = 0;
             string payload = (new StreamReader(stream)).ReadToEnd();
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, payload);
         }
 
         #endregion Error with custom instance annotations

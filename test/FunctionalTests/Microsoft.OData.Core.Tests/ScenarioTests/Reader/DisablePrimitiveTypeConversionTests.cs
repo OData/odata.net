@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
@@ -41,32 +40,36 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         [Fact]
         public void JsonLightShouldConvertOpenPropertyValueToPayloadSpecifiedTypeEvenIfConversionIsDisabled()
         {
-            this.ReadPropertyValueInJsonLight("OpenProperty", "AQ==", "Edm.Binary", this.settingsWithConversionDisabled).Should().BeAssignableTo<byte[]>();
+            var result = this.ReadPropertyValueInJsonLight("OpenProperty", "AQ==", "Edm.Binary", this.settingsWithConversionDisabled);
+            Assert.True(result is byte[]);
         }
 
         [Fact]
         public void JsonLightShouldConvertDeclaredPropertyValueToPayloadSpecifiedTypeEvenIfConversionIsDisabled()
         {
-            this.ReadPropertyValueInJsonLight("String", "AQ==", "Edm.Binary", this.settingsWithConversionDisabled).Should().BeAssignableTo<byte[]>();
+            var result = this.ReadPropertyValueInJsonLight("String", "AQ==", "Edm.Binary", this.settingsWithConversionDisabled);
+            Assert.True(result is byte[]);
         }
 
         [Fact]
         public void JsonLightShouldNotConvertDeclaredPropertyValueToMetadataTypeIfConversionIsDisabled()
         {
-            this.ReadPropertyValueInJsonLight("Binary", "AQ==", null, this.settingsWithConversionDisabled).Should().BeAssignableTo<string>();
+            var result = this.ReadPropertyValueInJsonLight("Binary", "AQ==", null, this.settingsWithConversionDisabled);
+            Assert.True(result is string);
         }
 
         [Fact]
         public void JsonLightShouldConvertDeclaredPropertyValueToMetadataTypeByDefault()
         {
-            this.ReadPropertyValueInJsonLight("Binary", "AQ==", null, this.defaultSettings).Should().BeAssignableTo<byte[]>();
+            var result = this.ReadPropertyValueInJsonLight("Binary", "AQ==", null, this.defaultSettings);
+            Assert.True(result is byte[]);
         }
 
         [Fact]
         public void JsonLightShouldFailIfPayloadTypeDoesNotMatchMetadataTypeByDefault()
         {
             Action readWithWrongType = () => this.ReadPropertyValueInJsonLight("String", "AQ==", "Edm.Binary", this.defaultSettings);
-            readWithWrongType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_IncompatibleType("Edm.Binary", "Edm.String"));
+            readWithWrongType.Throws<ODataException>(ODataErrorStrings.ValidationUtils_IncompatibleType("Edm.Binary", "Edm.String"));
         }
 
         private object ReadPropertyValueInJsonLight(string propertyName, string propertyValue, string typeName, ODataMessageReaderSettings settings)
@@ -94,14 +97,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             message.SetHeader("Content-Type", contentType);
             var reader = new ODataMessageReader((IODataResponseMessage)message, settings, this.model);
             var entryReader = reader.CreateODataResourceReader(this.entityType);
-            entryReader.Read().Should().BeTrue();
-            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
-            entryReader.Read().Should().BeTrue();
-            entryReader.State.Should().Be(ODataReaderState.ResourceEnd);
-            entryReader.Item.Should().BeAssignableTo<ODataResource>();
+            Assert.True(entryReader.Read());
+            Assert.Equal(ODataReaderState.ResourceStart, entryReader.State);
+            Assert.True(entryReader.Read());
+            Assert.Equal(ODataReaderState.ResourceEnd, entryReader.State);
+            ODataResource resource = entryReader.Item as ODataResource;
 
-            entryReader.Item.As<ODataResource>().Properties.Should().Contain(p => p.Name == propertyName);
-            var property = entryReader.Item.As<ODataResource>().Properties.Single(p => p.Name == propertyName);
+            Assert.Contains(resource.Properties, p => p.Name == propertyName);
+            var property = resource.Properties.Single(p => p.Name == propertyName);
             return property;
         }
     }

@@ -5,8 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -36,7 +34,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             string relativeUrl = "$metadata#R";
             Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(new EdmModel(), relativeUrl, ODataPayloadKind.Unsupported, null, true);
-            parseContextUri.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(relativeUrl));
+            parseContextUri.Throws<ODataException>(ErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(relativeUrl));
         }
 
         [Fact]
@@ -44,7 +42,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             string urlWithUnescapedSpecialMeaningCharacters = "https://www.example.com/api/$metadata#People('i%3A0%23.f%7Cmembership%7Cexample%40example.org')/Dogs";
             Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(GetModel(), urlWithUnescapedSpecialMeaningCharacters, ODataPayloadKind.Unsupported, null, true);
-            parseContextUri.ShouldNotThrow();
+            parseContextUri.DoesNotThrow();
         }
     }
 }

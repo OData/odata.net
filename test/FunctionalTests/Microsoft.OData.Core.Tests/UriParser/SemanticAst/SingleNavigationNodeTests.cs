@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -19,7 +18,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForPerson();
             var node = new SingleNavigationNode(source, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
 
-            node.Source.Should().BeSameAs(source);
+            Assert.Same(node.Source, source);
         }
 
         [Fact]
@@ -28,7 +27,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForPerson();
             var node = new SingleNavigationNode(source, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
 
-            node.TypeReference.Should().BeSameAs(HardCodedTestModel.GetPersonMyDogNavProp().Type);
+            Assert.Same(node.TypeReference, HardCodedTestModel.GetPersonMyDogNavProp().Type);
         }
 
         [Fact]
@@ -37,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForPerson();
             var node = new SingleNavigationNode(source, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
 
-            node.EntityTypeReference.Should().BeSameAs(node.TypeReference);
+            Assert.Same(node.EntityTypeReference, node.TypeReference);
         }
 
         [Fact]
@@ -46,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForPerson();
             var node = new SingleNavigationNode(source, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
 
-            node.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
+            Assert.Same(node.NavigationSource, HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
@@ -55,14 +54,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = new FakeSingleEntityNode(HardCodedTestModel.GetPersonTypeReference(), null);
             var node = new SingleNavigationNode(source, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
 
-            node.NavigationSource.Should().BeNull();
+            Assert.Null(node.NavigationSource);
         }
 
         [Fact]
         public void SingleNavigationNodeHandlesNullSourceSetParameter()
         {
             var node = new SingleNavigationNode((IEdmEntitySet)null, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
-            node.NavigationSource.Should().BeNull();
+            Assert.Null(node.NavigationSource);
         }
 
         [Fact]
@@ -71,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForPerson();
             var node = new SingleNavigationNode(source, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
 
-            node.InternalKind.Should().Be(InternalQueryNodeKind.SingleNavigationNode);
+            Assert.Equal(InternalQueryNodeKind.SingleNavigationNode, node.InternalKind);
         }
     }
 }

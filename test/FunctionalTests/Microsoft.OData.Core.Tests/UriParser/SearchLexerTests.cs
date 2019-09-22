@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -97,22 +96,22 @@ namespace Microsoft.OData.Tests.UriParser
             ValidateTokenKind(lexer, ExpressionTokenKind.End);
 
             Action action = () => new SearchLexer("b\\\"cd a3").NextToken();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionLexer_InvalidCharacter("\\", 1, "b\\\"cd a3"));
+            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidCharacter("\\", 1, "b\\\"cd a3"));
             action = () => new SearchLexer("bcd za3").NextToken();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionLexer_InvalidCharacter("3", 6, "bcd za3"));
+            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidCharacter("3", 6, "bcd za3"));
             action = () => new SearchLexer("\" za\"\\").NextToken();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionLexer_InvalidCharacter("\\", 5, "\" za\"\\"));
+            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidCharacter("\\", 5, "\" za\"\\"));
         }
 
         [Fact]
         public void InvalidEscapeTest()
         {
             Action action = () => new SearchLexer("\"t a\\A\"").NextToken();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionLexer_InvalidEscapeSequence("A", 5, "\"t a\\A\""));
+            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidEscapeSequence("A", 5, "\"t a\\A\""));
             action = () => new SearchLexer("\"a\\A t\"");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionLexer_InvalidEscapeSequence("A", 3, "\"a\\A t\""));
+            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidEscapeSequence("A", 3, "\"a\\A t\""));
             action = () => new SearchLexer("\"\\Aa t\"");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionLexer_InvalidEscapeSequence("A", 2, "\"\\Aa t\""));
+            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidEscapeSequence("A", 2, "\"\\Aa t\""));
         }
 
         [Fact]
@@ -127,9 +126,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new SearchLexer("A \"\"");
             Action action = () => lexer.NextToken();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_IdentifierExpected((2)));
+            action.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected((2)));
             action = () => new SearchLexer("\"\" A");
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_IdentifierExpected((0)));
+            action.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected((0)));
         }
 
         [Fact]
@@ -143,21 +142,21 @@ namespace Microsoft.OData.Tests.UriParser
 
         private static void ValidateStringLiteralToken(ExpressionLexer lexer, string text)
         {
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.StringLiteral);
-            lexer.CurrentToken.Text.Should().Be(text);
+            Assert.Equal(ExpressionTokenKind.StringLiteral, lexer.CurrentToken.Kind);
+            Assert.Equal(text, lexer.CurrentToken.Text);
             lexer.NextToken();
         }
 
         private static void ValidateIdentifierToken(ExpressionLexer lexer, string text)
         {
-            lexer.CurrentToken.Kind.Should().Be(ExpressionTokenKind.Identifier);
-            lexer.CurrentToken.Text.Should().Be(text);
+            Assert.Equal(ExpressionTokenKind.Identifier, lexer.CurrentToken.Kind);
+            Assert.Equal(text, lexer.CurrentToken.Text);
             lexer.NextToken();
         }
 
         private static void ValidateTokenKind(ExpressionLexer lexer, ExpressionTokenKind kind)
         {
-            lexer.CurrentToken.Kind.Should().Be(kind);
+            Assert.Equal(kind, lexer.CurrentToken.Kind);
             lexer.NextToken();
         }
     }

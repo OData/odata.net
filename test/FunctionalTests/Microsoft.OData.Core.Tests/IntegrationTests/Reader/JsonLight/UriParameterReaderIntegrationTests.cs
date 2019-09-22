@@ -9,9 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
@@ -152,9 +150,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, addressT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.First().Properties.First().Value.ShouldBeEquivalentTo("Shanghai");
-                resources.First().Properties.Last().Value.ShouldBeEquivalentTo("021");
-                nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
+                Assert.Equal("Shanghai", resources.First().Properties.First().Value);
+                Assert.Equal("021", resources.First().Properties.Last().Value);
+                Assert.Equal("City", nestedResourceInfos.First().Name);
             });
         }
 
@@ -173,10 +171,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, null, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.First().Properties.First().Value.ShouldBeEquivalentTo("Shanghai");
-                resources.First().Properties.Last().Value.ShouldBeEquivalentTo("021");
-                resources.Last().TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
-                nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
+                Assert.Equal("Shanghai", resources.First().Properties.First().Value);
+                Assert.Equal("021", resources.First().Properties.Last().Value);
+                Assert.Equal("NS.CompanyAddress", resources.Last().TypeName);
+                Assert.Equal("City", nestedResourceInfos.First().Name);
             });
         }
 
@@ -196,10 +194,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Exception ex = Assert.Throws<ODataException>(() =>
                 ReadAndValidate(payload, null, true, (resources, nestedResourceInfos, resourceSets) =>
                 {
-                    resources.First().Properties.First().Value.ShouldBeEquivalentTo("Shanghai");
-                    resources.First().Properties.Last().Value.ShouldBeEquivalentTo("021");
-                    resources.Last().TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
-                    nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
+                    Assert.Equal("Shanghai", resources.First().Properties.First().Value);
+                    Assert.Equal("021", resources.First().Properties.Last().Value);
+                    Assert.Equal("NS.CompanyAddress", resources.Last().TypeName);
+                    Assert.Equal("City", nestedResourceInfos.First().Name);
                 }));
             Assert.Contains("A resource without a type name was found", ex.Message);
         }
@@ -220,10 +218,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, addressT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.First().Properties.First().Value.ShouldBeEquivalentTo("Shanghai");
-                resources.First().Properties.Last().Value.ShouldBeEquivalentTo("021");
-                resources.Last().Properties.Single().Value.ShouldBeEquivalentTo("MS");
-                nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
+                Assert.Equal("Shanghai", resources.First().Properties.First().Value);
+                Assert.Equal("021", resources.First().Properties.Last().Value);
+                Assert.Equal("MS", resources.Last().Properties.Single().Value);
+                Assert.Equal("City", nestedResourceInfos.First().Name);
             });
         }
 
@@ -243,10 +241,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, otherInfoT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.First().TypeName.ShouldBeEquivalentTo("NS.City");
-                resources.First().Properties.Count().ShouldBeEquivalentTo(2);
-                resources.Last().Properties.Single().Value.ShouldBeEquivalentTo(180);
-                nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
+                Assert.Equal("NS.City", resources.First().TypeName);
+                Assert.Equal(2, resources.First().Properties.Count());
+                Assert.Equal(180, resources.Last().Properties.Single().Value);
+                Assert.Equal("City", nestedResourceInfos.First().Name);
             });
         }
 
@@ -262,9 +260,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, addressT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.First().Should().BeNull();
-                resources.Last().Properties.Single().Value.Should().BeNull();
-                resources.Last().TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
+                Assert.Null(resources.First());
+                Assert.Null(resources.Last().Properties.Single().Value);
+                Assert.Equal("NS.CompanyAddress", resources.Last().TypeName);
             });
         }
 
@@ -291,12 +289,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, addressT, false, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resourceSets.Count.ShouldBeEquivalentTo(1);
-                resources.ElementAt(0).Properties.Count().ShouldBeEquivalentTo(2);
-                resources.ElementAt(1).Properties.Count().ShouldBeEquivalentTo(0);
-                resources.ElementAt(2).Properties.Count().ShouldBeEquivalentTo(2);
-                resources.ElementAt(3).Properties.Count().ShouldBeEquivalentTo(0);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(2);
+                Assert.Equal(1, resourceSets.Count);
+                Assert.Equal(2, resources.ElementAt(0).Properties.Count());
+                Assert.Equal(0, resources.ElementAt(1).Properties.Count());
+                Assert.Equal(2, resources.ElementAt(2).Properties.Count());
+                Assert.Equal(0, resources.ElementAt(3).Properties.Count());
+                Assert.Equal(2, nestedResourceInfos.Count);
             });
         }
 
@@ -325,12 +323,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, null, false, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resourceSets.Count.ShouldBeEquivalentTo(1);
-                resources.ElementAt(0).Properties.Count().ShouldBeEquivalentTo(2);
-                resources.ElementAt(1).TypeName.ShouldBeEquivalentTo("NS.Address");
-                resources.ElementAt(2).Properties.Count().ShouldBeEquivalentTo(2);
-                resources.ElementAt(3).TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(2);
+                Assert.Equal(1, resourceSets.Count);
+                Assert.Equal(2, resources.ElementAt(0).Properties.Count());
+                Assert.Equal("NS.Address", resources.ElementAt(1).TypeName);
+                Assert.Equal(2, resources.ElementAt(2).Properties.Count());
+                Assert.Equal("NS.CompanyAddress", resources.ElementAt(3).TypeName);
+                Assert.Equal(2, nestedResourceInfos.Count);
             });
         }
 
@@ -359,12 +357,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, addressT, false, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resourceSets.Count.ShouldBeEquivalentTo(1);
-                resources.ElementAt(0).Properties.Count().ShouldBeEquivalentTo(2);
-                resources.ElementAt(1).Properties.Count().ShouldBeEquivalentTo(0);
-                resources.ElementAt(2).Properties.Count().ShouldBeEquivalentTo(2);
-                resources.ElementAt(3).Properties.Count().ShouldBeEquivalentTo(1);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(2);
+                Assert.Equal(1, resourceSets.Count);
+                Assert.Equal(2, resources.ElementAt(0).Properties.Count());
+                Assert.Equal(0, resources.ElementAt(1).Properties.Count());
+                Assert.Equal(2, resources.ElementAt(2).Properties.Count());
+                Assert.Equal(1, resources.ElementAt(3).Properties.Count());
+                Assert.Equal(2, nestedResourceInfos.Count);
             });
         }
 
@@ -413,20 +411,20 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.Count.ShouldBeEquivalentTo(9);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(7);
-                
-                nestedResourceInfos.ElementAt(1).Name.ShouldBeEquivalentTo("CompanyAddress");
-                resources.ElementAt(1).TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
+                Assert.Equal(9, resources.Count);
+                Assert.Equal(7, nestedResourceInfos.Count);
 
-                resourceSets.Count.ShouldBeEquivalentTo(1);
-                nestedResourceInfos.ElementAt(4).Name.ShouldBeEquivalentTo("BillingAddresses");
-                resources.ElementAt(5).Properties.Single().Value.Should().BeNull();
+                Assert.Equal("CompanyAddress", nestedResourceInfos.ElementAt(1).Name);
+                Assert.Equal("NS.CompanyAddress", resources.ElementAt(1).TypeName);
 
-                nestedResourceInfos.ElementAt(6).Name.ShouldBeEquivalentTo("Address");
-                resources.ElementAt(7).TypeName.ShouldBeEquivalentTo("NS.Address");
+                Assert.Equal(1, resourceSets.Count);
+                Assert.Equal("BillingAddresses", nestedResourceInfos.ElementAt(4).Name);
+                Assert.Null(resources.ElementAt(5).Properties.Single().Value);
 
-                resources.ElementAt(8).Properties.Single().Value.ShouldBeEquivalentTo(0);
+                Assert.Equal("Address", nestedResourceInfos.ElementAt(6).Name);
+                Assert.Equal("NS.Address", resources.ElementAt(7).TypeName);
+
+                Assert.Equal(0, resources.ElementAt(8).Properties.Single().Value);
             });
         }
 
@@ -446,17 +444,17 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.Count.ShouldBeEquivalentTo(4);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(4);
+                Assert.Equal(4, resources.Count);
+                Assert.Equal(4, nestedResourceInfos.Count);
 
-                nestedResourceInfos.ElementAt(0).Name.ShouldBeEquivalentTo("CompanyAddress");
-                resources.ElementAt(0).Should().BeNull();
+                Assert.Equal("CompanyAddress", nestedResourceInfos.ElementAt(0).Name);
+                Assert.Null(resources.ElementAt(0));
 
-                resourceSets.Count.ShouldBeEquivalentTo(1);
-                nestedResourceInfos.ElementAt(1).Name.ShouldBeEquivalentTo("BillingAddresses");
+                Assert.Equal(1, resourceSets.Count);
+                Assert.Equal("BillingAddresses", nestedResourceInfos.ElementAt(1).Name);
 
-                nestedResourceInfos.ElementAt(3).Name.ShouldBeEquivalentTo("Address");
-                resources.ElementAt(1).Properties.Count().ShouldBeEquivalentTo(0);
+                Assert.Equal("Address", nestedResourceInfos.ElementAt(3).Name);
+                Assert.Equal(0, resources.ElementAt(1).Properties.Count());
             });
 
         }
@@ -498,14 +496,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.Count.ShouldBeEquivalentTo(7);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(5);
-                resourceSets.Count.ShouldBeEquivalentTo(1);
+                Assert.Equal(7, resources.Count);
+                Assert.Equal(5, nestedResourceInfos.Count);
+                Assert.Equal(1, resourceSets.Count);
 
-                nestedResourceInfos.ElementAt(4).Name.ShouldBeEquivalentTo("OtherAddresses");
+                Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(4).Name);
 
-                resources.ElementAt(3).TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
-                resources.ElementAt(5).TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
+                Assert.Equal("NS.CompanyAddress", resources.ElementAt(3).TypeName);
+                Assert.Equal("NS.CompanyAddress", resources.ElementAt(5).TypeName);
             });
 
         }
@@ -530,12 +528,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.Count.ShouldBeEquivalentTo(3);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(3);
-                resourceSets.Count.ShouldBeEquivalentTo(1);
+                Assert.Equal(3, resources.Count);
+                Assert.Equal(3, nestedResourceInfos.Count);
+                Assert.Equal(1, resourceSets.Count);
 
-                nestedResourceInfos.ElementAt(2).Name.ShouldBeEquivalentTo("OtherAddresses");
-                nestedResourceInfos.ElementAt(2).IsCollection.ShouldBeEquivalentTo(true);
+                Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(2).Name);
+                Assert.True(nestedResourceInfos.ElementAt(2).IsCollection);
             });
         }
 
@@ -566,13 +564,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.Count.ShouldBeEquivalentTo(5);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(4);
+                Assert.Equal(5, resources.Count);
+                Assert.Equal(4, nestedResourceInfos.Count);
 
-                nestedResourceInfos.ElementAt(3).Name.ShouldBeEquivalentTo("OtherAddresses");
-                nestedResourceInfos.ElementAt(3).IsCollection.ShouldBeEquivalentTo(false);
+                Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(3).Name);
+                Assert.False(nestedResourceInfos.ElementAt(3).IsCollection);
 
-                resources.ElementAt(3).TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
+                Assert.Equal("NS.CompanyAddress", resources.ElementAt(3).TypeName);
             });
         }
 
@@ -597,12 +595,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.Count.ShouldBeEquivalentTo(3);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(3);
-                resourceSets.Count.ShouldBeEquivalentTo(1);
+                Assert.Equal(3, resources.Count);
+                Assert.Equal(3, nestedResourceInfos.Count);
+                Assert.Equal(1, resourceSets.Count);
 
-                nestedResourceInfos.ElementAt(2).Name.ShouldBeEquivalentTo("OtherAddresses");
-                nestedResourceInfos.ElementAt(2).IsCollection.ShouldBeEquivalentTo(true);
+                Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(2).Name);
+                Assert.True(nestedResourceInfos.ElementAt(2).IsCollection);
             });
         }
 
@@ -628,13 +626,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Exception ex = Assert.Throws<ODataException>(() =>
                 ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
                 {
-                    resources.Count.ShouldBeEquivalentTo(4);
-                    nestedResourceInfos.Count.ShouldBeEquivalentTo(3);
+                    Assert.Equal(4, resources.Count);
+                    Assert.Equal(3, nestedResourceInfos.Count);
 
-                    nestedResourceInfos.ElementAt(2).Name.ShouldBeEquivalentTo("OtherAddresses");
-                    nestedResourceInfos.ElementAt(2).IsCollection.ShouldBeEquivalentTo(false);
+                    Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(2).Name);
+                    Assert.False(nestedResourceInfos.ElementAt(2).IsCollection);
 
-                    resources.ElementAt(2).Should().BeNull();
+                    Assert.Null(resources.ElementAt(2));
                 }));
             Assert.Contains("A complex property with an 'odata.type' property annotation was found", ex.Message);
         }
@@ -670,8 +668,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, personT, false, (resources, nestedResourceInfos, resourceSets) =>
             {
-                resources.Count.ShouldBeEquivalentTo(6);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(4);
+                Assert.Equal(6, resources.Count);
+                Assert.Equal(4, nestedResourceInfos.Count);
             });
         }
     }

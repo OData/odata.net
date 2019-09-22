@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -15,27 +14,30 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void NotFoundHelperShouldThrowSpecialExceptionType()
         {
-            ExceptionUtil.CreateResourceNotFoundError("foo").Should().BeAssignableTo<ODataUnrecognizedPathException>();
+            var exception = ExceptionUtil.CreateResourceNotFoundError("foo");
+            Assert.IsType<ODataUnrecognizedPathException>(exception);
         }
 
         [Fact]
         public void SyntaxErrorHelperShouldThrowNormalODataException()
         {
-            ExceptionUtil.CreateSyntaxError().GetType().Should().Be(typeof(ODataException));
+            Assert.IsType<ODataException>(ExceptionUtil.CreateSyntaxError());
         }
 
         [Fact]
         public void NotFoundHelperShouldSetMessageCorrectly()
         {
-            ExceptionUtil.CreateResourceNotFoundError("foo").Message.Should().Be(Strings.RequestUriProcessor_ResourceNotFound("foo"));
+            var exception = ExceptionUtil.CreateResourceNotFoundError("foo");
+            Assert.Equal(Strings.RequestUriProcessor_ResourceNotFound("foo"), exception.Message);
         }
 
         [Fact]
         public void SyntaxErrorHelperShouldSetMessageCorrectly()
         {
-            ExceptionUtil.CreateSyntaxError().Message.Should().Be(Strings.RequestUriProcessor_SyntaxError);
+            var exception = ExceptionUtil.CreateSyntaxError();
+            Assert.Equal(Strings.RequestUriProcessor_SyntaxError, exception.Message);
 
-            string  a =  Strings.General_InternalError(Microsoft.OData.UriParser.InternalErrorCodes.UriQueryExpressionParser_ParseComparison);
+            string a = Strings.General_InternalError(Microsoft.OData.UriParser.InternalErrorCodes.UriQueryExpressionParser_ParseComparison);
         }
     }
 }

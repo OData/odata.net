@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -18,7 +17,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ReferenceSegmentConstructWithNullNavigationSourceShouldThrowException()
         {
             Action create = () => new ReferenceSegment(null);
-            create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: navigationSource");
+            Assert.Throws<ArgumentNullException>("navigationSource", create);
         }
 
         [Fact]
@@ -26,11 +25,11 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ReferenceSegment referenceSegment = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
 
-            referenceSegment.Identifier.Should().Be(UriQueryConstants.RefSegment);
-            referenceSegment.SingleResult.Should().BeFalse();
-            referenceSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPet1Set());
-            referenceSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
-            referenceSegment.EdmType.Should().BeNull();
+            Assert.Equal(UriQueryConstants.RefSegment, referenceSegment.Identifier);
+            Assert.False(referenceSegment.SingleResult);
+            Assert.Same(HardCodedTestModel.GetPet1Set(), referenceSegment.TargetEdmNavigationSource);
+            Assert.Equal(RequestTargetKind.Resource, referenceSegment.TargetKind);
+            Assert.Null(referenceSegment.EdmType);
         }
 
         [Fact]
@@ -38,11 +37,11 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             ReferenceSegment referenceSegment = new ReferenceSegment(HardCodedTestModel.GetBossSingleton());
 
-            referenceSegment.Identifier.Should().Be(UriQueryConstants.RefSegment);
-            referenceSegment.SingleResult.Should().BeTrue();
-            referenceSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetBossSingleton());
-            referenceSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
-            referenceSegment.EdmType.Should().BeNull();
+            Assert.Equal(UriQueryConstants.RefSegment, referenceSegment.Identifier);
+            Assert.True(referenceSegment.SingleResult);
+            Assert.Same(HardCodedTestModel.GetBossSingleton(), referenceSegment.TargetEdmNavigationSource);
+            Assert.Equal(RequestTargetKind.Resource, referenceSegment.TargetKind);
+            Assert.Null(referenceSegment.EdmType);
         }
 
         [Fact]
@@ -51,8 +50,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ReferenceSegment referenceSegment1 = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
             ReferenceSegment referenceSegment2 = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
 
-            referenceSegment1.Equals(referenceSegment2).Should().BeTrue();
-            referenceSegment2.Equals(referenceSegment1).Should().BeTrue();
+            Assert.True(referenceSegment1.Equals(referenceSegment2));
+            Assert.True(referenceSegment2.Equals(referenceSegment1));
         }
 
         [Fact]
@@ -61,8 +60,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ReferenceSegment referenceSegment1 = new ReferenceSegment(HardCodedTestModel.GetPeopleSet());
             ReferenceSegment referenceSegment2 = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
 
-            referenceSegment1.Equals(referenceSegment2).Should().BeFalse();
-            referenceSegment2.Equals(referenceSegment1).Should().BeFalse();
+            Assert.False(referenceSegment1.Equals(referenceSegment2));
+            Assert.False(referenceSegment2.Equals(referenceSegment1));
         }
         #endregion
     }

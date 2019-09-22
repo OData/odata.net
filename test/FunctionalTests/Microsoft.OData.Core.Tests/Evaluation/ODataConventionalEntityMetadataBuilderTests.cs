@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Xunit;
@@ -223,28 +222,28 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetEditLinkWithSingleKey()
         {
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(new Uri("http://odata.org/base/Products(42)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/Products(42)"));
         }
 
         [Fact]
         public void GetEditLinkWithMultipleKeys()
         {
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink().Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct"));
         }
 
         [Fact]
         public void GetEditLinkFromEntryInsteadOfBuilding()
         {
             var uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(uri);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), uri);
         }
 
         [Fact]
         public void EditLinkShouldBeNullIfReadLinkIsSetButEditLinkIsNotSet()
         {
             var uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(uri);
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().BeNull();
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), uri);
+            Assert.Null(this.productConventionalEntityMetadataBuilder.GetEditLink());
         }
 
         [Fact]
@@ -252,7 +251,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             // Verify that the last segment of the edit link is the expected type segment.
             string[] uriSegments = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink().Segments;
-            uriSegments[uriSegments.Length - 1].Should().Be("TestModel.DerivedMleProduct");
+            Assert.Equal("TestModel.DerivedMleProduct", uriSegments[uriSegments.Length - 1]);
         }
 
 
@@ -261,7 +260,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             Uri id = this.derivedMultiKeyMultiEtagMleEntry.Id;
             Uri expectedEditLink = this.uriBuilder.AppendTypeSegment(id, DerivedMleEntityTypeName);
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink().Should().Be(expectedEditLink);
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), expectedEditLink);
         }
 
         [Fact]
@@ -270,7 +269,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var id = new Uri("http://anotherodata.org/serviceBase/SomeType('xyz')");
             this.derivedMultiKeyMultiEtagMleEntry.Id = id;
             Uri expectedEditLink = this.uriBuilder.AppendTypeSegment(id, DerivedMleEntityTypeName);
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink().Should().Be(expectedEditLink);
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), expectedEditLink);
         }
 
         [Fact]
@@ -278,55 +277,55 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var id = new Uri("http://anotherodata.org/serviceBase/SomeType('xyz')");
             this.productEntry.Id = id;
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(id);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), id);
         }
 
         [Fact]
         public void EditLinkShouldNotContainTypeSegmentIfInstanceTypeMatchesSetType()
         {
-            this.productConventionalEntityMetadataBuilder.GetEditLink().AbsolutePath.Should().NotContain("TestModel.Product");
+            Assert.DoesNotContain("TestModel.Product", this.productConventionalEntityMetadataBuilder.GetEditLink().AbsolutePath);
         }
 
         [Fact]
         public void GetEditLinkWithSingleKeyWhenKeyisInt64()
         {
             this.SetSingleKeyPropertie("Id", 1L);
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(new Uri("http://odata.org/base/Products(1)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/Products(1)"));
         }
 
         [Fact]
         public void GetEditLinkWithSingleKeyWhenKeyisFloat()
         {
             this.SetSingleKeyPropertie("Id", -1.0f);
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(new Uri("http://odata.org/base/Products(-1)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/Products(-1)"));
         }
 
         [Fact]
         public void GetEditLinkWithSingleKeyWhenKeyisDouble()
         {
             this.SetSingleKeyPropertie("Id", 1.0d);
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(new Uri("http://odata.org/base/Products(1.0)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/Products(1.0)"));
         }
 
         [Fact]
         public void GetEditLinkWithSingleKeyWhenKeyisDecimal()
         {
             this.SetSingleKeyPropertie("Id", 0.0m);
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(new Uri("http://odata.org/base/Products(0.0)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/Products(0.0)"));
         }
 
         [Fact]
         public void GetEditLinkWithMultiKeysWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink().Should().Be(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct", entitySetInstanceId));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct", entitySetInstanceId)));
         }
 
         [Fact]
         public void EditlinkShouldBeNullWhenEntryIsATransientEntry()
         {
             this.productEntry.IsTransient = true;
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().BeNull();
+            Assert.Null(this.productConventionalEntityMetadataBuilder.GetEditLink());
         }
 
         [Fact]
@@ -335,7 +334,7 @@ namespace Microsoft.OData.Tests.Evaluation
             this.productEntry.IsTransient = false;
             var nonComputedEditLinkUri = new Uri("http://anotherodata.org/serviceBaseEdit/SomeType('xyz')");
             this.productEntry.EditLink = nonComputedEditLinkUri;
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(nonComputedEditLinkUri);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), nonComputedEditLinkUri);
         }
 
         [Fact]
@@ -343,7 +342,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.productEntry.IsTransient = true;
             this.productEntry.EditLink = new Uri("http://anotherodata.org/serviceBaseEdit/SomeType('xyz')");
-            this.productConventionalEntityMetadataBuilder.GetEditLink().Should().Be(this.productEntry.EditLink);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), this.productEntry.EditLink);
         }
 
         #endregion Tests for GetEditLink()
@@ -353,20 +352,20 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetIdForContainedCollectionProperty()
         {
             Uri id = this.containedCollectionProductConventionalEntityMetadataBuilder.GetId();
-            id.Should().ToString().Contains("Products(42)/Products(43)");
+            Assert.Contains("Products(42)/Products(43)", id.ToString());
         }
 
         [Fact]
         public void GetIdForContainedIndividualProperty()
         {
             Uri id = this.containedProductConventionalEntityMetadataBuilder.GetId();
-            id.Should().ToString().EndsWith("Products(42)/Products");
+            Assert.EndsWith("Products(42)/Products", id.ToString());
         }
 
         [Fact]
         public void GetIdShouldBeGeneratedIdWhenEntryDoesNotContainIdEditOrReadLink()
         {
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be("http://odata.org/base/Products(42)");
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), new Uri("http://odata.org/base/Products(42)"));
         }
 
         [Fact]
@@ -374,16 +373,16 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var uri = new Uri("http://anotherodata.org/serviceBase/SomeType('xyz')");
             this.productEntry.Id = uri;
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(uri);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), uri);
         }
 
         [Fact]
         public void GetIdShouldHonorUserOverridingId()
         {
-            this.productEntry.Id.Should().Be("http://odata.org/base/Products(42)");
+            Assert.Equal(new Uri("http://odata.org/base/Products(42)"), this.productEntry.Id);
             Uri uri = new Uri("http://overwrite");
             this.productEntry.Id = uri;
-            this.productEntry.Id.Should().Be(uri);
+            Assert.Equal(this.productEntry.Id, uri);
         }
 
         [Fact]
@@ -396,7 +395,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var editLinkUri = new Uri("http://anotherodata.org/serviceBaseEdit/SomeType('xyz')");
             this.productEntry.EditLink = editLinkUri;
 
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(id);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), id);
         }
 
         [Fact]
@@ -405,7 +404,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var canonicalUrl = this.productConventionalEntityMetadataBuilder.GetId();
             var uri = new Uri("http://anotherodata.org/serviceBase/SomeType('xyz')");
             this.productEntry.ReadLink = uri;
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(canonicalUrl);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), canonicalUrl);
         }
 
         [Fact]
@@ -414,7 +413,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var canonicalUrl = this.productConventionalEntityMetadataBuilder.GetId();
             var uri = new Uri("http://anotherodata.org/serviceBase/SomeType('xyz')");
             this.productEntry.EditLink = uri;
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(canonicalUrl);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), canonicalUrl);
         }
 
         [Fact]
@@ -425,7 +424,7 @@ namespace Microsoft.OData.Tests.Evaluation
             this.productEntry.ReadLink = readLinkUri;
             var editLinkUri = new Uri("http://anotherodata.org/serviceBaseEdit/SomeType('xyz')");
             this.productEntry.EditLink = editLinkUri;
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(canonicalUrl);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), canonicalUrl);
         }
 
         [Fact]
@@ -433,8 +432,8 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.productEntry.IsTransient = true;
             Uri id;
-            productConventionalEntityMetadataBuilder.TryGetIdForSerialization(out id).Should().BeTrue();
-            id.Should().BeNull();
+            Assert.True(productConventionalEntityMetadataBuilder.TryGetIdForSerialization(out id));
+            Assert.Null(id);
         }
 
         [Fact]
@@ -443,50 +442,50 @@ namespace Microsoft.OData.Tests.Evaluation
             this.productEntry.IsTransient = false;
             var canonicalUrl = this.productEntry.Id;
             Uri id;
-            productConventionalEntityMetadataBuilder.TryGetIdForSerialization(out id).Should().BeTrue();
-            id.Should().Be(canonicalUrl);
+            Assert.True(productConventionalEntityMetadataBuilder.TryGetIdForSerialization(out id));
+            Assert.Equal(id, canonicalUrl);
         }
 
         [Fact]
         public void GetIdShouldBeNullWhenEntryIsTransient()
         {
             this.productEntry.IsTransient = true;
-            productConventionalEntityMetadataBuilder.GetId().Should().BeNull();
+            Assert.Null(productConventionalEntityMetadataBuilder.GetId());
         }
 
         [Fact]
         public void GetIdWithSingleKeyWhenKeyisInt64AndEntryDoesNotContainIdEditOrReadLink()
         {
             this.SetSingleKeyPropertie("Id", -1L);
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(new Uri(@"http://odata.org/base/Products(-1)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), new Uri(@"http://odata.org/base/Products(-1)"));
         }
 
         [Fact]
         public void GetIdWithSingleKeyWhenKeyisFloatAndEntryDoesNotContainIdEditOrReadLink()
         {
             this.SetSingleKeyPropertie("Id", -1.0f);
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(@"http://odata.org/base/Products(-1)");
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), new Uri(@"http://odata.org/base/Products(-1)"));
         }
 
         [Fact]
         public void GetIdWithSingleKeyWhenKeyisDoubleAndEntryDoesNotContainIdEditOrReadLink()
         {
             this.SetSingleKeyPropertie("Id", 1.0d);
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(new Uri(@"http://odata.org/base/Products(1.0)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), new Uri(@"http://odata.org/base/Products(1.0)"));
         }
 
         [Fact]
         public void GetIdWithSingleKeyWhenKeyisDecimalAndEntryDoesNotContainIdEditOrReadLink()
         {
             this.SetSingleKeyPropertie("Id", 0.0m);
-            this.productConventionalEntityMetadataBuilder.GetId().Should().Be(new Uri(@"http://odata.org/base/Products(0.0)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetId(), new Uri(@"http://odata.org/base/Products(0.0)"));
         }
 
         [Fact]
         public void GetIdWithMultiKeysWhenKeyisLongLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetId().Should().Be(new Uri(string.Format(@"http://odata.org/base/Products({0})", entitySetInstanceId)));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetId(), new Uri(string.Format(@"http://odata.org/base/Products({0})", entitySetInstanceId)));
         }
 
         #endregion Tests for GetId()
@@ -495,27 +494,27 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetReadLinkWithSingleKey()
         {
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(new Uri("http://odata.org/base/Products(42)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/Products(42)"));
         }
 
         [Fact]
         public void GetReadLinkWithMultipleKeys()
         {
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink().Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct"));
         }
 
         [Fact]
         public void GetReadLinkFromEntryInsteadOfBuilding()
         {
             var uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(uri);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), uri);
         }
 
         [Fact]
         public void GetReadLinkWhenEntryHasEditLinkButNotReadLink()
         {
             var uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(uri);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), uri);
         }
 
         [Fact]
@@ -523,49 +522,49 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.SetProductEntryEditLink();
             var uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(uri);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), uri);
         }
 
         [Fact]
         public void GetReadLinkWithSingleKeyWhenKeyisInt64()
         {
             this.SetSingleKeyPropertie("Id", 1L);
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(new Uri("http://odata.org/base/Products(1)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/Products(1)"));
         }
 
         [Fact]
         public void GetReadLinkWithSingleKeyWhenKeyisFloat()
         {
             this.SetSingleKeyPropertie("Id", -1.0f);
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(new Uri("http://odata.org/base/Products(-1)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/Products(-1)"));
         }
 
         [Fact]
         public void GetReadLinkWithSingleKeyWhenKeyisDouble()
         {
             this.SetSingleKeyPropertie("Id", 1.0d);
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(new Uri("http://odata.org/base/Products(1.0)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/Products(1.0)"));
         }
 
         [Fact]
         public void GetReadLinkWithSingleKeyWhenKeyisDecimal()
         {
             this.SetSingleKeyPropertie("Id", 0.0m);
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(new Uri("http://odata.org/base/Products(0.0)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/Products(0.0)"));
         }
 
         [Fact]
         public void GetReadLinkWithMultiKeysWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink().Should().Be(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct", entitySetInstanceId));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink(), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct", entitySetInstanceId)));
         }
 
         [Fact]
         public void ReadLinkShouldBeNullWhenEntryIsATransientEntry()
         {
             this.productEntry.IsTransient = true;
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().BeNull();
+            Assert.Null(this.productConventionalEntityMetadataBuilder.GetReadLink());
         }
 
         [Fact]
@@ -574,7 +573,7 @@ namespace Microsoft.OData.Tests.Evaluation
             this.productEntry.IsTransient = false;
             var readLinkUri = new Uri("http://anotherodata.org/serviceBaseRead/SomeType('xyz')");
             this.productEntry.ReadLink = readLinkUri;
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(readLinkUri);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), readLinkUri);
         }
 
         [Fact]
@@ -582,7 +581,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.productEntry.IsTransient = false;
             var computedReadLinkUri = this.productEntry.ReadLink;
-            this.productConventionalEntityMetadataBuilder.GetReadLink().Should().Be(computedReadLinkUri);
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), computedReadLinkUri);
         }
 
         #endregion Tests for GetReadLink()
@@ -592,7 +591,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void ETagShouldBeNullForTypeWithoutConcurrencyTokens()
         {
             var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new KeyValuePair<string, object>[0] }, this.metadataContext, this.uriBuilder);
-            testSubject.GetETag().Should().Be((string)null);
+            Assert.Null(testSubject.GetETag());
         }
 
         [Fact]
@@ -603,24 +602,24 @@ namespace Microsoft.OData.Tests.Evaluation
             // validates that important uri literal values that OData uses don't change, and that we escape characters when
             // producing the etag for JsonLight
             var escapedStrings = Uri.EscapeUriString(@".:''-");
-            escapedStrings.Should().Be(@".:''-");
+            Assert.Equal(@".:''-", escapedStrings);
 
             var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value ") } }, this.metadataContext, this.uriBuilder);
-            testSubject.GetETag().Should().Be(@"W/""'Value%20'""");
+            Assert.Equal(@"W/""'Value%20'""", testSubject.GetETag());
         }
 
         [Fact]
         public void ETagShouldBeCorrectForTypeWithOneConcurrencyToken()
         {
             var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value") } }, this.metadataContext, this.uriBuilder);
-            testSubject.GetETag().Should().Be(@"W/""'Value'""");
+            Assert.Equal(@"W/""'Value'""", testSubject.GetETag());
         }
 
         [Fact]
         public void ETagShouldBeCorrectForNullConcurrencyToken()
         {
             var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", default(string)) } }, this.metadataContext, this.uriBuilder);
-            testSubject.GetETag().Should().Be(@"W/""null""");
+            Assert.Equal(@"W/""null""", testSubject.GetETag());
         }
 
         [Fact]
@@ -634,7 +633,7 @@ namespace Microsoft.OData.Tests.Evaluation
             };
 
             var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
-            testSubject.GetETag().Should().Be(@"W/""1.2345E%2B45,binary'AQID',2.3""");
+            Assert.Equal(@"W/""1.2345E%2B45,binary'AQID',2.3""", testSubject.GetETag());
         }
 
         [Fact]
@@ -649,7 +648,7 @@ namespace Microsoft.OData.Tests.Evaluation
             };
 
             var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
-            testSubject.GetETag().Should().Be(@"W/""1,1,1.0,1.0""");
+            Assert.Equal(@"W/""1,1,1.0,1.0""", testSubject.GetETag());
         }
         #endregion Tests for GetETag()
 
@@ -657,34 +656,34 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetStreamEditLinkForDefaultStream()
         {
-            this.productConventionalEntityMetadataBuilder.GetStreamEditLink(null).Should().Be(new Uri("http://odata.org/base/Products(42)/$value"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamEditLink(null), new Uri("http://odata.org/base/Products(42)/$value"));
         }
 
         [Fact]
         public void GetStreamEditLinkForDefaultStreamWhenEntryHasEditLink()
         {
             Uri uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetStreamEditLink(null).Should().Be(new Uri(uri.AbsoluteUri + "/$value"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamEditLink(null), new Uri(uri.AbsoluteUri + "/$value"));
         }
 
         [Fact]
         public void GetStreamEditLinkForStreamProperty()
         {
-            this.productConventionalEntityMetadataBuilder.GetStreamEditLink("StreamProperty").Should().Be(new Uri("http://odata.org/base/Products(42)/StreamProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamEditLink("StreamProperty"), new Uri("http://odata.org/base/Products(42)/StreamProperty"));
         }
 
         [Fact]
         public void GetStreamEditLinkForStreamPropertyWhenEntryHasEditLink()
         {
             Uri uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetStreamEditLink("StreamProperty").Should().Be(new Uri(uri.AbsoluteUri + "/StreamProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamEditLink("StreamProperty"), new Uri(uri.AbsoluteUri + "/StreamProperty"));
         }
 
         [Fact]
         public void GetDefaultStreamEditLinkWithMultiKeysWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetStreamEditLink(null).Should().Be(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/$value", entitySetInstanceId));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetStreamEditLink(null), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/$value", entitySetInstanceId)));
         }
         #endregion Tests for GetStreamEditLink()
 
@@ -692,23 +691,23 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void ShouldNotComputeMrForNonMle()
         {
-            this.productConventionalEntityMetadataBuilder.GetMediaResource().Should().BeNull();
+            Assert.Null(this.productConventionalEntityMetadataBuilder.GetMediaResource());
         }
 
         [Fact]
         public void ShouldComputeMrForMle()
         {
             var mr = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetMediaResource();
-            mr.Should().NotBeNull();
-            mr.EditLink.Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/$value"));
-            mr.ReadLink.Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/$value"));
+            Assert.NotNull(mr);
+            Assert.Equal(mr.EditLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/$value"));
+            Assert.Equal(mr.ReadLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/$value"));
         }
 
         [Fact]
         public void ShouldUseNonComputedMediaResourceIfSet()
         {
             this.derivedMultiKeyMultiEtagMleEntry.MediaResource = new ODataStreamReferenceValue();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetMediaResource().Should().BeSameAs(this.derivedMultiKeyMultiEtagMleEntry.MediaResource);
+            Assert.Same(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetMediaResource(), this.derivedMultiKeyMultiEtagMleEntry.MediaResource);
         }
 
         [Fact]
@@ -717,9 +716,9 @@ namespace Microsoft.OData.Tests.Evaluation
             this.derivedMultiKeyMultiEtagMleEntry.EditLink = new Uri("http://someeditlink");
             this.derivedMultiKeyMultiEtagMleEntry.ReadLink = new Uri("http://somereadlink");
             var mr = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetMediaResource();
-            mr.Should().NotBeNull();
-            mr.EditLink.Should().Be(new Uri("http://someeditlink/$value"));
-            mr.ReadLink.Should().Be(new Uri("http://somereadlink/$value"));
+            Assert.NotNull(mr);
+            Assert.Equal(mr.EditLink, new Uri("http://someeditlink/$value"));
+            Assert.Equal(mr.ReadLink, new Uri("http://somereadlink/$value"));
         }
         #endregion Tests for GetMediaResource
 
@@ -727,21 +726,21 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetStreamReadLinkForDefaultStream()
         {
-            this.productConventionalEntityMetadataBuilder.GetStreamReadLink(null).Should().Be(new Uri("http://odata.org/base/Products(42)/$value"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamReadLink(null), new Uri("http://odata.org/base/Products(42)/$value"));
         }
 
         [Fact]
         public void GetStreamReadLinkForDefaultStreamWhenEntryHasReadLinkAndNotEditLink()
         {
             Uri uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetStreamReadLink(null).Should().Be(new Uri(uri.AbsoluteUri + "/$value"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamReadLink(null), new Uri(uri.AbsoluteUri + "/$value"));
         }
 
         [Fact]
         public void GetStreamReadLinkForDefaultStreamWhenEntryHasEditLinkAndNotReadLink()
         {
             Uri uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetStreamReadLink(null).Should().Be(new Uri(uri.AbsoluteUri + "/$value"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamReadLink(null), new Uri(uri.AbsoluteUri + "/$value"));
         }
 
         [Fact]
@@ -749,27 +748,27 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.SetProductEntryEditLink();
             Uri uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetStreamReadLink(null).Should().Be(new Uri(uri.AbsoluteUri + "/$value"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamReadLink(null), new Uri(uri.AbsoluteUri + "/$value"));
         }
 
         [Fact]
         public void GetStreamReadLinkForStreamProperty()
         {
-            this.productConventionalEntityMetadataBuilder.GetStreamReadLink("StreamProperty").Should().Be(new Uri("http://odata.org/base/Products(42)/StreamProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamReadLink("StreamProperty"), new Uri("http://odata.org/base/Products(42)/StreamProperty"));
         }
 
         [Fact]
         public void GetStreamReadLinkForStreamPropertyWhenEntryHasReadLinkAndNotEditLink()
         {
             Uri uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetStreamReadLink("StreamProperty").Should().Be(new Uri(uri.AbsoluteUri + "/StreamProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamReadLink("StreamProperty"), new Uri(uri.AbsoluteUri + "/StreamProperty"));
         }
 
         [Fact]
         public void GetStreamReadLinkForStreamPropertyWhenEntryHasEditLinkAndNotReadLink()
         {
             Uri uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetStreamReadLink("StreamProperty").Should().Be(new Uri(uri.AbsoluteUri + "/StreamProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamReadLink("StreamProperty"), new Uri(uri.AbsoluteUri + "/StreamProperty"));
         }
 
         [Fact]
@@ -777,14 +776,14 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.SetProductEntryEditLink();
             Uri uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetStreamReadLink("StreamProperty").Should().Be(new Uri(uri.AbsoluteUri + "/StreamProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetStreamReadLink("StreamProperty"), new Uri(uri.AbsoluteUri + "/StreamProperty"));
         }
 
         [Fact]
         public void GetDefaultStreamReadLinkWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetStreamReadLink(null).Should().Be(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/$value", entitySetInstanceId));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetStreamReadLink(null), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/$value", entitySetInstanceId)));
         }
         #endregion Tests for GetStreamReadLink()
 
@@ -792,29 +791,33 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetNavigationLinkUri()
         {
-            this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false).Should().Be(new Uri("http://odata.org/base/Products(42)/NavigationProperty"));
-            this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, true).Should().BeNull();
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false), new Uri("http://odata.org/base/Products(42)/NavigationProperty"));
+            Assert.Null(this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, true));
         }
 
         [Fact]
         public void GetNavigationLinkUriWhenLinkAlreadyHasValue()
         {
-            this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", new Uri("http://example.com/override"), false).Should().Be(new Uri("http://odata.org/base/Products(42)/NavigationProperty"));
-            this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", new Uri("http://example.com/override"), true).Should().Be(new Uri("http://example.com/override"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", new Uri("http://example.com/override"), false),
+                new Uri("http://odata.org/base/Products(42)/NavigationProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", new Uri("http://example.com/override"), true),
+                new Uri("http://example.com/override"));
         }
 
         [Fact]
         public void GetNavigationLinkUriWhenEntryHasEditLink()
         {
             Uri uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false).Should().Be(new Uri(uri.AbsoluteUri + "/NavigationProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false),
+                new Uri(uri.AbsoluteUri + "/NavigationProperty"));
         }
 
         [Fact]
         public void GetNavigationLinkUriWhenEntryHasReadLink()
         {
             Uri uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false).Should().Be(new Uri(uri.AbsoluteUri + "/NavigationProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false),
+                new Uri(uri.AbsoluteUri + "/NavigationProperty"));
         }
 
         [Fact]
@@ -822,14 +825,16 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             Uri uri = this.SetProductEntryReadLink();
             this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false).Should().Be(new Uri(uri.AbsoluteUri + "/NavigationProperty"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false),
+                new Uri(uri.AbsoluteUri + "/NavigationProperty"));
         }
 
         [Fact]
         public void GetNavigationLinkUriWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false).Should().Be(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/NavigationProperty", entitySetInstanceId));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false),
+                new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/NavigationProperty", entitySetInstanceId)));
         }
         #endregion Tests for GetNavigationLinkUri()
 
@@ -837,29 +842,29 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetAssociationLinkUri()
         {
-            this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false).Should().Be(new Uri("http://odata.org/base/Products(42)/NavigationProperty/$ref"));
-            this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, true).Should().BeNull();
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false), new Uri("http://odata.org/base/Products(42)/NavigationProperty/$ref"));
+            Assert.Null(this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, true));
         }
 
         [Fact]
         public void GetAssociationLinkUriWhenLinkAlreadyHasValue()
         {
-            this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", new Uri("http://example.com/override"), false).Should().Be(new Uri("http://odata.org/base/Products(42)/NavigationProperty/$ref"));
-            this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", new Uri("http://example.com/override"), true).Should().Be(new Uri("http://example.com/override"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", new Uri("http://example.com/override"), false), new Uri("http://odata.org/base/Products(42)/NavigationProperty/$ref"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", new Uri("http://example.com/override"), true), new Uri("http://example.com/override"));
         }
 
         [Fact]
         public void GetAssociationLinkUriWhenEntryHasEditLink()
         {
             Uri uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false).Should().Be(new Uri(uri.AbsoluteUri + "/NavigationProperty/$ref"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false), new Uri(uri.AbsoluteUri + "/NavigationProperty/$ref"));
         }
 
         [Fact]
         public void GetAssociationLinkUriWhenEntryHasReadLink()
         {
             Uri uri = this.SetProductEntryReadLink();
-            this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false).Should().Be(new Uri(uri.AbsoluteUri + "/NavigationProperty/$ref"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false), new Uri(uri.AbsoluteUri + "/NavigationProperty/$ref"));
         }
 
         [Fact]
@@ -867,14 +872,14 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             Uri uri = this.SetProductEntryReadLink();
             this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false).Should().Be(new Uri(uri.AbsoluteUri + "/NavigationProperty/$ref"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false), new Uri(uri.AbsoluteUri + "/NavigationProperty/$ref"));
         }
 
         [Fact]
         public void GetAssociationLinkUriWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false).Should().Be(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/NavigationProperty/$ref", entitySetInstanceId));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/NavigationProperty/$ref", entitySetInstanceId)));
         }
         #endregion Tests for GetAssociationLinkUri()
 
@@ -882,18 +887,17 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetNextUnprocessedNestedResourceInfoShouldBeNullIfTypeHasNoNavProps()
         {
-            this.productConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink()
-                .Should().BeNull();
+            Assert.Null(this.productConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink());
         }
 
         [Fact]
         public void GetNextUnprocessedNestedResourceInfoShouldReturnNavProps()
         {
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedProducts");
+            Assert.Equal("RelatedProducts", nextNavProp.NestedResourceInfo.Name);
 
             nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedDerivedProduct");
+            Assert.Equal("RelatedDerivedProduct", nextNavProp.NestedResourceInfo.Name);
         }
 
         [Fact]
@@ -902,10 +906,10 @@ namespace Microsoft.OData.Tests.Evaluation
             this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.MarkNestedResourceInfoProcessed("RelatedDerivedProduct");
 
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedProducts");
+            Assert.Equal("RelatedProducts", nextNavProp.NestedResourceInfo.Name);
 
             nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.Should().BeNull();
+            Assert.Null(nextNavProp);
         }
 
         [Fact]
@@ -913,8 +917,8 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             // Note: it is up to the reader and writer to later add a metadata builder to navigation links generated this way.
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NestedResourceInfo.Url.Should().BeNull();
-            nextNavProp.NestedResourceInfo.AssociationLinkUrl.Should().BeNull();
+            Assert.Null(nextNavProp.NestedResourceInfo.Url);
+            Assert.Null(nextNavProp.NestedResourceInfo.AssociationLinkUrl);
         }
         #endregion Tests for MarkNestedResourceInfoAsProcessed() and GetNextUnprocessedNestedResourceInfo()
 
@@ -922,46 +926,46 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetOperationTargetUri()
         {
-            this.productConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null).Should().Be(new Uri("http://odata.org/base/Products(42)/OperationName"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri("http://odata.org/base/Products(42)/OperationName"));
         }
 
         [Fact]
         public void GetOperationTargetUriWhenEntryHasEditLink()
         {
             Uri uri = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null).Should().Be(new Uri(uri.AbsoluteUri + "/OperationName"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri(uri.AbsoluteUri + "/OperationName"));
         }
 
         [Fact]
         public void GetOperationTargetUriWithInheritance()
         {
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null).Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/OperationName"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/OperationName"));
         }
 
         [Fact]
         public void GetOperationTargetUriWithInheritanceWhenEntryHasEditLink()
         {
             Uri uri = this.SetDerivedProductEntryEditLink();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null).Should().Be(new Uri(uri.AbsoluteUri + "/OperationName"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri(uri.AbsoluteUri + "/OperationName"));
         }
 
         [Fact]
         public void GetOperationTargetUriWithParameterType()
         {
-            this.productConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1").Should().Be(new Uri("http://odata.org/base/Products(42)/OperationName(p1=@p1)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1"), new Uri("http://odata.org/base/Products(42)/OperationName(p1=@p1)"));
         }
 
         [Fact]
         public void GetOperationTargetUriWithParameterTypeWhenEntryHasEditLink()
         {
             Uri editLink = this.SetProductEntryEditLink();
-            this.productConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1").Should().Be(new Uri(editLink.AbsoluteUri + "/OperationName(p1=@p1)"));
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1"), new Uri(editLink.AbsoluteUri + "/OperationName(p1=@p1)"));
         }
 
         [Fact]
         public void GetOperationTargetUriWithParameterTypeAndInheritance()
         {
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1").Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/OperationName(p1=@p1)"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1"), new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/OperationName(p1=@p1)"));
         }
 
         [Fact]
@@ -970,14 +974,14 @@ namespace Microsoft.OData.Tests.Evaluation
             Uri editLink = this.SetDerivedProductEntryEditLink();
 
             // note that the type segment and operation name are appended onto the opaque edit-link, and may result in multiple type segments in the final target link.
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1").Should().Be(new Uri(editLink.AbsoluteUri + "/OperationName(p1=@p1)"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1"), new Uri(editLink.AbsoluteUri + "/OperationName(p1=@p1)"));
         }
 
         [Fact]
         public void GetOperationTargetUriWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null).Should().Be(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/OperationName", entitySetInstanceId));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/OperationName", entitySetInstanceId)));
         }
         #endregion Tests for GetOperationTargetUri()
 
@@ -985,7 +989,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetOperationTitle()
         {
-            this.productConventionalEntityMetadataBuilder.GetOperationTitle("OperationName").Should().Be("OperationName");
+            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetOperationTitle("OperationName"), "OperationName");
         }
         #endregion Tests for GetOperationTitle()
 
@@ -993,18 +997,18 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void ProductShouldNotContainComputedNamedStreams()
         {
-            this.productConventionalEntityMetadataBuilder.GetProperties(/*nonComputedProperties*/null).Should().BeEmpty();
+            Assert.Empty(this.productConventionalEntityMetadataBuilder.GetProperties(/*nonComputedProperties*/null));
         }
 
         [Fact]
         public void DerivedProductShouldContainComputedNamedStreams()
         {
             var photoProperty = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetProperties( /*nonComputedProperties*/null).Single();
-            photoProperty.Name.Should().Be("Photo");
+            Assert.Equal("Photo", photoProperty.Name);
             var photo = (ODataStreamReferenceValue)photoProperty.Value;
-            photo.Should().NotBeNull();
-            photo.EditLink.Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/Photo"));
-            photo.ReadLink.Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/Photo"));
+            Assert.NotNull(photo);
+            Assert.Equal(photo.EditLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/Photo"));
+            Assert.Equal(photo.ReadLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/Photo"));
         }
 
         [Fact]
@@ -1013,11 +1017,11 @@ namespace Microsoft.OData.Tests.Evaluation
             this.derivedMultiKeyMultiEtagMleEntry.EditLink = new Uri("http://someeditlink");
             this.derivedMultiKeyMultiEtagMleEntry.ReadLink = new Uri("http://somereadlink");
             var photoProperty = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetProperties( /*nonComputedProperties*/null).Single();
-            photoProperty.Name.Should().Be("Photo");
+            Assert.Equal("Photo", photoProperty.Name);
             var photo = (ODataStreamReferenceValue)photoProperty.Value;
-            photo.Should().NotBeNull();
-            photo.EditLink.Should().Be(new Uri("http://someeditlink/Photo"));
-            photo.ReadLink.Should().Be(new Uri("http://somereadlink/Photo"));
+            Assert.NotNull(photo);
+            Assert.Equal(photo.EditLink, new Uri("http://someeditlink/Photo"));
+            Assert.Equal(photo.ReadLink, new Uri("http://somereadlink/Photo"));
         }
         #endregion Tests for GetProperties()
 
@@ -1025,16 +1029,16 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void ProductShouldNotContainComputedActions()
         {
-            this.productConventionalEntityMetadataBuilder.GetActions().Should().BeEmpty();
+            Assert.Empty(this.productConventionalEntityMetadataBuilder.GetActions());
         }
 
         [Fact]
         public void DerivedProductShouldContainComputedActions()
         {
             var action = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetActions().Single();
-            action.Title.Should().Be("TestModel.Action");
-            action.Metadata.Should().Be(new Uri(MetadataDocumentUri, "#TestModel.Action"));
-            action.Target.Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/TestModel.Action"));
+            Assert.Equal(action.Title, "TestModel.Action");
+            Assert.Equal(action.Metadata, new Uri(MetadataDocumentUri, "#TestModel.Action"));
+            Assert.Equal(action.Target, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/TestModel.Action"));
         }
 
         [Fact]
@@ -1042,7 +1046,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var entitySetInstanceId = SetMultiKeyProperties();
             var action = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetActions().Single();
-            action.Target.Should().Be(new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/TestModel.Action", entitySetInstanceId)));
+            Assert.Equal(action.Target, new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/TestModel.Action", entitySetInstanceId)));
         }
 
         [Fact]
@@ -1050,9 +1054,9 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.derivedMultiKeyMultiEtagMleEntry.EditLink = new Uri("http://someeditlink");
             var action = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetActions().Single();
-            action.Title.Should().Be("TestModel.Action");
-            action.Metadata.Should().Be(new Uri(MetadataDocumentUri, "#TestModel.Action"));
-            action.Target.Should().Be(new Uri("http://someeditlink/TestModel.Action"));
+            Assert.Equal("TestModel.Action", action.Title);
+            Assert.Equal(action.Metadata, new Uri(MetadataDocumentUri, "#TestModel.Action"));
+            Assert.Equal(action.Target, new Uri("http://someeditlink/TestModel.Action"));
         }
         #endregion Tests for computed Actions
 
@@ -1060,16 +1064,16 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void ProductShouldNotContainComputedFunctions()
         {
-            this.productConventionalEntityMetadataBuilder.GetFunctions().Should().BeEmpty();
+            Assert.Empty(this.productConventionalEntityMetadataBuilder.GetFunctions());
         }
 
         [Fact]
         public void DerivedProductShouldContainComputedFunctions()
         {
             var function = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetFunctions().Single();
-            function.Title.Should().Be("TestModel.Function");
-            function.Metadata.Should().Be(new Uri(MetadataDocumentUri, "#TestModel.Function"));
-            function.Target.Should().Be(new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/TestModel.Function"));
+            Assert.Equal("TestModel.Function", function.Title);
+            Assert.Equal(function.Metadata, new Uri(MetadataDocumentUri, "#TestModel.Function"));
+            Assert.Equal(function.Target, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/TestModel.Function"));
         }
 
         [Fact]
@@ -1077,9 +1081,9 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.derivedMultiKeyMultiEtagMleEntry.EditLink = new Uri("http://someeditlink");
             var function = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetFunctions().Single();
-            function.Title.Should().Be("TestModel.Function");
-            function.Metadata.Should().Be(new Uri(MetadataDocumentUri, "#TestModel.Function"));
-            function.Target.Should().Be(new Uri("http://someeditlink/TestModel.Function"));
+            Assert.Equal("TestModel.Function", function.Title);
+            Assert.Equal(function.Metadata, new Uri(MetadataDocumentUri, "#TestModel.Function"));
+            Assert.Equal(function.Target, new Uri("http://someeditlink/TestModel.Function"));
         }
 
         [Fact]
@@ -1087,7 +1091,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var entitySetInstanceId = SetMultiKeyProperties();
             var function = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetFunctions().Single();
-            function.Target.Should().Be(new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/TestModel.Function", entitySetInstanceId)));
+            Assert.Equal(function.Target, new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/TestModel.Function", entitySetInstanceId)));
         }
         #endregion Tests for computed Functions
 
@@ -1116,9 +1120,9 @@ namespace Microsoft.OData.Tests.Evaluation
             };
 
             var singletonEntityMetadataBuilder = new ODataConventionalEntityMetadataBuilder(singletonEntryMetadataContext, this.metadataContext, this.uriBuilder);
-            singletonEntityMetadataBuilder.GetId().Should().Be(new Uri("http://odata.org/base/Boss"));
-            singletonEntityMetadataBuilder.GetEditLink().Should().Be(new Uri("http://odata.org/base/Boss"));
-            singletonEntityMetadataBuilder.GetReadLink().Should().Be(new Uri("http://odata.org/base/Boss"));
+            Assert.Equal(singletonEntityMetadataBuilder.GetId(), new Uri("http://odata.org/base/Boss"));
+            Assert.Equal(singletonEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/Boss"));
+            Assert.Equal(singletonEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/Boss"));
         }
         #endregion
 

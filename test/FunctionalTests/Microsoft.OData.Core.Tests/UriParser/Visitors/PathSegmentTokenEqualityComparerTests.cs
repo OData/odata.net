@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Visitors
 {
@@ -20,7 +18,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             var token1 = new NonSystemToken("foo", null, null);
             var token2 = new NonSystemToken("foo", null, null);
-            this.testSubject.Equals(token1, token2).Should().BeTrue();
+            Assert.True(this.testSubject.Equals(token1, token2));
         }
 
         [Fact]
@@ -28,7 +26,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             var token1 = new NonSystemToken("foo", null, null);
             var token2 = new NonSystemToken("bar", null, null);
-            this.testSubject.Equals(token1, token2).Should().BeFalse();
+            Assert.False(this.testSubject.Equals(token1, token2));
         }
 
         [Fact]
@@ -36,7 +34,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             var token1 = new NonSystemToken("foo", null, null);
             var token2 = new NonSystemToken("foo", null, new SystemToken("$batch", null));
-            this.testSubject.Equals(token1, token2).Should().BeFalse();
+            Assert.False(this.testSubject.Equals(token1, token2));
         }
 
         [Fact]
@@ -44,27 +42,27 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             var token1 = new NonSystemToken("foo", null, new SystemToken("$metadata", null));
             var token2 = new NonSystemToken("foo", null, new SystemToken("$batch", null));
-            this.testSubject.Equals(token1, token2).Should().BeFalse();
+            Assert.False(this.testSubject.Equals(token1, token2));
         }
 
         [Fact]
         public void NullPathSegmentTokensAreEquivalent()
         {
-            this.testSubject.Equals(null, null).Should().BeTrue();
+            Assert.True(this.testSubject.Equals(null, null));
         }
 
         [Fact]
         public void NullPathSegmentTokensAreNotEquivalentToAnyNonNullToken()
         {
             var token = new NonSystemToken("foo", null, null);
-            this.testSubject.Equals(null, token).Should().BeFalse();
-            this.testSubject.Equals(token, null).Should().BeFalse();
+            Assert.False(this.testSubject.Equals(null, token));
+            Assert.False(this.testSubject.Equals(token, null));
         }
 
         [Fact]
         public void PathSegmentTokenHashCodeForNullShouldBeZero()
         {
-            this.testSubject.GetHashCode(null).Should().Be(0);
+            Assert.Equal(0, this.testSubject.GetHashCode(null));
         }
 
         [Fact]
@@ -72,14 +70,14 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             var token1 = new NonSystemToken("foo", null, null);
             var token2 = new NonSystemToken("bar", null, null);
-            this.testSubject.GetHashCode(token1).Should().NotBe(this.testSubject.GetHashCode(token2));
+            Assert.NotEqual(this.testSubject.GetHashCode(token1), this.testSubject.GetHashCode(token2));
         }
         [Fact]
         public void PathSegmentTokenHashCodesShouldBeTheSame()
         {
             var token1 = new NonSystemToken("foo", null, new SystemToken("$metadata", null));
             var token2 = new NonSystemToken("foo", null, new SystemToken("$metadata", null));
-            this.testSubject.GetHashCode(token1).Should().Be(this.testSubject.GetHashCode(token2));
+            Assert.Equal(this.testSubject.GetHashCode(token1), this.testSubject.GetHashCode(token2));
         }
     }
 }

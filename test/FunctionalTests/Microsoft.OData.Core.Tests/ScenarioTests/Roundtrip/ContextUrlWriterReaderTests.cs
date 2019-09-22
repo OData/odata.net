@@ -11,10 +11,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
@@ -1700,7 +1698,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             {
                 contentType = message.GetHeader("Content-Type");
                 payload = reader.ReadToEnd();
-                payload.Should().Contain(expectedUri);
+                Assert.Contains(expectedUri, payload);
             }
         }
 

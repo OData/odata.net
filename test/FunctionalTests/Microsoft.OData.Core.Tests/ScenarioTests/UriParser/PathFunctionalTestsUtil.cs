@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
@@ -32,7 +31,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldgook/"), new Uri("http://gobbldygook/" + path)) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
             Action parse = () => parser.ParsePath();
-            parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);
+            parse.Throws<ODataException>(expectedMessage);
+        }
+
+        internal static void RunParseErrorPath<T>(string path, string expectedMessage) where T : Exception
+        {
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldgook/"), new Uri("http://gobbldygook/" + path)) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
+            Action parse = () => parser.ParsePath();
+            parse.Throws<T>(expectedMessage);
         }
     }
 }

@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
@@ -56,7 +55,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             filterQueryNode.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not)
                 .Operand.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
-            filterQueryNode.Expression.TypeReference.Should().BeNull();
+            Assert.Null(filterQueryNode.Expression.TypeReference);
         }
 
         [Fact]
@@ -70,7 +69,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     personType.FullTypeName(),
                     "PhantomProperty");
 
-            parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);
+            parse.Throws<ODataException>(expectedMessage);
         }
 
         [Fact]
@@ -78,7 +77,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var orderByNode = ParseOrderBy("Artist desc", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
-            orderByNode.Direction.Should().Be(OrderByDirection.Descending);
+            Assert.Equal(OrderByDirection.Descending, orderByNode.Direction);
             orderByNode.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPaintingArtistProp());
         }
 
@@ -87,7 +86,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var orderByNode = ParseOrderBy("Genre asc", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
-            orderByNode.Direction.Should().Be(OrderByDirection.Ascending);
+            Assert.Equal(OrderByDirection.Ascending, orderByNode.Direction);
             orderByNode.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
         }
 
@@ -102,7 +101,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             binaryOperatorNode.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
                               .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("SubGenre")
                               .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(GenrePropertyName);
-            
+
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Modern");
         }
 
@@ -117,7 +116,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     personType.FullTypeName(),
                     "PhantomProperty1");
 
-            parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);
+            parse.Throws<ODataException>(expectedMessage);
         }
 
         [Fact]
@@ -125,8 +124,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterQueryNode = ParseFilter("MyPaintings/any(p: startswith(-p/Genre, 'Ab'))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
-            var functionNode =
-                filterQueryNode.Expression.ShouldBeAnyQueryNode().Body.As<SingleValueFunctionCallNode>();
+            var functionNode = Assert.IsType<SingleValueFunctionCallNode>(filterQueryNode.Expression.ShouldBeAnyQueryNode().Body);
 
             var parameterNode = functionNode.Parameters.First();
             parameterNode.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
@@ -151,7 +149,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var functionNode = orderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode("day");
             functionNode.Parameters.Single().ShouldBeSingleValueOpenPropertyAccessQueryNode("Genre");
-            functionNode.TypeReference.Should().BeNull();
+            Assert.Null(functionNode.TypeReference);
         }
 
         [Fact]
@@ -162,7 +160,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var functionNode = filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("substring");
             functionNode.Parameters.First().ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetString(true)).
                 Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Genre");
-            functionNode.TypeReference.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetString(true));
+            Assert.True(functionNode.TypeReference.IsEquivalentTo(EdmCoreModel.Instance.GetString(true)));
         }
 
         [Fact]
@@ -175,17 +173,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     HardCodedTestModel.GetDogType().FullTypeName(),
                     "<null>");
 
-            parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);
+            parse.Throws<ODataException>(expectedMessage);
         }
 
         [Fact]
         public void ParseFilterWithCollectionOpenPropertyExpectCollectionOpenPropertyAccessQueryNode()
         {
             var filterQueryNode = ParseFilter("Critics/any(p:p eq 0)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
-            var lambdaNode = filterQueryNode.Expression.ShouldBeAnyQueryNode().As<LambdaNode>();
+            var anyNode = Assert.IsType<AnyNode>(filterQueryNode.Expression.ShouldBeAnyQueryNode());
 
-            lambdaNode.Source.ShouldBeCollectionOpenPropertyAccessQueryNode("Critics");
-            lambdaNode.Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            anyNode.Source.ShouldBeCollectionOpenPropertyAccessQueryNode("Critics");
+            anyNode.Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
         }
 
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmEntityType edmEntityType, IEdmEntitySet edmEntitySet = null)

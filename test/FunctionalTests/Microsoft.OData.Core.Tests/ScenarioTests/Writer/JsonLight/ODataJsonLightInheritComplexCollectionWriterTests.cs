@@ -8,10 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
@@ -75,7 +73,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         #region Writing odata.context
-        #region
+
         [Fact]
         public void ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithSerializationInfo()
         {
@@ -119,8 +117,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
             Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
-            sync.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-            async.ShouldThrow<AggregateException>();
+            sync.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            Assert.Throws<AggregateException>(async);
         }
 
         [Fact]
@@ -142,7 +140,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             collectionStart.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = "foo.bar" });
             WriteAndValidate(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"@odata.count\":3,\"@odata.nextLink\":\"http://next-link/\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
         }
-#endregion
+        #endregion
 
         #region Inheritance
         [Fact]
@@ -188,8 +186,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
             Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
-            sync.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-            async.ShouldThrow<AggregateException>();
+            sync.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            Assert.Throws<AggregateException>(async);
         }
 
         [Fact]
@@ -200,7 +198,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             WriteAndValidate(collectionStart, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: true, itemTypeReference: this.derivedAddressTypeReference);
         }
         #endregion Without model
-        #endregion Writing odata.context
 
         private static void WriteAndValidate(ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
         {
@@ -246,7 +243,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             stream.Seek(0, SeekOrigin.Begin);
             string payload = (new StreamReader(stream)).ReadToEnd();
-            payload.Should().Be(expectedPayload);
+            Assert.Equal(expectedPayload, payload);
         }
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)

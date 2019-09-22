@@ -3,24 +3,20 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Tests;
+using Xunit;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
 namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using FluentAssertions;
-    // ReSharper disable RedundantUsingDirective
-    using Microsoft.OData.Tests.JsonLight;
-    using Xunit;
-    using Microsoft.OData;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Tests;
-    // ReSharper restore RedundantUsingDirective
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
     public class ODataJsonLightEntryAndFeedDeserializerUndeclaredTests
     {
         private static ODataMessageReaderSettings UntypedAsStringReaderSettings = new ODataMessageReaderSettings
@@ -141,8 +137,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 entry = reader.Item as ODataResource;
             });
 
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().ODataValue.As<ODataUntypedValue>().RawValue.Should().Be("null");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("null", (entry.Properties.Last().ODataValue as ODataUntypedValue).RawValue);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -151,7 +147,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be(payload);
+            Assert.Equal(payload, result);
         }
 
         [Fact]
@@ -176,9 +172,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(2);
-            complex1.Properties.Count().Should().Be(2);
-            complex1.Properties.First(s => string.Equals("UndeclaredBool", s.Name, StringComparison.Ordinal)).Value.Should().Be(false);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(2, complex1.Properties.Count());
+            Assert.Equal(false, complex1.Properties.First(s => string.Equals("UndeclaredBool", s.Name, StringComparison.Ordinal)).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -191,7 +187,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be(payload);
+            Assert.Equal(payload, result);
         }
 
         [Fact]
@@ -216,10 +212,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(2);
-            complex1.Properties.Count().Should().Be(2);
-            complex1.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(2, complex1.Properties.Count());
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", complex1.Properties
+                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -232,7 +228,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -257,10 +253,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(2);
-            complex1.Properties.Count().Should().Be(2);
-            complex1.Properties
-                .First(s => string.Equals("UndeclaredStreetNo", s.Name, StringComparison.Ordinal)).Value.Should().Be(12d);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(2, complex1.Properties.Count());
+            Assert.Equal(12d, complex1.Properties
+                .First(s => string.Equals("UndeclaredStreetNo", s.Name, StringComparison.Ordinal)).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -273,7 +269,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreetNo@odata.type\":\"#Double\",\"UndeclaredStreetNo\":12.0}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreetNo@odata.type\":\"#Double\",\"UndeclaredStreetNo\":12.0}}");
         }
 
         [Fact]
@@ -298,12 +294,12 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(1);
-            complex1.TypeName.Should().Be("Server.NS.Address");
-            complex1.Properties.Count().Should().Be(2);
-            complex1.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
+            Assert.Single(entry.Properties);
+            Assert.Equal("Server.NS.Address", complex1.TypeName);
+            Assert.Equal(2, complex1.Properties.Count());
+            Assert.Equal((complex1.Properties
+                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value as ODataUntypedValue)
+                .RawValue, @"""No.10000000999,Zixing Rd Minhang""");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -316,7 +312,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1\":{\"@odata.type\":\"#Server.NS.Address\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1\":{\"@odata.type\":\"#Server.NS.Address\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -341,10 +337,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).ODataValue.As<ODataCollectionValue>().Items
-                .Cast<string>().Count().Should().Be(3);
-            complex1.Properties.Count().Should().Be(2);
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).ODataValue as ODataCollectionValue).Items.Count(), 3);
+            Assert.Equal(2, complex1.Properties.Count());
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -357,7 +352,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"UndeclaredCollection1@odata.type\":\"#Collection(String)\",\"UndeclaredCollection1\":[\"email1@163.com\",\"email2@gmail.com\",\"email3@gmail2.com\"],\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"UndeclaredCollection1@odata.type\":\"#Collection(String)\",\"UndeclaredCollection1\":[\"email1@163.com\",\"email2@gmail.com\",\"email3@gmail2.com\"],\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
         #endregion
 
@@ -375,8 +370,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 entry = reader.Item as ODataResource;
             });
 
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("null");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("null", (entry.Properties.Last().Value as ODataUntypedValue).RawValue);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -385,7 +380,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.type\":\"#Server.NS.UndefComplex1\",\"UndeclaredAddress1\":null}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.type\":\"#Server.NS.UndefComplex1\",\"UndeclaredAddress1\":null}");
         }
 
         [Fact]
@@ -410,12 +405,12 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal)).Value.As<ODataUntypedValue>().RawValue.Should().Be("12.3"); // numeric
-            complex1.Properties.Count().Should().Be(2);
-            complex1.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.As<ODataUntypedValue>() // string
-                .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal((entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue, "12.3"); // numeric
+            Assert.Equal(2, complex1.Properties.Count());
+            Assert.Equal((complex1.Properties
+                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value as ODataUntypedValue) // string
+                .RawValue, @"""No.10000000999,Zixing Rd Minhang""");
         }
 
         [Fact]
@@ -430,9 +425,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 entry = reader.Item as ODataResource;
             });
 
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
-                .Should().Be(@"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Last().Value as ODataUntypedValue).RawValue,
+                @"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}");
         }
 
         [Fact]
@@ -458,9 +453,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
-                .Should().Be(@"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""innerComplex1"":{""innerProp1"":null,""inerProp2"":""abc""},""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Last().Value as ODataUntypedValue).RawValue,
+                @"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""innerComplex1"":{""innerProp1"":null,""inerProp2"":""abc""},""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}");
         }
 
         [Fact]
@@ -485,10 +480,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value.As<ODataUntypedValue>().RawValue
-              .Should().Be(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
-            complex1.Properties.Count().Should().Be(2);
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue,
+              @"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
+            Assert.Equal(2, complex1.Properties.Count());
         }
 
         #endregion
@@ -523,9 +518,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(1);
-            undeclaredAddress1NestedInfo.TypeAnnotation.TypeName.Should().Be("Server.NS.UndefComplex1");
-            undeclaredAddress1.Should().Be(null);
+            Assert.Single(entry.Properties);
+            Assert.Equal("Server.NS.UndefComplex1", undeclaredAddress1NestedInfo.TypeAnnotation.TypeName);
+            Assert.Null(undeclaredAddress1);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -538,7 +533,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd(); // entry
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.type\":\"#Server.NS.UndefComplex1\",\"UndeclaredAddress1\":null}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.type\":\"#Server.NS.UndefComplex1\",\"UndeclaredAddress1\":null}");
         }
 
         [Fact]
@@ -563,14 +558,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
+            Assert.Equal(2, entry.Properties.Count());
             ODataProperty decimalProperty = entry.Properties.First(s => string.Equals("UndeclaredDecimal", s.Name, StringComparison.Ordinal));
-            decimalProperty.Value.Should().Be(12.3M);
-            decimalProperty.TypeAnnotation.TypeName.Should().Be("Server.NS.UndeclaredDecimalType");
-            complex1.Properties.Count().Should().Be(2);
+            Assert.Equal(12.3M, decimalProperty.Value);
+            Assert.Equal("Server.NS.UndeclaredDecimalType", decimalProperty.TypeAnnotation.TypeName);
+            Assert.Equal(2, complex1.Properties.Count());
             ODataProperty addressProperty = complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal));
-            addressProperty.Value.Should().Be("No.10000000999,Zixing Rd Minhang");
-            addressProperty.TypeAnnotation.TypeName.Should().Be("Server.NS.UndeclaredStreetType");
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", addressProperty.Value);
+            Assert.Equal("Server.NS.UndeclaredStreetType", addressProperty.TypeAnnotation.TypeName);
         }
 
         [Fact]
@@ -595,10 +590,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal)).Value.Should().Be(12.3M);
-            complex1.Properties.Count().Should().Be(2);
-            complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(12.3M, entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal(2, complex1.Properties.Count());
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
         }
 
         [Fact]
@@ -624,10 +619,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(1);
-            undeclaredAddress1.TypeName.Should().Be("Server.NS.AddressInValid");
-            undeclaredAddress1.Properties.Count().Should().Be(2);
-            undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
+            Assert.Single(entry.Properties);
+            Assert.Equal("Server.NS.AddressInValid", undeclaredAddress1.TypeName);
+            Assert.Equal(2, undeclaredAddress1.Properties.Count());
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
         }
 
         [Fact]
@@ -658,14 +653,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(1);
-            undeclaredAddress1.TypeName.Should().Be("Server.NS.AddressInValid");
-            undeclaredAddress1.Properties.Count().Should().Be(2);
-            undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
-            undeclaredAddress1.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.999,Zixing Rd Minhang");
-            innerComplex1.Properties.Count().Should().Be(2);
-            innerComplex1.Properties.First(s => string.Equals("innerProp1", s.Name, StringComparison.Ordinal)).Value.Should().Be(null);
-            innerComplex1.Properties.First(s => string.Equals("innerProp2", s.Name, StringComparison.Ordinal)).Value.Should().Be("abc");
+            Assert.Single(entry.Properties);
+            Assert.Equal("Server.NS.AddressInValid", undeclaredAddress1.TypeName);
+            Assert.Equal(2, undeclaredAddress1.Properties.Count());
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.999,Zixing Rd Minhang", undeclaredAddress1.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal(2, innerComplex1.Properties.Count());
+            Assert.Null(innerComplex1.Properties.First(s => string.Equals("innerProp1", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("abc", innerComplex1.Properties.First(s => string.Equals("innerProp2", s.Name, StringComparison.Ordinal)).Value);
         }
 
         [Fact]
@@ -708,16 +703,16 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
-            undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
-            undeclaredCollection1Items.Count().Should().Be(3);
-            undeclaredCollection1Items.First().Should().Be("email1@163.com");
-            String.Concat(undeclaredCollection1Items).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
-            addressNestedInfo.Name.Should().Be("Address");
-            address.TypeName.Should().Be("Server.NS.Address");
-            address.Properties.Count().Should().Be(2);
-            address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.999,Zixing Rd Minhang");
-            address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("UndeclaredCollection1", undeclaredCollection1.Name);
+            Assert.Equal(3, undeclaredCollection1Items.Count());
+            Assert.Equal("email1@163.com", undeclaredCollection1Items.First());
+            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", String.Concat(undeclaredCollection1Items));
+            Assert.Equal("Address", addressNestedInfo.Name);
+            Assert.Equal("Server.NS.Address", address.TypeName);
+            Assert.Equal(2, address.Properties.Count());
+            Assert.Equal("No.999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
         }
 
         [Fact]
@@ -766,13 +761,13 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
-            undeclaredCollection1.TypeAnnotation.TypeName.Should().Be("Collection(Server.NS.UnknownCollectionType)");
-            untypedCollection.Count().Should().Be(3);
-            String.Concat(untypedCollection.Select(c=>((ODataResource)c).Properties.Single(p => string.Equals(p.Name, "email", StringComparison.Ordinal)).Value)).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
-            address.Properties.Count().Should().Be(2);
-            address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.999,Zixing Rd Minhang");
-            address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("Collection(Server.NS.UnknownCollectionType)", undeclaredCollection1.TypeAnnotation.TypeName);
+            Assert.Equal(3, untypedCollection.Count());
+            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", String.Concat(untypedCollection.Select(c=>((ODataResource)c).Properties.Single(p => string.Equals(p.Name, "email", StringComparison.Ordinal)).Value)));
+            Assert.Equal(2, address.Properties.Count());
+            Assert.Equal("No.999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
         }
         #endregion
 
@@ -789,8 +784,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 entry = reader.Item as ODataResource;
             });
 
-            entry.Properties.Count().Should().Be(3);
-            Assert.Equal("null", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredType1", StringComparison.Ordinal)).ODataValue.As<ODataUntypedValue>().RawValue);
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal("null", (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredType1", StringComparison.Ordinal)).ODataValue as ODataUntypedValue).RawValue);
         }
 
         [Fact]
@@ -814,8 +809,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(2);
-            complex1.Properties.Count().Should().Be(2);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(2, complex1.Properties.Count());
         }
 
         [Fact]
@@ -840,8 +835,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(2);
-            complex1.Properties.Count().Should().Be(2);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(2, complex1.Properties.Count());
         }
 
         [Fact]
@@ -866,10 +861,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).ODataValue.As<ODataCollectionValue>().Items
-                .Cast<string>().Count().Should().Be(3);
-            complex1.Properties.Count().Should().Be(2);
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal(3, (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).ODataValue as ODataCollectionValue).Items
+                .Count());
+            Assert.Equal(2, complex1.Properties.Count());
         }
         #endregion
 
@@ -897,10 +892,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            complex1.Properties.Count().Should().Be(2);
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            Assert.Equal(2, complex1.Properties.Count());
         }
 
         [Fact]
@@ -924,8 +919,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                     }
                 }
             });
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
-                .Should().Be(@"{""@odata.type"":""Server.NS.AddressUndeclared"",""Street"":""No.999,Zixing Rd Minhang""}");
+            Assert.Equal((entry.Properties.Last().Value as ODataUntypedValue).RawValue,
+                @"{""@odata.type"":""Server.NS.AddressUndeclared"",""Street"":""No.999,Zixing Rd Minhang""}");
         }
 
         [Fact]
@@ -939,9 +934,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 entry = reader.Item as ODataResource;
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be(@"{}");
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value as ODataUntypedValue)
+                .RawValue, @"{}");
         }
 
         [Fact]
@@ -966,10 +961,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value.As<ODataUntypedValue>().RawValue
-                .Should().Be(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
-            complex1.Properties.Count().Should().Be(2);
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue,
+                @"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
+            Assert.Equal(2, complex1.Properties.Count());
         }
 
         [Fact]
@@ -994,11 +989,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be(@"[]");
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value as ODataUntypedValue)
+                .RawValue, @"[]");
+            Assert.Equal((complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"""No.10000000999,Zixing Rd Minhang""");
         }
 
         #endregion
@@ -1032,11 +1027,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
-            undeclaredComplex.Properties.Count().Should().Be(2);
-            undeclaredComplex.Properties.Single(p => p.Name == "MyProp1").Value.Should().Be("aaaaaaaaa");
-            undeclaredComplex.Properties.Single(p => p.Name == "UndeclaredProp1").Value.Should().Be("bbbbbbb");
-            address.Properties.Count().Should().Be(2);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(2, undeclaredComplex.Properties.Count());
+            Assert.Equal("aaaaaaaaa", undeclaredComplex.Properties.Single(p => p.Name == "MyProp1").Value);
+            Assert.Equal("bbbbbbb", undeclaredComplex.Properties.Single(p => p.Name == "UndeclaredProp1").Value);
+            Assert.Equal(2, address.Properties.Count());
         }
 
         [Fact]
@@ -1060,10 +1055,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                     }
                 }
             }, /*readUntypedAsValue*/ true);
-            entry.Properties.Count().Should().Be(2);
-            undeclaredComplex1.TypeName.Should().Be("Server.NS.AddressUndeclared");
-            undeclaredComplex1.Properties.Count().Should().Be(1);
-            undeclaredComplex1.Properties.Single(p => p.Name == "Street").Value.Should().Be("No.999,Zixing Rd Minhang");
+
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("Server.NS.AddressUndeclared", undeclaredComplex1.TypeName);
+            Assert.Single(undeclaredComplex1.Properties);
+            Assert.Equal("No.999,Zixing Rd Minhang", undeclaredComplex1.Properties.Single(p => p.Name == "Street").Value);
         }
 
         [Fact]
@@ -1088,8 +1084,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
-            undeclaredComplex1.Properties.Count().Should().Be(0);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Empty(undeclaredComplex1.Properties);
         }
 
         [Fact]
@@ -1146,14 +1142,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
-            undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
-            undeclaredCollection1Items.Count().Should().Be(5);
-            undeclaredCollection1Items.Last().Should().Be(null);
-            String.Concat(undeclaredCollection1Items).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
-            addressNestedInfo.Name.Should().Be("Address");
-            address.Properties.Count().Should().Be(2);
-            address.TypeName.Should().Be("Server.NS.Address");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("UndeclaredCollection1", undeclaredCollection1.Name);
+            Assert.Equal(5, undeclaredCollection1Items.Count());
+            Assert.Null(undeclaredCollection1Items.Last());
+            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", String.Concat(undeclaredCollection1Items));
+            Assert.Equal("Address", addressNestedInfo.Name);
+            Assert.Equal(2, address.Properties.Count());
+            Assert.Equal("Server.NS.Address", address.TypeName);
         }
 
         [Fact]
@@ -1247,18 +1243,18 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
-            undeclaredCollection1Address.Properties.Count().Should().Be(2);
-            undeclaredCollection1Address.TypeAnnotation.TypeName.Should().Be("Server.NS.Address");
-            undeclaredCollection1Email1.Value.Should().Be("email1@163.com");
-            undeclaredCollection1Email2.Value.Should().Be("email2@gmail.com");
-            undeclaredCollection1NestedEmail1.Value.Should().Be("email1@163.com");
-            undeclaredCollection1NestedCollectionAddress.Properties.Count().Should().Be(2);
-            undeclaredCollection1NestedNull.Should().Be(null);
-            undeclaredCollection1NestedEmail2.Value.Should().Be("email3@gmail2.com");
-            address.Properties.Count().Should().Be(2);
-            undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
-            undeclaredNestedCollection.Name.Should().Be("Address");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(2, undeclaredCollection1Address.Properties.Count());
+            Assert.Equal("Server.NS.Address", undeclaredCollection1Address.TypeAnnotation.TypeName);
+            Assert.Equal("email1@163.com", undeclaredCollection1Email1.Value);
+            Assert.Equal("email2@gmail.com", undeclaredCollection1Email2.Value);
+            Assert.Equal("email1@163.com", undeclaredCollection1NestedEmail1.Value);
+            Assert.Equal(2, undeclaredCollection1NestedCollectionAddress.Properties.Count());
+            Assert.Null(undeclaredCollection1NestedNull);
+            Assert.Equal("email3@gmail2.com", undeclaredCollection1NestedEmail2.Value);
+            Assert.Equal(2, address.Properties.Count());
+            Assert.Equal("UndeclaredCollection1", undeclaredCollection1.Name);
+            Assert.Equal("Address", undeclaredNestedCollection.Name);
         }
 
         [Fact]
@@ -1301,12 +1297,12 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(2);
-            undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
-            undeclaredCollection1Items.Count().Should().Be(0);
-            address.TypeName.Should().Be("Server.NS.Address");
-            addressNestedInfo.Name.Should().Be("Address");
-            address.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal)).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("UndeclaredCollection1", undeclaredCollection1.Name);
+            Assert.Empty(undeclaredCollection1Items);
+            Assert.Equal("Server.NS.Address", address.TypeName);
+            Assert.Equal("Address", addressNestedInfo.Name);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", address.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal)).Value);
         }
 
         #endregion
@@ -1327,8 +1323,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(1);
-            entry.Properties.First(p => p.Name == "id").Value.As<Decimal>().Should().Be(1);
+            Assert.Single(entry.Properties);
+            Assert.Equal(1m, entry.Properties.First(p => p.Name == "id").Value);
         }
 
         #endregion
@@ -1351,7 +1347,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                  }
              });
 
-            readEntry.Should().Be(false);
+            Assert.False(readEntry);
         }
 
         [Theory]
@@ -1372,8 +1368,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            readEntry.Should().Be(true);
-            entry.Should().Be(null);
+            Assert.True(readEntry);
+            Assert.Null(entry);
         }
 
         [Theory]
@@ -1392,7 +1388,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Value.Should().Be("primitiveString");
+            Assert.Equal("primitiveString", entry.Value);
         }
 
         [Theory]
@@ -1411,8 +1407,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(1);
-            entry.Properties.First(p=>p.Name == "id").Value.As<Decimal>().Should().Be(1);
+            Assert.Single(entry.Properties);
+            Assert.Equal(1m, entry.Properties.First(p=>p.Name == "id").Value);
         }
 
         [Theory]
@@ -1440,9 +1436,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            resourceMember.Properties.Count().Should().Be(1);
-            resourceMember.Properties.First(p => p.Name == "id").Value.As<Decimal>().Should().Be(1);
-            primitiveMember.Value.Should().Be("primitiveString");
+            Assert.Single(resourceMember.Properties);
+            Assert.Equal(1m, resourceMember.Properties.First(p => p.Name == "id").Value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
         }
 
         #endregion
@@ -1471,11 +1467,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
+            Assert.Equal(4, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp12"":""bbb222"",""abc"":null}");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1488,7 +1484,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -1514,11 +1510,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
+            Assert.Equal(4, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp12"":""bbb222"",""abc"":null}");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
@@ -1531,7 +1527,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -1556,11 +1552,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            Assert.Equal((complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp12"":""bbb222"",""abc"":null}");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1573,7 +1569,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"MyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"MyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}");
         }
         #endregion
 
@@ -1606,13 +1602,13 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal)).
-                Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal)).TypeAnnotation.TypeName.Should().Be("Edm.Untyped");
-            complex2.Should().BeNull();
+            Assert.Equal(4, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal)).
+                Value as ODataUntypedValue).RawValue, @"{""MyProp12"":""bbb222"",""abc"":null}");
+            Assert.Equal("Edm.Untyped", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal)).TypeAnnotation.TypeName);
+            Assert.Null(complex2);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1625,7 +1621,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp1@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp1@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -1651,12 +1647,12 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal)).
-                Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal)).TypeAnnotation.TypeName.Should().Be("Edm.Untyped");
+            Assert.Equal(4, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal)).
+                Value as ODataUntypedValue).RawValue, @"{""MyProp12"":""bbb222"",""abc"":null}");
+            Assert.Equal("Edm.Untyped", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal)).TypeAnnotation.TypeName);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
@@ -1669,7 +1665,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp2@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp2@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -1694,13 +1690,13 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             });
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            complex1.Properties
-                .Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal)).TypeAnnotation.TypeName.Should().Be("Edm.Untyped");
+            Assert.Equal(3, entry.Properties.Count());
+            Assert.Equal((entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            Assert.Equal((complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal))
+                .Value as ODataUntypedValue).RawValue, @"{""MyProp12"":""bbb222"",""abc"":null}");
+            Assert.Equal("Edm.Untyped", complex1.Properties
+                .Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal)).TypeAnnotation.TypeName);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1713,7 +1709,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"UndeclaredMyEdmUntypedProp3@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}");
+            Assert.Equal(result, "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"UndeclaredMyEdmUntypedProp3@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}");
         }
         #endregion
 
@@ -1740,10 +1736,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                     }
                 }
             }, /*readUntypedAsValue*/ true);
-            entry.Properties.Count().Should().Be(1);
-            undeclaredProperty.TypeName.Should().Be("Server.NS.Undeclared");
-            undeclaredProperty.Properties.Count().Should().Be(1);
-            undeclaredProperty.Properties.Single(p => p.Name == "Id").Value.Should().Be("123");
+
+            Assert.Single(entry.Properties);
+            Assert.Equal("Server.NS.Undeclared", undeclaredProperty.TypeName);
+            Assert.Single(undeclaredProperty.Properties);
+            Assert.Equal("123", undeclaredProperty.Properties.Single(p => p.Name == "Id").Value);
         }
 
         [Fact]
@@ -1752,7 +1749,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,
                 ""UndeclaredProperty"":{""@odata.type"":""#Collection(Server.NS.Undeclared)"", ""Id"":""123""}}";
             Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected("Collection(Server.NS.Undeclared)"));
+            test.Throws<ODataException>(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected("Collection(Server.NS.Undeclared)"));
         }
 
         [Fact]
@@ -1781,10 +1778,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                     level++;
                 }
             }, /*readUntypedAsValue*/ true);
-            entry.Properties.Count().Should().Be(1);
-            undeclaredProperty.TypeName.Should().Be("Server.NS.Undeclared");
-            undeclaredProperty.Properties.Count().Should().Be(1);
-            undeclaredProperty.Properties.Single(p => p.Name == "Id").Value.Should().Be("123");
+
+            Assert.Single(entry.Properties);
+            Assert.Equal("Server.NS.Undeclared", undeclaredProperty.TypeName);
+            Assert.Single(undeclaredProperty.Properties);
+            Assert.Equal("123", undeclaredProperty.Properties.Single(p => p.Name == "Id").Value);
         }
 
         [Fact]
@@ -1793,7 +1791,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,
                 ""UndeclaredProperty@odata.type"":""#Server.NS.Undeclared"",""UndeclaredProperty"":[{""Id"":""123""}]}";
             Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected("Server.NS.Undeclared"));
+            test.Throws<ODataException>(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected("Server.NS.Undeclared"));
         }
 
         [Fact]
@@ -1802,7 +1800,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             string contextUrl = @"http://www.sampletest.com/$metadata#Collection(Server.NS.Undefined)";
             string payload = "{\"@odata.context\":\"" + contextUrl + "\",\"id\":1}";
             Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(contextUrl, "Resource"));
+            test.Throws<ODataException>(ODataErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(contextUrl, "Resource"));
         }
 
         [Fact]
@@ -1811,7 +1809,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             string contextUrl = @"http://www.sampletest.com/$metadata#Server.NS.Undefined";
             string payload = "{\"@odata.context\":\"" + contextUrl + "\",\"value\":[{\"id\":1}]}";
             Action test = () => this.ReadCollectionPayload(payload, reader => { });
-            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(contextUrl, "ResourceSet"));
+            test.Throws<ODataException>(ODataErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(contextUrl, "ResourceSet"));
         }
         
         #endregion

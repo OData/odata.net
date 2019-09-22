@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -16,7 +15,7 @@ namespace Microsoft.OData.Tests
         public void SelectedPropertiesShouldReturnEntireSubtreeWhenMetadataDocumentUriIsNull()
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
-            settings.SelectedProperties.IsEntireSubtree().Should().BeTrue();
+            Assert.True(settings.SelectedProperties.IsEntireSubtree());
         }
 
         [Fact]
@@ -24,7 +23,7 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             settings.SetServiceDocumentUri(new Uri("http://service/$metadata"));
-            settings.SelectedProperties.IsEntireSubtree().Should().BeTrue();
+            Assert.True(settings.SelectedProperties.IsEntireSubtree());
         }
     }
 }

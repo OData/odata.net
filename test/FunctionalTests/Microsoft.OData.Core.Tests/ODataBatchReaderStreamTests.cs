@@ -5,13 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.MultipartMixed;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
-using System.Collections.Generic;
 
 namespace Microsoft.OData.Tests
 {
@@ -21,7 +20,7 @@ namespace Microsoft.OData.Tests
         public void ReadFirstNonEmptyLineShouldThrowOnEndOfInput()
         {
             Action readAtEndOfInput = () => CreateBatchReaderStream("").ReadFirstNonEmptyLine();
-            readAtEndOfInput.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataBatchReaderStream_UnexpectedEndOfInput);
+            readAtEndOfInput.Throws<ODataException>(ErrorStrings.ODataBatchReaderStream_UnexpectedEndOfInput);
         }
 
         [Fact]
@@ -31,28 +30,28 @@ namespace Microsoft.OData.Tests
 
 
 First non-empty line";
-            CreateBatchReaderStream(input).ReadFirstNonEmptyLine().Should().Be("First non-empty line");
+            Assert.Equal("First non-empty line", CreateBatchReaderStream(input).ReadFirstNonEmptyLine());
         }
 
         [Fact]
         public void ReadFirstNonEmptyLineShouldNotIncludeTrailingCRLF()
         {
             const string input = "First non-empty line\r\n";
-            CreateBatchReaderStream(input).ReadFirstNonEmptyLine().Should().Be("First non-empty line");
+            Assert.Equal("First non-empty line", CreateBatchReaderStream(input).ReadFirstNonEmptyLine());
         }
 
         [Fact]
         public void ReadFirstNonEmptyLineShouldNotIncludeTrailingLF()
         {
             const string input = "First non-empty line\n";
-            CreateBatchReaderStream(input).ReadFirstNonEmptyLine().Should().Be("First non-empty line");
+            Assert.Equal("First non-empty line", CreateBatchReaderStream(input).ReadFirstNonEmptyLine());
         }
 
         [Fact]
         public void ReadFirstNonEmptyLineShouldNotIncludeTrailingCR()
         {
             const string input = "First non-empty line\r";
-            CreateBatchReaderStream(input).ReadFirstNonEmptyLine().Should().Be("First non-empty line");
+            Assert.Equal("First non-empty line", CreateBatchReaderStream(input).ReadFirstNonEmptyLine());
         }
 
         [Fact]
@@ -60,7 +59,7 @@ First non-empty line";
         {
             const string input = @"First non-empty line
 Second line";
-            CreateBatchReaderStream(input).ReadFirstNonEmptyLine().Should().Be("First non-empty line");
+            Assert.Equal("First non-empty line", CreateBatchReaderStream(input).ReadFirstNonEmptyLine());
         }
 
         private static ODataMultipartMixedBatchReaderStream CreateBatchReaderStream(string inputString)

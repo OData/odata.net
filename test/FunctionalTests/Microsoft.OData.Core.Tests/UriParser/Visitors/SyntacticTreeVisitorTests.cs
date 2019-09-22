@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
@@ -24,7 +23,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitAllToken = () => visitor.Visit(new AllToken(null, null, null));
-            visitAllToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitAllToken);
         }
 
         [Fact]
@@ -32,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitAnyToken = () => visitor.Visit(new AnyToken(null, null, null));
-            visitAnyToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitAnyToken);
         }
 
         [Fact]
@@ -40,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitBinaryOperatorToken = () => visitor.Visit(new BinaryOperatorToken(BinaryOperatorKind.Equal, new LiteralToken(1), new LiteralToken(1)));
-            visitBinaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitBinaryOperatorToken);
         }
 
         [Fact]
@@ -48,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitCastToken = () => visitor.Visit(new DottedIdentifierToken("stuff", null));
-            visitCastToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitCastToken);
         }
 
         [Fact]
@@ -56,7 +55,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitExpandToken = () => visitor.Visit(new ExpandToken(null));
-            visitExpandToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitExpandToken);
         }
 
         [Fact]
@@ -66,7 +65,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             Action visitExpandTermToken = () => visitor.Visit(new ExpandTermToken(new NonSystemToken("stuff", null, null), 
                                                                                   null /*selectOption*/,
                                                                                   null /*expandOption*/));
-            visitExpandTermToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitExpandTermToken);
         }
 
         [Fact]
@@ -74,7 +73,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitFunctionCallToken = () => visitor.Visit(new FunctionCallToken("stuff", null));
-            visitFunctionCallToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitFunctionCallToken);
         }
 
         [Fact]
@@ -82,7 +81,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitLiteralToken = () => visitor.Visit(new LiteralToken(1));
-            visitLiteralToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitLiteralToken);
         }
 
         [Fact]
@@ -90,7 +89,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitNonRootSegmentToken = () => visitor.Visit(new InnerPathToken("stuff", null, null));
-            visitNonRootSegmentToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitNonRootSegmentToken);
         }
 
         [Fact]
@@ -98,7 +97,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitOrderByToken = () => visitor.Visit(new OrderByToken(new LiteralToken(1), OrderByDirection.Ascending));
-            visitOrderByToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitOrderByToken);
         }
 
         [Fact]
@@ -106,7 +105,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitPropertyAccessToken = () => visitor.Visit(new EndPathToken("stuff", null));
-            visitPropertyAccessToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitPropertyAccessToken);
         }
 
         [Fact]
@@ -114,7 +113,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitQueryOptionToken = () => visitor.Visit(new CustomQueryOptionToken("stuff", "stuff"));
-            visitQueryOptionToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitQueryOptionToken);
         }
 
         [Fact]
@@ -122,7 +121,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitRangeVariableToken = () => visitor.Visit(new RangeVariableToken("stuff"));
-            visitRangeVariableToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitRangeVariableToken);
         }
 
         [Fact]
@@ -130,7 +129,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitSelectToken = () => visitor.Visit(new SelectToken(properties: null));
-            visitSelectToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitSelectToken);
         }
 
         [Fact]
@@ -138,7 +137,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken(1)));
-            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitUnaryOperatorToken);
         }
 
         [Fact]
@@ -146,7 +145,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateToken(new List<AggregateTokenBase>()));
-            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitUnaryOperatorToken);
         }
 
         [Fact]
@@ -154,7 +153,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateExpressionToken(new EndPathToken("Identifier", null), AggregationMethodDefinition.Sum, "Alias"));
-            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitUnaryOperatorToken);
         }
 
         [Fact]
@@ -162,7 +161,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(new GroupByToken(new List<EndPathToken>(), null));
-            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitUnaryOperatorToken);
         }
 
         [Fact]
@@ -171,12 +170,12 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             ComputeToken token = new ComputeToken(new List<ComputeExpressionToken>());
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(token);
-            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitUnaryOperatorToken);
             Action acceptToken = () => token.Accept<string>(visitor);
-            acceptToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(acceptToken);
 
             ComputeVisitor computer = new ComputeVisitor();
-            token.Accept<string>(computer).ShouldBeEquivalentTo(typeof(ComputeToken).ToString());
+            Assert.Equal(typeof(ComputeToken).ToString(), token.Accept<string>(computer));
         }
 
         [Fact]
@@ -185,12 +184,12 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             ComputeExpressionToken token = new ComputeExpressionToken(new EndPathToken("Identifier", null), "Id");
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(token);
-            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(visitUnaryOperatorToken);
             Action acceptToken = () => token.Accept<string>(visitor);
-            acceptToken.ShouldThrow<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(acceptToken);
 
             ComputeVisitor computer = new ComputeVisitor();
-            token.Accept<string>(computer).ShouldBeEquivalentTo(typeof(ComputeExpressionToken).ToString());
+            Assert.Equal(typeof(ComputeExpressionToken).ToString(), token.Accept<string>(computer));
         }
 
         private class ComputeVisitor : SyntacticTreeVisitor<string>

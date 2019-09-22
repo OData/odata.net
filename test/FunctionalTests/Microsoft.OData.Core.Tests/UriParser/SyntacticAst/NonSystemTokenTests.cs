@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -18,14 +17,14 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
         public void IdentifierCannotBeNull()
         {
             Action createWithNullIdentifier = () => new NonSystemToken(null, null, null);
-            createWithNullIdentifier.ShouldThrow<Exception>(Error.ArgumentNull("identifier").ToString());
+            Assert.Throws<ArgumentNullException>("identifier", createWithNullIdentifier);
         }
 
         [Fact]
         public void IdentifierSetCorrectly()
         {
             NonSystemToken token = new NonSystemToken("stuff", null, null);
-            token.Identifier.Should().Be("stuff");
+            Assert.Equal("stuff", token.Identifier);
         }
 
         [Fact]
@@ -35,16 +34,18 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
             namedValues.Add(new NamedValue("name", new LiteralToken("value")));
 
             NonSystemToken token = new NonSystemToken("stuff", namedValues, null);
-            token.NamedValues.Should().OnlyContain(x => x.Name == "name" && x.Value.Value.As<string>() == "value");
+            var nameValue = Assert.Single(token.NamedValues);
+            Assert.Equal("name", nameValue.Name);
+            Assert.Equal("value", Assert.IsType<LiteralToken>(nameValue.Value).Value);
         }
 
         [Fact]
         public void IsNamespaceOrContainerQualifiedIsCorrect()
         {
             NonSystemToken token1 = new NonSystemToken("Fully.Qualified.Namespace", null, null);
-            token1.IsNamespaceOrContainerQualified().Should().BeTrue();
+            Assert.True(token1.IsNamespaceOrContainerQualified());
             NonSystemToken token2 = new NonSystemToken("namespace", null, null);
-            token2.IsNamespaceOrContainerQualified().Should().BeFalse();
+            Assert.False(token2.IsNamespaceOrContainerQualified());
         }
     }
 }

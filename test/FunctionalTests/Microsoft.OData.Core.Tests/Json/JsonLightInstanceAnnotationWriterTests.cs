@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -62,19 +61,19 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) =>
             {
-                name.Should().Be("@" + term);
+                Assert.Equal("@" + term, name);
                 verifierCalls++;
             };
             this.valueWriter.WritePrimitiveVerifier = (value, reference) =>
             {
-                value.Should().Be(integerValue.Value);
-                reference.Should().BeNull();
-                verifierCalls.Should().Be(1);
+                Assert.Equal(integerValue.Value, value);
+                Assert.Null(reference);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, integerValue));
-            verifierCalls.Should().Be(2);
+            Assert.Equal(2, verifierCalls);
         }
 
         [Fact]
@@ -88,31 +87,31 @@ namespace Microsoft.OData.Tests.Json
             {
                 if (verifierCalls == 0)
                 {
-                    name.Should().Be(term + "@odata.type");
+                    Assert.Equal(term + "@odata.type", name);
                     verifierCalls++;
                 }
                 else if (verifierCalls == 2)
                 {
-                    name.Should().Be("@" + term);
+                    Assert.Equal("@" + term, name);
                     verifierCalls++;
                 }
                 else throw new Exception("unexpected call to JsonWriter.WriteName");
             };
             this.jsonWriter.WriteValueVerifier = (value) =>
             {
-                verifierCalls.Should().Be(1);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.valueWriter.WritePrimitiveVerifier = (value, reference) =>
             {
-                value.Should().Be(date.Value);
-                reference.Should().BeNull();
-                verifierCalls.Should().Be(3);
+                Assert.Equal(date.Value, value);
+                Assert.Null(reference);
+                Assert.Equal(3, verifierCalls);
                 verifierCalls++;
             };
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, date));
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
         }
 
         [Fact]
@@ -126,31 +125,31 @@ namespace Microsoft.OData.Tests.Json
             {
                 if (verifierCalls == 0)
                 {
-                    name.Should().Be(term + "@odata.type");
+                    Assert.Equal(term + "@odata.type", name);
                     verifierCalls++;
                 }
                 else if (verifierCalls == 2)
                 {
-                    name.Should().Be("@" + term);
+                    Assert.Equal("@" + term, name);
                     verifierCalls++;
                 }
                 else throw new Exception("unexpected call to JsonWriter.WriteName");
             };
             this.jsonWriter.WriteValueVerifier = (value) =>
             {
-                verifierCalls.Should().Be(1);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.valueWriter.WritePrimitiveVerifier = (value, reference) =>
             {
-                value.Should().Be(dateTime.Value);
-                reference.Should().BeNull();
-                verifierCalls.Should().Be(3);
+                Assert.Equal(dateTime.Value, value);
+                Assert.Null(reference);
+                Assert.Equal(3, verifierCalls);
                 verifierCalls++;
             };
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, dateTime));
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
         }
 
         [Fact]
@@ -164,31 +163,31 @@ namespace Microsoft.OData.Tests.Json
             {
                 if (verifierCalls == 0)
                 {
-                    name.Should().Be(term + "@odata.type");
+                    Assert.Equal(term + "@odata.type", name);
                     verifierCalls++;
                 }
                 else if (verifierCalls == 2)
                 {
-                    name.Should().Be("@" + term);
+                    Assert.Equal("@" + term, name);
                     verifierCalls++;
                 }
                 else throw new Exception("unexpected call to JsonWriter.WriteName");
             };
             this.jsonWriter.WriteValueVerifier = (value) =>
             {
-                verifierCalls.Should().Be(1);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.valueWriter.WritePrimitiveVerifier = (value, reference) =>
             {
-                value.Should().Be(time.Value);
-                reference.Should().BeNull();
-                verifierCalls.Should().Be(3);
+                Assert.Equal(time.Value, value);
+                Assert.Null(reference);
+                Assert.Equal(3, verifierCalls);
                 verifierCalls++;
             };
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, time));
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
         }
 
         [Fact]
@@ -202,31 +201,31 @@ namespace Microsoft.OData.Tests.Json
             {
                 if (verifierCalls == 0)
                 {
-                    name.Should().Be(term + "@odata.type");
+                    Assert.Equal(term + "@odata.type", name);
                     verifierCalls++;
                 }
                 else if (verifierCalls == 2)
                 {
-                    name.Should().Be("@" + term);
+                    Assert.Equal("@" + term, name);
                     verifierCalls++;
                 }
                 else throw new Exception("unexpected call to JsonWriter.WriteName");
             };
             this.jsonWriter.WriteValueVerifier = (value) =>
             {
-                verifierCalls.Should().Be(1);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.valueWriter.WritePrimitiveVerifier = (value, reference) =>
             {
-                value.Should().Be(point.Value);
-                reference.Should().BeNull();
-                verifierCalls.Should().Be(3);
+                Assert.Equal(point.Value, value);
+                Assert.Null(reference);
+                Assert.Equal(3, verifierCalls);
                 verifierCalls++;
             };
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, point));
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
         }
 
         [Fact]
@@ -238,19 +237,19 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) =>
             {
-                name.Should().Be("@" + term);
+                Assert.Equal("@" + term, name);
                 verifierCalls++;
             };
             this.valueWriter.WriteResourceValueVerifier = (value, reference, isOpenProperty, dupChecker) =>
             {
-                value.Should().Be(resourceValue);
-                reference.Should().BeNull();
-                isOpenProperty.Should().BeTrue();
-                verifierCalls.Should().Be(1);
+                Assert.Equal(resourceValue, value);
+                Assert.Null(reference);
+                Assert.True(isOpenProperty);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, resourceValue));
-            verifierCalls.Should().Be(2);
+            Assert.Equal(2, verifierCalls);
         }
 
         [Fact]
@@ -263,24 +262,24 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) =>
             {
-                name.Should().Be("@" + term);
+                Assert.Equal("@" + term, name);
                 verifierCalls++;
             };
             this.valueWriter.WriteCollectionVerifier = (value, reference, valueTypeReference, isTopLevelProperty, isInUri, isOpenProperty) =>
             {
-                value.Should().Be(collectionValue);
-                reference.Should().BeNull();
-                valueTypeReference.Should().NotBeNull();
-                valueTypeReference.IsCollection().Should().BeTrue();
-                valueTypeReference.AsCollection().ElementType().IsString().Should().BeTrue();
-                isOpenProperty.Should().BeTrue();
-                isTopLevelProperty.Should().BeFalse();
-                isInUri.Should().BeFalse();
-                verifierCalls.Should().Be(1);
+                Assert.Equal(collectionValue, value);
+                Assert.Null(reference);
+                Assert.NotNull(valueTypeReference);
+                Assert.True(valueTypeReference.IsCollection());
+                Assert.True(valueTypeReference.AsCollection().ElementType().IsString());
+                Assert.True(isOpenProperty);
+                Assert.False(isTopLevelProperty);
+                Assert.False(isInUri);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, collectionValue));
-            verifierCalls.Should().Be(2);
+            Assert.Equal(2, verifierCalls);
         }
 
         [Fact]
@@ -291,16 +290,16 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) =>
             {
-                name.Should().Be("@" + term);
+                Assert.Equal("@" + term, name);
                 verifierCalls++;
             };
             this.valueWriter.WriteNullVerifier = () =>
             {
-                verifierCalls.Should().Be(1);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
-            verifierCalls.Should().Be(2);
+            Assert.Equal(2, verifierCalls);
         }
 
         [Fact]
@@ -312,18 +311,18 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) =>
             {
-                name.Should().Be("@" + term);
+                Assert.Equal("@" + term, name);
                 verifierCalls++;
             };
             this.valueWriter.WriteEnumVerifier = (value, expectedType) =>
             {
-                value.Should().Be(enumValue);
-                expectedType.Definition.Should().Be(CoreVocabularyModel.Instance.SchemaElements.FirstOrDefault(e => e.FullName() == "Org.OData.Core.V1.Permission"));
-                verifierCalls.Should().Be(1);
+                Assert.Equal(enumValue, value);
+                Assert.Same(expectedType.Definition, CoreVocabularyModel.Instance.SchemaElements.FirstOrDefault(e => e.FullName() == "Org.OData.Core.V1.Permission"));
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, enumValue));
-            verifierCalls.Should().Be(2);
+            Assert.Equal(2, verifierCalls);
         }
 
         [Fact]
@@ -340,16 +339,16 @@ namespace Microsoft.OData.Tests.Json
             const string term = "My.Namespace.Nullable";
             this.jsonWriter.WriteNameVerifier = (name) =>
             {
-                name.Should().Be("@" + term);
+                Assert.Equal("@" + term, name);
                 verifierCalls++;
             };
             this.valueWriter.WriteNullVerifier = () =>
             {
-                verifierCalls.Should().Be(1);
+                Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
-            verifierCalls.Should().Be(2);
+            Assert.Equal(2, verifierCalls);
         }
 
         [Fact]
@@ -363,7 +362,7 @@ namespace Microsoft.OData.Tests.Json
 
             string term = "My.Namespace.NotNullable";
             Action action = () => this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(term, "Edm.Int32"));
+            action.Throws<ODataException>(ODataErrorStrings.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(term, "Edm.Int32"));
         }
 
         [Fact]
@@ -376,7 +375,7 @@ namespace Microsoft.OData.Tests.Json
                 verifierCalls++;
             };
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(Enumerable.Empty<ODataInstanceAnnotation>());
-            verifierCalls.Should().Be(0);
+            Assert.Equal(0, verifierCalls);
         }
 
         [Fact]
@@ -391,7 +390,7 @@ namespace Microsoft.OData.Tests.Json
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations);
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
         }
 
         [Fact]
@@ -407,13 +406,13 @@ namespace Microsoft.OData.Tests.Json
             InstanceAnnotationWriteTracker tracker = new InstanceAnnotationWriteTracker();
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
 
-            tracker.IsAnnotationWritten("term.one").Should().BeTrue();
-            tracker.IsAnnotationWritten("term.two").Should().BeTrue();
+            Assert.True(tracker.IsAnnotationWritten("term.one"));
+            Assert.True(tracker.IsAnnotationWritten("term.two"));
         }
 
         [Fact]
@@ -428,15 +427,15 @@ namespace Microsoft.OData.Tests.Json
             InstanceAnnotationWriteTracker tracker = new InstanceAnnotationWriteTracker();
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            verifierCalls.Should().Be(2);
+            Assert.Equal(2, verifierCalls);
 
             annotations.Add(new ODataInstanceAnnotation("term.two", new ODataPrimitiveValue("456")));
-            tracker.IsAnnotationWritten("term.two").Should().BeFalse();
+            Assert.False(tracker.IsAnnotationWritten("term.two"));
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
 
-            tracker.IsAnnotationWritten("term.two").Should().BeTrue();
+            Assert.True(tracker.IsAnnotationWritten("term.two"));
         }
 
         [Fact]
@@ -451,7 +450,7 @@ namespace Microsoft.OData.Tests.Json
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
 
             Action test = () => this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("term.one"));
+            test.Throws<ODataException>(Strings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("term.one"));
         }
 
         [Fact]
@@ -466,7 +465,7 @@ namespace Microsoft.OData.Tests.Json
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations);
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
         }
 
         [Fact]
@@ -481,12 +480,12 @@ namespace Microsoft.OData.Tests.Json
 
             InstanceAnnotationWriteTracker tracker = new InstanceAnnotationWriteTracker();
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            verifierCalls.Should().Be(2);
-            tracker.IsAnnotationWritten("term.one").Should().BeTrue();
+            Assert.Equal(2, verifierCalls);
+            Assert.True(tracker.IsAnnotationWritten("term.one"));
 
             annotations.Add(new ODataInstanceAnnotation("term.one", new ODataPrimitiveValue(456)));
             Action test = () => this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("term.one"));
+            test.Throws<ODataException>(Strings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("term.one"));
         }
 
         [Fact]
@@ -501,14 +500,14 @@ namespace Microsoft.OData.Tests.Json
 
             InstanceAnnotationWriteTracker tracker = new InstanceAnnotationWriteTracker();
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            verifierCalls.Should().Be(2);
-            tracker.IsAnnotationWritten("term.one").Should().BeTrue();
+            Assert.Equal(2, verifierCalls);
+            Assert.True(tracker.IsAnnotationWritten("term.one"));
 
             annotations.Add(new ODataInstanceAnnotation("term.One", new ODataPrimitiveValue(456)));
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            verifierCalls.Should().Be(4);
-            tracker.IsAnnotationWritten("term.one").Should().BeTrue();
-            tracker.IsAnnotationWritten("term.One").Should().BeTrue();
+            Assert.Equal(4, verifierCalls);
+            Assert.True(tracker.IsAnnotationWritten("term.one"));
+            Assert.True(tracker.IsAnnotationWritten("term.One"));
         }
 
         [Fact]
@@ -522,13 +521,13 @@ namespace Microsoft.OData.Tests.Json
 
             this.valueWriter.WritePrimitiveVerifier = (o, reference) =>
             {
-                reference.Should().NotBeNull();
-                reference.IsDateTimeOffset().Should().BeTrue();
+                Assert.NotNull(reference);
+                Assert.True(reference.IsDateTimeOffset());
                 calledWritePrimitive = true;
             };
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
-            calledWritePrimitive.Should().BeTrue();
+            Assert.True(calledWritePrimitive);
         }
 
         [Fact]
@@ -549,7 +548,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 if (writingTypeName)
                 {
-                    s.Should().Be("#GeographyPoint");
+                    Assert.Equal(s, "#GeographyPoint");
                     wroteTypeName = true;
                 }
             };
@@ -558,7 +557,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
 
-            wroteTypeName.Should().BeTrue();
+            Assert.True(wroteTypeName);
         }
 
         [Fact]
@@ -573,14 +572,14 @@ namespace Microsoft.OData.Tests.Json
 
             this.valueWriter.WriteResourceValueVerifier = (resourceValue, typeReference, isOpenProperty, dupChecker) =>
             {
-                typeReference.Should().NotBeNull();
-                typeReference.IsComplex().Should().BeTrue();
-                typeReference.AsComplex().FullName().Should().Be("My.Namespace.ComplexType");
+                Assert.NotNull(typeReference);
+                Assert.True(typeReference.IsComplex());
+                Assert.Equal(typeReference.AsComplex().FullName(), "My.Namespace.ComplexType");
                 calledWriteResource = true;
             };
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
-            calledWriteResource.Should().BeTrue();
+            Assert.True(calledWriteResource);
         }
 
         [Fact]
@@ -598,21 +597,21 @@ namespace Microsoft.OData.Tests.Json
 
             this.valueWriter.WriteCollectionVerifier = (collectionValue, typeReference, valueTypeReference, isTopLevel, isOpenProperty, dupChecker) =>
             {
-                typeReference.Should().NotBeNull();
-                typeReference.IsCollection().Should().BeTrue();
-                typeReference.AsCollection().ElementType().IsString().Should().BeTrue();
-                valueTypeReference.Should().NotBeNull();
-                valueTypeReference.IsCollection().Should().BeTrue();
-                valueTypeReference.AsCollection().ElementType().IsString().Should().BeTrue();
+                Assert.NotNull(typeReference);
+                Assert.True(typeReference.IsCollection());
+                Assert.True(typeReference.AsCollection().ElementType().IsString());
+                Assert.NotNull(valueTypeReference);
+                Assert.True(valueTypeReference.IsCollection());
+                Assert.True(valueTypeReference.AsCollection().ElementType().IsString());
                 calledWriteCollection = true;
             };
 
             var result = WriteInstanceAnnotation(instanceAnnotation, this.referencedModel);
-            result.Should().Contain("{\"@My.Namespace.CollectionTerm\":[]}");
-            result.Should().NotContain("odata.type");
+            Assert.Contains("{\"@My.Namespace.CollectionTerm\":[]}", result);
+            Assert.DoesNotContain("odata.type", result);
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
-            calledWriteCollection.Should().BeTrue();
+            Assert.True(calledWriteCollection);
         }
 
         #region type name short-span integration tests
@@ -623,7 +622,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.MyDateTimeOffsetTerm", new ODataPrimitiveValue(DateTimeOffset.MinValue)),
                 EdmCoreModel.Instance);
 
-            result.Should().Contain("\"custom.namespace.MyDateTimeOffsetTerm@odata.type\":\"#DateTimeOffset\"");
+            Assert.Contains("\"custom.namespace.MyDateTimeOffsetTerm@odata.type\":\"#DateTimeOffset\"", result);
         }
 
         [Fact]
@@ -636,7 +635,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.MyDateTimeOffsetTerm", new ODataPrimitiveValue(DateTimeOffset.MinValue)),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            result.Should().NotContain("odata.type");
+            Assert.DoesNotContain("odata.type", result);
         }
 
         [Fact]
@@ -650,7 +649,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.MyDateTimeOffsetTerm", new ODataPrimitiveValue(Guid.Empty)),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.Guid", /*nullability*/ "False", "Edm.DateTimeOffset", /*nullability*/ "True"));
+            testSubject.Throws<ODataException>(ODataErrorStrings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.Guid", /*nullability*/ "False", "Edm.DateTimeOffset", /*nullability*/ "True"));
         }
 
         [Fact]
@@ -666,7 +665,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.AddressTerm", new ODataResourceValue() { TypeName = "custom.namespace.Address", Properties = Enumerable.Empty<ODataProperty>() }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            result.Should().NotContain("odata.type");
+            Assert.DoesNotContain("odata.type", result);
         }
 
         [Fact]
@@ -681,7 +680,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.AddressTerm", new ODataResourceValue() { TypeName = "custom.namespace.Address", Properties = Enumerable.Empty<ODataProperty>() }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            result.Should().Contain("\"@custom.namespace.AddressTerm\":{\"@odata.type\":\"#custom.namespace.Address\"");
+            Assert.Contains("\"@custom.namespace.AddressTerm\":{\"@odata.type\":\"#custom.namespace.Address\"", result);
         }
 
         [Fact]
@@ -694,8 +693,8 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new object[] { 42, 54 }, TypeName = "Collection(Int32)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            result.Should().Contain("{\"@custom.namespace.CollectionValueTerm\":[42,54]}");
-            result.Should().NotContain("odata.type");
+            Assert.Contains("{\"@custom.namespace.CollectionValueTerm\":[42,54]}", result);
+            Assert.DoesNotContain("odata.type", result);
         }
 
         [Fact]
@@ -707,7 +706,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new object[] { 42, 54 }, TypeName = "Collection(Int32)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            result.Should().Contain("\"custom.namespace.CollectionValueTerm@odata.type\":\"#Collection(Int32)\"");
+            Assert.Contains("\"custom.namespace.CollectionValueTerm@odata.type\":\"#Collection(Int32)\"", result);
         }
 
         [Fact]
@@ -720,7 +719,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.AddressTerm", new ODataResourceValue() { TypeName = "custom.namespace.Address", Properties = Enumerable.Empty<ODataProperty>() }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("custom.namespace.Address"));
+            testSubject.Throws<ODataException>(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("custom.namespace.Address"));
         }
 
         [Fact]
@@ -733,7 +732,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.CollectionOfAddressTerm", new ODataCollectionValue { Items = Enumerable.Empty<ODataResourceValue>(), TypeName = "Collection(custom.namespace.Address)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("Collection(custom.namespace.Address)"));
+            testSubject.Throws<ODataException>(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("Collection(custom.namespace.Address)"));
         }
 
         private static string WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, IEdmModel model)
@@ -769,7 +768,7 @@ namespace Microsoft.OData.Tests.Json
             this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name == "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
-            verifierCalls.Should().Be(2);
+            Assert.Equal(2, verifierCalls);
         }
 
         [Fact]
@@ -783,7 +782,7 @@ namespace Microsoft.OData.Tests.Json
             this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name != "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
-            verifierCalls.Should().Be(0);
+            Assert.Equal(0, verifierCalls);
         }
 
         [Fact]
@@ -802,7 +801,7 @@ namespace Microsoft.OData.Tests.Json
             defaultValueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
 
             defaultAnnotationWriter.WriteInstanceAnnotations(annotations);
-            verifierCalls.Should().Be(0);
+            Assert.Equal(0, verifierCalls);
         }
 
         [Fact]
@@ -821,7 +820,7 @@ namespace Microsoft.OData.Tests.Json
             defaultValueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
 
             defaultAnnotationWriter.WriteInstanceAnnotations(annotations, new InstanceAnnotationWriteTracker(), true);
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
         }
 
         [Fact]
@@ -840,7 +839,7 @@ namespace Microsoft.OData.Tests.Json
             defaultValueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
 
             defaultAnnotationWriter.WriteInstanceAnnotationsForError(annotations);
-            verifierCalls.Should().Be(4);
+            Assert.Equal(4, verifierCalls);
         }
 
         private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel model, IJsonWriter jsonWriter, ODataMessageWriterSettings settings = null)

@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -16,7 +15,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void CacheV3ShouldBeODataVersionV3()
         {
-            this.cache[ODataVersion.V4].Should().Be(ODataVersion.V4);
+            Assert.Equal(ODataVersion.V4, this.cache[ODataVersion.V4]);
         }
     }
 }

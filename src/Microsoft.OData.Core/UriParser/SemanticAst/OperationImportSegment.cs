@@ -102,7 +102,7 @@ namespace Microsoft.OData.UriParser
             : this()
         {
             // DEVNOTE: This ctor is only used in Select and Expand currently.
-            ExceptionUtils.CheckArgumentNotNull(operationImports, "operations");
+            ExceptionUtils.CheckArgumentNotNull(operationImports, "operationImports");
             this.operationImports = new ReadOnlyCollection<IEdmOperationImport>(operationImports.ToList());
 
             // check for empty after we copy locally, so that we don't do multiple enumeration of input

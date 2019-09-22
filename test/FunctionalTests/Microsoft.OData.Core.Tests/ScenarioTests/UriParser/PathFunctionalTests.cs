@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
@@ -29,7 +28,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Dogs");
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetDogsSet());
-            path.NavigationSource().Should().Be(HardCodedTestModel.GetDogsSet());
+            Assert.Same(HardCodedTestModel.GetDogsSet(), path.NavigationSource());
         }
 
         [Fact]
@@ -37,16 +36,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Boss");
             path.LastSegment.ShouldBeSingletonSegment(HardCodedTestModel.GetBossSingleton());
-            path.NavigationSource().Should().Be(HardCodedTestModel.GetBossSingleton());
+            Assert.Same(HardCodedTestModel.GetBossSingleton(), path.NavigationSource());
         }
 
         [Fact]
         public void SimpleServiceOperation()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("GetCoolPeople");
-            path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolPeople()).
-                And.EntitySet.Should().Be(HardCodedTestModel.GetPeopleSet());
-            path.NavigationSource().Should().Be(HardCodedTestModel.GetPeopleSet());
+            Assert.Same(HardCodedTestModel.GetPeopleSet(),
+                path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolPeople()).EntitySet);
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), path.NavigationSource());
         }
 
         [Fact]
@@ -54,22 +53,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(7)/MyDog/$ref");
             path.LastSegment.ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetPersonMyDogNavProp());
-            path.NavigationSource().Should().Be(HardCodedTestModel.GetDogsSet());
+            Assert.Same(HardCodedTestModel.GetDogsSet(), path.NavigationSource());
         }
 
         [Fact]
         public void SimpleActionImport()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("ResetAllData");
-            path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForResetAllData()).
-                And.EntitySet.Should().BeNull();
+            var result = path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForResetAllData()).
+                EntitySet;
+            Assert.Null(result);
         }
 
         [Fact]
         public void VoidServiceOperationIsNotComposable()
         {
             Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("GetNothing/foo");
-            parsePath.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("GetNothing"));
+            parsePath.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("GetNothing"));
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void PrimitiveServiceOperationIsComposable()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("GetSomeNumber/$value");
-            path.FirstSegment.Should().BeOfType<OperationImportSegment>();
+            Assert.IsType<OperationImportSegment>(path.FirstSegment);
             path.LastSegment.ShouldBeValueSegment();
         }
 
@@ -91,21 +91,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void PrimitiveServiceOperationShouldAllowButIgnoreEmptyParens()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("GetSomeNumber()");
-            path.LastSegment.Should().BeOfType<OperationImportSegment>();
+            Assert.IsType<OperationImportSegment>(path.LastSegment);
         }
 
         [Fact]
         public void PrimitiveServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
             Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("GetSomeNumber/foo");
-            parsePath.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("GetSomeNumber", "foo"));
+            parsePath.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("GetSomeNumber", "foo"));
         }
 
         [Fact]
         public void ComplexServiceOperationIsComposable()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("GetSomeAddress/City");
-            path.FirstSegment.Should().BeOfType<OperationImportSegment>();
+            Assert.IsType<OperationImportSegment>(path.FirstSegment);
             path.LastSegment.ShouldBePropertySegment(HardCodedTestModel.GetAddressCityProperty());
         }
 
@@ -113,30 +113,30 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ComplexServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
             Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("GetSomeAddress/foo");
-            parsePath.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
+            parsePath.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
         }
 
         [Fact]
         public void EntityServiceOperationIsComposable()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("GetCoolestPerson/Fully.Qualified.Namespace.Employee");
-            path.FirstSegment.Should().BeOfType<OperationImportSegment>();
+            Assert.IsType<OperationImportSegment>(path.FirstSegment);
             path.LastSegment.ShouldBeTypeSegment(HardCodedTestModel.GetEmployeeType());
         }
 
         [Fact]
         public void EntityServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("GetCoolestPerson/foo", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("GetCoolestPerson/foo", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
         }
 
         [Fact]
         public void EntitySetServiceOperationIsComposable()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("GetCoolPeople(1)");
-            path.FirstSegment.Should().BeOfType<OperationImportSegment>();
-            path.LastSegment.ShouldBeSimpleKeySegment(1)
-                .NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            Assert.IsType<OperationImportSegment>(path.FirstSegment);
+            var ns = path.LastSegment.ShouldBeSimpleKeySegment(1).NavigationSource;
+            Assert.Same(ns, HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SimpleKeyLookup()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Dogs(1)");
-            path.LastSegment.ShouldBeSimpleKeySegment(1).NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
+            Assert.Same(HardCodedTestModel.GetDogsSet(), path.LastSegment.ShouldBeSimpleKeySegment(1).NavigationSource);
         }
 
         [Fact]
@@ -189,28 +189,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SimpleTemplatedKeyLookupWithKeysAsSegments()
         {
             var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/{k1}")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash, EnableUriTemplateParsing = true }.ParsePath();
-            var keySegment = path.LastSegment.As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{k1}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            Assert.Equal("ID", keypair.Key);
+
+            var uriExpression = Assert.IsType<UriTemplateExpression>(keypair.Value);
+            Assert.Equal("{k1}", uriExpression.LiteralText);
+            var keyType = (keySegment.EdmType as IEdmEntityType).DeclaredKey.Single().Type;
+            Assert.Same(keyType, uriExpression.ExpectedType);
         }
 
         [Fact]
         public void UseTemplatedKeyWithPathTemplateSegmentInKeyAsSegmentShouldWork()
         {
             var paths = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/{k1}/{k2}")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash, EnableUriTemplateParsing = true }.ParsePath().ToList();
-            var keySegment = paths[1].As<KeySegment>();
+            var keySegment = Assert.IsType<KeySegment>(paths[1]);
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-            keypair.Key.Should().Be("ID");
-            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{k1}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
-            paths[2].As<PathTemplateSegment>().LiteralText.Should().Be("{k2}");
+            Assert.Equal("ID", keypair.Key);
+
+            var uriExpression = Assert.IsType<UriTemplateExpression>(keypair.Value);
+            Assert.Equal("{k1}", uriExpression.LiteralText);
+            var keyType = (keySegment.EdmType as IEdmEntityType).DeclaredKey.Single().Type;
+            Assert.Same(keyType, uriExpression.ExpectedType);
+
+            var pathTemplateSegment = Assert.IsType<PathTemplateSegment>(paths[2]);
+            Assert.Equal("{k2}", pathTemplateSegment.LiteralText);
         }
 
         [Fact]
         public void UseEscapeMarkerWithTemplatedKeyTypeSegmentInKeyAsSegmentShouldBeParsedAsPathTemplateSegment()
         {
             var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/$/{k1}")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash, EnableUriTemplateParsing = true }.ParsePath();
-            path.LastSegment.As<PathTemplateSegment>().LiteralText.Should().Be("{k1}");
+            var pathTemplateSegment = Assert.IsType<PathTemplateSegment>(path.LastSegment);
+            Assert.Equal("{k1}", pathTemplateSegment.LiteralText);
         }
 
         [Fact]
@@ -218,7 +229,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/service.svc"), new Uri("Dogs", UriKind.Relative));
             var path = parser.ParsePath();
-            parser.ServiceRoot.ShouldBeEquivalentTo(new Uri("http://gobbldygook/service.svc/"));
+            Assert.Equal(new Uri("http://gobbldygook/service.svc/"), parser.ServiceRoot);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetDogsSet());
         }
 
@@ -241,14 +252,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/People/1/$/$/MyDog/$/$/MyPeople/$/$/$count/$/$")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.LastSegment.ShouldBeCountSegment();
-            path.NavigationSource().Should().BeNull();
+            Assert.Null(path.NavigationSource());
         }
 
         [Fact]
         public void PathThatIsOnlyEscapeSegments()
         {
             var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/$")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
-            path.Should().BeEmpty();
+            Assert.Empty(path);
         }
 
         [Fact]
@@ -285,7 +296,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void BoundActionOnEntity()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Dogs(1)/Fully.Qualified.Namespace.Walk");
-            path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetDogWalkAction()).And.EntitySet.Should().BeNull();
+            Assert.Null(path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetDogWalkAction()).EntitySet);
         }
 
         [Fact]
@@ -293,9 +304,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Paint action returns a collection of Paintings that the Person created
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.Paint");
-            path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetPersonPaintAction()).
-                And.EntitySet.Should().BeSameAs(HardCodedTestModel.GetPaintingsSet());
-            path.NavigationSource().Should().Be(HardCodedTestModel.GetPaintingsSet());
+            Assert.Same(path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetPersonPaintAction()).
+                EntitySet, HardCodedTestModel.GetPaintingsSet());
+            Assert.Same(path.NavigationSource(), HardCodedTestModel.GetPaintingsSet());
         }
 
         [Fact]
@@ -353,20 +364,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionWithNamedParameter()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.HasDog(inOffice=true)");
-            var opSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForEmployeeHasDogWithTwoParameters())
-                .And.ShouldHaveParameterCount(1);
-            opSegment.And.Parameters.SingleOrDefault(p => p.Name == "inOffice").Value.As<ConvertNode>().Source.As<ConstantNode>().Value.Should().Be(true);
+            var opSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForEmployeeHasDogWithTwoParameters());
+            opSegment.ShouldHaveParameterCount(1);
+            var source = Assert.IsType<ConvertNode>(opSegment.Parameters.SingleOrDefault(p => p.Name == "inOffice").Value).Source;
+            var constantNode = Assert.IsType<ConstantNode>(source);
+            Assert.Equal(true, constantNode.Value);
         }
 
         [Fact]
         public void FunctionWithMultipleNamedParameters()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.HasDog(inOffice=true, name='Fido')");
-            var opSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters())
-                  .And.ShouldHaveParameterCount(2);
+            var opSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters());
+            opSegment.ShouldHaveParameterCount(2);
             //.And.ShouldHaveConstantParameter("inOffice", true)
-            opSegment.And.ShouldHaveConstantParameter("name", "Fido");
-            opSegment.And.Parameters.SingleOrDefault(p => p.Name == "inOffice").Value.As<ConvertNode>().Source.As<ConstantNode>().Value.Should().Be(true);
+            opSegment.ShouldHaveConstantParameter("name", "Fido");
+            var source = Assert.IsType<ConvertNode>(opSegment.Parameters.SingleOrDefault(p => p.Name == "inOffice").Value).Source;
+            var constantNode = Assert.IsType<ConstantNode>(source);
+            Assert.Equal(true, constantNode.Value);
         }
 
         [Fact]
@@ -374,9 +389,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.HasDog(inOffice=@x, name=@y)");
             path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters())
-                .And.ShouldHaveParameterCount(2)
-                .And.ShouldHaveSegmentOfParameterAliasNode("inOffice", "@x")
-                .And.ShouldHaveSegmentOfParameterAliasNode("name", "@y");
+                .ShouldHaveParameterCount(2)
+                .ShouldHaveSegmentOfParameterAliasNode("inOffice", "@x")
+                .ShouldHaveSegmentOfParameterAliasNode("name", "@y");
         }
 
         [Fact]
@@ -421,7 +436,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionBoundToPrimitiveCannotBeInvoked()
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/ID/IsPrime()", ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("ID", "IsPrime()"));
+            parse.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("ID", "IsPrime()"));
         }
 
         [Fact]
@@ -430,8 +445,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             var path = PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/Color/Test.IsDark()", model);
 
-            path.Should().HaveCount(4);
-            path.LastSegment.ShouldBeOperationSegment(model.FindOperations("Test.IsDark").Single()).And.Operations.Should().HaveCount(1);
+            Assert.Equal(4, path.Count);
+            var operationSegment = path.LastSegment.ShouldBeOperationSegment(model.FindOperations("Test.IsDark").Single());
+            Assert.Single(operationSegment.Operations);
         }
 
         [Fact]
@@ -440,8 +456,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             var path = PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/Color/Test.GetMostPopularVegetableWithThisColor/ID", model);
 
-            path.Should().HaveCount(5);
-            path.LastSegment.ShouldBePropertySegment(model.FindType("Test.Vegetable").As<IEdmEntityType>().Properties().Single(p => p.Name == "ID"));
+            var entityType = model.FindType("Test.Vegetable") as IEdmEntityType;
+            Assert.NotNull(entityType);
+            Assert.Equal(5, path.Count);
+            var propertySegment = path.LastSegment.ShouldBePropertySegment(entityType.Properties().Single(p => p.Name == "ID"));
         }
 
         [Fact]
@@ -450,68 +468,85 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             var path = PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/Color/Test.IsDarkerThan(other={\"Blue\":128})", model);
 
-            path.Should().HaveCount(4);
+            Assert.Equal(4, path.Count);
             var isDarkerThanFunction = model.FindOperations("Test.IsDarkerThan").ToList().FirstOrDefault();
-            path.LastSegment.ShouldBeOperationSegment(isDarkerThanFunction).And.Operations.Should().HaveCount(1);
+            var operationSegment = path.LastSegment.ShouldBeOperationSegment(isDarkerThanFunction);
+            Assert.Single(operationSegment.Operations);
         }
 
         // JSON (light) literals
-
         [Fact]
         public void FunctionWithComplexParameterThatUsesSingleQuotesInsteadOfDoubleWorks()
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={'Street' : 'stuff', 'City' : 'stuff'})");
-            var parameter = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
-                And.Parameters.Single().Value.As<ConvertNode>();
-            parameter.TypeReference.FullName().Should().Be("Fully.Qualified.Namespace.Address");
-            parameter.Source.As<ConstantNode>().Value.Should().Be("{'Street' : 'stuff', 'City' : 'stuff'}");
+            var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).Parameters;
+            var parameter = Assert.Single(parameters);
+            var convertNode = Assert.IsType<ConvertNode>(parameter.Value);
+            Assert.Equal("Fully.Qualified.Namespace.Address", convertNode.TypeReference.FullName());
+            var constNode = Assert.IsType<ConstantNode>(convertNode.Source);
+            Assert.Equal("{'Street' : 'stuff', 'City' : 'stuff'}", constNode.Value);
         }
 
         [Fact]
         public void FunctionWithComplexParameterInJsonWithTypeNameWorks()
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})");
-            var parameter = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
-                And.Parameters.Single().Value.As<ConvertNode>();
-            parameter.TypeReference.FullName().Should().Be("Fully.Qualified.Namespace.Address");
-            parameter.Source.As<ConstantNode>().Value.Should().Be("{\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
+            var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).Parameters;
+            var parameter = Assert.Single(parameters);
+            var convertNode = Assert.IsType<ConvertNode>(parameter.Value);
+            Assert.Equal("Fully.Qualified.Namespace.Address", convertNode.TypeReference.FullName());
+
+            var constNode = Assert.IsType<ConstantNode>(convertNode.Source);
+            Assert.Equal(constNode.Value, "{\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
         }
 
         [Fact]
         public void FunctionWithComplexParameterInJsonWithNoTypeNameWorks()
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})");
-            var parameter = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
-                And.Parameters.Single().Value.As<ConvertNode>();
-            parameter.TypeReference.FullName().Should().Be("Fully.Qualified.Namespace.Address");
-            parameter.Source.As<ConstantNode>().Value.Should().Be("{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
+
+            var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).Parameters;
+            var parameter = Assert.Single(parameters);
+            var convertNode = Assert.IsType<ConvertNode>(parameter.Value);
+            Assert.Equal("Fully.Qualified.Namespace.Address", convertNode.TypeReference.FullName());
+
+            var constNode = Assert.IsType<ConstantNode>(convertNode.Source);
+            Assert.Equal(constNode.Value, "{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
         }
         
         [Fact]
         public void FunctionWithCollectionParameterInJsonWorks()
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.OwnsTheseDogs(dogNames=[\"Barky\",\"Junior\"])");
-            var parameterValue = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).And.Parameters.Single().Value;
-            parameterValue.As<ConstantNode>().Value.Should().BeOfType<ODataCollectionValue>();
-            parameterValue.As<ConstantNode>().LiteralText.Should().Be("[\"Barky\",\"Junior\"]");
-            parameterValue.As<ConstantNode>().Value.As<ODataCollectionValue>().Items.Should().Contain("Barky").And.Contain("Junior");
+            var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).Parameters;
+            var parameter = Assert.Single(parameters);
+            var constNode = Assert.IsType<ConstantNode>(parameter.Value);
+
+            var collectionValue = Assert.IsType<ODataCollectionValue>(constNode.Value);
+            Assert.Equal(constNode.LiteralText, "[\"Barky\",\"Junior\"]");
+            Assert.Contains("Barky", collectionValue.Items);
+            Assert.Contains("Junior", collectionValue.Items);
         }
 
         [Fact]
         public void FunctionWithCollectionOfComplexParameterInJsonWorks()
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddresses(addresses=[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}])");
-            var parameterValue = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses()).And.Parameters.Single();
-            var innerParameterNode = parameterValue.As<OperationSegmentParameter>().Value.As<ConvertNode>();
-            innerParameterNode.Source.As<ConstantNode>().Value.Should().Be("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
-            innerParameterNode.TypeReference.FullName().Should().Be("Collection(Fully.Qualified.Namespace.Address)");
+
+            var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses()).Parameters;
+            var parameter = Assert.Single(parameters);
+            var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
+            var innerParameterNode = Assert.IsType<ConvertNode>(segmentParameter.Value);
+            var constNode = Assert.IsType<ConstantNode>(innerParameterNode.Source);
+            Assert.Equal(constNode.Value, "[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Address)", innerParameterNode.TypeReference.FullName());
         }
 
         [Fact]
         public void AmbiguousFunctionCallThrows()
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/Test.Foo(p2='1')", ModelBuildingHelpers.GetModelWithFunctionOverloadsWithSameParameterNames());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Test.Foo", "p2"));
+            parse.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Test.Foo", "p2"));
         }
 
         [Fact]
@@ -525,7 +560,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ActionBoundToPrimitiveThrows()
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/ID/Subtract", ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("ID", "Subtract"));
+            parse.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("ID", "Subtract"));
         }
 
         [Fact]
@@ -538,7 +573,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionWithMultipleParametersWithTheSameNameThrows()
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Foo(p2='stuff', p2='1')", ModelBuildingHelpers.GetModelWithFunctionWithDuplicateParameterNames());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
+            parse.Throws<ODataException>(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
         }
 
         #endregion
@@ -547,33 +582,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void StructuralPropertyOnEntity()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Birthdate");
-            path.LastSegment.ShouldBePropertySegment(HardCodedTestModel.GetPersonBirthdateProp()).
-                And.EdmType.Should().BeSameAs(HardCodedTestModel.GetPersonBirthdateProp().Type.Definition);
+            var segment = path.LastSegment.ShouldBePropertySegment(HardCodedTestModel.GetPersonBirthdateProp());
+            Assert.Same(HardCodedTestModel.GetPersonBirthdateProp().Type.Definition, segment.EdmType);
         }
 
         [Fact]
         public void OpenPropertyOnOpenEntity()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Paintings(1)/SomeOpenProp");
-            path.LastSegment.ShouldBeDynamicPathSegment("SomeOpenProp")
-                .And.EdmType.Should().BeNull();
+            var segment = path.LastSegment.ShouldBeDynamicPathSegment("SomeOpenProp");
+            Assert.Null(segment.EdmType);
         }
 
         [Fact]
         public void OpenPropertyOnOpenComplex()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/MyOpenAddress/SomeOpenProp");
-            path.LastSegment.ShouldBeDynamicPathSegment("SomeOpenProp")
-                .And.EdmType.Should().BeNull();
+            var segment = path.LastSegment.ShouldBeDynamicPathSegment("SomeOpenProp");
+            Assert.Null(segment.EdmType);
         }
 
         [Fact]
         public void NavigationPropertyOnEntity()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/MyDog");
-            path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp()).
-                And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
-            path.NavigationSource().Should().Be(HardCodedTestModel.GetDogsSet());
+            var segment = path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp());
+            Assert.Same(HardCodedTestModel.GetDogsSet(), segment.NavigationSource);
+            Assert.Same(HardCodedTestModel.GetDogsSet(), path.NavigationSource());
         }
 
         [Fact]
@@ -589,8 +624,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetTestModelForNavigationPropertyBinding();
             Action parse = () => new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/KeyGene")).ParsePath();
-            parse.ShouldThrow<ODataException>().WithMessage("The target Entity Set of Navigation Property 'KeyGene' could not be found. This is most likely an error in the IEdmModel.").
-                And.GetType().Should().Be<ODataException>();
+            parse.Throws<ODataException>("The target Entity Set of Navigation Property 'KeyGene' could not be found. This is most likely an error in the IEdmModel.");
         }
 
         [Fact]
@@ -625,17 +659,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void CastShouldBeAllowedOnSingleEntity()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(2)/Fully.Qualified.Namespace.Employee");
-            path.LastSegment.ShouldBeTypeSegment(HardCodedTestModel.GetEmployeeType()).
-                And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
-            path.NavigationSource().Should().Be(HardCodedTestModel.GetPeopleSet());
+            var typeSegment = path.LastSegment.ShouldBeTypeSegment(HardCodedTestModel.GetEmployeeType());
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), typeSegment.NavigationSource);
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), path.NavigationSource());
         }
 
         [Fact]
         public void CastShouldBeAllowedOnEntityCollection()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People/Fully.Qualified.Namespace.Employee");
-            path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(new EdmEntityTypeReference(HardCodedTestModel.GetEmployeeType(), false))).
-                And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            var typeSegment = path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(new EdmEntityTypeReference(HardCodedTestModel.GetEmployeeType(), false)));
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), typeSegment.NavigationSource);
         }
 
         [Fact]
@@ -680,9 +714,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void KeyLookupsCanBeOnCollectionNavigationProperties()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Dogs(1)/MyPeople(2)");
-            path.LastSegment.ShouldBeSimpleKeySegment(2)
-                .NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
-            path.NavigationSource().Should().Be(HardCodedTestModel.GetPeopleSet());
+            var keySegment = path.LastSegment.ShouldBeSimpleKeySegment(2);
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), keySegment.NavigationSource);
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), path.NavigationSource());
         }
 
         [Fact]
@@ -704,7 +738,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void KeysDuplicatedError()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("Dogs( ID  =  1, ID  =  1)");
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
+            action.Throws<ODataException>(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
         }
 
         [Fact]
@@ -793,7 +827,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Action parse = () => parser.ParsePath();
 
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -802,7 +836,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$42/$ref"));
             parser.BatchReferenceCallback = contentId =>
             {
-                contentId.Should().Be("$42");
+                Assert.Equal("$42", contentId);
                 return new BatchReferenceSegment(contentId, HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
             };
 
@@ -854,62 +888,62 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // long
             PathFunctionalTestsUtil.RunParsePath("GetPet1(id=102)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet1())
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter("id", 102L);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter("id", 102L);
             PathFunctionalTestsUtil.RunParsePath("GetPet1(id=102L)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet1())
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter("id", 102L);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter("id", 102L);
 
             // float
             PathFunctionalTestsUtil.RunParsePath("GetPet2(id=102)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet2())
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter("id", 102F);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter("id", 102F);
             PathFunctionalTestsUtil.RunParsePath("GetPet2(id=102F)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet2())
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter("id", 102F);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter("id", 102F);
 
             // double
             PathFunctionalTestsUtil.RunParsePath("GetPet3(id=102.0)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet3())
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter("id", 102D);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter("id", 102D);
             PathFunctionalTestsUtil.RunParsePath("GetPet3(id=102D)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet3())
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter("id", 102D);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter("id", 102D);
 
             // decimal
             PathFunctionalTestsUtil.RunParsePath("GetPet4(id=102.0)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4())
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter("id", 102M);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter("id", 102M);
             PathFunctionalTestsUtil.RunParsePath("GetPet4(id=102M)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4())
-                .And.ShouldHaveParameterCount(1)
-                .And.ShouldHaveConstantParameter("id", 102M);
+                .ShouldHaveParameterCount(1)
+                .ShouldHaveConstantParameter("id", 102M);
         }
 
         [Fact]
         public void FunctionParameterDoublePrecision()
         {
-            PathFunctionalTestsUtil.RunParsePath("GetPet3(id=1.0099999904632568)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet3()).And.ShouldHaveParameterCount(1).And.ShouldHaveConstantParameter("id", 1.0099999904632568D);
+            PathFunctionalTestsUtil.RunParsePath("GetPet3(id=1.0099999904632568)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet3()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", 1.0099999904632568D);
         }
 
         [Fact]
         public void FunctionParameterSinglePrecision()
         {
-            PathFunctionalTestsUtil.RunParsePath("GetPet2(id=-3.40282347E+38)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet2()).And.ShouldHaveParameterCount(1).And.ShouldHaveConstantParameter("id", -3.40282347E+38F);
+            PathFunctionalTestsUtil.RunParsePath("GetPet2(id=-3.40282347E+38)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet2()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", -3.40282347E+38F);
         }
 
         [Fact]
         public void FunctionParameterDecimalBound()
         {
-            PathFunctionalTestsUtil.RunParsePath("GetPet4(id=79228162514264337593543950335)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.ShouldHaveParameterCount(1).And.ShouldHaveConstantParameter("id", 79228162514264337593543950335M);
-            PathFunctionalTestsUtil.RunParsePath("GetPet4(id=-79228162514264337593543950335)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.ShouldHaveParameterCount(1).And.ShouldHaveConstantParameter("id", -79228162514264337593543950335M);
+            PathFunctionalTestsUtil.RunParsePath("GetPet4(id=79228162514264337593543950335)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", 79228162514264337593543950335M);
+            PathFunctionalTestsUtil.RunParsePath("GetPet4(id=-79228162514264337593543950335)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", -79228162514264337593543950335M);
         }
 
         [Fact]
         public void FunctionParameterBooleanTrue()
         {
-            PathFunctionalTestsUtil.RunParsePath("GetPet5(id=true)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet5()).And.ShouldHaveParameterCount(1).And.ShouldHaveConstantParameter("id", true);
+            PathFunctionalTestsUtil.RunParsePath("GetPet5(id=true)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet5()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", true);
 
-            PathFunctionalTestsUtil.RunParsePath("GetPet5(id=false)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet5()).And.ShouldHaveParameterCount(1).And.ShouldHaveConstantParameter("id", false);
+            PathFunctionalTestsUtil.RunParsePath("GetPet5(id=false)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet5()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", false);
 
             PathFunctionalTestsUtil.RunParseErrorPath("GetPet5(id=1)", ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Boolean"));
         }
@@ -933,7 +967,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             //PathFunctionalTestsUtil.RunParseErrorPath("GetPet4(id=102F)", Strings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure("Edm.Decimal", "102"));
 
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("GetPet4(id=79228162514264337593543950336)");
-            parse.ShouldThrow<OverflowException>();
+            Assert.Throws<OverflowException>(parse);
         }
 
         [Fact]
@@ -996,7 +1030,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("$batch");
             path.LastSegment.ShouldBeBatchSegment();
-            path.NavigationSource().Should().BeNull();
+            Assert.Null(path.NavigationSource());
         }
 
         [Fact]
@@ -1036,7 +1070,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CountCannotAppearOnSingleNavigationProperties()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyDog/$count",
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/MyDog/$count",
                 "The request URI is not valid. $count cannot be applied to the segment 'MyDog' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
         }
 
@@ -1045,20 +1079,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("$metadata");
             path.LastSegment.ShouldBeMetadataSegment();
-            path.NavigationSource().Should().BeNull();
+            Assert.Null(path.NavigationSource());
         }
 
         [Fact]
         public void NothingCanAppearAfterMetadata()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("$metadata/Dogs", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$metadata"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$metadata/Dogs", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$metadata"));
         }
 
         [Fact]
         public void MetadataCannotAppearAfterAnotherSegment()
         {
             // TODO: We can improve error message drastically when we refactor path parsing
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/$metadata", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$metadata"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/$metadata", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$metadata"));
         }
 
         [Fact]
@@ -1099,46 +1133,46 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/MyAddress/$value");
             path.LastSegment.ShouldBeValueSegment();
-            path.NavigationSource().Should().BeNull();
+            Assert.Null(path.NavigationSource());
         }
 
         [Fact]
         public void ValueRequestOnServiceRootIsInvalid()
         {
             // TODO: improve error message wehn refactoring / cleaning up code
-            PathFunctionalTestsUtil.RunParseErrorPath("$value", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$value"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$value", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$value"));
         }
 
         [Fact]
         public void NothingCanAppearAfterValue()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyAddress/$value/City", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/MyAddress/$value/City", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
         }
 
         [Fact]
         public void NothingCanAppearAfterEnumValue()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Pet2Set(1)/PetColorPattern/$value/City", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("Pet2Set(1)/PetColorPattern/$value/City", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
         }
 
         [Fact]
         public void ReservedWordsAreCaseSensitive()
         {
             // TODO: Should the error message talk about $ being special? Would this be OK if there was a $metaDATA EntitySet? Is that allowed?
-            PathFunctionalTestsUtil.RunParseErrorPath("$metaDATA", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$metaDATA"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$metaDATA", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$metaDATA"));
         }
 
         [Fact]
         public void DirectValueServiceOperationWithKeyLookupIsInvalid()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("DirectValuePrimitiveServiceOperation(ID='Bob')", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("DirectValuePrimitiveServiceOperation"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("DirectValuePrimitiveServiceOperation(ID='Bob')", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("DirectValuePrimitiveServiceOperation"));
         }
 
         [Fact]
         public void SystemQueryOptionsThatDoNotBelongInPathAreBlocked()
         {
             // TODO: Should the error message talk about $ being special? 
-            PathFunctionalTestsUtil.RunParseErrorPath("$top", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$top"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$top", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$top"));
         }
 
         [Fact]
@@ -1147,14 +1181,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$42/MyPeople"));
             parser.BatchReferenceCallback = contentId =>
             {
-                contentId.Should().Be("$42");
+                Assert.Equal("$42", contentId);
                 return new BatchReferenceSegment(contentId, HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
             };
             var path = parser.ParsePath();
 
             Assert.Equal("$42", path.FirstSegment.ShouldBeBatchReferenceSegment(HardCodedTestModel.GetDogType()).ContentId);
             path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
-            path.FirstSegment.TranslateWith(new DetermineNavigationSourceTranslator()).Should().Be(HardCodedTestModel.GetDogsSet());
+            Assert.Same(HardCodedTestModel.GetDogsSet(), path.FirstSegment.TranslateWith(new DetermineNavigationSourceTranslator()));
         }
 
         //[Fact(Skip = "#833: Throw exception when $value appears after a stream.")]
@@ -1173,7 +1207,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Dogs(1)/Nicknames/$value");
 
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
+            parse.Throws<ODataException>(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
         }
 
         [Fact]
@@ -1181,7 +1215,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Dogs/$value");
 
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
+            parse.Throws<ODataException>(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
         }
 
         [Fact]
@@ -1215,7 +1249,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Prop.With.Periods");
             path.LastSegment.ShouldBePropertySegment(HardCodedTestModel.GetPersonPropWithPeriods());
-            path.NavigationSource().Should().BeNull();
+            Assert.Null(path.NavigationSource());
         }
 
         [Fact]
@@ -1223,7 +1257,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Paintings(1)/Not.A.Type.Or.Operation");
             path.LastSegment.ShouldBeDynamicPathSegment("Not.A.Type.Or.Operation");
-            path.NavigationSource().Should().BeNull();
+            Assert.Null(path.NavigationSource());
         }
 
         [Fact]
@@ -1256,7 +1290,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("https://www.tomatosoup.com:1234/OData/V3/", UriKind.Absolute), new Uri("https://www.tomatosoup.com:1234/OData/V3/Dogs"));
             var path = parser.ParsePath();
 
-            path.Should().HaveCount(1);
+            Assert.Single(path);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetDogsSet());
         }
 
@@ -1266,7 +1300,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("https://www.tomatosoup.com:1234/OData/V3/", UriKind.Absolute), new Uri("https://www.differentwebsite.com:1234/OData/V3/Dogs"));
             Action parse = () => parser.ParsePath();
 
-            parse.ShouldNotThrow();
+            parse.DoesNotThrow();
         }
 
         [Fact]
@@ -1278,7 +1312,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, path);
             Action parse = () => parser.ParsePath();
 
-            parse.ShouldThrow<Exception>().WithMessage(ODataErrorStrings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(path, serviceRoot));
+            parse.Throws<ODataException>(ODataErrorStrings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(path, serviceRoot));
         }
 
         [Fact]
@@ -1286,7 +1320,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => new ODataUriParser(HardCodedTestModel.TestModel, null, new Uri("https://www.tomatosoup.com:1234/OData/V3/Dogs"));
 
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_NeedServiceRootForThisOverload);
+            parse.Throws<ODataException>(ODataErrorStrings.UriParser_NeedServiceRootForThisOverload);
         }
 
         [Fact]
@@ -1310,14 +1344,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CannotExplicitlyAddBindingParameterToFunction()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.HasDog(person=$it)", Strings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/Fully.Qualified.Namespace.HasDog(person=$it)", Strings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
         }
 
         [Fact]
         public void CannotAddEntityAsBindingParameterToFunction()
         {
             // bindable functions don't require the first parameter be specified, since its already implied in the path.
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.HasDog(person=People(1))", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/Fully.Qualified.Namespace.HasDog(person=People(1))", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
         }
 
         [Fact]
@@ -1325,13 +1359,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // in this case all I really care about is that it doesn't throw... baselining this is overkill.
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.AllMyFriendsDogs()/Fully.Qualified.Namespace.OwnerOfFastestDog()/MyDog/MyPeople/Fully.Qualified.Namespace.AllHaveDog(inOffice=true)");
-            path.Count.Should().Be(7);
+            Assert.Equal(7, path.Count);
         }
 
         [Fact]
         public void FunctionBindingFailsIfParameterNameIsWronglyCased()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Fully.Qualified.Namespace.HasDog(inOfFiCe=true)", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("Fully.Qualified.Namespace.HasDog(inOfFiCe=true)", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
         }
 
         [Fact]
@@ -1346,9 +1380,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var point = GeometryPoint.Create(1, 2);
             var path = PathFunctionalTestsUtil.RunParsePath("Paintings(0)/Fully.Qualified.Namespace.GetColorAtPosition(position=geometry'" + SpatialHelpers.WriteSpatial(point) + "',includeAlpha=null)");
-            path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetColorAtPositionFunction())
-                .And.ShouldHaveConstantParameter("position", point)
-                .And.ShouldHaveConstantParameter("includeAlpha", (object)null);
+            var operationSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetColorAtPositionFunction());
+            operationSegment.ShouldHaveConstantParameter("position", point);
+            operationSegment.ShouldHaveConstantParameter("includeAlpha", (object)null);
         }
 
         [Fact]
@@ -1356,9 +1390,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var point = GeographyPoint.Create(1, 2);
             var path = PathFunctionalTestsUtil.RunParsePath("People(0)/Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)");
-            path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetNearbyPriorAddressesFunction())
-                .And.ShouldHaveConstantParameter("currentLocation", point)
-                .And.ShouldHaveConstantParameter("limit", (object)null);
+            var operationSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetNearbyPriorAddressesFunction());
+            operationSegment.ShouldHaveConstantParameter("currentLocation", point);
+            operationSegment.ShouldHaveConstantParameter("limit", (object)null);
         }
 
         [Fact]
@@ -1366,7 +1400,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldgook/"), new Uri("http://gobbldgook/GetCoolPeople(id=test, limit=1)"));
             Action action = () => parser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_ParameterNotInScope("id=test"));
+            action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_ParameterNotInScope("id=test"));
         }
 
         #region enum property in path
@@ -1374,22 +1408,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void EnumPropertyOfEntity()
         {
             ODataPath path = PathFunctionalTestsUtil.RunParsePath("Pet2Set(1)/PetColorPattern");
-            path.Count.Should().Be(3);
+            Assert.Equal(3, path.Count);
             List<ODataPathSegment> segments = path.ToList();
-            segments[2].TargetKind.Should().Be(RequestTargetKind.Enum);
-            segments[2].EdmType.Should().Be(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"));
+            Assert.Equal(RequestTargetKind.Enum, segments[2].TargetKind);
+            Assert.Same(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"), segments[2].EdmType);
         }
 
         [Fact]
         public void EnumPropertyValueOfEntity()
         {
             ODataPath path = PathFunctionalTestsUtil.RunParsePath("Pet2Set(1)/PetColorPattern/$value");
-            path.Count.Should().Be(4);
+            Assert.Equal(4, path.Count);
             List<ODataPathSegment> segments = path.ToList();
-            segments[2].TargetKind.Should().Be(RequestTargetKind.Enum);
-            segments[2].EdmType.Should().Be(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"));
-            segments[3].TargetKind.Should().Be(RequestTargetKind.EnumValue);
-            segments[3].EdmType.Should().Be(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"));
+            Assert.Equal(RequestTargetKind.Enum, segments[2].TargetKind);
+            Assert.Same(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"), segments[2].EdmType);
+            Assert.Equal(RequestTargetKind.EnumValue, segments[3].TargetKind);
+            Assert.Same(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"), segments[3].EdmType);
         }
         #endregion
 
@@ -1398,33 +1432,45 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParsePath_NullableEnumInFunction()
         {
             ODataPath path = PathFunctionalTestsUtil.RunParsePath("GetPetCountNullable(colorPattern=Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped')");
-            path.Count.Should().Be(1);
-            var paramNode = path.Single().As<OperationImportSegment>().Parameters.Single().As<OperationSegmentParameter>();
-            paramNode.Name.Should().Be("colorPattern");
-            paramNode.Value.As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
-            paramNode.Value.As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22"); // BlueYellowStriped
+            var segment = Assert.Single(path);
+            var parameter = Assert.IsType<OperationImportSegment>(segment).Parameters.Single();
+            var paramNode = Assert.IsType<OperationSegmentParameter>(parameter);
+            Assert.Equal("colorPattern", paramNode.Name);
+            var constNode = Assert.IsType<ConstantNode>(paramNode.Value);
+            var enumValue = Assert.IsType<ODataEnumValue>(constNode.Value);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
+            Assert.Equal("22", enumValue.Value); // BlueYellowStriped
         }
 
         [Fact]
         public void ParsePath_EnumInFunction()
         {
             ODataPath path = PathFunctionalTestsUtil.RunParsePath("GetPetCount(colorPattern=Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped')");
-            path.Count.Should().Be(1);
-            var paramNode = path.Single().As<OperationImportSegment>().Parameters.Single().As<OperationSegmentParameter>();
-            paramNode.Name.Should().Be("colorPattern");
-            paramNode.Value.As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
-            paramNode.Value.As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22"); // BlueYellowStriped
+            var segment = Assert.Single(path);
+            var parameter = Assert.IsType<OperationImportSegment>(segment).Parameters.Single();
+            var paramNode = Assert.IsType<OperationSegmentParameter>(parameter);
+            Assert.Equal("colorPattern", paramNode.Name);
+
+            var constNode = Assert.IsType<ConstantNode>(paramNode.Value);
+            var enumValue = Assert.IsType<ODataEnumValue>(constNode.Value);
+
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
+            Assert.Equal("22", enumValue.Value); // BlueYellowStriped
         }
 
         [Fact]
         public void ParsePath_EnumInFunction_undefined()
         {
             ODataPath path = PathFunctionalTestsUtil.RunParsePath("GetPetCount(colorPattern=Fully.Qualified.Namespace.ColorPattern'99999222')");
-            path.Count.Should().Be(1);
-            var paramNode = path.Single().As<OperationImportSegment>().Parameters.Single().As<OperationSegmentParameter>();
-            paramNode.Name.Should().Be("colorPattern");
-            paramNode.Value.As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
-            paramNode.Value.As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("99999222");
+            var segment = Assert.Single(path);
+            var parameter = Assert.IsType<OperationImportSegment>(segment).Parameters.Single();
+            var paramNode = Assert.IsType<OperationSegmentParameter>(parameter);
+            Assert.Equal("colorPattern", paramNode.Name);
+
+            var constNode = Assert.IsType<ConstantNode>(paramNode.Value);
+            var enumValue = Assert.IsType<ODataEnumValue>(constNode.Value);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
+            Assert.Equal("99999222", enumValue.Value);
         }
         #endregion
 
@@ -1433,11 +1479,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParsePath_EnumAsKey()
         {
             ODataPath path = PathFunctionalTestsUtil.RunParsePath("PetCategories(Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped')");
-            path.Count.Should().Be(2);
-            var keyInfo = path.Last().As<KeySegment>().Keys.Single();
-            keyInfo.Key.Should().Be("PetCategorysColorPattern");
-            keyInfo.Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
-            keyInfo.Value.As<ODataEnumValue>().Value.Should().Be("22");
+            Assert.Equal(2, path.Count);
+            var keyInfo = Assert.IsType<KeySegment>(path.Last()).Keys.Single();
+            Assert.Equal("PetCategorysColorPattern", keyInfo.Key);
+
+            var enumValue = Assert.IsType<ODataEnumValue>(keyInfo.Value);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
+            Assert.Equal("22", enumValue.Value);
         }
         #endregion
 
@@ -1455,7 +1503,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void KeyOfIncompatibleTypeDefinitionShouldFail()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("Pet6Set(ID='abc')");
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            action.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -1469,7 +1517,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionImportWithImcompatibleTypeDefinitionShouldFail()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("GetPet6(id='abc')");
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.String", "Fully.Qualified.Namespace.IdType"));
+            action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.String", "Fully.Qualified.Namespace.IdType"));
         }
 
         #endregion

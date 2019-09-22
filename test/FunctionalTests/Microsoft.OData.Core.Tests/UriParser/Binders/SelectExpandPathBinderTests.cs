@@ -5,11 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using System.Linq;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -24,8 +24,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             PathSegmentToken firstNonTypeToken;
             IEdmStructuredType entityType = HardCodedTestModel.GetPersonType();
             var result = SelectExpandPathBinder.FollowTypeSegments(typeSegment, HardCodedTestModel.TestModel, 800, DefaultUriResolver, ref entityType, out firstNonTypeToken);
-            result.Should().OnlyContain(x => x.Equals(new TypeSegment(HardCodedTestModel.GetEmployeeType(), null)));
-            entityType.Should().Be(HardCodedTestModel.GetEmployeeType());
+            var segment = Assert.Single(result);
+            var caseSegment = Assert.IsType<TypeSegment>(segment);
+            Assert.Same(HardCodedTestModel.GetEmployeeType(), caseSegment.EdmType);
+            Assert.Same(HardCodedTestModel.GetEmployeeType(), entityType);
             firstNonTypeToken.ShouldBeNonSystemToken("WorkEmail");
         }
 
@@ -36,9 +38,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             PathSegmentToken firstNonTypeToken;
             IEdmStructuredType entityType = HardCodedTestModel.GetPersonType();
             var result = SelectExpandPathBinder.FollowTypeSegments(typeSegment, HardCodedTestModel.TestModel, 800, DefaultUriResolver, ref entityType, out firstNonTypeToken);
-            result.Should().Contain(x => x.As<TypeSegment>().EdmType == HardCodedTestModel.GetEmployeeType())
-                .And.Contain(x => x.As<TypeSegment>().EdmType == HardCodedTestModel.GetManagerType());
-            entityType.Should().Be(HardCodedTestModel.GetManagerType());
+            var castSegments = result.OfType<TypeSegment>();
+            Assert.Equal(2, castSegments.Count());
+            Assert.Contains(castSegments, x => x.EdmType == HardCodedTestModel.GetEmployeeType());
+            Assert.Contains(castSegments, x => x.EdmType == HardCodedTestModel.GetManagerType());
+            Assert.Same(HardCodedTestModel.GetManagerType(), entityType);
             firstNonTypeToken.ShouldBeNonSystemToken("NumberOfReports");
         }
 
@@ -49,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             PathSegmentToken firstNonTypeToken;
             IEdmStructuredType entityType = HardCodedTestModel.GetPersonType();
             Action followInvalidTypeSegment = () => SelectExpandPathBinder.FollowTypeSegments(typeSegment, HardCodedTestModel.TestModel, 800, DefaultUriResolver, ref entityType, out firstNonTypeToken);
-            followInvalidTypeSegment.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectExpandPathBinder_FollowNonTypeSegment("Stuff"));
+            followInvalidTypeSegment.Throws<ODataException>(ODataErrorStrings.SelectExpandPathBinder_FollowNonTypeSegment("Stuff"));
         }
 
         [Fact]
@@ -59,7 +63,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             PathSegmentToken firstNonTypeToken;
             IEdmStructuredType entityType = HardCodedTestModel.GetPersonType();
             Action followLongChain = () => SelectExpandPathBinder.FollowTypeSegments(typeSegment, HardCodedTestModel.TestModel, 1, DefaultUriResolver, ref entityType, out firstNonTypeToken);
-            followLongChain.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpandItemBinder_PathTooDeep);
+            followLongChain.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_PathTooDeep);
         }
     }
 }

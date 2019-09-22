@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -20,24 +19,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void DateShouldParseCorrectly()
         {
             Date realResult;
-            TryParse("2012-07-28", EdmCoreModel.Instance.GetDate(false), out realResult).Should().BeTrue();
-            realResult.Should().Be(new Date(2012, 7, 28));
+            Assert.True(TryParse("2012-07-28", EdmCoreModel.Instance.GetDate(false), out realResult));
+            Assert.Equal(realResult, new Date(2012, 7, 28));
         }
 
         [Fact]
         public void TimeOfDayShouldParseCorrectly()
         {
             TimeOfDay realResult;
-            TryParse("19:30:5.005", EdmCoreModel.Instance.GetTimeOfDay(false), out realResult).Should().BeTrue();
-            realResult.Should().Be(new TimeOfDay(19, 30, 5, 5));
+            Assert.True(TryParse("19:30:5.005", EdmCoreModel.Instance.GetTimeOfDay(false), out realResult));
+            Assert.Equal(realResult, new TimeOfDay(19, 30, 5, 5));
         }
 
         [Fact]
         public void DateTimeOffsetThatProvidesEverythingShouldParseCorrectly()
         {
             DateTimeOffset realResult;
-            TryParse("2012-07-28T13:22:16.123-07:15", DATE_TIME_OFFSET, out realResult).Should().BeTrue();
-            realResult.Should().Be(new DateTimeOffset(2012, 7, 28, 13, 22, 16, 123, new TimeSpan(-7, -15, 0)));
+            Assert.True(TryParse("2012-07-28T13:22:16.123-07:15", DATE_TIME_OFFSET, out realResult));
+            Assert.Equal(realResult, new DateTimeOffset(2012, 7, 28, 13, 22, 16, 123, new TimeSpan(-7, -15, 0)));
         }
 
         [Fact]
@@ -45,9 +44,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Guid guid;
             IEdmPrimitiveTypeReference guidRefType = EdmCoreModel.Instance.GetGuid(false);
-            TryParse("38cf68c2-4010-4ccc-8922-868217f03ddc", guidRefType, out guid).Should().BeTrue();
-            guid.Should().Be(new Guid("{38CF68C2-4010-4CCC-8922-868217F03DDC}"));
-
+            Assert.True(TryParse("38cf68c2-4010-4ccc-8922-868217f03ddc", guidRefType, out guid));
+            Assert.Equal(guid, new Guid("{38CF68C2-4010-4CCC-8922-868217F03DDC}"));
         }
 
         private static bool TryParse<T>(string input, IEdmPrimitiveTypeReference asType, out T realResult)
