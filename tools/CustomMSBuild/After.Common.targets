@@ -99,7 +99,7 @@ using System.Resources;
     <PropertyGroup>
       <AssemblyAttributeOutputFile>$(IntermediateOutputPath.TrimEnd("\\"))\AssemblyAttributes$(DefaultLanguageSourceExtension)</AssemblyAttributeOutputFile>
       <AssemblyNameFull>$(AssemblyName)$(TargetExt)</AssemblyNameFull>
-      <AssemblyAttributeFileContentsTransformed>$([System.String]::Copy('$(GenerateAssemblyAttributeTemplate)').Replace("%25AssemblyNameFull%25",$(AssemblyNameFull)).Replace("%25VersionFull%25",$(VersionFull)))</AssemblyAttributeFileContentsTransformed>
+      <AssemblyAttributeFileContentsTransformed>$([System.String]::Copy('$(GenerateAssemblyAttributeTemplate)').Replace("%25AssemblyNameFull%25",$(AssemblyNameFull)).Replace("%25VersionFull%25",$(VersionFull)).Replace("%25VersionFullSemantic%25",$(VersionFullSemantic)))</AssemblyAttributeFileContentsTransformed>
     </PropertyGroup>
 
     <Message Text="GenerateAssemblyAttributeFile: Generating $(AssemblyAttributeOutputFile)" Importance="high" Condition="'$(DebugMessages)' == 'true'"/>
