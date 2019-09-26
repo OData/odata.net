@@ -227,12 +227,12 @@
     </Property>
   </ComplexType>
 
-  <Term Name="ModificationException" Type="Core.ModificationExceptionType" Nullable="false">
+  <Term Name="DataModificationException" Type="Core.DataModificationExceptionType" Nullable="false">
     <Annotation Term="Core.Description"
       String="A modification operation failed on the annotated instance or collection within a success payload" />
   </Term>
-  <ComplexType Name="ModificationExceptionType" BaseType="Core.ExceptionType">
-    <Property Name="failedOperation" Type="Core.ModificationOperationKind" Nullable="false">
+  <ComplexType Name="DataModificationExceptionType" BaseType="Core.ExceptionType">
+    <Property Name="failedOperation" Type="Core.DataModificationOperationKind" Nullable="false">
       <Annotation Term="Core.Description" String="The kind of modification operation that failed" />
     </Property>
     <Property Name="responseCode" Type="Edm.Int16" Nullable="true">
@@ -241,7 +241,7 @@
       <Annotation Term="Validation.Maximum" Decimal="599" />
     </Property>
   </ComplexType>
-  <EnumType Name="ModificationOperationKind" UnderlyingType="Edm.Int32">
+  <EnumType Name="DataModificationOperationKind" UnderlyingType="Edm.Int32">
     <Member Name="insert">
       <Annotation Term="Core.Description" String="Insert new instance" />
     </Member>
