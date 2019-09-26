@@ -139,8 +139,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.IsURL"" Bool=""true"" />
     </Property>
   </ComplexType>
-  <ComplexType Name=""ModificationExceptionType"" BaseType=""Core.ExceptionType"">
-    <Property Name=""failedOperation"" Type=""Core.ModificationOperationKind"" Nullable=""false"">
+  <ComplexType Name=""DataModificationExceptionType"" BaseType=""Core.ExceptionType"">
+    <Property Name=""failedOperation"" Type=""Core.DataModificationOperationKind"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""The kind of modification operation that failed"" />
     </Property>
     <Property Name=""responseCode"" Type=""Edm.Int16"">
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""Model element was deprecated"" />
     </Member>
   </EnumType>
-  <EnumType Name=""ModificationOperationKind"">
+  <EnumType Name=""DataModificationOperationKind"">
     <Member Name=""insert"">
       <Annotation Term=""Core.Description"" String=""Insert new instance"" />
     </Member>
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""ResourceException"" Type=""Core.ResourceExceptionType"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""The annotated instance within a success payload is problematic"" />
   </Term>
-  <Term Name=""ModificationException"" Type=""Core.ModificationExceptionType"" Nullable=""false"">
+  <Term Name=""DataModificationException"" Type=""Core.DataModificationExceptionType"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""A modification operation failed on the annotated instance or collection within a success payload"" />
   </Term>
   <Term Name=""IsLanguageDependent"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""Term Property"" Nullable=""false"">
