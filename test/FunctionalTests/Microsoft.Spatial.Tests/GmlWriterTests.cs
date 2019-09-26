@@ -355,10 +355,10 @@ namespace Microsoft.Spatial.Tests
             GeographyGmlWriterTest(p =>
             {
                 p.SetCoordinateSystem(CoordinateSystem.DefaultGeography);
-                p.BeginGeography(SpatialType.FullGlobe);    
-                p.EndGeography();  
+                p.BeginGeography(SpatialType.FullGlobe);
+                p.EndGeography(); 
             },
-            "sqlgeo:FullGlobe[@gml:srsName = 'http://www.opengis.net/def/crs/EPSG/0/4326' and not(text())]");
+            "sqlgeo:FullGlobe[@srsName = 'http://www.opengis.net/def/crs/EPSG/0/4326' and not(text())]");
         }
 
         private static void GeographyGmlWriterTest(Action<GeographyPipeline> pipelineCalls, params string[] expectedXPaths)
@@ -388,9 +388,9 @@ namespace Microsoft.Spatial.Tests
 
             var xDoc = new XmlDocument(nt);
             xDoc.Load(ms);
-            
+
             var nav = xDoc.CreateNavigator();
-            SpatialTestUtils.VerifyXPaths(nav, xnm, "/node()[@gml:srsName = '" + GmlConstants.SrsPrefix + CoordinateSystem.DefaultGeography.EpsgId + "']");                                          
+            SpatialTestUtils.VerifyXPaths(nav, xnm, "/node()[@srsName = '" + GmlConstants.SrsPrefix + CoordinateSystem.DefaultGeography.EpsgId + "']");
             SpatialTestUtils.VerifyXPaths(nav, xnm, expectedXPaths);
         }
 
@@ -757,7 +757,7 @@ namespace Microsoft.Spatial.Tests
             xDoc.Load(ms);
 
             var nav = xDoc.CreateNavigator();
-            SpatialTestUtils.VerifyXPaths(nav, xnm, "/node()[@gml:srsName = '" + GmlConstants.SrsPrefix + CoordinateSystem.DefaultGeometry.EpsgId + "']");
+            SpatialTestUtils.VerifyXPaths(nav, xnm, "/node()[@srsName = '" + GmlConstants.SrsPrefix + CoordinateSystem.DefaultGeometry.EpsgId + "']");
 
             SpatialTestUtils.VerifyXPaths(nav, xnm, expectedXPaths);
         }
