@@ -287,7 +287,7 @@ namespace Microsoft.Spatial
             {
                 this.coordinateSystemWritten = true;
                 var crsValue = GmlConstants.SrsPrefix + this.currentCoordinateSystem.Id;
-                this.writer.WriteAttributeString(GmlConstants.GmlPrefix, GmlConstants.SrsName, GmlConstants.GmlNamespace, crsValue);
+                this.writer.WriteAttributeString(GmlConstants.SrsName, crsValue);
             }
         }
 
