@@ -123,6 +123,10 @@ namespace Microsoft.OData.UriParser
                 }
 
                 object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);
+                if (((ODataCollectionValue)collection).Items.Count() == 0)
+                {
+                    throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+                }
                 LiteralToken collectionLiteralToken = new LiteralToken(collection, originalLiteralText, expectedType);
                 operand = this.bindMethod(collectionLiteralToken) as CollectionConstantNode;
             }

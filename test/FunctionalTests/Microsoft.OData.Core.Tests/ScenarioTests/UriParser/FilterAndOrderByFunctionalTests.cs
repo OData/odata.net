@@ -2019,6 +2019,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("[1,2,3]", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
         }
 
+        [Theory]
+        [InlineData("()")]
+        [InlineData("(  )")]
+        public void FilterWithInOperationWithEmptyCollection(string collection)
+        {
+            string filterClause = $"ID in {collection}";
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+        }
+
         [Fact]
         public void FilterWithInOperationWithMismatchedClosureCollection()
         {
