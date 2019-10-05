@@ -45,33 +45,58 @@ $PROGRAMFILESX86 = [Environment]::GetFolderPath("ProgramFilesX86")
 $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LOGDIR = $ENLISTMENT_ROOT + "\bin"
+$VSDIRPREFIX = [System.IO.Path]::Combine($PROGRAMFILESX86, "Microsoft Visual Studio")
+$VSVERSION
+$VSINSTALLATIONPATH
 
-# Default to use Visual Studio 2015
-$VS14MSBUILD = $PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
-$VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-$FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
-$SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
-$SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
-
-# Use Visual Studio 2017 or 2019 compiler for .NET Core and .NET Standard. Because VS2017 and 2019 have different paths for different
-# versions, we have to check for each version. Meanwhile, the dotnet CLI is required to run the .NET Core unit tests in this script.
-$VS1516VERSIONS = "Enterprise",
-"Professional",
-"Community"
-$VS1516MSBUILD = $null
-ForEach ($version in $VS1516VERSIONS) {
-    $tempMSBuildPath = ($PROGRAMFILESX86 + "\Microsoft Visual Studio\2017\{0}\MSBuild\15.0\Bin\MSBuild.exe") -f $version
-    if ([System.IO.File]::Exists($tempMSBuildPath)) {
-        $VS1516MSBUILD = $tempMSBuildPath
-        break
+:loop for ($i = 16; $i -ge 14; $i--) {
+    $path = $VSDIRPREFIX
+    if ($i -ge 14) {
+        $year = If ($i -eq 16) { "2019" } else { "2017" }
+        $path += "\" + $year
+    }       
+    else {
+        $path += " 14.0"        
     }
 
-    $tempMSBuildPath = ($PROGRAMFILESX86 + "\Microsoft Visual Studio\2019\{0}\MSBuild\Current\Bin\MSBuild.exe") -f $version
-    if ([System.IO.File]::Exists($tempMSBuildPath)) {
-        $VS1516MSBUILD = $tempMSBuildPath
-        break
+    if ([System.IO.Directory]::Exists($path)) {
+        If ($i -gt 14) {
+            foreach ($edition in "Enterprise", "Professional", "Community") {
+                $vsEdition = [System.IO.Path]::Combine($path, $edition)
+                if ([System.IO.Directory]::Exists($vsEdition)) {                    
+                    $VSVERSION = $i
+                    $VSINSTALLATIONPATH = $vsEdition                        
+                    break loop 
+                }	                
+            }	            
+        }
+        else {
+            $VSVERSION = $i
+            $VSINSTALLATIONPATH = $path
+            break loop
+        }
+
+        Write-Host 'Could not find VS installation path!' -ForegroundColor $Err
     }    
+    elseif ($i -eq 14) {
+        Write-Host 'Could not find VS installation path!' -ForegroundColor $Err
+    }  
 }
+
+# Default to use Visual Studio 2015
+$VS14MSBUILD = [System.IO.Path]::Combine($PROGRAMFILESX86, "MSBuild\14.0\Bin\MSBuild.exe")
+$VSNEWMSBUILD = null
+if($VSVERSION -gt 14)
+{
+	$buildPath = if($VSVERSION -eq 16) { "Current" } else { "15.0" }
+	$VSNEWMSBUILD = ($VSINSTALLATIONPATH + "\MSBUILD\{0}\Bin\MSBuild.exe") -f $buildPath
+}
+
+$VSTEST = [System.IO.Path]::Combine($VSINSTALLATIONPATH, "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe")
+$FXCOPDIR = [System.IO.Path]::Combine($VSINSTALLATIONPATH, "Team Tools\Static Analysis Tools\FxCop")
+
+$SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
+$SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
 $DOTNETDIR = "C:\Program Files\dotnet\"
 $DOTNETTEST = $null
@@ -275,14 +300,13 @@ Function CleanBeforeScorch {
 Function RunBuild ($sln, $vsToolVersion) {
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
-    $Conf = "/p:Configuration=" + "$Configuration"
-
-    # Default to VS2015
-    $MSBUILD = $VS14MSBUILD
+    $Conf = "/p:Configuration=" + "$Configuration"	
     
-    if ($vsToolVersion -eq '15.0') {
-        $MSBUILD = $VS1516MSBUILD
-    }   
+    $MSBUILD = switch($VSVERSION)
+	{		
+		14 { $VS14MSBUILD }
+		default { $VSNEWMSBUILD }
+	}
     
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
@@ -467,15 +491,15 @@ Function BuildProcess {
         rm $BUILDLOG
     }
 
-    RunBuild ('OData.Net45.sln') -vsToolVersion '15.0'
+    RunBuild ('OData.Net45.sln')
 
     if ($TestType -ne 'Quick') {
         # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
-        RunBuild ('OData.Tests.E2E.sln') -vsToolVersion '15.0' 
-        RunBuild ('OData.Net35.sln') -vsToolVersion '15.0'
+        RunBuild ('OData.Tests.E2E.sln')
+        RunBuild ('OData.Net35.sln')
         # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
-        if ($VS1516MSBUILD) {
-            Write-Host "Found VS2017 version: $VS1516MSBUILD"
+        if ($VS15MSBUILD) {
+            Write-Host "Found VS2017 version: $VS15MSBUILD"
             RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
             RunBuild ('OData.CodeGen.sln') -vsToolVersion '15.0'
         }
