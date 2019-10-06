@@ -85,11 +85,11 @@ $VSINSTALLATIONPATH
 
 # Default to use Visual Studio 2015
 $VS14MSBUILD = [System.IO.Path]::Combine($PROGRAMFILESX86, "MSBuild\14.0\Bin\MSBuild.exe")
-$VSNEWMSBUILD = null
+$VSNEWMSBUILD = $null
 if($VSVERSION -gt 14)
 {
-	$buildPath = if($VSVERSION -eq 16) { "Current" } else { "15.0" }
-	$VSNEWMSBUILD = ($VSINSTALLATIONPATH + "\MSBUILD\{0}\Bin\MSBuild.exe") -f $buildPath
+  $buildPath = if($VSVERSION -eq 16) { "Current" } else { "15.0" }
+  $VSNEWMSBUILD = ($VSINSTALLATIONPATH + "\MSBUILD\{0}\Bin\MSBuild.exe") -f $buildPath
 }
 
 $VSTEST = [System.IO.Path]::Combine($VSINSTALLATIONPATH, "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe")
@@ -303,10 +303,10 @@ Function RunBuild ($sln, $vsToolVersion) {
     $Conf = "/p:Configuration=" + "$Configuration"	
     
     $MSBUILD = switch($VSVERSION)
-	{		
-		14 { $VS14MSBUILD }
-		default { $VSNEWMSBUILD }
-	}
+  {		
+    14 { $VS14MSBUILD }
+    default { $VSNEWMSBUILD }
+  }
     
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
@@ -478,8 +478,16 @@ Function RunTest($title, $testdir, $framework) {
 
 Function NugetRestoreSolution {
     Write-Host '**********Pull NuGet Packages*********'
+
+    $nugetVersion = (Get-Item $NUGETEXE).VersionInfo.FileVersion #e.g. 3.5.0.1996
+    $nugetMajorVersion = $nugetVersion.Split('.')[0] #3
+    if($VSVERSION -eq 16 -and $nugetMajorVersion -le '5')
+    {
+        & $NUGETEXE "update" -self
+    } 
+
     foreach ($solution in $NugetRestoreSolutions) {
-        & $NUGETEXE "restore" ($ENLISTMENT_ROOT + "\sln\" + $solution)
+        & $NUGETEXE "restore" ($ENLISTMENT_ROOT + "\sln\" + $solution)        
     }
 }
 
@@ -498,8 +506,9 @@ Function BuildProcess {
         RunBuild ('OData.Tests.E2E.sln')
         RunBuild ('OData.Net35.sln')
         # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
-        if ($VS15MSBUILD) {
-            Write-Host "Found VS2017 version: $VS15MSBUILD"
+        if ($VSVERSION -ge 15) {
+            $vsVersionTxt = if($VSVERSION -eq 16) { "2019" } else { "2017" }
+            Write-Host ("Found VS{0} version: $VS15MSBUILD") -r $vsVersionTxt
             RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
             RunBuild ('OData.CodeGen.sln') -vsToolVersion '15.0'
         }
