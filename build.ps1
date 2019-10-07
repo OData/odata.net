@@ -107,7 +107,7 @@ $VSNEWMSBUILD = $null
 if($VSVERSION -gt 14)
 {
   $buildPath = if($VSVERSION -eq 16) { "Current" } else { "15.0" }
-  $VSNEWMSBUILD = ($VSINSTALLATIONPATH + "\MSBUILD\{0}\Bin\MSBuild.exe") -f $buildPath
+  $VSNEWMSBUILD = ($VSINSTALLATIONPATH + "\MSBuild\{0}\Bin\MSBuild.exe") -f $buildPath
 }
 
 $VSTEST = [System.IO.Path]::Combine($VSINSTALLATIONPATH, "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe")
@@ -553,7 +553,7 @@ Function NugetRestoreSolution
 
     $nugetVersion = (Get-Item $NUGETEXE).VersionInfo.FileVersion #e.g. 3.5.0.1996
     $nugetMajorVersion = $nugetVersion.Split('.')[0] #3
-    if($VSVERSION -eq 16 -and $nugetMajorVersion -le '5')
+    if($VSVERSION -eq 16 -and $nugetMajorVersion -lt '5')
     {
         & $NUGETEXE "update" -self
     } 
