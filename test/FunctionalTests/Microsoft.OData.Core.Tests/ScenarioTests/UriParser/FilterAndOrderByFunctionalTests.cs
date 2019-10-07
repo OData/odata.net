@@ -2020,11 +2020,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("()")]
-        [InlineData("(  )")]
-        public void FilterWithInOperationWithEmptyCollection(string collection)
+        [InlineData("ID in ()")]
+        [InlineData("ID in (  )")]
+        [InlineData("SSN in (  )")]     // Edm.String
+        [InlineData("MyGuid in (  )")]  // Edm.Guid
+        public void FilterWithInOperationWithEmptyCollection(string filterClause)
         {
-            string filterClause = $"ID in {collection}";
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
         }
