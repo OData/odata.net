@@ -6,38 +6,47 @@ $Success = 'Green'
 $Warning = 'Yellow'
 $Err = 'Red'
 
-if (($args.Count -eq 0) -or ($args[0] -match 'Nightly')) {
+if (($args.Count -eq 0) -or ($args[0] -match 'Nightly')) 
+{
     $TestType = 'Nightly'
     $Configuration = 'Release'
 }
-elseif ($args[0] -match 'Quick' -or ($args[0] -match '-q')) {
+elseif ($args[0] -match 'Quick' -or ($args[0] -match '-q')) 
+{
     $TestType = "Quick"
 }
-elseif ($args[0] -match 'Rolling') {
+elseif ($args[0] -match 'Rolling')
+{
     # Rolling is a legacy options - run all tests.
     $TestType = "Nightly"
 }
-elseif ($args[0] -match 'E2E') {
+elseif ($args[0] -match 'E2E')
+{
     # Rolling is a legacy options - run all tests.
     $TestType = "Nightly"
 }
-elseif ($args[0] -match 'DisableSkipStrongName') {
+elseif ($args[0] -match 'DisableSkipStrongName')
+{
     $TestType = "DisableSkipStrongName"
 }
-elseif ($args[0] -match 'EnableSkipStrongName') {
+elseif ($args[0] -match 'EnableSkipStrongName')
+{
     $TestType = "EnableSkipStrongName"
 }
-elseif ($args[0] -match 'SkipStrongName') {
+elseif ($args[0] -match 'SkipStrongName')
+{
     # SkipStrongName is a legacy options.
     $TestType = "EnableSkipStrongName"
 }
-else {
+else 
+{
     Write-Host 'Please choose Nightly Test or Quick Test!' -ForegroundColor $Err
     exit
 }
 
 $Build = 'build'
-if ($args -contains 'rebuild') {
+if ($args -contains 'rebuild')
+{
     $Build = 'rebuild'
 }
 
@@ -49,28 +58,36 @@ $VSDIRPREFIX = [System.IO.Path]::Combine($PROGRAMFILESX86, "Microsoft Visual Stu
 $VSVERSION
 $VSINSTALLATIONPATH
 
-:loop for ($i = 16; $i -ge 14; $i--) {
+:loop for ($i = 16; $i -ge 14; $i--) 
+{
     $path = $VSDIRPREFIX
-    if ($i -ge 14) {
+    if ($i -ge 14) 
+	{
         $year = If ($i -eq 16) { "2019" } else { "2017" }
         $path += "\" + $year
     }       
-    else {
+    else
+	{
         $path += " 14.0"        
     }
 
-    if ([System.IO.Directory]::Exists($path)) {
-        If ($i -gt 14) {
-            foreach ($edition in "Enterprise", "Professional", "Community") {
+    if ([System.IO.Directory]::Exists($path))
+	{
+        If ($i -gt 14)
+		{
+            foreach ($edition in "Enterprise", "Professional", "Community")
+			{
                 $vsEdition = [System.IO.Path]::Combine($path, $edition)
-                if ([System.IO.Directory]::Exists($vsEdition)) {                    
+                if ([System.IO.Directory]::Exists($vsEdition))
+				{                    
                     $VSVERSION = $i
                     $VSINSTALLATIONPATH = $vsEdition                        
                     break loop 
                 }	                
             }	            
         }
-        else {
+        else
+		{
             $VSVERSION = $i
             $VSINSTALLATIONPATH = $path
             break loop
@@ -78,7 +95,8 @@ $VSINSTALLATIONPATH
 
         Write-Host 'Could not find VS installation path!' -ForegroundColor $Err
     }    
-    elseif ($i -eq 14) {
+    elseif ($i -eq 14)
+	{
         Write-Host 'Could not find VS installation path!' -ForegroundColor $Err
     }  
 }
@@ -100,7 +118,8 @@ $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools
 
 $DOTNETDIR = "C:\Program Files\dotnet\"
 $DOTNETTEST = $null
-if ([System.IO.File]::Exists($DOTNETDIR + "dotnet.exe")) {
+if ([System.IO.File]::Exists($DOTNETDIR + "dotnet.exe"))
+{
     $DOTNETTEST = $DOTNETDIR + "dotnet.exe"
 }
 
@@ -118,149 +137,166 @@ $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2
 $NugetRestoreSolutions = "OData.NetStandard.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
-"Microsoft.OData.Core.dll",
-"Microsoft.OData.Edm.dll",
-"Microsoft.OData.Service.Design.T4.dll",
-"Microsoft.Spatial.dll"
+    "Microsoft.OData.Core.dll",
+    "Microsoft.OData.Edm.dll",
+    "Microsoft.OData.Service.Design.T4.dll",
+    "Microsoft.Spatial.dll"
 
 $XUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
-"Microsoft.OData.Edm.Tests.dll",
-"Microsoft.Spatial.Tests.dll",
-"Microsoft.OData.Client.Tests.dll"
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll",
+    "Microsoft.OData.Client.Tests.dll"
 
 $NetCoreXUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
-"Microsoft.OData.Edm.Tests.dll",
-"Microsoft.Spatial.Tests.dll"
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll"
 
 $TestSupportDlls = "Microsoft.OData.Service.Design.T4.dll",
-"Microsoft.OData.Service.dll",
-"Microsoft.OData.Service.Test.Common.dll"
+    "Microsoft.OData.Service.dll",
+    "Microsoft.OData.Service.Test.Common.dll"
 
 $NightlyTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
-"Microsoft.OData.Client.Design.T4.UnitTests.dll",
-"AstoriaUnitTests.TDDUnitTests.dll",
-"EdmLibTests.dll",
-"Microsoft.OData.Client.TDDUnitTests.dll",
-"Microsoft.Test.Taupo.OData.Common.Tests.dll",
-"Microsoft.Test.Taupo.OData.Query.Tests.dll",
-"Microsoft.Test.Taupo.OData.Reader.Tests.dll",
-"Microsoft.Test.Taupo.OData.Writer.Tests.dll",
-"Microsoft.Test.Taupo.OData.Scenario.Tests.dll",
-"AstoriaUnitTests.ClientCSharp.dll",
-"Microsoft.Data.NamedStream.UnitTests.dll",
-"Microsoft.Data.ServerUnitTests1.UnitTests.dll",
-"Microsoft.Data.ServerUnitTests2.UnitTests.dll",
-"RegressionUnitTests.dll",
-"Microsoft.Test.OData.PluggableFormat.Tests.dll",
-"Microsoft.Data.MetadataObjectModel.UnitTests.dll",
-"AstoriaUnitTests.dll",
-"AstoriaClientUnitTests.dll"
+    "Microsoft.OData.Client.Design.T4.UnitTests.dll",
+    "AstoriaUnitTests.TDDUnitTests.dll",
+    "EdmLibTests.dll",
+    "Microsoft.OData.Client.TDDUnitTests.dll",
+    "Microsoft.Test.Taupo.OData.Common.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Query.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Reader.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Writer.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Scenario.Tests.dll",
+    "AstoriaUnitTests.ClientCSharp.dll",
+    "Microsoft.Data.NamedStream.UnitTests.dll",
+    "Microsoft.Data.ServerUnitTests1.UnitTests.dll",
+    "Microsoft.Data.ServerUnitTests2.UnitTests.dll",
+    "RegressionUnitTests.dll",
+    "Microsoft.Test.OData.PluggableFormat.Tests.dll",
+    "Microsoft.Data.MetadataObjectModel.UnitTests.dll",
+    "AstoriaUnitTests.dll",
+    "AstoriaClientUnitTests.dll"
 
 # .NET Core tests are different and require the dotnet tool. The tool references the .csproj (VS2017) files instead of dlls
 $NetCoreXUnitTestProjs = "\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.NetCore.csproj",
-"\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.NetCore.csproj",
-"\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj",
-"\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.NetCore.csproj",
-"\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj"
+    "\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj"
 
 $QuickTestSuite = @()
 $NightlyTestSuite = @()
-ForEach ($dll in $XUnitTestDlls) {
+ForEach($dll in $XUnitTestDlls)
+{
     $QuickTestSuite += $TESTDIR + "\" + $dll
     $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
-ForEach ($dll in $NightlyTestDlls) {
+ForEach($dll in $NightlyTestDlls)
+{
     $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
 $E2eTestDlls = @("Microsoft.Test.OData.Tests.Client.dll")
-ForEach ($dll in $E2eTestDlls) {
+ForEach ($dll in $E2eTestDlls)
+{
     $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
-"/rule:$FxCopDir\Rules\NamingRules.dll",
-"/rule:$FxCopDir\Rules\PerformanceRules.dll",
-"/rule:$FxCopDir\Rules\SecurityRules.dll",
-"/rule:$FxCopDir\Rules\GlobalizationRules.dll",
-"/dictionary:$ENLISTMENT_ROOT\src\CustomDictionary.xml",
-"/ruleid:-Microsoft.Design#CA1006",
-"/ruleid:-Microsoft.Design#CA1016",
-"/ruleid:-Microsoft.Design#CA1020",
-"/ruleid:-Microsoft.Design#CA1021",
-"/ruleid:-Microsoft.Design#CA1045",
-"/ruleid:-Microsoft.Design#CA2210",
-"/ruleid:-Microsoft.Performance#CA1814"
+    "/rule:$FxCopDir\Rules\NamingRules.dll",
+    "/rule:$FxCopDir\Rules\PerformanceRules.dll",
+    "/rule:$FxCopDir\Rules\SecurityRules.dll",
+    "/rule:$FxCopDir\Rules\GlobalizationRules.dll",
+    "/dictionary:$ENLISTMENT_ROOT\src\CustomDictionary.xml",
+    "/ruleid:-Microsoft.Design#CA1006",
+    "/ruleid:-Microsoft.Design#CA1016",
+    "/ruleid:-Microsoft.Design#CA1020",
+    "/ruleid:-Microsoft.Design#CA1021",
+    "/ruleid:-Microsoft.Design#CA1045",
+    "/ruleid:-Microsoft.Design#CA2210",
+    "/ruleid:-Microsoft.Performance#CA1814"
 $DataWebRulesOption = "/rule:$TESTDIR\DataWebRules.dll"
 
-Function GetDlls {
+Function GetDlls
+{
     $dlls = @()
 
-    ForEach ($dll in $ProductDlls) {
+    ForEach($dll in $ProductDlls)
+    {
         $dlls += $PRODUCTDIR + "\" + $dll
     }
 
-    ForEach ($dll in $XUnitTestDlls) {
+    ForEach($dll in $XUnitTestDlls)
+    {
         $dlls += $TESTDIR + "\" + $dll
     }
 
-    ForEach ($dll in $NetCoreXUnitTestDlls) {
+    ForEach($dll in $NetCoreXUnitTestDlls)
+    {
         $dlls += $NETCORETESTDIR + "\" + $dll
     }
 
-    ForEach ($dll in $TestSupportDlls) {
+    ForEach($dll in $TestSupportDlls)
+    {
         $dlls += $TESTDIR + "\" + $dll
     }
 
-    ForEach ($dll in $NightlyTestDlls) {
+    ForEach($dll in $NightlyTestDlls)
+    {
         $dlls += $TESTDIR + "\" + $dll
     }
 
-    ForEach ($dll in $E2eTestDlls) {
+    ForEach($dll in $E2eTestDlls)
+    {
         $dlls += $TESTDIR + "\" + $dll
     }
 
     return $dlls
 }
 
-Function SkipStrongName {
+Function SkipStrongName
+{
     $SnLog = $LOGDIR + "\SkipStrongName.log"
     Out-File $SnLog
 
     Write-Host 'Skip strong name validations for ODataLib assemblies...'
 
     $dlls = GetDlls
-    ForEach ($dll in $dlls) {
+    ForEach ($dll in $dlls)
+    {
         & $SN /Vr $dll | Out-File $SnLog -Append
     }
 
-    ForEach ($dll in $dlls) {
+    ForEach ($dll in $dlls)
+    {
         & $SNx64 /Vr $dll | Out-File $SnLog -Append
     }
 
     Write-Host "SkipStrongName Done" -ForegroundColor $Success
 }
 
-Function DisableSkipStrongName {
+Function DisableSkipStrongName
+{
     $SnLog = $LOGDIR + "\DisableSkipStrongName.log"
     Out-File $SnLog
 
     Write-Host 'Disable skip strong name validations for ODataLib assemblies...'
 
     $dlls = GetDlls
-    ForEach ($dll in $dlls) {
+    ForEach ($dll in $dlls)
+    {
         & $SN /Vu $dll | Out-File $SnLog -Append
     }
 
-    ForEach ($dll in $dlls) {
+    ForEach ($dll in $dlls)
+    {
         & $SNx64 /Vu $dll | Out-File $SnLog -Append
     }
 
     Write-Host "DisableSkipStrongName Done" -ForegroundColor $Success
 }
 
-Function Cleanup {    
+Function Cleanup 
+{    
     cd $ENLISTMENT_ROOT\tools\Scripts
     Write-Host "Dropping stale databases..."
     cscript "$ENLISTMENT_ROOT\tools\Scripts\artdbclean.js" //Nologo
@@ -268,7 +304,8 @@ Function Cleanup {
     Write-Host "Clean Done" -ForegroundColor $Success
 }
 
-Function CleanBeforeScorch {
+Function CleanBeforeScorch
+{
     Write-Host 'Stopping TaupoAstoriaRunner as it should no longer be running'
     taskkill /F /IM "TaupoAstoriaRunner.exe" 1>$null 2>$null
 
@@ -297,23 +334,26 @@ Function CleanBeforeScorch {
 }
 
 # Incremental build and rebuild
-Function RunBuild ($sln, $vsToolVersion) {
+Function RunBuild ($sln, $vsToolVersion)
+{
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
-    $Conf = "/p:Configuration=" + "$Configuration"	
-    
+    $Conf = "/p:Configuration=" + "$Configuration"
+
     $MSBUILD = switch($VSVERSION)
-  {		
-    14 { $VS14MSBUILD }
-    default { $VSNEWMSBUILD }
-  }
+	{		
+		14 { $VS14MSBUILD }
+		default { $VSNEWMSBUILD }
+	}	
     
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
-    if ($LASTEXITCODE -eq 0) {
+    if($LASTEXITCODE -eq 0)
+    {
         Write-Host "Build $sln SUCCESS" -ForegroundColor $Success
     }
-    else {
+    else
+    {
         Write-Host "Build $sln FAILED" -ForegroundColor $Err
         Write-Host "For more information, please open the following test result files:"
         Write-Host "$LOGDIR\msbuild.log"
@@ -322,50 +362,62 @@ Function RunBuild ($sln, $vsToolVersion) {
     }
 }
 
-Function FailedTestLog ($playlist , $reruncmd , $failedtest1 , $failedtest2) {
+Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
+{
     Write-Output "<Playlist Version=`"1.0`">" | Out-File $playlist
     Write-Output "@echo off" | Out-File -Encoding ascii $reruncmd
     Write-Output "cd $TESTDIR" | Out-File -Append -Encoding ascii $reruncmd
     $rerun = "`"$VSTEST`""
-    if ($TestType -eq 'Nightly') {
-        foreach ($dll in $NightlyTestSuite) {
+    if ($TestType -eq 'Nightly')
+    {
+        foreach ($dll in $NightlyTestSuite) 
+        {
             $rerun += " $dll" 
         }
     }
-    else {
-        foreach ($dll in $QuickTestSuite) {
+    else
+    {
+        foreach ($dll in $QuickTestSuite) 
+        {
             $rerun += " $dll" 
         }
     }
-    if ($failedtest1.count -gt 0) {
+    if ($failedtest1.count -gt 0)
+    {
         $rerun += " /Tests:"
     }
-    foreach ($case in $failedtest1) {
+    foreach($case in $failedtest1)
+    {
         $name = $case.split('.')[-1]
         $rerun += $name + ","
         $output = "<Add Test=`"" + $case + "`" />"
-        Write-Output $output | Out-File -Append $playlist
+        Write-Output $output  | Out-File -Append $playlist
     } 
     # build the command only if failed tests exist
-    if ($failedtest1.count -gt 0) {
+    if ($failedtest1.count -gt 0)
+    {
         $rerun += " " + $XUNITADAPTER
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     $rerun = "`"$VSTEST`""
-    foreach ($dll in $E2eTestSuite) {
+    foreach ($dll in $E2eTestSuite)
+    {
         $rerun += " $dll" 
     }
-    if ($failedtest2.count -gt 0) {
+    if ($failedtest2.count -gt 0)
+    {
         $rerun += " /Tests:"
     }
-    foreach ($case in $failedtest2) {
+    foreach($case in $failedtest2)
+    {
         $name = $case.split('.')[-1]
         $rerun += $name + ","
         $output = "<Add Test=`"" + $case + "`" />"
-        Write-Output $output | Out-File -Append $playlist
+        Write-Output $output  | Out-File -Append $playlist
     }
     # build the command only if failed tests exist
-    if ($failedtest2.count -gt 0) {
+    if ($failedtest2.count -gt 0)
+    {
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     Write-Output "cd $LOGDIR" | Out-File -Append -Encoding ascii $reruncmd
@@ -377,14 +429,17 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 , $failedtest2) {
     Write-Host $reruncmd -ForegroundColor $Err
 }
 
-Function TestSummary {
+Function TestSummary
+{
     Write-Host 'Collecting test results'
     $playlist = "$LOGDIR\FailedTests.playlist"
     $reruncmd = "$LOGDIR\rerun.cmd"
-    if (Test-Path $playlist) {
+    if (Test-Path $playlist)
+    {
         rm $playlist
     }
-    if (Test-Path $reruncmd) {
+    if (Test-Path $reruncmd)
+    {
         rm $reruncmd
     }
     
@@ -396,10 +451,12 @@ Function TestSummary {
     $failedtest1 = New-Object -TypeName System.Collections.ArrayList
     $failedtest2 = New-Object -TypeName System.Collections.ArrayList
     $part = 1
-    foreach ($line in $file) {
+    foreach ($line in $file)
+    {
         # Consolidate logic for retrieving number of passed and skipped tests. Failed tests is separate due to the way
         # VSTest and DotNet (for .NET Core tests) report results differently.
-        if ($line -match "^Total tests: .*") {
+        if ($line -match "^Total tests: .*") 
+        {
             # The line is in this format:
             # Total tests: 5735. Passed: 5735. Failed: 0. Skipped: 0.
             # We want to extract the total passed and total skipped.
@@ -418,16 +475,20 @@ Function TestSummary {
             $extractedNumber = [regex]::match($line, $pattern).Groups[1].Value.Split(".")[0]
             $skipped += $extractedNumber
         }
-        elseif ($line -match "^Failed\s+(.*)") {
+        elseif ($line -match "^Failed\s+(.*)")
+        {
             $fail = $fail + 1
-            if ($part -eq 1) {
+            if ($part -eq 1)
+            {
                 [void]$failedtest1.Add($Matches[1])
             }
-            else {    
+            else
+            {    
                 [void]$failedtest2.Add($Matches[1])
             }
         }
-        elseif ($line -match "^Results file: (.*)") {
+        elseif ($line -match "^Results file: (.*)")
+        {
             [void]$trxfile.Add($Matches[1])
             $part = 2
         }
@@ -436,47 +497,58 @@ Function TestSummary {
     Write-Host "Test summary:" -ForegroundColor $Success
     Write-Host "Passed :`t$pass"  -ForegroundColor $Success
 
-    if ($skipped -ne 0) {
+    if ($skipped -ne 0)
+    {
         Write-Host "Skipped:`t$skipped"  -ForegroundColor $Warning
     }
 
     $color = $Success
-    if ($fail -ne 0) {
+    if ($fail -ne 0)
+    {
         $color = $Err
     }
     Write-Host "Failed :`t$fail"  -ForegroundColor $color
     Write-Host "---------------"  -ForegroundColor $Success
     Write-Host "Total :`t$($pass + $fail)"  -ForegroundColor $Success
     Write-Host "For more information, please open the following test result files:"
-    foreach ($trx in $trxfile) {
+    foreach ($trx in $trxfile)
+    {
         Write-Host $trx
     }
-    if ($fail -gt 0) {
+    if ($fail -gt 0)
+    {
         FailedTestLog -playlist $playlist -reruncmd $reruncmd -failedtest1 $failedtest1 -failedtest2 $failedtest2 
     }
-    else {
+    else
+    {
         Write-Host "Congratulation! All of the tests passed!" -ForegroundColor $Success
     }
 }
 
-Function RunTest($title, $testdir, $framework) {
+Function RunTest($title, $testdir, $framework)
+{
     Write-Host "**********Running $title***********"
-    if ($framework -eq 'dotnet') {
-        foreach ($testProj in $testdir) {
+    if ($framework -eq 'dotnet')
+    {
+        foreach($testProj in $testdir)
+        {
             Write-Host "Launching $testProj..."
             & $DOTNETTEST "test" ($ENLISTMENT_ROOT + $testProj) "--no-build" >> $TESTLOG
         }
     }
-    else {
+    else
+    {
         & $VSTEST $testdir $XUNITADAPTER >> $TESTLOG
     }
 
-    if ($LASTEXITCODE -ne 0) {
+    if($LASTEXITCODE -ne 0)
+    {
         Write-Host "Run $title FAILED" -ForegroundColor $Err
     }
 }
 
-Function NugetRestoreSolution {
+Function NugetRestoreSolution
+{
     Write-Host '**********Pull NuGet Packages*********'
 
     $nugetVersion = (Get-Item $NUGETEXE).VersionInfo.FileVersion #e.g. 3.5.0.1996
@@ -486,35 +558,41 @@ Function NugetRestoreSolution {
         & $NUGETEXE "update" -self
     } 
 
-    foreach ($solution in $NugetRestoreSolutions) {
+    foreach ($solution in $NugetRestoreSolutions) 
+	{
         & $NUGETEXE "restore" ($ENLISTMENT_ROOT + "\sln\" + $solution)        
     }
 }
 
-Function BuildProcess {
+Function BuildProcess
+{
     Write-Host '**********Start To Build The Project*********'
     
     $script:BUILD_START_TIME = Get-Date
-    if (Test-Path $BUILDLOG) {
+    if (Test-Path $BUILDLOG)
+    {
         rm $BUILDLOG
     }
 
     RunBuild ('OData.Net45.sln')
 
-    if ($TestType -ne 'Quick') {
+    if ($TestType -ne 'Quick')
+    {
         # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
         RunBuild ('OData.Tests.E2E.sln')
         RunBuild ('OData.Net35.sln')
         # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
-        if ($VSVERSION -ge 15) {
+        if ($VSVERSION -ge 15)
+		{
             $vsVersionTxt = if($VSVERSION -eq 16) { "2019" } else { "2017" }
             Write-Host ("Found VS{0} version: $VS15MSBUILD") -r $vsVersionTxt
             RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
             RunBuild ('OData.CodeGen.sln') -vsToolVersion '15.0'
         }
-        else {
+        else
+        {
             Write-Host ('Warning! Skipping build for .NET Core tests because no versions of VS2017 found. ' + `
-                    'Building only product in .NET Standard.') -ForegroundColor $Warning
+            'Building only product in .NET Standard.') -ForegroundColor $Warning
             RunBuild ('OData.NetStandard.sln')
         }
         RunBuild ('OData.Tests.WindowsApps.sln')
@@ -524,29 +602,36 @@ Function BuildProcess {
     $script:BUILD_END_TIME = Get-Date
 }
 
-Function TestProcess {
+Function TestProcess
+{
     Write-Host '**********Start To Run The Test*********'
-    if (Test-Path $TESTLOG) {
+    if (Test-Path $TESTLOG)
+    {
         rm $TESTLOG
     }
     $script:TEST_START_TIME = Get-Date
     cd $TESTDIR
-    if ($TestType -eq 'Nightly') {
+    if ($TestType -eq 'Nightly')
+    {
         RunTest -title 'NightlyTests' -testdir $NightlyTestSuite
     }
-    elseif ($TestType -eq 'Quick') {
+    elseif ($TestType -eq 'Quick')
+    {
         RunTest -title 'XUnitTests' -testdir $QuickTestSuite
     }
-    else {
+    else
+    {
         Write-Host 'Error : TestType' -ForegroundColor $Err
         Cleanup
         exit
     }
 
-    if ($DOTNETTEST) {
+    if ($DOTNETTEST)
+    {
         RunTest -title 'NetCoreTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
     }
-    else {
+    else
+    {
         Write-Host 'The dotnet CLI must be installed to run any .NET Core tests.' -ForegroundColor $Warning
     }
 
@@ -556,7 +641,8 @@ Function TestProcess {
     cd $ENLISTMENT_ROOT
 }
 
-Function FxCopProcess {
+Function FxCopProcess
+{
     Write-Host '**********Start To FxCop*********'
     & $FXCOP "/f:$ProductDir\Microsoft.Spatial.dll" "/o:$LOGDIR\SpatialFxCopReport.xml" $DataWebRulesOption `
         $FxCopRulesOptions 1>$null 2>$null
@@ -574,18 +660,21 @@ Function FxCopProcess {
 
 # Main Process
 
-if (! (Test-Path $LOGDIR)) {
+if (! (Test-Path $LOGDIR))
+{
     mkdir $LOGDIR 1>$null
 }
 
-if ($TestType -eq 'EnableSkipStrongName') {
+if ($TestType -eq 'EnableSkipStrongName')
+{
     CleanBeforeScorch
     NugetRestoreSolution
     BuildProcess
     SkipStrongName
     Exit
 }
-elseif ($TestType -eq 'DisableSkipStrongName') {
+elseif ($TestType -eq 'DisableSkipStrongName')
+{
     CleanBeforeScorch
     NugetRestoreSolution
     BuildProcess
