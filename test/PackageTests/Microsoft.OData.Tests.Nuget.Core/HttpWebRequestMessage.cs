@@ -21,6 +21,7 @@ namespace Microsoft.OData.Tests.Nuget.Core
 
         public HttpWebRequestMessage(Uri uri)
         {
+            ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
             request = (HttpWebRequest)WebRequest.Create(uri);
         }
 
