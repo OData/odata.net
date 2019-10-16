@@ -15,12 +15,12 @@ namespace Microsoft.OData
     internal class AnnotationFilter
     {
         /// <summary>
-        /// Filter that maches all annotation names.
+        /// Filter that matches all annotation names.
         /// </summary>
         private static readonly AnnotationFilter IncludeAll = new IncludeAllFilter();
 
         /// <summary>
-        /// Filter than maches no annotation names.
+        /// Filter than matches no annotation names.
         /// </summary>
         private static readonly AnnotationFilter ExcludeAll = new ExcludeAllFilter();
 
@@ -84,10 +84,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Create a filter that inlcude all.
+        /// Create a filter that include all.
         /// </summary>
         /// <returns>The include all filter.</returns>
-        internal static AnnotationFilter CreateInclueAllFilter()
+        internal static AnnotationFilter CreateIncludeAllFilter()
         {
             return new IncludeAllFilter();
         }
@@ -101,7 +101,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(annotationName, "annotationName");
 
-            // Find the highest priority pattern that maches and return true only if that pattern is not exclude.
+            // Find the highest priority pattern that matches and return true only if that pattern is not exclude.
             foreach (AnnotationFilterPattern pattern in this.prioritizedPatternsToMatch)
             {
                 if (pattern.Matches(annotationName))

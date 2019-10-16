@@ -43,7 +43,7 @@ namespace Microsoft.OData.Metadata
         /// <param name="writer">The Xml writer to write to.</param>
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
-        /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         internal static void WriteError(XmlWriter writer, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth)
         {
             ErrorUtils.WriteXmlError(writer, error, includeDebugInformation, maxInnerErrorDepth);

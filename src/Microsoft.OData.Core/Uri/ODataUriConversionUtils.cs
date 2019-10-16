@@ -166,7 +166,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(resource, "resource");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            return ConverToJsonLightLiteral(
+            return ConvertToJsonLightLiteral(
                 model,
                 context =>
             {
@@ -187,7 +187,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(entries, "entries");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            return ConverToJsonLightLiteral(
+            return ConvertToJsonLightLiteral(
                 model,
                 context =>
             {
@@ -216,7 +216,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(link, "link");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            return ConverToJsonLightLiteral(model, context => context.WriteEntityReferenceLink(link));
+            return ConvertToJsonLightLiteral(model, context => context.WriteEntityReferenceLink(link));
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(links, "links");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            return ConverToJsonLightLiteral(model, context => context.WriteEntityReferenceLinks(links));
+            return ConvertToJsonLightLiteral(model, context => context.WriteEntityReferenceLinks(links));
         }
 
         /// <summary>
@@ -441,10 +441,10 @@ namespace Microsoft.OData
                     case EdmPrimitiveTypeKind.Double:
                         return primitiveValue;
                     case EdmPrimitiveTypeKind.Decimal:
-                        // TODO: extract these convertion steps to an individual function
+                        // TODO: extract these conversion steps to an individual function
                         decimal doubleToDecimalR;
 
-                        // To keep the full presion of the current value, which if necessary is all 17 digits of precision supported by the Double type.
+                        // To keep the full precision of the current value, which if necessary is all 17 digits of precision supported by the Double type.
                         if (decimal.TryParse(((Double)primitiveValue).ToString("R", CultureInfo.InvariantCulture),
                             out doubleToDecimalR))
                         {
@@ -561,7 +561,7 @@ namespace Microsoft.OData
         /// <param name="model">EDM Model to use for validation and type lookups.</param>
         /// <param name="writeAction">Delegate to use to actually write the value.</param>
         /// <returns>The literal value string.</returns>
-        private static string ConverToJsonLightLiteral(IEdmModel model, Action<ODataOutputContext> writeAction)
+        private static string ConvertToJsonLightLiteral(IEdmModel model, Action<ODataOutputContext> writeAction)
         {
             using (MemoryStream stream = new MemoryStream())
             {

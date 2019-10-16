@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     public class ParameterAliasNode : SingleValueNode
     {
         /// <summary>
-        /// The alias' type which is infered from the type of alias value's SingleValueNode.
+        /// The alias' type which is inferred from the type of alias value's SingleValueNode.
         /// </summary>
         private readonly IEdmTypeReference typeReference;
 
@@ -22,7 +22,7 @@ namespace Microsoft.OData.UriParser
         /// Constructor.
         /// </summary>
         /// <param name="alias">The parameter alias.</param>
-        /// <param name="typeReference">The alias' type which is infered from the type of alias value's SingleValueNode.</param>
+        /// <param name="typeReference">The alias' type which is inferred from the type of alias value's SingleValueNode.</param>
         public ParameterAliasNode(string alias, IEdmTypeReference typeReference)
         {
             this.Alias = alias;
@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser
         public string Alias { get; private set; }
 
         /// <summary>
-        /// The alias' type which is infered from the type of alias value's SingleValueNode
+        /// The alias' type which is inferred from the type of alias value's SingleValueNode
         /// </summary>
         public override IEdmTypeReference TypeReference
         {

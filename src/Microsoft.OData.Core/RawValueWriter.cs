@@ -15,7 +15,7 @@ namespace Microsoft.OData
     using Microsoft.Spatial;
 
     /// <summary>
-    /// Class that hanldes writing top level raw values to a stream.
+    /// Class that handles writing top level raw values to a stream.
     /// </summary>
     internal sealed class RawValueWriter : IDisposable
     {
@@ -166,7 +166,7 @@ namespace Microsoft.OData
             Stream nonDisposingStream;
             if (MessageStreamWrapper.IsNonDisposingStream(this.stream) || this.stream is AsyncBufferedStream)
             {
-                // AsynBufferedStream ignores Dispose
+                // AsyncBufferedStream ignores Dispose
                 nonDisposingStream = this.stream;
             }
             else

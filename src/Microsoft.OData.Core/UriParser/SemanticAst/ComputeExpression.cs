@@ -32,7 +32,7 @@ namespace Microsoft.OData.UriParser
 
             this.expression = expression;
             this.alias = alias;
-            //// TypeRefrence is null for dynamic properties
+            //// TypeReference is null for dynamic properties
             this.typeReference = typeReference;
         }
 

@@ -446,7 +446,7 @@ namespace Microsoft.OData
                 // When isCollectionElementEmpty is true, Reader needs to be in CollectionStart state.
                 Debug.Assert(!this.isCollectionElementEmpty ||
                         (this.isCollectionElementEmpty && state == ODataCollectionReaderState.CollectionStart),
-                        "Expected state to be CollectionStart if isCollectionElementyEmpty is true.");
+                        "Expected state to be CollectionStart if isCollectionElementEmpty is true.");
             }
 
             /// <summary>

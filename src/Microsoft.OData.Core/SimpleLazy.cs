@@ -24,7 +24,7 @@ namespace Microsoft.OData
     internal sealed class SimpleLazy<T>
     {
         /// <summary>
-        /// For thread safty in creating the value.
+        /// For thread safety in creating the value.
         /// </summary>
         private readonly object mutex;
 

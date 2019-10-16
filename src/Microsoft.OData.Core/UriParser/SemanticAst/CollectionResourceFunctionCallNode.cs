@@ -136,7 +136,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the navigation source contaiing the entities returned by this function.
+        /// Gets the navigation source containing the entities returned by this function.
         /// </summary>
         public override IEdmNavigationSource NavigationSource
         {

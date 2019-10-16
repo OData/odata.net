@@ -402,7 +402,7 @@ this.State == ODataParameterReaderState.Collection,
         protected abstract ODataReader CreateResourceReader(IEdmStructuredType expectedResourceType);
 
         /// <summary>
-        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
         /// <param name="expectedResourceType">Expected resource set element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>

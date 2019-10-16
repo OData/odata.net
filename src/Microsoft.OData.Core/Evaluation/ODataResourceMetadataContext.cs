@@ -148,7 +148,7 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
-        /// Get key value pair array for specifc odata resource using specifc entity type
+        /// Get key value pair array for specific odata resource using specific entity type
         /// </summary>
         /// <param name="resource">The resource instance.</param>
         /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>

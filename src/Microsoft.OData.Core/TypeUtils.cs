@@ -41,7 +41,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Checks whether the specified <paramref name="type"/> can be assigned null. If it is a non-nullable
-        /// value type it creates the corresonding nullable type and returns it.
+        /// value type it creates the corresponding nullable type and returns it.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns>The <paramref name="type"/> if it allows null or the corresponding nullable type.</returns>

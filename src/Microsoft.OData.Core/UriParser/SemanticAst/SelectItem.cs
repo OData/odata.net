@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     public abstract class SelectItem
     {
         /// <summary>
-        /// Translate a <see cref="SelectItem"/> using an implemntation of<see cref="SelectItemTranslator{T}"/>.
+        /// Translate a <see cref="SelectItem"/> using an implementation of<see cref="SelectItemTranslator{T}"/>.
         /// </summary>
         /// <typeparam name="T">Type that the translator will return after visiting this token.</typeparam>
         /// <param name="translator">An implementation of the translator interface.</param>

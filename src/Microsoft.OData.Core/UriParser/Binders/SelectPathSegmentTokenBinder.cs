@@ -66,7 +66,7 @@ namespace Microsoft.OData.UriParser
                 return nextSegment;
             }
 
-            // Operations must be container-qualified, and because the token type indicates it was not a .-seperated identifier, we should not try to look up operations.
+            // Operations must be container-qualified, and because the token type indicates it was not a .-separated identifier, we should not try to look up operations.
             if (tokenIn.IsNamespaceOrContainerQualified())
             {
                 if (TryBindAsOperation(tokenIn, model, edmType, out nextSegment))
@@ -140,7 +140,7 @@ namespace Microsoft.OData.UriParser
             IList<string> parameterNames = new List<string>();
 
             // Catch all catchable exceptions as FindDeclaredBoundOperations is implemented by anyone.
-            // If an exception occurs it will be supressed and the possible functions will be empty and return false.
+            // If an exception occurs it will be suppressed and the possible functions will be empty and return false.
             try
             {
                 int wildCardPos = pathToken.Identifier.IndexOf("*", StringComparison.Ordinal);

@@ -548,7 +548,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && !IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]),
                 "The SkipWhitespaces wasn't called or it didn't correctly skip all whitespace characters from the input.");
-            Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().Type != ScopeType.Object, "Value can only occure at the root, in array or as a property value.");
+            Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().Type != ScopeType.Object, "Value can only occur at the root, in array or as a property value.");
 
             // Increase the count of values under the current scope.
             this.scopes.Peek().ValueCount++;
@@ -654,7 +654,7 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// Assumes that the current token position points to the opening quote.
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
-        /// So it can either return a string succesfully or fail.</remarks>
+        /// So it can either return a string successfully or fail.</remarks>
         private string ParseStringPrimitiveValue()
         {
             bool hasLeadingBackslash;
@@ -670,7 +670,7 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// Assumes that the current token position points to the opening quote.
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
-        /// So it can either return a string succesfully or fail.</remarks>
+        /// So it can either return a string successfully or fail.</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
         private string ParseStringPrimitiveValue(out bool hasLeadingBackslash)
         {
@@ -697,7 +697,7 @@ namespace Microsoft.OData.Json
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
                 if (character == '\\')
                 {
-                    // If we're at the begining of the string
+                    // If we're at the beginning of the string
                     // (means that relative token index must be 0 and we must not have consumed anything into our value builder yet)
                     if (currentCharacterTokenRelativeIndex == 0 && valueBuilder == null)
                     {
@@ -968,7 +968,7 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// Assumes that the current token position points to the opening quote.
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
-        /// So it can either return a string succesfully or fail.</remarks>
+        /// So it can either return a string successfully or fail.</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
         private int ReadChars(char[] chars, int offset, int maxLength)
         {
@@ -1117,7 +1117,7 @@ namespace Microsoft.OData.Json
 
             Debug.Assert(
                 this.scopes.Count > 0 && this.scopes.Peek().Type == ScopeType.Root && this.scopes.Peek().ValueCount <= 1,
-                "The end of input should only occure with root at the top of the stack with zero or one value.");
+                "The end of input should only occur with root at the top of the stack with zero or one value.");
             Debug.Assert(this.nodeValue == null, "The node value should have been reset to null.");
 
             this.nodeType = JsonNodeType.EndOfInput;
@@ -1233,7 +1233,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>true if more characters are available; false if end of input was reached.</returns>
         /// <remarks>This may move characters in the characterBuffer, so after this is called
-        /// all indeces to the characterBuffer are invalid except for tokenStartIndex.</remarks>
+        /// all indices to the characterBuffer are invalid except for tokenStartIndex.</remarks>
         private bool ReadInput()
         {
             Debug.Assert(this.tokenStartIndex >= 0 && this.tokenStartIndex <= this.storedCharacterCount, "The token start is out of stored characters range.");
@@ -1243,7 +1243,7 @@ namespace Microsoft.OData.Json
                 return false;
             }
 
-            // initialze the buffer
+            // initialize the buffer
             if (this.characterBuffer == null)
             {
                 this.characterBuffer = BufferUtils.RentFromBuffer(ArrayPool, InitialCharacterBufferSize);

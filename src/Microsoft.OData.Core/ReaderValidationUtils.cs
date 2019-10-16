@@ -600,7 +600,7 @@ namespace Microsoft.OData
 
             if (payloadEntityType == null)
             {
-                // for dynmaic path, the contextUriParseResult.EdmType might be null;
+                // for dynamic path, the contextUriParseResult.EdmType might be null;
                 return;
             }
 

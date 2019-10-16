@@ -18,7 +18,7 @@ namespace Microsoft.OData.UriParser
     public abstract class CollectionNode : QueryNode
     {
         /// <summary>
-        /// The resouce type of a single item from the collection represented by this node.
+        /// The resource type of a single item from the collection represented by this node.
         /// </summary>
         public abstract IEdmTypeReference ItemType
         {

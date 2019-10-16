@@ -23,9 +23,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>Normalized SelectToken</returns>
         public static SelectToken NormalizeSelectTree(SelectToken selectToken)
         {
-            // Be noted: It's not allowed have multple select clause with same path.
+            // Be noted: It's not allowed have multiple select clause with same path.
             // For example: $select=abc($top=2),abc($skip=2) is not allowed by design.
-            // Cusotmer should combine them together, for example: $select=abc($top=2;$skip=2).
+            // Customer should combine them together, for example: $select=abc($top=2;$skip=2).
             // The logic is different with ExpandTreeNormalizer. We should change the logic in ExpandTreeNormalizer
             // in next breaking change version.
             VerifySelectToken(selectToken);

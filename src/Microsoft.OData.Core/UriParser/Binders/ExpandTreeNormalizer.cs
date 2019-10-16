@@ -101,9 +101,9 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// add a new expandTermToken into an exisiting token, adding any additional levels and trees along the way.
+        /// add a new expandTermToken into an existing token, adding any additional levels and trees along the way.
         /// </summary>
-        /// <param name="existingToken">the exisiting (already expanded) token</param>
+        /// <param name="existingToken">the existing (already expanded) token</param>
         /// <param name="newToken">the new (already expanded) token</param>
         /// <returns>the combined token, or, if the two are mutually exclusive, the same tokens</returns>
         public static ExpandTermToken CombineTerms(ExpandTermToken existingToken, ExpandTermToken newToken)

@@ -69,7 +69,7 @@ namespace Microsoft.OData.UriParser
             this.left = left;
             this.right = right;
 
-            // set the TypeReference if explictly given, otherwise based on the Operands.
+            // set the TypeReference if explicitly given, otherwise based on the Operands.
             if (typeReference != null)
             {
                 this.typeReference = typeReference;

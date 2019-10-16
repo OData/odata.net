@@ -214,7 +214,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Bind parameter alias (figuring out its type by first parsing and binding its value expression).
         /// </summary>
-        /// <param name="functionParameterAliasToken">The alias syntatics token.</param>
+        /// <param name="functionParameterAliasToken">The alias syntactics token.</param>
         /// <returns>The semantics node for parameter alias.</returns>
         protected virtual SingleValueNode BindParameterAlias(FunctionParameterAliasToken functionParameterAliasToken)
         {

@@ -39,7 +39,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="metadataContext">The current resource metadata context.</param>
         internal ODataMissingOperationGenerator(IODataResourceMetadataContext resourceMetadataContext, IODataMetadataContext metadataContext)
         {
-            Debug.Assert(resourceMetadataContext != null, "resourceMetadataCotext != null");
+            Debug.Assert(resourceMetadataContext != null, "resourceMetadataContext != null");
             Debug.Assert(metadataContext != null, "metadataContext != null");
 
             this.resourceMetadataContext = resourceMetadataContext;
