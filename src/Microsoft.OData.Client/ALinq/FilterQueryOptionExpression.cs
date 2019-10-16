@@ -40,7 +40,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the list of individual conjucts which are separated by AND for the predicate
+        /// Gets the list of individual conjuncts which are separated by AND for the predicate
         /// i.e. if the filter statement is id1=1 and id2="var1" and id3=datetimeoffset'31'
         /// then this list will have 3 entries, id1=1, id2="var1" and id3=datetimeoffset'xxxxxxxxx'
         /// </summary>

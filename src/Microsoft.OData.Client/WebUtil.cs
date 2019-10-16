@@ -93,7 +93,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>get response object from possible WebException</summary>
         /// <param name="exception">exception to probe</param>
-        /// <param name="response">http web respose object from exception</param>
+        /// <param name="response">http web response object from exception</param>
         /// <returns>an instance of InvalidOperationException.</returns>
         internal static InvalidOperationException GetHttpWebResponse(InvalidOperationException exception, ref IODataResponseMessage response)
         {
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(collectionItemType != null, "collectionItemType != null");
 
-            // nested collections are not supported. Need to exclude primitve types - e.g. string implements IEnumerable<char>
+            // nested collections are not supported. Need to exclude primitive types - e.g. string implements IEnumerable<char>
             if (!PrimitiveType.IsKnownNullableType(collectionItemType) &&
                 collectionItemType.GetInterfaces().SingleOrDefault(t => t == typeof(IEnumerable)) != null)
             {
@@ -412,7 +412,7 @@ namespace Microsoft.OData.Client
         /// <param name="typeArguments">Types to be used for creating DataServiceCollection&lt;&gt; object.</param>
         /// <returns>
         /// Instance of DataServiceCollection&lt;&gt; class created using provided types or null if DataServiceCollection&lt;&gt;
-        /// type is not avaiable.
+        /// type is not available.
         /// </returns>
         internal static Type GetDataServiceCollectionOfT(params Type[] typeArguments)
         {

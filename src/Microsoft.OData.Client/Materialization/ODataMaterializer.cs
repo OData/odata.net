@@ -81,7 +81,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>Entry being materialized; possibly null.</summary>
         internal abstract ODataResource CurrentEntry { get; }
 
-        /// <summary>Table storing the next links assoicated with the current payload</summary>
+        /// <summary>Table storing the next links associated with the current payload</summary>
         internal Dictionary<IEnumerable, DataServiceQueryContinuation> NextLinkTable
         {
             get { return this.nextLinkTable; }

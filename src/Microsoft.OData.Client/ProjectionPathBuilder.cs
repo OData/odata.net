@@ -148,7 +148,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Records that a member initialization expression has been entered
-        /// when visting a projection.
+        /// when visiting a projection.
         /// </summary>
         /// <param name="init">Expression for initialization.</param>
         internal void EnterMemberInit(MemberInitExpression init)
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Client
 
             List<string> names = new List<string>();
 
-            // This could be a MemberAccess wrapped in a type conversion, so strip off unnecessary converions for each loop iteration.
+            // This could be a MemberAccess wrapped in a type conversion, so strip off unnecessary conversions for each loop iteration.
             // E.g. (p.BestFriend As Person) instead of just p.BestFriend
             expression = ResourceBinder.StripTo<Expression>(expression);
             while (expression.NodeType == ExpressionType.MemberAccess || expression.NodeType == ExpressionType.TypeAs)
@@ -216,7 +216,7 @@ namespace Microsoft.OData.Client
             return result;
         }
 
-        /// <summary>Records that a lambda scope has been left when visting a projection.</summary>
+        /// <summary>Records that a lambda scope has been left when visiting a projection.</summary>
         internal void LeaveLambdaScope()
         {
             this.entityInScope.Pop();
@@ -228,7 +228,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Records that a member initialization expression has been left when
-        /// visting a projection.
+        /// visiting a projection.
         /// </summary>
         internal void LeaveMemberInit()
         {

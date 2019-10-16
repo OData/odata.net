@@ -252,7 +252,7 @@ namespace Microsoft.OData.Client
 
             if (null != result.Failure)
             {
-                if (Util.IsKnownClientExcption(result.Failure))
+                if (Util.IsKnownClientException(result.Failure))
                 {
                     throw result.Failure;
                 }
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Client
                 finally
                 {
                     // 1. set IAsyncResult.IsCompleted, otherwise user was
-                    // signalled on another thread, but the property may not be true.
+                    // signaled on another thread, but the property may not be true.
                     this.userCompleted = true;
 
                     // 2. signal the wait handle because it can't be first nor can it be last.

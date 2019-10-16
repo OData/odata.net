@@ -377,7 +377,7 @@ namespace Microsoft.OData.Client
                 Debug.Assert(nex != null, "nex != null");
 
                 // Special case DataServiceCollection creation so context instance
-                // and paging (continuations) propperly flow through
+                // and paging (continuations) properly flow through
                 if (ResourceBinder.PatternRules.MatchNewDataServiceCollectionOfT(nex))
                 {
                     return this.RebindNewExpressionForDataServiceCollectionOfT(nex);

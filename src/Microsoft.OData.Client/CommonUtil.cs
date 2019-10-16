@@ -17,7 +17,7 @@ namespace Microsoft.OData.Service
     using System.Threading;
 
     /// <summary>
-    /// Common defintions and functions for ALL product assemblies
+    /// Common definitions and functions for ALL product assemblies
     /// </summary>
     internal static partial class CommonUtil
     {

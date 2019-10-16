@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
     {
         /// <summary>The <see cref="QueryOperationResponse"/> which represents
         /// the response for the Load operation.</summary>
-        /// <remarks>This field is non-null only when the Load operation was successfull.
+        /// <remarks>This field is non-null only when the Load operation was successful.
         /// Otherwise it's null.</remarks>
         private QueryOperationResponse queryOperationResponse;
 

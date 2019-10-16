@@ -85,7 +85,7 @@ namespace Microsoft.OData.Client
         /// <param name="clrType">The Clr Type</param>
         /// <param name="edmTypeName">The Edm Type Name</param>
         /// <param name="primitiveKind">The Edm Primitive Type Kind</param>
-        /// <param name="typeConverter">A PrimitiveXmlConverter that provides convertion between  instances of this type to its Xml representation and back</param>
+        /// <param name="typeConverter">A PrimitiveXmlConverter that provides conversion between  instances of this type to its Xml representation and back</param>
         /// <param name="hasReverseMapping">Whether this primitive type can be mapped from the Edm type name</param>
         private PrimitiveType(Type clrType, string edmTypeName, EdmPrimitiveTypeKind primitiveKind, PrimitiveTypeConverter typeConverter, bool hasReverseMapping)
         {
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// A PrimitiveXmlConverter that provides convertion between
+        /// A PrimitiveXmlConverter that provides conversion between
         /// instances of this type to its Xml representation and back
         /// </summary>
         internal PrimitiveTypeConverter TypeConverter
@@ -540,7 +540,7 @@ namespace Microsoft.OData.Client
             /// <returns>Returns a new instance of the IEdmPrimitiveType</returns>
             public static IEdmPrimitiveType CreateType(EdmPrimitiveTypeKind primitiveKind)
             {
-                Debug.Assert(primitiveKind != EdmPrimitiveTypeKind.None, "primitiveKiind != EdmPrimitiveTypeKind.None");
+                Debug.Assert(primitiveKind != EdmPrimitiveTypeKind.None, "primitiveKind != EdmPrimitiveTypeKind.None");
                 return new ClientEdmPrimitiveType(XmlConstants.EdmNamespace, primitiveKind.ToString(), primitiveKind);
             }
         }

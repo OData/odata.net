@@ -14,7 +14,7 @@ namespace Microsoft.OData.Client
     #endregion Namespaces
 
     /// <summary>
-    /// Specific Vistior base class for the DataServiceQueryProvider.
+    /// Specific Visitor base class for the DataServiceQueryProvider.
     /// </summary>
     internal abstract class DataServiceALinqExpressionVisitor : ALinqExpressionVisitor
     {

@@ -614,7 +614,7 @@ namespace Microsoft.OData.Client
 
             // Do we need an operation on context to handle the Delete operation.
             // Detach behavior is special because it is only applicable in Clear
-            // cases, where we don't callback users for detach nofications.
+            // cases, where we don't callback users for detach notifications.
             bool contextOperationRequired = this.IsContextTrackingEntity(target) && !this.DetachBehavior;
 
             if (contextOperationRequired)

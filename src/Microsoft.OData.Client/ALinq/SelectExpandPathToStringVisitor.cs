@@ -43,7 +43,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Translate a NonSystemToken into a select or expand string.
         /// </summary>
-        /// <param name="tokenIn">the non sytem token to translate</param>
+        /// <param name="tokenIn">the non system token to translate</param>
         /// <returns>The string representation of a given NonSystemToken</returns>
         public string Visit(NonSystemToken tokenIn)
         {
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Follow a chain of structrual properties until we hit a non-structural property
+        /// Follow a chain of structural properties until we hit a non-structural property
         /// </summary>
         /// <param name="firstStructuralProperty">the first structural property we hit</param>
         /// <param name="firstNonStructuralProperty">the first non structural property we hit</param>

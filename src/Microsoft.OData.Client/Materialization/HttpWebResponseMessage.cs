@@ -133,7 +133,7 @@ namespace Microsoft.OData.Client
                 return result;
             }
 
-            // Since the unintialized value of ContentLength header is -1, we need to return
+            // Since the uninitialized value of ContentLength header is -1, we need to return
             // -1 if the content length header is not present
             if (string.Equals(headerName, XmlConstants.HttpContentLength, StringComparison.Ordinal))
             {

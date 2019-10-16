@@ -300,7 +300,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="ex">exception to test</param>
         /// <returns>true if the exception type is one of the DataService*Exception</returns>
-        internal static bool IsKnownClientExcption(Exception ex)
+        internal static bool IsKnownClientException(Exception ex)
         {
             return (ex is DataServiceClientException) || (ex is DataServiceQueryException) || (ex is DataServiceRequestException);
         }
