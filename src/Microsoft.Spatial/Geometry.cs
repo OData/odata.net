@@ -68,7 +68,7 @@ namespace Microsoft.Spatial
         }
 
         /// <summary>
-        /// Check for basic equality due to emptyness, nullness, referential equality and difference in coordinate system
+        /// Check for basic equality due to emptiness, nullness, referential equality and difference in coordinate system
         /// </summary>
         /// <param name="other">The other geography</param>
         /// <returns>Boolean value indicating equality, or null to indicate inconclusion</returns>

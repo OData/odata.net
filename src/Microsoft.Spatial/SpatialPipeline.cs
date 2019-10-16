@@ -25,7 +25,7 @@ namespace Microsoft.Spatial
         private GeometryPipeline geometryPipeline;
 
         /// <summary>
-        /// A reference to the begining link of the chain
+        /// A reference to the beginning link of the chain
         /// useful for getting the startingLink when creating the chain fluently
         /// e.g.  new ForwardingSegment(new Node()).ChainTo(new Node()).ChainTo(new Node).StartingLink
         /// </summary>

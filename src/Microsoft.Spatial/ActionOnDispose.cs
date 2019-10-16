@@ -27,7 +27,7 @@ namespace Microsoft.Spatial
         }
 
         /// <summary>
-        /// The dipose method of the IDisposable insterface
+        /// The dispose method of the IDisposable interface
         /// </summary>
         public void Dispose()
         {
