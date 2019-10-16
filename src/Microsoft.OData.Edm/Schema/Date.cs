@@ -30,7 +30,7 @@ namespace Microsoft.OData.Edm
         private DateTime dateTime;
 
         /// <summary>
-        /// Consturctor of <see cref="Microsoft.OData.Edm.Date"/>
+        /// Constructor of <see cref="Microsoft.OData.Edm.Date"/>
         /// </summary>
         /// <param name="year">Year value of date</param>
         /// <param name="month">Month value of date</param>

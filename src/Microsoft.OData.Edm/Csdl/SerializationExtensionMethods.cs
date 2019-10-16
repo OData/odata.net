@@ -275,7 +275,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         // This internal method exists so we can get a consistent view of the mappings through the entire serialization process.
-        // Otherwise, changes to the dictionary durring serialization would result in an invalid or inconsistent output.
+        // Otherwise, changes to the dictionary during serialization would result in an invalid or inconsistent output.
         internal static VersioningDictionary<string, string> GetNamespaceAliases(this IEdmModel model)
         {
             EdmUtil.CheckArgumentNull(model, "model");

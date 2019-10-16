@@ -408,7 +408,7 @@ namespace Microsoft.OData.Edm
         {
             this.ProcessElement(model);
 
-            // TODO: also visit referneced models?
+            // TODO: also visit referenced models?
             this.VisitSchemaElements(model.SchemaElements);
             this.VisitVocabularyAnnotations(model.VocabularyAnnotations);
         }
@@ -417,7 +417,7 @@ namespace Microsoft.OData.Edm
 
         protected virtual void ProcessElement(IEdmElement element)
         {
-            // TODO: DirectValueAnnotationsInMainSechema (not including those in referenced schemas)
+            // TODO: DirectValueAnnotationsInMainSchema (not including those in referenced schemas)
             this.VisitAnnotations(this.Model.DirectValueAnnotations(element));
         }
 
@@ -581,7 +581,7 @@ namespace Microsoft.OData.Edm
 
         protected virtual void ProcessSchemaType(IEdmSchemaType type)
         {
-            // Do not visit type or schema element, because all types will do that on thier own.
+            // Do not visit type or schema element, because all types will do that on their own.
         }
 
         protected virtual void ProcessType(IEdmType definition)

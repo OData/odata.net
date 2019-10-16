@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="Memoizer.cs" company="Microsoft">
+// <copyright file="Memorizer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,18 +17,18 @@ namespace Microsoft.OData.Edm
     /// </summary>
     /// <typeparam name="TArg">Type of the argument to the function.</typeparam>
     /// <typeparam name="TResult">Type of the function result.</typeparam>
-    internal sealed class Memoizer<TArg, TResult>
+    internal sealed class Memorizer<TArg, TResult>
     {
         private readonly Func<TArg, TResult> function;
         private readonly Dictionary<TArg, Result> resultCache;
         private readonly ReaderWriterLockSlim slimLock;
 
         /// <summary>
-        /// Constructs the memoizer.
+        /// Constructs the memorizer.
         /// </summary>
         /// <param name="function">Required. Function whose values are being cached.</param>
         /// <param name="argComparer">Optional. Comparer used to determine if two functions arguments are the same.</param>
-        internal Memoizer(Func<TArg, TResult> function, IEqualityComparer<TArg> argComparer)
+        internal Memorizer(Func<TArg, TResult> function, IEqualityComparer<TArg> argComparer)
         {
             Debug.Assert(function != null, "function != null");
 

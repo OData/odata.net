@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// This is a thread-safe cache of object type to interface visitors which is shared between all instances of the validator.
         /// </summary>
-        private static readonly Memoizer<Type, IEnumerable<VisitorBase>> ConcreteTypeInterfaceVisitors = new Memoizer<Type, IEnumerable<VisitorBase>>(ComputeInterfaceVisitorsForObject, null);
+        private static readonly Memorizer<Type, IEnumerable<VisitorBase>> ConcreteTypeInterfaceVisitors = new Memorizer<Type, IEnumerable<VisitorBase>>(ComputeInterfaceVisitorsForObject, null);
         private readonly HashSetInternal<object> visited = new HashSetInternal<object>();
         private readonly HashSetInternal<object> visitedBad = new HashSetInternal<object>();
         private readonly HashSetInternal<object> danglingReferences = new HashSetInternal<object>();
@@ -700,11 +700,11 @@ namespace Microsoft.OData.Edm.Validation
 
                 if (type.BaseType != null)
                 {
-                    HashSetInternal<IEdmStructuredType> visitiedTypes = new HashSetInternal<IEdmStructuredType>();
-                    visitiedTypes.Add(type);
+                    HashSetInternal<IEdmStructuredType> visitedTypes = new HashSetInternal<IEdmStructuredType>();
+                    visitedTypes.Add(type);
                     for (IEdmStructuredType currentBaseType = currentBaseType = type.BaseType; currentBaseType != null; currentBaseType = currentBaseType.BaseType)
                     {
-                        if (visitiedTypes.Contains(currentBaseType))
+                        if (visitedTypes.Contains(currentBaseType))
                         {
                             IEdmSchemaType schemaType = type as IEdmSchemaType;
                             string typeName = schemaType != null ? schemaType.FullName() : typeof(Type).Name;

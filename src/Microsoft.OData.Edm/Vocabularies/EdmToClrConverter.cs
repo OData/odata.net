@@ -926,12 +926,12 @@ namespace Microsoft.OData.Edm.Vocabularies
                         {
                             clrPropertyValueTypeAddMethod.Invoke(clrPropertyValue, new object[] { convertedElementValue });
                         }
-                        catch (TargetInvocationException targetInvokationException)
+                        catch (TargetInvocationException targetInvocationException)
                         {
-                            // Unwrap the target invokation exception that masks an interesting invalid cast exception.
-                            if (targetInvokationException.InnerException != null && targetInvokationException.InnerException is InvalidCastException)
+                            // Unwrap the target invocation exception that masks an interesting invalid cast exception.
+                            if (targetInvocationException.InnerException != null && targetInvocationException.InnerException is InvalidCastException)
                             {
-                                throw targetInvokationException.InnerException;
+                                throw targetInvocationException.InnerException;
                             }
                             else
                             {
@@ -961,7 +961,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
         /// <summary>
         /// The class contains method that are called thru reflection to produce values of correct CLR types.
-        /// For example if one has an int value and a clr type represnting an enum : int, there is no other way to convert the int
+        /// For example if one has an int value and a clr type representing an enum : int, there is no other way to convert the int
         /// to the enum type object.
         /// </summary>
         private static class CastHelper

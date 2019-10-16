@@ -22,7 +22,7 @@ namespace Microsoft.OData.Edm
         string Qualifier { get; }
 
         /// <summary>
-        /// Getst the target namespace.
+        /// Gets the target namespace.
         /// </summary>
         string TargetNamespace { get; }
     }

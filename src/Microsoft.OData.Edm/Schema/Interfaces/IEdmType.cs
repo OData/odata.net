@@ -57,7 +57,7 @@ namespace Microsoft.OData.Edm
         Untyped,
 
         /// <summary>
-        /// Represetns a type implementing <see cref="IEdmPathType"/>.
+        /// Represents a type implementing <see cref="IEdmPathType"/>.
         /// </summary>
         Path,
     }
