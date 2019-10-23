@@ -15,12 +15,20 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using System.Threading.Tasks;
 
+    public interface IDataServiceQuery<TElement> : IQueryable<TElement>
+    {
+        IDataServiceQuery<TElement> Expand(string path);
+        IDataServiceQuery<TElement> Expand<TTarget>(Expression<Func<TElement, TTarget>> navigationPropertyAccessor);
+        Task<IEnumerable<TElement>> ExecuteAsync();
+        //DataServiceContext Context { get; }
+    }
+
     /// <summary>
     /// query object
     /// </summary>
     /// <typeparam name="TElement">type of object to materialize</typeparam>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "required for this feature")]
-    public class DataServiceQuery<TElement> : DataServiceQuery, IQueryable<TElement>
+    public class DataServiceQuery<TElement> : DataServiceQuery, IQueryable<TElement>, IDataServiceQuery<TElement>
     {
         #region Private fields
 
@@ -280,6 +288,13 @@ namespace Microsoft.OData.Client
         /// <summary>Expands a query to include entities from a related entity set in the query response.</summary>
         /// <returns>A new query that includes the requested $expand query option appended to the URI of the supplied query.</returns>
         /// <param name="path">The expand path in the format Orders/Order_Details.</param>
+        IDataServiceQuery<TElement> IDataServiceQuery<TElement>.Expand(string path)
+        {
+            return Expand(path) as IDataServiceQuery<TElement>;
+        }
+        /// <summary>Expands a query to include entities from a related entity set in the query response.</summary>
+        /// <returns>A new query that includes the requested $expand query option appended to the URI of the supplied query.</returns>
+        /// <param name="path">The expand path in the format Orders/Order_Details.</param>
         public DataServiceQuery<TElement> Expand(string path)
         {
             Util.CheckArgumentNullAndEmpty(path, "path");
@@ -297,6 +312,10 @@ namespace Microsoft.OData.Client
         /// <param name="navigationPropertyAccessor">A lambda expression that indicates the navigation property that returns the entity set to include in the expanded query.</param>
         /// <typeparam name="TTarget">Target type of the last property on the expand path.</typeparam>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design")]
+        IDataServiceQuery<TElement> IDataServiceQuery<TElement>.Expand<TTarget>(Expression<Func<TElement, TTarget>> navigationPropertyAccessor)
+        {
+            return Expand(navigationPropertyAccessor) as IDataServiceQuery<TElement>;
+        }
         public DataServiceQuery<TElement> Expand<TTarget>(Expression<Func<TElement, TTarget>> navigationPropertyAccessor)
         {
             Util.CheckArgumentNull(navigationPropertyAccessor, "navigationPropertyAccessor");
