@@ -19,6 +19,7 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
+    using System.Globalization;
 
     #endregion Namespaces
 
@@ -401,8 +402,8 @@ namespace Microsoft.OData.Client
             {
                 this.topLevelProjectionFound = true;
 
-                ParameterExpression expectedTypeParameter = Expression.Parameter(typeof(Type), "type" + this.identifierId);
-                ParameterExpression entryParameter = Expression.Parameter(typeof(object), "entry" + this.identifierId);
+                ParameterExpression expectedTypeParameter = Expression.Parameter(typeof(Type), "type" + (this.identifierId).ToString(CultureInfo.InvariantCulture));
+                ParameterExpression entryParameter = Expression.Parameter(typeof(object), "entry" + (this.identifierId).ToString(CultureInfo.InvariantCulture));
                 this.identifierId++;
 
                 this.pathBuilder.EnterLambdaScope(lambda, entryParameter, expectedTypeParameter);
@@ -628,7 +629,7 @@ namespace Microsoft.OData.Client
             {
                 entryToInitValue = this.GetDeepestEntry(expressions);
                 expectedParamValue = projectedTypeExpression;
-                entryParameterForMembers = Expression.Parameter(typeof(object), "subentry" + this.identifierId++);
+                entryParameterForMembers = Expression.Parameter(typeof(object), "subentry" + (this.identifierId++).ToString(CultureInfo.InvariantCulture));
                 expectedParameterForMembers = (ParameterExpression)this.pathBuilder.ExpectedParamTypeInScope;
 
                 // Annotate the entry expression with 'how we get to it' information.
@@ -668,7 +669,7 @@ namespace Microsoft.OData.Client
                         Expression.Constant(assignment.Member.Name, typeof(string)));
                     ParameterExpression nestedEntryParameter = Expression.Parameter(
                         typeof(object),
-                        "subentry" + this.identifierId++);
+                        "subentry" + (this.identifierId++).ToString(CultureInfo.InvariantCulture));
 
                     // Register the rewrite from the top to the entry if necessary.
                     ProjectionPath entryPath;
