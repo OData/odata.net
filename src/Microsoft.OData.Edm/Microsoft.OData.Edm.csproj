@@ -197,7 +197,7 @@
     <Compile Include="Schema\EdmUnknownEntitySet.cs" />
     <Compile Include="Schema\EdmPathExpression.cs" />
     <Compile Include="Schema\EdmEnumMemberValue.cs" />
-    <Compile Include="Memorizer.cs" />
+    <Compile Include="Memoizer.cs" />
     <Compile Include="Schema\EdmFunctionImport.cs" />
     <Compile Include="Schema\EdmActionImport.cs" />
     <Compile Include="Schema\EdmFunction.cs" />

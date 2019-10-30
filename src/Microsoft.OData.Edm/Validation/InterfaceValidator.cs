@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// This is a thread-safe cache of object type to interface visitors which is shared between all instances of the validator.
         /// </summary>
-        private static readonly Memorizer<Type, IEnumerable<VisitorBase>> ConcreteTypeInterfaceVisitors = new Memorizer<Type, IEnumerable<VisitorBase>>(ComputeInterfaceVisitorsForObject, null);
+        private static readonly Memoizer<Type, IEnumerable<VisitorBase>> ConcreteTypeInterfaceVisitors = new Memorizer<Type, IEnumerable<VisitorBase>>(ComputeInterfaceVisitorsForObject, null);
         private readonly HashSetInternal<object> visited = new HashSetInternal<object>();
         private readonly HashSetInternal<object> visitedBad = new HashSetInternal<object>();
         private readonly HashSetInternal<object> danglingReferences = new HashSetInternal<object>();
