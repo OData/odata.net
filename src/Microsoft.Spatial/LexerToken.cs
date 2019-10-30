@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Globalization;
+
 namespace Microsoft.Spatial
 {
     using System;
@@ -41,7 +43,7 @@ namespace Microsoft.Spatial
         /// <returns>String representation of this token</returns>
         public override string ToString()
         {
-            return "Type:[" + this.Type + "] Text:[" + this.Text + "]";
+            return "Type:[" + this.Type.ToString(CultureInfo.InvariantCulture) + "] Text:[" + this.Text + "]";
         }
     }
 }

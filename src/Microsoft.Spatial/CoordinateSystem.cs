@@ -190,7 +190,7 @@ namespace Microsoft.Spatial
                     return r;
                 }
 
-                r = new CoordinateSystem(epsgId, "ID " + epsgId, topology);
+                r = new CoordinateSystem(epsgId, "ID " + epsgId.ToString(CultureInfo.InvariantCulture), topology);
                 AddRef(r);
             }
 
