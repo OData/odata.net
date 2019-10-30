@@ -807,7 +807,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
         private ODataReader CreateResourceReaderImplementation(IEdmNavigationSource navigationSource, IEdmStructuredType expectedBaseResourceType)
         {
-            return new ODataJsonLightReader(this, navigationSource, expectedBaseResourceType, false);
+            return new ODataJsonLightReader(this, navigationSource, expectedBaseResourceType, false, readingDelta:!this.ReadingResponse);
         }
 
         /// <summary>

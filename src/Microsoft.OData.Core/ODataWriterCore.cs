@@ -67,7 +67,7 @@ namespace Microsoft.OData
 
             this.outputContext = outputContext;
             this.writingResourceSet = writingResourceSet;
-            this.writingDelta = writingDelta;
+            this.writingDelta = writingDelta || (!writingResourceSet && !outputContext.WritingResponse);
             this.WriterValidator = outputContext.WriterValidator;
             this.Version = outputContext.MessageWriterSettings.Version;
 

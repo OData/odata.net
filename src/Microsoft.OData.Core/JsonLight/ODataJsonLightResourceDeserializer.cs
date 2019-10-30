@@ -813,6 +813,11 @@ namespace Microsoft.OData.JsonLight
                 case ODataAnnotationNames.ODataMediaETag:  // 'odata.mediaEtag'
                     return this.ReadAndValidateAnnotationStringValue(annotationName);
 
+                case ODataAnnotationNames.ODataRemoved: // 'odata.removed'
+                    {
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
+                    }
+
                 default:
                     ODataAnnotationNames.ValidateIsCustomAnnotationName(annotationName);
                     Debug.Assert(
@@ -1249,7 +1254,7 @@ namespace Microsoft.OData.JsonLight
                     ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, isCollection, propertyName);
                     if (isCollection)
                     {
-                        readerNestedResourceInfo = this.ReadingResponse
+                        readerNestedResourceInfo = this.ReadingResponse || isDeltaResourceSet
                             ? ReadExpandedResourceSetNestedResourceInfo(resourceState, navigationProperty, navigationProperty.Type.ToStructuredType(), propertyName, /*isDeltaResourceSet*/ isDeltaResourceSet)
                             : ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, navigationProperty, propertyName, /*isExpanded*/ true);
                     }
