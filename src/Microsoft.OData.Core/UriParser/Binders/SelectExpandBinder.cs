@@ -12,7 +12,7 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser.Aggregation;
 using ODataErrorStrings = Microsoft.OData.Strings;
-
+using System.Text;
 
 namespace Microsoft.OData.UriParser
 {
@@ -125,16 +125,100 @@ namespace Microsoft.OData.UriParser
             {
                 // if there are any select items at this level then allSelected is false, otherwise it's true.
                 isAllSelected = false;
+                HashSet<PathSegmentToken> selectedPaths = new HashSet<PathSegmentToken>(new PathSegmentTokenEqualityComparer());
 
                 foreach (SelectTermToken selectTermToken in selectToken.SelectTerms)
                 {
-                    AddToSelectedItems(GenerateSelectItem(selectTermToken), selectExpandItems);
+                    SelectItem selectItem = GenerateSelectItem(selectTermToken);
+                    if (selectedPaths.Contains(selectTermToken.PathToProperty))
+                    {
+                        // It's not allowed have multple select clause with same path.
+                        // For example: $select=abc($top=2),abc($skip=2) is not allowed by design.
+                        // Customer should combine them together, for example: $select=abc($top=2;$skip=2).
+                        // The logic is different with ExpandTreeNormalizer. We should change the logic in ExpandTreeNormalizer
+                        // in next breaking change version.
+                        // For backward compatibility with previous versions of OData Library, we only validate
+                        // if one of the select item has options.
+                        PathSelectItem selectPathItem = selectItem as PathSelectItem;
+
+                        // if the new one has options, raise an error
+                        if (selectPathItem != null && selectPathItem.HasOptions)
+                        {
+                            throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(selectTermToken.PathToProperty)));
+                        }
+                        else
+                        {
+                            // find the previous item
+                            PathSelectItem previousItem = selectExpandItems.Cast<PathSelectItem>().FirstOrDefault(selectExpandItem =>
+                            {
+                                return (selectExpandItem is PathSelectItem &&
+                                    selectPathItem.SelectedPath.Equals(selectExpandItem.SelectedPath));
+                            });
+
+                            // if the previous one had options, raise an error
+                            if (previousItem != null && previousItem.HasOptions)
+                            {
+                                throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(selectTermToken.PathToProperty)));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        AddToSelectedItems(selectItem, selectExpandItems);
+                        selectedPaths.Add(selectTermToken.PathToProperty);
+                    }
                 }
             }
 
             // It's better to return "null" if both expand and select are null.
             // However, in order to be consistent, we returns empty "SelectExpandClause" with AllSelected = true.
             return new SelectExpandClause(selectExpandItems, isAllSelected);
+        }
+
+
+        /// <summary>
+        /// Get the path string for a path segment token.
+        /// </summary>
+        /// <param name="head">The head of the path</param>
+        /// <returns>The path string.</returns>
+        internal static string ToPathString(PathSegmentToken head)
+        {
+            StringBuilder sb = new StringBuilder();
+            PathSegmentToken curr = head;
+            while (curr != null)
+            {
+                sb.Append(curr.Identifier);
+
+                NonSystemToken nonSystem = curr as NonSystemToken;
+                if (nonSystem != null && nonSystem.NamedValues != null)
+                {
+                    sb.Append("(");
+                    bool first = true;
+                    foreach (var item in nonSystem.NamedValues)
+                    {
+                        if (first)
+                        {
+                            first = false;
+                        }
+                        else
+                        {
+                            sb.Append(",");
+                        }
+
+                        sb.Append(item.Name).Append("=").Append(item.Value.Value);
+                    }
+
+                    sb.Append(")");
+                }
+
+                curr = curr.NextToken;
+                if (curr != null)
+                {
+                    sb.Append("/");
+                }
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>

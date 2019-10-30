@@ -133,5 +133,24 @@ namespace Microsoft.OData.UriParser
         {
             handler.Handle(this);
         }
+
+        /// <summary>
+        /// Returns whether or not the path select item has any options applied
+        /// </summary>
+        internal bool HasOptions
+        {
+            get
+            {
+                return
+                    FilterOption != null ||
+                    ComputeOption != null ||
+                    SearchOption != null ||
+                    TopOption != null ||
+                    SkipOption != null ||
+                    CountOption != null ||
+                    OrderByOption != null ||
+                    (SelectAndExpand != null && !SelectAndExpand.AllSelected);
+            }
+        }
     }
 }
