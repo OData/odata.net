@@ -272,7 +272,8 @@ namespace Microsoft.OData.Edm.Csdl
         {
             EdmUtil.CheckArgumentNull(model, "model");
             VersioningDictionary<string, string> mappings = model.GetAnnotationValue<VersioningDictionary<string, string>>(model, EdmConstants.InternalUri, CsdlConstants.NamespaceAliasAnnotation);
-            if (mappings != null && mappings.TryGetValue(namespaceName, out string namespaceAlias))
+            string namespaceAlias;
+            if (mappings != null && mappings.TryGetValue(namespaceName, out namespaceAlias))
             {
                 return namespaceAlias;
             }
