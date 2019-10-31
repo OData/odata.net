@@ -152,6 +152,7 @@
     <Compile Include="Schema\CoreModel\EdmCoreModelEntityType.cs" />
     <Compile Include="Schema\CoreModel\EdmCoreModelPathType.cs" />
     <Compile Include="Schema\CoreModel\EdmCoreModel.cs" />
+    <Compile Include="Schema\EdmDictionaryOfStringStringTypeReference.cs" />
     <Compile Include="Schema\EdmUntypedStructuredType.cs" />
     <Compile Include="Schema\EdmUntypedStructuredTypeReference.cs" />
     <Compile Include="Schema\EdmPathTypeReference.cs" />

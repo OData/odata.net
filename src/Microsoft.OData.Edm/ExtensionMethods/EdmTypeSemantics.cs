@@ -702,6 +702,50 @@ namespace Microsoft.OData.Edm
             return false;
         }
 
+        /// <summary>
+        /// Returns true if this reference refers to a dictionary type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a dictionary type.</returns>
+        public static bool IsDictionary(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.Definition.IsDictionary();
+        }
+
+        /// <summary>
+        /// Returns true if this definition refers to a dictionary type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This definition refers to a dictionary type.</returns>
+        public static bool IsDictionary(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind.IsDictionary();
+        }
+
+        /// <summary>
+        /// Returns true if this type kind represents a dictionary type.
+        /// </summary>
+        /// <param name="typeKind">Type reference.</param>
+        /// <returns>This kind refers to a dictionary type.</returns>
+        public static bool IsDictionary(this EdmPrimitiveTypeKind typeKind)
+        {
+            switch (typeKind)
+            {
+                case EdmPrimitiveTypeKind.DictionaryOfStringString:
+                    return true;
+            }
+
+            return false;
+        }
+
         #endregion
 
         // The As*** functions never return null -- if the supplied type does not have the appropriate shape, an encoding of a bad type is returned.
@@ -1327,6 +1371,8 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.GeometryMultiLineString:
                 case EdmPrimitiveTypeKind.GeometryMultiPoint:
                     return new EdmSpatialTypeReference(type, isNullable);
+                case EdmPrimitiveTypeKind.DictionaryOfStringString:
+                    return new EdmDictionaryOfStringStringTypeReference(type, isNullable);
                 default:
                     throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
             }

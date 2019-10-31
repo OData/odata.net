@@ -185,6 +185,11 @@ namespace Microsoft.OData.Edm
         /// Represents a Primitive type
         /// </summary>
         PrimitiveType,
+
+        /// <summary>
+        /// Represents a Dictionary of String, String
+        /// </summary>
+        DictionaryOfStringString,
     }
 
     /// <summary>

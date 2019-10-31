@@ -509,7 +509,7 @@ namespace Microsoft.OData.Metadata
                 return true;
             }
 
-            return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
+            return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType) || typeof(IDictionary<string, string>).IsAssignableFrom(clrType);
         }
 
         /// <summary>
@@ -1446,6 +1446,10 @@ namespace Microsoft.OData.Metadata
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Geometry);
             }
+            else if (typeof(IDictionary<string, string>).IsAssignableFrom(clrType))
+            {
+                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DictionaryOfStringString);
+            }
 
             if (primitiveType == null)
             {
@@ -1923,6 +1927,8 @@ namespace Microsoft.OData.Metadata
                 case EdmPrimitiveTypeKind.GeometryMultiPoint:
                 case EdmPrimitiveTypeKind.GeometryCollection:
                     return new EdmSpatialTypeReference(primitiveType, nullable);
+                case EdmPrimitiveTypeKind.DictionaryOfStringString:
+                    return new EdmDictionaryOfStringStringTypeReference(primitiveType, nullable);
                 default:
                     throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_PrimitiveTypeReference));
             }

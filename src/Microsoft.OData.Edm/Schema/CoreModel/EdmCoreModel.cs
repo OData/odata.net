@@ -76,6 +76,7 @@ namespace Microsoft.OData.Edm
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPolygon),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiLineString),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPoint),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.DictionaryOfStringString),
                 primitiveType, // Edm.PrimitiveType
             };
 
