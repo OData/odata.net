@@ -412,18 +412,18 @@ namespace EdmLibTests
                 foreach (var parameterElement in sourceCsdl.Descendants().Elements(XName.Get(schemaElementType, csdlNamespace.NamespaceName)))
                 {
                     IEdmOperationParameter parameterFound = null;
-                    var paramterName = parameterElement.Attribute("Name").Value;
+                    var parameterName = parameterElement.Attribute("Name").Value;
                     Assert.IsTrue(new string[] {"Function", "Action"}.Any(n => n == parameterElement.Parent.Name.LocalName), "<Parameter> is used in {0}", parameterElement.Parent.Name.LocalName);
 
                     IEdmOperation elementFound;
 
                     var schemaElementName = string.Format("{0}.{1}", namespaceValue, parameterElement.Parent.Attribute("Name").Value);
-                    elementFound = testModel.FindOperations(schemaElementName).Where(n => n.FindParameter(paramterName) != null).FirstOrDefault();
+                    elementFound = testModel.FindOperations(schemaElementName).Where(n => n.FindParameter(parameterName) != null).FirstOrDefault();
 
-                    parameterFound = elementFound.FindParameter(paramterName);
+                    parameterFound = elementFound.FindParameter(parameterName);
 
-                    Assert.IsNotNull(parameterFound, "Faild to FindParameter for the parameter : {0}", paramterName);
-                    Assert.AreEqual(parameterFound.Name, paramterName, "FindParameter returns a wrong parameter for {0}", parameterElement.Attribute("Name").Value);
+                    Assert.IsNotNull(parameterFound, "Faild to FindParameter for the parameter : {0}", parameterName);
+                    Assert.AreEqual(parameterFound.Name, parameterName, "FindParameter returns a wrong parameter for {0}", parameterElement.Attribute("Name").Value);
                 }
             }
         }
