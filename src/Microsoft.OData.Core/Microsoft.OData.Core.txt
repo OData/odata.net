@@ -532,6 +532,8 @@ ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected=A non-collecti
 
 ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue=The value specified for the spatial property was not valid. You must specify a valid spatial value.
 
+ODataJsonReaderCoreUtils_CannotReadDictionaryPropertyValue=The value specified for the dictionary property was not valid. You must specify a valid dictionary value.
+
 ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource=If a primitive value is representing a resource, the resource must be null.
 ODataJsonLightReaderUtils_AnnotationWithNullValue=The '{0}' instance or property annotation has a null value. In OData, the '{0}' instance or property annotation must have a non-null string value.
 ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation=An '{0}' annotation was found with an invalid value. In OData, the only valid value for the '{0}' annotation is '{1}'.

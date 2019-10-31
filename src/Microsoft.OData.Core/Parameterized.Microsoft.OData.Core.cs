@@ -3473,6 +3473,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The value specified for the dictionary property was not valid. You must specify a valid dictionary value."
+        /// </summary>
+        internal static string ODataJsonReaderCoreUtils_CannotReadDictionaryPropertyValue
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonReaderCoreUtils_CannotReadDictionaryPropertyValue);
+            }
+        }
+
+        /// <summary>
         /// A string like "If a primitive value is representing a resource, the resource must be null."
         /// </summary>
         internal static string ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource {

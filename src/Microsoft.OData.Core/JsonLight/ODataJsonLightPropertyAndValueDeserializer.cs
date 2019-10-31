@@ -1461,6 +1461,17 @@ namespace Microsoft.OData.JsonLight
                     this.recursionDepth,
                     propertyName);
             }
+            else if (expectedValueTypeReference != null && expectedValueTypeReference.IsDictionary())
+            {
+                result = ODataJsonReaderCoreUtils.ReadDictionaryOfStringStringValue(
+                    this.JsonReader,
+                    insideJsonObjectValue,
+                    this.JsonLightInputContext,
+                    expectedValueTypeReference,
+                    validateNullValue,
+                    this.recursionDepth,
+                    propertyName);
+            }
             else
             {
                 if (insideJsonObjectValue)
