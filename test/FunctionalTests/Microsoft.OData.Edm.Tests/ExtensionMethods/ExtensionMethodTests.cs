@@ -950,6 +950,13 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Assert.Null(model.GetNamespaceAlias("SomeNamespace"));
         }
 
+        [Fact]
+        public void GetNamespaceAliasForNamespaceWithAlias()
+        {
+            Assert.Equal(TestModel.TestModelAlias, TestModel.Instance.Model.GetNamespaceAlias(TestModel.TestModelNameSpace));
+            Assert.Equal(TestModel.TestModelAlias2, TestModel.Instance.Model.GetNamespaceAlias(TestModel.TestModelNameSpace2));
+        }
+        
         internal class TestModel
         {
             public static TestModel Instance = new TestModel();
