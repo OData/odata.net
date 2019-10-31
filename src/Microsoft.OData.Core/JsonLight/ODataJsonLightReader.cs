@@ -154,11 +154,8 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node depending on whether we are reading a nested payload or a Uri Operation Parameter or not.
-            ODataPayloadKind payloadKind = this.ReadingDelta
-                ? ODataPayloadKind.Delta
-                : this.ReadingResourceSet ?
-                    ODataPayloadKind.ResourceSet
-                    : ODataPayloadKind.Resource;
+            ODataPayloadKind payloadKind = this.ReadingResourceSet ?
+                this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
 
             // Following parameter "this.IsReadingNestedPayload || this.readingParameter" indicates whether to read
             // { "value" :
@@ -1879,7 +1876,9 @@ namespace Microsoft.OData.JsonLight
             }
 
             ODataDeltaKind resourceKind = ODataDeltaKind.Resource;
-            if (this.ReadingResourceSet || this.IsExpandedLinkContent || this.ReadingDelta)
+
+            // if this is a resourceSet, expanded link, or non-top level resource in a delta result, read the contextUrl
+            if (this.ReadingResourceSet || this.IsExpandedLinkContent || (this.ReadingDelta && !this.IsTopLevel))
             {
                 string contextUriStr =
                     this.jsonLightResourceDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Resource,
