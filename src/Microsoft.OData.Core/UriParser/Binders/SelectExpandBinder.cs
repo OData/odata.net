@@ -8,11 +8,12 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser.Aggregation;
 using ODataErrorStrings = Microsoft.OData.Strings;
-using System.Text;
+
 
 namespace Microsoft.OData.UriParser
 {
@@ -125,47 +126,40 @@ namespace Microsoft.OData.UriParser
             {
                 // if there are any select items at this level then allSelected is false, otherwise it's true.
                 isAllSelected = false;
-                HashSet<PathSegmentToken> selectedPaths = new HashSet<PathSegmentToken>(new PathSegmentTokenEqualityComparer());
 
                 foreach (SelectTermToken selectTermToken in selectToken.SelectTerms)
                 {
                     SelectItem selectItem = GenerateSelectItem(selectTermToken);
-                    if (selectedPaths.Contains(selectTermToken.PathToProperty))
+                    PathSelectItem selectPathItem = selectItem as PathSelectItem;
+                    bool duplicate = false;
+
+                    if (selectPathItem != null)
                     {
-                        // It's not allowed have multple select clause with same path.
+                        // It's not allowed to have multiple select clause with the same path.
                         // For example: $select=abc($top=2),abc($skip=2) is not allowed by design.
                         // Customer should combine them together, for example: $select=abc($top=2;$skip=2).
                         // The logic is different with ExpandTreeNormalizer. We should change the logic in ExpandTreeNormalizer
                         // in next breaking change version.
                         // For backward compatibility with previous versions of OData Library, we only validate
-                        // if one of the select item has options.
-                        PathSelectItem selectPathItem = selectItem as PathSelectItem;
-
-                        // if the new one has options, raise an error
-                        if (selectPathItem != null && selectPathItem.HasOptions)
+                        // if one of the select items has options.
+                        foreach (PathSelectItem existingItem in selectExpandItems.OfType<PathSelectItem>())
                         {
-                            throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(selectTermToken.PathToProperty)));
-                        }
-                        else
-                        {
-                            // find the previous item
-                            PathSelectItem previousItem = selectExpandItems.Cast<PathSelectItem>().FirstOrDefault(selectExpandItem =>
-                            {
-                                return (selectExpandItem is PathSelectItem &&
-                                    selectPathItem.SelectedPath.Equals(selectExpandItem.SelectedPath));
-                            });
-
-                            // if the previous one had options, raise an error
-                            if (previousItem != null && previousItem.HasOptions)
+                            if ((selectPathItem.HasOptions && overLaps(selectPathItem, existingItem)) || (existingItem.HasOptions && overLaps(existingItem, selectPathItem)))
                             {
                                 throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(selectTermToken.PathToProperty)));
                             }
+
+                            // two items without options are identical -- for backward compat just ignore the new one
+                            if (selectPathItem.SelectedPath.Equals(existingItem.SelectedPath))
+                            {
+                                duplicate = true;
+                            }
                         }
                     }
-                    else
+
+                    if (!duplicate)
                     {
                         AddToSelectedItems(selectItem, selectExpandItems);
-                        selectedPaths.Add(selectTermToken.PathToProperty);
                     }
                 }
             }
@@ -174,7 +168,6 @@ namespace Microsoft.OData.UriParser
             // However, in order to be consistent, we returns empty "SelectExpandClause" with AllSelected = true.
             return new SelectExpandClause(selectExpandItems, isAllSelected);
         }
-
 
         /// <summary>
         /// Get the path string for a path segment token.
@@ -219,6 +212,25 @@ namespace Microsoft.OData.UriParser
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Determines whether the first path is entirely contained in the second path.
+        /// </summary>
+        /// <param name="first">First path item</param>
+        /// <param name="second">Second path item</param>
+        /// <returns></returns>
+        private static bool overLaps(PathSelectItem firstPath, PathSelectItem secondPath)
+        {
+            IEnumerator<ODataPathSegment> first = firstPath.SelectedPath.GetEnumerator();
+            IEnumerator<ODataPathSegment> second = secondPath.SelectedPath.GetEnumerator();
+
+            bool completed;
+            while ((completed = first.MoveNext()) && second.MoveNext() && first.Current.Identifier == second.Current.Identifier)
+            { 
+            }
+
+            return !completed;
         }
 
         /// <summary>

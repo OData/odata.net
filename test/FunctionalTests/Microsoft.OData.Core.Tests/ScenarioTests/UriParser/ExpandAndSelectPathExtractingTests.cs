@@ -207,7 +207,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             test.Throws<ODataException>("Found multiple select terms with same select path 'Address' at one $select, please combine them together.");
         }
 
-        [Fact(Skip = "Currently succeeds with extra top-level 'Address' node due to known issue.")]
+        [Fact]
         public void DifferentPathsToSamePropertyFails()
         {
             const string selectClauseText = "Address($select=NearestAirports),Address/NearestAirports";
@@ -215,7 +215,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
         }
 
-        [Fact(Skip = "Currently succeeds with extra top-level 'Address' node due to known issue.")]
+        [Fact]
         public void DifferentPathsToSamePropertyWithOptionsFails()
         {
             const string selectClauseText = "Address($select=NearestAirports($top=2)),Address/NearestAirports";
@@ -223,7 +223,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
         }
 
-        [Fact(Skip = "Currently succeeds with extra top-level 'Address' node due to known issue.")]
+        [Fact]
         public void DifferentPathsToSamePropertyWithOptionsOnBothFails()
         {
             const string selectClauseText = "Address($select=NearestAirports($top=2)),Address/NearestAirports($skip=2)";
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
         }
 
-        [Fact(Skip = "Currently succeeds with extra top-level 'Address' node due to known issue.")]
+        [Fact]
         public void DifferentPathsToSamePropertyWithSubselectsOnBothFails()
         {
             const string selectClauseText = "Address($select=NearestAirports($select=City)),Address/NearestAirports($select=Region)";

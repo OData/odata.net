@@ -163,7 +163,6 @@
       <DependentUpon>Microsoft.Spatial.tt</DependentUpon>
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
-    <None Include="packages.config" />
     <None Include="Parameterized.Microsoft.Spatial.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Parameterized.Microsoft.Spatial.cs</LastGenOutput>
@@ -177,14 +176,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\sln\packages\MSTest.TestFramework.2.0.0\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\sln\packages\MSTest.TestFramework.2.0.0\lib\netstandard1.0\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\Portable.targets" />
 </Project>
