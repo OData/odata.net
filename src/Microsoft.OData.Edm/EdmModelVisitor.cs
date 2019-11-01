@@ -314,6 +314,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.Date:
                 case EdmPrimitiveTypeKind.PrimitiveType:
                 case EdmPrimitiveTypeKind.None:
+                case EdmPrimitiveTypeKind.DictionaryOfStringString:
                     this.ProcessPrimitiveTypeReference(reference);
                     break;
                 default:
