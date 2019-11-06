@@ -79,7 +79,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     "Expected exception of type '{0}' with message resource ID '{1}' but none was thrown.",
                     this.ExpectedException.ExpectedExceptionType.ToString(),
                     this.ExpectedException.ExpectedMessage == null ? "<null>" : this.ExpectedException.ExpectedMessage.ResourceIdentifier);
-                 this.settings.ExceptionVerifier.VerifyExceptionResult(this.ExpectedException, exception);
+                this.settings.ExceptionVerifier.VerifyExceptionResult(this.ExpectedException, exception);
             }
             else
             {
