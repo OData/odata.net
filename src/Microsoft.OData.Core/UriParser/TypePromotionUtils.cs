@@ -507,6 +507,7 @@ namespace Microsoft.OData.UriParser
                 {
                     return false;
                 }
+
                 // for structured types, use IsAssignableFrom
                 return EdmLibraryExtensions.IsAssignableFrom(
                     (IEdmStructuredType)targetReference.Definition,

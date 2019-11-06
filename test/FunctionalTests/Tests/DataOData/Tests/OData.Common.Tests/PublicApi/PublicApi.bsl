@@ -6964,6 +6964,7 @@ public sealed class Microsoft.OData.UriParser.PathSelectItem : Microsoft.OData.U
 	Microsoft.OData.UriParser.ComputeClause ComputeOption  { public get; }
 	System.Nullable`1[[System.Boolean]] CountOption  { public get; }
 	Microsoft.OData.UriParser.FilterClause FilterOption  { public get; }
+	bool HasOptions  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
 	Microsoft.OData.UriParser.OrderByClause OrderByOption  { public get; }
 	Microsoft.OData.UriParser.SearchClause SearchOption  { public get; }

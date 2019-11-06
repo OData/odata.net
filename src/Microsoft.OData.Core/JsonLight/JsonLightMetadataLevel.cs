@@ -90,6 +90,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
         /// <param name="odataUri">The OData Uri.</param>
+        /// <param name="settings">The settings to use when creating the resource builder.</param>
         /// <returns>The created metadata builder.</returns>
         internal abstract ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
             ODataResourceBase resource,
