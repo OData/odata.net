@@ -49,6 +49,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="countQueryOption">the query count option for this select term</param>
         /// <param name="searchOption">the search option for this select term</param>
         /// <param name="selectOption">the select option for this select term</param>
+        /// <param name="computeOption">the compute option for this select term</param>
         public SelectTermToken(PathSegmentToken pathToProperty,
             QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, QueryToken searchOption, SelectToken selectOption, ComputeToken computeOption)
             : base(pathToProperty, filterOption, orderByOptions, topOption, skipOption, countQueryOption, searchOption, selectOption, computeOption)

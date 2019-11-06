@@ -5137,7 +5137,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Found mutliple select terms with same select path '{0}' at one $select, please combine them together."
+        /// A string like "Found multiple select terms with same select path '{0}' at one $select, please combine them together."
         /// </summary>
         internal static string SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound, p0);

@@ -403,6 +403,7 @@ namespace Microsoft.OData.Evaluation
             /// <param name="actualResourceType">The structured type of the resource.</param>
             /// <param name="metadataContext">The metadata context to use.</param>
             /// <param name="selectedProperties">The selected properties.</param>
+            /// <param name="metadataSelector">The metadata selector to use when writing metadata.</param>
             internal ODataResourceMetadataContextWithModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, IEdmStructuredType actualResourceType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties, ODataMetadataSelector metadataSelector)
                 : base(resource, typeContext)
             {
