@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     ////#endif
 
     /// <summary>
-    /// Throw this expcetion when the parser can parse the target type but failed to do so.
+    /// Throw this exception when the parser can parse the target type but failed to do so.
     /// Do not throw when parser is not able to parse the target type.
     /// </summary>
     [DebuggerDisplay("{Message}")]

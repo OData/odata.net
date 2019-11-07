@@ -24,7 +24,7 @@ namespace Microsoft.OData.Service
     internal static class UriUtil
     {
 #if ODATA_CLIENT
-        /// <summary>forward slash char array for triming uris</summary>
+        /// <summary>forward slash char array for trimming uris</summary>
         internal static readonly char[] ForwardSlash = new char[1] { '/' };
 #endif
 

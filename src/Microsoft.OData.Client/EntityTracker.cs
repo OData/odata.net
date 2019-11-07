@@ -414,7 +414,7 @@ namespace Microsoft.OData.Client
             trackedEntityDescriptor.State = EntityStates.Unchanged;
             trackedEntityDescriptor.PropertiesToSerialize.Clear();
 
-            // scenario: sucessfully (1) delete an existing entity and (2) add a new entity where the new entity has the same identity as deleted entity
+            // scenario: successfully (1) delete an existing entity and (2) add a new entity where the new entity has the same identity as deleted entity
             // where the SaveChanges pass1 will now associate existing identity with new entity
             // but pass2 for the deleted entity will not blindly remove the identity that is now associated with the new identity
             this.identityToDescriptor[entityDescriptorFromMaterializer.Identity] = trackedEntityDescriptor;
@@ -450,7 +450,7 @@ namespace Microsoft.OData.Client
             resource.Identity = identity; // always attach the identity
             resource.EditLink = editLink;
 
-            // scenario: sucessfully batch (1) add a new entity and (2) delete an existing entity where the new entity has the same identity as deleted entity
+            // scenario: successfully batch (1) add a new entity and (2) delete an existing entity where the new entity has the same identity as deleted entity
             // where the SaveChanges pass1 will now associate existing identity with new entity
             // but pass2 for the deleted entity will not blindly remove the identity that is now associated with the new identity
             this.identityToDescriptor[identity] = resource;

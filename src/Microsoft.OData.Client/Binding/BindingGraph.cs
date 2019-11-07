@@ -773,7 +773,7 @@ namespace Microsoft.OData.Client
                 return this.vertices.TryGetValue(item, out v);
             }
 
-            /// <summary>Looksup the vertex corresponding to <paramref name="item"/></summary>
+            /// <summary>Looks up the vertex corresponding to <paramref name="item"/></summary>
             /// <param name="item">Item to lookup</param>
             /// <returns>Vertex corresponding to item</returns>
             public Vertex LookupVertex(object item)
@@ -883,7 +883,7 @@ namespace Microsoft.OData.Client
             /// <remarks>
             /// Performs a depth first traversal of the graph starting from the root collection
             /// vertex and checks if some vertices were unreachable was reached while doing the traversal.
-            /// Alogrithm from Introduction to Algorithms 22.2 by Cormen et al.
+            /// Algorithm from Introduction to Algorithms 22.2 by Cormen et al.
             /// </remarks>
             private IEnumerable<Vertex> UnreachableVertices()
             {

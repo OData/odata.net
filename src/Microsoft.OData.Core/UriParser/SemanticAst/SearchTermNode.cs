@@ -51,7 +51,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the resouce type of the single value this node represents.
+        /// Gets the resource type of the single value this node represents.
         /// </summary>
         public override IEdmTypeReference TypeReference
         {

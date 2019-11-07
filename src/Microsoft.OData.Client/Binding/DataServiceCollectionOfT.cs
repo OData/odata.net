@@ -556,7 +556,7 @@ namespace Microsoft.OData.Client
         /// <param name="item">The item to add.</param>
         /// <remarks>
         /// Override to prevent additions to the collection in "deferred tracking" mode, and to verify that the item implements INotifyPropertyChanged.
-        /// Overridding this method will cover items that are added to the collection via Add and Insert.
+        /// Overriding this method will cover items that are added to the collection via Add and Insert.
         /// </remarks>
         protected override void InsertItem(int index, T item)
         {

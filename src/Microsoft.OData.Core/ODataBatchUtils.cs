@@ -148,7 +148,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates that the uri's reference of $requestId, if used, is one of the depends-on requests.
+        /// Validates that the URIs reference of $requestId, if used, is one of the depends-on requests.
         /// The Uri can be either absolute or relative.
         /// Exception is thrown if the request Id reference is not found in the list of depends-on requests.
         /// </summary>

@@ -238,7 +238,7 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="type">starting type</param>
         /// <param name="genericTypeDefinition">the generic type definition to find</param>
-        /// <returns>concrete type that implementats the generic type</returns>
+        /// <returns>concrete type that implements the generic type</returns>
         internal static Type GetImplementationType(Type type, Type genericTypeDefinition)
         {
             if (IsConstructedGeneric(type, genericTypeDefinition))
@@ -253,7 +253,7 @@ namespace Microsoft.OData.Client.Metadata
                     if (IsConstructedGeneric(interfaceType, genericTypeDefinition))
                     {
                         if (null == implementationType)
-                        {   // found implmentation of genericTypeDefinition (e.g. ICollection<T>)
+                        {   // found implementation of genericTypeDefinition (e.g. ICollection<T>)
                             implementationType = interfaceType;
                         }
                         else
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Client.Metadata
                     //// we do support adding elements to collections
                     //// ICollection<PropertyType> { get; /*ignored set;*/ }
 
-                    //// indexed properties are not suported because
+                    //// indexed properties are not supporter because
                     //// we don't have anything to use as the index
                     //// PropertyType Property[object x] { /*ignored get;*/ /*ignored set;*/ }
 
@@ -688,11 +688,11 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convension.
+        /// Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.
         /// </summary>
         /// <param name="propertyInfo">Property in question.</param>
         /// <param name="dataServiceKeyAttribute">DataServiceKeyAttribute instance.</param>
-        /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convension.</returns>
+        /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.</returns>
         private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute)
         {
             Debug.Assert(propertyInfo != null, "propertyInfo != null");
@@ -727,7 +727,7 @@ namespace Microsoft.OData.Client.Metadata
         /// closed constructed type of the generic type.
         /// </summary>
         /// <param name="type">Type to check.</param>
-        /// <param name="genericTypeDefinition">Generic type for checkin.</param>
+        /// <param name="genericTypeDefinition">Generic type for checking.</param>
         /// <returns>true if <paramref name="type"/> is a constructed type of <paramref name="genericTypeDefinition"/>.</returns>
         /// <remarks>The check is an immediate check; no inheritance rules are applied.</remarks>
         private static bool IsConstructedGeneric(Type type, Type genericTypeDefinition)

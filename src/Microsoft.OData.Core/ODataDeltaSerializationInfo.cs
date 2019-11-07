@@ -12,7 +12,7 @@ namespace Microsoft.OData
     public sealed class ODataDeltaSerializationInfo
     {
         /// <summary>
-        /// The navigation source name of the resource/source resource to be written. Should be fully qualified if the navigatio nsource is not in the default container.
+        /// The navigation source name of the resource/source resource to be written. Should be fully qualified if the navigation source is not in the default container.
         /// </summary>
         private string navigationSourceName;
 

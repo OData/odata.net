@@ -31,7 +31,7 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmProperty property;
 
         /// <summary>
-        /// The resouce type of a single item from the collection represented by this node.
+        /// The resource type of a single item from the collection represented by this node.
         /// </summary>
         private readonly IEdmTypeReference itemType;
 

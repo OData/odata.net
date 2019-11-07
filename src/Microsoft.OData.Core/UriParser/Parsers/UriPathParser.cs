@@ -102,7 +102,7 @@ namespace Microsoft.OData.UriParser
                     // Handle the "root...::/{xyz}"
                     if (segment.Length >= 2 && segment.EndsWith("::", StringComparison.Ordinal))
                     {
-                        // It should be the terminal of the provious escape segment and the start of next escape semgent.
+                        // It should be the terminal of the previous escape segment and the start of next escape segment.
                         // Otherwise, it's an invalid Uri.
                         if (escapedStart == -1)
                         {
@@ -149,7 +149,7 @@ namespace Microsoft.OData.UriParser
                 if (escapedStart != -1 && escapedStart < uriSegments.Length)
                 {
                     string escapedSegment = ":" + String.Join("/", uriSegments, escapedStart, uriSegments.Length - escapedStart);
-                    segments.Add(escapedSegment); // We should not use "segments.Add(Uri.UnescapeDataString(escapedSegment));" to keep the orignal string.
+                    segments.Add(escapedSegment); // We should not use "segments.Add(Uri.UnescapeDataString(escapedSegment));" to keep the original string.
                 }
 
                 return segments.ToArray();

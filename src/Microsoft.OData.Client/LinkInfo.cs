@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client
         private string name;
 
         /// <summary>
-        /// Creates a LinkInfo with a given properyName
+        /// Creates a LinkInfo with a given propertyName
         /// </summary>
         /// <param name="propertyName">the name of the navigation property</param>
         internal LinkInfo(String propertyName)

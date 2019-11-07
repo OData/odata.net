@@ -87,7 +87,7 @@ namespace Microsoft.OData.UriParser
                 case '"':
                     char quote = this.ch.Value;
 
-                    this.AdvanceToNextOccuranceOfWithEscape(quote);
+                    this.AdvanceToNextOccurenceOfWithEscape(quote);
 
                     if (this.textPos == this.TextLen)
                     {
@@ -173,10 +173,10 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Advance to certain char, with escpae char support.
+        /// Advance to certain char, with escape char support.
         /// </summary>
         /// <param name="endingValue">the ending delimiter.</param>
-        private void AdvanceToNextOccuranceOfWithEscape(char endingValue)
+        private void AdvanceToNextOccurenceOfWithEscape(char endingValue)
         {
             this.NextCharWithEscape();
             while (this.ch.HasValue && !(this.ch == endingValue && !this.isEscape))

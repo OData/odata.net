@@ -125,7 +125,7 @@ namespace Microsoft.OData
         /// <param name="mediaType">The media type used to compute the default encoding for the payload.</param>
         /// <param name="utf8Encoding">The encoding to use for UTF-8 charsets; we use the one without the BOM.</param>
         /// <param name="defaultEncoding">The encoding to use if no encoding could be computed from the <paramref name="acceptableCharsets"/> or <paramref name="mediaType"/>.</param>
-        /// <returns>An Encoding object appropriate to the specifed charset request.</returns>
+        /// <returns>An Encoding object appropriate to the specified charset request.</returns>
         internal static Encoding EncodingFromAcceptableCharsets(string acceptableCharsets, ODataMediaType mediaType, Encoding utf8Encoding, Encoding defaultEncoding)
         {
             Debug.Assert(mediaType != null, "mediaType != null");
@@ -171,7 +171,7 @@ namespace Microsoft.OData
                 }
             }
 
-            // No Charset was specifed, or if charsets were specified, no valid charset was found.
+            // No Charset was specified, or if charsets were specified, no valid charset was found.
             // Returning a different charset is also valid. Get the default encoding for the media type.
             if (result == null)
             {
@@ -525,7 +525,7 @@ namespace Microsoft.OData
 
             // PERF: optimize for common patterns.
             bool commaRequired = false; // Whether a comma should be found
-            int headerIndex = 0;        // Index of character being procesed on headerValue.
+            int headerIndex = 0;        // Index of character being processed on headerValue.
             int headerStart;            // Index into headerValue for the start of the charset name.
             int headerNameEnd;          // Index into headerValue for the end of the charset name (+1).
             int headerEnd;              // Index into headerValue for this charset part (+1).
@@ -826,7 +826,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Verfies whether the specified character is a valid separator in
+        /// Verifies whether the specified character is a valid separator in
         /// an HTTP header list of element.
         /// </summary>
         /// <param name="c">Character to verify.</param>

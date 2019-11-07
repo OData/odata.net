@@ -233,7 +233,7 @@ namespace Microsoft.OData.Client
                             requestMessage.SetRequestStream(contentStream);
                         }
 
-                        responseMsg = this.RequestInfo.GetSyncronousResponse(requestMessage, false);
+                        responseMsg = this.RequestInfo.GetSynchronousResponse(requestMessage, false);
 
                         this.HandleOperationResponse(responseMsg);
                         this.HandleOperationResponseHeaders((HttpStatusCode)responseMsg.StatusCode, new HeaderCollection(responseMsg));
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Client
                         (null != (requestMessage = this.CheckAndProcessMediaEntryPut(entityDescriptor))))
                     {
                         this.streamRequestKind = StreamRequestKind.PutMediaResource;
-                        descriptorForSendingRequest2 = entityDescriptor.DefaultStreamDescriptor;  // We want to give SendingRequest2 the StreamDecriptor
+                        descriptorForSendingRequest2 = entityDescriptor.DefaultStreamDescriptor;  // We want to give SendingRequest2 the StreamDescriptor
                     }
                     else if ((EntityStates.Added == descriptor.State) && (null != (requestMessage = this.CheckAndProcessMediaEntryPost(entityDescriptor))))
                     {

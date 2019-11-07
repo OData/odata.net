@@ -36,7 +36,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// "Registered" uri literal parser to an EdmType. These parsers will be called when the text has to be parsed to the
-        /// specific EdmType they had registered to. Each of these parsers could parse only one EdmType. Better performace.
+        /// specific EdmType they had registered to. Each of these parsers could parse only one EdmType. Better performance.
         /// </summary>
         private static UriLiteralParserPerEdmType[] customUriLiteralParserPerEdmType = new UriLiteralParserPerEdmType[0];
 
@@ -73,14 +73,14 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// Parse the given uri text.
-        /// Try to parse with a specific Uri literal parser regeistered for the target EdmType.
+        /// Try to parse with a specific Uri literal parser registered for the target EdmType.
         /// If no parser is registered, try to parse with the general parsers.
-        /// This method is public becuase of the Interface, but the Singleton instance in internal so it could not be accessed by clients.
+        /// This method is public because of the Interface, but the Singleton instance in internal so it could not be accessed by clients.
         /// </summary>
         /// <param name="text">Part of the Uri which has to be parsed to a value of EdmType <paramref name="targetType"/></param>
         /// <param name="targetType">The type which the uri text has to be parsed to</param>
         /// <param name="parsingException">Assign the exception only in case the text could be parsed to the <paramref name="targetType"/> but failed during the parsing process</param>
-        /// <returns>If parsing proceess has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
+        /// <returns>If parsing process has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
         public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
         {
             IUriLiteralParser uriLiteralParserForEdmType = CustomUriLiteralParsers.GetUriLiteralParserByEdmType(targetType);

@@ -296,9 +296,9 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.entityReferenceLinks != null && this.entityReferenceLinks.First != null)
             {
-                ODataEntityReferenceLink entityRefernceLink = this.entityReferenceLinks.First.Value;
+                ODataEntityReferenceLink entityReferenceLink = this.entityReferenceLinks.First.Value;
                 this.entityReferenceLinks.RemoveFirst();
-                return entityRefernceLink;
+                return entityReferenceLink;
             }
 
             return null;

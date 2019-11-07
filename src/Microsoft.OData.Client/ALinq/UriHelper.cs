@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// <summary>forwardslash character</summary>
         internal const char FORWARDSLASH = '/';
 
-        /// <summary>leftparan character</summary>
+        /// <summary>leftparen character</summary>
         internal const char LEFTPAREN = '(';
 
         /// <summary>rightparan character</summary>

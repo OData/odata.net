@@ -152,9 +152,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
-            // Handle the out-of-line optinal parameter annotation for parameters.
+            // Handle the out-of-line optional parameter annotation for parameters.
             // First, use the above built parameters to create the full target name, for example: NS.TestFunction(Edm.String, Edm.String, Edm.String)
-            // Then, go through each prameters by visiting the out-of-line optional parameter annotation.
+            // Then, go through each parameters by visiting the out-of-line optional parameter annotation.
             // If we find at least one of out-of-line optional parameter annotation, we replace it as an optional parameter.
             // Otherwise, re-use the built parameter.
             // Be noted: if a parameter has inline and out-of-line optional parameter, the out-of-line will win.

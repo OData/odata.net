@@ -38,7 +38,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Gets the <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection returned by the query.</summary>
         /// <returns>An enumerator over the query results.</returns>
-        /// <remarks>Expect derived class to override this with an explict interface implementation</remarks>
+        /// <remarks>Expect derived class to override this with an explicit interface implementation</remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033", Justification = "required for this feature")]
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {

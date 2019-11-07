@@ -208,7 +208,7 @@ namespace Microsoft.OData.Client
 #region FollowOnSuccessWith
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task succeeded.
+        /// which will only be invoked if the antecedent task succeeded.
         /// </summary>
         /// <param name="antecedentTask">The task to "append" the operation to.</param>
         /// <param name="operation">The operation to execute if the <paramref name="antecedentTask"/> succeeded.</param>
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task succeeded.
+        /// which will only be invoked if the antecedent task succeeded.
         /// </summary>
         /// <typeparam name="TFollowupTaskResult">The result type of the operation. This MUST NOT be a Task or a type derived from Task.</typeparam>
         /// <param name="antecedentTask">The task to "append" the operation to.</param>
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task succeeded.
+        /// which will only be invoked if the antecedent task succeeded.
         /// </summary>
         /// <typeparam name="TAntecedentTaskResult">The result type of the antecedent task.</typeparam>
         /// <param name="antecedentTask">The task to "append" the operation to.</param>
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task succeeded.
+        /// which will only be invoked if the antecedent task succeeded.
         /// </summary>
         /// <typeparam name="TAntecedentTaskResult">The result type of the antecedent task.</typeparam>
         /// <typeparam name="TFollowupTaskResult">The result type of the operation. This MUST NOT be a Task or a type derived from Task.</typeparam>
@@ -272,7 +272,7 @@ namespace Microsoft.OData.Client
 #region FollowOnSuccessWithTask
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task succeeded.
+        /// which will only be invoked if the antecedent task succeeded.
         /// </summary>
         /// <param name="antecedentTask">The task to "append" the operation to.</param>
         /// <param name="operation">The operation to execute if the <paramref name="antecedentTask"/> succeeded.</param>
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task succeeded.
+        /// which will only be invoked if the antecedent task succeeded.
         /// </summary>
         /// <typeparam name="TFollowupTaskResult">The result type of the operation. This MUST NOT be a Task or a type derived from Task.</typeparam>
         /// <param name="antecedentTask">The task to "append" the operation to.</param>
@@ -321,7 +321,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task succeeded.
+        /// which will only be invoked if the antecedent task succeeded.
         /// </summary>
         /// <typeparam name="TAntecedentTaskResult">The result type of the antecedent task.</typeparam>
         /// <param name="antecedentTask">The task to "append" the operation to.</param>
@@ -346,7 +346,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task succeeded.
+        /// which will only be invoked if the antecedent task succeeded.
         /// </summary>
         /// <typeparam name="TAntecedentTaskResult">The result type of the antecedent task.</typeparam>
         /// <typeparam name="TFollowupTaskResult">The result type of the operation. This MUST NOT be a Task or a type derived from Task.</typeparam>
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Client
 #region FollowOnFaultWith
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task faulted.
+        /// which will only be invoked if the antecedent task faulted.
         /// </summary>
         /// <param name="antecedentTask">The task to "append" the operation to.</param>
         /// <param name="operation">The operation to execute if the <paramref name="antecedentTask"/> faulted.</param>
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
-        /// which will only be invoked if the antecendent task faulted.
+        /// which will only be invoked if the antecedent task faulted.
         /// </summary>
         /// <typeparam name="TResult">The type of the result of the task.</typeparam>
         /// <param name="antecedentTask">The task to "append" the operation to.</param>
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Client
 #region FollowOnFaultAndCatchExceptionWith
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="catchBlock"/>
-        /// which will only be invoked if the antecendent task faulted and it failed with exception of type TExceptionType.
+        /// which will only be invoked if the antecedent task faulted and it failed with exception of type TExceptionType.
         /// </summary>
         /// <typeparam name="TResult">The type of the result of the task.</typeparam>
         /// <typeparam name="TExceptionType">The exception type to catch.</typeparam>
@@ -625,7 +625,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(operation != null, "operation != null");
             Debug.Assert(
                 !(typeof(Task).IsAssignableFrom(typeof(TResult))),
-                "It's not valid to call FollowOnSucessWith on an operation which returns a Task, instead use FollowOnSuccessWithTask.");
+                "It's not valid to call FollowOnSuccessWith on an operation which returns a Task, instead use FollowOnSuccessWithTask.");
 
             TaskCompletionSource<TResult> taskCompletionSource = new TaskCompletionSource<TResult>();
             antecedentTask.ContinueWith(

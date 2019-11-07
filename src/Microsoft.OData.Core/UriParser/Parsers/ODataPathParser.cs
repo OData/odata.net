@@ -162,7 +162,7 @@ namespace Microsoft.OData.UriParser
         /// Tries to find a single matching operation import for the given identifier, and parameters.
         /// </summary>
         /// <param name="identifier">The identifier from the URI.</param>
-        /// <param name="parenthesisExpression">The parenthesis expression contianing parameters, if any.</param>
+        /// <param name="parenthesisExpression">The parenthesis expression containing parameters, if any.</param>
         /// <param name="configuration">The configuration of the parser.</param>
         /// <param name="boundParameters">The parsed parameters from the parenthesis expression.</param>
         /// <param name="matchingFunctionImport">The single matching operation import if one could be determined.</param>
@@ -177,7 +177,7 @@ namespace Microsoft.OData.UriParser
                 {
                     IEdmOperationImport possibleMatchingOperationImport = null;
 
-                    // Look for an overload that returns an entity collection by the specified name. If so parthensis is just key parameters.
+                    // Look for an overload that returns an entity collection by the specified name. If so parenthesis is just key parameters.
                     if (FunctionOverloadResolver.ResolveOperationImportFromList(identifier, EmptyList, configuration.Model, out possibleMatchingOperationImport, configuration.Resolver))
                     {
                         IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperationImport.Operation.ReturnType as IEdmCollectionTypeReference;
@@ -215,10 +215,10 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Tries to find a single matching operation import for the given identifier, parametes, and binding type.
+        /// Tries to find a single matching operation import for the given identifier, parameters, and binding type.
         /// </summary>
         /// <param name="identifier">The identifier from the URI.</param>
-        /// <param name="parenthesisExpression">The parenthesis expression contianing parameters, if any.</param>
+        /// <param name="parenthesisExpression">The parenthesis expression containing parameters, if any.</param>
         /// <param name="bindingType">The current binding type or null if there isn't one.</param>
         /// <param name="configuration">The configuration of the parser.</param>
         /// <param name="boundParameters">The parsed parameters from the parenthesis expression.</param>
@@ -244,7 +244,7 @@ namespace Microsoft.OData.UriParser
                 {
                     IEdmOperation possibleMatchingOperation = null;
 
-                    // Look for an overload that returns an entity collection by the specified name. If so parthensis is just key parameters.
+                    // Look for an overload that returns an entity collection by the specified name. If so parenthesis is just key parameters.
                     if (FunctionOverloadResolver.ResolveOperationFromList(identifier, new List<string>(), bindingType, configuration.Model, out possibleMatchingOperation, configuration.Resolver))
                     {
                         IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperation.ReturnType as IEdmCollectionTypeReference;
@@ -350,7 +350,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Tries to handle the given text as a key if the URL conventions support it and it was not preceeded by an escape segment.
+        /// Tries to handle the given text as a key if the URL conventions support it and it was not preceded by an escape segment.
         /// </summary>
         /// <param name="segmentText">The text which might be a key.</param>
         /// <returns>Whether or not the text was handled as a key.</returns>
@@ -686,7 +686,7 @@ namespace Microsoft.OData.UriParser
         /// Tries to bind a key from the parenthetical section of a segment.
         /// </summary>
         /// <param name="parenthesesSection">The section of the segment inside parentheses, or null if there was none.</param>
-        /// <returns>Returns True if a key segment was found and added from the paratheses section otherwise false.</returns>
+        /// <returns>Returns True if a key segment was found and added from the parentheses section otherwise false.</returns>
         private bool TryBindKeyFromParentheses(string parenthesesSection)
         {
             if (parenthesesSection == null)
@@ -889,10 +889,10 @@ namespace Microsoft.OData.UriParser
                     throw ExceptionUtil.CreateSyntaxError();
                 }
 
-                BatchReferenceSegment crossReferencedSegement = this.configuration.BatchReferenceCallback(identifier);
-                if (crossReferencedSegement != null)
+                BatchReferenceSegment crossReferencedSegment = this.configuration.BatchReferenceCallback(identifier);
+                if (crossReferencedSegment != null)
                 {
-                    this.parsedSegments.Add(crossReferencedSegement);
+                    this.parsedSegments.Add(crossReferencedSegment);
                     return;
                 }
             }
@@ -971,24 +971,24 @@ namespace Microsoft.OData.UriParser
 
             this.parsedSegments.Add(segment);
 
-            this.TryBindKeySegmentIfNoResolvedParametersAndParathesisValueExsts(parenthesisExpression, returnType, resolvedParameters, segment);
+            this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisExpression, returnType, resolvedParameters, segment);
 
             return true;
         }
 
         /// <summary>
-        /// Tries the bind key segment if no resolved parameters and parathesis value exsts.
+        /// Tries the bind key segment if no resolved parameters and parenthesis value exists.
         /// </summary>
         /// <param name="parenthesisExpression">The parenthesis expression.</param>
         /// <param name="returnType">Type of the return.</param>
         /// <param name="resolvedParameters">The resolved parameters.</param>
         /// <param name="segment">The segment.</param>
-        private void TryBindKeySegmentIfNoResolvedParametersAndParathesisValueExsts(string parenthesisExpression, IEdmTypeReference returnType, ICollection<OperationSegmentParameter> resolvedParameters, ODataPathSegment segment)
+        private void TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(string parenthesisExpression, IEdmTypeReference returnType, ICollection<OperationSegmentParameter> resolvedParameters, ODataPathSegment segment)
         {
             IEdmCollectionTypeReference collectionTypeReference = returnType as IEdmCollectionTypeReference;
             if (collectionTypeReference != null && collectionTypeReference.ElementType().IsEntity() && resolvedParameters == null && parenthesisExpression != null)
             {
-                // The parameters in the parathesis is a key segment.
+                // The parameters in the parenthesis is a key segment.
                 if (this.TryBindKeyFromParentheses(parenthesisExpression))
                 {
                     ThrowIfMustBeLeafSegment(segment);
@@ -1045,7 +1045,7 @@ namespace Microsoft.OData.UriParser
                 targetset = singleOperation.GetTargetEntitySet(source, this.configuration.Model);
             }
 
-            // If previous segment is cross-referenced then we explicitly dissallow the service action call
+            // If previous segment is cross-referenced then we explicitly disallow the service action call
             if (previousSegment is BatchReferenceSegment)
             {
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset(identifier));
@@ -1060,7 +1060,7 @@ namespace Microsoft.OData.UriParser
 
             this.parsedSegments.Add(segment);
 
-            this.TryBindKeySegmentIfNoResolvedParametersAndParathesisValueExsts(parenthesisExpression, returnType, resolvedParameters, segment);
+            this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisExpression, returnType, resolvedParameters, segment);
 
             return true;
         }
@@ -1076,7 +1076,7 @@ namespace Microsoft.OData.UriParser
             ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
 
             /*
-             * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceeded by an excape - marker segment('$').
+             * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceded by an escape - marker segment('$').
              * For KeyAsSegment, the following precedence rules should be supported[ODATA - 799]:
              * Try to match an OData segment(starting with “$”).
              *   - Note: $filter path segment is a special case that has the format "$filter(@a)", where @a represents an alias.
@@ -1386,7 +1386,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Check whether identifiers matches according to case in sensitive option.
         /// </summary>
-        /// <param name="expected">The expected identifer.</param>
+        /// <param name="expected">The expected identifier.</param>
         /// <param name="identifier">Identifier to be evaluated.</param>
         /// <returns>Whether the identifier matches.</returns>
         private bool IdentifierIs(string expected, string identifier)
@@ -1580,15 +1580,15 @@ namespace Microsoft.OData.UriParser
                 }
 
                 string fullTypeName = lastTypeSegment.TargetEdmType.FullTypeName();
-                IEdmOperationParameter bindingParaemter = operation.Parameters.First();
-                IEdmType bindingType = bindingParaemter.Type.Definition;
+                IEdmOperationParameter bindingParameter = operation.Parameters.First();
+                IEdmType bindingType = bindingParameter.Type.Definition;
                 bindingType = bindingType.AsElementType();
                 if (fullTypeName == bindingType.FullTypeName())
                 {
                     return;
                 }
 
-                VerifyDerivedTypeConstraints(this.configuration.Model, bindingParaemter, fullTypeName, "operation", operation.Name);
+                VerifyDerivedTypeConstraints(this.configuration.Model, bindingParameter, fullTypeName, "operation", operation.Name);
             }
         }
 

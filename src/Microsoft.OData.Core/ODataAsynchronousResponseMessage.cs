@@ -26,7 +26,7 @@ namespace Microsoft.OData
         IODataResponseMessage
 #endif
     {
-        /// <summary>True if we are wrting the response; false if we are reading it.</summary>
+        /// <summary>True if we are writing the response; false if we are reading it.</summary>
         private readonly bool writing;
 
         /// <summary>The stream of the response message.</summary>

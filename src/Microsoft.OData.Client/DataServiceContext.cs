@@ -1463,7 +1463,7 @@ namespace Microsoft.OData.Client
                     throw new DataServiceClientException(Strings.Context_SetSaveStreamOnInvalidEntityState(Enum.GetName(typeof(EntityStates), box.State)));
             }
 
-            // Note that there's no need to mark the entity as updated because we consider the presense
+            // Note that there's no need to mark the entity as updated because we consider the presence
             // of the save stream as the mark that the MR for this MLE has been updated.
 
             // TODO: why we don't increment the change order number in this case, when the entity is in unmodified state?
@@ -1746,7 +1746,7 @@ namespace Microsoft.OData.Client
         {
             // We don't support operation parameters with "GET" yet.
 
-            // This public API is for backwards compatability, which is why it always uses GET and sets singleResult to null
+            // This public API is for backwards compatibility, which is why it always uses GET and sets singleResult to null
             return InnerSynchExecute<TElement>(requestUri, XmlConstants.HttpMethodGet, null);
         }
 
@@ -1850,7 +1850,7 @@ namespace Microsoft.OData.Client
         /// <param name="callback">The delegate to call when the operation is completed.</param>
         /// <param name="state">The user-defined state object that is used to pass context data to the callback method.</param>
         /// <remarks>
-        /// BeginSaveChanges will asynchronously attach identity Uri returned by server to sucessfully added entites.
+        /// BeginSaveChanges will asynchronously attach identity Uri returned by server to successfully added entities.
         /// EndSaveChanges will apply updated values to entities, raise ReadingEntity events and change entity states.
         /// </remarks>
         public IAsyncResult BeginSaveChanges(SaveChangesOptions options, AsyncCallback callback, object state)
@@ -2215,7 +2215,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="T:System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">When the object is not being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</exception>
         /// <remarks>
-        /// Existings objects in the Added state become detached.
+        /// Existing objects in the Added state become detached.
         /// </remarks>
         public void DeleteObject(object entity)
         {
@@ -2377,7 +2377,7 @@ namespace Microsoft.OData.Client
 
             EntityStates state;
 
-            // ReferenceIdentity is a test hook to help verify we dont' use identity instead of editLink
+            // ReferenceIdentity is a test hook to help verify we don't use identity instead of editLink
             entity = (TEntity)this.EntityTracker.TryGetEntity(identity, out state);
             return (null != entity);
         }
@@ -2399,7 +2399,7 @@ namespace Microsoft.OData.Client
                 (null != resource.Identity) &&
                 Object.ReferenceEquals(resource, this.entityTracker.TryGetEntityDescriptor(resource.Identity)))
             {
-                // DereferenceIdentity is a test hook to help verify we dont' use identity instead of editLink
+                // DereferenceIdentity is a test hook to help verify we don't use identity instead of editLink
                 identity = resource.Identity;
             }
 
@@ -2624,7 +2624,7 @@ namespace Microsoft.OData.Client
         #region GetResponse
 
         /// <summary>
-        /// This method wraps the HttpWebRequest.GetSyncronousResponse method call. The reasons for doing this are to give us a place
+        /// This method wraps the HttpWebRequest.GetSynchronousResponse method call. The reasons for doing this are to give us a place
         /// to invoke internal test hook callbacks that can validate the response headers, and also so that we can do
         /// debug validation to make sure that the headers have not changed since they were originally configured on the request.
         /// </summary>
@@ -2632,9 +2632,9 @@ namespace Microsoft.OData.Client
         /// <param name="handleWebException">If set to true, this method will only re-throw the WebException that was caught if
         /// the response in the exception is null. If set to false, this method will always re-throw in case of a WebException.</param>
         /// <returns>
-        /// Returns the HttpWebResponse from the wrapped GetSyncronousResponse method.
+        /// Returns the HttpWebResponse from the wrapped GetSynchronousResponse method.
         /// </returns>
-        internal IODataResponseMessage GetSyncronousResponse(ODataRequestMessageWrapper request, bool handleWebException)
+        internal IODataResponseMessage GetSynchronousResponse(ODataRequestMessageWrapper request, bool handleWebException)
         {
             return this.GetResponseHelper(request, null, handleWebException);
         }
@@ -2735,7 +2735,7 @@ namespace Microsoft.OData.Client
         {
             BuildingRequestEventArgs requestMessageArgs = new BuildingRequestEventArgs(method, requestUri, headers, descriptor, stack);
 
-            // Set default headers before firing BudingRequest event
+            // Set default headers before firing BuildingRequest event
             requestMessageArgs.HeaderCollection.SetDefaultHeaders();
 
             return this.FireBuildingRequest(requestMessageArgs);
@@ -2861,7 +2861,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Validates a given list of operation parameter and returns two seperated list of body operation parameter
+        /// Validates a given list of operation parameter and returns two separated list of body operation parameter
         /// and uri operation parameter respectively.
         /// </summary>
         /// <param name="httpMethod">the http method used in the request. Only POST and GET http methods are supported with operation parameters.</param>
@@ -2993,8 +2993,8 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Validate and process the input parameters to all the execute methods. Also seperates and returns
-        /// the input operation parameters list into two seperate list - one of body operation parameters and the other
+        /// Validate and process the input parameters to all the execute methods. Also separates and returns
+        /// the input operation parameters list into two separate list - one of body operation parameters and the other
         /// for uri operation parameters.
         /// </summary>
         /// <typeparam name="TElement">element type. See Execute method for more details.</typeparam>
@@ -3046,7 +3046,7 @@ namespace Microsoft.OData.Client
         /// <param name="state">user state</param>
         /// <param name="requestUri">The request uri, or null if one is to be constructed</param>
         /// <param name="continuation">Continuation, if one is available.</param>
-        /// <returns>a aync result that you can get a response from</returns>
+        /// <returns>a async result that you can get a response from</returns>
         private LoadPropertyResult CreateLoadPropertyRequest(object entity, string propertyName, AsyncCallback callback, object state, Uri requestUri, DataServiceQueryContinuation continuation)
         {
             Debug.Assert(continuation == null || requestUri == null, "continuation == null || requestUri == null -- only one or the either (or neither) may be passed in");
@@ -3219,7 +3219,7 @@ namespace Microsoft.OData.Client
         /// This method creates an async result object around a request to get the read stream for a Media Resource
         /// associated with the Media Link Entry represented by the entity object.
         /// </summary>
-        /// <param name="entity">The entity which is the Media Link Entry for the requested Media Resource. Thist must specify
+        /// <param name="entity">The entity which is the Media Link Entry for the requested Media Resource. This must specify
         /// a tracked entity in a non-added state.</param>
         /// <param name="args">Instance of <see cref="DataServiceRequestArgs"/> class with additional metadata for the request.
         /// Must not be null.</param>
@@ -3319,7 +3319,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// This method wraps the HttpWebRequest.GetSyncronousResponse method call. It fires the ReceivingResponse event.
+        /// This method wraps the HttpWebRequest.GetSynchronousResponse method call. It fires the ReceivingResponse event.
         /// It also gives us a place to invoke internal test hook callbacks that can validate the response headers, and also so that we can do
         /// debug validation to make sure that the headers have not changed since they were originally configured on the request.
         /// </summary>
@@ -3327,10 +3327,10 @@ namespace Microsoft.OData.Client
         /// <param name="asyncResult">IAsyncResult for EndGetResponse if this is an async call.</param>
         /// <param name="handleWebException">If set to true, this method will only re-throw the WebException that was caught if
         /// the response in the exception is null. If set to false, this method will always re-throw in case of a WebException.</param>
-        /// <returns>Returns the HttpWebResponse from the wrapped GetSyncronousResponse method.</returns>
+        /// <returns>Returns the HttpWebResponse from the wrapped GetSynchronousResponse method.</returns>
         private IODataResponseMessage GetResponseHelper(ODataRequestMessageWrapper request, IAsyncResult asyncResult, bool handleWebException)
         {
-            Debug.Assert(request != null, "Expected a non-null request for all scenarios calling GetSyncronousResponse");
+            Debug.Assert(request != null, "Expected a non-null request for all scenarios calling GetSynchronousResponse");
 
             IODataResponseMessage response = null;
             try
@@ -3409,7 +3409,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="ArgumentNullException">if entity is null</exception>
         /// <exception cref="InvalidOperationException">if entity is not being tracked by the context, or if the entity is in the added state and <paramref name="failIfInAddedState"/> is true.</exception>
         /// <remarks>
-        /// Existings objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
+        /// Existing objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
         /// </remarks>
         private void DeleteObjectInternal(object entity, bool failIfInAddedState)
         {

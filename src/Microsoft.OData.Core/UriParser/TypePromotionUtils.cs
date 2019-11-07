@@ -994,7 +994,7 @@ namespace Microsoft.OData.UriParser
                 return -1;
             }
 
-            // If both decimal and double are possible or if both decimal and single are possible, then single/double is prefered (int32->long->single->double->decimal).
+            // If both decimal and double are possible or if both decimal and single are possible, then single/double is preferred (int32->long->single->double->decimal).
             if (IsDecimalType(targetA) && IsDoubleOrSingle(targetB))
             {
                 return -1;
@@ -1005,7 +1005,7 @@ namespace Microsoft.OData.UriParser
                 return 1;
             }
 
-            // If both DateTimeOffset and Date are possible, then DateTimeOffset is perfered, as to keep previous behaviour.
+            // If both DateTimeOffset and Date are possible, then DateTimeOffset is preferred, as to keep previous behaviour.
             if (IsDateTimeOffset(targetA) && IsDate(targetB))
             {
                 return 1;

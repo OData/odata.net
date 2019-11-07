@@ -290,7 +290,7 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // TODO: (issue #888) this logic results in type annotations not being written for dynamic properties on types that are not
-                // marked as open. Type annotations should always be written for dynamic properties whose type cannot be hueristically
+                // marked as open. Type annotations should always be written for dynamic properties whose type cannot be heuristically
                 // determined. Need to change this.currentPropertyInfo.MetadataType.IsOpenProperty to this.currentPropertyInfo.MetadataType.IsDynamic,
                 // and fix related tests and other logic (this change alone results in writing type even if it's already implied by context).
                 isOpenProperty = (!this.WritingResponse && this.currentPropertyInfo.MetadataType.OwningType == null) // Treat property as dynamic property when writing request and owning type is null

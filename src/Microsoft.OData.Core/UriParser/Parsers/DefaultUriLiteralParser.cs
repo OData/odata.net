@@ -50,7 +50,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="text">Part of the Uri which has to be parsed to a value of EdmType <paramref name="targetType"/></param>
         /// <param name="targetType">The type which the uri text has to be parsed to</param>
         /// <param name="parsingException">Assign the exception only in case the text could be parsed to the <paramref name="targetType"/> but failed during the parsing process</param>
-        /// <returns>If the parsing proceess has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
+        /// <returns>If the parsing process has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
         public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
         {
             parsingException = null;
@@ -61,7 +61,7 @@ namespace Microsoft.OData.UriParser
             {
                 targetValue = uriTypeParser.ParseUriStringToType(text, targetType, out parsingException);
 
-                // Stop in case the parser has returned an excpetion
+                // Stop in case the parser has returned an exception
                 if (parsingException != null)
                 {
                     return null;

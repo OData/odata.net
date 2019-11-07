@@ -7,7 +7,7 @@
 namespace Microsoft.Spatial
 {
     /// <summary>
-    /// Internal pipeline Inteface that washes the distinction between Geography and Geometry
+    /// Internal pipeline Interface that washes the distinction between Geography and Geometry
     /// </summary>
     internal abstract class TypeWashedPipeline
     {

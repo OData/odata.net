@@ -114,7 +114,7 @@ namespace Microsoft.OData.Client
         {
             try
             {
-                this.responseMessage = this.requestInfo.GetSyncronousResponse(this.requestMessage, true);
+                this.responseMessage = this.requestInfo.GetSynchronousResponse(this.requestMessage, true);
                 Debug.Assert(this.responseMessage != null, "Can't set a null response.");
             }
             catch (Exception e)

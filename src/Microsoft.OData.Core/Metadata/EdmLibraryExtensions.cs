@@ -1707,7 +1707,7 @@ namespace Microsoft.OData.Metadata
         /// Gets the operation parameter types in string.
         /// </summary>
         /// <param name="operation">Operation in question.</param>
-        /// <returns>Comma separated operation parameter types enclosed in parantheses.</returns>
+        /// <returns>Comma separated operation parameter types enclosed in parentheses.</returns>
         private static string ParameterTypesToString(this IEdmOperation operation)
         {
             // TODO: Resolve duplication of operationImport and operation
@@ -1720,7 +1720,7 @@ namespace Microsoft.OData.Metadata
         /// Gets the non binding operation parameter names in string.
         /// </summary>
         /// <param name="operation">Operation in question.</param>
-        /// <returns>Comma separated operation parameter names enclosed in parantheses.</returns>
+        /// <returns>Comma separated operation parameter names enclosed in parentheses.</returns>
         private static string NonBindingParameterNamesToString(this IEdmOperation operation)
         {
             IEnumerable<IEdmOperationParameter> nonBindingParameters = operation.IsBound ? operation.Parameters.Skip(1) : operation.Parameters;
@@ -1736,7 +1736,7 @@ namespace Microsoft.OData.Metadata
         /// <remarks>
         /// The following rules are used for collection type names:
         /// - it has to start with "Collection(" and end with ")" - trailing and leading whitespaces make the type not to be recognized as collection.
-        /// - there is to be no characters (including whitespaces) between "Collection" and "(" - otherwise it won't berecognized as collection
+        /// - there is to be no characters (including whitespaces) between "Collection" and "(" - otherwise it won't be recognized as collection
         /// - collection item type name has to be a non-empty string - i.e. "Collection()" won't be recognized as collection
         /// - nested collection - e.g. "Collection(Collection(Edm.Int32))" - are not supported - we will throw
         /// Note the following are examples of valid type names which are not collection:
@@ -1775,7 +1775,7 @@ namespace Microsoft.OData.Metadata
         /// Gets the operation import parameter types in string.
         /// </summary>
         /// <param name="operationImport">Function import in question.</param>
-        /// <returns>Comma separated operation import parameter types enclosed in parantheses.</returns>
+        /// <returns>Comma separated operation import parameter types enclosed in parentheses.</returns>
         private static string ParameterTypesToString(this IEdmOperationImport operationImport)
         {
             // TODO: Resolve duplication of operationImport and operation

@@ -38,7 +38,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="collectionStartPropertyAndAnnotationCollector">The duplicate property names checker used to keep track of the properties and annotations
         /// in the collection wrapper object.</param>
-        /// <param name="isReadingNestedPayload">true if we are reading a nested collection inside a paramter payload; otherwise false.</param>
+        /// <param name="isReadingNestedPayload">true if we are reading a nested collection inside a parameter payload; otherwise false.</param>
         /// <param name="expectedItemTypeReference">The expected item type reference or null if none is expected.</param>
         /// <param name="actualItemTypeReference">The validated actual item type reference (if specified in the payload) or the expected item type reference.</param>
         /// <returns>An <see cref="ODataCollectionStart"/> representing the collection-level information. Currently this is only the name of the collection in ATOM.</returns>
@@ -211,7 +211,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads the end of a collection; this includes collection-level instance annotations.
         /// </summary>
-        /// <param name="isReadingNestedPayload">true if we are reading a nested collection inside a paramter payload; otherwise false.</param>
+        /// <param name="isReadingNestedPayload">true if we are reading a nested collection inside a parameter payload; otherwise false.</param>
         /// <remarks>
         /// Pre-Condition:  EndArray node:      End of the collection content array
         /// Post-Condition: EndOfInput:         All of the collection payload has been consumed.

@@ -15,7 +15,7 @@ namespace Microsoft.OData
     public static class ODataUriExtensions
     {
         /// <summary>
-        /// Build ODataUri into a Uri, the result Uri's query options are URL encoded.
+        /// Build ODataUri into a Uri, the result URIs query options are URL encoded.
         /// </summary>
         /// <param name="odataUri">ODataUri which will be build to relative url</param>
         /// <param name="urlKeyDelimiter">Value from ODataUrlKeyDelimiter</param>

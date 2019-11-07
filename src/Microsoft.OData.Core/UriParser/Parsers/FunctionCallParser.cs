@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
 
     /// <summary>
     /// Implementation of IFunctionCallParser that allows functions calls and parses arguments with a provided method.
-    /// TODO: This inmplementaiton is incomplete.
+    /// TODO: This implementation is incomplete.
     /// </summary>
     internal sealed class FunctionCallParser : IFunctionCallParser
     {

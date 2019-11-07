@@ -403,7 +403,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (this.ch == '\'')
                 {
-                    this.AdvanceToNextOccuranceOf('\'');
+                    this.AdvanceToNextOccurenceOf('\'');
                 }
 
                 if (this.ch == '(')
@@ -474,7 +474,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="position">The position to restore, returned from SnapshotPosition.</param>
         /// <remarks>
-        /// The specified position must have been retrieved by GetPostion on this instance.
+        /// The specified position must have been retrieved by GetPosition on this instance.
         /// </remarks>
         internal void RestorePosition(ExpressionLexerPosition position)
         {
@@ -530,10 +530,10 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Advance the pointer to the next occurance of the given value, swallowing all characters in between.
+        /// Advance the pointer to the next occurence of the given value, swallowing all characters in between.
         /// </summary>
         /// <param name="endingValue">the ending delimiter.</param>
-        protected void AdvanceToNextOccuranceOf(char endingValue)
+        protected void AdvanceToNextOccurenceOf(char endingValue)
         {
             this.NextChar();
             while (this.ch.HasValue && (this.ch != endingValue))
@@ -640,7 +640,7 @@ namespace Microsoft.OData.UriParser
                     char quote = this.ch.Value;
                     do
                     {
-                        this.AdvanceToNextOccuranceOf(quote);
+                        this.AdvanceToNextOccurenceOf(quote);
 
                         if (this.textPos == this.TextLen)
                         {
@@ -1146,15 +1146,15 @@ namespace Microsoft.OData.UriParser
         /// Makes best guess on numeric string without trailing letter like L, F, M, D
         /// </summary>
         /// <param name="numericStr">The numeric string.</param>
-        /// <param name="guessedKind">The possbile kind (IntegerLiteral or DoubleLiteral) from ParseFromDigit() method.</param>
+        /// <param name="guessedKind">The possible kind (IntegerLiteral or DoubleLiteral) from ParseFromDigit() method.</param>
         /// <returns>A more accurate ExpressionTokenKind</returns>
         private static ExpressionTokenKind MakeBestGuessOnNoSuffixStr(string numericStr, ExpressionTokenKind guessedKind)
         {
             // no suffix, so
             // (1) make a best guess (note: later we support promoting each to later one: int32->int64->single->double->decimal).
             // look at value:       "2147483647" may be Int32/long, "2147483649" must be long.
-            // look at precision:   "3258.67876576549" may be sinle/double/decimal, "3258.678765765489753678965390" must be decimal.
-            // (2) then let MetadataUtilsCommon.CanConvertPrimitiveTypeTo() method does further promotion when knowing expected sematics type.
+            // look at precision:   "3258.67876576549" may be single/double/decimal, "3258.678765765489753678965390" must be decimal.
+            // (2) then let MetadataUtilsCommon.CanConvertPrimitiveTypeTo() method does further promotion when knowing expected semantics type.
             int tmpInt = 0;
             long tmpLong = 0;
             float tmpFloat = 0;
@@ -1233,7 +1233,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (this.ch == '\'')
                 {
-                    this.AdvanceToNextOccuranceOf('\'');
+                    this.AdvanceToNextOccurenceOf('\'');
                 }
 
                 if (this.ch == startingCharacter)
@@ -1289,7 +1289,7 @@ namespace Microsoft.OData.UriParser
 
         #region Private classes
         /// <summary>
-        /// Provides fields to remember an ExpresionLexer's position.
+        /// Provides fields to remember an ExpressionLexer's position.
         /// </summary>
         internal class ExpressionLexerPosition
         {

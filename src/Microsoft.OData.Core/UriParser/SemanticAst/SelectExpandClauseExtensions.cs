@@ -53,7 +53,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="expandClause">Returns the expand clause.</param>
         internal static void GetSelectExpandPaths(this SelectExpandClause selectExpandClause, ODataVersion version, out string selectClause, out string expandClause)
         {
-            Debug.Assert(selectExpandClause != null, "selectExpandCluase != null");
+            Debug.Assert(selectExpandClause != null, "selectExpandClause != null");
 
             StringBuilder selectClauseBuilder, expandClauseBuilder;
             selectExpandClause.GetSelectExpandPaths(version, out selectClauseBuilder, out expandClauseBuilder);
@@ -146,7 +146,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>the string representation of the top level select clause.</returns>
         private static string BuildTopLevelSelect(SelectExpandClause selectExpandClause)
         {
-            // Special case to build the top level select clause (this it the only time that we actualy
+            // Special case to build the top level select clause (this it the only time that we actually
             // modify the selectClause because in V4 the the top level select clause can only modify the top
             // level).
             return String.Join(",", selectExpandClause.GetCurrentLevelSelectList().ToArray());
@@ -212,7 +212,7 @@ namespace Microsoft.OData.UriParser
             return String.Join(",", currentLevelExpandClauses.ToArray());
         }
 
-        /// <summary>Process sub expand node, contact with subexpad result</summary>
+        /// <summary>Process sub expand node, contact with subexpand result</summary>
         /// <param name="expandNode">The current expanded node.</param>
         /// <param name="subExpand">Generated sub expand node.</param>
         /// <returns>The generated expand string.</returns>

@@ -21,7 +21,7 @@ namespace Microsoft.OData.MultipartMixed
         private readonly IList<string> topLevelDependsOnIds;
 
         /// <summary>
-        /// List of depeondsOn ids seen so far in current change set.
+        /// List of dependsOn ids seen so far in current change set.
         /// It should be empty if current processing is not within a change set.
         /// </summary>
         private readonly IList<string> changeSetDependsOnIds;

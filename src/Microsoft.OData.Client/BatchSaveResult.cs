@@ -156,7 +156,7 @@ namespace Microsoft.OData.Client
 
                 try
                 {
-                    this.batchResponseMessage = this.RequestInfo.GetSyncronousResponse(batchRequestMessage, false);
+                    this.batchResponseMessage = this.RequestInfo.GetSynchronousResponse(batchRequestMessage, false);
                 }
                 catch (DataServiceTransportException ex)
                 {
@@ -520,7 +520,7 @@ namespace Microsoft.OData.Client
         /// The message reader for the entire batch response is stored in the this.batchMessageReader.
         /// The message reader is disposable, but this method should not dispose it itself. It will be either disposed by the caller (in case of exception)
         /// or the ownership will be passed to the returned response object (in case of success).
-        /// In could also be diposed indirectly by this method when it enumerates through the responses.
+        /// In could also be disposed indirectly by this method when it enumerates through the responses.
         /// </remarks>
         private DataServiceResponse HandleBatchResponseInternal(ODataBatchReader batchReader)
         {
@@ -800,7 +800,7 @@ namespace Microsoft.OData.Client
             }
 
             // If we hit en error inside a batch, we will never expose a descriptor since we don't know which one to return.
-            // The descriptor we fetched above based on the content-ID is bogus because the server returns an errounous content-id when
+            // The descriptor we fetched above based on the content-ID is bogus because the server returns an erroneous content-id when
             // it hits an error inside batch.
             if (!WebUtil.SuccessStatusCode((HttpStatusCode)operationResponseMessage.StatusCode))
             {
@@ -875,7 +875,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Stores information about the currenly processed operation response.
+        /// Stores information about the currently processed operation response.
         /// </summary>
         private sealed class CurrentOperationResponse
         {
@@ -898,7 +898,7 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(headers != null, "headers != null");
                 Debug.Assert(contentStream != null, "contentStream != null");
-                Debug.Assert(contentStream.Position == 0, "The stream should have been reset to the begining.");
+                Debug.Assert(contentStream.Position == 0, "The stream should have been reset to the beginning.");
 
                 this.statusCode = statusCode;
                 this.contentStream = contentStream;

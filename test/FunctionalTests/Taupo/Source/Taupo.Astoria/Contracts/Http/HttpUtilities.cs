@@ -37,7 +37,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Http
         /// Tries to get the given parameter from the content type
         /// </summary>
         /// <param name="contentType">The content type</param>
-        /// <param name="parameterName">The content-type paramter to look for</param>
+        /// <param name="parameterName">The content-type parameter to look for</param>
         /// <param name="parameterValue">The value of the parameter if it is found</param>
         /// <returns>Whether or not the parameter was found</returns>
         public static bool TryGetContentTypeParameter(string contentType, string parameterName, out string parameterValue)

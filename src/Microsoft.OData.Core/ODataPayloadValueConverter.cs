@@ -190,7 +190,7 @@ namespace Microsoft.OData
 
             if (targetType == typeof(Double) || targetType == typeof(Single))
             {
-                // Accept Infinity and -Infinity to perserve consistence
+                // Accept Infinity and -Infinity to preserve consistency
                 if (stringValue == CultureInfo.InvariantCulture.NumberFormat.PositiveInfinitySymbol)
                 {
                     stringValue = JsonValueUtils.ODataJsonPositiveInfinitySymbol;

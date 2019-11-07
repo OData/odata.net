@@ -24,7 +24,7 @@ namespace Microsoft.OData.Client
     public sealed class EntityDescriptor : Descriptor
     {
         #region Fields
-        /// <summary>uri to identitfy the entity</summary>
+        /// <summary>uri to identify the entity</summary>
         /// <remarks>&lt;atom:id&gt;identity&lt;/id&gt;</remarks>
         private Uri identity;
 
@@ -702,7 +702,7 @@ namespace Microsoft.OData.Client
         /// Returns the LinkInfo for the given navigation property.
         /// </summary>
         /// <param name="propertyName">name of the navigation property </param>
-        /// <param name="linkInfo"> LinkInfo for the navigation propery</param>
+        /// <param name="linkInfo"> LinkInfo for the navigation property</param>
         /// <returns>true if LinkInfo is found for the navigation property, false if not found</returns>
         internal bool TryGetLinkInfo(string propertyName, out LinkInfo linkInfo)
         {

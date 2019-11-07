@@ -8,7 +8,7 @@ namespace Microsoft.Spatial
 {
     /// <summary>
     /// Class responsible for knowing how to create the Geography and Geometry builders for
-    /// the data services implemenation of Spatial types
+    /// the data services implementation of Spatial types
     /// </summary>
     internal class DataServicesSpatialImplementation : SpatialImplementation
     {
@@ -22,7 +22,7 @@ namespace Microsoft.Spatial
         }
 
         /// <summary>
-        /// Creates a SpatialBuilder for this implemenation
+        /// Creates a SpatialBuilder for this implementation
         /// </summary>
         /// <returns>
         /// The SpatialBuilder created.

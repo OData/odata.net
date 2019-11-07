@@ -14,11 +14,11 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// The EDM model with capabilities vocabularies.
         /// </summary>
-        public static readonly IEdmModel Instance = VocabularyModelProvider.CapabilitesModel;
+        public static readonly IEdmModel Instance = VocabularyModelProvider.CapabilitiesModel;
 
         /// <summary>
         /// The change tracking term.
         /// </summary>
-        public static readonly IEdmTerm ChangeTrackingTerm = VocabularyModelProvider.CapabilitesModel.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);
+        public static readonly IEdmTerm ChangeTrackingTerm = VocabularyModelProvider.CapabilitiesModel.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);
     }
 }

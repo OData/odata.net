@@ -96,7 +96,7 @@ namespace Microsoft.OData.JsonLight
         /// Writes a element (EntitySet, Singleton or FunctionImport) in service document.
         /// </summary>
         /// <param name="serviceDocumentElement">The element in service document to write.</param>
-        /// <param name="kind">Kind of the service document element, optional for entityset's must for FunctionImport and Singleton.</param>
+        /// <param name="kind">Kind of the service document element, optional for entitysets must for FunctionImport and Singleton.</param>
         private void WriteServiceDocumentElement(ODataServiceDocumentElement serviceDocumentElement, string kind)
         {
             // validate that the resource has a non-null url.

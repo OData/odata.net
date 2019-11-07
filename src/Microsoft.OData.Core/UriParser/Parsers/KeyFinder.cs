@@ -26,7 +26,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="currentNavigationProperty">The current navigation property that we're trying to follow using the raw key values</param>
         /// <param name="keySegmentOfParentEntity">The key segment of the parent entity in this path, if it exists. Null otherwise</param>
         /// <returns>A new SegmentArgumentParser with any keys that were found added to its list of NamedValues.</returns>
-        /// <throws>Thorws if the input currentNavigationProperty is null.</throws>
+        /// <throws>Throws if the input currentNavigationProperty is null.</throws>
         public static SegmentArgumentParser FindAndUseKeysFromRelatedSegment(SegmentArgumentParser rawKeyValuesFromUri, IEnumerable<IEdmStructuralProperty> targetEntityKeyProperties, IEdmNavigationProperty currentNavigationProperty, KeySegment keySegmentOfParentEntity)
         {
             ExceptionUtils.CheckArgumentNotNull(currentNavigationProperty, "currentNavigationProperty");

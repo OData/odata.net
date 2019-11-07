@@ -215,7 +215,7 @@ namespace Microsoft.OData.Edm.Validation
         InterfaceCriticalEnumPropertyValueOutOfRange = 80,
 
         /// <summary>
-        /// If property P1 is a navigation property and P2 is its parnter, then partner property of P2 must be P1.
+        /// If property P1 is a navigation property and P2 is its partner, then partner property of P2 must be P1.
         /// </summary>
         InterfaceCriticalNavigationPartnerInvalid = 81,
 
@@ -262,7 +262,7 @@ namespace Microsoft.OData.Edm.Validation
         // InvalidContainerTypeForEnd = 99,
 
         /// <summary>
-        /// The extent name used in the EntittyContainerType End does not match the name of any of the EntityContainerProperties in the containing EntityContainer
+        /// The extent name used in the EntityContainerType End does not match the name of any of the EntityContainerProperties in the containing EntityContainer
         /// </summary>
         InvalidEndEntitySet = 100,
 
@@ -358,7 +358,7 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         EntityKeyMustNotBeBinary = 129,
 
-        //// <summary>The primitive type kind does not have a prefered mapping</summary>
+        //// <summary>The primitive type kind does not have a preferred mapping</summary>
         // NoPreferredMappingForPrimitiveTypeKind = 130,
         //// <summary>More than one PreferredMapping for a PrimitiveTypeKind</summary>
         // TooManyPreferredMappingsForPrimitiveTypeKind = 131,
@@ -392,11 +392,11 @@ namespace Microsoft.OData.Edm.Validation
         // SystemNamespace = 141,
         //// <summary>Empty DefiningQuery text</summary>
         // EmptyDefiningQuery = 142,
-        //// <summary>Schema, Table and DefiningQuery are all specified, and are mutualy exlusive</summary>
+        //// <summary>Schema, Table and DefiningQuery are all specified, and are mutually exlusive</summary>
         // TableAndSchemaAreMutuallyExclusiveWithDefiningQuery = 143,
 
         /// <summary>
-        /// Conurency can't change for any sub types of an EntitySet type.
+        /// Concurrency can't change for any sub types of an EntitySet type.
         /// </summary>
         ConcurrencyRedefinedOnSubtypeOfEntitySetType = 145,
 
@@ -1169,7 +1169,7 @@ namespace Microsoft.OData.Edm.Validation
         TypeAnnotationMissingRequiredProperty = 347,
 
         /// <summary>
-        /// Type annotation has a property binding for a non-existant property and its type is not open.
+        /// Type annotation has a property binding for a non-existent property and its type is not open.
         /// </summary>
         TypeAnnotationHasExtraProperties = 348,
 
@@ -1289,7 +1289,7 @@ namespace Microsoft.OData.Edm.Validation
         NavigationPropertyOfCollectionTypeMustNotTargetToSingleton = 371,
 
         /// <summary>
-        /// Reference must contatin at least one Include or IncludeAnnotations
+        /// Reference must contain at least one Include or IncludeAnnotations
         /// </summary>
         ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement = 372,
 
@@ -1359,7 +1359,7 @@ namespace Microsoft.OData.Edm.Validation
         EntityTypeOfEntitySetCannotBeEdmEntityType = 385,
 
         /// <summary>
-        /// The dclaring type of navigation source cannot have path type property.
+        /// The declaring type of navigation source cannot have path type property.
         /// </summary>
         DeclaringTypeOfNavigationSourceCannotHavePathProperty = 386,
 

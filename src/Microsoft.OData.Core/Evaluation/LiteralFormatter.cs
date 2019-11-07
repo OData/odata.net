@@ -111,7 +111,7 @@ namespace Microsoft.OData.Evaluation
         internal abstract string Format(object value);
 
         /// <summary>
-        /// Escapes the result accoridng to URI escaping rules.
+        /// Escapes the result according to URI escaping rules.
         /// </summary>
         /// <param name="result">The result to escape.</param>
         /// <returns>The escaped string.</returns>
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Evaluation
             if (value is DateTime)
             {
                 // Since the server/client supports DateTime values, convert the DateTime value
-                // to DateTimeOffset and use XmlCOnvert to convert to String.
+                // to DateTimeOffset and use XmlConvert to convert to String.
                 // If datetime kind is unspecified, then treat it as UTC.
 #if ODATA_SERVICE
                 DateTimeOffset dto = WebUtil.ConvertDateTimeToDateTimeOffset((DateTime)value);
@@ -439,7 +439,7 @@ namespace Microsoft.OData.Evaluation
             }
 
             /// <summary>
-            /// Escapes the result accoridng to URI escaping rules.
+            /// Escapes the result according to URI escaping rules.
             /// </summary>
             /// <param name="result">The result to escape.</param>
             /// <returns>The escaped string.</returns>

@@ -230,7 +230,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The value of the property annotation.</returns>
         /// <remarks>
         /// This method should read the property annotation value and return a representation of the value which will be later
-        /// consumed by the resource reading code, or throw if ther is something unexpected.
+        /// consumed by the resource reading code, or throw if there is something unexpected.
         ///
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the property annotation property
         ///                 JsonNodeType.StartObject
@@ -352,7 +352,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="error">The <see cref="ODataError"/> object to update with the data from this property value.</param>
         /// <param name="propertyName">The name of the property whose value is to be read.</param>
         /// <param name="duplicationPropertyNameChecker">PropertyAndAnnotationCollector to use for extracting property annotations
-        /// targetting any custom instance annotations on the error.</param>
+        /// targeting any custom instance annotations on the error.</param>
         /// <remarks>
         /// Pre-Condition:  any                         - The value of the property being read.
         /// Post-Condition: JsonNodeType.Property       - The property after the one being read.

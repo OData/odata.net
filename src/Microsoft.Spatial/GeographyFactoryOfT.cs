@@ -10,7 +10,7 @@ namespace Microsoft.Spatial
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Geograph Spatial Factory
+    /// Geography Spatial Factory
     /// </summary>
     /// <typeparam name="T">The target type</typeparam>
     public class GeographyFactory<T> : SpatialFactory where T : Geography

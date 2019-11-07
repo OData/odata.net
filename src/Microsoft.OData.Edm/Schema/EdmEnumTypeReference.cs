@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEnumTypeReference"/> class.
         /// </summary>
-        /// <param name="enumType">The definition refered to by this reference.</param>
+        /// <param name="enumType">The definition referred to by this reference.</param>
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         public EdmEnumTypeReference(IEdmEnumType enumType, bool isNullable)
             : base(enumType, isNullable)

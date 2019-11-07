@@ -133,7 +133,7 @@ namespace Microsoft.Test.Taupo.Contracts.CodeDomExtensions
         /// Adds parameter to a lambda expression
         /// </summary>
         /// <param name="lambda">the lambda expression to add parameter</param>
-        /// <param name="type">the type of the paramter</param>
+        /// <param name="type">the type of the parameter</param>
         /// <param name="name">the name of the parameter with strong type reference</param>
         /// <returns>the newly constructed lambda expression</returns>
         public static CodeLambdaExpression WithParameter(this CodeLambdaExpression lambda, Type type, string name)
