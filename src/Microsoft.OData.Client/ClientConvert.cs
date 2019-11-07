@@ -83,7 +83,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// change primtive typeName into non-nullable type
+        /// change primitive typeName into non-nullable type
         /// </summary>
         /// <param name="typeName">like Edm.String or Edm.Binary</param>
         /// <param name="type">the mapped output type</param>

@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmPropertyPathExpression"/> class.
         /// </summary>
-        /// <param name="path">Path string containing segments seperated by '/'. For example: "A.B/C/D.E/Func1(NS.T,NS.T2)/P1".</param>
+        /// <param name="path">Path string containing segments separated by '/'. For example: "A.B/C/D.E/Func1(NS.T,NS.T2)/P1".</param>
         public EdmPropertyPathExpression(string path)
             : base(path)
         {

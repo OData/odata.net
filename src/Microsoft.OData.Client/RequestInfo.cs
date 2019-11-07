@@ -211,7 +211,7 @@ namespace Microsoft.OData.Client
 
 #if !PORTABLELIB
         /// <summary>
-        /// This method wraps the HttpWebRequest.GetSyncronousResponse method call. The reasons for doing this are to give us a place
+        /// This method wraps the HttpWebRequest.GetSynchronousResponse method call. The reasons for doing this are to give us a place
         /// to invoke internal test hook callbacks that can validate the response headers, and also so that we can do
         /// debug validation to make sure that the headers have not changed since they were originally configured on the request.
         /// </summary>
@@ -219,11 +219,11 @@ namespace Microsoft.OData.Client
         /// <param name="handleWebException">If set to true, this method will only re-throw the WebException that was caught if
         /// the response in the exception is null. If set to false, this method will always re-throw in case of a WebException.</param>
         /// <returns>
-        /// Returns the HttpWebResponse from the wrapped GetSyncronousResponse method.
+        /// Returns the HttpWebResponse from the wrapped GetSynchronousResponse method.
         /// </returns>
-        internal IODataResponseMessage GetSyncronousResponse(ODataRequestMessageWrapper request, bool handleWebException)
+        internal IODataResponseMessage GetSynchronousResponse(ODataRequestMessageWrapper request, bool handleWebException)
         {
-            return this.Context.GetSyncronousResponse(request, handleWebException);
+            return this.Context.GetSynchronousResponse(request, handleWebException);
         }
 #endif
 

@@ -60,7 +60,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the resouce type of a single item from the collection represented by this node.
+        /// Gets the resource type of a single item from the collection represented by this node.
         /// </summary>
         public override IEdmTypeReference ItemType
         {

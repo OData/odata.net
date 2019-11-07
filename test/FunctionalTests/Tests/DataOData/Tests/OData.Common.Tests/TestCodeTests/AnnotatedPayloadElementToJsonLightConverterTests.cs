@@ -532,7 +532,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         {
             var testCases = new JsonLightSerializerTestCase[]
             {
-                // Parameter payload with null, primitive, complex and collection paramters
+                // Parameter payload with null, primitive, complex and collection parameters
                 new JsonLightSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.ComplexValue()

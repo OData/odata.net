@@ -23,7 +23,7 @@ namespace Microsoft.OData.Service
 #endif
 
     /// <summary>
-    /// Common defintions and functions for the server and client lib
+    /// Common definitions and functions for the server and client lib
     /// </summary>
     internal static partial class CommonUtil
     {
@@ -325,7 +325,7 @@ namespace Microsoft.OData.Service
         {
             // NOTE: the size of the input message is only limited by the WCF message size in Astoria
             // In WCF DS client, we never had a limit on any of these. Hence for client, it makes sense
-            // to set these values to some high limit. In WCF DS server, there are bunch of API's to
+            // to set these values to some high limit. In WCF DS server, there are bunch of APIs to
             // cover some of these limits and if we pass the value to ODL, for batch requests, there is
             // a breaking change, since WCF DS server cannot figure out why the exception was thrown and
             // and hence fail way early. For now, the best way is to tell ODL to not impose any limits

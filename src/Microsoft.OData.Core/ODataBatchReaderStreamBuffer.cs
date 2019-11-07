@@ -129,7 +129,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="lineEndStartPosition">The start position of the line terminator or -1 if not found.</param>
         /// <param name="lineEndEndPosition">The end position of the line terminator or -1 if not found.</param>
-        /// <returns>An enumeration value indicating whether the line termintor was found completely, partially or not at all.</returns>
+        /// <returns>An enumeration value indicating whether the line terminator was found completely, partially or not at all.</returns>
         internal ODataBatchReaderStreamScanResult ScanForLineEnd(out int lineEndStartPosition, out int lineEndEndPosition)
         {
             bool endOfBufferReached;
@@ -329,7 +329,7 @@ namespace Microsoft.OData
         /// <param name="lineEndStartPosition">The start position of the line terminator or -1 if not found.</param>
         /// <param name="lineEndEndPosition">The end position of the line terminator or -1 if not found.</param>
         /// <param name="endOfBufferReached">true if the end of the buffer was reached while scanning for the line end; otherwise false.</param>
-        /// <returns>An enumeration value indicating whether the line termintor was found completely, partially or not at all.</returns>
+        /// <returns>An enumeration value indicating whether the line terminator was found completely, partially or not at all.</returns>
         /// <remarks>This method only returns <see cref="ODataBatchReaderStreamScanResult.PartialMatch"/> if we found the start
         /// of a line terminator at the last character in the buffer.</remarks>
         private ODataBatchReaderStreamScanResult ScanForLineEnd(
@@ -533,7 +533,7 @@ namespace Microsoft.OData
         /// <param name="isEndBoundary">true if the boundary string is used in an end boundary; otherwise false.</param>
         /// <returns>true if it was established that the buffer starting at <paramref name="startIx"/>
         /// matches the <paramref name="boundary"/>; otherwise false.</returns>
-        /// <remarks>This method also returns false if the boundary string was completly matched against the
+        /// <remarks>This method also returns false if the boundary string was completely matched against the
         /// buffer but it could not be determined whether it is used in an end boundary or not.</remarks>
         private bool MatchBoundary(string boundary, int startIx, int matchLength, out bool isEndBoundary)
         {

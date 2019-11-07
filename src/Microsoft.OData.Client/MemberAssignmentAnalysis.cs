@@ -24,7 +24,7 @@ namespace Microsoft.OData.Client
     /// This class will also detect cases in which the assignment
     /// expression refers to cases which we shouldn't handle during
     /// materialization, such as references to multiple entity types
-    /// as sources (or refering to no source at all).
+    /// as sources (or referring to no source at all).
     /// </remarks>
     internal class MemberAssignmentAnalysis : ALinqExpressionVisitor
     {
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Client
                 MemberAssignmentAnalysis previousNested = null;
                 foreach (var arg in nex.Arguments)
                 {
-                    if (!this.CheckCompatibleAssigmentExpression(arg, nex.Type, ref previousNested))
+                    if (!this.CheckCompatibleAssignmentExpression(arg, nex.Type, ref previousNested))
                     {
                         break;
                     }
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Client
                     continue;
                 }
 
-                if (!this.CheckCompatibleAssigmentExpression(assignment.Expression, init.Type, ref previousNested))
+                if (!this.CheckCompatibleAssignmentExpression(assignment.Expression, init.Type, ref previousNested))
                 {
                     break;
                 }
@@ -376,13 +376,13 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// If there is a MemberInitExpression 'new Person { ID = p.ID, Friend = new Person { ID = p.Friend.ID }}'
         /// or a NewExpression 'new { ID = p.ID, Friend = new { ID = p.Friend.ID }}',
-        /// this method validates against the RHS of the member assigment, the expression "p.ID" for example.
+        /// this method validates against the RHS of the member assignment, the expression "p.ID" for example.
         /// </summary>
         /// <param name="expressionToAssign">The expression to validate.</param>
         /// <param name="initType">Type of the MemberInit or the New expression.</param>
-        /// <param name="previousNested">The outter nested initializer of the current initializer we are checking.</param>
+        /// <param name="previousNested">The outer nested initializer of the current initializer we are checking.</param>
         /// <returns>true if the expression to assign is fine; false otherwise.</returns>
-        private bool CheckCompatibleAssigmentExpression(Expression expressionToAssign, Type initType, ref MemberAssignmentAnalysis previousNested)
+        private bool CheckCompatibleAssignmentExpression(Expression expressionToAssign, Type initType, ref MemberAssignmentAnalysis previousNested)
         {
             MemberAssignmentAnalysis nested = MemberAssignmentAnalysis.Analyze(this.entity, expressionToAssign);
             if (nested.MultiplePathsFound)
@@ -391,7 +391,7 @@ namespace Microsoft.OData.Client
                 return false;
             }
 
-            // When we're visitng a nested entity initializer, we're exactly one level above that.
+            // When we're visiting a nested entity initializer, we're exactly one level above that.
             Exception incompatibleException = nested.CheckCompatibleAssignments(initType, ref previousNested);
             if (incompatibleException != null)
             {

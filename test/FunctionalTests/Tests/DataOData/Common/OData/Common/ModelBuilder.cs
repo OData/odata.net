@@ -150,7 +150,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="functionImport">The <see cref="FunctionImport"/> to add the parameter to.</param>
         /// <param name="name">The local name of the parameter.</param>
         /// <param name="dataType">The type of the function parameter.</param>
-        /// <param name="mode">The paramter mode.</param>
+        /// <param name="mode">The parameter mode.</param>
         /// <returns>The <paramref name="functionImport"/> (for composability).</returns>
         public static FunctionImport Parameter(this FunctionImport functionImport, string name, DataType dataType, FunctionParameterMode mode = FunctionParameterMode.In)
         {
@@ -168,7 +168,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="functionImport">The <see cref="FunctionImport"/> to add the parameter to.</param>
         /// <param name="name">The local name of the parameter.</param>
         /// <param name="returnType">The type of the function parameter.</param>
-        /// <param name="mode">The paramter mode.</param>
+        /// <param name="mode">The parameter mode.</param>
         /// <returns>The <paramref name="functionImport"/> (for composability).</returns>
         public static FunctionImport ReturnType(this FunctionImport functionImport, DataType returnDataType, EntitySet entitySet = null)
         {

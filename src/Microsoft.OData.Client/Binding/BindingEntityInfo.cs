@@ -113,7 +113,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <remarks>
         /// If there a generic class in the inheritance hierarchy of the type, that has a single
-        /// entity type paramenter T, and is assignable to DataServiceCollection(Of T), then
+        /// entity type parameter T, and is assignable to DataServiceCollection(Of T), then
         /// the type is an DataServiceCollection.
         /// </remarks>
         /// <param name="collectionType">An object type specifier.</param>
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Client
                 if (type.IsGenericType())
                 {
                     // Is there a generic class in the inheritance hierarchy, that has a single
-                    // entity type paramenter T, and is assignable to DataServiceCollection<T>
+                    // entity type parameter T, and is assignable to DataServiceCollection<T>
                     Type[] parms = type.GetGenericArguments();
 
                     if (parms != null && parms.Length == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(parms[0]))
@@ -388,7 +388,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets entity set corresponding to a given type</summary>
-        /// <param name="entityType">Intput type</param>
+        /// <param name="entityType">Input type</param>
         /// <param name="model">The client model.</param>
         /// <returns>Entity set name for the type</returns>
         private static string GetEntitySetAttribute(Type entityType, ClientEdmModel model)

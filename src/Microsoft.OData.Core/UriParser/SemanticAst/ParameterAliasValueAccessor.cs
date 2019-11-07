@@ -10,7 +10,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
 
     /// <summary>
-    /// Provides syntactic information of the paramenter aliases in query uri, and caches the semantics information of the aliases' values.
+    /// Provides syntactic information of the parameter aliases in query uri, and caches the semantics information of the aliases' values.
     /// </summary>
     internal sealed class ParameterAliasValueAccessor
     {

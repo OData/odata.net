@@ -107,7 +107,7 @@ namespace Microsoft.Spatial
             // 2b. We are inside a token and we've encountered a new token (currentType and peek type is different)
             // It follows that most of the time we will either accumulate the token or break out of the loop
             // to return the token, except in one case, where we are starting fresh AND the first character is a terminal
-            // character (delimeter). In this case we will both accumulate that char and break out of the loop.
+            // character (delimiter). In this case we will both accumulate that char and break out of the loop.
             if (this.peekToken != null)
             {
                 this.currentToken = this.peekToken;

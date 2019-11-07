@@ -41,7 +41,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// </summary>
         /// <param name="astModel">The raw CsdlModel.</param>
         /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
-        /// <param name="referencedModels">The IEdmModels to be referenced. if any element or namespce is not supposed to be include, you should have removed it before passing to this constructor.</param>
+        /// <param name="referencedModels">The IEdmModels to be referenced. if any element or namespace is not supposed to be include, you should have removed it before passing to this constructor.</param>
         /// <param name="includeDefaultVocabularies">A value indicating enable/disable the built-in vocabulary supporting.</param>
         public CsdlSemanticsModel(CsdlModel astModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<IEdmModel> referencedModels, bool includeDefaultVocabularies = true)
             : base(referencedModels, annotationsManager, includeDefaultVocabularies)

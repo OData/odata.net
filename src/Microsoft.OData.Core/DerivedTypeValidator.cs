@@ -11,7 +11,7 @@ namespace Microsoft.OData
     using Microsoft.OData.Edm;
 
     /// <summary>
-    ///  Helper class to verify the resource type meets the drived type contraints.
+    ///  Helper class to verify the resource type meets the derived type constraints.
     /// </summary>
     internal sealed class DerivedTypeValidator
     {
@@ -24,7 +24,7 @@ namespace Microsoft.OData
         /// Constructor.
         /// </summary>
         /// <param name="expectedType">The expected type.</param>
-        /// <param name="derivedTypeConstraints">The derived type contraints.</param>
+        /// <param name="derivedTypeConstraints">The derived type constraints.</param>
         /// <param name="resourceKind">The resource type, be used at error message.</param>
         /// <param name="resourceName">The resource name, be used at error message.</param>
         public DerivedTypeValidator(IEdmType expectedType, IEnumerable<string> derivedTypeConstraints, string resourceKind, string resourceName)

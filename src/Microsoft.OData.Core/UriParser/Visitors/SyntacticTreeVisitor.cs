@@ -43,7 +43,7 @@ namespace Microsoft.OData.UriParser
         /// Visits a BinaryOperatorToken
         /// </summary>
         /// <param name="tokenIn">The Binary operator token to visit.</param>
-        /// <returns>A BinaryOperatorNode thats bound to this token</returns>
+        /// <returns>A BinaryOperatorNode that's bound to this token</returns>
         public virtual T Visit(BinaryOperatorToken tokenIn)
         {
             throw new NotImplementedException();
@@ -53,7 +53,7 @@ namespace Microsoft.OData.UriParser
         /// Visits an InToken
         /// </summary>
         /// <param name="tokenIn">The In token to visit.</param>
-        /// <returns>An InNode thats bound to this token</returns>
+        /// <returns>An InNode that's bound to this token</returns>
         public virtual T Visit(InToken tokenIn)
         {
             throw new NotImplementedException();
@@ -250,7 +250,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visits a FuntionParameterToken
+        /// Visits a FunctionParameterToken
         /// </summary>
         /// <param name="tokenIn">The FunctionParameterToken to bind</param>
         /// <returns>A user defined value</returns>

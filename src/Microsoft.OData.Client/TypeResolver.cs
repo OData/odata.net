@@ -172,7 +172,7 @@ namespace Microsoft.OData.Client
             // type specified in the wire. However, in V1/V2, since there was no collection feature
             // supported, it will call us with a collection wire name, but its okay to return null
             // in that case, since there is no collection supported. If the user writes the type
-            // resolver in such a way to handle collections themselver, even then it will fail later
+            // resolver in such a way to handle collections themselves, even then it will fail later
             // in ODataLib stating collection types are not supported in V1/V2 versions.
             if (expectedEdmType != null)
             {

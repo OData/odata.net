@@ -314,8 +314,8 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Adds a filter to this ResourceSetExpression.
-        /// If filter is already presents, adds the predicateConjunts to the
-        /// PredicateConjucts of the filter
+        /// If filter is already presents, adds the predicateConjuncts to the
+        /// PredicateConjuncts of the filter
         /// </summary>
         /// <param name="predicateConjuncts">The predicate conjuncts.</param>
         internal void AddFilter(IEnumerable<Expression> predicateConjuncts)
@@ -457,9 +457,9 @@ namespace Microsoft.OData.Client
         ///   .SelectMany($ => $.o, ($, od) => od)
         ///
         /// PatternRules.MatchPropertyProjectionSet identifies Orders as the target of the collector.
-        /// PatternRules.MatchTransparentScopeSelector identifies the introduction of a transparent identifer.
+        /// PatternRules.MatchTransparentScopeSelector identifies the introduction of a transparent identifier.
         ///
-        /// A transparent accessor is associated with Orders, with 'c' being the source accesor,
+        /// A transparent accessor is associated with Orders, with 'c' being the source accessor,
         /// and 'o' being the (introduced) accessor.
         /// </remarks>
         [DebuggerDisplay("{ToString()}")]
@@ -485,18 +485,18 @@ namespace Microsoft.OData.Client
             /// Constructs a new transparent scope with the specified set and source set accessors
             /// </summary>
             /// <param name="acc">The name of the property required to access the resource set</param>
-            /// <param name="sourceAccesors">The names of the property required to access the resource set's sources.</param>
-            internal TransparentAccessors(string acc, Dictionary<string, Expression> sourceAccesors)
+            /// <param name="sourceAccessors">The names of the property required to access the resource set's sources.</param>
+            internal TransparentAccessors(string acc, Dictionary<string, Expression> sourceAccessors)
             {
                 Debug.Assert(!string.IsNullOrEmpty(acc), "Set accessor cannot be null or empty");
-                Debug.Assert(sourceAccesors != null, "sourceAccesors != null");
+                Debug.Assert(sourceAccessors != null, "sourceAccessors != null");
 
                 this.Accessor = acc;
-                this.SourceAccessors = sourceAccesors;
+                this.SourceAccessors = sourceAccessors;
             }
 
             /// <summary>Provides a string representation of this accessor.</summary>
-            /// <returns>The text represntation of this accessor.</returns>
+            /// <returns>The text representation of this accessor.</returns>
             public override string ToString()
             {
                 string result = "SourceAccessors=[" + string.Join(",", this.SourceAccessors.Keys.ToArray());

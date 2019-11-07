@@ -55,7 +55,7 @@ namespace Microsoft.OData.Edm
         private TimeSpan timeSpan;
 
         /// <summary>
-        /// Consturctor of <see cref="Microsoft.OData.Edm.TimeOfDay"/>
+        /// Constructor of <see cref="Microsoft.OData.Edm.TimeOfDay"/>
         /// </summary>
         /// <param name="hour">Hour value of TimeOfDay</param>
         /// <param name="minute">Minute value of TimeOfDay</param>
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Consturctor of <see cref="Microsoft.OData.Edm.TimeOfDay"/>
+        /// Constructor of <see cref="Microsoft.OData.Edm.TimeOfDay"/>
         /// </summary>
         /// <param name="ticks">ticks value of TimeOfDay</param>
         public TimeOfDay(long ticks)

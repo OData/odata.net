@@ -121,7 +121,7 @@ namespace Microsoft.Spatial
             /// <summary>
             /// Parses the top level element in the document
             /// </summary>
-            /// <param name="readCoordinateSystem">Whether coordinte system is expected</param>
+            /// <param name="readCoordinateSystem">Whether coordinate system is expected</param>
             private void ParseGmlGeometry(bool readCoordinateSystem)
             {
                 if (!this.reader.IsStartElement())
@@ -240,7 +240,7 @@ namespace Microsoft.Spatial
             /// <summary>
             /// creates a shape and parses the element.
             /// This is used to parse a top level Point element, as opposed to
-            /// a point which is embeded in a linestring or a polygon.
+            /// a point which is embedded in a linestring or a polygon.
             /// </summary>
             private void ParseGmlPointShape()
             {
@@ -612,7 +612,7 @@ namespace Microsoft.Spatial
             /// <summary>
             /// parses a GmlPosListElement.
             /// </summary>
-            /// <param name="allowEmpty">Alow empty posList</param>
+            /// <param name="allowEmpty">Allow empty posList</param>
             private void ParseGmlPosListElement(bool allowEmpty)
             {
                 // GmlPosListElement :=
@@ -687,8 +687,8 @@ namespace Microsoft.Spatial
             ///     1- current element is not a start element named "element" - throw
             ///     2- current element is named "element" but is an empty element - return false
             ///     3- current element is named "element" and is not empty - return true
-            /// If the funciton returns true, it means that a non-empty element of the given name
-            /// was read, so the caller takes responsability to read the corresponding end element.
+            /// If the function returns true, it means that a non-empty element of the given name
+            /// was read, so the caller takes responsibility to read the corresponding end element.
             /// </summary>
             /// <param name="element">The element name</param>
             /// <returns>Returns true if it read a non-empty start element of the given name.</returns>

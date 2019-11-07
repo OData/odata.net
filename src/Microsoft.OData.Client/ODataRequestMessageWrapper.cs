@@ -354,7 +354,7 @@ namespace Microsoft.OData.Client
             // Once the actions have descriptors, we can enable this assert.
             // Debug.Assert(
             //    descriptor != null || this.requestMessage.Method == XmlConstants.HttpMethodGet || this.requestMessage.Url.AbsoluteUri.Contains("$batch"),
-            //    "For CUD operations, decriptor must be specified in every SendingRequest2 event except top level batch request");
+            //    "For CUD operations, descriptor must be specified in every SendingRequest2 event except top level batch request");
 #endif
 
             // Do we need to fire these events if someone has replaced the transport layer? Maybe no.
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Client
             else
             {
                 // Cache the headers if there is no sending request 2 event subscribers. At the time of GetRequestStream
-                // or GetSyncronousResponse, we will validate that the headers are the same.
+                // or GetSynchronousResponse, we will validate that the headers are the same.
                 this.cachedRequestHeaders = new HeaderCollection();
                 foreach (var header in this.requestMessage.Headers)
                 {

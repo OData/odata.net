@@ -216,7 +216,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Http
         /// Tries to get the given parameter from the mime part's content type
         /// </summary>
         /// <param name="mimePart">The mime part</param>
-        /// <param name="parameterName">The content-type paramter to look for</param>
+        /// <param name="parameterName">The content-type parameter to look for</param>
         /// <param name="parameterValue">The value of the parameter if it is found</param>
         /// <returns>Whether or not the parameter was found</returns>
         internal static bool TryGetContentTypeParameter(this IMimePart mimePart, string parameterName, out string parameterValue)

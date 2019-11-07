@@ -9,7 +9,7 @@ namespace Microsoft.Spatial
     using System;
 
     /// <summary>
-    /// Class responsible for knowing how to perform operations for a particular implemenation of Spatial types
+    /// Class responsible for knowing how to perform operations for a particular implementation of Spatial types
     /// </summary>
     public abstract class SpatialOperations
     {

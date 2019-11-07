@@ -106,7 +106,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Iterates over an object array, verifies that each element in the array is another array, and calls a delgate on the contained array.
+            /// Iterates over an object array, verifies that each element in the array is another array, and calls a delegate on the contained array.
             /// </summary>
             /// <param name="array">Array to iterate over.</param>
             /// <param name="send">Delegate to invoke for each element once it has been validated to be an array.</param>

@@ -143,7 +143,7 @@ namespace Microsoft.OData
         /// Computes the expected type kind of an item from the type name read from the payload.
         /// </summary>
         /// <param name="typeName">The type name to compute the type kind from.</param>
-        /// <param name="primitiveItemType">The primitive type for the specified type name or null if the type name is not a valid primitve type.</param>
+        /// <param name="primitiveItemType">The primitive type for the specified type name or null if the type name is not a valid primitive type.</param>
         /// <returns>The <see cref="EdmTypeKind"/> of the type with the specified <paramref name="typeName"/>.</returns>
         private static EdmTypeKind ComputeExpectedTypeKind(string typeName, out IEdmPrimitiveType primitiveItemType)
         {

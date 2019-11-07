@@ -60,7 +60,7 @@ namespace Microsoft.OData.UriParser
             functions.Add("geo.distance", signatures);
 
             // bool geo.intersects(geometry.Point, geometry.Polygon)
-            // bool geo.intersects(geometry.Polygon, geomtery.Point)
+            // bool geo.intersects(geometry.Polygon, geometry.Point)
             // bool geo.intersects(geography.Point, geography.Polygon)
             // bool geo.intersects(geography.Polygon, geography.Point)
             signatures = new FunctionSignatureWithReturnType[]

@@ -540,7 +540,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Add dictinoary to url and each alias value will be URL encoded.
+        /// Add dictionary to url and each alias value will be URL encoded.
         /// </summary>
         /// <param name="dictionary">Dictionary</param>
         /// <returns>The url query string of dictionary's key value pairs (URL encoded)</returns>

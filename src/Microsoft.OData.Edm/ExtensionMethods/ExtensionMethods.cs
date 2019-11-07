@@ -155,7 +155,7 @@ namespace Microsoft.OData.Edm
         /// If the container name in the model is the same as the input name. The input name maybe full qualified name.
         /// </summary>
         /// <param name="model">The model to search.</param>
-        /// <param name="containerName">Input container name to be searched. The container name may be full qualified with namesapce prefix.</param>
+        /// <param name="containerName">Input container name to be searched. The container name may be full qualified with namespace prefix.</param>
         /// <returns>True if the model has a container called input name, otherwise false.</returns>
         public static bool ExistsContainer(this IEdmModel model, string containerName)
         {
@@ -164,9 +164,9 @@ namespace Microsoft.OData.Edm
                 return false;
             }
 
-            string fullQulifiedName = (model.EntityContainer.Namespace ?? String.Empty) + "." + (containerName ?? String.Empty);
+            string fullQualifiedName = (model.EntityContainer.Namespace ?? String.Empty) + "." + (containerName ?? String.Empty);
 
-            if (string.Equals(model.EntityContainer.FullName(), fullQulifiedName, StringComparison.Ordinal)
+            if (string.Equals(model.EntityContainer.FullName(), fullQualifiedName, StringComparison.Ordinal)
                 || string.Equals(model.EntityContainer.FullName(), containerName, StringComparison.Ordinal))
             {
                 return true;
@@ -764,7 +764,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="model">The model referenced to.</param>
         /// <param name="navigationSource">The navigation source.</param>
-        /// <returns>Null or a collection string of qualifed type name.</returns>
+        /// <returns>Null or a collection string of qualified type name.</returns>
         public static IEnumerable<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmNavigationSource navigationSource)
         {
             if (model == null || navigationSource == null)
@@ -791,7 +791,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="model">The model referenced to.</param>
         /// <param name="target">The target annotatable to find annotation.</param>
-        /// <returns>Null or a collection string of qualifed type name.</returns>
+        /// <returns>Null or a collection string of qualified type name.</returns>
         public static IEnumerable<string> GetDerivedTypeConstraints(this IEdmModel model, IEdmVocabularyAnnotatable target)
         {
             if (model == null || target == null)
@@ -1331,7 +1331,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="model">The model referenced to.</param>
         /// <param name="target">The target Annotatable to add annotation.</param>
-        /// <param name="description">Decription to be added.</param>
+        /// <param name="description">Description to be added.</param>
         public static void SetDescriptionAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, string description)
         {
             EdmUtil.CheckArgumentNull(model, "model");
@@ -1348,7 +1348,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="model">The model referenced to.</param>
         /// <param name="target">The target Annotatable to add annotation.</param>
-        /// <param name="description">Decription to be added.</param>
+        /// <param name="description">Description to be added.</param>
         public static void SetLongDescriptionAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, string description)
         {
             EdmUtil.CheckArgumentNull(model, "model");
@@ -2747,7 +2747,7 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model to search for type.</param>
         /// <param name="finderFunc">The func for each IEdmModel node to find element by name.</param>
         /// <param name="qualifiedName">The qualified name of the type being found.</param>
-        /// <param name="ambiguousCreator">The func to combine results ifwhen more than one is found.</param>
+        /// <param name="ambiguousCreator">The func to combine results when more than one is found.</param>
         /// <remarks>when searching, will ignore built-in types in EdmCoreModel and CoreVocabularyModel.</remarks>
         /// <returns>The requested type, or null if no such type exists.</returns>
         internal static T FindInModelTree<T>(this CsdlSemanticsModel model, Func<IEdmModel, string, T> finderFunc, string qualifiedName, Func<T, T, T> ambiguousCreator)
@@ -3320,7 +3320,7 @@ namespace Microsoft.OData.Edm
         /// <param name="container">The IEdmEntityContainer object, can be CsdlSemanticsEntityContainer.</param>
         /// <param name="simpleName">A simple (not fully qualified) entity set name, singleton name, operation import name or path.</param>
         /// <param name="finderFunc">The func to do the search within container.</param>
-        /// <param name="depth">The recursive deepth of .Extends containers to search.</param>
+        /// <param name="depth">The recursive depth of .Extends containers to search.</param>
         /// <returns>The found entity set or singleton or operation import.</returns>
         private static T FindInContainerAndExtendsRecursively<T>(IEdmEntityContainer container, string simpleName, Func<IEdmEntityContainer, string, T> finderFunc, int depth)
         {

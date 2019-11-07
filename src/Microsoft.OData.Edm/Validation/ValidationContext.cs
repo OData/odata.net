@@ -52,7 +52,7 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         /// <param name="location">Location of the error.</param>
         /// <param name="errorCode">Value representing the error.</param>
-        /// <param name="errorMessage">Message text discribing the error.</param>
+        /// <param name="errorMessage">Message text describing the error.</param>
         public void AddError(EdmLocation location, EdmErrorCode errorCode, string errorMessage)
         {
             this.AddError(new EdmError(location, errorCode, errorMessage));

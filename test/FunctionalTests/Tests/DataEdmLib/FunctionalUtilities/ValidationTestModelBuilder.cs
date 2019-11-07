@@ -1681,7 +1681,7 @@ namespace EdmLibTests.FunctionalUtilities
             return FixUpWithEdmVersion(csdl, edmVersion);
         }
 
-        public static XElement[] FunctionImportParamterShouldBeInAndOutAndInOut(EdmVersion edmVersion)
+        public static XElement[] FunctionImportParameterShouldBeInAndOutAndInOut(EdmVersion edmVersion)
         {
             const string csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1831,7 +1831,7 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static XElement[] OperationParamterValidTypeTest(EdmVersion edmVersion)
+        public static XElement[] OperationParameterValidTypeTest(EdmVersion edmVersion)
         {
             const string csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>

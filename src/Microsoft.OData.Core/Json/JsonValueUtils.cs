@@ -517,7 +517,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Convert string to Json-formated string with proper escaped special characters.
+        /// Convert string to Json-formatted string with proper escaped special characters.
         /// Note that the return value is not enclosed by the top level double-quotes.
         /// </summary>
         /// <param name="inputString">string that might contain special characters.</param>
@@ -567,7 +567,7 @@ namespace Microsoft.OData.Json
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="character">The character to write to the buffer.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
-        /// <param name="bufferIndex">The index into the bufffer in which to write the character.</param>
+        /// <param name="bufferIndex">The index into the buffer in which to write the character.</param>
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <returns>Current position in the buffer after the character has been written.</returns>
         /// <remarks>
@@ -584,7 +584,7 @@ namespace Microsoft.OData.Json
                 escapedString = JsonValueUtils.SpecialCharToEscapedStringMap[character];
             }
 
-            // Append the unhandled characters (that do not require special treament)
+            // Append the unhandled characters (that do not require special treatment)
             // to the buffer.
             if (escapedString == null)
             {
@@ -593,7 +593,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                // Okay, an unhandled character was deteced.
+                // Okay, an unhandled character was detected.
                 // First lets check if we can fit it in the existing buffer, if not,
                 // flush the current buffer and reset. Add the escaped string to the buffer
                 // and continue.

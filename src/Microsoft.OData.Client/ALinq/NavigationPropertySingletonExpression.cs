@@ -38,7 +38,7 @@ namespace Microsoft.OData.Client
         /// <param name="resourceType">resource type for expression</param>
         /// <param name="expandPaths">expand paths for resource set</param>
         /// <param name="countOption">count option for the resource set</param>
-        /// <param name="customQueryOptions">custom query options for resourcse set</param>
+        /// <param name="customQueryOptions">custom query options for resource set</param>
         /// <param name="projection">projection expression</param>
         /// <param name="resourceTypeAs">target expression type for a TypeAs conversion</param>
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>

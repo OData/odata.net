@@ -24,7 +24,7 @@ namespace Microsoft.OData.Client
         private readonly Stream stream;
 
         /// <summary>
-        /// Set to true if the stream is a MemoryStream and we produced it (so it does have the buffer accesible)
+        /// Set to true if the stream is a MemoryStream and we produced it (so it does have the buffer accessible)
         /// </summary>
         private readonly bool isKnownMemoryStream;
 
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Set to true if the stream is a MemoryStream and we produced it (so it does have the buffer accesible)
+        /// Set to true if the stream is a MemoryStream and we produced it (so it does have the buffer accessible)
         /// </summary>
         public bool IsKnownMemoryStream
         {

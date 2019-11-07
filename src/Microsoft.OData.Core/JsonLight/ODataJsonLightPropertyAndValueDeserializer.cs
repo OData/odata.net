@@ -186,7 +186,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Reads bulit-in "odata." or custom instance annotation's value.
+        /// Reads built-in "odata." or custom instance annotation's value.
         /// </summary>
         /// <param name="annotationName">The annotation name.</param>
         /// <param name="odataType">the odata.type value if exists.</param>

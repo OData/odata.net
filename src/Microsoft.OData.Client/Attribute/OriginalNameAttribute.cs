@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client
             this.originalName = originalName;
         }
 
-        /// <summary>Gets the orginal names of the variable.</summary>
+        /// <summary>Gets the original names of the variable.</summary>
         /// <returns>String value that contains the original name of the variable. </returns>
         public string OriginalName
         {

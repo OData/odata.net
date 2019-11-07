@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client
         /// <summary>Originating WebRequest</summary>
         internal readonly ODataRequestMessageWrapper Request;
 
-        /// <summary>reusuable async copy buffer</summary>
+        /// <summary>reusable async copy buffer</summary>
         private static byte[] reusableAsyncCopyBuffer;
 
         /// <summary>content to write to request stream</summary>
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Client
                 }
 #endif
                 IODataResponseMessage response = null;
-                response = this.RequestInfo.GetSyncronousResponse(this.Request, true);
+                response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
 
                 if (HttpStatusCode.NoContent != this.StatusCode)
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Client
         /// Create materializer on top of response stream
         /// </summary>
         /// <param name="plan">Precompiled projection plan (possibly null).</param>
-        /// <returns>A materializer instance ready to deserialize ther result</returns>
+        /// <returns>A materializer instance ready to deserialize the result</returns>
         internal MaterializeAtom GetMaterializer(ProjectionPlan plan)
         {
             Debug.Assert(this.IsCompletedInternally, "request hasn't completed yet");
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Processes the result for successfull request and produces the actual result of the request.
+        /// Processes the result for successful request and produces the actual result of the request.
         /// </summary>
         /// <typeparam name="TElement">Element type of the result.</typeparam>
         /// <param name="plan">The plan to use for the projection, if available in precompiled form.</param>
@@ -429,7 +429,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>get stream which of copy buffer (via response stream) will be copied into</summary>
-        /// <returns>writtable stream, happens before GetAsyncResponseStreamCopyBuffer</returns>
+        /// <returns>writable stream, happens before GetAsyncResponseStreamCopyBuffer</returns>
         protected virtual Stream GetAsyncResponseStreamCopy()
         {
             this.responseStreamOwner = true;
@@ -448,7 +448,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>get buffer which response stream will be copied into</summary>
-        /// <returns>writtable stream</returns>
+        /// <returns>writable stream</returns>
         protected virtual byte[] GetAsyncResponseStreamCopyBuffer()
         {   // consider having a cache of these buffers since they will be pinned
             Debug.Assert(null == this.asyncStreamCopyBuffer, "non-null this.asyncStreamCopyBuffer");
@@ -475,7 +475,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                // Since the unintialized value of ContentLength header is -1, we need to return
+                // Since the uninitialized value of ContentLength header is -1, we need to return
                 // -1 if the content length header is not present
                 this.contentLength = -1;
             }
@@ -549,7 +549,7 @@ namespace Microsoft.OData.Client
                     {
                         if (null == this.outputResponseStream)
                         {
-                            // this is the stream we copy the reponse to
+                            // this is the stream we copy the response to
                             this.outputResponseStream = Util.NullCheck(this.GetAsyncResponseStreamCopy(), InternalError.InvalidAsyncResponseStreamCopy);
                         }
 

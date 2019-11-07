@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.Equal(FakeBindMethods.KeyBinderConstantToken, results.ShouldBeKeyLookupQueryNode().KeyPropertyValues.Single().KeyValue);
         }
 
-        // TODO: Clearly CollectionNode is too broad for BindKeyValues. Consider change the object model and/or the paramter type for BindKeyValues.
+        // TODO: Clearly CollectionNode is too broad for BindKeyValues. Consider change the object model and/or the parameter type for BindKeyValues.
 
         /*
         // TODO: Collection of Primitive should throw

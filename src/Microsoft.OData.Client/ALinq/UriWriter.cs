@@ -275,9 +275,9 @@ namespace Microsoft.OData.Client
             else if (rse.MemberExpression != null)
             {
                 // this is a resource set expression
-                // we should be at the very begining of
+                // we should be at the very beginning of
                 // the URI
-                Debug.Assert(this.uriBuilder.Length == 0, "The builder is not empty while we are adding a resourset");
+                Debug.Assert(this.uriBuilder.Length == 0, "The builder is not empty while we are adding a resourceset");
                 string entitySetName = (String)((ConstantExpression)rse.MemberExpression).Value;
                 this.uriBuilder.Append(this.context.BaseUriResolver.GetEntitySetUri(entitySetName));
             }

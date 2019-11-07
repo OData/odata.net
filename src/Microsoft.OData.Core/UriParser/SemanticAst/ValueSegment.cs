@@ -20,10 +20,10 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmType edmType;
 
         /// <summary>
-        /// Build a segment to represnt $value.
+        /// Build a segment to represent $value.
         /// </summary>
         /// <param name="previousType">The type of the segment before $value. This may be null, for cases such as open properties.</param>
-        /// <exception cref="ODataException">Throws if the input previousType is a colleciton type.</exception>
+        /// <exception cref="ODataException">Throws if the input previousType is a collection type.</exception>
         public ValueSegment(IEdmType previousType)
         {
             this.Identifier = UriQueryConstants.ValueSegment;

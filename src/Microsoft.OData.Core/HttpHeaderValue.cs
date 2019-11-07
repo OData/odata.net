@@ -24,9 +24,9 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Returns the HTTP header value string which can be used to set the header on the requst and response messages.
+        /// Returns the HTTP header value string which can be used to set the header on the request and response messages.
         /// </summary>
-        /// <returns>Returns the HTTP header value string which can be used to set the header on the requst and response messages.</returns>
+        /// <returns>Returns the HTTP header value string which can be used to set the header on the request and response messages.</returns>
         public override string ToString()
         {
             return this.Count == 0 ? null : String.Join(HttpHeaderValueLexer.ElementSeparator, this.Values.Select(element => element.ToString()).ToArray());

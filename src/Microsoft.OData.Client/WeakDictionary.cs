@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// The constructor with a specified comparer and a referesh interval.
+        /// The constructor with a specified comparer and a refresh interval.
         /// </summary>
         /// <param name="comparer">
         /// The IEqualityComparer used to determine equals of object of <typeparamref name="TKey"/>.

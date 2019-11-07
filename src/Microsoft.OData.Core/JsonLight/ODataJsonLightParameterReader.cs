@@ -115,7 +115,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
+        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the beginning of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
         ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.
@@ -131,7 +131,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
+        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the beginning of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
         ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.
@@ -176,7 +176,7 @@ namespace Microsoft.OData.JsonLight
 
 #if PORTABLELIB
         /// <summary>
-        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
         /// <param name="expectedResourceType">Expected resource set element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
@@ -245,7 +245,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
+        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the beginning of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
         ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.

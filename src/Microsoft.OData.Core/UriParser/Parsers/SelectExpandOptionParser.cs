@@ -266,7 +266,7 @@ namespace Microsoft.OData.UriParser
                             topOption = ParseInnerTop();
                             break;
 
-                        case ExpressionConstants.QueryOptionSkip: // innner $skip
+                        case ExpressionConstants.QueryOptionSkip: // inner $skip
                             skipOption = ParseInnerSkip();
                             break;
 
@@ -683,7 +683,7 @@ namespace Microsoft.OData.UriParser
 
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
             {
-                // Move over the ';' seperator
+                // Move over the ';' separator
                 this.lexer.NextToken();
                 return expressionText;
             }

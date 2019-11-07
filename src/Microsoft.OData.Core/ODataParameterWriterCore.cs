@@ -310,7 +310,7 @@ namespace Microsoft.OData
         /// </remarks>
         void IODataOutputInStreamErrorListener.OnInStreamError()
         {
-            // The parameter payload is writen by the client and read by the server, we do not support
+            // The parameter payload is written by the client and read by the server, we do not support
             // writing an in-stream error payload in this scenario.
             throw new ODataException(Strings.ODataParameterWriter_InStreamErrorNotSupported);
         }

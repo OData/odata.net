@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// Use this class to materialize instance annnotations in an <see cref="ODataAnnotatable"/>.
+    /// Use this class to materialize instance annotations in an <see cref="ODataAnnotatable"/>.
     /// </summary>
     internal class InstanceAnnotationMaterializationPolicy
     {
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Set instance annotation for a property
         /// </summary>
         /// <param name="propertyName">Property name</param>
-        /// <param name="instanceAnnotations">Intance annotations to be set</param>
+        /// <param name="instanceAnnotations">Instance annotations to be set</param>
         /// <param name="type">The type of the containing object</param>
         /// <param name="declaringInstance">The containing object instance</param>
         private void SetInstanceAnnotations(string propertyName, IDictionary<string, object> instanceAnnotations, Type type, object declaringInstance)

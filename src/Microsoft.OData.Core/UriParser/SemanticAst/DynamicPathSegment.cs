@@ -89,12 +89,12 @@ namespace Microsoft.OData.UriParser
         internal override bool Equals(ODataPathSegment other)
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
-            DynamicPathSegment otherDynmaicPathSegment = other as DynamicPathSegment;
-            return otherDynmaicPathSegment != null
-                && otherDynmaicPathSegment.Identifier == this.Identifier
-                && otherDynmaicPathSegment.EdmType == this.EdmType
-                && otherDynmaicPathSegment.TargetEdmNavigationSource == this.TargetEdmNavigationSource
-                && otherDynmaicPathSegment.SingleResult == this.SingleResult;
+            DynamicPathSegment otherDynamicPathSegment = other as DynamicPathSegment;
+            return otherDynamicPathSegment != null
+                && otherDynamicPathSegment.Identifier == this.Identifier
+                && otherDynamicPathSegment.EdmType == this.EdmType
+                && otherDynamicPathSegment.TargetEdmNavigationSource == this.TargetEdmNavigationSource
+                && otherDynamicPathSegment.SingleResult == this.SingleResult;
         }
     }
 }

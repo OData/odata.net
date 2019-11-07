@@ -24,7 +24,7 @@ namespace Microsoft.Spatial
 
         /// <summary>Creates a new instance of the <see cref="T:Microsoft.Spatial.ParseErrorException" /> class from a message and previous exception.</summary>
         /// <param name="message">The message about the exception.</param>
-        /// <param name="innerException">The exception that preceeded this one.</param>
+        /// <param name="innerException">The exception that preceded this one.</param>
         public ParseErrorException(string message, Exception innerException)
             : base(message, innerException)
         {
