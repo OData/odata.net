@@ -801,7 +801,7 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
-        /// Increments the nested resource count by one and fails if the new value exceeds the maxiumum nested resource depth limit.
+        /// Increments the nested resource count by one and fails if the new value exceeds the maxium nested resource depth limit.
         /// </summary>
         protected void IncreaseResourceDepth()
         {

@@ -408,7 +408,7 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Determines if a <paramref name="sourcePrimitiveType"/> is convertibale according to OData rules to the
+        /// Determines if a <paramref name="sourcePrimitiveType"/> is convertible according to OData rules to the
         /// <paramref name="targetPrimitiveType"/>.
         /// </summary>
         /// <param name="sourceNodeOrNull">The node which is to be converted.</param>

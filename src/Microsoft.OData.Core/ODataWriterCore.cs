@@ -1240,7 +1240,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Place where derived writers can perform custom steps before the resource is writen, at the begining of WriteStartEntryImplementation.
+        /// Place where derived writers can perform custom steps before the resource is written, at the beginning of WriteStartEntryImplementation.
         /// </summary>
         /// <param name="resourceScope">The ResourceScope.</param>
         /// <param name="resource">Resource to write.</param>
@@ -1255,7 +1255,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Place where derived writers can perform custom steps before the deleted resource is writen, at the begining of WriteStartEntryImplementation.
+        /// Place where derived writers can perform custom steps before the deleted resource is written, at the beginning of WriteStartEntryImplementation.
         /// </summary>
         /// <param name="resourceScope">The ResourceScope.</param>
         /// <param name="deletedResource">Resource to write.</param>
@@ -1520,7 +1520,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Start writing a delta link or delta delted link - implementation of the actual functionality.
+        /// Start writing a delta link or delta deleted link - implementation of the actual functionality.
         /// </summary>
         /// <param name="deltaLink">Delta (deleted) link to write.</param>
         private void WriteDeltaLinkImplementation(ODataDeltaLinkBase deltaLink)
@@ -2096,7 +2096,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Increments the nested resource count by one and fails if the new value exceeds the maxiumum nested resource depth limit.
+        /// Increments the nested resource count by one and fails if the new value exceeds the maximum nested resource depth limit.
         /// </summary>
         private void IncreaseResourceDepth()
         {

@@ -64,7 +64,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Returns the oracle to use when determing the type name to write for entries and values.
+        /// Returns the oracle to use when determining the type name to write for entries and values.
         /// </summary>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
         internal override JsonLightTypeNameOracle GetTypeNameOracle()

@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         private DataServiceStreamLink streamLink;
 
-        /// <summary>entity descriptor refering the parent entity.</summary>
+        /// <summary>entity descriptor referring the parent entity.</summary>
         private EntityDescriptor entityDescriptor;
 
         /// <summary>

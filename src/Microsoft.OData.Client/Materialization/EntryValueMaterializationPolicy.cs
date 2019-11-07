@@ -201,7 +201,7 @@ namespace Microsoft.OData.Client.Materialization
                 this.ResolveByCreatingWithType(entry, actualType.ElementType);
             }
 
-            Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise ResolveOrCreateInstnace didn't do its job");
+            Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise ResolveOrCreateInstance didn't do its job");
 
             this.MaterializeResolvedEntry(entry, includeLinks);
         }
@@ -428,7 +428,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                Debug.Assert(!entry.ForLoadProperty, "LoadProperty should always have ShouldUpateForPayload set to true.");
+                Debug.Assert(!entry.ForLoadProperty, "LoadProperty should always have ShouldUpdateForPayload set to true.");
 
                 foreach (object item in items)
                 {
@@ -466,7 +466,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 Type collectionType = property.PropertyType;
 
-                // For backward compatiblity we need to have different strategy of collection creation b/w
+                // For backward compatibility we need to have different strategy of collection creation b/w
                 // LoadProperty scenario versus regular collection creation scenario.
                 if (forLoadProperty)
                 {

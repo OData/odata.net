@@ -77,7 +77,7 @@ namespace Microsoft.OData
         /// </remarks>
         Completed,
 
-        /// <summary>The reader is positioned on a non-null primivite value within an untyped collection.</summary>
+        /// <summary>The reader is positioned on a non-null primitive value within an untyped collection.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns
         /// an <see cref="ODataPrimitiveValue"/>.
@@ -112,7 +112,7 @@ namespace Microsoft.OData
         /// </remarks>
         DeletedResourceEnd,
 
-        /// <summary>The reder is positioned on a delta link.</summary>
+        /// <summary>The reader is positioned on a delta link.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns
         /// an <see cref="ODataDeltaLink"/>.

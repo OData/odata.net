@@ -39,7 +39,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// An instance of <see cref="DataServiceUrlKeyDelimiter"/> which uses arentheses delimiter. Specifically, this instance will produce keys that use parentheses like "Customers('ALFKI')".
+        /// An instance of <see cref="DataServiceUrlKeyDelimiter"/> which uses parentheses delimiter. Specifically, this instance will produce keys that use parentheses like "Customers('ALFKI')".
         /// </summary>
         public static DataServiceUrlKeyDelimiter Parentheses
         {

@@ -48,7 +48,7 @@ namespace Microsoft.OData.Edm
 
             this.referencedEdmModels = new List<IEdmModel>(referencedModels);
 
-            // EdmCoreModel is always embeded.
+            // EdmCoreModel is always embedded.
             this.referencedEdmModels.Insert(0, EdmCoreModel.Instance);
 
             if (includeDefaultVocabularies)

@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// This class binds parameter alias by :
     /// (1) parse and bind the alias value's expression into SingleValueNode, then get its type.
-    /// (2) asign SingleValueNode's type to alias' ParameterAliasNode.
+    /// (2) assign SingleValueNode's type to alias' ParameterAliasNode.
     /// </summary>
     internal sealed class ParameterAliasBinder
     {
@@ -75,7 +75,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="bindingState">The BindingState.</param>
         /// <param name="aliasValueExpression">The alias value's expression text.</param>
         /// <param name="parameterType">The edm type of the parameter.</param>
-        /// <returns>The semantcs node of the expression text.</returns>
+        /// <returns>The semantics node of the expression text.</returns>
         private SingleValueNode ParseAndBindParameterAliasValueExpression(BindingState bindingState, string aliasValueExpression, IEdmTypeReference parameterType)
         {
             // Get the syntactic representation of the filter expression

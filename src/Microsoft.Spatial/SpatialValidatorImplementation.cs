@@ -85,7 +85,7 @@ namespace Microsoft.Spatial
         /// this is the actual validator, and derived from DrawBoth
         /// while the real SpatialValidator derives from DrawSpatial.
         /// We simple create an instance of this nested class and pass back
-        /// the DrawGeometry, and DrawGeography when the outter classes DataSpatial
+        /// the DrawGeometry, and DrawGeography when the outer classes DataSpatial
         /// properties are accessed.
         /// </summary>
         private class NestedValidator : DrawBoth
@@ -587,7 +587,7 @@ namespace Microsoft.Spatial
             /// </summary>
             /// <param name="numOfPoints">The number of points in the ring</param>
             /// <param name="initialFirstCoordinate">its first latitude</param>
-            /// <param name="initialSecondCoordinate">it first longitued</param>
+            /// <param name="initialSecondCoordinate">it first longitude</param>
             /// <param name="mostRecentFirstCoordinate">its last latitude</param>
             /// <param name="mostRecentSecondCoordinate">its last longitude</param>
             private static void ValidateGeographyPolygon(

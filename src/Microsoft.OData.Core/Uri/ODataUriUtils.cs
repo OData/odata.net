@@ -55,7 +55,7 @@ namespace Microsoft.OData
             }
 
             // Let ExpressionLexer try to get a primitive
-            ExpressionLexer lexer = new ExpressionLexer(value, false /*moveToFirstToken*/, false /*useSemicolonDelimeter*/);
+            ExpressionLexer lexer = new ExpressionLexer(value, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/);
             Exception error;
             ExpressionToken token;
 

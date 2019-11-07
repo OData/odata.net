@@ -135,9 +135,9 @@ namespace Microsoft.OData
                     // Thus we can't dispose the XmlWriter since that might end up writing more data into the stream right here
                     // and thus callers would have no way to prevent us from writing synchronously into the underlying stream.
                     // Also in case of in-stream error we intentionally want to not write the end elements to keep the payload invalid.
-                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitely.
+                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
 
-                    // Dipose the message stream (note that we OWN this stream, so we always dispose it).
+                    // Dispose the message stream (note that we OWN this stream, so we always dispose it).
                     this.messageOutputStream.Dispose();
                 }
             }

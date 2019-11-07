@@ -89,7 +89,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Build the ExpandOption strategy (SelectOption build does not need resolover and parentEntityType now).
+        /// Build the ExpandOption strategy (SelectOption build does not need resolver and parentEntityType now).
         /// </summary>
         /// <param name="resolver">the URI resolver which will resolve different kinds of Uri parsing context</param>
         /// <param name="clauseToParse">the clause to parse</param>
@@ -163,7 +163,7 @@ namespace Microsoft.OData.UriParser
         public SelectToken ParseSelect()
         {
             this.isSelect = true;
-            return this.ParseCommaSeperatedSelectList(termTokens => new SelectToken(termTokens), this.ParseSingleSelectTerm);
+            return this.ParseCommaSeparatedSelectList(termTokens => new SelectToken(termTokens), this.ParseSingleSelectTerm);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Microsoft.OData.UriParser
         public ExpandToken ParseExpand()
         {
             this.isSelect = false;
-            return this.ParseCommaSeperatedExpandList(termTokens => new ExpandToken(termTokens), this.ParseSingleExpandTerm);
+            return this.ParseCommaSeparatedExpandList(termTokens => new ExpandToken(termTokens), this.ParseSingleExpandTerm);
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="ctor">A method to construct the final token from the term tokens.</param>
         /// <param name="termParsingFunc">A method to parse each individual term.</param>
         /// <returns>A token representing the entire $expand clause syntactically.</returns>
-        private ExpandToken ParseCommaSeperatedExpandList(Func<IEnumerable<ExpandTermToken>, ExpandToken> ctor, Func<List<ExpandTermToken>> termParsingFunc)
+        private ExpandToken ParseCommaSeparatedExpandList(Func<IEnumerable<ExpandTermToken>, ExpandToken> ctor, Func<List<ExpandTermToken>> termParsingFunc)
         {
             List<ExpandTermToken> termTokens = new List<ExpandTermToken>();
 
@@ -333,7 +333,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="ctor">A method to construct the final token from the term tokens.</param>
         /// <param name="termParsingFunc">A method to parse each individual term.</param>
         /// <returns>A token representing the entire $select clause syntactically.</returns>
-        private SelectToken ParseCommaSeperatedSelectList(Func<IEnumerable<SelectTermToken>, SelectToken> ctor, Func<SelectTermToken> termParsingFunc)
+        private SelectToken ParseCommaSeparatedSelectList(Func<IEnumerable<SelectTermToken>, SelectToken> ctor, Func<SelectTermToken> termParsingFunc)
         {
             List<SelectTermToken> termTokens = new List<SelectTermToken>();
 

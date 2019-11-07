@@ -23,7 +23,7 @@ namespace Microsoft.OData
         private readonly LinkedList<byte[]> buffers;
 
         /// <summary>
-        /// The stream being wrapped.sdfasdf
+        /// The stream being wrapped.
         /// </summary>
         private Stream innerStream;
 

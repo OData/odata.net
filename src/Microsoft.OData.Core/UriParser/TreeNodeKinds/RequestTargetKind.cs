@@ -7,7 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
-    /// Provides values to describe the kind of thing targetted by a
+    /// Provides values to describe the kind of thing targeted by a
     /// client request.
     /// </summary>
     internal enum RequestTargetKind

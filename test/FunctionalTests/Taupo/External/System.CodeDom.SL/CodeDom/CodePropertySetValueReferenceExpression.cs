@@ -13,7 +13,7 @@ namespace System.CodeDom {
 
     /// <devdoc>
     ///    <para>
-    ///       Represents the value paramter of a property set
+    ///       Represents the value parameter of a property set
     ///    </para>
     /// </devdoc>
     [

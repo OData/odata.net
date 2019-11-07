@@ -383,7 +383,7 @@ namespace Microsoft.Test.Taupo.Query.Linq
         /// Get the input Parameter name
         /// </summary>
         /// <param name="codeQuerySource">Input code query source</param>
-        /// <returns>input paramter Name</returns>
+        /// <returns>input parameter Name</returns>
         protected string GetInputParameterName(CodeQueryExpression codeQuerySource)
         {
             bool shouldCreateNewInputParameter = codeQuerySource == null || codeQuerySource.GroupByKeySelector != null || codeQuerySource.Select != null;

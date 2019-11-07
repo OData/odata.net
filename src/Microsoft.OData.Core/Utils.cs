@@ -105,7 +105,7 @@ namespace Microsoft.OData
             /// A value &gt; 0 if <paramref name="x"/> is greater than <paramref name="y"/>.
             /// </returns>
             /// <remarks>This method will never return the value 0 since the input sequence is constructed in a way
-            /// that all key/value pairs have unique indeces.</remarks>
+            /// that all key/value pairs have unique indices.</remarks>
             public int Compare(KeyValuePair<int, T> x, KeyValuePair<int, T> y)
             {
                 int result = this.innerComparer(x.Value, y.Value);

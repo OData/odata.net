@@ -104,7 +104,7 @@ namespace Microsoft.OData.Edm.Validation
                     return false;
                 }
 
-                // The root element must corespond to the term of the annotation
+                // The root element must correspond to the term of the annotation
                 string elementNamespace = reader.NamespaceURI;
                 string elementName = reader.LocalName;
 

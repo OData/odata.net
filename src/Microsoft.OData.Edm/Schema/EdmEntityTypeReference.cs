@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEntityTypeReference"/> class.
         /// </summary>
-        /// <param name="entityType">The definition refered to by this reference.</param>
+        /// <param name="entityType">The definition referred to by this reference.</param>
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         public EdmEntityTypeReference(IEdmEntityType entityType, bool isNullable)
             : base(entityType, isNullable)

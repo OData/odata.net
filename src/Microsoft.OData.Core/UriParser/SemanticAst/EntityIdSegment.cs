@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityIdSegment"/> class.
         /// </summary>
-        /// <param name="id">Uri correspoding to $id</param>
+        /// <param name="id">Uri corresponding to $id</param>
         internal EntityIdSegment(Uri id)
         {
             this.Id = id;

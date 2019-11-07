@@ -32,7 +32,7 @@ namespace Microsoft.OData.JsonLight
             // If it starts with a '#', validate that the rest of the string is a valid Uri fragment.
             if (propertyName[0] == ODataConstants.ContextUriFragmentIndicator)
             {
-                // In order to use System.Uri to validate a fragement, we first prepend the metadataDocumentUri
+                // In order to use System.Uri to validate a fragment, we first prepend the metadataDocumentUri
                 // so that it becomes an absolute URI which we can validate with Uri.IsWellFormedUriString.
                 uriStringToValidate = UriUtils.UriToString(metadataDocumentUri) + UriUtils.EnsureEscapedFragment(propertyName);
             }

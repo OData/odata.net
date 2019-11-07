@@ -791,7 +791,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
         ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
-        ///                 JsonNodeType.EndArry               If no (more) properties exist in the resource's content
+        ///                 JsonNodeType.EndArray               If no (more) properties exist in the resource's content
         /// </remarks>
         protected override bool ReadAtDeltaLinkImplementation()
         {
@@ -829,7 +829,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
         ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
-        ///                 JsonNodeType.EndArry               If no (more) properties exist in the resource's content
+        ///                 JsonNodeType.EndArray               If no (more) properties exist in the resource's content
         /// </remarks>
         protected override bool ReadAtDeltaDeletedLinkImplementation()
         {
@@ -1162,7 +1162,7 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // End of resource
-                // All the properties have already been read before we acually entered the EntryStart state (since we read as far as we can in any given state).
+                // All the properties have already been read before we actually entered the EntryStart state (since we read as far as we can in any given state).
                 this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject);
                 this.EndEntry();
             }
@@ -1481,7 +1481,7 @@ namespace Microsoft.OData.JsonLight
                     else
                     {
                         ODataDeltaResourceSet deltaResourceSet = nestedResourceInfo.NestedResourceSet as ODataDeltaResourceSet;
-                        Debug.Assert(deltaResourceSet != null, "Nested recource collection is not a resource set or a delta resource set");
+                        Debug.Assert(deltaResourceSet != null, "Nested resource collection is not a resource set or a delta resource set");
                         this.ReadDeltaResourceSetStart(deltaResourceSet, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, currentLink.Name));
                     }
                 }
@@ -1980,7 +1980,7 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                 default:
-                    Debug.Assert(true, "Uknown ODataDeltaKind " + resourceKind.ToString());
+                    Debug.Assert(true, "Unknown ODataDeltaKind " + resourceKind.ToString());
                     break;
             }
         }

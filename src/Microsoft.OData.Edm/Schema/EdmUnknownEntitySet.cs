@@ -21,7 +21,7 @@ namespace Microsoft.OData.Edm
         /// Initializes a new instance of the <see cref="EdmUnknownEntitySet"/> class.
         /// </summary>
         /// <param name="parentNavigationSource">The <see cref="IEdmNavigationSource"/> that container element belongs to</param>
-        /// <param name="navigationProperty">An <see cref="IEdmNavigationProperty"/> containing the navagation property definition of the contained element</param>
+        /// <param name="navigationProperty">An <see cref="IEdmNavigationProperty"/> containing the navigation property definition of the contained element</param>
         public EdmUnknownEntitySet(IEdmNavigationSource parentNavigationSource, IEdmNavigationProperty navigationProperty)
             : base(navigationProperty.Name, navigationProperty.ToEntityType())
         {
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Edm
         /// Finds the entity set that a navigation property targets.
         /// </summary>
         /// <param name="property">The navigation property.</param>
-        /// <returns>The entity set that the navigation propertion targets, or null if no such entity set exists.</returns>
+        /// <returns>The entity set that the navigation property targets, or null if no such entity set exists.</returns>
         /// TODO: change null logic to using UnknownEntitySet
         public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property)
         {

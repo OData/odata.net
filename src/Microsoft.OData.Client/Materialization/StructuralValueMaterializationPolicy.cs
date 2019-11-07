@@ -25,7 +25,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary> The collection value materialization policy. </summary>
         private CollectionValueMaterializationPolicy collectionValueMaterializationPolicy;
 
-        /// <summary> The instance annnotation materialization policy. </summary>
+        /// <summary> The instance annotation materialization policy. </summary>
         private InstanceAnnotationMaterializationPolicy instanceAnnotationMaterializationPolicy;
 
         /// <summary> The primitive property converter. </summary>
@@ -64,10 +64,10 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Gets the instance annnotation materialization policy.
+        /// Gets the instance annotation materialization policy.
         /// </summary>
         /// <value>
-        /// The instance annnotation materialization policy.
+        /// The instance annotation materialization policy.
         /// </value>
         protected internal InstanceAnnotationMaterializationPolicy InstanceAnnotationMaterializationPolicy
         {
@@ -237,7 +237,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Whether properties missing from the client types should be supported or throw exception.
         /// </param>
         /// <remarks>
-        /// Values are materialized in-place withi each <see cref="ODataProperty"/>
+        /// Values are materialized in-place with each <see cref="ODataProperty"/>
         /// instance.
         /// </remarks>
         internal void MaterializeDataValues(ClientTypeAnnotation actualType, IEnumerable<ODataProperty> values, UndeclaredPropertyBehavior undeclaredPropertyBehavior)

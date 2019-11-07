@@ -110,7 +110,7 @@ namespace Microsoft.OData.UriParser
                     break;
                 }
 
-                Debug.Assert(i + 1 < s.Length && s[i + 1] == '\'', @"Each single quote should be propertly escaped with double single quotes.");
+                Debug.Assert(i + 1 < s.Length && s[i + 1] == '\'', @"Each single quote should be properly escaped with double single quotes.");
                 s = s.Remove(i, 1);
                 start = i + 1;
             }
@@ -264,7 +264,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Determines whether or not an identifier is an annotation term name
         /// </summary>
-        /// <param name="identifier">The identifer that may be an annotation term name</param>
+        /// <param name="identifier">The identifier that may be an annotation term name</param>
         /// <returns>True if the identifier is an annotation term, otherwise false</returns>
         internal static bool IsAnnotation(string identifier)
         {

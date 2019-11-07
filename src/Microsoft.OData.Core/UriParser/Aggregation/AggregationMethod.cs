@@ -58,7 +58,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// <summary>Returns a definition for the aggregation method used to calculate $count.</summary>
         public static AggregationMethodDefinition VirtualPropertyCount = new AggregationMethodDefinition(AggregationMethod.VirtualPropertyCount);
 
-        /// <summary>Private constructor. Instances should be aquired via static fields of via Custom method.</summary>
+        /// <summary>Private constructor. Instances should be acquired via static fields of via Custom method.</summary>
         /// <param name="aggregationMethodType">The <see cref="AggregationMethod"/> of this method definition.</param>
         private AggregationMethodDefinition(AggregationMethod aggregationMethodType)
         {

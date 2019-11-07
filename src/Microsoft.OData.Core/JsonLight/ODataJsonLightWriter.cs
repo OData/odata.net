@@ -612,7 +612,7 @@ namespace Microsoft.OData.JsonLight
                     // End the array which holds the entries in the resource set.
                     // NOTE: in requests we will only write the EndArray of a resource set
                     //       when we hit the nested resource info end since a nested resource info
-                    //       can contain multiple resource sets that get collapesed into a single array value.
+                    //       can contain multiple resource sets that get collapsed into a single array value.
                     this.jsonWriter.EndArrayScope();
 
                     // Write the next link if it's available.
@@ -1830,7 +1830,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Marks the <paramref name="jsonLightMetadataProperty"/> as written in this resource scope.
             /// </summary>
-            /// <param name="jsonLightMetadataProperty">The metadta property which was written.</param>
+            /// <param name="jsonLightMetadataProperty">The metadata property which was written.</param>
             private void SetWrittenMetadataProperty(JsonLightEntryMetadataProperty jsonLightMetadataProperty)
             {
                 Debug.Assert(!this.IsMetadataPropertyWritten(jsonLightMetadataProperty), "Can't write the same metadata property twice.");
@@ -2130,7 +2130,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Marks the <paramref name="jsonLightMetadataProperty"/> as written in this resource scope.
             /// </summary>
-            /// <param name="jsonLightMetadataProperty">The metadta property which was written.</param>
+            /// <param name="jsonLightMetadataProperty">The metadata property which was written.</param>
             private void SetWrittenMetadataProperty(JsonLightEntryMetadataProperty jsonLightMetadataProperty)
             {
                 Debug.Assert(!this.IsMetadataPropertyWritten(jsonLightMetadataProperty), "Can't write the same metadata property twice.");

@@ -295,7 +295,7 @@ namespace Microsoft.OData.UriParser
             /// Tries to remove formatting specific to this parser's expected type.
             /// </summary>
             /// <param name="text">The text to remove formatting from.</param>
-            /// <returns>Whether or not the expected formatting was found and succesfully removed.</returns>
+            /// <returns>Whether or not the expected formatting was found and successfully removed.</returns>
             internal virtual bool TryRemoveFormatting(ref string text)
             {
                 if (this.prefix != null)

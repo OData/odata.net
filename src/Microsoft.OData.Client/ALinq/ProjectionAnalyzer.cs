@@ -352,7 +352,7 @@ namespace Microsoft.OData.Client
 #if DEBUG
                         Debug.Assert(
                             lastExpression != null,
-                            "lastExpression != null -- the initilizer has been visited, and cannot be empty, and the only expressions that are allowed can be formed off the parameter, so this is always correlatd");
+                            "lastExpression != null -- the initilizer has been visited, and cannot be empty, and the only expressions that are allowed can be formed off the parameter, so this is always correlated");
 #endif
 
                         analysis.CheckCompatibleAssignments(mie.Type, ref targetEntityPath);
@@ -401,7 +401,7 @@ namespace Microsoft.OData.Client
                 }
 
                 // In V3 while we support TypeAs conversions, we only support TypeAs before a MemberAccess and not TypeAs as the last operation
-                // i.e. we support "Manager = (p as Employee).Manager" (see VisitMemberAccess for detail), but we dont support "Manager = (p as Manager)"
+                // i.e. we support "Manager = (p as Employee).Manager" (see VisitMemberAccess for detail), but we don't support "Manager = (p as Manager)"
                 // Note that the server also doesn't support a property path which ends with a type identifier.
                 throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, u.ToString()));
             }
@@ -624,7 +624,7 @@ namespace Microsoft.OData.Client
                 if (!ResourceBinder.PatternRules.MatchConvertToAssignable(u))
                 {
                     // In V3 while we support TypeAs conversions, we only support TypeAs before a MemberAccess and not TypeAs as the last operation
-                    // i.e. we support "Manager = (p as Employee).Manager" (see VisitMemberAccess for detail), but we dont support "Manager = (p as Manager)"
+                    // i.e. we support "Manager = (p as Employee).Manager" (see VisitMemberAccess for detail), but we don't support "Manager = (p as Manager)"
                     // Note that the server also doesn't support a property path which ends with a type identifier.
                     if (u.NodeType == ExpressionType.TypeAs && this.leafExpressionIsMemberAccess)
                     {

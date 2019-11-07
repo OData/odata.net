@@ -56,7 +56,7 @@ namespace Microsoft.OData.Metadata
         /// <summary>Flag to control if the xml:base attributes should be processed when reading.</summary>
         private readonly bool disableXmlBase;
 
-        /// <summary>The maximumum number of recursive internalexception elements to allow when reading in-stream errors.</summary>
+        /// <summary>The maximum number of recursive internalexception elements to allow when reading in-stream errors.</summary>
         private readonly int maxInnerErrorDepth;
 
         /// <summary>The base URI for the document.</summary>
@@ -823,7 +823,7 @@ namespace Microsoft.OData.Metadata
             // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't
             // want to blindly continuing to read. The model is that with every call to StartBuffering you reset the position of the
             // current node in the list and start reading through the buffer again.
-            Debug.Assert(this.currentBufferedNode == null, "When starting to buffer, the currentBufferedNode must be null, since we always reset to the begining of the buffer.");
+            Debug.Assert(this.currentBufferedNode == null, "When starting to buffer, the currentBufferedNode must be null, since we always reset to the beginning of the buffer.");
             this.currentBufferedNode = this.bufferedNodes.First;
 
             this.currentBufferedNodeToReport = this.currentBufferedNode;
@@ -887,7 +887,7 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// The actual implementatin of the Read method. Moves the reader to the next node.
+        /// The actual implementation of the Read method. Moves the reader to the next node.
         /// </summary>
         /// <param name="ignoreInStreamErrors">true if the reader should not check for in-stream errors; otherwise false.</param>
         /// <returns>true if next node is available and the reader has moved; false if end-of-input was reached.</returns>

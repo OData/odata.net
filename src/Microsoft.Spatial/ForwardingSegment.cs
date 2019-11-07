@@ -98,7 +98,7 @@ namespace Microsoft.Spatial
         /// <summary>
         /// Add the next pipeline
         /// </summary>
-        /// <param name="destination">the next pipleine</param>
+        /// <param name="destination">the next pipeline</param>
         /// <returns>The last pipesegment in the chain, usually the one just created</returns>
         public override SpatialPipeline ChainTo(SpatialPipeline destination)
         {
@@ -292,7 +292,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Reset the piprline
+            /// Reset the pipeline
             /// </summary>
             public override void Reset()
             {
@@ -413,7 +413,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Reset the piprline
+            /// Reset the pipeline
             /// </summary>
             public override void Reset()
             {

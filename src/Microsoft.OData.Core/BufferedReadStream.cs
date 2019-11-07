@@ -226,7 +226,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Resets the stream to the begining and prepares it for reading.
+        /// Resets the stream to the beginning and prepares it for reading.
         /// </summary>
         internal void ResetForReading()
         {

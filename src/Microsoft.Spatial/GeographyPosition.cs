@@ -14,10 +14,10 @@ namespace Microsoft.Spatial
     /// </summary>
     //// DEVNOTE(pqian):
     //// Initially we had this as a value-type (struct) since it's rarely used outside of call parameters
-    //// However, since we need to remove the parameterless constructor, we now define it as a refererence type.
+    //// However, since we need to remove the parameterless constructor, we now define it as a reference type.
     public class GeographyPosition : IEquatable<GeographyPosition>
     {
-        /// <summary>lattitude portion of position</summary>
+        /// <summary>latitude portion of position</summary>
         private readonly double latitude;
 
         /// <summary>longitude portion of position</summary>

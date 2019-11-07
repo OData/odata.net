@@ -88,7 +88,7 @@ namespace Microsoft.OData
                 case ODataPayloadKind.Asynchronous:
                     return !inRequest;
 
-                // These payload kidns are only valid in requests
+                // These payload kinds are only valid in requests
                 case ODataPayloadKind.Parameter:
                     return inRequest;
 
@@ -100,7 +100,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Concats two enumerables.
+        /// Concatenates two enumerables.
         /// </summary>
         /// <typeparam name="T">Element type of the enumerable.</typeparam>
         /// <param name="enumerable1">Enumerable 1 to concat.</param>

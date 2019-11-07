@@ -23,25 +23,25 @@ namespace Microsoft.OData.JsonLight
     {
         /// <summary>
         /// Property name for message Id in Json batch payload's message object.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// Property names definitions here are all in upper case to support case insensitivity.
         /// </summary>
         internal const string PropertyNameId = "ID";
 
         /// <summary>
         /// Property name for message atomicityGroup association in Json batch payload's message object.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// Property names definitions here are all in upper case to support case insensitivity.
         /// </summary>
         internal const string PropertyNameAtomicityGroup = "ATOMICITYGROUP";
 
         /// <summary>
         /// Property name for response headers in Json batch response.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// Property names definitions here are all in upper case to support case insensitivity.
         /// </summary>
         internal const string PropertyNameHeaders = "HEADERS";
 
         /// <summary>
         /// Property name for message body in Json batch payload's message object.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// Property names definitions here are all in upper case to support case insensitivity.
         /// </summary>
         internal const string PropertyNameBody = "BODY";
 
@@ -49,19 +49,19 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>
         /// Property name for request execution dependency in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// Property names definitions here are all in upper case to support case insensitivity.
         /// </summary>
         internal const string PropertyNameDependsOn = "DEPENDSON";
 
         /// <summary>
         /// Property name for request HTTP method in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// Property names definitions here are all in upper case to support case insensitivity.
         /// </summary>
         internal const string PropertyNameMethod = "METHOD";
 
         /// <summary>
         /// Property name for request URL in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// Property names definitions here are all in upper case to support case insensitivity.
         /// </summary>
         internal const string PropertyNameUrl = "URL";
 
@@ -69,7 +69,7 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>
         /// Property name for response status in Json batch response.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// Property names definitions here are all in upper case to support case insensitivity.
         /// </summary>
         internal const string PropertyNameStatus = "STATUS";
 

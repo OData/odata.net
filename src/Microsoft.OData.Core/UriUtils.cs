@@ -68,7 +68,7 @@ namespace Microsoft.OData
         /// Returns the unescaped string representation of the Uri; if the Uri is absolute returns the absolute Uri otherwise the original string.
         /// </summary>
         /// <param name="uri">The Uri to convert to a string.</param>
-        /// <returns>For absolute Uris the string representation of the absolute Uri; otherwise the Uri's original string.</returns>
+        /// <returns>For absolute Uris the string representation of the absolute Uri; otherwise the URIs original string.</returns>
         internal static string UriToString(Uri uri)
         {
             Debug.Assert(uri != null, "uri != null");
@@ -230,7 +230,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Create mock absoulte Uri from given Uri
+        /// Create mock absolute Uri from given Uri
         /// </summary>
         /// <param name="uri">The Uri to be operated on.</param>
         /// <returns>The mock Uri, the base Uri if given <paramref name="uri"/> is null</returns>

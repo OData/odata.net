@@ -1843,15 +1843,15 @@ namespace Microsoft.OData.Client {
         /// <summary>
         /// A string like "The operation parameter named '{0}' has a collection item of Edm type kind '{1}'. A collection item must be either a primitive type or a complex Edm type kind."
         /// </summary>
-        internal static string Serializer_InvalidCollectionParamterItemType(object p0, object p1) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_InvalidCollectionParamterItemType, p0, p1);
+        internal static string Serializer_InvalidCollectionParameterItemType(object p0, object p1) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_InvalidCollectionParameterItemType, p0, p1);
         }
 
         /// <summary>
         /// A string like "The operation parameter named '{0}' has a null collection item. The items of a collection must not be null."
         /// </summary>
-        internal static string Serializer_NullCollectionParamterItemValue(object p0) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_NullCollectionParamterItemValue, p0);
+        internal static string Serializer_NullCollectionParameterItemValue(object p0) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_NullCollectionParameterItemValue, p0);
         }
 
         /// <summary>

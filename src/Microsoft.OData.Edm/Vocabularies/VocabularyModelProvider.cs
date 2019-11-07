@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// Capabilities Vocabulary Model.
         /// </summary>
-        public static readonly IEdmModel CapabilitesModel;
+        public static readonly IEdmModel CapabilitiesModel;
 
         /// <summary>
         /// Alternate Vocabulary Model.
@@ -74,10 +74,10 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             Debug.Assert(validationVocabularies != null, "ValidationVocabularies.xml: not found.");
             ValidationModel = LoadSchemaEdmModel(assembly, validationVocabularies, new[] { CoreModel }); // validation relies on core
 
-            // capabilites
+            // capabilities
             string capabilitiesVocabularies = allResources.FirstOrDefault(x => x.Contains("CapabilitiesVocabularies.xml"));
             Debug.Assert(capabilitiesVocabularies != null, "CapabilitiesVocabularies.xml: not found.");
-            CapabilitesModel = LoadCsdlEdmModel(assembly, capabilitiesVocabularies, new[] { CoreModel, AuthorizationModel, ValidationModel }); // capabilities relies on core & validation
+            CapabilitiesModel = LoadCsdlEdmModel(assembly, capabilitiesVocabularies, new[] { CoreModel, AuthorizationModel, ValidationModel }); // capabilities relies on core & validation
 
             // alternateKey
             string alternateKeysVocabularies = allResources.Where(x => x.Contains("AlternateKeysVocabularies.xml")).FirstOrDefault();
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
 
             VocabularyModels = new List<IEdmModel>
             {
-                CoreModel, CapabilitesModel, AlternateKeyModel, CommunityModel, ValidationModel, AuthorizationModel
+                CoreModel, CapabilitiesModel, AlternateKeyModel, CommunityModel, ValidationModel, AuthorizationModel
             };
         }
 

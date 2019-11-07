@@ -194,7 +194,7 @@ namespace Microsoft.OData.JsonLight
             this.CurrentOperationRequestMessage = null;
             this.CurrentOperationResponseMessage = null;
 
-            EnsurePreceedingMessageIsClosed();
+            this.EnsurePrecedingMessageIsClosed();
         }
 
         /// <summary>
@@ -555,7 +555,7 @@ namespace Microsoft.OData.JsonLight
                     this.CurrentOperationRequestMessage = null;
                     this.CurrentOperationResponseMessage = null;
 
-                    EnsurePreceedingMessageIsClosed();
+                    this.EnsurePrecedingMessageIsClosed();
                 }
             }
         }
@@ -563,7 +563,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Closes preceding message Json object if any.
         /// </summary>
-        private void EnsurePreceedingMessageIsClosed()
+        private void EnsurePrecedingMessageIsClosed()
         {
             // There shouldn't be any pending message object.
             Debug.Assert(this.CurrentOperationMessage == null, "this.CurrentOperationMessage == null");
@@ -572,7 +572,7 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>
         /// Writes the json format batch envelope.
-        /// Always sets the isBatchEvelopeWritten flag to true before return.
+        /// Always sets the isBatchEnvelopeWritten flag to true before return.
         /// </summary>
         private void WriteBatchEnvelope()
         {

@@ -112,9 +112,9 @@ namespace Microsoft.OData
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
-            // Always include all annotations when writting request message.
+            // Always include all annotations when writing request message.
             Debug.Assert(this.settings.ShouldIncludeAnnotation == null, "this.settings.ShouldIncludeAnnotation == null");
-            this.settings.ShouldIncludeAnnotation = AnnotationFilter.CreateInclueAllFilter().Matches;
+            this.settings.ShouldIncludeAnnotation = AnnotationFilter.CreateIncludeAllFilter().Matches;
         }
 
         /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given response message. </summary>

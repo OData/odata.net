@@ -212,7 +212,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Input resource set references are intentionally omitted from the URL string for the top level
-        /// refences to input parameter (i.e. outside of any/all methods).
+        /// references to input parameter (i.e. outside of any/all methods).
         /// For parameter references to input (range variable for Where) inside any/all methods we write "$it".
         /// </summary>
         /// <param name="ire">The input reference</param>
@@ -226,7 +226,7 @@ namespace Microsoft.OData.Client
             {
                 // Ideally we refer to the parent expression as the un-translatable one,
                 // because we cannot reference 'this' as a standalone expression; however
-                // if the parent is null for any reasonn, we fall back to the expression itself.
+                // if the parent is null for any reason, we fall back to the expression itself.
                 string expressionText = (this.parent != null) ? this.parent.ToString() : ire.ToString();
                 throw new NotSupportedException(Strings.ALinq_CantTranslateExpression(expressionText));
             }
@@ -802,7 +802,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Visits operands for Binary and Unary expressions.
         /// Will only output parens if operand is complex expression,
-        /// this is so don't have unecessary parens in URI.
+        /// this is so don't have unnecessary parens in URI.
         /// </summary>
         /// <param name="e">The operand expression to visit</param>
         private void VisitOperand(Expression e)
@@ -813,7 +813,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Visits operands for Binary and Unary expressions.
         /// Will only output parens if operand is complex expression,
-        /// this is so don't have unecessary parens in URI.
+        /// this is so don't have unnecessary parens in URI.
         /// </summary>
         /// <param name="e">The operand expression to visit</param>
         /// <param name="parentType">The node type of the parent expression (if applicable)</param>
@@ -884,7 +884,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Check whether the type of this Expresion is enum
+        /// Check whether the type of this Expression is enum
         /// </summary>
         /// <param name="e">The BinaryExpression to check</param>
         /// <returns>The checked result</returns>

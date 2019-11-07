@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client
 
             // In this function, we need to handle 2 cases:
             //  1> Either the 2 function entity descriptors are the same, in which case
-            //     we just have to convert the relative uri's into absolute uri's if any
+            //     we just have to convert the relative URIs into absolute URIs if any
             //  2> If the entity descriptor are not the same, then we need to update the etag
             //     If the merge option is not AppendOnly and merge all entity descriptor if specified
             if (!Object.ReferenceEquals(trackedEntityDescriptor, entityDescriptorFromMaterializer))

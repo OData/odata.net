@@ -612,7 +612,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         private void VisitEntityTypeDeclaredKey(IEnumerable<IEdmStructuralProperty> keyProperties)
         {
-            this.schemaWriter.WriteDelaredKeyPropertiesElementHeader();
+            this.schemaWriter.WriteDeclaredKeyPropertiesElementHeader();
             this.VisitPropertyRefs(keyProperties);
             this.schemaWriter.WriteEndElement();
         }

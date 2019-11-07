@@ -277,7 +277,7 @@ namespace Microsoft.OData.Client
         /// MemberAssignment visit method
         /// </summary>
         /// <param name="assignment">The MemberAssignment to visit</param>
-        /// <returns>The visited MemberAssignmentt</returns>
+        /// <returns>The visited MemberAssignment</returns>
         internal virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
         {
             Expression e = this.Visit(assignment.Expression);

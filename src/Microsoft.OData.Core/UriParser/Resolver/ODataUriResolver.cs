@@ -292,7 +292,7 @@ namespace Microsoft.OData.UriParser
                     functionParameter = operation.FindParameter(item.Key);
                 }
 
-                // ensure parameter name existis
+                // ensure parameter name exists
                 if (functionParameter == null)
                 {
                     throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(item.Key, operation.Name));

@@ -37,7 +37,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             this.expression = expression;
             this.method = method;
 
-            //// TypeRefrence is null for dynamic properties
+            //// TypeReference is null for dynamic properties
             this.typeReference = typeReference;
         }
 

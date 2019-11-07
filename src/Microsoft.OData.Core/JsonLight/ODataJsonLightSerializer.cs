@@ -37,8 +37,8 @@ namespace Microsoft.OData.JsonLight
         private readonly SimpleLazy<JsonLightODataAnnotationWriter> odataAnnotationWriter;
 
         /// <summary>
-        /// Set to true when odata.context is writen; set to false otherwise.
-        /// When value is false, all URIs writen to the payload must be absolute.
+        /// Set to true when odata.context is written; set to false otherwise.
+        /// When value is false, all URIs written to the payload must be absolute.
         /// </summary>
         private bool allowRelativeUri;
 

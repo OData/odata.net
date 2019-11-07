@@ -130,7 +130,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>Writes a deleted resource and performs an action in-between.</summary>
-        /// <param name="deletedResource">The deletedresource to write.</param>
+        /// <param name="deletedResource">The deleted resource to write.</param>
         /// <param name="nestedAction">The action to perform in-between the writing.</param>
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
         public ODataWriter Write(ODataDeletedResource deletedResource, Action nestedAction)

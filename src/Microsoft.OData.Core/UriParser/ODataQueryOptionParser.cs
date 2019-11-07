@@ -579,7 +579,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Parses a query count option
         /// Valid Samples: $count=true; $count=false
-        /// Invalid Samples: $count=True; $count=ture
+        /// Invalid Samples: $count=True; $count=true
         /// </summary>
         /// <param name="count">The count string from the query</param>
         /// <returns>query count true of false</returns>
@@ -627,7 +627,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// Parses the <paramref name="compute"/> clause, binding
-        /// the text into a metadata-bound list of compuations using the provided model.
+        /// the text into a metadata-bound list of computations using the provided model.
         /// </summary>
         /// <param name="compute">String representation of the compute expression from the URI.</param>
         /// <param name="configuration">The configuration used for binding.</param>
@@ -656,7 +656,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="name">The query option name with $ prefix.</param>
         /// <param name="value">The value of the query option.</param>
-        /// <returns>Whether value successfully retrived.</returns>
+        /// <returns>Whether value successfully retrieved.</returns>
         private bool TryGetQueryOption(string name, out string value)
         {
             value = null;

@@ -251,8 +251,8 @@ namespace Microsoft.OData.Client {
         internal const string AtomMaterializer_TypeShouldBeCollectionError = "AtomMaterializer_TypeShouldBeCollectionError";
         internal const string Serializer_LoopsNotAllowedInComplexTypes = "Serializer_LoopsNotAllowedInComplexTypes";
         internal const string Serializer_LoopsNotAllowedInNonPropertyComplexTypes = "Serializer_LoopsNotAllowedInNonPropertyComplexTypes";
-        internal const string Serializer_InvalidCollectionParamterItemType = "Serializer_InvalidCollectionParamterItemType";
-        internal const string Serializer_NullCollectionParamterItemValue = "Serializer_NullCollectionParamterItemValue";
+        internal const string Serializer_InvalidCollectionParameterItemType = "Serializer_InvalidCollectionParameterItemType";
+        internal const string Serializer_NullCollectionParameterItemValue = "Serializer_NullCollectionParameterItemValue";
         internal const string Serializer_InvalidParameterType = "Serializer_InvalidParameterType";
         internal const string Serializer_UriDoesNotContainParameterAlias = "Serializer_UriDoesNotContainParameterAlias";
         internal const string Serializer_InvalidEnumMemberValue = "Serializer_InvalidEnumMemberValue";

@@ -44,7 +44,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public override IEnumerable<IEdmSchemaElement> SchemaElements
         {
-            // TODO: REF plus referneced elements
+            // TODO: REF plus referenced elements
             get { return this.elements; }
         }
 

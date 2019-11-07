@@ -83,7 +83,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(false, "Should never call Close or Dispose on the TextWriter.");
 
-            // This is done to make sure we don't accidently close or dispose the underlying stream.
+            // This is done to make sure we don't accidentally close or dispose the underlying stream.
             // Since we don't own the stream, we should never close or dispose it.
             throw new NotImplementedException();
         }

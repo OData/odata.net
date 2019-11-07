@@ -176,7 +176,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates that no duplicate "odata.assocationLink" annotation exists and gets the corresponding
+        /// Validates that no duplicate "odata.associationLink" annotation exists and gets the corresponding
         /// ODataNestedResourceInfo of the annotated property if available.
         /// </summary>
         /// <param name="propertyName">Name of the annotated property.</param>

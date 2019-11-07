@@ -43,7 +43,7 @@ namespace Microsoft.OData
         /// <param name="writer">The Xml writer to write to.</param>
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
-        /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         internal static void WriteXmlError(XmlWriter writer, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth)
         {
             Debug.Assert(writer != null, "writer != null");
@@ -63,7 +63,7 @@ namespace Microsoft.OData
         /// <param name="code">The code of the error.</param>
         /// <param name="message">The message of the error.</param>
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
-        /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         private static void WriteXmlError(XmlWriter writer, string code, string message, ODataInnerError innerError, int maxInnerErrorDepth)
         {
             Debug.Assert(writer != null, "writer != null");
@@ -95,7 +95,7 @@ namespace Microsoft.OData
         /// <param name="innerError">The inner error to write.</param>
         /// <param name="innerErrorElementName">The local name of the element representing the inner error.</param>
         /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
-        /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         private static void WriteXmlInnerError(XmlWriter writer, ODataInnerError innerError, string innerErrorElementName, int recursionDepth, int maxInnerErrorDepth)
         {
             Debug.Assert(writer != null, "writer != null");
