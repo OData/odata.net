@@ -798,7 +798,7 @@ Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An inst
 Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType=An instance of InNode can only be created where the item types of the right operand '{0}' and the left operand '{1}' can be compared.
 
 ExpandTreeNormalizer_NonPathInPropertyChain=Found a segment that isn't a path while parsing the path within a select or expand query option.
-SelectTreeNormalizer_MultipleSelecTermWithSamePathFound=Found mutliple select terms with same select path '{0}' at one $select, please combine them together.
+SelectTreeNormalizer_MultipleSelecTermWithSamePathFound=Found multiple select terms with same select path '{0}' at one $select, please combine them together.
 
 UriExpandParser_TermIsNotValidForStar=Term '{0}' is not valid in a $expand expression, as only $level option is allowed when the expanded navigation property is star.
 UriExpandParser_TermIsNotValidForStarRef=Term '{0}' is not valid in a $expand expression, no option is allowed when the expanded navigation property is */$ref.

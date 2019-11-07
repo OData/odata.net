@@ -270,8 +270,15 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>The alias of the given namespace, or null if one does not exist.</returns>
         public static string GetNamespaceAlias(this IEdmModel model, string namespaceName)
         {
+            EdmUtil.CheckArgumentNull(model, "model");
             VersioningDictionary<string, string> mappings = model.GetAnnotationValue<VersioningDictionary<string, string>>(model, EdmConstants.InternalUri, CsdlConstants.NamespaceAliasAnnotation);
-            return mappings.Get(namespaceName);
+            string namespaceAlias;
+            if (mappings != null && mappings.TryGetValue(namespaceName, out namespaceAlias))
+            {
+                return namespaceAlias;
+            }
+
+            return null;
         }
 
         // This internal method exists so we can get a consistent view of the mappings through the entire serialization process.

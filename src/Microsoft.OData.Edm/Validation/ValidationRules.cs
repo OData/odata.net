@@ -239,7 +239,7 @@ namespace Microsoft.OData.Edm.Validation
                             }
 
                             // OperationImports of the same name can exist as long as they reference different operations.
-                            string operationImportUniqueString = operationImport.Name + "_" + operationImport.Operation.GetHashCode();
+                            string operationImportUniqueString = operationImport.Name + "_" + operationImport.Operation.GetHashCode().ToString(CultureInfo.InvariantCulture);
                             if (operationImportOperationList.Contains(operationImportUniqueString))
                             {
                                 duplicate = true;

@@ -112,6 +112,26 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public ComputeClause ComputeOption { get; internal set; }
 
+
+        /// <summary>
+        /// Returns whether or not the path select item has any options applied
+        /// </summary>
+        public bool HasOptions
+        {
+            get
+            {
+                return
+                    FilterOption != null ||
+                    ComputeOption != null ||
+                    SearchOption != null ||
+                    TopOption != null ||
+                    SkipOption != null ||
+                    CountOption != null ||
+                    OrderByOption != null ||
+                    (SelectAndExpand != null && !SelectAndExpand.AllSelected);
+            }
+        }
+
         /// <summary>
         /// Translate using a <see cref="SelectItemTranslator{T}"/>.
         /// </summary>

@@ -40,6 +40,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isResponse">true if the resource metadata builder to create should be for a response payload; false for a request.</param>
         /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.</param>
         /// <param name="odataUri">The OData Uri.</param>
+        /// <param name="settings">The settings to use when creating the resource builder.</param>
         /// <returns>The created metadata builder.</returns>
         internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
             ODataResourceBase resource,

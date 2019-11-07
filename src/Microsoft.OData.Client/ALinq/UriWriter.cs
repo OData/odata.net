@@ -354,7 +354,7 @@ namespace Microsoft.OData.Client
                         int count = 1;
                         while (this.alias.ContainsKey(aliasName))
                         {
-                            aliasName = UriHelper.ATSIGN + param.Key + count;
+                            aliasName = UriHelper.ATSIGN + param.Key + count.ToString(CultureInfo.InvariantCulture);
                             count++;
                         }
 
@@ -408,7 +408,7 @@ namespace Microsoft.OData.Client
                                 this.VisitQueryOptionExpression((FilterQueryOptionExpression)e);
                                 break;
                             default:
-                                Debug.Assert(false, "Unexpected expression type " + (int)et);
+                                Debug.Assert(false, "Unexpected expression type " + ((int)et).ToString(CultureInfo.InvariantCulture));
                                 break;
                         }
                     }

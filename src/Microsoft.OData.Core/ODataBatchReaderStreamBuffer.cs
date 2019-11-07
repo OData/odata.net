@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Globalization;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -585,7 +587,7 @@ namespace Microsoft.OData
                 currentIx++;
             }
 
-            Debug.Assert(trailingDashes <= TwoDashesLength, "Should never look for more than " + TwoDashesLength + " trailing dashes.");
+            Debug.Assert(trailingDashes <= TwoDashesLength, "Should never look for more than " + TwoDashesLength.ToString(CultureInfo.InvariantCulture) + " trailing dashes.");
             isEndBoundary = trailingDashes == TwoDashesLength;
             return true;
         }
