@@ -2686,7 +2686,7 @@ namespace Microsoft.OData.Edm
             var csdlSemanticsNavigationProperty = navigationProperty as CsdlSemanticsNavigationProperty;
             if (csdlSemanticsNavigationProperty != null)
             {
-                return ((CsdlNavigationProperty)csdlSemanticsNavigationProperty.Element).PartnerPath;
+                return (csdlSemanticsNavigationProperty.Element as CsdlNavigationProperty)?.PartnerPath;
             }
 
             // Default behavior where partner path corresponds to the name of the partner nav. property. In other words,
