@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests
             // Compare original and settings created from copy constructor after setting some values
             settings.BaseUri = new Uri("http://www.odata.org");
             settings.EnableCharactersCheck = true;
-            copyOfSettings = settings.Clone();
+            copyOfSettings = settings.Clone(); 
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
             // Compare original and settings created from copy constructor after setting rest of the values 
@@ -205,6 +205,9 @@ namespace Microsoft.OData.Tests
             Assert.True(expected.MessageQuotas.MaxOperationsPerChangeset == actual.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset does not match");
             Assert.True(expected.MessageQuotas.MaxNestingDepth == actual.MessageQuotas.MaxNestingDepth, "MaxNestingDepth does not match");
             Assert.True(expected.MessageQuotas.MaxReceivedMessageSize == actual.MessageQuotas.MaxReceivedMessageSize, "MaxMessageSize does not match");
+
+            var differences = ValidationHelper.GetDifferences<ODataMessageReaderSettings>(expected, actual);
+            Assert.True(differences.Count == 0, String.Join(",", differences));      
         }
 
         [Fact]

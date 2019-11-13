@@ -117,7 +117,7 @@
     <Compile Include="..\Evaluation\ODataMetadataContextTests.cs" />
     <Compile Include="..\Evaluation\ODataMetadataSelectorTests.cs" />
     <Compile Include="..\Evaluation\ODataMissingOperationGeneratorTests.cs" />
-	<Compile Include="..\Evaluation\TestMetadataSelector.cs" />
+    <Compile Include="..\Evaluation\TestMetadataSelector.cs" />
     <Compile Include="..\Evaluation\TestModel.cs" />
     <Compile Include="..\HttpHeaderValueElementTests.cs" />
     <Compile Include="..\HttpHeaderValueLexerTests.cs" />
@@ -454,6 +454,8 @@
     <Compile Include="..\WriterUtilsTests.cs" />
     <Compile Include="..\ScenarioTests\Streaming\ODataJsonLightStreamReadingTests.cs" />
     <Compile Include="..\ScenarioTests\Streaming\ODataJsonLightStreamWritingTests.cs" />
+    <Compile Include="TestCharArrayPool.cs" />
+    <Compile Include="ValidationHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

@@ -287,6 +287,7 @@ namespace Microsoft.OData
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;
+            this.ArrayPool = other.ArrayPool;
         }
     }
 }
