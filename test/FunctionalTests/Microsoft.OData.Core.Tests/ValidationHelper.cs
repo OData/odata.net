@@ -53,14 +53,14 @@ namespace Microsoft.OData.Tests
                         diff.Add(string.Format("Value of Uri {0} does not match.", prop.Name));
                     }
                 }
-                else if (typeof(IComparable).IsAssignableFrom(prop.PropertyType) || prop.PropertyType.IsPrimitive || prop.PropertyType.IsValueType)
+                else if (typeof(IComparable).IsAssignableFrom(prop.PropertyType) || prop.PropertyType.IsPrimitive() || prop.PropertyType.IsValueType())
                 {
                     if ((!val1.Equals(val2)))
                     {
                         diff.Add(string.Format("Value of {0} does not match.", prop.Name));
                     }
                 }
-                else if (prop.PropertyType.IsClass)
+                else if (prop.PropertyType.IsClass())
                 {
                     EvaluateDifferences(val1, val2, diff);
                 }
@@ -98,7 +98,7 @@ namespace Microsoft.OData.Tests
                                     diff.Add(string.Format("Value of Uri collection {0} does not match.", prop.Name));
                                 }
                             }
-                            else if (typeof(IComparable).IsAssignableFrom(collpropType) || collpropType.IsPrimitive || collpropType.IsValueType)
+                            else if (typeof(IComparable).IsAssignableFrom(collpropType) || collpropType.IsPrimitive() || collpropType.IsValueType())
                             {
                                 if ((!element1.Equals(element2)))
                                 {
