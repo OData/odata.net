@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests
             // Compare original and settings created from copy constructor after setting some values
             settings.BaseUri = new Uri("http://www.odata.org");
             settings.EnableCharactersCheck = true;
-            copyOfSettings = settings.Clone(); 
+            copyOfSettings = settings.Clone();
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
             // Compare original and settings created from copy constructor after setting rest of the values 

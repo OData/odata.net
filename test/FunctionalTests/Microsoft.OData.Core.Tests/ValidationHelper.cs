@@ -89,7 +89,6 @@ namespace Microsoft.OData.Tests
                             if (element1 == null || element2 == null)
                             {
                                 diff.Add(string.Format("Value of items in Collection {0} does not match.", prop.Name));
-
                             }
                             else if (typeof(Uri) == collpropType)
                             {
@@ -109,7 +108,6 @@ namespace Microsoft.OData.Tests
                             {
                                 EvaluateDifferences(element1, element2, diff);
                             }
-
                         }
                     }
                 }

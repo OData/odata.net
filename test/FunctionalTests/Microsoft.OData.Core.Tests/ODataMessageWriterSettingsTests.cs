@@ -372,7 +372,6 @@ namespace Microsoft.OData.Tests
 
             var differences = ValidationHelper.GetDifferences<ODataMessageWriterSettings>(this.settings, newSetting);
             Assert.True(differences.Count == 0, String.Join(",", differences));
-
         }
         #endregion Copy constructor tests
 
@@ -400,7 +399,7 @@ namespace Microsoft.OData.Tests
                     MaxNestingDepth = maxNestingDepth,
                 },
                 Version = version,
-                LibraryCompatibility = library,                
+                LibraryCompatibility = library,
             };
 
             Assert.False(this.settings.ThrowOnDuplicatePropertyNames);
