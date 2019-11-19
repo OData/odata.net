@@ -937,6 +937,26 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Assert.Null(unknownType);
         }
 
+        [Theory]
+        [InlineData("TestModelNameSpace.MyFunction")]
+        [InlineData("TestModelAlias.MyFunction")]
+        public void FindBoundFunctionByNamespaceAndAlias(string operation)
+        {
+            var operations = TestModel.Instance.Model.FindBoundOperations(operation, TestModel.Instance.T1);
+            var foundOperation = Assert.Single(operations);
+            Assert.Equal("TestModelNameSpace.MyFunction", foundOperation.FullName());
+        }
+
+        [Theory]
+        [InlineData("TestModelNameSpace.MyAction")]
+        [InlineData("TestModelAlias.MyAction")]
+        public void FindBoundActionByNamespaceAndAlias(string operation)
+        {
+            var operations = TestModel.Instance.Model.FindBoundOperations(operation, TestModel.Instance.T1);
+            var foundOperation = Assert.Single(operations);
+            Assert.Equal("TestModelNameSpace.MyAction", foundOperation.FullName());
+        }
+
         [Fact]
         public void GetNamespaceAliasReturnsNullForNamespaceWithoutAlias()
         {
@@ -982,6 +1002,14 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 this.Model.AddElement(this.T2);
 
                 this.Model.AddElement(new EdmEnumType(TestModelNameSpace2, "E1"));
+
+                var function = new EdmFunction(TestModelNameSpace, "MyFunction", EdmCoreModel.Instance.GetBoolean(false), true, null, false);
+                function.AddParameter("entity", new EdmEntityTypeReference(this.T1, true));
+                this.Model.AddElement(function);
+
+                var action = new EdmAction(TestModelNameSpace, "MyAction", null, true, null);
+                action.AddParameter("entity", new EdmEntityTypeReference(this.T1, true));
+                this.Model.AddElement(action);
 
                 this.functionImport = new EdmFunction(TestModelNameSpace, "Function1", new EdmEntityTypeReference(this.T1, true));
                 this.functionImport.AddParameter("id", EdmCoreModel.Instance.GetInt32(false));

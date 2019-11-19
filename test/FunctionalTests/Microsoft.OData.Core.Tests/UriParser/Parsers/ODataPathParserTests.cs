@@ -427,10 +427,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
         #endregion
 
-        [Fact]
-        public void ActionShouldWork()
+        [Theory]
+        [InlineData("Fully.Qualified.Namespace.Walk")]
+        [InlineData("MainAlias.Walk")]
+        public void ActionShouldWork(string actionSegment)
         {
-            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "Dogs(1)", "Fully.Qualified.Namespace.Walk" });
+            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "Dogs(1)", actionSegment });
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetDogWalkAction());
         }
 
@@ -652,10 +654,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             path[1].ShouldBeCountSegment();
         }
 
-        [Fact]
-        public void ParseCountAfterBoundFunctionReturnsCollectionOfPrimitiveShouldWork()
+        [Theory]
+        [InlineData("Fully.Qualified.Namespace.GetPriorAddresses")]
+        [InlineData("MainAlias.GetPriorAddresses")]
+        public void ParseCountAfterBoundFunctionReturnsCollectionOfPrimitiveShouldWork(string functionSegment)
         {
-            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetPriorAddresses", "$count" });
+            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", functionSegment, "$count" });
             Assert.Equal(4, path.Count);
             path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));

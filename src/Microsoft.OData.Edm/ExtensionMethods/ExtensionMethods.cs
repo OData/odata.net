@@ -107,12 +107,14 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
 
+            string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
+
             // the below is a copy of FindAcrossModels method but Func<IEdmModel, TInput, T> finder is replaced by FindDeclaredBoundOperations.
-            IEnumerable<IEdmOperation> candidate = model.FindDeclaredBoundOperations(qualifiedName, bindingType);
+            IEnumerable<IEdmOperation> candidate = model.FindDeclaredBoundOperations(fullyQualifiedName, bindingType);
 
             foreach (IEdmModel reference in model.ReferencedModels)
             {
-                IEnumerable<IEdmOperation> fromReference = reference.FindDeclaredBoundOperations(qualifiedName, bindingType);
+                IEnumerable<IEdmOperation> fromReference = reference.FindDeclaredBoundOperations(fullyQualifiedName, bindingType);
                 if (fromReference != null)
                 {
                     candidate = candidate == null ? fromReference : mergeFunctions(candidate, fromReference);
