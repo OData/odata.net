@@ -1,5 +1,11 @@
-﻿using Microsoft.OData.Buffers;
+﻿//---------------------------------------------------------------------
+// <copyright file="TestCharArrayPool.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System;
+using Microsoft.OData.Buffers;
 
 namespace Microsoft.OData.Tests
 {
