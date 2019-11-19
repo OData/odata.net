@@ -187,25 +187,7 @@ namespace Microsoft.OData.Tests
             {
                 return;
             }
-
-            Assert.True(expected != null, "expected settings cannot be null");
-            Assert.True(actual != null, "actual settings cannot be null");
-            Assert.True(expected.Validations == actual.Validations, "Validations does not match");
-            Assert.True(Uri.Compare(expected.BaseUri, actual.BaseUri, UriComponents.AbsoluteUri, UriFormat.Unescaped, StringComparison.CurrentCulture) == 0,
-                "BaseUri does not match");
-            Assert.True(expected.ClientCustomTypeResolver == actual.ClientCustomTypeResolver, "ClientCustomTypeResolver does not match");
-            Assert.True(expected.PrimitiveTypeResolver == actual.PrimitiveTypeResolver, "PrimitiveTypeResolver does not match");
-            Assert.True(expected.EnableMessageStreamDisposal == actual.EnableMessageStreamDisposal, "EnableMessageStreamDisposal does not match");
-            Assert.True(expected.EnablePrimitiveTypeConversion == actual.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion does not match");
-            Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");
-            Assert.True(expected.ShouldIncludeAnnotation == actual.ShouldIncludeAnnotation, "UseKeyAsSegment does not match");
-            Assert.True(expected.Validations == actual.Validations, "Validations does not match");
-            Assert.True(expected.MaxProtocolVersion == actual.MaxProtocolVersion, "MaxProtocolVersion does not match.");
-            Assert.True(expected.MessageQuotas.MaxPartsPerBatch == actual.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch does not match");
-            Assert.True(expected.MessageQuotas.MaxOperationsPerChangeset == actual.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset does not match");
-            Assert.True(expected.MessageQuotas.MaxNestingDepth == actual.MessageQuotas.MaxNestingDepth, "MaxNestingDepth does not match");
-            Assert.True(expected.MessageQuotas.MaxReceivedMessageSize == actual.MessageQuotas.MaxReceivedMessageSize, "MaxMessageSize does not match");
-
+            
             var differences = ValidationHelper.GetDifferences<ODataMessageReaderSettings>(expected, actual);
             Assert.True(differences.Count == 0, String.Join(",", differences));      
         }
