@@ -51,7 +51,10 @@ namespace Microsoft.OData
         /// <summary> Asynchronously start writing a resource set. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="resourceSet">The resource set or collection to write.</param>
-        public abstract Task WriteStartAsync(ODataResourceSet resourceSet);
+        public virtual Task WriteStartAsync(ODataResourceSet resourceSet)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(resourceSet));
+        }
 #endif
 
         /// <summary>Starts the writing of a delta resource set.</summary>
@@ -89,7 +92,7 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The resource set or collection to write.</param>
         public virtual Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            throw new NotImplementedException();
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(deltaResourceSet));
         }
 #endif
 
@@ -163,7 +166,10 @@ namespace Microsoft.OData
         /// <summary> Asynchronously start writing a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="resource">The resource or item to write.</param>
-        public abstract Task WriteStartAsync(ODataResource resource);
+        public virtual Task WriteStartAsync(ODataResource resource)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(resource));
+        }
 #endif
 
 
@@ -261,7 +267,10 @@ namespace Microsoft.OData
         /// <summary> Asynchronously start writing a nested resource info. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="nestedResourceInfo">The nested resource info to writer.</param>
-        public abstract Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo);
+        public virtual Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(nestedResourceInfo));
+        }
 #endif
 
         /// <summary>Writes a primitive value within an untyped collection.</summary>
@@ -381,7 +390,10 @@ namespace Microsoft.OData
 #if PORTABLELIB
         /// <summary> Asynchronously finish writing a resource set, resource, or nested resource info. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteEndAsync();
+        public virtual Task WriteEndAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteEnd());
+        }
 #endif
 
         /// <summary> Writes an entity reference link, which is used to represent binding to an existing resource in a request payload. </summary>
@@ -404,7 +416,10 @@ namespace Microsoft.OData
         /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
-        public abstract Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink);
+        public virtual Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteEntityReferenceLink(entityReferenceLink));
+        }
 #endif
 
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
@@ -413,7 +428,10 @@ namespace Microsoft.OData
 #if PORTABLELIB
         /// <summary>Flushes the write buffer to the underlying stream asynchronously.</summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
-        public abstract Task FlushAsync();
+        public virtual Task FlushAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.Flush());
+        }
 #endif
     }
 }
