@@ -74,7 +74,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingResourceSet">true if the writer is created for writing a resource set; false when it is created for writing a resource.</param>
         /// <param name="writingParameter">true if the writer is created for writing a parameter; false otherwise.</param>
-        /// <param name="writingDelta">True if the writer is created for writing delta response; false otherwise.</param>
+        /// <param name="writingDelta">True if the writer is created for writing delta payload; false otherwise.</param>
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         internal ODataJsonLightWriter(
             ODataJsonLightOutputContext jsonLightOutputContext,

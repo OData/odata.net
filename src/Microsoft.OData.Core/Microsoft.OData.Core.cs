@@ -528,6 +528,7 @@ namespace Microsoft.OData {
         internal const string ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject = "ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject";
         internal const string ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst = "ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst";
         internal const string ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty = "ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty";
+        internal const string ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload = "ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload";
         internal const string ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart = "ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart";
         internal const string ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound = "ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound";
         internal const string ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet = "ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet";
