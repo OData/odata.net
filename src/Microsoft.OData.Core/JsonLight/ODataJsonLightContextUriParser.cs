@@ -177,7 +177,7 @@ namespace Microsoft.OData.JsonLight
             else if (detectedPayloadKind == ODataPayloadKind.Resource && parseType.IsODataComplexTypeKind())
             {
                 this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.Resource, ODataPayloadKind.Property };
-                if (expectedPayloadKind == ODataPayloadKind.Property)
+                if (expectedPayloadKind == ODataPayloadKind.Property || expectedPayloadKind == ODataPayloadKind.Delta)
                 {
                     detectedPayloadKindMatchesExpectation = true;
                 }
