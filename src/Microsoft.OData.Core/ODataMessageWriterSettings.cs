@@ -424,6 +424,7 @@ namespace Microsoft.OData
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.ArrayPool = other.ArrayPool;
         }
     }
 }
