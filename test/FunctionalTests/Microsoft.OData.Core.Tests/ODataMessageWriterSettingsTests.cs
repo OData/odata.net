@@ -331,6 +331,48 @@ namespace Microsoft.OData.Tests
                 Assert.Equal(select, "*");
             }
         }
+
+        [Fact]
+        public void CopyConstructorShouldCopyAll()
+        {
+            this.settings.MetadataSelector = new TestMetadataSelector() { PropertyToOmit = "TestProperty" };
+            this.settings.SetContentType("application/json,application/atom+xml", "iso-8859-5, unicode-1-1;q=0.8");
+            this.settings.SetServiceDocumentUri(new Uri("http://example.com"));
+            this.settings.ArrayPool = new TestCharArrayPool(5);
+            this.settings.EnableMessageStreamDisposal = false;
+            this.settings.EnableCharactersCheck = true;
+
+            var edmModel = new EdmModel();
+            var defaultContainer = new EdmEntityContainer("TestModel", "DefaultContainer");
+            edmModel.AddElement(defaultContainer);
+            var cityType = new EdmEntityType("TestModel", "City");
+            var cityIdProperty = cityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(/*isNullable*/false));
+            cityType.AddKeys(cityIdProperty);
+            cityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(/*isNullable*/false));
+            cityType.AddStructuralProperty("Size", EdmCoreModel.Instance.GetInt32(/*isNullable*/false));
+            edmModel.AddElement(cityType);
+            var citySet = defaultContainer.AddEntitySet("Cities", cityType);
+
+            var result = new ODataQueryOptionParser(edmModel, cityType, citySet, new Dictionary<string, string> { { "$expand", "" }, { "$select", "Id,*" } }).ParseSelectAndExpand();
+
+            this.settings.ODataUri = new ODataUri()
+            {
+                ServiceRoot = new Uri("http://test.org"),
+                SelectAndExpand = result,
+                Path = new ODataUriParser(edmModel, new Uri("http://test.org"), new Uri("http://test.org/Cities(1)/Name")).ParsePath()
+            };
+
+            this.settings.LibraryCompatibility = ODataLibraryCompatibility.Version6;
+            this.settings.Version = ODataVersion.V4;
+
+            Func<string, bool> filter = name => true;
+            this.settings.ShouldIncludeAnnotation = filter;
+
+            var newSetting = this.settings.Clone();
+
+            var differences = ValidationHelper.GetDifferences<ODataMessageWriterSettings>(this.settings, newSetting);
+            Assert.True(differences.Count == 0, String.Join(",", differences));
+        }
         #endregion Copy constructor tests
 
         #region Property getters and setters tests

@@ -117,7 +117,7 @@
     <Compile Include="..\Evaluation\ODataMetadataContextTests.cs" />
     <Compile Include="..\Evaluation\ODataMetadataSelectorTests.cs" />
     <Compile Include="..\Evaluation\ODataMissingOperationGeneratorTests.cs" />
-	<Compile Include="..\Evaluation\TestMetadataSelector.cs" />
+    <Compile Include="..\Evaluation\TestMetadataSelector.cs" />
     <Compile Include="..\Evaluation\TestModel.cs" />
     <Compile Include="..\HttpHeaderValueElementTests.cs" />
     <Compile Include="..\HttpHeaderValueLexerTests.cs" />
@@ -281,6 +281,7 @@
     <Compile Include="..\ScenarioTests\UriParser\TopAndSkipFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\VerificationHelpers.cs" />
     <Compile Include="..\ScenarioTests\Writer\JsonLight\WriteFeedWithoutNavigationSourceTests.cs" />
+    <Compile Include="..\TestCharArrayPool.cs" />
     <Compile Include="..\UriParser\Binders\MetadataBindingTests.cs" />
     <Compile Include="..\UriParser\Binders\MetadataBindingUtilsTests.cs" />
     <Compile Include="..\UriParser\EntitySetNode.cs" />
@@ -450,6 +451,7 @@
     <Compile Include="..\UriParser\Visitors\IsCollectionTranslatorTests.cs" />
     <Compile Include="..\UriParser\Visitors\QueryNodeVisitorTests.cs" />
     <Compile Include="..\UriParser\Visitors\SyntacticTreeVisitorTests.cs" />
+    <Compile Include="..\ValidationHelper.cs" />
     <Compile Include="..\ValidationUtilsTests.cs" />
     <Compile Include="..\WriterUtilsTests.cs" />
     <Compile Include="..\ScenarioTests\Streaming\ODataJsonLightStreamReadingTests.cs" />
