@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Microsoft.OData.Tests
 {
@@ -69,17 +70,7 @@ namespace Microsoft.OData.Tests
                     diff.Add(string.Format("Value of{0} {1} does not match.",collectionStatement, objName));
                 }
             }
-            else if (objType.IsClass())
-            {
-                foreach (var prop in obj.GetType().GetProperties().Where(x => x.CanRead))
-                {
-                    var val1 = prop.GetValue(obj);
-                    var val2 = prop.GetValue(copy);
-
-                    EvaluateDifferences(val1, val2, diff,prop.Name);
-                }
-            }
-            else if (typeof(Enumerable).IsAssignableFrom(objType))
+            else if (objType.IsArray || typeof(IEnumerable).IsAssignableFrom(objType))
             {
                 var collection1 = ((IEnumerable)obj).Cast<object>();
                 var collection2 = ((IEnumerable)copy).Cast<object>();
@@ -95,10 +86,21 @@ namespace Microsoft.OData.Tests
                         var element1 = collection1.ElementAt(i);
                         var element2 = collection2.ElementAt(i);
 
-                        EvaluateDifferences(element1, element2,diff, collection1.GetType().Name, true);
+                        EvaluateDifferences(element1, element2, diff, collection1.GetType().Name, true);
                     }
                 }
             }
+            else if ( objType.IsClass())
+            {
+                foreach (var prop in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.CanRead && x.CanWrite))
+                {
+                    var val1 = prop.GetValue(obj);
+                    var val2 = prop.GetValue(copy);
+
+                    EvaluateDifferences(val1, val2, diff,prop.Name);
+                }
+            }
+            
         }
     }
 }
