@@ -4,7 +4,7 @@
 
 ### Assemblies affected
 
-*Which assemblies and versions are known to be affected e.g. OData .Net lib 6.15-beta.*
+*Which assemblies and versions are known to be affected e.g. OData .Net lib 7.x*
 
 ### Reproduce steps
 
