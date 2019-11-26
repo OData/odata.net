@@ -12,6 +12,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using FluentAssertions;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Client.Design.T4.UnitTests
 {
@@ -44,6 +47,26 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             /// A custom verification action to perform. Takes in the generated code and runs asserts that the code was generated properly. A verification function provided here should be valid for both CodeGen using the Design DLL and T4.
             /// </summary>
             public Action<string, bool, bool> Verify { get; set; }
+        }
+
+        internal static void ValidateXMLFile(string tempFilePath)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(tempFilePath);
+        }
+
+        internal static void ValidateEdmx(string tempFilePath)
+        {
+            string edmx = File.ReadAllText(tempFilePath);
+            using (var stringReader = new StringReader(edmx)) {
+                using (var xmlReader = XmlReader.Create(stringReader)) {
+                    IEdmModel edmModel = null;
+                    IEnumerable<EdmError> edmErrors = null;
+                    CsdlReader.TryParse(xmlReader, out edmModel, out edmErrors);
+                    edmErrors.Should().BeEmpty();
+                } ;
+            } ;
+          
         }
 
         private static void VerifyGeneratedCode(string actualCode, Dictionary<string, string> expectedCode, bool isCSharp, bool useDSC, string key = null)
