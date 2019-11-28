@@ -375,7 +375,7 @@ namespace Microsoft.OData.Client
 
                     break;
 
-#if !PORTABLELIB
+#if (!PORTABLELIB && !NETCOREAPP3_0)
                 case NotifyCollectionChangedAction.Move:
                     // Do Nothing. Added for completeness.
                     break;
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Client
                         this.OnRemoveFromComplexTypeCollection(sender, e.OldItems);
                         this.OnAddToComplexTypeCollection(sender, e.NewItems);
                         break;
-#if !PORTABLELIB
+#if (!PORTABLELIB && !NETCOREAPP3_0)
                     case NotifyCollectionChangedAction.Move:
                         // Do Nothing. Added for completeness.
                         break;
