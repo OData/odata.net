@@ -1935,7 +1935,7 @@ namespace Microsoft.OData
                                     IEdmPathExpression bindingPath;
                                     this.CurrentScope.NavigationSource = parentNavigationSource == null ?
                                         null :
-                                        parentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.CurrentScope.ODataUri.Path.ToList(), out bindingPath);
+                                        parentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.CurrentScope.ODataUri.Path.Segments, out bindingPath);
                                 }
                             }
                         }
@@ -2341,7 +2341,7 @@ namespace Microsoft.OData
 
                                 navigationSource = currentNavigationSource == null
                                     ? null
-                                    : currentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, odataPath.ToList(), out bindingPath);
+                                    : currentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, odataPath.Segments, out bindingPath);
 
                                 SelectExpandClause clause = odataUri.SelectAndExpand;
                                 TypeSegment typeCastFromExpand = null;
