@@ -58,7 +58,7 @@ namespace Microsoft.OData
         /// <param name="parsedSegments">The parsed segments in path, which is used to match binding path.</param>
         /// <param name="bindingPath">The output binding path of the navigation property which matches the <paramref name="parsedSegments"/></param>
         /// <returns>The navigation target which matches the binding path.</returns>
-        public static IEdmNavigationSource FindNavigationTarget(this IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, Func<IEdmPathExpression, List<ODataPathSegment>, bool> matchBindingPath, List<ODataPathSegment> parsedSegments, out IEdmPathExpression bindingPath)
+        public static IEdmNavigationSource FindNavigationTarget(this IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, Func<IEdmPathExpression, IList<ODataPathSegment>, bool> matchBindingPath, IList<ODataPathSegment> parsedSegments, out IEdmPathExpression bindingPath)
         {
             Debug.Assert(navigationSource != null);
             Debug.Assert(navigationProperty != null);
