@@ -375,14 +375,14 @@ namespace Microsoft.OData.Client
 
                     break;
 
-#if (!PORTABLELIB && !NETCOREAPP3_0)
+#if !PORTABLELIB
                 case NotifyCollectionChangedAction.Move:
                     // Do Nothing. Added for completeness.
                     break;
 #endif
 
-                default:
-                    throw new InvalidOperationException(Strings.DataBinding_DataServiceCollectionChangedUnknownActionCollection(eventArgs.Action));
+                default: // No Action
+                    break;
             }
         }
 
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Client
                         this.OnRemoveFromComplexTypeCollection(sender, e.OldItems);
                         this.OnAddToComplexTypeCollection(sender, e.NewItems);
                         break;
-#if (!PORTABLELIB && !NETCOREAPP3_0)
+#if !PORTABLELIB
                     case NotifyCollectionChangedAction.Move:
                         // Do Nothing. Added for completeness.
                         break;
@@ -427,8 +427,8 @@ namespace Microsoft.OData.Client
                     case NotifyCollectionChangedAction.Reset:
                         this.bindingGraph.RemoveCollection(sender);
                         break;
-                    default:
-                        throw new InvalidOperationException(Strings.DataBinding_CollectionChangedUnknownActionCollection(e.Action, sender.GetType()));
+                    default: // No Action
+                        break;
                 }
             }
 
