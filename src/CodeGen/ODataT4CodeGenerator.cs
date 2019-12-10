@@ -1505,6 +1505,8 @@ public abstract class ODataClientTemplate : TemplateBase
     internal void WriteEntityContainer(IEdmEntityContainer container, string fullNamespace)
     {
         string camelCaseContainerName = container.Name;
+        string path = this.context.TempFilePath;
+        bool useTempFile = !String.IsNullOrEmpty(path);
         if (this.context.EnableNamingAlias)
         {
             camelCaseContainerName = Customization.CustomizeNaming(camelCaseContainerName);
@@ -1579,9 +1581,16 @@ public abstract class ODataClientTemplate : TemplateBase
                 edmNavigationSourceList.Add(singleton);
             }
         }
-
-        this.WriteGeneratedEdmModel(Utils.SerializeToString(this.context.Edmx).Replace("\"", "\"\""));
-        
+    
+        if(useTempFile) 
+        {
+            this.WriteGeneratedEdmModel(Utils.SerializeToString(this.context.Edmx));
+        }
+        else
+        {
+            this.WriteGeneratedEdmModel(Utils.SerializeToString(this.context.Edmx).Replace("\"", "\"\""));
+        }
+         
         bool hasOperationImport = container.OperationImports().OfType<IEdmOperationImport>().Any();
         foreach (IEdmFunctionImport functionImport in container.OperationImports().OfType<IEdmFunctionImport>())
         {
@@ -3757,12 +3766,10 @@ this.Write(");\r\n        }\r\n");
 
     internal override void WriteGeneratedEdmModel(string escapedEdmxString)
     {
-
-        string path = this.context.TempFilePath; 
-        
+        string path = this.context.TempFilePath;
         if (!String.IsNullOrEmpty(path))
         {
-            using (StreamWriter writer = new StreamWriter(path, true))
+            using (StreamWriter writer = new StreamWriter(path, false))
             {
                 writer.WriteLine(escapedEdmxString);
             }
