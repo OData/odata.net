@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,59 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         public void UseDefaultJsonReader()
         {
             RunReaderTest(null, "{\"@odata.context\":\"http://test/$metadata#People/$entity\",\"PersonId\":999,\"Name\":\"Jack\"}");
+        }
+
+        [Fact]
+        public void UseComplexJsonReaderNestedSelect()
+        {
+            // $select =Address/SubAddress/SubRoad OR
+            //$select =Address($select =SubAddress($select=SubRoad))
+
+            var resDict =  RunComplexReaderTest(null, "{\"@odata.context\":\"http://test/$metadata#People(Address/SubAddress/SubRoad)/$entity\","+
+            "\"Address\":{" +
+                "\"SubAddress\":{\"SubRoad\":\"Redmond\"}}}");
+
+            Assert.Equal(resDict["DefaultNs.SubAddress"].ToList()[0].Value, "Redmond");
+        }
+        
+        [Fact]
+        public void UseComplexJsonReaderExpandAndSelect()
+        {
+            // $Expand =PersonCity($select =Zipcode),Address/City
+
+            var resDict = RunComplexReaderTest(null, "{\"@odata.context\":\"http://test/$metadata#People(PersonCity(ZipCode),Address/City())/$entity\"," +
+            "\"PersonCity\":{\"ZipCode\":98052},"+
+                "\"Address\":{" +
+                "\"City\":{\"ZipCode\":98052}}}");
+
+            Assert.Equal(resDict["DefaultNs.PersonCity"].ToList()[0].Value, 98052);
+            Assert.Equal(resDict["DefaultNs.City"].ToList()[0].Value, 98052);
+        }
+
+        [Fact]
+        public void UseComplexJsonReaderExpandAndSelectComplex()
+        {
+          //$select=Address&$Expand=Address/City
+
+            var resDict = RunComplexReaderTest(null, "{\"@odata.context\":\"http://test/$metadata#People(Address,Address/City())/$entity\"," +
+             "\"Address\":{" +
+                "\"SubAddress\":{\"SubRoad\":\"Redmond\"},"+
+              "\"City\":{\"ZipCode\":98052}}}");
+
+            Assert.Equal(resDict["DefaultNs.SubAddress"].ToList()[0].Value, "Redmond");
+            Assert.Equal(resDict["DefaultNs.City"].ToList()[0].Value, 98052);
+        }
+      
+        [Fact]
+        public void UseComplexJsonReaderSelectComplex()
+        {
+            //$select=Address
+
+            var resDict = RunComplexReaderTest(null, "{\"@odata.context\":\"http://test/$metadata#People(Address)/$entity\"," +
+          "\"Address\":{" +
+              "\"SubAddress\":{\"SubRoad\":\"Redmond\"}}}");
+
+            Assert.Equal(resDict["DefaultNs.SubAddress"].ToList()[0].Value, "Redmond");
         }
 
         [Fact]
@@ -77,6 +131,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             Assert.Equal("Jack", propertyList[1].Value);
         }
 
+        private static Dictionary<string, IEnumerable<ODataProperty>> RunComplexReaderTest(Action<IContainerBuilder> action, string messageContent)
+        {
+            var model = GetModel();
+            var entitySet = model.FindDeclaredEntitySet("People");
+            var entityType = model.GetEntityType("DefaultNs.Person");
+            var container = ContainerBuilderHelper.BuildContainer(action);
+            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = true;
+            var resource = GetReadedResourceWithNestedInfo(messageContent, model, entitySet, entityType, container);
+
+            var resourceDict = new Dictionary<string, IEnumerable<ODataProperty>>();
+
+            foreach(var res in resource)
+            {
+                resourceDict.Add(res.TypeName, res.Properties);
+            }
+
+            return resourceDict;            
+        }
+
         private static EdmModel BuildModel()
         {
             var model = new EdmModel();
@@ -92,6 +165,116 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             return model;
         }
+
+        private static EdmModel GetModel()
+        {
+            var model = new EdmModel();
+
+            var person = new EdmEntityType("DefaultNs", "Person");
+            var entityId = person.AddStructuralProperty("UserName", EdmCoreModel.Instance.GetString(false));
+            person.AddKeys(entityId);
+
+            var employee = new EdmEntityType("DefaultNs", "Employee", person);
+
+            var city = new EdmEntityType("DefaultNs", "City");
+            var cityId = city.AddStructuralProperty("ZipCode", EdmCoreModel.Instance.GetInt32(false));
+            city.AddKeys(cityId);
+
+            var personCity = new EdmEntityType("DefaultNs", "PersonCity");
+            var personcityId = personCity.AddStructuralProperty("ZipCode", EdmCoreModel.Instance.GetInt32(false));
+            personCity.AddKeys(personcityId);
+
+            var city3 = new EdmEntityType("DefaultNs", "City3");
+            var cityId3 = city.AddStructuralProperty("ZipCode3", EdmCoreModel.Instance.GetInt32(false));
+            city.AddKeys(cityId3);
+
+            var region = new EdmEntityType("DefaultNs", "Region");
+            var regionId = region.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            region.AddKeys(regionId);
+
+            var cityRegion = city.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Name = "Region",
+                Target = region,
+                TargetMultiplicity = EdmMultiplicity.One,
+            });
+
+            var complex = new EdmComplexType("DefaultNs", "Address");
+            complex.AddStructuralProperty("Road", EdmCoreModel.Instance.GetString(false));
+
+            var subcomplex = new EdmComplexType("DefaultNs", "SubAddress");
+            subcomplex.AddStructuralProperty("SubRoad", EdmCoreModel.Instance.GetString(false));
+
+            complex.AddStructuralProperty("SubAddress", new EdmComplexTypeReference(subcomplex, false));
+
+            var navP = complex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "City",
+                    Target = city,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+
+            var navP3 = complex.AddUnidirectionalNavigation(
+               new EdmNavigationPropertyInfo()
+               {
+                   Name = "City3",
+                   Target = city3,
+                   TargetMultiplicity = EdmMultiplicity.One,
+               });
+
+
+            var derivedComplex = new EdmComplexType("DefaultNs", "WorkAddress", complex);
+            var navP2 = derivedComplex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "City2",
+                    Target = city,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+
+            complex.AddStructuralProperty("WorkAddress", new EdmComplexTypeReference(complex, false));
+
+            person.AddStructuralProperty("Address", new EdmComplexTypeReference(complex, false));
+            person.AddStructuralProperty("Addresses", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complex, false))));
+            var navP4 = person.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "PersonCity",
+                    Target = personCity,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+            
+            model.AddElement(person);
+            model.AddElement(employee);
+            model.AddElement(city);
+            model.AddElement(personCity);
+            model.AddElement(city3);
+            model.AddElement(region);
+            model.AddElement(complex);
+            model.AddElement(derivedComplex);
+
+            var entityContainer = new EdmEntityContainer("DefaultNs", "Container");
+            model.AddElement(entityContainer);
+            EdmEntitySet people = new EdmEntitySet(entityContainer, "People", person);
+            EdmEntitySet cities = new EdmEntitySet(entityContainer, "City", city);
+            EdmEntitySet pcities = new EdmEntitySet(entityContainer, "PersonCity", personCity);
+            EdmEntitySet regions = new EdmEntitySet(entityContainer, "Regions", region);
+            people.AddNavigationTarget(navP, cities, new EdmPathExpression("Address/City"));
+            people.AddNavigationTarget(navP3, cities, new EdmPathExpression("Address/City3"));
+            people.AddNavigationTarget(navP, cities, new EdmPathExpression("Addresses/City"));
+            people.AddNavigationTarget(navP2, cities, new EdmPathExpression("Address/WorkAddress/DefaultNs.WorkAddress/City2"));
+            people.AddNavigationTarget(navP4, pcities, new EdmPathExpression("PersonCity"));
+
+
+            cities.AddNavigationTarget(cityRegion, regions);
+            entityContainer.AddElement(people);
+            entityContainer.AddElement(cities);
+            entityContainer.AddElement(pcities);
+
+            return model;
+        }
+
 
         private static string GetWriterOutput(ODataResource entry, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType, IServiceProvider container)
         {
@@ -139,6 +322,38 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             }
         }
 
+        private static IList<ODataResource> GetReadedResourceWithNestedInfo(string messageContent, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType, IServiceProvider container)
+        {
+            var outputStream = new MemoryStream();
+            var writer = new StreamWriter(outputStream);
+            writer.Write(messageContent);
+            writer.Flush();
+            outputStream.Seek(0, SeekOrigin.Begin);
+
+            IODataResponseMessage message = new InMemoryMessage
+            {
+                Stream = outputStream,
+                Container = container
+            };
+            message.SetHeader("Content-Type", "application/json;odata.metadata=full");
+
+            var settings = new ODataMessageReaderSettings();
+            using (var messageReader = new ODataMessageReader(message, settings, model))
+            {
+                var reader = messageReader.CreateODataResourceReader(entitySet, entityType);
+                IList<ODataResource> resources = new List<ODataResource>();
+
+                while (reader.Read())
+                {
+                    if(reader.State == ODataReaderState.ResourceEnd)
+                    {
+                        resources.Add(reader.Item as ODataResource);                     
+                    }
+                }
+
+                return resources;
+            }
+        }
         private class TestJsonWriterFactory : IJsonWriterFactory
         {
             public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)

@@ -166,7 +166,7 @@ namespace Microsoft.OData.UriParser
             // level).
             return String.Join(",", selectExpandClause.GetCurrentLevelSelectList().ToArray());
         }
-         
+
         /// <summary>
         /// Get the string representation of a select item (that isn't an expandedNavPropSelectItem
         /// </summary>

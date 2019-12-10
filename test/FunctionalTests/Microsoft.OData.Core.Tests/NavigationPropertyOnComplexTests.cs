@@ -344,6 +344,97 @@ namespace Microsoft.OData.Tests
             Assert.Equal(actual, expected);
         }
 
+        [Fact]
+        public void WriteNavigationPropertyOnComplexFullMetaData()
+        {
+            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')?$expand=Address/City($select=ZipCode)"), null);
+            var odataUri = uriParser.ParseUri();
+
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "UserName", Value = "abc" } } };
+            ODataNestedResourceInfo nestedComplexInfo = new ODataNestedResourceInfo() { Name = "Address" };
+            ODataResource nestedComplex = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Road", Value = "Zixing" } } };
+            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "City", IsCollection = false };
+            ODataResource nestednav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 111 } } };
+
+            string actual = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            {
+                writer.WriteStart(res);
+                writer.WriteStart(nestedComplexInfo);
+                writer.WriteStart(nestedComplex);
+                writer.WriteStart(nestedResInfo);
+                writer.WriteStart(nestednav);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            },isFullMetadata:true);
+
+            string expected = "{\"@odata.context\":\"http://host/$metadata#People(Address/City(ZipCode))/$entity\",\"@odata.id\":\"People('abc')\",\"@odata.editLink\":\"People('abc')\",\"UserName\":\"abc\",\"Address\":{\"Road\":\"Zixing\",\"City@odata.associationLink\":\"http://host/People('abc')/Address/City/$ref\",\"City@odata.navigationLink\":\"http://host/People('abc')/Address/City\",\"City\":{\"@odata.id\":\"City(111)\",\"@odata.editLink\":\"City(111)\",\"ZipCode\":111}}}";
+
+            Assert.Equal(actual, expected);
+        }
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        public void WriteNavigationPropertyOnDeepComplexFullMetaData(ODataVersion version)
+        {
+            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People?$expand=Address/WorkAddress/DefaultNs.WorkAddress/City2&$select=UserName"), null);
+            var odataUri = uriParser.ParseUri();
+
+            ODataResourceSet peopleInfo = new ODataResourceSet();
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "UserName", Value = "abc" } } };
+            ODataNestedResourceInfo addressInfo = new ODataNestedResourceInfo() { Name = "Address" };
+            ODataResource address = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Road", Value = "Zixing" } } };
+            ODataNestedResourceInfo workAddressInfo = new ODataNestedResourceInfo() { Name = "WorkAddress" };
+            ODataResource workAddress = new ODataResource() { TypeName = "DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
+            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
+            ODataResource nestednav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
+
+            string actual = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            {
+                writer.WriteStart(peopleInfo);
+                writer.WriteStart(res);
+                writer.WriteStart(addressInfo);
+                writer.WriteStart(address);
+                writer.WriteStart(workAddressInfo);
+                writer.WriteStart(workAddress);
+                writer.WriteStart(nestedResInfo);
+                writer.WriteStart(nestednav);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }, true,isFullMetadata:true, version: version);
+
+            string expected = version == ODataVersion.V4 ?
+                //OData V4.01
+                "{\"@odata.context\":\"http://host/$metadata#People(UserName,Address/WorkAddress/DefaultNs.WorkAddress/City2())\",\"value\":[{\"@odata.id\":\"People('abc')\",\"@odata.editLink\":\"People('abc')\",\"UserName\":\"abc\",\"Address\":{\"Road\":\"Zixing\",\"WorkAddress\":{\"@odata.type\":\"#DefaultNs.WorkAddress\",\"Road\":\"Ziyue\",\"City2@odata.associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2/$ref\",\"City2@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2\",\"City2\":{\"@odata.id\":\"City(222)\",\"@odata.editLink\":\"City(222)\",\"ZipCode\":222}}}}]}" :
+                //OData V4.01
+                "{\"@context\":\"http://host/$metadata#People(UserName,Address/WorkAddress/DefaultNs.WorkAddress/City2())\",\"value\":[{\"@id\":\"People('abc')\",\"@editLink\":\"People('abc')\",\"UserName\":\"abc\",\"Address\":{\"Road\":\"Zixing\",\"WorkAddress\":{\"@type\":\"#DefaultNs.WorkAddress\",\"Road\":\"Ziyue\",\"City2@associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2/$ref\",\"City2@navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2\",\"City2\":{\"@id\":\"City(222)\",\"@editLink\":\"City(222)\",\"ZipCode\":222}}}}]}";
+
+            Assert.Equal(actual, expected);
+
+            var entryList = ReadPayload(expected, Model, EntitySet, EntityType, true, version: version).OfType<ODataResource>().ToList();
+            Assert.Equal(new Uri("http://host/City(222)"), entryList[0].Id);
+            Assert.Equal("DefaultNs.City", entryList[0].TypeName);
+
+            Assert.Null(entryList[1].Id);
+            Assert.Equal("DefaultNs.WorkAddress", entryList[1].TypeName);
+
+            Assert.Null(entryList[2].Id);
+            Assert.Equal("DefaultNs.Address", entryList[2].TypeName);
+
+            Assert.Equal(new Uri("http://host/People('abc')"), entryList[3].Id);
+            Assert.Equal("DefaultNs.Person", entryList[3].TypeName);
+        }
+
+
         [Theory]
         [InlineData(ODataVersion.V4)]
         [InlineData(ODataVersion.V401)]
@@ -983,10 +1074,16 @@ namespace Microsoft.OData.Tests
                                               "\"Name\":\"Land\"" +
                                               "}}," +
                                       "\"City@odata.associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City/$ref\"," +
-                                      "\"City@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City\"" +
+                                      "\"City@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City\"," +
+                                      "\"City3@odata.associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City3/$ref\"," +
+                                      "\"City3@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City3\"," +
+                                      "\"City4@odata.associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City4/$ref\"," +
+                                      "\"City4@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City4\"" +
                                       "}," +
                                       "\"City@odata.associationLink\":\"http://host/People('abc')/Address/City/$ref\"," +
-                                      "\"City@odata.navigationLink\":\"http://host/People('abc')/Address/City\"" +
+                                      "\"City@odata.navigationLink\":\"http://host/People('abc')/Address/City\"," +
+                                      "\"City3@odata.associationLink\":\"http://host/People('abc')/Address/City3/$ref\"," +
+                                      "\"City3@odata.navigationLink\":\"http://host/People('abc')/Address/City3\"" +
                               "}" +
                               "}";
 
@@ -1102,7 +1199,7 @@ namespace Microsoft.OData.Tests
             // itemsList[3] is the nested info for complex property WorkAddress, skip the validation.
 
             // City under Address
-            nestInfo = itemsList[4];
+            nestInfo = itemsList[6];
             Assert.Equal(new Uri("http://host/People('abc')/Address/City"), nestInfo.Url);
         }
         #endregion
@@ -1355,6 +1452,10 @@ namespace Microsoft.OData.Tests
             var cityId = city.AddStructuralProperty("ZipCode", EdmCoreModel.Instance.GetInt32(false));
             city.AddKeys(cityId);
 
+            var city3 = new EdmEntityType("DefaultNs", "City3");
+            var cityId3 = city3.AddStructuralProperty("ZipCode3", EdmCoreModel.Instance.GetInt32(false));
+            city3.AddKeys(cityId3);
+
             var region = new EdmEntityType("DefaultNs", "Region");
             var regionId = region.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
             region.AddKeys(regionId);
@@ -1376,6 +1477,14 @@ namespace Microsoft.OData.Tests
                     TargetMultiplicity = EdmMultiplicity.One,
                 });
 
+            var navP3 = complex.AddUnidirectionalNavigation(
+               new EdmNavigationPropertyInfo()
+               {
+                   Name = "City3",
+                   Target = city3,
+                   TargetMultiplicity = EdmMultiplicity.One,
+               });
+
             var derivedComplex = new EdmComplexType("DefaultNs", "WorkAddress", complex);
             var navP2 = derivedComplex.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo()
@@ -1385,6 +1494,14 @@ namespace Microsoft.OData.Tests
                     TargetMultiplicity = EdmMultiplicity.One,
                 });
 
+            var navP4 = derivedComplex.AddUnidirectionalNavigation(
+            new EdmNavigationPropertyInfo()
+            {
+                Name = "City4",
+                Target = city,
+                TargetMultiplicity = EdmMultiplicity.One,
+            });
+
             complex.AddStructuralProperty("WorkAddress", new EdmComplexTypeReference(complex, false));
 
             person.AddStructuralProperty("Address", new EdmComplexTypeReference(complex, false));
@@ -1393,6 +1510,7 @@ namespace Microsoft.OData.Tests
             model.AddElement(person);
             model.AddElement(employee);
             model.AddElement(city);
+            model.AddElement(city3);
             model.AddElement(region);
             model.AddElement(complex);
             model.AddElement(derivedComplex);
@@ -1401,10 +1519,13 @@ namespace Microsoft.OData.Tests
             model.AddElement(entityContainer);
             EdmEntitySet people = new EdmEntitySet(entityContainer, "People", person);
             EdmEntitySet cities = new EdmEntitySet(entityContainer, "City", city);
+            EdmEntitySet cities3 = new EdmEntitySet(entityContainer, "City", city3);
             EdmEntitySet regions = new EdmEntitySet(entityContainer, "Regions", region);
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Address/City"));
+            people.AddNavigationTarget(navP3, cities3, new EdmPathExpression("Address/City3"));
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Addresses/City"));
             people.AddNavigationTarget(navP2, cities, new EdmPathExpression("Address/WorkAddress/DefaultNs.WorkAddress/City2"));
+            people.AddNavigationTarget(navP4, cities, new EdmPathExpression("Address/WorkAddress/DefaultNs.WorkAddress/City4"));
             cities.AddNavigationTarget(cityRegion, regions);
             entityContainer.AddElement(people);
             entityContainer.AddElement(cities);
