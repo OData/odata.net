@@ -49,7 +49,7 @@ namespace Microsoft.OData.Client
         /// <summary>Executes the query against the data service.</summary>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
         /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
-        public IEnumerable Execute()
+        public virtual IEnumerable Execute()
         {
             return this.ExecuteInternal();
         }
@@ -59,14 +59,14 @@ namespace Microsoft.OData.Client
         /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation.</returns>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
         /// <param name="state">User-defined state object passed to the callback.</param>
-        public IAsyncResult BeginExecute(AsyncCallback callback, object state)
+        public virtual IAsyncResult BeginExecute(AsyncCallback callback, object state)
         {
             return this.BeginExecuteInternal(callback, state);
         }
 
         /// <summary>Asynchronously sends a request to execute the data service query.</summary>
         /// <returns>A task represents An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
-        public Task<IEnumerable> ExecuteAsync()
+        public virtual Task<IEnumerable> ExecuteAsync()
         {
             return Task<IEnumerable>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
         }
