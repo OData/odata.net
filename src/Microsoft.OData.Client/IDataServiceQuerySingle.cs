@@ -20,8 +20,10 @@ namespace Microsoft.OData.Client
         DataServiceQuerySingle<TElement> Expand(string path);
         DataServiceQuerySingle<TElement> Expand<TTarget>(Expression<Func<TElement, TTarget>> navigationPropertyAccessor);
         string GetPath(string nextSegment);
+#if !PORTABLELIB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         TElement GetValue();
+#endif
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         Task<TElement> GetValueAsync();
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Select")]

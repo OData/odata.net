@@ -13,7 +13,9 @@ namespace Microsoft.OData.Client
 
         IAsyncResult BeginExecute(AsyncCallback callback, object state);
         IEnumerable EndExecute(IAsyncResult asyncResult);
+#if !PORTABLELIB
         IEnumerable Execute();
+#endif
         Task<IEnumerable> ExecuteAsync();
     }
 }

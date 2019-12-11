@@ -17,17 +17,20 @@ namespace Microsoft.OData.Client
 
         DataServiceQuery<TElement> AddQueryOption(string name, object value);
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings")]
         string AppendRequestUri(string nextSegment);
         IAsyncResult BeginExecute(AsyncCallback callback, object state);
         DataServiceQuery<T> CreateFunctionQuery<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters);
         DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters);
         IEnumerable<TElement> EndExecute(IAsyncResult asyncResult);
+#if !PORTABLELIB
         IEnumerable<TElement> Execute();
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        IEnumerable<TElement> GetAllPages();
+#endif
         Task<IEnumerable<TElement>> ExecuteAsync();
         DataServiceQuery<TElement> Expand(string path);
         DataServiceQuery<TElement> Expand<TTarget>(Expression<Func<TElement, TTarget>> navigationPropertyAccessor);
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        IEnumerable<TElement> GetAllPages();
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         Task<IEnumerable<TElement>> GetAllPagesAsync();
         IEnumerator<TElement> GetEnumerator();

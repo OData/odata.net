@@ -29,7 +29,9 @@ namespace Microsoft.OData.Client
         Func<Type, string> ResolveName { get; set; }
         Func<string, Type> ResolveType { get; set; }
         SaveChangesOptions SaveChangesDefaultOptions { get; set; }
+#if !PORTABLELIB
         int Timeout { get; set; }
+#endif
         DataServiceUrlKeyDelimiter UrlKeyDelimiter { get; set; }
         bool UsePostTunneling { get; set; }
 
@@ -77,39 +79,49 @@ namespace Microsoft.OData.Client
         DataServiceStreamResponse EndGetReadStream(IAsyncResult asyncResult);
         QueryOperationResponse EndLoadProperty(IAsyncResult asyncResult);
         DataServiceResponse EndSaveChanges(IAsyncResult asyncResult);
+#if !PORTABLELIB
         OperationResponse Execute(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters);
         QueryOperationResponse<T> Execute<T>(DataServiceQueryContinuation<T> continuation);
         IEnumerable<TElement> Execute<TElement>(Uri requestUri);
         IEnumerable<TElement> Execute<TElement>(Uri requestUri, string httpMethod, bool singleResult, params OperationParameter[] operationParameters);
         IEnumerable<TElement> Execute<TElement>(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters);
+#endif
         Task<OperationResponse> ExecuteAsync(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters);
         Task<IEnumerable<TElement>> ExecuteAsync<TElement>(DataServiceQueryContinuation<TElement> continuation);
         Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri);
         Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, bool singleResult, params OperationParameter[] operationParameters);
         Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters);
+#if !PORTABLELIB
         DataServiceResponse ExecuteBatch(params DataServiceRequest[] queries);
+#endif
         Task<DataServiceResponse> ExecuteBatchAsync(params DataServiceRequest[] queries);
         EntityDescriptor GetEntityDescriptor(object entity);
         LinkDescriptor GetLinkDescriptor(object source, string sourceProperty, object target);
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         Uri GetMetadataUri();
+#if !PORTABLELIB
         DataServiceStreamResponse GetReadStream(object entity);
         DataServiceStreamResponse GetReadStream(object entity, DataServiceRequestArgs args);
         DataServiceStreamResponse GetReadStream(object entity, string acceptContentType);
         DataServiceStreamResponse GetReadStream(object entity, string name, DataServiceRequestArgs args);
+#endif
         Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, DataServiceRequestArgs args);
         Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, string name, DataServiceRequestArgs args);
         Uri GetReadStreamUri(object entity);
         Uri GetReadStreamUri(object entity, string name);
+#if !PORTABLELIB
         QueryOperationResponse LoadProperty(object entity, string propertyName);
         QueryOperationResponse LoadProperty(object entity, string propertyName, DataServiceQueryContinuation continuation);
         QueryOperationResponse LoadProperty(object entity, string propertyName, Uri nextLinkUri);
         QueryOperationResponse<T> LoadProperty<T>(object entity, string propertyName, DataServiceQueryContinuation<T> continuation);
+#endif
         Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName);
         Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, DataServiceQueryContinuation continuation);
         Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, Uri nextLinkUri);
+#if !PORTABLELIB 
         DataServiceResponse SaveChanges();
         DataServiceResponse SaveChanges(SaveChangesOptions options);
+#endif
         Task<DataServiceResponse> SaveChangesAsync();
         Task<DataServiceResponse> SaveChangesAsync(SaveChangesOptions options);
         void SetLink(object source, string sourceProperty, object target);
