@@ -33,7 +33,7 @@ namespace Event.String.Int
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("value")]
-        public string Value
+        public virtual string Value
         {
             get
             {
@@ -104,7 +104,7 @@ namespace Event.String.Int
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("keyProp")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -126,7 +126,7 @@ namespace Event.String.Int
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("valueProp")]
-        public string ValueProp
+        public virtual string ValueProp
         {
             get
             {
@@ -248,7 +248,7 @@ namespace Simple.Double
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("set1")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::Event.String.Int.TestType1> Set1
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Event.String.Int.TestType1> Set1
         {
             get
             {
@@ -266,7 +266,7 @@ namespace Simple.Double
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("set2")]
-        public global::Microsoft.OData.Client.DataServiceQuery<TestType2> Set2
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<TestType2> Set2
         {
             get
             {
@@ -283,7 +283,7 @@ namespace Simple.Double
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSet1(global::Event.String.Int.TestType1 testType1)
+        public virtual void AddToSet1(global::Event.String.Int.TestType1 testType1)
         {
             base.AddObject("set1", testType1);
         }
@@ -291,7 +291,7 @@ namespace Simple.Double
         /// There are no comments for Set2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSet2(TestType2 testType2)
+        public virtual void AddToSet2(TestType2 testType2)
         {
             base.AddObject("set2", testType2);
         }
@@ -437,7 +437,7 @@ namespace Simple.Double
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("keyProp")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -459,7 +459,7 @@ namespace Simple.Double
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("valueProp")]
-        public string ValueProp
+        public virtual string ValueProp
         {
             get
             {
@@ -481,7 +481,7 @@ namespace Simple.Double
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("complexValueProp")]
-        public global::Event.String.Int.ComplexType ComplexValueProp
+        public virtual global::Event.String.Int.ComplexType ComplexValueProp
         {
             get
             {

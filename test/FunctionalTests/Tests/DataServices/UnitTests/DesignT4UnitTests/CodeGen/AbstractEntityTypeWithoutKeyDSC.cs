@@ -43,7 +43,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for DerivedBaseETSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<DerivedBaseET> DerivedBaseETSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<DerivedBaseET> DerivedBaseETSet
         {
             get
             {
@@ -60,7 +60,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for DerivedETSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<DerivedET> DerivedETSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<DerivedET> DerivedETSet
         {
             get
             {
@@ -77,7 +77,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for DerivedAbstractETSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<DerivedAbstractETWithKey> DerivedAbstractETSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<DerivedAbstractETWithKey> DerivedAbstractETSet
         {
             get
             {
@@ -94,7 +94,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for DerivedBaseETSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToDerivedBaseETSet(DerivedBaseET derivedBaseET)
+        public virtual void AddToDerivedBaseETSet(DerivedBaseET derivedBaseET)
         {
             base.AddObject("DerivedBaseETSet", derivedBaseET);
         }
@@ -102,7 +102,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for DerivedETSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToDerivedETSet(DerivedET derivedET)
+        public virtual void AddToDerivedETSet(DerivedET derivedET)
         {
             base.AddObject("DerivedETSet", derivedET);
         }
@@ -110,7 +110,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for DerivedAbstractETSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToDerivedAbstractETSet(DerivedAbstractETWithKey derivedAbstractETWithKey)
+        public virtual void AddToDerivedAbstractETSet(DerivedAbstractETWithKey derivedAbstractETWithKey)
         {
             base.AddObject("DerivedAbstractETSet", derivedAbstractETWithKey);
         }
@@ -228,7 +228,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for Property PropertyInAbstractET in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string PropertyInAbstractET
+        public virtual string PropertyInAbstractET
         {
             get
             {
@@ -298,7 +298,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for Property PropertyInDerivedAbstractET in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string PropertyInDerivedAbstractET
+        public virtual string PropertyInDerivedAbstractET
         {
             get
             {
@@ -366,7 +366,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Id
+        public virtual string Id
         {
             get
             {
@@ -436,7 +436,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for Property PropertyInDerivedET in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int PropertyInDerivedET
+        public virtual int PropertyInDerivedET
         {
             get
             {
@@ -493,7 +493,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Id
+        public virtual string Id
         {
             get
             {
@@ -562,7 +562,7 @@ namespace AbstractEntityTypeWithoutKey.DSC
         /// There are no comments for Property PropertyInDerivedET2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string PropertyInDerivedET2
+        public virtual string PropertyInDerivedET2
         {
             get
             {

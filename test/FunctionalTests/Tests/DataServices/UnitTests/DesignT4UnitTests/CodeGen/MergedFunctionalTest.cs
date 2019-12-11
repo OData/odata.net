@@ -44,7 +44,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Customers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<Customer> Customers
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<Customer> Customers
         {
             get
             {
@@ -61,7 +61,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<Order> Orders
         {
             get
             {
@@ -78,7 +78,7 @@ namespace MergedFunctionalTest
         /// There are no comments for CustomerInfo in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<CustomerInfo> CustomerInfo
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<CustomerInfo> CustomerInfo
         {
             get
             {
@@ -95,7 +95,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Company in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<Company> Company
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<Company> Company
         {
             get
             {
@@ -112,7 +112,7 @@ namespace MergedFunctionalTest
         /// There are no comments for TestSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<SpecialTypeWithPrecisionFacet> TestSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<SpecialTypeWithPrecisionFacet> TestSet
         {
             get
             {
@@ -129,7 +129,7 @@ namespace MergedFunctionalTest
         /// There are no comments for BlobEntities in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<BlobType> BlobEntities
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<BlobType> BlobEntities
         {
             get
             {
@@ -146,7 +146,7 @@ namespace MergedFunctionalTest
         /// There are no comments for People in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<Person> People
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<Person> People
         {
             get
             {
@@ -163,7 +163,7 @@ namespace MergedFunctionalTest
         /// There are no comments for TestTypeSet1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<TestType> TestTypeSet1
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<TestType> TestTypeSet1
         {
             get
             {
@@ -180,7 +180,7 @@ namespace MergedFunctionalTest
         /// There are no comments for TestTypeSet2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<TestType> TestTypeSet2
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<TestType> TestTypeSet2
         {
             get
             {
@@ -197,7 +197,7 @@ namespace MergedFunctionalTest
         /// There are no comments for SpatialCollectionEntities in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<TestCollectionType> SpatialCollectionEntities
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<TestCollectionType> SpatialCollectionEntities
         {
             get
             {
@@ -214,7 +214,7 @@ namespace MergedFunctionalTest
         /// There are no comments for KatMaiSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<KatmaiType> KatMaiSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<KatmaiType> KatMaiSet
         {
             get
             {
@@ -231,7 +231,7 @@ namespace MergedFunctionalTest
         /// There are no comments for GoodCustomers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<GoodCustomer> GoodCustomers
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<GoodCustomer> GoodCustomers
         {
             get
             {
@@ -248,7 +248,7 @@ namespace MergedFunctionalTest
         /// There are no comments for BadCustomers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<BadCustomer> BadCustomers
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<BadCustomer> BadCustomers
         {
             get
             {
@@ -265,7 +265,7 @@ namespace MergedFunctionalTest
         /// There are no comments for GroupSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<Group> GroupSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<Group> GroupSet
         {
             get
             {
@@ -282,7 +282,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Product in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<Product> Product
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<Product> Product
         {
             get
             {
@@ -299,7 +299,7 @@ namespace MergedFunctionalTest
         /// There are no comments for ProductDetail in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<ProductDetail> ProductDetail
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<ProductDetail> ProductDetail
         {
             get
             {
@@ -316,7 +316,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Customers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToCustomers(Customer customer)
+        public virtual void AddToCustomers(Customer customer)
         {
             base.AddObject("Customers", customer);
         }
@@ -324,7 +324,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToOrders(Order order)
+        public virtual void AddToOrders(Order order)
         {
             base.AddObject("Orders", order);
         }
@@ -332,7 +332,7 @@ namespace MergedFunctionalTest
         /// There are no comments for CustomerInfo in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToCustomerInfo(CustomerInfo customerInfo)
+        public virtual void AddToCustomerInfo(CustomerInfo customerInfo)
         {
             base.AddObject("CustomerInfo", customerInfo);
         }
@@ -340,7 +340,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Company in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToCompany(Company company)
+        public virtual void AddToCompany(Company company)
         {
             base.AddObject("Company", company);
         }
@@ -348,7 +348,7 @@ namespace MergedFunctionalTest
         /// There are no comments for TestSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToTestSet(SpecialTypeWithPrecisionFacet specialTypeWithPrecisionFacet)
+        public virtual void AddToTestSet(SpecialTypeWithPrecisionFacet specialTypeWithPrecisionFacet)
         {
             base.AddObject("TestSet", specialTypeWithPrecisionFacet);
         }
@@ -356,7 +356,7 @@ namespace MergedFunctionalTest
         /// There are no comments for BlobEntities in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToBlobEntities(BlobType blobType)
+        public virtual void AddToBlobEntities(BlobType blobType)
         {
             base.AddObject("BlobEntities", blobType);
         }
@@ -364,7 +364,7 @@ namespace MergedFunctionalTest
         /// There are no comments for People in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToPeople(Person person)
+        public virtual void AddToPeople(Person person)
         {
             base.AddObject("People", person);
         }
@@ -372,7 +372,7 @@ namespace MergedFunctionalTest
         /// There are no comments for TestTypeSet1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToTestTypeSet1(TestType testType)
+        public virtual void AddToTestTypeSet1(TestType testType)
         {
             base.AddObject("TestTypeSet1", testType);
         }
@@ -380,7 +380,7 @@ namespace MergedFunctionalTest
         /// There are no comments for TestTypeSet2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToTestTypeSet2(TestType testType)
+        public virtual void AddToTestTypeSet2(TestType testType)
         {
             base.AddObject("TestTypeSet2", testType);
         }
@@ -388,7 +388,7 @@ namespace MergedFunctionalTest
         /// There are no comments for SpatialCollectionEntities in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSpatialCollectionEntities(TestCollectionType testCollectionType)
+        public virtual void AddToSpatialCollectionEntities(TestCollectionType testCollectionType)
         {
             base.AddObject("SpatialCollectionEntities", testCollectionType);
         }
@@ -396,7 +396,7 @@ namespace MergedFunctionalTest
         /// There are no comments for KatMaiSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToKatMaiSet(KatmaiType katmaiType)
+        public virtual void AddToKatMaiSet(KatmaiType katmaiType)
         {
             base.AddObject("KatMaiSet", katmaiType);
         }
@@ -404,7 +404,7 @@ namespace MergedFunctionalTest
         /// There are no comments for GoodCustomers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToGoodCustomers(GoodCustomer goodCustomer)
+        public virtual void AddToGoodCustomers(GoodCustomer goodCustomer)
         {
             base.AddObject("GoodCustomers", goodCustomer);
         }
@@ -412,7 +412,7 @@ namespace MergedFunctionalTest
         /// There are no comments for BadCustomers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToBadCustomers(BadCustomer badCustomer)
+        public virtual void AddToBadCustomers(BadCustomer badCustomer)
         {
             base.AddObject("BadCustomers", badCustomer);
         }
@@ -420,7 +420,7 @@ namespace MergedFunctionalTest
         /// There are no comments for GroupSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToGroupSet(Group group)
+        public virtual void AddToGroupSet(Group group)
         {
             base.AddObject("GroupSet", group);
         }
@@ -428,7 +428,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Product in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToProduct(Product product)
+        public virtual void AddToProduct(Product product)
         {
             base.AddObject("Product", product);
         }
@@ -436,7 +436,7 @@ namespace MergedFunctionalTest
         /// There are no comments for ProductDetail in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToProductDetail(ProductDetail productDetail)
+        public virtual void AddToProductDetail(ProductDetail productDetail)
         {
             base.AddObject("ProductDetail", productDetail);
         }
@@ -444,7 +444,7 @@ namespace MergedFunctionalTest
         /// There are no comments for SuperType in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public TestTypeSingle SuperType
+        public virtual TestTypeSingle SuperType
         {
             get
             {
@@ -461,7 +461,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Single in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public SingleTypeSingle Single
+        public virtual SingleTypeSingle Single
         {
             get
             {
@@ -1062,21 +1062,21 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for GetPeople in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Person> GetPeople()
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Person> GetPeople()
         {
             return this.CreateFunctionQuery<global::MergedFunctionalTest.Person>("", "GetPeople", false);
         }
         /// <summary>
         /// There are no comments for foo1 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<string> foo1(global::System.Collections.Generic.ICollection<global::MergedFunctionalTest.Customer> p1, bool useEntityReference = false)
+        public virtual global::Microsoft.OData.Client.DataServiceQuerySingle<string> foo1(global::System.Collections.Generic.ICollection<global::MergedFunctionalTest.Customer> p1, bool useEntityReference = false)
         {
             return this.CreateFunctionQuerySingle<string>("", "foo1", false, new global::Microsoft.OData.Client.UriEntityOperationParameter("p1", p1, useEntityReference));
         }
         /// <summary>
         /// There are no comments for MyGroupFunc in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Group> MyGroupFunc(global::MergedFunctionalTest.Principal @this, int taskKey, string attribute, bool useEntityReference = false)
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Group> MyGroupFunc(global::MergedFunctionalTest.Principal @this, int taskKey, string attribute, bool useEntityReference = false)
         {
             return this.CreateFunctionQuery<global::MergedFunctionalTest.Group>("", "MyGroupFunc", false, new global::Microsoft.OData.Client.UriEntityOperationParameter("this", @this, useEntityReference),
                     new global::Microsoft.OData.Client.UriOperationParameter("taskKey", taskKey),
@@ -1085,7 +1085,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for MyGroupFunc in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Group> MyGroupFunc(global::MergedFunctionalTest.Principal @this, int taskKey, bool useEntityReference = false)
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Group> MyGroupFunc(global::MergedFunctionalTest.Principal @this, int taskKey, bool useEntityReference = false)
         {
             return this.CreateFunctionQuery<global::MergedFunctionalTest.Group>("", "MyGroupFunc", false, new global::Microsoft.OData.Client.UriEntityOperationParameter("this", @this, useEntityReference),
                     new global::Microsoft.OData.Client.UriOperationParameter("taskKey", taskKey));
@@ -1093,7 +1093,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo6 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::MergedFunctionalTest.Address> foo6(global::System.Nullable<int> p1, global::MergedFunctionalTest.Customer p2, bool useEntityReference = false)
+        public virtual global::Microsoft.OData.Client.DataServiceQuerySingle<global::MergedFunctionalTest.Address> foo6(global::System.Nullable<int> p1, global::MergedFunctionalTest.Customer p2, bool useEntityReference = false)
         {
             return this.CreateFunctionQuerySingle<global::MergedFunctionalTest.Address>("", "foo6", false, new global::Microsoft.OData.Client.UriOperationParameter("p1", p1),
                     new global::Microsoft.OData.Client.UriEntityOperationParameter("p2", p2, useEntityReference));
@@ -1101,14 +1101,14 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo3 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<string> foo3(global::System.Collections.Generic.ICollection<global::MergedFunctionalTest.Customer> p1)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuerySingle<string> foo3(global::System.Collections.Generic.ICollection<global::MergedFunctionalTest.Customer> p1)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<string>(this, this.BaseUri.OriginalString.Trim('/') + "/foo3", new global::Microsoft.OData.Client.BodyOperationParameter("p1", p1));
         }
         /// <summary>
         /// There are no comments for foo8 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuery foo8(global::MergedFunctionalTest.Address @event, global::System.Nullable<int> @string)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery foo8(global::MergedFunctionalTest.Address @event, global::System.Nullable<int> @string)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery(this, this.BaseUri.OriginalString.Trim('/') + "/foo8", new global::Microsoft.OData.Client.BodyOperationParameter("event", @event),
                     new global::Microsoft.OData.Client.BodyOperationParameter("string", @string));
@@ -1116,7 +1116,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo11 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuery<int> foo11(global::MergedFunctionalTest.Customer p1)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery<int> foo11(global::MergedFunctionalTest.Customer p1)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery<int>(this, this.BaseUri.OriginalString.Trim('/') + "/foo11", new global::Microsoft.OData.Client.BodyOperationParameter("p1", p1));
         }
@@ -1148,7 +1148,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Info in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.CustomerInfoSingle Info
+        public virtual global::MergedFunctionalTest.CustomerInfoSingle Info
         {
             get
             {
@@ -1169,7 +1169,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Company in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.CompanySingle Company
+        public virtual global::MergedFunctionalTest.CompanySingle Company
         {
             get
             {
@@ -1190,7 +1190,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Order> Orders
         {
             get
             {
@@ -1242,7 +1242,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property CustomerId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int CustomerId
+        public virtual int CustomerId
         {
             get
             {
@@ -1263,7 +1263,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Name in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -1284,7 +1284,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Addresses in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.Address> Addresses
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.Address> Addresses
         {
             get
             {
@@ -1305,7 +1305,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Thumbnail in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceStreamLink Thumbnail
+        public virtual global::Microsoft.OData.Client.DataServiceStreamLink Thumbnail
         {
             get
             {
@@ -1326,7 +1326,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Video in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceStreamLink Video
+        public virtual global::Microsoft.OData.Client.DataServiceStreamLink Video
         {
             get
             {
@@ -1347,7 +1347,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Info in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.CustomerInfo Info
+        public virtual global::MergedFunctionalTest.CustomerInfo Info
         {
             get
             {
@@ -1368,7 +1368,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Company in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.Company Company
+        public virtual global::MergedFunctionalTest.Company Company
         {
             get
             {
@@ -1389,7 +1389,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.Order> Orders
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.Order> Orders
         {
             get
             {
@@ -1409,7 +1409,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo2 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<string> foo2(int p2)
+        public virtual global::Microsoft.OData.Client.DataServiceQuerySingle<string> foo2(int p2)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -1419,7 +1419,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo7 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<int>> foo7(global::System.Collections.Generic.ICollection<int> p1, global::MergedFunctionalTest.Address p2)
+        public virtual global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<int>> foo7(global::System.Collections.Generic.ICollection<int> p1, global::MergedFunctionalTest.Address p2)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -1430,7 +1430,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo7 in the schema.
         /// </summary>
-        public global::MergedFunctionalTest.CustomerSingle foo7(global::MergedFunctionalTest.Address p1)
+        public virtual global::MergedFunctionalTest.CustomerSingle foo7(global::MergedFunctionalTest.Address p1)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -1440,7 +1440,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo9 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuery<global::MergedFunctionalTest.Address> foo9(global::System.Collections.Generic.ICollection<global::MergedFunctionalTest.Address> p2)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery<global::MergedFunctionalTest.Address> foo9(global::System.Collections.Generic.ICollection<global::MergedFunctionalTest.Address> p2)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -1453,7 +1453,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo10 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::MergedFunctionalTest.Address> foo10()
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::MergedFunctionalTest.Address> foo10()
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -1491,7 +1491,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Info in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.CustomerInfoSingle Info
+        public virtual global::MergedFunctionalTest.CustomerInfoSingle Info
         {
             get
             {
@@ -1512,7 +1512,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Company in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.CompanySingle Company
+        public virtual global::MergedFunctionalTest.CompanySingle Company
         {
             get
             {
@@ -1533,7 +1533,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Order> Orders
         {
             get
             {
@@ -1609,7 +1609,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Info in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.CustomerInfoSingle Info
+        public virtual global::MergedFunctionalTest.CustomerInfoSingle Info
         {
             get
             {
@@ -1630,7 +1630,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Company in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.CompanySingle Company
+        public virtual global::MergedFunctionalTest.CompanySingle Company
         {
             get
             {
@@ -1651,7 +1651,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Order> Orders
         {
             get
             {
@@ -1748,7 +1748,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property CustomerInfoId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int CustomerInfoId
+        public virtual int CustomerInfoId
         {
             get
             {
@@ -1769,7 +1769,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Information in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Information
+        public virtual string Information
         {
             get
             {
@@ -1814,7 +1814,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Customer in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.CustomerSingle Customer
+        public virtual global::MergedFunctionalTest.CustomerSingle Customer
         {
             get
             {
@@ -1856,7 +1856,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property OrderId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int OrderId
+        public virtual int OrderId
         {
             get
             {
@@ -1877,7 +1877,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property CustomerId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> CustomerId
+        public virtual global::System.Nullable<int> CustomerId
         {
             get
             {
@@ -1898,7 +1898,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Customer in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.Customer Customer
+        public virtual global::MergedFunctionalTest.Customer Customer
         {
             get
             {
@@ -1964,7 +1964,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property CompanyId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int CompanyId
+        public virtual int CompanyId
         {
             get
             {
@@ -1985,7 +1985,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property CompanyInformation in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string CompanyInformation
+        public virtual string CompanyInformation
         {
             get
             {
@@ -2030,7 +2030,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Detail in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.ProductDetailSingle Detail
+        public virtual global::MergedFunctionalTest.ProductDetailSingle Detail
         {
             get
             {
@@ -2072,7 +2072,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ID in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string ID
+        public virtual string ID
         {
             get
             {
@@ -2093,7 +2093,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Description in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Description
+        public virtual string Description
         {
             get
             {
@@ -2114,7 +2114,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Colors in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.Color> Colors
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.Color> Colors
         {
             get
             {
@@ -2135,7 +2135,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Detail in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.ProductDetail Detail
+        public virtual global::MergedFunctionalTest.ProductDetail Detail
         {
             get
             {
@@ -2155,7 +2155,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo7 in the schema.
         /// </summary>
-        public global::MergedFunctionalTest.CustomerSingle foo7(global::MergedFunctionalTest.Address p1)
+        public virtual global::MergedFunctionalTest.CustomerSingle foo7(global::MergedFunctionalTest.Address p1)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -2165,7 +2165,7 @@ namespace MergedFunctionalTest
         /// <summary>
         /// There are no comments for foo7 in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Customer> foo7()
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.Customer> foo7()
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -2199,7 +2199,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Product in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.ProductSingle Product
+        public virtual global::MergedFunctionalTest.ProductSingle Product
         {
             get
             {
@@ -2241,7 +2241,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ProductId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int ProductId
+        public virtual int ProductId
         {
             get
             {
@@ -2262,7 +2262,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Details in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Details
+        public virtual string Details
         {
             get
             {
@@ -2283,7 +2283,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Product in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.Product Product
+        public virtual global::MergedFunctionalTest.Product Product
         {
             get
             {
@@ -2349,7 +2349,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int Id
+        public virtual int Id
         {
             get
             {
@@ -2370,7 +2370,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property TimeSpan in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.TimeSpan> TimeSpan
+        public virtual global::System.Nullable<global::System.TimeSpan> TimeSpan
         {
             get
             {
@@ -2439,7 +2439,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -2460,7 +2460,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ValueProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string ValueProp
+        public virtual string ValueProp
         {
             get
             {
@@ -2526,7 +2526,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Description in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Description
+        public virtual string Description
         {
             get
             {
@@ -2592,7 +2592,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ID in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid ID
+        public virtual global::System.Guid ID
         {
             get
             {
@@ -2613,7 +2613,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Name in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -2788,7 +2788,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.DateTimeOffset Id
+        public virtual global::System.DateTimeOffset Id
         {
             get
             {
@@ -2809,7 +2809,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ColorProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.Color ColorProp
+        public virtual global::MergedFunctionalTest.Color ColorProp
         {
             get
             {
@@ -2830,7 +2830,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableBinaryProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte[] NonNullableBinaryProp
+        public virtual byte[] NonNullableBinaryProp
         {
             get
             {
@@ -2851,7 +2851,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableBinaryProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte[] ExplicitlyNullableBinaryProp
+        public virtual byte[] ExplicitlyNullableBinaryProp
         {
             get
             {
@@ -2872,7 +2872,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableBinaryProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte[] NullableBinaryProp
+        public virtual byte[] NullableBinaryProp
         {
             get
             {
@@ -2893,7 +2893,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableBooleanProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public bool NonNullableBooleanProp
+        public virtual bool NonNullableBooleanProp
         {
             get
             {
@@ -2914,7 +2914,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableBooleanProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<bool> ExplicitlyNullableBooleanProp
+        public virtual global::System.Nullable<bool> ExplicitlyNullableBooleanProp
         {
             get
             {
@@ -2935,7 +2935,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableBooleanProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<bool> NullableBooleanProp
+        public virtual global::System.Nullable<bool> NullableBooleanProp
         {
             get
             {
@@ -2956,7 +2956,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte NonNullableByteProp
+        public virtual byte NonNullableByteProp
         {
             get
             {
@@ -2977,7 +2977,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<byte> ExplicitlyNullableByteProp
+        public virtual global::System.Nullable<byte> ExplicitlyNullableByteProp
         {
             get
             {
@@ -2998,7 +2998,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<byte> NullableByteProp
+        public virtual global::System.Nullable<byte> NullableByteProp
         {
             get
             {
@@ -3019,7 +3019,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableDecimalProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public decimal NonNullableDecimalProp
+        public virtual decimal NonNullableDecimalProp
         {
             get
             {
@@ -3040,7 +3040,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableDecimalProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<decimal> ExplicitlyNullableDecimalProp
+        public virtual global::System.Nullable<decimal> ExplicitlyNullableDecimalProp
         {
             get
             {
@@ -3061,7 +3061,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableDecimalProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<decimal> NullableDecimalProp
+        public virtual global::System.Nullable<decimal> NullableDecimalProp
         {
             get
             {
@@ -3082,7 +3082,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableDoubleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public double NonNullableDoubleProp
+        public virtual double NonNullableDoubleProp
         {
             get
             {
@@ -3103,7 +3103,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableDoubleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> ExplicitlyNullableDoubleProp
+        public virtual global::System.Nullable<double> ExplicitlyNullableDoubleProp
         {
             get
             {
@@ -3124,7 +3124,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableDoubleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> NullableDoubleProp
+        public virtual global::System.Nullable<double> NullableDoubleProp
         {
             get
             {
@@ -3145,7 +3145,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableSingleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public float NonNullableSingleProp
+        public virtual float NonNullableSingleProp
         {
             get
             {
@@ -3166,7 +3166,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableSingleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<float> ExplicitlyNullableSingleProp
+        public virtual global::System.Nullable<float> ExplicitlyNullableSingleProp
         {
             get
             {
@@ -3187,7 +3187,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableSingleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<float> NullableSingleProp
+        public virtual global::System.Nullable<float> NullableSingleProp
         {
             get
             {
@@ -3208,7 +3208,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableInt16Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public short NonNullableInt16Prop
+        public virtual short NonNullableInt16Prop
         {
             get
             {
@@ -3229,7 +3229,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableInt16Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<short> ExplicitlyNullableInt16Prop
+        public virtual global::System.Nullable<short> ExplicitlyNullableInt16Prop
         {
             get
             {
@@ -3250,7 +3250,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableInt16Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<short> NullableInt16Prop
+        public virtual global::System.Nullable<short> NullableInt16Prop
         {
             get
             {
@@ -3271,7 +3271,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableInt32Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int NonNullableInt32Prop
+        public virtual int NonNullableInt32Prop
         {
             get
             {
@@ -3292,7 +3292,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableInt32Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> ExplicitlyNullableInt32Prop
+        public virtual global::System.Nullable<int> ExplicitlyNullableInt32Prop
         {
             get
             {
@@ -3313,7 +3313,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableInt32Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> NullableInt32Prop
+        public virtual global::System.Nullable<int> NullableInt32Prop
         {
             get
             {
@@ -3334,7 +3334,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableInt64Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public long NonNullableInt64Prop
+        public virtual long NonNullableInt64Prop
         {
             get
             {
@@ -3355,7 +3355,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableInt64Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<long> ExplicitlyNullableInt64Prop
+        public virtual global::System.Nullable<long> ExplicitlyNullableInt64Prop
         {
             get
             {
@@ -3376,7 +3376,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableInt64Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<long> NullableInt64Prop
+        public virtual global::System.Nullable<long> NullableInt64Prop
         {
             get
             {
@@ -3397,7 +3397,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGuidProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid NonNullableGuidProp
+        public virtual global::System.Guid NonNullableGuidProp
         {
             get
             {
@@ -3418,7 +3418,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGuidProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.Guid> ExplicitlyNullableGuidProp
+        public virtual global::System.Nullable<global::System.Guid> ExplicitlyNullableGuidProp
         {
             get
             {
@@ -3439,7 +3439,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGuidProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.Guid> NullableGuidProp
+        public virtual global::System.Nullable<global::System.Guid> NullableGuidProp
         {
             get
             {
@@ -3460,7 +3460,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableStringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string NonNullableStringProp
+        public virtual string NonNullableStringProp
         {
             get
             {
@@ -3481,7 +3481,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableStringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string ExplicitlyNullableStringProp
+        public virtual string ExplicitlyNullableStringProp
         {
             get
             {
@@ -3502,7 +3502,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableStringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string NullableStringProp
+        public virtual string NullableStringProp
         {
             get
             {
@@ -3523,7 +3523,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableDurationProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.TimeSpan NonNullableDurationProp
+        public virtual global::System.TimeSpan NonNullableDurationProp
         {
             get
             {
@@ -3544,7 +3544,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableDurationProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.TimeSpan> ExplicitlyNullableDurationProp
+        public virtual global::System.Nullable<global::System.TimeSpan> ExplicitlyNullableDurationProp
         {
             get
             {
@@ -3565,7 +3565,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableDurationProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.TimeSpan> NullableDurationProp
+        public virtual global::System.Nullable<global::System.TimeSpan> NullableDurationProp
         {
             get
             {
@@ -3586,7 +3586,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableDateTimeOffsetProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.DateTimeOffset NonNullableDateTimeOffsetProp
+        public virtual global::System.DateTimeOffset NonNullableDateTimeOffsetProp
         {
             get
             {
@@ -3607,7 +3607,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableDateTimeOffsetProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.DateTimeOffset> ExplicitlyNullableDateTimeOffsetProp
+        public virtual global::System.Nullable<global::System.DateTimeOffset> ExplicitlyNullableDateTimeOffsetProp
         {
             get
             {
@@ -3628,7 +3628,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableDateTimeOffsetProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.DateTimeOffset> NullableDateTimeOffsetProp
+        public virtual global::System.Nullable<global::System.DateTimeOffset> NullableDateTimeOffsetProp
         {
             get
             {
@@ -3649,7 +3649,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableDateProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Edm.Date NonNullableDateProp
+        public virtual global::Microsoft.OData.Edm.Date NonNullableDateProp
         {
             get
             {
@@ -3670,7 +3670,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableDateProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::Microsoft.OData.Edm.Date> ExplicitlyNullableDateProp
+        public virtual global::System.Nullable<global::Microsoft.OData.Edm.Date> ExplicitlyNullableDateProp
         {
             get
             {
@@ -3691,7 +3691,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableDateProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::Microsoft.OData.Edm.Date> NullableDateProp
+        public virtual global::System.Nullable<global::Microsoft.OData.Edm.Date> NullableDateProp
         {
             get
             {
@@ -3712,7 +3712,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableTimeOfDayProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Edm.TimeOfDay NonNullableTimeOfDayProp
+        public virtual global::Microsoft.OData.Edm.TimeOfDay NonNullableTimeOfDayProp
         {
             get
             {
@@ -3733,7 +3733,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableTimeOfDayProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> ExplicitlyNullableTimeOfDayProp
+        public virtual global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> ExplicitlyNullableTimeOfDayProp
         {
             get
             {
@@ -3754,7 +3754,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableTimeOfDayProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> NullableTimeOfDayProp
+        public virtual global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> NullableTimeOfDayProp
         {
             get
             {
@@ -3775,7 +3775,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableStreamProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceStreamLink NonNullableStreamProp
+        public virtual global::Microsoft.OData.Client.DataServiceStreamLink NonNullableStreamProp
         {
             get
             {
@@ -3796,7 +3796,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableStreamProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceStreamLink ExplicitlyNullableStreamProp
+        public virtual global::Microsoft.OData.Client.DataServiceStreamLink ExplicitlyNullableStreamProp
         {
             get
             {
@@ -3817,7 +3817,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableStreamProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceStreamLink NullableStreamProp
+        public virtual global::Microsoft.OData.Client.DataServiceStreamLink NullableStreamProp
         {
             get
             {
@@ -3838,7 +3838,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableSByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public sbyte NonNullableSByteProp
+        public virtual sbyte NonNullableSByteProp
         {
             get
             {
@@ -3859,7 +3859,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableSByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<sbyte> ExplicitlyNullableSByteProp
+        public virtual global::System.Nullable<sbyte> ExplicitlyNullableSByteProp
         {
             get
             {
@@ -3880,7 +3880,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableSByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<sbyte> NullableSByteProp
+        public virtual global::System.Nullable<sbyte> NullableSByteProp
         {
             get
             {
@@ -3901,7 +3901,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeography in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.Geography NonNullableGeography
+        public virtual global::Microsoft.Spatial.Geography NonNullableGeography
         {
             get
             {
@@ -3922,7 +3922,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeography in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.Geography ExplicitlyNullableGeography
+        public virtual global::Microsoft.Spatial.Geography ExplicitlyNullableGeography
         {
             get
             {
@@ -3943,7 +3943,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeography in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.Geography NullableGeography
+        public virtual global::Microsoft.Spatial.Geography NullableGeography
         {
             get
             {
@@ -3964,7 +3964,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeographyPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPoint NonNullableGeographyPoint
+        public virtual global::Microsoft.Spatial.GeographyPoint NonNullableGeographyPoint
         {
             get
             {
@@ -3985,7 +3985,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeographyPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPoint ExplicitlyNullableGeographyPoint
+        public virtual global::Microsoft.Spatial.GeographyPoint ExplicitlyNullableGeographyPoint
         {
             get
             {
@@ -4006,7 +4006,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeographyPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPoint NullableGeographyPoint
+        public virtual global::Microsoft.Spatial.GeographyPoint NullableGeographyPoint
         {
             get
             {
@@ -4027,7 +4027,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeographyLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyLineString NonNullableGeographyLineString
+        public virtual global::Microsoft.Spatial.GeographyLineString NonNullableGeographyLineString
         {
             get
             {
@@ -4048,7 +4048,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeographyLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyLineString ExplicitlyNullableGeographyLineString
+        public virtual global::Microsoft.Spatial.GeographyLineString ExplicitlyNullableGeographyLineString
         {
             get
             {
@@ -4069,7 +4069,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeographyLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyLineString NullableGeographyLineString
+        public virtual global::Microsoft.Spatial.GeographyLineString NullableGeographyLineString
         {
             get
             {
@@ -4090,7 +4090,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeographyPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPolygon NonNullableGeographyPolygon
+        public virtual global::Microsoft.Spatial.GeographyPolygon NonNullableGeographyPolygon
         {
             get
             {
@@ -4111,7 +4111,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeographyPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPolygon ExplicitlyNullableGeographyPolygon
+        public virtual global::Microsoft.Spatial.GeographyPolygon ExplicitlyNullableGeographyPolygon
         {
             get
             {
@@ -4132,7 +4132,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeographyPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPolygon NullableGeographyPolygon
+        public virtual global::Microsoft.Spatial.GeographyPolygon NullableGeographyPolygon
         {
             get
             {
@@ -4153,7 +4153,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeographyMultiPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiPoint NonNullableGeographyMultiPoint
+        public virtual global::Microsoft.Spatial.GeographyMultiPoint NonNullableGeographyMultiPoint
         {
             get
             {
@@ -4174,7 +4174,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeographyMultiPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiPoint ExplicitlyNullableGeographyMultiPoint
+        public virtual global::Microsoft.Spatial.GeographyMultiPoint ExplicitlyNullableGeographyMultiPoint
         {
             get
             {
@@ -4195,7 +4195,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeographyMultiPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiPoint NullableGeographyMultiPoint
+        public virtual global::Microsoft.Spatial.GeographyMultiPoint NullableGeographyMultiPoint
         {
             get
             {
@@ -4216,7 +4216,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeographyMultiLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiLineString NonNullableGeographyMultiLineString
+        public virtual global::Microsoft.Spatial.GeographyMultiLineString NonNullableGeographyMultiLineString
         {
             get
             {
@@ -4237,7 +4237,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeographyMultiLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiLineString ExplicitlyNullableGeographyMultiLineString
+        public virtual global::Microsoft.Spatial.GeographyMultiLineString ExplicitlyNullableGeographyMultiLineString
         {
             get
             {
@@ -4258,7 +4258,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeographyMultiLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiLineString NullableGeographyMultiLineString
+        public virtual global::Microsoft.Spatial.GeographyMultiLineString NullableGeographyMultiLineString
         {
             get
             {
@@ -4279,7 +4279,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeographyMultiPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiPolygon NonNullableGeographyMultiPolygon
+        public virtual global::Microsoft.Spatial.GeographyMultiPolygon NonNullableGeographyMultiPolygon
         {
             get
             {
@@ -4300,7 +4300,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeographyMultiPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiPolygon ExplicitlyNullableGeographyMultiPolygon
+        public virtual global::Microsoft.Spatial.GeographyMultiPolygon ExplicitlyNullableGeographyMultiPolygon
         {
             get
             {
@@ -4321,7 +4321,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeographyMultiPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiPolygon NullableGeographyMultiPolygon
+        public virtual global::Microsoft.Spatial.GeographyMultiPolygon NullableGeographyMultiPolygon
         {
             get
             {
@@ -4342,7 +4342,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeographyCollection in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyCollection NonNullableGeographyCollection
+        public virtual global::Microsoft.Spatial.GeographyCollection NonNullableGeographyCollection
         {
             get
             {
@@ -4363,7 +4363,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeographyCollection in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyCollection ExplicitlyNullableGeographyCollection
+        public virtual global::Microsoft.Spatial.GeographyCollection ExplicitlyNullableGeographyCollection
         {
             get
             {
@@ -4384,7 +4384,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeographyCollection in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyCollection NullableGeographyCollection
+        public virtual global::Microsoft.Spatial.GeographyCollection NullableGeographyCollection
         {
             get
             {
@@ -4405,7 +4405,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeometry in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.Geometry NonNullableGeometry
+        public virtual global::Microsoft.Spatial.Geometry NonNullableGeometry
         {
             get
             {
@@ -4426,7 +4426,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeometry in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.Geometry ExplicitlyNullableGeometry
+        public virtual global::Microsoft.Spatial.Geometry ExplicitlyNullableGeometry
         {
             get
             {
@@ -4447,7 +4447,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeometry in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.Geometry NullableGeometry
+        public virtual global::Microsoft.Spatial.Geometry NullableGeometry
         {
             get
             {
@@ -4468,7 +4468,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeometryPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPoint NonNullableGeometryPoint
+        public virtual global::Microsoft.Spatial.GeometryPoint NonNullableGeometryPoint
         {
             get
             {
@@ -4489,7 +4489,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeometryPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPoint ExplicitlyNullableGeometryPoint
+        public virtual global::Microsoft.Spatial.GeometryPoint ExplicitlyNullableGeometryPoint
         {
             get
             {
@@ -4510,7 +4510,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeometryPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPoint NullableGeometryPoint
+        public virtual global::Microsoft.Spatial.GeometryPoint NullableGeometryPoint
         {
             get
             {
@@ -4531,7 +4531,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeometryLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryLineString NonNullableGeometryLineString
+        public virtual global::Microsoft.Spatial.GeometryLineString NonNullableGeometryLineString
         {
             get
             {
@@ -4552,7 +4552,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeometryLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryLineString ExplicitlyNullableGeometryLineString
+        public virtual global::Microsoft.Spatial.GeometryLineString ExplicitlyNullableGeometryLineString
         {
             get
             {
@@ -4573,7 +4573,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeometryLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryLineString NullableGeometryLineString
+        public virtual global::Microsoft.Spatial.GeometryLineString NullableGeometryLineString
         {
             get
             {
@@ -4594,7 +4594,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeometryPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPolygon NonNullableGeometryPolygon
+        public virtual global::Microsoft.Spatial.GeometryPolygon NonNullableGeometryPolygon
         {
             get
             {
@@ -4615,7 +4615,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeometryPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPolygon ExplicitlyNullableGeometryPolygon
+        public virtual global::Microsoft.Spatial.GeometryPolygon ExplicitlyNullableGeometryPolygon
         {
             get
             {
@@ -4636,7 +4636,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeometryPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPolygon NullableGeometryPolygon
+        public virtual global::Microsoft.Spatial.GeometryPolygon NullableGeometryPolygon
         {
             get
             {
@@ -4657,7 +4657,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeometryMultiPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiPoint NonNullableGeometryMultiPoint
+        public virtual global::Microsoft.Spatial.GeometryMultiPoint NonNullableGeometryMultiPoint
         {
             get
             {
@@ -4678,7 +4678,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeometryMultiPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiPoint ExplicitlyNullableGeometryMultiPoint
+        public virtual global::Microsoft.Spatial.GeometryMultiPoint ExplicitlyNullableGeometryMultiPoint
         {
             get
             {
@@ -4699,7 +4699,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeometryMultiPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiPoint NullableGeometryMultiPoint
+        public virtual global::Microsoft.Spatial.GeometryMultiPoint NullableGeometryMultiPoint
         {
             get
             {
@@ -4720,7 +4720,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeometryMultiLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiLineString NonNullableGeometryMultiLineString
+        public virtual global::Microsoft.Spatial.GeometryMultiLineString NonNullableGeometryMultiLineString
         {
             get
             {
@@ -4741,7 +4741,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeometryMultiLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiLineString ExplicitlyNullableGeometryMultiLineString
+        public virtual global::Microsoft.Spatial.GeometryMultiLineString ExplicitlyNullableGeometryMultiLineString
         {
             get
             {
@@ -4762,7 +4762,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeometryMultiLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiLineString NullableGeometryMultiLineString
+        public virtual global::Microsoft.Spatial.GeometryMultiLineString NullableGeometryMultiLineString
         {
             get
             {
@@ -4783,7 +4783,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeometryMultiPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiPolygon NonNullableGeometryMultiPolygon
+        public virtual global::Microsoft.Spatial.GeometryMultiPolygon NonNullableGeometryMultiPolygon
         {
             get
             {
@@ -4804,7 +4804,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeometryMultiPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiPolygon ExplicitlyNullableGeometryMultiPolygon
+        public virtual global::Microsoft.Spatial.GeometryMultiPolygon ExplicitlyNullableGeometryMultiPolygon
         {
             get
             {
@@ -4825,7 +4825,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeometryMultiPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiPolygon NullableGeometryMultiPolygon
+        public virtual global::Microsoft.Spatial.GeometryMultiPolygon NullableGeometryMultiPolygon
         {
             get
             {
@@ -4846,7 +4846,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableGeometryCollection in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryCollection NonNullableGeometryCollection
+        public virtual global::Microsoft.Spatial.GeometryCollection NonNullableGeometryCollection
         {
             get
             {
@@ -4867,7 +4867,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ExplicitlyNullableGeometryCollection in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryCollection ExplicitlyNullableGeometryCollection
+        public virtual global::Microsoft.Spatial.GeometryCollection ExplicitlyNullableGeometryCollection
         {
             get
             {
@@ -4888,7 +4888,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableGeometryCollection in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryCollection NullableGeometryCollection
+        public virtual global::Microsoft.Spatial.GeometryCollection NullableGeometryCollection
         {
             get
             {
@@ -4909,7 +4909,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ComplexNonNull in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.TestComplexType ComplexNonNull
+        public virtual global::MergedFunctionalTest.TestComplexType ComplexNonNull
         {
             get
             {
@@ -4930,7 +4930,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ComplexNullExplicit in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.TestComplexType ComplexNullExplicit
+        public virtual global::MergedFunctionalTest.TestComplexType ComplexNullExplicit
         {
             get
             {
@@ -4951,7 +4951,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ComplexNull in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.TestComplexType ComplexNull
+        public virtual global::MergedFunctionalTest.TestComplexType ComplexNull
         {
             get
             {
@@ -5017,7 +5017,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -5038,7 +5038,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfDecimals in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<decimal> BagOfDecimals
+        public virtual global::System.Collections.ObjectModel.Collection<decimal> BagOfDecimals
         {
             get
             {
@@ -5059,7 +5059,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfDoubles in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<double> BagOfDoubles
+        public virtual global::System.Collections.ObjectModel.Collection<double> BagOfDoubles
         {
             get
             {
@@ -5080,7 +5080,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfSingles in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<float> BagOfSingles
+        public virtual global::System.Collections.ObjectModel.Collection<float> BagOfSingles
         {
             get
             {
@@ -5101,7 +5101,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfBytes in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<byte> BagOfBytes
+        public virtual global::System.Collections.ObjectModel.Collection<byte> BagOfBytes
         {
             get
             {
@@ -5122,7 +5122,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfInt16s in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<short> BagOfInt16s
+        public virtual global::System.Collections.ObjectModel.Collection<short> BagOfInt16s
         {
             get
             {
@@ -5143,7 +5143,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfInt32s in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<int> BagOfInt32s
+        public virtual global::System.Collections.ObjectModel.Collection<int> BagOfInt32s
         {
             get
             {
@@ -5164,7 +5164,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfInt64s in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<long> BagOfInt64s
+        public virtual global::System.Collections.ObjectModel.Collection<long> BagOfInt64s
         {
             get
             {
@@ -5185,7 +5185,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfGuids in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::System.Guid> BagOfGuids
+        public virtual global::System.Collections.ObjectModel.Collection<global::System.Guid> BagOfGuids
         {
             get
             {
@@ -5206,7 +5206,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfDateTime in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::System.DateTimeOffset> BagOfDateTime
+        public virtual global::System.Collections.ObjectModel.Collection<global::System.DateTimeOffset> BagOfDateTime
         {
             get
             {
@@ -5227,7 +5227,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfStrings in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<string> BagOfStrings
+        public virtual global::System.Collections.ObjectModel.Collection<string> BagOfStrings
         {
             get
             {
@@ -5248,7 +5248,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfBinarys in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<byte[]> BagOfBinarys
+        public virtual global::System.Collections.ObjectModel.Collection<byte[]> BagOfBinarys
         {
             get
             {
@@ -5269,7 +5269,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfBooleans in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<bool> BagOfBooleans
+        public virtual global::System.Collections.ObjectModel.Collection<bool> BagOfBooleans
         {
             get
             {
@@ -5290,7 +5290,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfDuration in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::System.TimeSpan> BagOfDuration
+        public virtual global::System.Collections.ObjectModel.Collection<global::System.TimeSpan> BagOfDuration
         {
             get
             {
@@ -5311,7 +5311,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfDate in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.Date> BagOfDate
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.Date> BagOfDate
         {
             get
             {
@@ -5332,7 +5332,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfTimeOfDay in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.TimeOfDay> BagOfTimeOfDay
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.TimeOfDay> BagOfTimeOfDay
         {
             get
             {
@@ -5353,7 +5353,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfStream in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Client.DataServiceStreamLink> BagOfStream
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Client.DataServiceStreamLink> BagOfStream
         {
             get
             {
@@ -5374,7 +5374,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfSByte in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<sbyte> BagOfSByte
+        public virtual global::System.Collections.ObjectModel.Collection<sbyte> BagOfSByte
         {
             get
             {
@@ -5395,7 +5395,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Geography in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.Geography> Geography
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.Geography> Geography
         {
             get
             {
@@ -5416,7 +5416,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPoint> GeographyPoint
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPoint> GeographyPoint
         {
             get
             {
@@ -5437,7 +5437,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyLineString> GeographyLineString
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyLineString> GeographyLineString
         {
             get
             {
@@ -5458,7 +5458,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPolygon> GeographyPolygon
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPolygon> GeographyPolygon
         {
             get
             {
@@ -5479,7 +5479,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyMultiPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyMultiPoint> GeographyMultiPoint
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyMultiPoint> GeographyMultiPoint
         {
             get
             {
@@ -5500,7 +5500,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyMultiLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyMultiLineString> GeographyMultiLineString
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyMultiLineString> GeographyMultiLineString
         {
             get
             {
@@ -5521,7 +5521,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyMultiPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyMultiPolygon> GeographyMultiPolygon
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyMultiPolygon> GeographyMultiPolygon
         {
             get
             {
@@ -5542,7 +5542,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyCollection in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyCollection> GeographyCollection
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyCollection> GeographyCollection
         {
             get
             {
@@ -5563,7 +5563,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Geometry in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.Geometry> Geometry
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.Geometry> Geometry
         {
             get
             {
@@ -5584,7 +5584,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPoint> GeometryPoint
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPoint> GeometryPoint
         {
             get
             {
@@ -5605,7 +5605,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryLineString> GeometryLineString
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryLineString> GeometryLineString
         {
             get
             {
@@ -5626,7 +5626,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPolygon> GeometryPolygon
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPolygon> GeometryPolygon
         {
             get
             {
@@ -5647,7 +5647,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryMultiPoint in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryMultiPoint> GeometryMultiPoint
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryMultiPoint> GeometryMultiPoint
         {
             get
             {
@@ -5668,7 +5668,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryMultiLineString in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryMultiLineString> GeometryMultiLineString
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryMultiLineString> GeometryMultiLineString
         {
             get
             {
@@ -5689,7 +5689,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryMultiPolygon in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryMultiPolygon> GeometryMultiPolygon
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryMultiPolygon> GeometryMultiPolygon
         {
             get
             {
@@ -5710,7 +5710,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryCollection in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryCollection> GeometryCollection
+        public virtual global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryCollection> GeometryCollection
         {
             get
             {
@@ -5731,7 +5731,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property CollectionOfComplexNotNullExplictly in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.TestComplexType> CollectionOfComplexNotNullExplictly
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.TestComplexType> CollectionOfComplexNotNullExplictly
         {
             get
             {
@@ -5752,7 +5752,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property CollectionOfComplexNullExplictly in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.TestComplexType> CollectionOfComplexNullExplictly
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.TestComplexType> CollectionOfComplexNullExplictly
         {
             get
             {
@@ -5773,7 +5773,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property CollectionOfComplex in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.TestComplexType> CollectionOfComplex
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.TestComplexType> CollectionOfComplex
         {
             get
             {
@@ -5828,7 +5828,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -5849,7 +5849,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BinaryProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte[] BinaryProp
+        public virtual byte[] BinaryProp
         {
             get
             {
@@ -5870,7 +5870,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property StringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string StringProp
+        public virtual string StringProp
         {
             get
             {
@@ -5891,7 +5891,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DecimalProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public decimal DecimalProp
+        public virtual decimal DecimalProp
         {
             get
             {
@@ -5912,7 +5912,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ShortProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public short ShortProp
+        public virtual short ShortProp
         {
             get
             {
@@ -5933,7 +5933,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property FloatProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public float FloatProp
+        public virtual float FloatProp
         {
             get
             {
@@ -5954,7 +5954,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BooleanProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public bool BooleanProp
+        public virtual bool BooleanProp
         {
             get
             {
@@ -5975,7 +5975,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DoubleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public double DoubleProp
+        public virtual double DoubleProp
         {
             get
             {
@@ -5996,7 +5996,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GuidProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid GuidProp
+        public virtual global::System.Guid GuidProp
         {
             get
             {
@@ -6017,7 +6017,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte ByteProp
+        public virtual byte ByteProp
         {
             get
             {
@@ -6038,7 +6038,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property LongProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public long LongProp
+        public virtual long LongProp
         {
             get
             {
@@ -6059,7 +6059,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property SByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public sbyte SByteProp
+        public virtual sbyte SByteProp
         {
             get
             {
@@ -6080,7 +6080,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DurationProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.TimeSpan DurationProp
+        public virtual global::System.TimeSpan DurationProp
         {
             get
             {
@@ -6101,7 +6101,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DateTimeOffsetProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.DateTimeOffset DateTimeOffsetProp
+        public virtual global::System.DateTimeOffset DateTimeOffsetProp
         {
             get
             {
@@ -6122,7 +6122,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DateProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Edm.Date DateProp
+        public virtual global::Microsoft.OData.Edm.Date DateProp
         {
             get
             {
@@ -6143,7 +6143,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property TimeOfDayProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Edm.TimeOfDay TimeOfDayProp
+        public virtual global::Microsoft.OData.Edm.TimeOfDay TimeOfDayProp
         {
             get
             {
@@ -6164,7 +6164,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.Geography GeographyProp
+        public virtual global::Microsoft.Spatial.Geography GeographyProp
         {
             get
             {
@@ -6185,7 +6185,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyPointProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPoint GeographyPointProp
+        public virtual global::Microsoft.Spatial.GeographyPoint GeographyPointProp
         {
             get
             {
@@ -6206,7 +6206,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyLineStringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyLineString GeographyLineStringProp
+        public virtual global::Microsoft.Spatial.GeographyLineString GeographyLineStringProp
         {
             get
             {
@@ -6227,7 +6227,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyPolygonProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPolygon GeographyPolygonProp
+        public virtual global::Microsoft.Spatial.GeographyPolygon GeographyPolygonProp
         {
             get
             {
@@ -6248,7 +6248,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyCollectionProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyCollection GeographyCollectionProp
+        public virtual global::Microsoft.Spatial.GeographyCollection GeographyCollectionProp
         {
             get
             {
@@ -6269,7 +6269,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyMultiPolygonProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiPolygon GeographyMultiPolygonProp
+        public virtual global::Microsoft.Spatial.GeographyMultiPolygon GeographyMultiPolygonProp
         {
             get
             {
@@ -6290,7 +6290,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyMultiLineStringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiLineString GeographyMultiLineStringProp
+        public virtual global::Microsoft.Spatial.GeographyMultiLineString GeographyMultiLineStringProp
         {
             get
             {
@@ -6311,7 +6311,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeographyMultiPointProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyMultiPoint GeographyMultiPointProp
+        public virtual global::Microsoft.Spatial.GeographyMultiPoint GeographyMultiPointProp
         {
             get
             {
@@ -6332,7 +6332,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.Geometry GeometryProp
+        public virtual global::Microsoft.Spatial.Geometry GeometryProp
         {
             get
             {
@@ -6353,7 +6353,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryPointProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPoint GeometryPointProp
+        public virtual global::Microsoft.Spatial.GeometryPoint GeometryPointProp
         {
             get
             {
@@ -6374,7 +6374,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryLineStringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryLineString GeometryLineStringProp
+        public virtual global::Microsoft.Spatial.GeometryLineString GeometryLineStringProp
         {
             get
             {
@@ -6395,7 +6395,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryPolygonProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPolygon GeometryPolygonProp
+        public virtual global::Microsoft.Spatial.GeometryPolygon GeometryPolygonProp
         {
             get
             {
@@ -6416,7 +6416,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryCollectionProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryCollection GeometryCollectionProp
+        public virtual global::Microsoft.Spatial.GeometryCollection GeometryCollectionProp
         {
             get
             {
@@ -6437,7 +6437,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryMultiPolygonProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiPolygon GeometryMultiPolygonProp
+        public virtual global::Microsoft.Spatial.GeometryMultiPolygon GeometryMultiPolygonProp
         {
             get
             {
@@ -6458,7 +6458,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryMultiLineStringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiLineString GeometryMultiLineStringProp
+        public virtual global::Microsoft.Spatial.GeometryMultiLineString GeometryMultiLineStringProp
         {
             get
             {
@@ -6479,7 +6479,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeometryMultiPointProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryMultiPoint GeometryMultiPointProp
+        public virtual global::Microsoft.Spatial.GeometryMultiPoint GeometryMultiPointProp
         {
             get
             {
@@ -6500,7 +6500,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property UserAccess in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::MergedFunctionalTest.AccessLevel> UserAccess
+        public virtual global::System.Nullable<global::MergedFunctionalTest.AccessLevel> UserAccess
         {
             get
             {
@@ -6521,7 +6521,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property SkinColor in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.Color SkinColor
+        public virtual global::MergedFunctionalTest.Color SkinColor
         {
             get
             {
@@ -6542,7 +6542,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property SkinColor2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.Color SkinColor2
+        public virtual global::MergedFunctionalTest.Color SkinColor2
         {
             get
             {
@@ -6563,7 +6563,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property SkinColor3 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.Color SkinColor3
+        public virtual global::MergedFunctionalTest.Color SkinColor3
         {
             get
             {
@@ -6638,7 +6638,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Int64Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public long Int64Id
+        public virtual long Int64Id
         {
             get
             {
@@ -6659,7 +6659,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property StringId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string StringId
+        public virtual string StringId
         {
             get
             {
@@ -6680,7 +6680,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DateTimeOffsetId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.DateTimeOffset DateTimeOffsetId
+        public virtual global::System.DateTimeOffset DateTimeOffsetId
         {
             get
             {
@@ -6701,7 +6701,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GuidId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid GuidId
+        public virtual global::System.Guid GuidId
         {
             get
             {
@@ -6767,7 +6767,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public long KeyProp
+        public virtual long KeyProp
         {
             get
             {
@@ -6837,7 +6837,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -6858,7 +6858,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DateTimeOffset in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.DateTimeOffset DateTimeOffset
+        public virtual global::System.DateTimeOffset DateTimeOffset
         {
             get
             {
@@ -6879,7 +6879,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property TimeSpan in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.TimeSpan TimeSpan
+        public virtual global::System.TimeSpan TimeSpan
         {
             get
             {
@@ -6900,7 +6900,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableDateTimeOffset in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.DateTimeOffset> NullableDateTimeOffset
+        public virtual global::System.Nullable<global::System.DateTimeOffset> NullableDateTimeOffset
         {
             get
             {
@@ -6921,7 +6921,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NullableTimeSpan in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::System.TimeSpan> NullableTimeSpan
+        public virtual global::System.Nullable<global::System.TimeSpan> NullableTimeSpan
         {
             get
             {
@@ -6976,7 +6976,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Level0Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Level0Prop
+        public virtual string Level0Prop
         {
             get
             {
@@ -7046,7 +7046,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Level1Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int Level1Id
+        public virtual int Level1Id
         {
             get
             {
@@ -7067,7 +7067,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Level1Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Level1Prop
+        public virtual string Level1Prop
         {
             get
             {
@@ -7139,7 +7139,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Level2Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Level2Prop
+        public virtual string Level2Prop
         {
             get
             {
@@ -7184,7 +7184,7 @@ namespace MergedFunctionalTest
         /// There are no comments for BaseSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.TestType> BaseSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.TestType> BaseSet
         {
             get
             {
@@ -7226,7 +7226,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPoint KeyProp
+        public virtual global::Microsoft.Spatial.GeographyPoint KeyProp
         {
             get
             {
@@ -7247,7 +7247,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BaseSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.TestType> BaseSet
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.TestType> BaseSet
         {
             get
             {
@@ -7292,7 +7292,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Good in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.GoodCustomer> Good
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::MergedFunctionalTest.GoodCustomer> Good
         {
             get
             {
@@ -7313,7 +7313,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Bad in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.BadCustomerSingle Bad
+        public virtual global::MergedFunctionalTest.BadCustomerSingle Bad
         {
             get
             {
@@ -7357,7 +7357,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int Id
+        public virtual int Id
         {
             get
             {
@@ -7378,7 +7378,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property IsHiddenInUI in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public bool IsHiddenInUI
+        public virtual bool IsHiddenInUI
         {
             get
             {
@@ -7399,7 +7399,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property LoginName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string LoginName
+        public virtual string LoginName
         {
             get
             {
@@ -7420,7 +7420,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Good in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.GoodCustomer> Good
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.GoodCustomer> Good
         {
             get
             {
@@ -7441,7 +7441,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Bad in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.BadCustomer Bad
+        public virtual global::MergedFunctionalTest.BadCustomer Bad
         {
             get
             {
@@ -7511,7 +7511,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int Id
+        public virtual int Id
         {
             get
             {
@@ -7532,7 +7532,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property IsHiddenInUI in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public bool IsHiddenInUI
+        public virtual bool IsHiddenInUI
         {
             get
             {
@@ -7553,7 +7553,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property LoginName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string LoginName
+        public virtual string LoginName
         {
             get
             {
@@ -7574,7 +7574,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Title in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Title
+        public virtual string Title
         {
             get
             {
@@ -7595,7 +7595,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property PrincipalType in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int PrincipalType
+        public virtual int PrincipalType
         {
             get
             {
@@ -7622,7 +7622,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ComplextLevel0Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string ComplextLevel0Prop
+        public virtual string ComplextLevel0Prop
         {
             get
             {
@@ -7662,7 +7662,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ComplextLevel1Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public long ComplextLevel1Prop
+        public virtual long ComplextLevel1Prop
         {
             get
             {
@@ -7689,7 +7689,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Street in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Street
+        public virtual string Street
         {
             get
             {
@@ -7754,7 +7754,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BinaryProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte[] BinaryProp
+        public virtual byte[] BinaryProp
         {
             get
             {
@@ -7775,7 +7775,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BooleanProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public bool BooleanProp
+        public virtual bool BooleanProp
         {
             get
             {
@@ -7796,7 +7796,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<byte> ByteProp
+        public virtual global::System.Nullable<byte> ByteProp
         {
             get
             {
@@ -7817,7 +7817,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DecimalProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public decimal DecimalProp
+        public virtual decimal DecimalProp
         {
             get
             {
@@ -7838,7 +7838,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DoubleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public double DoubleProp
+        public virtual double DoubleProp
         {
             get
             {
@@ -7859,7 +7859,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property SingleProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public float SingleProp
+        public virtual float SingleProp
         {
             get
             {
@@ -7880,7 +7880,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GuidProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid GuidProp
+        public virtual global::System.Guid GuidProp
         {
             get
             {
@@ -7901,7 +7901,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Int64Prop in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<long> Int64Prop
+        public virtual global::System.Nullable<long> Int64Prop
         {
             get
             {
@@ -7922,7 +7922,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property StringProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string StringProp
+        public virtual string StringProp
         {
             get
             {
@@ -7943,7 +7943,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DurationProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.TimeSpan DurationProp
+        public virtual global::System.TimeSpan DurationProp
         {
             get
             {
@@ -7964,7 +7964,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DateTimeOffsetProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.DateTimeOffset DateTimeOffsetProp
+        public virtual global::System.DateTimeOffset DateTimeOffsetProp
         {
             get
             {
@@ -7985,7 +7985,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property StreamProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceStreamLink StreamProp
+        public virtual global::Microsoft.OData.Client.DataServiceStreamLink StreamProp
         {
             get
             {
@@ -8006,7 +8006,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property SByteProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public sbyte SByteProp
+        public virtual sbyte SByteProp
         {
             get
             {
@@ -8027,7 +8027,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeogPointProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeographyPoint GeogPointProp
+        public virtual global::Microsoft.Spatial.GeographyPoint GeogPointProp
         {
             get
             {
@@ -8048,7 +8048,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property GeomPointProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Spatial.GeometryPoint GeomPointProp
+        public virtual global::Microsoft.Spatial.GeometryPoint GeomPointProp
         {
             get
             {
@@ -8069,7 +8069,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property ColorProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest.Color ColorProp
+        public virtual global::MergedFunctionalTest.Color ColorProp
         {
             get
             {
@@ -8090,7 +8090,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property Colors in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.Color> Colors
+        public virtual global::System.Collections.ObjectModel.Collection<global::MergedFunctionalTest.Color> Colors
         {
             get
             {
@@ -9066,7 +9066,7 @@ namespace MergedFunctionalTest1
         /// There are no comments for Property DerivedProperty in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string DerivedProperty
+        public virtual string DerivedProperty
         {
             get
             {
@@ -9132,7 +9132,7 @@ namespace MergedFunctionalTest1
         /// There are no comments for Property CustomerId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int CustomerId
+        public virtual int CustomerId
         {
             get
             {
@@ -9153,7 +9153,7 @@ namespace MergedFunctionalTest1
         /// There are no comments for Property Name in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -9174,7 +9174,7 @@ namespace MergedFunctionalTest1
         /// There are no comments for Property Address in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::MergedFunctionalTest1.Address Address
+        public virtual global::MergedFunctionalTest1.Address Address
         {
             get
             {
@@ -9201,7 +9201,7 @@ namespace MergedFunctionalTest1
         /// There are no comments for Property Street in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Street
+        public virtual string Street
         {
             get
             {

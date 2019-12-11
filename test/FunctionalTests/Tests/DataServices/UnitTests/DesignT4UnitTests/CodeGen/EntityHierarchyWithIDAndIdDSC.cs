@@ -43,7 +43,7 @@ namespace Namespace1.DSC
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EntityType> Set1
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EntityType> Set1
         {
             get
             {
@@ -60,7 +60,7 @@ namespace Namespace1.DSC
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSet1(EntityType entityType)
+        public virtual void AddToSet1(EntityType entityType)
         {
             base.AddObject("Set1", entityType);
         }
@@ -175,7 +175,7 @@ namespace Namespace1.DSC
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int Id
+        public virtual int Id
         {
             get
             {
@@ -262,7 +262,7 @@ namespace Namespace1.DSC
         /// There are no comments for Property ID in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int ID
+        public virtual int ID
         {
             get
             {

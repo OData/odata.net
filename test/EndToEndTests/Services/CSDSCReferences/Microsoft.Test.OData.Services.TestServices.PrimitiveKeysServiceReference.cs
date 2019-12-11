@@ -63,7 +63,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmBinarySet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmBinary> EdmBinarySet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmBinary> EdmBinarySet
         {
             get
             {
@@ -80,7 +80,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmBooleanSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmBoolean> EdmBooleanSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmBoolean> EdmBooleanSet
         {
             get
             {
@@ -97,7 +97,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmByteSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmByte> EdmByteSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmByte> EdmByteSet
         {
             get
             {
@@ -114,7 +114,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmDecimalSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmDecimal> EdmDecimalSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmDecimal> EdmDecimalSet
         {
             get
             {
@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmDoubleSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmDouble> EdmDoubleSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmDouble> EdmDoubleSet
         {
             get
             {
@@ -148,7 +148,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmSingleSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmSingle> EdmSingleSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmSingle> EdmSingleSet
         {
             get
             {
@@ -165,7 +165,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmGuidSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmGuid> EdmGuidSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmGuid> EdmGuidSet
         {
             get
             {
@@ -182,7 +182,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmInt16Set in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmInt16> EdmInt16Set
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmInt16> EdmInt16Set
         {
             get
             {
@@ -199,7 +199,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmInt32Set in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmInt32> EdmInt32Set
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmInt32> EdmInt32Set
         {
             get
             {
@@ -216,7 +216,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmInt64Set in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmInt64> EdmInt64Set
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmInt64> EdmInt64Set
         {
             get
             {
@@ -233,7 +233,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmStringSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmString> EdmStringSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmString> EdmStringSet
         {
             get
             {
@@ -250,7 +250,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmTimeSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmTime> EdmTimeSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmTime> EdmTimeSet
         {
             get
             {
@@ -267,7 +267,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmDateTimeOffsetSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EdmDateTimeOffset> EdmDateTimeOffsetSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EdmDateTimeOffset> EdmDateTimeOffsetSet
         {
             get
             {
@@ -284,7 +284,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Folders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<Folder> Folders
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<Folder> Folders
         {
             get
             {
@@ -301,7 +301,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmBinarySet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmBinarySet(EdmBinary edmBinary)
+        public virtual void AddToEdmBinarySet(EdmBinary edmBinary)
         {
             base.AddObject("EdmBinarySet", edmBinary);
         }
@@ -309,7 +309,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmBooleanSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmBooleanSet(EdmBoolean edmBoolean)
+        public virtual void AddToEdmBooleanSet(EdmBoolean edmBoolean)
         {
             base.AddObject("EdmBooleanSet", edmBoolean);
         }
@@ -317,7 +317,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmByteSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmByteSet(EdmByte edmByte)
+        public virtual void AddToEdmByteSet(EdmByte edmByte)
         {
             base.AddObject("EdmByteSet", edmByte);
         }
@@ -325,7 +325,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmDecimalSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmDecimalSet(EdmDecimal edmDecimal)
+        public virtual void AddToEdmDecimalSet(EdmDecimal edmDecimal)
         {
             base.AddObject("EdmDecimalSet", edmDecimal);
         }
@@ -333,7 +333,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmDoubleSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmDoubleSet(EdmDouble edmDouble)
+        public virtual void AddToEdmDoubleSet(EdmDouble edmDouble)
         {
             base.AddObject("EdmDoubleSet", edmDouble);
         }
@@ -341,7 +341,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmSingleSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmSingleSet(EdmSingle edmSingle)
+        public virtual void AddToEdmSingleSet(EdmSingle edmSingle)
         {
             base.AddObject("EdmSingleSet", edmSingle);
         }
@@ -349,7 +349,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmGuidSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmGuidSet(EdmGuid edmGuid)
+        public virtual void AddToEdmGuidSet(EdmGuid edmGuid)
         {
             base.AddObject("EdmGuidSet", edmGuid);
         }
@@ -357,7 +357,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmInt16Set in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmInt16Set(EdmInt16 edmInt16)
+        public virtual void AddToEdmInt16Set(EdmInt16 edmInt16)
         {
             base.AddObject("EdmInt16Set", edmInt16);
         }
@@ -365,7 +365,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmInt32Set in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmInt32Set(EdmInt32 edmInt32)
+        public virtual void AddToEdmInt32Set(EdmInt32 edmInt32)
         {
             base.AddObject("EdmInt32Set", edmInt32);
         }
@@ -373,7 +373,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmInt64Set in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmInt64Set(EdmInt64 edmInt64)
+        public virtual void AddToEdmInt64Set(EdmInt64 edmInt64)
         {
             base.AddObject("EdmInt64Set", edmInt64);
         }
@@ -381,7 +381,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmStringSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmStringSet(EdmString edmString)
+        public virtual void AddToEdmStringSet(EdmString edmString)
         {
             base.AddObject("EdmStringSet", edmString);
         }
@@ -389,7 +389,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmTimeSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmTimeSet(EdmTime edmTime)
+        public virtual void AddToEdmTimeSet(EdmTime edmTime)
         {
             base.AddObject("EdmTimeSet", edmTime);
         }
@@ -397,7 +397,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for EdmDateTimeOffsetSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToEdmDateTimeOffsetSet(EdmDateTimeOffset edmDateTimeOffset)
+        public virtual void AddToEdmDateTimeOffsetSet(EdmDateTimeOffset edmDateTimeOffset)
         {
             base.AddObject("EdmDateTimeOffsetSet", edmDateTimeOffset);
         }
@@ -405,7 +405,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Folders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToFolders(Folder folder)
+        public virtual void AddToFolders(Folder folder)
         {
             base.AddObject("Folders", folder);
         }
@@ -537,8 +537,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
                 try
                 {
                     global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
-                    global::Microsoft.OData.Edm.IEdmModel edmModel;
-                    
+                    global::Microsoft.OData.Edm.IEdmModel edmModel;                   
                     if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
                     {
                         global::System.Text.StringBuilder errorMessages = new System.Text.StringBuilder();
@@ -613,7 +612,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte[] Id
+        public virtual byte[] Id
         {
             get
             {
@@ -698,7 +697,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public bool Id
+        public virtual bool Id
         {
             get
             {
@@ -783,7 +782,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public byte Id
+        public virtual byte Id
         {
             get
             {
@@ -868,7 +867,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public decimal Id
+        public virtual decimal Id
         {
             get
             {
@@ -953,7 +952,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public double Id
+        public virtual double Id
         {
             get
             {
@@ -1038,7 +1037,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public float Id
+        public virtual float Id
         {
             get
             {
@@ -1123,7 +1122,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid Id
+        public virtual global::System.Guid Id
         {
             get
             {
@@ -1208,7 +1207,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public short Id
+        public virtual short Id
         {
             get
             {
@@ -1293,7 +1292,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int Id
+        public virtual int Id
         {
             get
             {
@@ -1378,7 +1377,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public long Id
+        public virtual long Id
         {
             get
             {
@@ -1463,7 +1462,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Id
+        public virtual string Id
         {
             get
             {
@@ -1548,7 +1547,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.TimeSpan Id
+        public virtual global::System.TimeSpan Id
         {
             get
             {
@@ -1633,7 +1632,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.DateTimeOffset Id
+        public virtual global::System.DateTimeOffset Id
         {
             get
             {
@@ -1696,7 +1695,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Parent in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.FolderSingle Parent
+        public virtual global::Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.FolderSingle Parent
         {
             get
             {
@@ -1739,7 +1738,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int Id
+        public virtual int Id
         {
             get
             {
@@ -1761,7 +1760,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Name in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -1783,7 +1782,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         /// There are no comments for Property Parent in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.Folder Parent
+        public virtual global::Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.Folder Parent
         {
             get
             {
@@ -2148,4 +2147,3 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         }
     }
 }
-

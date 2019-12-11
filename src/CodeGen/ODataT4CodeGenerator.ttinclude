@@ -3368,7 +3368,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public global::Microsoft.OData.Client.DataServiceQuery<<#= entitySetElementTypeName #>> <#= entitySetFixedName #>
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<<#= entitySetElementTypeName #>> <#= entitySetFixedName #>
         {
             get
             {
@@ -3410,7 +3410,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= singletonElementTypeName #> <#= singletonFixedName #>
+        public virtual <#= singletonElementTypeName #> <#= singletonFixedName #>
         {
             get
             {
@@ -3444,7 +3444,7 @@ namespace <#= fullNamespace #>
         /// There are no comments for <#= entitySetName #> in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")]
-        public void AddTo<#= entitySetName #>(<#= typeName #> <#= parameterName #>)
+        public virtual void AddTo<#= entitySetName #>(<#= typeName #> <#= parameterName #>)
         {
             base.AddObject("<#= originalEntitySetName #>", <#= parameterName #>);
         }
@@ -3763,7 +3763,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= propertyType #> <#= fixedPropertyName #>
+        public virtual <#= propertyType #> <#= fixedPropertyName #>
         {
             get
             {
@@ -3885,7 +3885,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public global::Microsoft.OData.Client.DataServiceQuery<<#= returnTypeName #>> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<<#= returnTypeName #>> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
         {
             return this.CreateFunctionQuery<<#= returnTypeName #>>("", "<#= originalFunctionName #>", <#= isComposable.ToString().ToLower() #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>);
         }
@@ -3906,7 +3906,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
+        public virtual <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
         {
             return <#= isReturnEntity ? "new " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>this.CreateFunctionQuerySingle<<#= returnTypeName #>>("", "<#= originalFunctionName #>", <#= isComposable.ToString().ToLower() #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>;
         }
@@ -3927,7 +3927,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #>global::Microsoft.OData.Client.DataServiceQuery<<#= returnTypeName #>> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
+        public virtual <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #>global::Microsoft.OData.Client.DataServiceQuery<<#= returnTypeName #>> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -3950,7 +3950,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #><#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
+        public virtual <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #><#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -3974,7 +3974,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= returnTypeName #> <#= actionName #>(<#= parameters #>)
+        public virtual <#= returnTypeName #> <#= actionName #>(<#= parameters #>)
         {
             return new <#= returnTypeName #>(this, this.BaseUri.OriginalString.Trim('/') + "/<#= originalActionName #>"<#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>);
         }
@@ -3995,7 +3995,7 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #><#= returnTypeName #> <#= actionName #>(<#= parameters #>)
+        public virtual <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #><#= returnTypeName #> <#= actionName #>(<#= parameters #>)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)

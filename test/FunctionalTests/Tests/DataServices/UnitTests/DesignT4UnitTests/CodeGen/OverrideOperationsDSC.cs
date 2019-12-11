@@ -43,7 +43,7 @@ namespace OverrideOperations.DSC
         /// There are no comments for ETSets in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<ET> ETSets
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<ET> ETSets
         {
             get
             {
@@ -60,7 +60,7 @@ namespace OverrideOperations.DSC
         /// There are no comments for ETSets in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToETSets(ET eT)
+        public virtual void AddToETSets(ET eT)
         {
             base.AddObject("ETSets", eT);
         }
@@ -222,7 +222,7 @@ namespace OverrideOperations.DSC
         /// There are no comments for Property UserName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string UserName
+        public virtual string UserName
         {
             get
             {
@@ -260,7 +260,7 @@ namespace OverrideOperations.DSC
         /// <summary>
         /// There are no comments for FunctionWithoutParameter in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::OverrideOperations.DSC.CT> FunctionWithoutParameter()
+        public virtual global::Microsoft.OData.Client.DataServiceQuerySingle<global::OverrideOperations.DSC.CT> FunctionWithoutParameter()
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -270,7 +270,7 @@ namespace OverrideOperations.DSC
         /// <summary>
         /// There are no comments for ActionWithParameter in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::OverrideOperations.DSC.ET> ActionWithParameter(string p1)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::OverrideOperations.DSC.ET> ActionWithParameter(string p1)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -329,7 +329,7 @@ namespace OverrideOperations.DSC
         /// There are no comments for Property DerivedComplexP in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::OverrideOperations.DSC.DerivedCT DerivedComplexP
+        public virtual global::OverrideOperations.DSC.DerivedCT DerivedComplexP
         {
             get
             {
@@ -350,7 +350,7 @@ namespace OverrideOperations.DSC
         /// <summary>
         /// There are no comments for FunctionWithoutParameter in the schema.
         /// </summary>
-        public new global::Microsoft.OData.Client.DataServiceQuerySingle<global::OverrideOperations.DSC.CT> FunctionWithoutParameter()
+        public virtual new global::Microsoft.OData.Client.DataServiceQuerySingle<global::OverrideOperations.DSC.CT> FunctionWithoutParameter()
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -360,7 +360,7 @@ namespace OverrideOperations.DSC
         /// <summary>
         /// There are no comments for ActionWithParameter in the schema.
         /// </summary>
-        public new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::OverrideOperations.DSC.ET> ActionWithParameter(string p1)
+        public virtual new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::OverrideOperations.DSC.ET> ActionWithParameter(string p1)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -391,7 +391,7 @@ namespace OverrideOperations.DSC
         /// There are no comments for Property Name in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -449,7 +449,7 @@ namespace OverrideOperations.DSC
         /// There are no comments for Property Description in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Description
+        public virtual string Description
         {
             get
             {

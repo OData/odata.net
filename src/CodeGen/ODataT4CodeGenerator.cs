@@ -3574,7 +3574,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public global::Microsoft.OData.Client.DataServiceQuery<");
+this.Write("        public virtual global::Microsoft.OData.Client.DataServiceQuery<");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetElementTypeName));
 
@@ -3664,7 +3664,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public ");
+this.Write("        public virtual ");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonElementTypeName));
 
@@ -3739,7 +3739,7 @@ this.Write(" in the schema.\r\n        /// </summary>\r\n        [global::System
 
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-this.Write("\")]\r\n        public void AddTo");
+this.Write("\")]\r\n        public virtual void AddTo");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
@@ -3955,8 +3955,7 @@ this.Write("                global::System.Xml.XmlReader reader = CreateXmlReade
 this.Write(@"                try
                 {
                     global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
-                    global::Microsoft.OData.Edm.IEdmModel edmModel;
-                    
+                    global::Microsoft.OData.Edm.IEdmModel edmModel;                   
                     if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, ");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(this.context.IgnoreUnexpectedElementsAndAttributes ? "true" : "false"));
@@ -4277,7 +4276,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public ");
+this.Write("        public virtual ");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyType));
 
@@ -4488,7 +4487,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public global::Microsoft.OData.Client.DataServiceQuery<");
+this.Write("        public virtual global::Microsoft.OData.Client.DataServiceQuery<");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
@@ -4543,7 +4542,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public ");
+this.Write("        public virtual ");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName)));
 
@@ -4606,7 +4605,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public ");
+this.Write("        public virtual ");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 
@@ -4675,7 +4674,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public ");
+this.Write("        public virtual ");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 
@@ -4747,7 +4746,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public ");
+this.Write("        public virtual ");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
@@ -4798,7 +4797,7 @@ this.Write("\")]\r\n");
 
         }
 
-this.Write("        public ");
+this.Write("        public virtual ");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 

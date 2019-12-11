@@ -31,7 +31,7 @@ namespace NamespaceInKeywords.@event.@string.@int
         /// There are no comments for Property Value in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Value
+        public virtual string Value
         {
             get
             {
@@ -99,7 +99,7 @@ namespace NamespaceInKeywords.@event.@string.@int
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -120,7 +120,7 @@ namespace NamespaceInKeywords.@event.@string.@int
         /// There are no comments for Property ValueProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string ValueProp
+        public virtual string ValueProp
         {
             get
             {
@@ -191,7 +191,7 @@ namespace NamespaceInKeywords.@double
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::NamespaceInKeywords.@event.@string.@int.TestType1> Set1
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::NamespaceInKeywords.@event.@string.@int.TestType1> Set1
         {
             get
             {
@@ -208,7 +208,7 @@ namespace NamespaceInKeywords.@double
         /// There are no comments for Set2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<TestType2> Set2
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<TestType2> Set2
         {
             get
             {
@@ -225,7 +225,7 @@ namespace NamespaceInKeywords.@double
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSet1(global::NamespaceInKeywords.@event.@string.@int.TestType1 testType1)
+        public virtual void AddToSet1(global::NamespaceInKeywords.@event.@string.@int.TestType1 testType1)
         {
             base.AddObject("Set1", testType1);
         }
@@ -233,7 +233,7 @@ namespace NamespaceInKeywords.@double
         /// There are no comments for Set2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSet2(TestType2 testType2)
+        public virtual void AddToSet2(TestType2 testType2)
         {
             base.AddObject("Set2", testType2);
         }
@@ -368,7 +368,7 @@ namespace NamespaceInKeywords.@double
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -389,7 +389,7 @@ namespace NamespaceInKeywords.@double
         /// There are no comments for Property ValueProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string ValueProp
+        public virtual string ValueProp
         {
             get
             {
@@ -410,7 +410,7 @@ namespace NamespaceInKeywords.@double
         /// There are no comments for Property ComplexValueProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::NamespaceInKeywords.@event.@string.@int.ComplexType ComplexValueProp
+        public virtual global::NamespaceInKeywords.@event.@string.@int.ComplexType ComplexValueProp
         {
             get
             {

@@ -32,7 +32,7 @@ namespace DupNames
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<DupWithTypeName> Set1
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<DupWithTypeName> Set1
         {
             get
             {
@@ -49,7 +49,7 @@ namespace DupNames
         /// There are no comments for Set2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<DupWithTypeName1> Set2
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<DupWithTypeName1> Set2
         {
             get
             {
@@ -66,7 +66,7 @@ namespace DupNames
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSet1(DupWithTypeName dupWithTypeName)
+        public virtual void AddToSet1(DupWithTypeName dupWithTypeName)
         {
             base.AddObject("Set1", dupWithTypeName);
         }
@@ -74,7 +74,7 @@ namespace DupNames
         /// There are no comments for Set2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSet2(DupWithTypeName1 dupWithTypeName1)
+        public virtual void AddToSet2(DupWithTypeName1 dupWithTypeName1)
         {
             base.AddObject("Set2", dupWithTypeName1);
         }
@@ -192,7 +192,7 @@ namespace DupNames
         /// There are no comments for dupPropertyName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::DupNames.DupWithTypeName1> dupPropertyName
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::DupNames.DupWithTypeName1> dupPropertyName
         {
             get
             {
@@ -247,7 +247,7 @@ namespace DupNames
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DupWithTypeName")]
-        public global::System.Guid DupWithTypeName4
+        public virtual global::System.Guid DupWithTypeName4
         {
             get
             {
@@ -268,7 +268,7 @@ namespace DupNames
         /// There are no comments for Property dupWithTypeName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> dupWithTypeName
+        public virtual global::System.Nullable<int> dupWithTypeName
         {
             get
             {
@@ -289,7 +289,7 @@ namespace DupNames
         /// There are no comments for Property DupWithTypeName1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid DupWithTypeName1
+        public virtual global::System.Guid DupWithTypeName1
         {
             get
             {
@@ -310,7 +310,7 @@ namespace DupNames
         /// There are no comments for Property dupWithTypeName1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid dupWithTypeName1
+        public virtual global::System.Guid dupWithTypeName1
         {
             get
             {
@@ -331,7 +331,7 @@ namespace DupNames
         /// There are no comments for Property DupWithTypeName2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid DupWithTypeName2
+        public virtual global::System.Guid DupWithTypeName2
         {
             get
             {
@@ -352,7 +352,7 @@ namespace DupNames
         /// There are no comments for Property DupWithTypeName3 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::DupNames.DupWithComplexTypeName DupWithTypeName3
+        public virtual global::DupNames.DupWithComplexTypeName DupWithTypeName3
         {
             get
             {
@@ -373,7 +373,7 @@ namespace DupNames
         /// There are no comments for Property DupPropertyName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> DupPropertyName
+        public virtual global::System.Nullable<int> DupPropertyName
         {
             get
             {
@@ -394,7 +394,7 @@ namespace DupNames
         /// There are no comments for Property dupPropertyName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::DupNames.DupWithTypeName1> dupPropertyName
+        public virtual global::System.Collections.ObjectModel.Collection<global::DupNames.DupWithTypeName1> dupPropertyName
         {
             get
             {
@@ -422,7 +422,7 @@ namespace DupNames
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DupWithComplexTypeName")]
-        public global::System.Nullable<int> DupWithComplexTypeName2
+        public virtual global::System.Nullable<int> DupWithComplexTypeName2
         {
             get
             {
@@ -443,7 +443,7 @@ namespace DupNames
         /// There are no comments for Property dupWithComplexTypeName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> dupWithComplexTypeName
+        public virtual global::System.Nullable<int> dupWithComplexTypeName
         {
             get
             {
@@ -464,7 +464,7 @@ namespace DupNames
         /// There are no comments for Property DupWithComplexTypeName1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string DupWithComplexTypeName1
+        public virtual string DupWithComplexTypeName1
         {
             get
             {
@@ -485,7 +485,7 @@ namespace DupNames
         /// There are no comments for Property _DupWithComplexTypeName2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> _DupWithComplexTypeName2
+        public virtual global::System.Nullable<int> _DupWithComplexTypeName2
         {
             get
             {
@@ -506,7 +506,7 @@ namespace DupNames
         /// There are no comments for Property __DupWithComplexTypeName2 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> __DupWithComplexTypeName2
+        public virtual global::System.Nullable<int> __DupWithComplexTypeName2
         {
             get
             {
@@ -574,7 +574,7 @@ namespace DupNames
         /// There are no comments for Property dupWithTypeName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid dupWithTypeName
+        public virtual global::System.Guid dupWithTypeName
         {
             get
             {
@@ -595,7 +595,7 @@ namespace DupNames
         /// There are no comments for Property dupwithtypeName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid dupwithtypeName
+        public virtual global::System.Guid dupwithtypeName
         {
             get
             {
@@ -616,7 +616,7 @@ namespace DupNames
         /// There are no comments for Property DupWithTypeName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> DupWithTypeName
+        public virtual global::System.Nullable<int> DupWithTypeName
         {
             get
             {
@@ -638,7 +638,7 @@ namespace DupNames
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DupWithTypeName1")]
-        public global::System.Nullable<int> DupWithTypeName11
+        public virtual global::System.Nullable<int> DupWithTypeName11
         {
             get
             {
@@ -659,7 +659,7 @@ namespace DupNames
         /// There are no comments for Property DupWithTypeName3 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> DupWithTypeName3
+        public virtual global::System.Nullable<int> DupWithTypeName3
         {
             get
             {

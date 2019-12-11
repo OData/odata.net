@@ -62,7 +62,7 @@ namespace Namespace.Foo.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("keyProp")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -127,7 +127,7 @@ namespace Namespace.Foo.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("singleType")]
-        public global::Namespace.Foo.DSC.SingleTypeSingle SingleType
+        public virtual global::Namespace.Foo.DSC.SingleTypeSingle SingleType
         {
             get
             {
@@ -171,7 +171,7 @@ namespace Namespace.Foo.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("singleType")]
-        public global::Namespace.Foo.DSC.SingleType SingleType
+        public virtual global::Namespace.Foo.DSC.SingleType SingleType
         {
             get
             {
@@ -219,7 +219,7 @@ namespace Namespace.Foo.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("baseSet")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::Namespace.Foo.DSC.TestType> BaseSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Namespace.Foo.DSC.TestType> BaseSet
         {
             get
             {
@@ -265,7 +265,7 @@ namespace Namespace.Foo.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("keyProp")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -288,7 +288,7 @@ namespace Namespace.Foo.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("colorProp")]
-        public global::Namespace.Foo.DSC.Color ColorProp
+        public virtual global::Namespace.Foo.DSC.Color ColorProp
         {
             get
             {
@@ -311,7 +311,7 @@ namespace Namespace.Foo.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("baseSet")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::Namespace.Foo.DSC.TestType> BaseSet
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Namespace.Foo.DSC.TestType> BaseSet
         {
             get
             {
@@ -350,7 +350,7 @@ namespace Namespace.Foo.DSC
         /// There are no comments for Foo7 in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("foo7")]
-        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::System.Nullable<int>> Foo7()
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::System.Nullable<int>> Foo7()
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -551,7 +551,7 @@ namespace Namespace.Bar.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("testTypeSet")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::Namespace.Foo.DSC.TestType> TestTypeSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Namespace.Foo.DSC.TestType> TestTypeSet
         {
             get
             {
@@ -569,7 +569,7 @@ namespace Namespace.Bar.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("baseTypeSet")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::Namespace.Foo.DSC.BaseType> BaseTypeSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Namespace.Foo.DSC.BaseType> BaseTypeSet
         {
             get
             {
@@ -586,7 +586,7 @@ namespace Namespace.Bar.DSC
         /// There are no comments for TestTypeSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToTestTypeSet(global::Namespace.Foo.DSC.TestType testType)
+        public virtual void AddToTestTypeSet(global::Namespace.Foo.DSC.TestType testType)
         {
             base.AddObject("testTypeSet", testType);
         }
@@ -594,7 +594,7 @@ namespace Namespace.Bar.DSC
         /// There are no comments for BaseTypeSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToBaseTypeSet(global::Namespace.Foo.DSC.BaseType baseType)
+        public virtual void AddToBaseTypeSet(global::Namespace.Foo.DSC.BaseType baseType)
         {
             base.AddObject("baseTypeSet", baseType);
         }
@@ -603,7 +603,7 @@ namespace Namespace.Bar.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("superType")]
-        public global::Namespace.Foo.DSC.TestTypeSingle SuperType
+        public virtual global::Namespace.Foo.DSC.TestTypeSingle SuperType
         {
             get
             {
@@ -621,7 +621,7 @@ namespace Namespace.Bar.DSC
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("single")]
-        public global::Namespace.Foo.DSC.SingleTypeSingle Single
+        public virtual global::Namespace.Foo.DSC.SingleTypeSingle Single
         {
             get
             {
@@ -727,7 +727,7 @@ namespace Namespace.Bar.DSC
         /// There are no comments for Foo6 in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("foo6")]
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<string> Foo6(global::System.Collections.Generic.ICollection<global::Namespace.Foo.DSC.TestType> p1, bool useEntityReference = false)
+        public virtual global::Microsoft.OData.Client.DataServiceQuerySingle<string> Foo6(global::System.Collections.Generic.ICollection<global::Namespace.Foo.DSC.TestType> p1, bool useEntityReference = false)
         {
             return this.CreateFunctionQuerySingle<string>("", "foo6", false, new global::Microsoft.OData.Client.UriEntityOperationParameter("p1", p1, useEntityReference));
         }

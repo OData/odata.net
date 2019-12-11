@@ -32,7 +32,7 @@ namespace PrefixConflict
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<EntityType> Set1
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<EntityType> Set1
         {
             get
             {
@@ -49,7 +49,7 @@ namespace PrefixConflict
         /// There are no comments for Set1 in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToSet1(EntityType entityType)
+        public virtual void AddToSet1(EntityType entityType)
         {
             base.AddObject("Set1", entityType);
         }
@@ -164,7 +164,7 @@ namespace PrefixConflict
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Guid Id
+        public virtual global::System.Guid Id
         {
             get
             {
@@ -185,7 +185,7 @@ namespace PrefixConflict
         /// There are no comments for Property Name in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> Name
+        public virtual global::System.Nullable<int> Name
         {
             get
             {
@@ -206,7 +206,7 @@ namespace PrefixConflict
         /// There are no comments for Property _Name in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string _Name
+        public virtual string _Name
         {
             get
             {
@@ -227,7 +227,7 @@ namespace PrefixConflict
         /// There are no comments for Property __Name in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> __Name
+        public virtual global::System.Nullable<int> __Name
         {
             get
             {

@@ -43,7 +43,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Trucks in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<TruckType> Trucks
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<TruckType> Trucks
         {
             get
             {
@@ -60,7 +60,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for VehicleGPSSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSSet
         {
             get
             {
@@ -77,7 +77,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for DerivedVehicleGPSSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<DerivedVehicleGPSType> DerivedVehicleGPSSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<DerivedVehicleGPSType> DerivedVehicleGPSSet
         {
             get
             {
@@ -94,7 +94,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for VehicleGPSSetInGPS in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSSetInGPS
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSSetInGPS
         {
             get
             {
@@ -111,7 +111,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Trucks in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToTrucks(TruckType truckType)
+        public virtual void AddToTrucks(TruckType truckType)
         {
             base.AddObject("Trucks", truckType);
         }
@@ -119,7 +119,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for VehicleGPSSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToVehicleGPSSet(global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType vehicleGPSType)
+        public virtual void AddToVehicleGPSSet(global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType vehicleGPSType)
         {
             base.AddObject("VehicleGPSSet", vehicleGPSType);
         }
@@ -127,7 +127,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for DerivedVehicleGPSSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToDerivedVehicleGPSSet(DerivedVehicleGPSType derivedVehicleGPSType)
+        public virtual void AddToDerivedVehicleGPSSet(DerivedVehicleGPSType derivedVehicleGPSType)
         {
             base.AddObject("DerivedVehicleGPSSet", derivedVehicleGPSType);
         }
@@ -135,7 +135,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for VehicleGPSSetInGPS in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToVehicleGPSSetInGPS(global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType vehicleGPSType)
+        public virtual void AddToVehicleGPSSetInGPS(global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType vehicleGPSType)
         {
             base.AddObject("VehicleGPSSetInGPS", vehicleGPSType);
         }
@@ -377,14 +377,14 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// <summary>
         /// There are no comments for GetDefaultOutsideGeoFenceAlarm in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType> GetDefaultOutsideGeoFenceAlarm()
+        public virtual global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType> GetDefaultOutsideGeoFenceAlarm()
         {
             return this.CreateFunctionQuerySingle<global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType>("", "GetDefaultOutsideGeoFenceAlarm", true);
         }
         /// <summary>
         /// There are no comments for ResetVehicleSpeedToValue in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> ResetVehicleSpeedToValue(global::System.Nullable<double> targetValue)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> ResetVehicleSpeedToValue(global::System.Nullable<double> targetValue)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType>(this, this.BaseUri.OriginalString.Trim('/') + "/ResetVehicleSpeedToValue", new global::Microsoft.OData.Client.BodyOperationParameter("targetValue", targetValue));
         }
@@ -398,7 +398,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property FuelLevel in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> FuelLevel
+        public virtual global::System.Nullable<double> FuelLevel
         {
             get
             {
@@ -419,7 +419,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property Location in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation Location
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation Location
         {
             get
             {
@@ -446,7 +446,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property Severity in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> Severity
+        public virtual global::System.Nullable<int> Severity
         {
             get
             {
@@ -467,7 +467,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property LocationAndFuel in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.LocationAndFuel LocationAndFuel
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.LocationAndFuel LocationAndFuel
         {
             get
             {
@@ -533,7 +533,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property SerialNo in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string SerialNo
+        public virtual string SerialNo
         {
             get
             {
@@ -554,7 +554,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property DimmingLevel in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> DimmingLevel
+        public virtual global::System.Nullable<double> DimmingLevel
         {
             get
             {
@@ -599,7 +599,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for HeadUnit in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitTypeSingle HeadUnit
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitTypeSingle HeadUnit
         {
             get
             {
@@ -620,7 +620,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for VehicleGPS in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSTypeSingle VehicleGPS
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSTypeSingle VehicleGPS
         {
             get
             {
@@ -662,7 +662,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property Key in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Key
+        public virtual string Key
         {
             get
             {
@@ -683,7 +683,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property VIN in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string VIN
+        public virtual string VIN
         {
             get
             {
@@ -704,7 +704,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property FuelLevel in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> FuelLevel
+        public virtual global::System.Nullable<double> FuelLevel
         {
             get
             {
@@ -725,7 +725,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property ACState in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<bool> ACState
+        public virtual global::System.Nullable<bool> ACState
         {
             get
             {
@@ -746,7 +746,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property TruckIsHomeFuelLevel in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> TruckIsHomeFuelLevel
+        public virtual global::System.Nullable<double> TruckIsHomeFuelLevel
         {
             get
             {
@@ -767,7 +767,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property TruckStoppedAlarm in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.TruckStoppedAlarmType TruckStoppedAlarm
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.TruckStoppedAlarmType TruckStoppedAlarm
         {
             get
             {
@@ -788,7 +788,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property OutsideGeoFenceAlarm in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType OutsideGeoFenceAlarm
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType OutsideGeoFenceAlarm
         {
             get
             {
@@ -809,7 +809,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property HeadUnit in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitType HeadUnit
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitType HeadUnit
         {
             get
             {
@@ -830,7 +830,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property VehicleGPS in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType VehicleGPS
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType VehicleGPS
         {
             get
             {
@@ -850,7 +850,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// <summary>
         /// There are no comments for SetACState in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuery SetACState(global::System.Nullable<bool> state)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery SetACState(global::System.Nullable<bool> state)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -863,7 +863,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// <summary>
         /// There are no comments for TurnOffAC in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuery TurnOffAC()
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery TurnOffAC()
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -922,7 +922,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
         /// There are no comments for Property DisplayName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string DisplayName
+        public virtual string DisplayName
         {
             get
             {
@@ -1089,7 +1089,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for VehicleGPSSetInGPS in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<VehicleGPSType> VehicleGPSSetInGPS
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<VehicleGPSType> VehicleGPSSetInGPS
         {
             get
             {
@@ -1106,7 +1106,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for VehicleGPSSetInGPS in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToVehicleGPSSetInGPS(VehicleGPSType vehicleGPSType)
+        public virtual void AddToVehicleGPSSetInGPS(VehicleGPSType vehicleGPSType)
         {
             base.AddObject("VehicleGPSSetInGPS", vehicleGPSType);
         }
@@ -1348,7 +1348,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// <summary>
         /// There are no comments for ResetVehicleSpeedToValue in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> ResetVehicleSpeedToValue(global::System.Nullable<double> targetValue)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> ResetVehicleSpeedToValue(global::System.Nullable<double> targetValue)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType>(this, this.BaseUri.OriginalString.Trim('/') + "/ResetVehicleSpeedToValue", new global::Microsoft.OData.Client.BodyOperationParameter("targetValue", targetValue));
         }
@@ -1362,7 +1362,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property Severity in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> Severity
+        public virtual global::System.Nullable<int> Severity
         {
             get
             {
@@ -1383,7 +1383,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property LastKnownLocation in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation LastKnownLocation
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation LastKnownLocation
         {
             get
             {
@@ -1449,7 +1449,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property Key in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Key
+        public virtual string Key
         {
             get
             {
@@ -1470,7 +1470,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property VehicleSpeed in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> VehicleSpeed
+        public virtual global::System.Nullable<double> VehicleSpeed
         {
             get
             {
@@ -1491,7 +1491,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property StartLocation in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation StartLocation
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation StartLocation
         {
             get
             {
@@ -1512,7 +1512,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property EndLocation in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation EndLocation
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation EndLocation
         {
             get
             {
@@ -1533,7 +1533,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property CurrentLocation in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation CurrentLocation
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation CurrentLocation
         {
             get
             {
@@ -1554,7 +1554,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property Map in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.Map.MapType Map
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.Map.MapType Map
         {
             get
             {
@@ -1575,7 +1575,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// There are no comments for Property LostSignalAlarm in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GPSLostSignalAlarmType LostSignalAlarm
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GPSLostSignalAlarmType LostSignalAlarm
         {
             get
             {
@@ -1595,7 +1595,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// <summary>
         /// There are no comments for GetVehicleSpeed in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetVehicleSpeed()
+        public virtual global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetVehicleSpeed()
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -1605,7 +1605,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// <summary>
         /// There are no comments for ResetVehicleSpeed in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuery ResetVehicleSpeed(global::System.Nullable<double> targetValue)
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery ResetVehicleSpeed(global::System.Nullable<double> targetValue)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -1681,7 +1681,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.Location
         /// There are no comments for Property Lat in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> Lat
+        public virtual global::System.Nullable<double> Lat
         {
             get
             {
@@ -1702,7 +1702,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.Location
         /// There are no comments for Property Long in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> Long
+        public virtual global::System.Nullable<double> Long
         {
             get
             {
@@ -1729,7 +1729,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.Location
         /// There are no comments for Property Severity in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<int> Severity
+        public virtual global::System.Nullable<int> Severity
         {
             get
             {
@@ -1750,7 +1750,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.Location
         /// There are no comments for Property Location in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation Location
+        public virtual global::Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation Location
         {
             get
             {
@@ -1780,7 +1780,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.Map
         /// There are no comments for Property ProviderName in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string ProviderName
+        public virtual string ProviderName
         {
             get
             {
@@ -1801,7 +1801,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.Map
         /// There are no comments for Property Uri in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string Uri
+        public virtual string Uri
         {
             get
             {
@@ -1822,7 +1822,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.Map
         /// There are no comments for Property MBytesDownloaded in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<double> MBytesDownloaded
+        public virtual global::System.Nullable<double> MBytesDownloaded
         {
             get
             {

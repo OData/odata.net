@@ -63,7 +63,7 @@ namespace NamespacePrefixWithSingleNamespace
         /// There are no comments for Items in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Client.DataServiceQuery<TestType> Items
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<TestType> Items
         {
             get
             {
@@ -80,7 +80,7 @@ namespace NamespacePrefixWithSingleNamespace
         /// There are no comments for Items in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public void AddToItems(TestType testType)
+        public virtual void AddToItems(TestType testType)
         {
             base.AddObject("Items", testType);
         }
@@ -195,7 +195,7 @@ namespace NamespacePrefixWithSingleNamespace
         /// There are no comments for Property KeyProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public int KeyProp
+        public virtual int KeyProp
         {
             get
             {
@@ -216,7 +216,7 @@ namespace NamespacePrefixWithSingleNamespace
         /// There are no comments for Property ValueProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public string ValueProp
+        public virtual string ValueProp
         {
             get
             {
