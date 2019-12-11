@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
     /// Query object of a single item.
     /// </summary>
     /// <typeparam name="TElement">Type of object to materialize.</typeparam>
-    public class DataServiceQuerySingle<TElement>
+    public class DataServiceQuerySingle<TElement> : IDataServiceQuerySingle<TElement>
     {
         /// <summary>
         /// Query object.

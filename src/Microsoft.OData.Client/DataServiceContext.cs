@@ -50,7 +50,7 @@ namespace Microsoft.OData.Client
     /// The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> represents the runtime context of the data service.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506", Justification = "Central class of the API, likely to have many cross-references")]
-    public class DataServiceContext
+    public class DataServiceContext : IDataServiceContext
     {
         /// <summary>Same version as <see cref="maxProtocolVersion"/> but stored as instance of <see cref="Version"/> for easy comparisons.</summary>
         internal Version MaxProtocolVersionAsVersion;

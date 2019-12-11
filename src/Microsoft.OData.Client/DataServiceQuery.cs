@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
     /// <summary>non-generic placeholder for generic implementation</summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1010", Justification = "required for this feature")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710", Justification = "required for this feature")]
-    public abstract class DataServiceQuery : DataServiceRequest, IQueryable
+    public abstract class DataServiceQuery : DataServiceRequest, IQueryable, IDataServiceQuery
     {
         /// <summary>internal constructor so that only our assembly can provide an implementation</summary>
         internal DataServiceQuery()

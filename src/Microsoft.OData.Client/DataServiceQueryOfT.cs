@@ -20,7 +20,7 @@ namespace Microsoft.OData.Client
     /// </summary>
     /// <typeparam name="TElement">type of object to materialize</typeparam>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "required for this feature")]
-    public class DataServiceQuery<TElement> : DataServiceQuery, IQueryable<TElement>
+    public class DataServiceQuery<TElement> : DataServiceQuery, IQueryable<TElement>, IDataServiceQueryOfT<TElement>
     {
         #region Private fields
 
