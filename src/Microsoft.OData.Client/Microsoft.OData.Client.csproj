@@ -243,6 +243,10 @@
     <Compile Include="ContentStream.cs" />
     <Compile Include="ConventionalODataEntityMetadataBuilder.cs" />
     <Compile Include="DataServiceQuerySingleOfT.cs" />
+    <Compile Include="IDataServiceContext.cs" />
+    <Compile Include="IDataServiceQuery.cs" />
+    <Compile Include="IDataServiceQueryOfT.cs" />
+    <Compile Include="IDataServiceQuerySingle.cs" />
     <Compile Include="Materialization\EnumValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\InstanceAnnotationMaterializationPolicy.cs" />
     <Compile Include="Materialization\ODataLoadNavigationPropertyMaterializer.cs" />
