@@ -833,6 +833,18 @@
     <Compile Include="$(EnlistmentRoot)\src\PlatformHelper.cs">
       <Link>PlatformHelper.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\IDataServiceQuerySingle.cs">
+      <Link>IDataServiceQuerySingle.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\IDataServiceQueryOfT.cs">
+      <Link>IDataServiceQueryOfT.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\IDataServiceQuery.cs">
+      <Link>IDataServiceQuery.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\IDataServiceContext.cs">
+      <Link>IDataServiceContext.cs</Link>
+    </Compile>
   </ItemGroup>
   <!-- Files that are specific to this project and are not updated by the cross targetting task -->
   <ItemGroup>
