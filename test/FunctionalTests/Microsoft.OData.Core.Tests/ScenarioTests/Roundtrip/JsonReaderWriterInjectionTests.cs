@@ -57,11 +57,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             // $Expand =PersonCity($select =Zipcode),Address/City
 
             var resDict = RunComplexReaderTest(null, "{\"@odata.context\":\"http://test/$metadata#People(PersonCity(ZipCode),Address/City())/$entity\"," +
-            "\"PersonCity\":{\"ZipCode\":98052},"+
+            "\"PersonCity\":{\"ZipCode\":10001},"+
                 "\"Address\":{" +
                 "\"City\":{\"ZipCode\":98052}}}");
 
-            Assert.Equal(resDict["DefaultNs.PersonCity"].ToList()[0].Value, 98052);
+            Assert.Equal(resDict["DefaultNs.PersonCity"].ToList()[0].Value, 10001);
             Assert.Equal(resDict["DefaultNs.City"].ToList()[0].Value, 98052);
         }
 
@@ -347,13 +347,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 {
                     if(reader.State == ODataReaderState.ResourceEnd)
                     {
-                        resources.Add(reader.Item as ODataResource);                     
+                        resources.Add(reader.Item as ODataResource);
                     }
                 }
 
                 return resources;
             }
         }
+
         private class TestJsonWriterFactory : IJsonWriterFactory
         {
             public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)

@@ -413,7 +413,7 @@ namespace Microsoft.OData.Tests
             }, true,isFullMetadata:true, version: version);
 
             string expected = version == ODataVersion.V4 ?
-                //OData V4.01
+                //OData V4.0
                 "{\"@odata.context\":\"http://host/$metadata#People(UserName,Address/WorkAddress/DefaultNs.WorkAddress/City2())\",\"value\":[{\"@odata.id\":\"People('abc')\",\"@odata.editLink\":\"People('abc')\",\"UserName\":\"abc\",\"Address\":{\"Road\":\"Zixing\",\"WorkAddress\":{\"@odata.type\":\"#DefaultNs.WorkAddress\",\"Road\":\"Ziyue\",\"City2@odata.associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2/$ref\",\"City2@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2\",\"City2\":{\"@odata.id\":\"City(222)\",\"@odata.editLink\":\"City(222)\",\"ZipCode\":222}}}}]}" :
                 //OData V4.01
                 "{\"@context\":\"http://host/$metadata#People(UserName,Address/WorkAddress/DefaultNs.WorkAddress/City2())\",\"value\":[{\"@id\":\"People('abc')\",\"@editLink\":\"People('abc')\",\"UserName\":\"abc\",\"Address\":{\"Road\":\"Zixing\",\"WorkAddress\":{\"@type\":\"#DefaultNs.WorkAddress\",\"Road\":\"Ziyue\",\"City2@associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2/$ref\",\"City2@navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2\",\"City2\":{\"@id\":\"City(222)\",\"@editLink\":\"City(222)\",\"ZipCode\":222}}}}]}";

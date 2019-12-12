@@ -86,15 +86,36 @@ namespace Microsoft.OData.UriParser
         /// <returns>String list generated from selected items</returns>
         internal static List<string> GetCurrentLevelSelectList(this SelectExpandClause selectExpandClause)
         {
-            List<string> levelSelectList = new List<string>(); 
+            List<string> levelSelectList = new List<string>();
+          
             foreach (var selectItem in selectExpandClause.SelectedItems)
             {
-                IList<string> selectList = GetSelectString(selectItem);
-                if (selectList != null)
+                WildcardSelectItem wildcardSelect = selectItem as WildcardSelectItem;
+                if (wildcardSelect != null)
                 {
-                    levelSelectList.AddRange(selectList);
+                    levelSelectList.Add("*");
+                    continue;
                 }
-            }   
+
+                NamespaceQualifiedWildcardSelectItem namespaceQualifiedWildcard = selectItem as NamespaceQualifiedWildcardSelectItem;
+                if (namespaceQualifiedWildcard != null)
+                {
+                    levelSelectList.Add(namespaceQualifiedWildcard.Namespace + ".*" );
+                    continue;
+                }
+
+                PathSelectItem pathSelectItem = selectItem as PathSelectItem;
+                if (pathSelectItem != null)
+                {
+                    IList<string> pathSelectItems = GetSelectStringFromPathSelectItem(pathSelectItem);
+
+                    for(int i=0; i< pathSelectItems.Count; i++)
+                    {
+                        levelSelectList.Add(pathSelectItems[i]);
+                    }
+                }
+            }
+
             return levelSelectList;
         }
 
@@ -168,52 +189,35 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Get the string representation of a select item (that isn't an expandedNavPropSelectItem
+        /// Get the string representation of a Pathselect item (that isn't an expandedNavPropSelectItem
         /// </summary>
-        /// <param name="selectedItem">the select item to translate</param>
-        /// <returns>the string representation of this select item, or null if the select item is an expandedNavPropSelectItem</returns>
-        private static IList<string> GetSelectString(SelectItem selectedItem)
+        /// <param name="pathSelectItem">the pathselect item to translate</param>
+        /// <returns>the string representation of this select pathselectitem</returns>
+        private static IList<string> GetSelectStringFromPathSelectItem(PathSelectItem pathSelectItem)
         {
-            WildcardSelectItem wildcardSelect = selectedItem as WildcardSelectItem;
-            NamespaceQualifiedWildcardSelectItem namespaceQualifiedWildcard = selectedItem as NamespaceQualifiedWildcardSelectItem;
-            PathSelectItem pathSelectItem = selectedItem as PathSelectItem;
-
-            if (wildcardSelect!= null)
+            IList<string> nextLevelSelectList = null;
+            if (pathSelectItem.SelectAndExpand != null)
             {
-                return new List<string>() { "*" };
-            }
-            else if (namespaceQualifiedWildcard != null)
-            {
-                return new List<string>() { namespaceQualifiedWildcard.Namespace + ".*" };
-            }
-            else if (pathSelectItem != null)
-            {
-                IList<string> nextLevelSelectList = null;
-                if (pathSelectItem.SelectAndExpand != null)
-                {
-                    nextLevelSelectList = GetCurrentLevelSelectList(pathSelectItem.SelectAndExpand);
-                }
-
-                var selectListItem = String.Join("/", pathSelectItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
-
-                if (nextLevelSelectList != null && nextLevelSelectList.Any())
-                {
-                    List<string> selectList = new List<string>();
-
-                    foreach (var listItem in nextLevelSelectList)
-                    {
-                        selectList.Add(selectListItem + "/" + listItem);
-                    }
-
-                    return selectList;
-                }
-                else
-                {
-                    return new List<string>() { selectListItem };
-                }
+                nextLevelSelectList = GetCurrentLevelSelectList(pathSelectItem.SelectAndExpand);
             }
 
-            return null;
+            var selectListItem = String.Join("/", pathSelectItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance));
+
+            if (nextLevelSelectList != null && nextLevelSelectList.Any())
+            {
+                List<string> selectList = new List<string>();
+
+                foreach (var listItem in nextLevelSelectList)
+                {
+                    selectList.Add(selectListItem + "/" + listItem);
+                }
+
+                return selectList;
+            }
+            else
+            {
+                return new List<string>() { selectListItem };
+            }
         }
 
         /// <summary>
