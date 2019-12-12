@@ -201,7 +201,7 @@ namespace Microsoft.OData.UriParser
                 nextLevelSelectList = GetCurrentLevelSelectList(pathSelectItem.SelectAndExpand);
             }
 
-            var selectListItem = String.Join("/", pathSelectItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance));
+            var selectListItem = String.Join("/", pathSelectItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
 
             if (nextLevelSelectList != null && nextLevelSelectList.Any())
             {
