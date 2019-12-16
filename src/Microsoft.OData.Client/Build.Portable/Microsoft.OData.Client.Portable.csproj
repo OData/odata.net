@@ -833,8 +833,8 @@
     <Compile Include="$(EnlistmentRoot)\src\PlatformHelper.cs">
       <Link>PlatformHelper.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\IDataServiceQuerySingle.cs">
-      <Link>IDataServiceQuerySingle.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\IDataServiceQuerySingleOfT.cs">
+      <Link>IDataServiceQuerySingleOfT.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\IDataServiceQueryOfT.cs">
       <Link>IDataServiceQueryOfT.cs</Link>

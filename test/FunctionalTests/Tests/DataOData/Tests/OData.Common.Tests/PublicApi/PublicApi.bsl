@@ -7634,7 +7634,7 @@ public interface Microsoft.OData.Client.IDataServiceQuery {
 	System.Threading.Tasks.Task`1[[System.Collections.IEnumerable]] ExecuteAsync ()
 }
 
-public interface Microsoft.OData.Client.IDataServiceQueryOfT`1 {
+public interface Microsoft.OData.Client.IDataServiceQuery`1 {
 	Microsoft.OData.Client.DataServiceContext Context  { public abstract get; }
 	System.Type ElementType  { public abstract get; }
 	System.Linq.Expressions.Expression Expression  { public abstract get; }
@@ -7985,7 +7985,7 @@ public class Microsoft.OData.Client.DataServiceContext : IDataServiceContext {
 	public virtual void UpdateRelatedObject (object source, string sourceProperty, object target)
 }
 
-public class Microsoft.OData.Client.DataServiceQuery`1 : Microsoft.OData.Client.DataServiceQuery, IDataServiceQueryOfT`1, IEnumerable`1, IQueryable`1, IEnumerable, IQueryable, IDataServiceQuery {
+public class Microsoft.OData.Client.DataServiceQuery`1 : Microsoft.OData.Client.DataServiceQuery, IDataServiceQuery`1, IEnumerable`1, IQueryable`1, IEnumerable, IQueryable, IDataServiceQuery {
 	public DataServiceQuery`1 (System.Linq.Expressions.Expression expression, Microsoft.OData.Client.DataServiceQueryProvider provider)
 	public DataServiceQuery`1 (System.Linq.Expressions.Expression expression, Microsoft.OData.Client.DataServiceQueryProvider provider, bool isComposable)
 
@@ -8020,7 +8020,7 @@ public class Microsoft.OData.Client.DataServiceQuery`1 : Microsoft.OData.Client.
 	public virtual string ToString ()
 }
 
-public class Microsoft.OData.Client.DataServiceQuery`1+DataServiceOrderedQuery : DataServiceQuery`1, IDataServiceQueryOfT`1, IEnumerable`1, IOrderedQueryable`1, IQueryable`1, IEnumerable, IOrderedQueryable, IQueryable, IDataServiceQuery {
+public class Microsoft.OData.Client.DataServiceQuery`1+DataServiceOrderedQuery : DataServiceQuery`1, IDataServiceQuery`1, IEnumerable`1, IOrderedQueryable`1, IQueryable`1, IEnumerable, IOrderedQueryable, IQueryable, IDataServiceQuery {
 }
 
 public class Microsoft.OData.Client.DataServiceQuerySingle`1 : IDataServiceQuerySingle`1 {
