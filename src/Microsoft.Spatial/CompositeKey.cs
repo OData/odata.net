@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.Spatial
 {
-    using System;
-
     /// <summary>
     /// A key consisting of multiple fields
     /// </summary>

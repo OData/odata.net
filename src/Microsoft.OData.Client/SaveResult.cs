@@ -200,66 +200,6 @@ namespace Microsoft.OData.Client
             Debug.Assert(this.entryIndex < this.ChangedEntries.Count || this.ChangedEntries.All(o => o.ContentGeneratedForSave), "didn't generate content for all entities/links");
         }
 
-#if !PORTABLELIB// Synchronous methods not available
-        /// <summary>
-        /// This starts the next change
-        /// </summary>
-        internal void CreateNextChange()
-        {
-            ODataRequestMessageWrapper requestMessage = null;
-
-            do
-            {
-                IODataResponseMessage responseMsg = null;
-
-                try
-                {
-                    requestMessage = this.CreateNextRequest();
-                    if ((null != requestMessage) || (this.entryIndex < this.ChangedEntries.Count))
-                    {
-                        if (this.ChangedEntries[this.entryIndex].ContentGeneratedForSave)
-                        {
-                            Debug.Assert(this.ChangedEntries[this.entryIndex] is LinkDescriptor, "only expected RelatedEnd to presave");
-                            Debug.Assert(
-                                this.ChangedEntries[this.entryIndex].State == EntityStates.Added ||
-                                this.ChangedEntries[this.entryIndex].State == EntityStates.Modified,
-                                "only expected added to presave");
-                            continue;
-                        }
-
-                        ContentStream contentStream = this.CreateNonBatchChangeData(this.entryIndex, requestMessage);
-                        if (null != contentStream && null != contentStream.Stream)
-                        {
-                            requestMessage.SetRequestStream(contentStream);
-                        }
-
-                        responseMsg = this.RequestInfo.GetSynchronousResponse(requestMessage, false);
-
-                        this.HandleOperationResponse(responseMsg);
-                        this.HandleOperationResponseHeaders((HttpStatusCode)responseMsg.StatusCode, new HeaderCollection(responseMsg));
-                        this.HandleOperationResponseData(responseMsg);
-                        this.perRequest = null;
-                    }
-                }
-                catch (InvalidOperationException e)
-                {
-                    e = WebUtil.GetHttpWebResponse(e, ref responseMsg);
-                    this.HandleOperationException(e, responseMsg);
-                }
-                finally
-                {
-                    WebUtil.DisposeMessage(responseMsg);
-                }
-
-                // we have no more pending requests or there has been an error in the previous request and we decided not to continue
-                // (When an error occurs and we are not going to continue on error, we call SetCompleted
-            }
-            while (this.entryIndex < this.ChangedEntries.Count && !this.IsCompletedInternally);
-
-            Debug.Assert(this.entryIndex < this.ChangedEntries.Count || this.ChangedEntries.All(o => o.ContentGeneratedForSave), "didn't generate content for all entities/links");
-        }
-#endif
-
         /// <summary>Read and store response data for the current change, and try to start the next one</summary>
         /// <param name="pereq">the completed per request object</param>
         protected override void FinishCurrentChange(PerRequest pereq)

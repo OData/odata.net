@@ -13,17 +13,6 @@ namespace Microsoft.Spatial
     /// </summary>
     internal class Util
     {
-#if !PORTABLELIB
-        /// <summary>StackOverFlow exception type</summary>
-        private static readonly Type StackOverflowType = typeof(System.StackOverflowException);
-
-        /// <summary>ThreadAbortException exception type</summary>
-        private static readonly Type ThreadAbortType = typeof(System.Threading.ThreadAbortException);
-
-        /// <summary>AccessViolationException exception type</summary>
-        private static readonly Type AccessViolationType = typeof(System.AccessViolationException);
-#endif
-
         /// <summary>OutOfMemoryException exception type</summary>
         private static readonly Type OutOfMemoryType = typeof(System.OutOfMemoryException);
 
@@ -57,11 +46,6 @@ namespace Microsoft.Spatial
             Type type = e.GetType();
 
             return ((type != OutOfMemoryType) &&
-#if !PORTABLELIB
-                    (type != StackOverflowType) &&
-                    (type != ThreadAbortType) &&
-                    (type != AccessViolationType) &&
-#endif
                     (type != NullReferenceType) &&
                     !SecurityType.IsAssignableFrom(type));
         }

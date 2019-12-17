@@ -103,40 +103,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if !PORTABLELIB
-        /// <summary>
-        /// Executes the request synchronously.
-        /// </summary>
-        /// <returns>
-        /// The response object for this request.
-        /// </returns>
-        internal DataServiceStreamResponse Execute()
-        {
-            try
-            {
-                this.responseMessage = this.requestInfo.GetSynchronousResponse(this.requestMessage, true);
-                Debug.Assert(this.responseMessage != null, "Can't set a null response.");
-            }
-            catch (Exception e)
-            {
-                this.HandleFailure(e);
-                throw;
-            }
-            finally
-            {
-                this.SetCompleted();
-                this.CompletedRequest();
-            }
-
-            if (null != this.Failure)
-            {
-                throw this.Failure;
-            }
-
-            return this.End();
-        }
-#endif
-
         /// <summary>invoked for derived classes to cleanup before callback is invoked</summary>
         protected override void CompletedRequest()
         {

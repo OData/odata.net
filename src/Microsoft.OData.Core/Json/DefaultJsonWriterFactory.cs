@@ -39,7 +39,7 @@ namespace Microsoft.OData.Json
         /// <param name="textWriter">Writer to which text needs to be written.</param>
         /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
         /// <returns>The JSON writer created.</returns>
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
         {
             return new JsonWriter(textWriter, isIeee754Compatible, this.stringEscapeOption);

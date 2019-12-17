@@ -125,23 +125,6 @@ namespace Microsoft.OData.Client
             return new DataServiceQuerySingle<T>(this.CreateFunctionQuery<T>(functionName, isComposable, parameters), isComposable);
         }
 
-#if !PORTABLELIB // Synchronous methods not available
-        /// <summary>
-        /// Executes the query and returns the result.
-        /// </summary>
-        /// <returns>Query result.</returns>
-        /// <exception cref="InvalidOperationException">Problem materializing result of query into object.</exception>
-        public TElement GetValue()
-        {
-            if (this.isFunction)
-            {
-                return this.Context.Execute<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, true).SingleOrDefault();
-            }
-
-            return this.Query.Execute().SingleOrDefault();
-        }
-#endif
-
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
         /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>
         /// <param name="callback">The delegate to invoke when the operation completes.</param>

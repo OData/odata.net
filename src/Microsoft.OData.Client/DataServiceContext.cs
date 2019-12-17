@@ -1142,100 +1142,6 @@ namespace Microsoft.OData.Client
             return response.LoadProperty();
         }
 
-#if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Loads deferred content for a specified property from the data service.</summary>
-        /// <returns>The response to the load operation.</returns>
-        /// <param name="entity">The entity that contains the property to load.</param>
-        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <remarks>
-        /// If <paramref name="entity"/> is in in detached or added state, this method will throw an InvalidOperationException
-        /// since there is nothing it can load from the server.
-        ///
-        /// If <paramref name="entity"/> is in unchanged or modified state, this method will load its collection or
-        /// reference elements as unchanged with unchanged bindings.
-        ///
-        /// If <paramref name="entity"/> is in deleted state, this method will load the entities linked to by its collection or
-        /// reference property in the unchanged state with bindings in the deleted state.
-        /// </remarks>
-        public QueryOperationResponse LoadProperty(object entity, string propertyName)
-        {
-            return this.LoadProperty(entity, propertyName, (Uri)null);
-        }
-
-        /// <summary>Loads a page of related entities by using the supplied next link URI.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the request.</returns>
-        /// <param name="entity">The entity that contains the property to load.</param>
-        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="nextLinkUri">The URI that is used to load the next results page.</param>
-        /// <exception cref="T:System.InvalidOperationException">When <paramref name="entity" /> is in a <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
-        /// <remarks>
-        /// If <paramref name="entity"/> is in in detached or added state, this method will throw an InvalidOperationException
-        /// since there is nothing it can load from the server.
-        ///
-        /// If <paramref name="entity"/> is in unchanged or modified state, this method will load its collection or
-        /// reference elements as unchanged with unchanged bindings.
-        ///
-        /// If <paramref name="entity"/> is in deleted state, this method will load the entities linked to by its collection or
-        /// reference property in the unchanged state with bindings in the deleted state.
-        /// </remarks>
-        public QueryOperationResponse LoadProperty(object entity, string propertyName, Uri nextLinkUri)
-        {
-            LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, nextLinkUri, null /*continuation*/);
-            result.ExecuteQuery();
-            return result.LoadProperty();
-        }
-
-        /// <summary>Loads the next page of related entities from the data service by using the supplied query continuation object.</summary>
-        /// <returns>The response that contains the next page of related entity data.</returns>
-        /// <param name="entity">The entity that contains the property to load.</param>
-        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entities to load from the data service.</param>
-        /// <exception cref="T:System.InvalidOperationException">When <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
-        /// <remarks>
-        /// If <paramref name="entity"/> is in in detached or added state, this method will throw an InvalidOperationException
-        /// since there is nothing it can load from the server.
-        ///
-        /// If <paramref name="entity"/> is in unchanged or modified state, this method will load its collection or
-        /// reference elements as unchanged with unchanged bindings.
-        ///
-        /// If <paramref name="entity"/> is in deleted state, this method will load the entities linked to by its collection or
-        /// reference property in the unchanged state with bindings in the deleted state.
-        /// </remarks>
-        public QueryOperationResponse LoadProperty(object entity, string propertyName, DataServiceQueryContinuation continuation)
-        {
-            LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, null /*requestUri*/, continuation);
-            result.ExecuteQuery();
-            return result.LoadProperty();
-        }
-
-        /// <summary>Loads the next page of related entities from the data service by using the supplied generic query continuation object.</summary>
-        /// <returns>The response that contains the next page of related entity data.</returns>
-        /// <param name="entity">The entity that contains the property to load.</param>
-        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entities to load from the data service.</param>
-        /// <typeparam name="T">Element type of collection to load.</typeparam>
-        /// <exception cref="T:System.InvalidOperationException">When <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
-        /// <remarks>
-        /// If <paramref name="entity"/> is in in detached or added state, this method will throw an InvalidOperationException
-        /// since there is nothing it can load from the server.
-        ///
-        /// If <paramref name="entity"/> is in unchanged or modified state, this method will load its collection or
-        /// reference elements as unchanged with unchanged bindings.
-        ///
-        /// If <paramref name="entity"/> is in deleted state, this method will load the entities linked to by its collection or
-        /// reference property in the unchanged state with bindings in the deleted state.
-        /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011", Justification = "allows compiler to infer 'T'")]
-        public QueryOperationResponse<T> LoadProperty<T>(object entity, string propertyName, DataServiceQueryContinuation<T> continuation)
-        {
-            LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, null /*requestUri*/, continuation);
-            result.ExecuteQuery();
-            return (QueryOperationResponse<T>)result.LoadProperty();
-        }
-
-#endif
-
-
         #endregion
 
         #region GetReadStreamUri
@@ -1340,63 +1246,7 @@ namespace Microsoft.OData.Client
             return result.End();
         }
 
-#if !PORTABLELIB
-        /// <summary>Gets the binary data stream that belongs to the specified entity.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
-        /// <param name="entity">The entity that has the binary stream to retrieve. </param>
-        /// <exception cref="T:System.ArgumentNullException">The<paramref name=" entity" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary stream.</exception>
-        public DataServiceStreamResponse GetReadStream(object entity)
-        {
-            DataServiceRequestArgs args = new DataServiceRequestArgs();
-            return this.GetReadStream(entity, args);
-        }
-
-        /// <summary>Gets the binary data stream that belongs to the specified entity, by using the specified Content-Type message header.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
-        /// <param name="entity">The entity that has the binary data stream to retrieve. </param>
-        /// <param name="acceptContentType">The Content-Type of the binary data stream requested from the data service, specified in the Accept header.</param>
-        /// <exception cref="T:System.ArgumentNullException">
-        ///   <paramref name="entity" /> is null.-or- <paramref name="acceptContentType" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related stream.</exception>
-        public DataServiceStreamResponse GetReadStream(object entity, string acceptContentType)
-        {
-            Util.CheckArgumentNullAndEmpty(acceptContentType, "acceptContentType");
-            DataServiceRequestArgs args = new DataServiceRequestArgs();
-            args.AcceptContentType = acceptContentType;
-            return this.GetReadStream(entity, args);
-        }
-
-        /// <summary>Gets binary data stream for the specified entity by using the specified message headers.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
-        /// <param name="entity">The entity that has the binary stream to retrieve. </param>
-        /// <param name="args">Instance of <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
-        /// <exception cref="T:System.ArgumentNullException">
-        ///   <paramref name="entity" /> is null.-or- <paramref name="args" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary stream.</exception>
-        public DataServiceStreamResponse GetReadStream(object entity, DataServiceRequestArgs args)
-        {
-            GetReadStreamResult result = this.CreateGetReadStreamResult(entity, args, null, null, null);
-            return result.Execute();
-        }
-
-        /// <summary>Gets a named binary data stream that belongs to the specified entity, by using the specified Content-Type message header.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
-        /// <param name="entity">The entity that has the binary data stream to retrieve.</param>
-        /// <param name="name">The name of the binary stream to request.</param>
-        /// <param name="args">Instance of <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
-        /// <exception cref="ArgumentNullException">Either entity or args parameters are null.</exception>
-        /// <exception cref="ArgumentException">The specified entity is either not tracked, is in the added state.</exception>
-        public DataServiceStreamResponse GetReadStream(object entity, string name, DataServiceRequestArgs args)
-        {
-            Util.CheckArgumentNullAndEmpty(name, "name");
-            this.EnsureMinimumProtocolVersionV3();
-            GetReadStreamResult result = this.CreateGetReadStreamResult(entity, args, null, null, name);
-            return result.Execute();
-        }
-
-#endif
-        #endregion
+       #endregion
 
         #region SetSaveStream
 
@@ -1555,20 +1405,6 @@ namespace Microsoft.OData.Client
             BatchSaveResult result = BaseAsyncResult.EndExecute<BatchSaveResult>(this, "ExecuteBatch", asyncResult);
             return result.EndRequest();
         }
-
-#if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
-        /// <returns>The response to the batch operation.</returns>
-        /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
-        public DataServiceResponse ExecuteBatch(params DataServiceRequest[] queries)
-        {
-            Util.CheckArgumentNotEmpty(queries, "queries");
-
-            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, null, null);
-            result.BatchRequest();
-            return result.EndRequest();
-        }
-#endif
 
         #endregion
 
@@ -1731,99 +1567,6 @@ namespace Microsoft.OData.Client
             return result;
         }
 
-#if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Sends a request to the data service to execute a specific URI.</summary>
-        /// <returns>The results of the query operation.</returns>
-        /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
-        /// <typeparam name="TElement">The type that the query returns.</typeparam>
-        /// <exception cref="T:System.Net.WebException">When a response is not received from a request to the <paramref name="requestUri" />.</exception>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="requestUri" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">When <paramref name="requestUri" /> is not a valid URI for the data service.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When an error is raised either during execution of the request or when it converts the contents of the response message into objects.</exception>
-        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
-        public IEnumerable<TElement> Execute<TElement>(Uri requestUri)
-        {
-            // We don't support operation parameters with "GET" yet.
-
-            // This public API is for backwards compatibility, which is why it always uses GET and sets singleResult to null
-            return InnerSynchExecute<TElement>(requestUri, XmlConstants.HttpMethodGet, null);
-        }
-
-        /// <summary>Sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
-        /// <returns>The response that contains the next page of data in the query result.</returns>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
-        /// <typeparam name="T">The type returned by the query.</typeparam>
-        public QueryOperationResponse<T> Execute<T>(DataServiceQueryContinuation<T> continuation)
-        {
-            Util.CheckArgumentNull(continuation, "continuation");
-            QueryComponents qc = continuation.CreateQueryComponents();
-            Uri requestUri = qc.Uri;
-            DataServiceRequest request = new DataServiceRequest<T>(requestUri, qc, continuation.Plan);
-            return request.Execute<T>(this, qc);
-        }
-
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
-        /// <returns>The response of the operation.</returns>
-        /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
-        /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
-        /// <param name="operationParameters">The operation parameters used.</param>
-        /// <remarks>
-        /// This overload expects the <paramref name="requestUri"/> to end with a ServiceOperation
-        /// or ServiceAction that returns void.
-        /// </remarks>
-        /// <exception cref="ArgumentNullException">null requestUri</exception>
-        /// <exception cref="ArgumentException">The <paramref name="httpMethod"/> is not GET, POST or DELETE.</exception>
-        /// <exception cref="InvalidOperationException">problem materializing results of query into objects</exception>
-        /// <exception cref="WebException">failure to get response for requestUri</exception>
-        public OperationResponse Execute(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters)
-        {
-            QueryOperationResponse<object> result = (QueryOperationResponse<object>)Execute<object>(requestUri, httpMethod, false, operationParameters);
-            if (result.Any())
-            {
-                throw new DataServiceClientException(Strings.Context_ExecuteExpectedVoidResponse);
-            }
-
-            return result;
-        }
-
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
-        /// <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
-        /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
-        /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
-        /// <param name="singleResult">Attribute used on service operations to specify that they return a single instance of their return element.</param>
-        /// <param name="operationParameters">The operation parameters used.</param>
-        /// <typeparam name="TElement">The type returned by the query.</typeparam>
-        /// <exception cref="ArgumentNullException">null requestUri</exception>
-        /// <exception cref="ArgumentException">The <paramref name="httpMethod"/> is not GET nor POST.</exception>
-        /// <exception cref="InvalidOperationException">problem materializing results of query into objects</exception>
-        /// <exception cref="WebException">failure to get response for requestUri</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Just for CTP")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
-        public IEnumerable<TElement> Execute<TElement>(Uri requestUri, string httpMethod, bool singleResult, params OperationParameter[] operationParameters)
-        {
-            return InnerSynchExecute<TElement>(requestUri, httpMethod, singleResult, operationParameters);
-        }
-
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
-        /// <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
-        /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
-        /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
-        /// <param name="operationParameters">The operation parameters used.</param>
-        /// <typeparam name="TElement">The type returned by the query.</typeparam>
-        /// <exception cref="ArgumentNullException">null requestUri</exception>
-        /// <exception cref="ArgumentException">The <paramref name="httpMethod"/> is not GET nor POST.</exception>
-        /// <exception cref="InvalidOperationException">problem materializing results of query into objects</exception>
-        /// <exception cref="WebException">failure to get response for requestUri</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Just for CTP")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
-        public IEnumerable<TElement> Execute<TElement>(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters)
-        {
-            bool? singleResult = this.IsSingletonType<TElement>();
-            return InnerSynchExecute<TElement>(requestUri, httpMethod, singleResult, operationParameters);
-        }
-
-#endif
         #endregion
 
         #region SaveChanges, BeginSaveChanges, EndSaveChanges
@@ -1894,44 +1637,6 @@ namespace Microsoft.OData.Client
             return errors;
         }
 
-#if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges.Remarks" />.</returns>
-        public DataServiceResponse SaveChanges()
-        {
-            return this.SaveChanges(this.SaveChangesDefaultOptions);
-        }
-
-        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</returns>
-        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
-        public DataServiceResponse SaveChanges(SaveChangesOptions options)
-        {
-            DataServiceResponse errors = null;
-            this.ValidateSaveChangesOptions(options);
-
-            BaseSaveResult result = BaseSaveResult.CreateSaveResult(this, Util.SaveChangesMethodName, null, options, null, null);
-            if (result.IsBatchRequest)
-            {
-                ((BatchSaveResult)result).BatchRequest();
-            }
-            else
-            {
-                ((SaveResult)result).CreateNextChange();
-            }
-
-            errors = result.EndRequest();
-
-            Debug.Assert(null != errors, "null errors");
-
-            if (this.ChangesSaved != null)
-            {
-                this.ChangesSaved(this, new SaveChangesEventArgs(errors));
-            }
-
-            return errors;
-        }
-#endif
         #endregion
 
         #region Add, Attach, Delete, Detach, Update, TryGetEntity, TryGetUri
@@ -2436,74 +2141,6 @@ namespace Microsoft.OData.Client
             var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result, entity, propertyName));
             return nextTask;
         }
-
-#if !PORTABLELIB
-
-        /// <summary>
-        /// Loads all pages of related entities for a specified property from the data service.
-        /// </summary>
-        /// <param name="entity">The entity that contains the property to load.</param>
-        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the last page request.</returns>
-        internal QueryOperationResponse LoadPropertyAllPages(object entity, string propertyName)
-        {
-            DataServiceQueryContinuation continuation = null;
-            QueryOperationResponse response;
-            do
-            {
-                if (continuation == null)
-                {
-                    response = this.LoadProperty(entity, propertyName, (Uri)null);
-                }
-                else
-                {
-                    response = this.LoadProperty(entity, propertyName, continuation);
-                }
-
-                continuation = response.GetContinuation();
-            }
-            while (continuation != null);
-
-            return response;
-        }
-
-        /// <summary>
-        /// Execute the <paramref name="requestUri"/> using <paramref name="httpMethod"/>.
-        /// </summary>
-        /// <typeparam name="TElement">Element type of the result. </typeparam>
-        /// <param name="requestUri">Request URI to execute.</param>
-        /// <param name="httpMethod">HttpMethod to use. Only GET or POST are supported.</param>
-        /// <param name="singleResult">If set to true, indicates that a single result is expected as a response.
-        /// False indicates that a collection of TElement is assumed. Should be null for void, entry, and feed cases.
-        /// This function will check if TElement is an entity type and set singleResult to null in this case.</param>
-        /// <param name="operationParameters">The operation parameters associated with the service operation.</param>
-        /// <returns>A QueryOperationResponse that is enumerable over the results and holds other response information.</returns>
-        /// <exception cref="ArgumentNullException">null requestUri</exception>
-        /// <exception cref="ArgumentException">The <paramref name="httpMethod"/> is not GET nor POST.</exception>
-        /// <exception cref="InvalidOperationException">problem materializing results of query into objects</exception>
-        /// <exception cref="WebException">failure to get response for requestUri</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
-        internal QueryOperationResponse<TElement> InnerSynchExecute<TElement>(Uri requestUri, string httpMethod, bool? singleResult, params OperationParameter[] operationParameters)
-        {
-            List<UriOperationParameter> uriOperationParameters = null;
-            List<BodyOperationParameter> bodyOperationParameters = null;
-            this.ValidateExecuteParameters<TElement>(ref requestUri, httpMethod, ref singleResult, out bodyOperationParameters, out uriOperationParameters, operationParameters);
-            QueryComponents qc = new QueryComponents(
-                requestUri,
-                Util.ODataVersionEmpty,
-                typeof(TElement),
-                null /* projection */,
-                null /* normalizer rewrites */,
-                httpMethod,
-                singleResult,
-                bodyOperationParameters,
-                uriOperationParameters);
-
-            requestUri = qc.Uri;
-            DataServiceRequest request = new DataServiceRequest<TElement>(requestUri, qc, null);
-            return request.Execute<TElement>(this, qc);
-        }
-#endif
 
         /// <summary>Begins the execution of the request uri based on the http method.</summary>
         /// <typeparam name="TElement">element type of the result</typeparam>

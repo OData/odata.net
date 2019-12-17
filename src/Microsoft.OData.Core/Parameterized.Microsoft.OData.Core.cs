@@ -425,10 +425,9 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Unable to serialize an object in a collection as it is not an ODataPrimitve or ODataResourceValue."
+        /// A string like "Unable to serialize an object in a collection as it is not a supported ODataValue."
         /// </summary>
-        internal static string ODataJsonWriter_UnsupportedValueInCollection
-        {
+        internal static string ODataJsonWriter_UnsupportedValueInCollection {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonWriter_UnsupportedValueInCollection);
             }
@@ -3588,10 +3587,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Encountered a deleted entity when reading a non-delta response payload. Deleted entities are only supported in request payloads and delta responses."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload
-        {
-            get
-            {
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
             }
         }

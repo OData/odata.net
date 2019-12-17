@@ -10,7 +10,6 @@ namespace Microsoft.OData.Client
 
     using System.Diagnostics;
     using System.IO;
-    using System.Runtime.Serialization;
 
     #endregion Namespaces
 
@@ -87,11 +86,7 @@ namespace Microsoft.OData.Client
         {
             if (this.stream != null && this.close)
             {
-#if PORTABLELIB
                 this.stream.Dispose();
-#else
-                this.stream.Close();
-#endif
             }
         }
     }
