@@ -1014,9 +1014,11 @@ namespace Microsoft.OData.UriParser
                 bindingType = (previousSegment is EachSegment) ? previousSegment.TargetEdmType : previousSegment.EdmType;
             }
 
-            if (!String.IsNullOrEmpty(identifier) && identifier[0] == ':' && bindingType != null)
+            string newIdentifier, newParenthesisExpression;
+            if (TryResolveEscapeFunction(identifier, bindingType, configuration.Model, out newIdentifier, out newParenthesisExpression))
             {
-                identifier = ResolveEscapeFunction(identifier, bindingType, configuration.Model, out parenthesisExpression);
+                identifier = newIdentifier;
+                parenthesisExpression = newParenthesisExpression;
             }
 
             ICollection<OperationSegmentParameter> resolvedParameters;
@@ -1603,17 +1605,24 @@ namespace Microsoft.OData.UriParser
             throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(fullTypeName, kind, name));
         }
 
-        private static string ResolveEscapeFunction(string identifier, IEdmType bindingType, IEdmModel model, out string parenthesisExpression)
+        private static bool TryResolveEscapeFunction(string identifier, IEdmType bindingType, IEdmModel model, out string qualifiedName, out string parenthesisExpression)
         {
-            Debug.Assert(identifier != null && identifier.Length >= 1 && identifier[0] == ':');
-            Debug.Assert(bindingType != null);
+            qualifiedName = null;
+            parenthesisExpression = null;
+
+            if (bindingType == null || // escape function is only for bind function
+                String.IsNullOrEmpty(identifier) ||
+                identifier[0] != ':')
+            {
+                return false;
+            }
 
             bool isComposableRequired = identifier.Length >= 2 && identifier[identifier.Length - 1] == ':';
-            IEdmFunction function = model.FindBoundOperations(bindingType)
-                .OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
+
+            IEdmFunction function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
             if (function == null)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported(bindingType.FullTypeName()));
+                return false;
             }
 
             if (function.Parameters == null || function.Parameters.Count() != 2 || !function.Parameters.ElementAt(1).Type.IsString())
@@ -1622,7 +1631,8 @@ namespace Microsoft.OData.UriParser
             }
 
             parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(1, identifier.Length - 2) : identifier.Substring(1)) + "'";
-            return function.FullName();
+            qualifiedName = function.FullName();
+            return true;
         }
 
         internal static bool IsUrlEscapeFunction(IEdmModel model, IEdmFunction function)

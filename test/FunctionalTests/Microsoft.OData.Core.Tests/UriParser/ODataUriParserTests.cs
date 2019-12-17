@@ -1343,12 +1343,34 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("NS.CalcCustomers", segment.Operations.First().FullName());
         }
 
+        [Theory]
+        [InlineData("Orders(':abc:')")]
+        [InlineData("Orders/:abc:")]
+        public void ParseEscapeFunctionUrlWithAnotherEscapeFunctionReturnsCorrectODataPath2(string escapePathString)
+        {
+            // Arrange
+            IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
+
+            // Act
+            string fullUriString = ServiceRoot + "/" + escapePathString;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.Equal(4, escapePath.Count());
+            OperationSegment segment = escapePath.First(p => p is OperationSegment) as OperationSegment;
+            Assert.Equal("NS.FindOrderComposable", segment.Operations.First().FullName());
+
+            segment = escapePath.Last(p => p is OperationSegment) as OperationSegment;
+            Assert.Equal("NS.CalcCustomers", segment.Operations.First().FullName());
+        }
+
         internal static IEdmModel GetCustomerOrderEdmModelWithEscapeFunction()
         {
             EdmModel model = new EdmModel();
 
             EdmEntityType orderType = new EdmEntityType("NS", "Order");
-            orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
             orderType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
             model.AddElement(orderType);
 
