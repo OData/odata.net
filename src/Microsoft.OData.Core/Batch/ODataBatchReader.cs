@@ -4,20 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Threading.Tasks;
+
 namespace Microsoft.OData
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
-    #endregion Namespaces
-
     /// <summary>
     /// Abstract class for reading OData batch messages; also verifies the proper sequence of read calls on the reader.
     /// </summary>

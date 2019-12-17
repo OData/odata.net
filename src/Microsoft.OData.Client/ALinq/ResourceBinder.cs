@@ -320,6 +320,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="target">Target set.</param>
         /// <param name="predicates">Candidate predicates.</param>
+        /// <param name="edmModel">edm model.</param>
         /// <param name="nonKeyPredicates">Returns list of non-key predicates.</param>
         /// <returns>List of key predicates if found, otherwise null</returns>
         private static List<Expression> ExtractKeyPredicate(

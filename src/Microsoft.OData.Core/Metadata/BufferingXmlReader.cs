@@ -644,16 +644,6 @@ namespace Microsoft.OData.Metadata
             return this.reader.ReadAttributeValue();
         }
 
-#if !PORTABLELIB
-        /// <summary>
-        /// Closes the reader and the underlying input.
-        /// </summary>
-        public override void Close()
-        {
-            throw new NotSupportedException();
-        }
-#endif
-
         /// <summary>
         /// Returns the value of an attribute based on its index.
         /// </summary>

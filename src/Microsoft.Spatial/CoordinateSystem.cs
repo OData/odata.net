@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+
 namespace Microsoft.Spatial
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-
     /// <summary>
     ///   Coordinate System Reference
     /// </summary>

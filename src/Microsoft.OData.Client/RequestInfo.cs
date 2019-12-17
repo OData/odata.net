@@ -91,17 +91,12 @@ namespace Microsoft.OData.Client
             get
             {
                 Debug.Assert(this.Context.ResolveName != null, "this.context.ResolveName != null.");
-#if PORTABLELIB
+
     // Func<>.Method property does not exist on Win8 and there is no other way to access any MethodInfo that is behind the Func,
     // so we have no way to determine if the Func was supplied by the user or if it's the one provided by codegen.
     // In this case we will always assume it's the one provided by codegen, which means we'll try to resolve the name using the entity descriptor
     // first. This is likely to be correct in more cases than using the codegen resolver, so it is safer to make this assumption than the reverse.
                 return false;
-#else
-                MethodInfo resolveNameMethodInfo = this.Context.ResolveName.Method;
-                var codegenAttr = resolveNameMethodInfo.GetCustomAttributes(false).OfType<GeneratedCodeAttribute>().FirstOrDefault();
-                return codegenAttr == null || codegenAttr.Tool != Util.CodeGeneratorToolName;
-#endif
             }
         }
 
@@ -147,16 +142,6 @@ namespace Microsoft.OData.Client
         {
             get { return this.Context.Credentials; }
         }
-
-#if !PORTABLELIB
-        /// <summary>
-        /// Get the timeout span in seconds to use for the underlying HTTP request to the data service.
-        /// </summary>
-        internal int Timeout
-        {
-            get { return this.Context.Timeout; }
-        }
-#endif
 
         /// <summary>
         /// Whether to use post-tunneling for PUT/DELETE.
@@ -208,24 +193,6 @@ namespace Microsoft.OData.Client
         #endregion Properties
 
         #region Methods
-
-#if !PORTABLELIB
-        /// <summary>
-        /// This method wraps the HttpWebRequest.GetSynchronousResponse method call. The reasons for doing this are to give us a place
-        /// to invoke internal test hook callbacks that can validate the response headers, and also so that we can do
-        /// debug validation to make sure that the headers have not changed since they were originally configured on the request.
-        /// </summary>
-        /// <param name="request">ODataRequestMessageWrapper instance</param>
-        /// <param name="handleWebException">If set to true, this method will only re-throw the WebException that was caught if
-        /// the response in the exception is null. If set to false, this method will always re-throw in case of a WebException.</param>
-        /// <returns>
-        /// Returns the HttpWebResponse from the wrapped GetSynchronousResponse method.
-        /// </returns>
-        internal IODataResponseMessage GetSynchronousResponse(ODataRequestMessageWrapper request, bool handleWebException)
-        {
-            return this.Context.GetSynchronousResponse(request, handleWebException);
-        }
-#endif
 
         /// <summary>
         /// This method wraps the HttpWebRequest.EndGetResponse method call. The reason for doing this is to give us a place
