@@ -344,11 +344,6 @@ namespace Microsoft.OData.Client
                 ex = e;
             }
 
-            if (ex != null)
-            {
-                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, service);
-            }
-
             return service;
         }
 
