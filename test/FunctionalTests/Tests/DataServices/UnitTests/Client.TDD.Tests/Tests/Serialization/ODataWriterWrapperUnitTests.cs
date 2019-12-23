@@ -15,6 +15,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FluentAssertions;
+    using Microsoft.OData.Client.TDDUnitTests;
 
     /// <summary>
     /// Unit tests for the ODataWriterWrapperUnitTests class.
@@ -26,7 +27,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void EndToEndShortIntegrationWriteEntryEventTest()
         {
             List<KeyValuePair<string, object>> eventArgsCalled = new List<KeyValuePair<string, object>>();
-            var dataServiceContext = new DataServiceContext(new Uri("http://www.odata.org/Service.svc"));
+            var dataServiceContext = new DataServiceContext(new Uri("http://www.odata.org/Service.svc")).ReConfigureForNetworkLoadingTests();
             dataServiceContext.Configurations.RequestPipeline.OnEntityReferenceLink((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntityReferenceLink", args)));
             dataServiceContext.Configurations.RequestPipeline.OnEntryEnding((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntryEnded", args)));
             dataServiceContext.Configurations.RequestPipeline.OnEntryStarting((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntryStarted", args)));
@@ -90,7 +91,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void EntityPropertiesShouldBePopulatedBeforeCallingWriteStart()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
+            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
             context.Configurations.RequestPipeline.OnEntryStarting(args =>
             {
                 args.Entry.Should().NotBeNull();
@@ -208,7 +209,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var car1 = new Car { ID = 1001 };
             var car2 = new Car { ID = 1002 };
 
-            DataServiceContext dataServiceContext = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
+            DataServiceContext dataServiceContext = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
             dataServiceContext.AttachTo("Persons", person);
             dataServiceContext.AttachTo("Cars", car1);
             dataServiceContext.AttachTo("Cars", car2);

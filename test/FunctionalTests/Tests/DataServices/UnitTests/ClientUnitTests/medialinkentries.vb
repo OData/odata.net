@@ -20,6 +20,7 @@ Imports AstoriaUnitTests.Stubs
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports System.Web
+Imports Microsoft.OData.Edm
 
 Partial Public Class ClientModule
     ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
@@ -375,6 +376,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New SpacesPhotos.SpacesPhotosService(web.ServiceRoot)
+            Me.ctx.Format.UseJson(New EdmModel())
             'Me.'ctx.EnableAtom = True
         End Sub
 

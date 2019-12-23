@@ -16,6 +16,7 @@ Imports System.Xml.Linq
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports AstoriaUnitTests.Stubs
 Imports AstoriaUnitTests.Data
+Imports Microsoft.OData.Edm
 
 Partial Public Class ClientModule
 
@@ -26,6 +27,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub BeforeEachTestMethod()
             ctx = New DataServiceContext(New Uri("http://localhost/svc"))
+            ctx.Format.UseJson(New EdmModel())
         End Sub
 
         <TestCleanup()> Public Sub AfterEachTestMethod()

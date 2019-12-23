@@ -22,6 +22,7 @@ Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests
 Imports System.Web
 Imports System.IO
+Imports Microsoft.OData.Edm
 
 Partial Public Class ClientModule
 
@@ -118,8 +119,9 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBeginExecute_NullBaseUri_AbsoluteRequestUri_Success()
             Dim context = New DataServiceContext()
+            'context.ReConfigureForNetworkLoadingTests()
             'context.EnableAtom = True
-            'context.Format.UseAtom()
+            context.Format.UseJson(New EdmModel())
             context.BeginExecute(Of Object)(entitySet1AbsoluteUri, Sub(ar As IAsyncResult)
                                                                        CType(ar, DataServiceQuery(Of Object)).EndExecute(ar).ToList()
                                                                    End Sub,
@@ -573,7 +575,7 @@ Partial Public Class ClientModule
             ' context with good uri
             Dim context = New DataServiceContext(New Uri(web1.BaseUri, UriKind.Absolute))
             'context.EnableAtom = True
-            'context.Format.UseAtom()
+            context.Format.UseJson(New EdmModel())
             context.ResolveEntitySet = Function(entitySetName As String) New Uri(context.BaseUri.OriginalString + "/Values", UriKind.Absolute)
 
 

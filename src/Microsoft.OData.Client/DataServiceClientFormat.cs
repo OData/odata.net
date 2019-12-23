@@ -4,14 +4,26 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+
+
 namespace Microsoft.OData.Client
 {
+    #region namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData;
-    using Microsoft.OData.Edm;
+    using Edm;
+    using System.IO;
+    using System.Xml;
+    using System.Net;
+    using Microsoft.OData.Edm.Csdl;
+    using System.Collections.Generic;
+#if PORTABLELIB
+    using System.Threading.Tasks;
+#endif
 
+    #endregion
     /// <summary>
     /// Tracks the user-preferred format which the client should use when making requests.
     /// </summary>
@@ -84,10 +96,23 @@ namespace Microsoft.OData.Client
                 {
                     serviceModel = LoadServiceModel();
                 }
-
+                // For when the model is null and the user has not specified a method to load the service model
+                // default to fetching it from the metadata Uri
+                else if (serviceModel == null && LoadServiceModel == null)
+                {
+                    serviceModel = LoadServiceModelUsingNetwork();
+                }
+             
                 return serviceModel;
             }
         }
+
+        /// <summary>
+        /// Invoked during test cases to fake out network calls to get the metadata
+        /// TODO: Change the visibility of this to internal after adding correct InternalsVisibleTo
+        /// returns a string that is passed to the csdl parser and is used to bypass the network call while testing
+        /// </summary>
+        internal Func<HttpWebRequestMessage> InjectMetadataHttpNetworkRequest { get; set; }
 
         /// <summary>
         /// Indicates that the client should use the efficient JSON format.
@@ -246,7 +271,8 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="headers">The headers to update.</param>
         /// <param name="mediaType">The media type for the accept header.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822", Justification = "If this becomes static, then so do its more visible callers, and we do not want to provide a mix of instance and static methods on this class.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822", Justification =
+            "If this becomes static, then so do its more visible callers, and we do not want to provide a mix of instance and static methods on this class.")]
         private void SetAcceptHeaderAndCharset(HeaderCollection headers, string mediaType)
         {
             // NOTE: we intentionally do NOT set the DSV header for 'accept' as content-negotiation
@@ -274,5 +300,47 @@ namespace Microsoft.OData.Client
 
             return MimeApplicationJsonODataLight;
         }
+
+        /// <summary>
+        /// Loads the metadata and converts it into an EdmModel that is then used by a dataservice context
+        /// This allows the user to use the DataServiceContext directly without having to manually pass an IEdmModel in the Format
+        /// </summary>
+        /// <returns>A service model to be used in format tracking</returns>
+        internal IEdmModel LoadServiceModelUsingNetwork()
+        {
+            HttpWebRequestMessage httpRequest;
+            //internal method
+            if (InjectMetadataHttpNetworkRequest != null)
+            {
+                httpRequest = InjectMetadataHttpNetworkRequest();
+            }
+            else
+            {
+                DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    context.GetMetadataUri(),
+                    context.UseDefaultCredentials,
+                    context.UsePostTunneling,
+                    new Dictionary<string, string>());
+
+                httpRequest = new HttpWebRequestMessage(args);
+            }
+#if !PORTABLELIB
+            IODataResponseMessage response = httpRequest.GetResponse();
+
+#endif
+#if PORTABLELIB
+            Task<IODataResponseMessage> asyncResponse =
+                Task<IODataResponseMessage>.Factory.FromAsync(httpRequest.BeginGetResponse, httpRequest.EndGetResponse,
+                    httpRequest);
+            IODataResponseMessage response = asyncResponse.GetAwaiter().GetResult();
+#endif
+
+            StreamReader streamReader = new StreamReader(response.GetStream());
+            string xmlResponse = streamReader.ReadToEnd();
+            XmlReader xmlReader = XmlReader.Create(new StringReader(xmlResponse));
+            return CsdlReader.Parse(xmlReader);
+        }
+
     }
 }

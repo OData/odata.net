@@ -10,6 +10,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client;
     using System.IO;
     using System.Linq;
+    using Microsoft.OData.Client.TDDUnitTests;
+
 #if !PORTABLELIB
     using AstoriaUnitTests.ClientExtensions;
 #endif
@@ -33,7 +35,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 #if SILVERLIGHT
             usePostTunnelingDefault = true;
 #endif
-            var context = new DataServiceContext();
+            var context = new DataServiceContext().ReConfigureForNetworkLoadingTests();
             context.UsePostTunneling.Should().Be(usePostTunnelingDefault);
         }
 
@@ -44,7 +46,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestInitialize]
         public void Init()
         {
-            this.testSubject = new DataServiceContext(new Uri("http://base.org/"));
+            this.testSubject = new DataServiceContext(new Uri("http://base.org/")).ReConfigureForNetworkLoadingTests();
         }
 
         [TestMethod]
@@ -240,7 +242,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void DisposeShouldBeCalledOnResponseMessageForExecuteWithNoContent()
         {
-            DataServiceContext context = new DataServiceContext();
+            DataServiceContext context = new DataServiceContext().ReConfigureForNetworkLoadingTests();
             bool responseMessageDisposed = false;
             context.Configurations.RequestPipeline.OnMessageCreating = args =>
             {

@@ -17,6 +17,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Client.TDDUnitTests;
 
     using OData = Microsoft.OData;
 
@@ -206,6 +207,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     {
         public const string ServerNamespace = "namespace.test";
         public Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
+
+        [TestInitialize]
+        public void Init()
+        {
+            Context.ReConfigureForNetworkLoadingTests();
+        }
 
         [TestMethod]
         public void EntitySetUriShouldUseOriginalName()
@@ -465,7 +472,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         internal EntryValueMaterializationPolicy CreateEntryMaterializationPolicy(TestMaterializerContext materializerContext = null)
         {
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
-            var context = new DataServiceContext();
+            var context = new DataServiceContext().ReConfigureForNetworkLoadingTests();
             materializerContext = materializerContext ?? new TestMaterializerContext() { Model = clientEdmModel, Context = context };
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
             var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());

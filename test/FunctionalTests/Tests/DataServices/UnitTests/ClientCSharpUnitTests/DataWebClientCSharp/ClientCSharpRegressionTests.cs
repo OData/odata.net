@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
+
 namespace AstoriaUnitTests.Tests
 {
     using System;
@@ -503,6 +505,7 @@ namespace AstoriaUnitTests.Tests
             (options) =>
             {
                 DataServiceContext context = new DataServiceContext(new Uri("http://localhost/TheTest.svc"), ODataProtocolVersion.V4);
+                context.Format.UseJson(new EdmModel());
                 context.AddAndUpdateResponsePreference = DataServiceResponsePreference.NoContent;
 
                 Customer c = new Customer() { ID = 1, Name = "Foo" };
@@ -587,6 +590,7 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, getRequestMessage, getResponseMessage);
+                context.Format.UseJson(new EdmModel());
                 context.AddAndUpdateResponsePreference = DataServiceResponsePreference.NoContent;
 
                 CustomerWithStream c = new CustomerWithStream() { ID = 1, Name = "Foo" };
@@ -1155,9 +1159,8 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 var ctx = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, getRequestMessage, getResponseMessage);
-                //ctx.EnableAtom = true;
-                //ctx.Format.UseAtom();
-
+                // disables network loading by injecting an empty model
+                ctx.Format.UseJson(new EdmModel());
                 ctx.AddObject("Entities", entity);
                 ctx.SaveChanges();
 
@@ -1502,6 +1505,8 @@ namespace AstoriaUnitTests.Tests
             // The context does not need to return usable results. It is created with a dummy URI so
             // that there is actually time to cancel the request. It should not return promptly.
             var context = new Microsoft.OData.Client.DataServiceContext(new Uri("http://123.32.52.1"));
+            // this helps bypass network loading in tests
+            context.Format.UseJson(new EdmModel());
             context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             Uri uri = new Uri("foo", UriKind.Relative);
 
@@ -1556,6 +1561,7 @@ namespace AstoriaUnitTests.Tests
             for (int i = 0; i < 2; ++i)
             {
                 DataServiceContext ctx = new DataServiceContext(new Uri("http://localhost"), ODataProtocolVersion.V4);
+                ctx.Format.UseJson(new EdmModel());
                 ctx.AddObject("Entities", new ClientTypeCacheError_EntityType());
 
                 Exception ex = TestUtil.RunCatching(() => ctx.SaveChanges());
