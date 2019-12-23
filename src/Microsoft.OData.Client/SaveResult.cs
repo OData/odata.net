@@ -307,41 +307,28 @@ namespace Microsoft.OData.Client
         {
             List<OperationResponse> responses = new List<OperationResponse>(this.cachedResponses != null ? this.cachedResponses.Count : 0);
             DataServiceResponse service = new DataServiceResponse(null, -1, responses, false /*isBatch*/);
-            Exception ex = null;
-
-            try
+            
+            foreach (CachedResponse response in this.cachedResponses)
             {
-                foreach (CachedResponse response in this.cachedResponses)
+                Descriptor descriptor = response.Descriptor;
+                this.SaveResultProcessed(descriptor);
+                OperationResponse operationResponse = new ChangeOperationResponse(response.Headers, descriptor);
+                operationResponse.StatusCode = (int)response.StatusCode;
+                if (response.Exception != null)
                 {
-                    Descriptor descriptor = response.Descriptor;
-                    this.SaveResultProcessed(descriptor);
-                    OperationResponse operationResponse = new ChangeOperationResponse(response.Headers, descriptor);
-                    operationResponse.StatusCode = (int)response.StatusCode;
-                    if (response.Exception != null)
-                    {
-                        operationResponse.Error = response.Exception;
-
-                        if (ex == null)
-                        {
-                            ex = response.Exception;
-                        }
-                    }
-                    else
-                    {
-                        this.cachedResponse = response;
-#if DEBUG
-                        this.HandleOperationResponse(descriptor, response.Headers, response.StatusCode);
-#else
-                        this.HandleOperationResponse(descriptor, response.Headers);
-#endif
-                    }
-
-                    responses.Add(operationResponse);
+                    operationResponse.Error = response.Exception;
                 }
-            }
-            catch (InvalidOperationException e)
-            {
-                ex = e;
+                else
+                {
+                    this.cachedResponse = response;
+#if DEBUG
+                    this.HandleOperationResponse(descriptor, response.Headers, response.StatusCode);
+#else
+                    this.HandleOperationResponse(descriptor, response.Headers);
+#endif
+                }
+
+                responses.Add(operationResponse);
             }
 
             return service;
