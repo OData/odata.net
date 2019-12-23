@@ -130,7 +130,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             {
                 var ar2 = ctx.BeginSaveChanges(null, null).EnqueueWait(this);
                 ctx.EndSaveChanges(ar2);
-                Assert.Fail("Expected error not thrown");
+                // Assert.Fail("Expected error not thrown"); // Commented since errors should be added to COR not thrown
             }
             catch (DataServiceRequestException e)
             {
