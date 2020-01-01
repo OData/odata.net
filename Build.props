@@ -28,7 +28,7 @@
     <TransparentAssembly Condition="'$(TransparentAssembly)' == ''">false</TransparentAssembly>
     <AssemblyAttributeSkipVerificationInFullTrust Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == ''">true</AssemblyAttributeSkipVerificationInFullTrust>
   </PropertyGroup>
-
+ 
   <PropertyGroup>
     <!--Define constants that are used in ...\src\AssemblyInfo\AssemblyInfoCommon.cs to generate assembly attributes-->
     <DefineConstants Condition="'$(UseVsVersion)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_PRODUCT_VS</DefineConstants>
@@ -41,15 +41,15 @@
     <DefineConstants Condition="'$(AllowPartialTrustedCalls)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS</DefineConstants>
     <DefineConstants Condition="'$(ConditionalAPTCA_L2)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2</DefineConstants>
     <DefineConstants Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST</DefineConstants>
-    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v3.5'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
+    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.5'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == '.NETPortable'">
-    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_SECURITY_RULES;</DefineConstants>
+  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.1'">
+    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v3.5'">
-    <DefineConstants>$(DefineConstants);ORCAS;SUPPRESS_SECURITY_RULES</DefineConstants>
+  <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v4.5'">
+    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
@@ -98,8 +98,7 @@
     <AssemblyKeysCSharpFilePath>$(DataFxIncPath)\AssemblyKeys.cs</AssemblyKeysCSharpFilePath>
     
     <!-- Install directory of Visual Studio e.g. C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ -->
-    <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '12.0'">$(VS120COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
-    <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '14.0'">$(VS140COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
+    <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '16.0'">$(VS160COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
   </PropertyGroup>
 
   <!--These empty property groups are used to ensure x64, x86 and AnyCPU are included in the platform list. 
