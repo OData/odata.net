@@ -1,15 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" >
-  <PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <RootNamespace>Microsoft.OData.Tests</RootNamespace>
-    <TargetFrameworks>net45;netcoreapp1.0;netcoreapp2.0;</TargetFrameworks>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\sln\</SolutionDir>
-    <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>C:\Users\srpazham\Documents\GitHub\odata.net\sln\Backup\</UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
-  </PropertyGroup>
+   <RootNamespace>Microsoft.OData.Tests</RootNamespace>    
+   <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\sln\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+
+    <NoWarn>;0618</NoWarn>
+
+ </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+   
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -23,32 +24,34 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs" Link="ExceptionUtilities.cs" />
-    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs" Link="EdmConstants.cs" />
-    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmToStockModelConverter.cs" Link="EdmToStockModelConverter.cs" />
-    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataExtensionMethods.cs" Link="MetadataExtensionMethods.cs" />
-    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs" Link="MetadataUtils.cs" />
-    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs" Link="TestModels.cs" />
-    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs" Link="ModelBuilder.cs" />
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs" Link ="ExceptionUtilities.cs"/>  
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs" Link ="EdmConstants.cs"/>  
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmToStockModelConverter.cs" Link ="EdmToStockModelConverter.cs"/>    
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataExtensionMethods.cs" Link ="MetadataExtensionMethods.cs"/> 
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs" Link ="MetadataUtils.cs"/>    
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs" Link ="TestModels.cs"/> 
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs" Link ="ModelBuilder.cs"/>   
   </ItemGroup>
+
   <ItemGroup>
-    <None Remove="IntegrationTests\Writer\Atom\ODataAtomWriterEnumIntegrationTests.cs" />
-    <!--see whether the file can be removed altogehter-->
+    <None Remove="IntegrationTests\Writer\Atom\ODataAtomWriterEnumIntegrationTests.cs" /> <!--see whether the file can be removed altogehter-->
     <None Remove="IntegrationTests\Reader\Atom\ODataAtomReaderEnumIntegrationTests.cs" />
   </ItemGroup>
+  
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-    <ProjectReference Include="..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-    <ProjectReference Include="..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\Microsoft.OData.TestCommon\Build.NetFramework\Microsoft.OData.TestCommon.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj"/>    
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj"/> 
+    <ProjectReference Include="..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj"/>
+    <ProjectReference Include="..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj"/>
+    <ProjectReference Include="..\..\Microsoft.OData.TestCommon\Build.NetFramework\Microsoft.OData.TestCommon.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
