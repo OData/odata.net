@@ -26,7 +26,7 @@
     <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
     <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.csproj" />
   </ItemGroup>
-  
+  <Import Project="..\Build.props" />
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Core.Tests" />
   </ItemGroup>

@@ -17,10 +17,7 @@
     <IsShipping>true</IsShipping>
   </PropertyGroup>
 
-  <!-- References -->
-  <!-- <Import Project="..\Build.props" /> -->
-  <!-- Generated files -->
-
+  <Import Project="..\Build.props" />
 
   <PropertyGroup>
     <!-- DelaySignKeys Constant used in assemblyinfocommon.cs to set key strings -->
