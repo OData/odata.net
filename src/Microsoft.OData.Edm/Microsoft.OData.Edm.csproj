@@ -17,7 +17,9 @@
     <IsPackable>true</IsPackable>
     <IsShipping>true</IsShipping>
   </PropertyGroup>
-
+  
+  <Import Project="..\Build.props" />
+  
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Edm.Tests" />
   </ItemGroup>

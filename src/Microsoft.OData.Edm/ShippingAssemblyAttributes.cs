@@ -4,3 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Microsoft.OData.Edm.Tests" + AssemblyRef.TestPublicKey)]
+
