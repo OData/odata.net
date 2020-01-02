@@ -15,6 +15,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{35FE6234-9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Edm.Tests", "..\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj", "{4BA645D8-7630-4002-8545-A07EAED9EE5B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D3941F3B-721B-4A70-A8FD-6DF733E9220F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Spatial.Tests", "..\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj", "{DD8286AB-7EA8-41AD-A58B-439469032D57}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Core.Tests", "..\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj", "{6F3526F6-8C4F-4F15-9F19-B19E16D77B99}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client.Tests", "..\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj", "{9F0AB290-8164-4885-BFCA-A6F87AB81740}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,12 +49,31 @@ Global
 		{4BA645D8-7630-4002-8545-A07EAED9EE5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BA645D8-7630-4002-8545-A07EAED9EE5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BA645D8-7630-4002-8545-A07EAED9EE5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD8286AB-7EA8-41AD-A58B-439469032D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD8286AB-7EA8-41AD-A58B-439469032D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD8286AB-7EA8-41AD-A58B-439469032D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD8286AB-7EA8-41AD-A58B-439469032D57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F3526F6-8C4F-4F15-9F19-B19E16D77B99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F3526F6-8C4F-4F15-9F19-B19E16D77B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F3526F6-8C4F-4F15-9F19-B19E16D77B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F3526F6-8C4F-4F15-9F19-B19E16D77B99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{B66FF173-78A9-454B-9839-92668DEC137D} = {D3941F3B-721B-4A70-A8FD-6DF733E9220F}
+		{ED9C6BDC-0A72-4E0E-8204-1BFB7CCD3189} = {D3941F3B-721B-4A70-A8FD-6DF733E9220F}
+		{F28F8C91-8296-4AC2-A2DB-D7E6266D87F8} = {D3941F3B-721B-4A70-A8FD-6DF733E9220F}
+		{A2355097-0615-4956-8919-B9AA89A090FD} = {D3941F3B-721B-4A70-A8FD-6DF733E9220F}
 		{4BA645D8-7630-4002-8545-A07EAED9EE5B} = {35FE6234-9623-4C15-9DD8-4124FD9394DB}
+		{DD8286AB-7EA8-41AD-A58B-439469032D57} = {35FE6234-9623-4C15-9DD8-4124FD9394DB}
+		{6F3526F6-8C4F-4F15-9F19-B19E16D77B99} = {35FE6234-9623-4C15-9DD8-4124FD9394DB}
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740} = {35FE6234-9623-4C15-9DD8-4124FD9394DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6DF43B7C-C662-42C3-92C5-C4DBA296CB51}
