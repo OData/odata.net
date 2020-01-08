@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -57,6 +58,11 @@ namespace Microsoft.OData.UriParser
         private IEdmNavigationSource lastNavigationSource;
 
         /// <summary>
+        /// Indicates that the next segment can be related to escape function
+        /// </summary>
+        private bool nextSegmentCanBeEscapeFunction;
+
+        /// <summary>
         /// Initializes a new instance of <see cref="ODataPathParser"/>.
         /// </summary>
         /// <param name="configuration">The parser's current configuration.</param>
@@ -78,7 +84,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="parenthesisExpression">The query portion that was found. Will be null after the call if no query portion was present.</param>
         internal static void ExtractSegmentIdentifierAndParenthesisExpression(string segmentText, out string identifier, out string parenthesisExpression)
         {
-            Debug.Assert(segmentText != null, "segment != null");
+            //Debug.Assert(segmentText != null, "segment != null");
+            if (segmentText == null)
+            {
+                identifier = "";
+                parenthesisExpression = "";
+                return;
+            }
 
             int parenthesisStart = segmentText.IndexOf('(');
             if (parenthesisStart < 0)
@@ -86,8 +98,22 @@ namespace Microsoft.OData.UriParser
                 identifier = segmentText;
                 parenthesisExpression = null;
             }
-            else
+            else if (segmentText[segmentText.Length - 1] == ':')
             {
+
+                if (segmentText.Length < 2 ||
+                    segmentText[segmentText.Length - 2] != ')')
+                {
+                    throw ExceptionUtil.CreateSyntaxError();
+                }
+
+
+                identifier = segmentText.Substring(0, parenthesisStart) + ":";
+                parenthesisExpression =
+                   segmentText.Substring(parenthesisStart + 1, segmentText.Length - identifier.Length - 2);
+            }
+            else
+            { 
                 if (segmentText[segmentText.Length - 1] != ')')
                 {
                     throw ExceptionUtil.CreateSyntaxError();
@@ -142,6 +168,12 @@ namespace Microsoft.OData.UriParser
                     {
                         lastNavigationSource = navigationSource;
                     }
+                }
+
+                //Create the segment handling empty string if the no arguements found
+                if (this.nextSegmentCanBeEscapeFunction)
+                {
+                    this.CreateNextSegment(null);
                 }
             }
             catch (ODataUnrecognizedPathException ex)
@@ -360,6 +392,23 @@ namespace Microsoft.OData.UriParser
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
 
             KeySegment keySegment;
+
+            if (segmentText.Length > 0 && segmentText[segmentText.Length - 1] == ':' && previous.EdmType != null)
+            {
+                IEdmFunction function = configuration.Model.FindBoundOperations(previous.EdmType).OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(configuration.Model, f));
+                if (function != null)
+                {
+                    this.nextSegmentCanBeEscapeFunction = true;
+                    segmentText = segmentText.Substring(0, segmentText.Length - 1);
+                    
+                    // Handle /:/ escape function pattern
+                    if (segmentText.Length == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
             if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlKeyDelimiter, this.configuration.Resolver, out keySegment, this.configuration.EnableUriTemplateParsing))
             {
                 this.parsedSegments.Add(keySegment);
@@ -694,6 +743,12 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
+            if (parenthesesSection[parenthesesSection.Length - 1] == ':')
+            {
+                this.nextSegmentCanBeEscapeFunction = true;
+                parenthesesSection = parenthesesSection.Substring(0, parenthesesSection.Length - 1);
+            }
+
             ODataPathSegment keySegment;
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
@@ -922,6 +977,12 @@ namespace Microsoft.OData.UriParser
             IEdmEntitySet targetEdmEntitySet;
             IEdmSingleton targetEdmSingleton;
 
+            if (identifier[identifier.Length - 1] == ':')
+            {
+                identifier = identifier.Substring(0, identifier.Length - 1);
+                this.nextSegmentCanBeEscapeFunction = true;
+            }
+
             IEdmNavigationSource source = this.configuration.Resolver.ResolveNavigationSource(this.configuration.Model, identifier);
 
             if ((targetEdmEntitySet = source as IEdmEntitySet) != null)
@@ -1015,7 +1076,8 @@ namespace Microsoft.OData.UriParser
             }
 
             string newIdentifier, newParenthesisExpression;
-            if (TryResolveEscapeFunction(identifier, bindingType, configuration.Model, out newIdentifier, out newParenthesisExpression))
+
+            if (this.nextSegmentCanBeEscapeFunction && TryResolveEscapeFunction(identifier, bindingType, configuration.Model, out newIdentifier, out newParenthesisExpression))
             {
                 identifier = newIdentifier;
                 parenthesisExpression = newParenthesisExpression;
@@ -1077,6 +1139,14 @@ namespace Microsoft.OData.UriParser
             string parenthesisExpression;
             ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
 
+            ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
+
+            if (this.nextSegmentCanBeEscapeFunction && string.IsNullOrEmpty(text))
+            {
+                this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression);
+                return;
+            }
+
             /*
              * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceded by an escape - marker segment('$').
              * For KeyAsSegment, the following precedence rules should be supported[ODATA - 799]:
@@ -1094,7 +1164,6 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             if (previous.TargetKind == RequestTargetKind.Primitive)
             {
                 // only $value is allowed after a primitive property
@@ -1209,6 +1278,12 @@ namespace Microsoft.OData.UriParser
                 {
                     structuredType = collectionType.ElementType.Definition as IEdmStructuredType;
                 }
+            }
+
+            if (identifier[identifier.Length-1] == ':')
+            {
+                this.nextSegmentCanBeEscapeFunction = true;
+                identifier = identifier.Substring(0, identifier.Length - 1);
             }
 
             if (structuredType == null)
@@ -1605,19 +1680,45 @@ namespace Microsoft.OData.UriParser
             throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(fullTypeName, kind, name));
         }
 
-        private static bool TryResolveEscapeFunction(string identifier, IEdmType bindingType, IEdmModel model, out string qualifiedName, out string parenthesisExpression)
+        private bool TryResolveEscapeFunction(string identifier, IEdmType bindingType, IEdmModel model, out string qualifiedName, out string parenthesisExpression)
         {
             qualifiedName = null;
             parenthesisExpression = null;
 
-            if (bindingType == null || // escape function is only for bind function
-                String.IsNullOrEmpty(identifier) ||
-                identifier[0] != ':')
+            if (bindingType == null)  // escape function is only for bind function
+
             {
                 return false;
             }
 
-            bool isComposableRequired = identifier.Length >= 2 && identifier[identifier.Length - 1] == ':';
+            string nextPiece = null;
+            bool anotherEscapeFunctionStarting = false;
+            if (!string.IsNullOrEmpty(identifier) && identifier[identifier.Length - 1] != ':')
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(identifier);
+
+                while (this.TryGetNextSegmentText(out nextPiece))
+                {
+                    sb.Append('/');
+                    sb.Append(nextPiece);
+
+                    if (nextPiece[nextPiece.Length - 1] == ':')
+                    {
+                        break;
+                    }
+                }
+
+                identifier = sb.ToString();
+            }
+
+            if (identifier != null && identifier.Length >= 2 && identifier[identifier.Length - 2] == ':')
+            {
+                anotherEscapeFunctionStarting = true;
+            }
+
+            this.nextSegmentCanBeEscapeFunction = anotherEscapeFunctionStarting;
+            bool isComposableRequired = identifier.Length >= 1 && identifier[identifier.Length - 1] == ':';
 
             IEdmFunction function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
             if (function == null)
@@ -1630,8 +1731,9 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter(function.FullName()));
             }
 
-            parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(1, identifier.Length - 2) : identifier.Substring(1)) + "'";
+            parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(0, identifier.Length - 1) : identifier.Substring(0)) + "'";
             qualifiedName = function.FullName();
+            
             return true;
         }
 
