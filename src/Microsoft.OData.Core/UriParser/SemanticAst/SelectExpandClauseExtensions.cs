@@ -109,7 +109,7 @@ namespace Microsoft.OData.UriParser
                 {
                     IList<string> pathSelectItems = GetSelectStringFromPathSelectItem(pathSelectItem);
 
-                    for(int i=0; i< pathSelectItems.Count; i++)
+                    for (int i = 0; i< pathSelectItems.Count; i++)
                     {
                         levelSelectList.Add(pathSelectItems[i]);
                     }
@@ -201,7 +201,7 @@ namespace Microsoft.OData.UriParser
                 nextLevelSelectList = GetCurrentLevelSelectList(pathSelectItem.SelectAndExpand);
             }
 
-            var selectListItem = String.Join("/", pathSelectItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+            string selectListItem = String.Join("/", pathSelectItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
 
             if (nextLevelSelectList != null && nextLevelSelectList.Any())
             {

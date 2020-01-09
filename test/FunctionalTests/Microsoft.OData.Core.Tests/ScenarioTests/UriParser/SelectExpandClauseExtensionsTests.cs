@@ -4,18 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Tests.UriParser;
-using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
-using Microsoft.OData.UriParser.Aggregation;
 
-namespace Microsoft.OData.Tests
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     public class SelectExpandClauseExtensionsTests
     {
@@ -24,17 +19,15 @@ namespace Microsoft.OData.Tests
         {
             //Arrange
             var expected = new List<string>();
-            expected.Add("Name");
             expected.Add("Shoe");
+            expected.Add("Name");
 
             //Act
             var clause = CreateSelectExpandClauseMultiSelect();
             var actual = SelectExpandClauseExtensions.GetCurrentLevelSelectList(clause);
 
             //Assert
-            Assert.Equal(expected.Count, actual.Count);
-            Assert.Equal(0,expected.Except(actual).Count());
-            Assert.Equal(0,actual.Except(expected).Count());
+            Assert.True(expected.SequenceEqual(actual));    
         }
 
         [Fact]
@@ -42,8 +35,8 @@ namespace Microsoft.OData.Tests
         {
             //Arrange
             var expected = new List<string>();
-            expected.Add("Name");
             expected.Add("FavoriteDate");
+            expected.Add("Name");
             expected.Add("MyAddress/City");
 
             //Act
@@ -51,9 +44,7 @@ namespace Microsoft.OData.Tests
             var actual = SelectExpandClauseExtensions.GetCurrentLevelSelectList(clause);
 
             //Assert
-            Assert.Equal(expected.Count, actual.Count);
-            Assert.Equal(0, expected.Except(actual).Count());
-            Assert.Equal(0, actual.Except(expected).Count());
+            Assert.True(expected.SequenceEqual(actual));
         }
 
         [Fact]
@@ -88,31 +79,31 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected[0], actual[0]);
         }
 
-        private SelectExpandClause CreateSelectExpandClauseMultiSelect()
+        private static SelectExpandClause CreateSelectExpandClauseMultiSelect()
         {
             ODataSelectPath personNamePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonNameProp()));
             ODataSelectPath personShoePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonShoeProp()));
 
-            var clause = new SelectExpandClause(new List<ExpandedNavigationSelectItem>(), false);
+            var clause = new SelectExpandClause(new List<SelectItem>(), false);
             clause.AddToSelectedItems(new PathSelectItem(personShoePath));
             clause.AddToSelectedItems(new PathSelectItem(personNamePath));
 
             return clause;
         }
 
-        private SelectExpandClause CreateSelectExpandClauseNestedSelect()
+        private static SelectExpandClause CreateSelectExpandClauseNestedSelect()
         {
             ODataSelectPath personNamePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonNameProp()));
             ODataSelectPath personShoePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonFavoriteDateProp()));
             ODataSelectPath addrPath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonAddressProp()));
             ODataSelectPath cityPath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetAddressCityProperty()));
 
-            var cityClause = new SelectExpandClause(new List<ExpandedNavigationSelectItem>(), false);
+            var cityClause = new SelectExpandClause(new List<SelectItem>(), false);
             cityClause.AddToSelectedItems(new PathSelectItem(cityPath));
             var addritem = new PathSelectItem(addrPath);
             addritem.SelectAndExpand = cityClause;
 
-            var clause = new SelectExpandClause(new List<ExpandedNavigationSelectItem>(), false);
+            var clause = new SelectExpandClause(new List<SelectItem>(), false);
             clause.AddToSelectedItems(new PathSelectItem(personShoePath));
             clause.AddToSelectedItems(new PathSelectItem(personNamePath));
             clause.AddToSelectedItems(addritem);
@@ -120,16 +111,16 @@ namespace Microsoft.OData.Tests
             return clause;
         }
 
-        private SelectExpandClause CreateSelectExpandClauseAllSelected()
+        private static SelectExpandClause CreateSelectExpandClauseAllSelected()
         {
-            var clause = new SelectExpandClause(new List<ExpandedNavigationSelectItem>(), true);
-            clause.AddToSelectedItems(new WildcardSelectItem()); 
+            var clause = new SelectExpandClause(new List<SelectItem>(), true);
+            clause.AddToSelectedItems(new WildcardSelectItem());
             return clause;
         }
 
-        private SelectExpandClause CreateSelectExpandClauseAllSelectedWithNamespace()
+        private static SelectExpandClause CreateSelectExpandClauseAllSelectedWithNamespace()
         {
-            var clause = new SelectExpandClause(new List<ExpandedNavigationSelectItem>(), true);
+            var clause = new SelectExpandClause(new List<SelectItem>(), true);
             clause.AddToSelectedItems(new NamespaceQualifiedWildcardSelectItem("namespace"));
             return clause;
         }
