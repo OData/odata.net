@@ -1,21 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-    <MSBuildTasksPath>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v$(MSBuildToolsVersion).dll</MSBuildTasksPath>
-    <MSBuildTasksPath Condition="!Exists('$(MSBuildTasksPath)')">$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</MSBuildTasksPath>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Define Basic Properties">
-    <EnlistmentRoot Condition=" '$(EnlistmentRoot)'=='' ">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))</EnlistmentRoot>
-    <EnlistmentRoot>$(EnlistmentRoot.TrimEnd({'\\'}))</EnlistmentRoot>
-    <BuildExtensionsPath Condition=" '$(BuildExtensionsPath)'=='' ">$(MSBuildThisFileDirectory.TrimEnd('\'))</BuildExtensionsPath>
-    <CustomBuildExtensionsPath Condition=" '$(CustomBuildExtensionsPath)'=='' ">$(EnlistmentRoot)\tools\CustomMSBuild</CustomBuildExtensionsPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">16.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <!-- when a TFS build definition, building for mixed platforms, specifies no platform. -->
     <Platform Condition=" '$(Platform)' == '' And '$(MSBuildProjectExtension)' != '.vcxproj' ">AnyCPU</Platform>
@@ -40,7 +26,7 @@
     <OutputPath>$(OutDir)</OutputPath>
     
     <!-- Setting this variable to false preserves the OutputPath set above. Without this variable, our OutputPath would eventually be overwritten with a different one in the Microsoft.Common.CurrentVersion.Target script. -->
-    <GenerateProjectSpecificOutputFolder>false</GenerateProjectSpecificOutputFolder>
+    
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(RedirectOutputToLocalBin)'=='' ">
@@ -132,10 +118,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DebugSymbols Condition="'$(DebugSymbols)' == ''">true</DebugSymbols>
+  
     <DebugType Condition="'$(DebugType)' == ''">full</DebugType>
-    <ErrorReport Condition="'$(ErrorReport)' == ''">prompt</ErrorReport>
-    <WarningLevel Condition="'$(WarningLevel)' == ''">4</WarningLevel>
+   
     <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>

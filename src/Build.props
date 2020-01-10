@@ -1,26 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-  <PropertyGroup>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <BuildInOSS Condition="'$(BuildInOSS)' == '' and !Exists('$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))\_BuildCommon')">true</BuildInOSS>
-  </PropertyGroup>
-
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))\tools\CustomMSBuild\TargetFrameworkPath.props" Condition="'$(BuildInOSS)' == 'true'"/>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))\_BuildCommon\Extensions\TargetFrameworkPath.props" Condition="'$(BuildInOSS)' != 'true'"/>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RelativeOutputPath>Product\$(RelativeOutputPath)</RelativeOutputPath>
-    <EnableStyleCop Condition="'$(TargetFrameworkVersion)' == 'v3.5'">false</EnableStyleCop>
     <StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">$(MSBuildThisFileDirectory)Common.StyleCop</StyleCopOverrideSettingsFile>
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">Delay</SigningScenario>
     <SigningType Condition="'$(SigningType)' == ''">Product</SigningType>
-    <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == '' and '$(MSBuildProjectExtension)' != '.nuproj' and '$(MSBuildProjectExtension)' != '.wixproj'">true</ShouldGenerateAssemblyAttributeFile>
-    <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == '' and '$(TargetFrameworkVersion)' != 'v3.5'">true</RunCodeAnalysis>
+    <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == '' ">true</ShouldGenerateAssemblyAttributeFile>
+    <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == ''">true</RunCodeAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
