@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-  </PropertyGroup>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- Set the version number: major, minor, build and release (i.e. alpha, beta or blank for RTM)-->
   <PropertyGroup>
@@ -13,11 +9,11 @@
   </PropertyGroup>
 
   <!--
-      Revision number is a date code. Note that this only work for about 6 years before the year part (year-2020)
+      Revision number is a date code. Note that this only work for about 6 years before the year part (year-2017)
       overflows the Int16. The system convert below will throw errors when this happens.
     -->
   <PropertyGroup>
-    <VersionStartYear Condition="'$(VersionStartYear)' == ''">2020</VersionStartYear>
+    <VersionStartYear Condition="'$(VersionStartYear)' == ''">2017</VersionStartYear>
     <VersionDateCode>$([System.Convert]::ToInt16('$([MSBuild]::Add(1, $([MSBuild]::Subtract($([System.DateTime]::Now.Year), $(VersionStartYear)))))$([System.DateTime]::Now.ToString("MMdd"))'))</VersionDateCode>
     <VersionRevision Condition="'$(VersionRevision)' == '' OR '$(VersionRevision)' == '0'">$([System.Convert]::ToString($(VersionDateCode)))</VersionRevision>
   </PropertyGroup>
