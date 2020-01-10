@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-  </PropertyGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <!-- Global settings that apply unconditionally. -->
     <EnlistmentRoot>$(MSBuildThisFileDirectory.TrimEnd('\'))</EnlistmentRoot>
@@ -24,8 +20,7 @@
     <AssemblyAttributeComCompatibleSideBySide Condition="'$(AssemblyAttributeComCompatibleSideBySide)' == ''">false</AssemblyAttributeComCompatibleSideBySide>
     <UseOwnAssemblyVersion Condition="'$(UseOwnAssemblyVersion)' == ''">false</UseOwnAssemblyVersion>
     <NoRuntimeCompatibilityAttribute Condition="'$(NoRuntimeCompatibilityAttribute)' == ''">false</NoRuntimeCompatibilityAttribute>
-    <GenerateTargetFrameworkAttribute Condition="'$(GenerateTargetFrameworkAttribute)' == ''">false</GenerateTargetFrameworkAttribute>
-    <TransparentAssembly Condition="'$(TransparentAssembly)' == ''">false</TransparentAssembly>
+    
     <AssemblyAttributeSkipVerificationInFullTrust Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == ''">true</AssemblyAttributeSkipVerificationInFullTrust>
   </PropertyGroup>
  
@@ -78,10 +73,7 @@
     <PackagesConfig>$(NuGetToolsPath)\packages.config</PackagesConfig>
   </PropertyGroup>
 
-  <Target Name="RestoreNuGetPackages" BeforeTargets="$(GenerateTextStringResourcesDependsOn)">
-    <Exec Command="&quot;$(NuGetExePath)&quot; restore &quot;$(PackagesConfig)&quot; -PackageSaveMode nuspec -SolutionDirectory &quot;$(SolutionDir)\&quot;" />
-  </Target>
-
+ 
   <!-- StyleCop settings -->
   <PropertyGroup>
     <StyleCopTargets>$(NuGetPack)\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.Targets</StyleCopTargets>
@@ -103,8 +95,6 @@
 
   <!--These empty property groups are used to ensure x64, x86 and AnyCPU are included in the platform list. 
       VS will pick AnyCPU as the default purely because of alphabetic order.-->
-  <PropertyGroup Condition="'$(Platform)' == 'x64'" />
-  <PropertyGroup Condition="'$(Platform)' == 'x86'" />
-  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'" />
+
 
 </Project>
