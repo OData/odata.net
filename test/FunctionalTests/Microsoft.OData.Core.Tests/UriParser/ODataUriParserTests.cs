@@ -1183,22 +1183,6 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("Name", proSegment.Property.Name);
         }
 
-        //[Fact]
-        //public void ParseEscapeFunctionUrlThrowsWithoutEscapeFunction()
-        //{
-        //    // Arrange
-        //    IEdmModel model = GetEdmModelWithEscapeFunction(escape: false);
-
-        //    // Act
-        //    var fullUriString = ServiceRoot + "/root:/photos/2018/February";
-        //    var parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
-        //    Action test = () => parser.ParsePath();
-
-        //    // Assert
-        //    var odataException = Assert.Throws<ODataException>(test);
-        //    Assert.Equal(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported("NS.OneDrive"), odataException.Message);
-        //}
-
         [Fact]
         public void ParseEscapeFunctionUrlThrowsInvalidEscapeFunction()
         {
