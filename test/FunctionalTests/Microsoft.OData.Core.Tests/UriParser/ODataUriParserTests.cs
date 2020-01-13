@@ -1289,22 +1289,6 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("xyz/abc", ((ConstantNode)parameter.Value).Value);
         }
 
-        //[Fact]
-        //public void ParseEscapeFunctionUrlWithoutEndingDelimiterThrowsWithoutNonComposableFunction()
-        //{
-        //    // Arrange
-        //    IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
-
-        //    // Act
-        //    string fullUriString = ServiceRoot + "/Customers(2)/MyOrders:/xyz/abc";
-        //    ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
-        //    Action test = () => parser.ParsePath();
-
-        //    // Assert
-        //    var odataException = Assert.Throws<ODataException>(test);
-        //    Assert.Equal(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported("Collection(NS.Order)"), odataException.Message);
-        //}
-
         [Theory]
         [InlineData("Customers(2):/abc:/:/xyz")]
         [InlineData("Customers(2):/abc::/xyz")]
