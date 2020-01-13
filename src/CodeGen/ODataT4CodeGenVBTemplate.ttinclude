@@ -1,0 +1,1031 @@
+﻿<#+
+public sealed class ODataClientVBTemplate : ODataClientTemplate
+{
+    /// <summary>
+    /// Creates an instance of the ODataClientTemplate.
+    /// </summary>
+    /// <param name="context">The cotion context.</param>
+    public ODataClientVBTemplate(CodeGenerationContext context)
+        : base(context)
+    {
+    }
+
+    internal override string GlobalPrefix { get { return string.Empty; } }
+    internal override string SystemTypeTypeName { get { return "Global.System.Type"; } }
+    internal override string AbstractModifier { get { return " MustInherit"; } }
+    internal override string DataServiceActionQueryTypeName { get { return "Global.Microsoft.OData.Client.DataServiceActionQuery"; } }
+    internal override string DataServiceActionQuerySingleOfTStructureTemplate { get { return "Global.Microsoft.OData.Client.DataServiceActionQuerySingle(Of {0})"; } }
+    internal override string DataServiceActionQueryOfTStructureTemplate { get { return "Global.Microsoft.OData.Client.DataServiceActionQuery(Of {0})"; } }
+    internal override string NotifyPropertyChangedModifier { get { return "\r\n        Implements Global.System.ComponentModel.INotifyPropertyChanged"; } }
+    internal override string ClassInheritMarker { get { return "\r\n        Inherits "; } }
+    internal override string ParameterSeparator { get { return ",  _\r\n                    "; } }
+    internal override string KeyParameterSeparator { get { return ",  _\r\n            "; } }
+    internal override string KeyDictionaryItemSeparator { get { return ",  _\r\n                "; } }
+    internal override string SystemNullableStructureTemplate { get { return "Global.System.Nullable(Of {0})"; } }
+    internal override string ICollectionOfTStructureTemplate { get { return "Global.System.Collections.Generic.ICollection(Of {0})"; } }
+    internal override string DataServiceCollectionStructureTemplate { get { return "Global.Microsoft.OData.Client.DataServiceCollection(Of {0})"; } }
+    internal override string DataServiceQueryStructureTemplate { get { return "Global.Microsoft.OData.Client.DataServiceQuery(Of {0})"; } }
+    internal override string DataServiceQuerySingleStructureTemplate { get { return "Global.Microsoft.OData.Client.DataServiceQuerySingle(Of {0})"; } }
+    internal override string ObservableCollectionStructureTemplate { get { return "Global.System.Collections.ObjectModel.ObservableCollection(Of {0})"; } }
+    internal override string ObjectModelCollectionStructureTemplate { get { return "Global.System.Collections.ObjectModel.Collection(Of {0})"; } }
+    internal override string DataServiceCollectionConstructorParameters { get { return "(Nothing, Global.Microsoft.OData.Client.TrackingMode.None)"; } }
+    internal override string NewModifier { get { return "New "; } }
+    internal override string GeoTypeInitializePattern { get { return "Global.Microsoft.Spatial.SpatialImplementation.CurrentImplementation.CreateWellKnownTextSqlFormatter(False).Read(Of {0})(New Global.System.IO.StringReader(\"{1}\"))"; } }
+    internal override string Int32TypeName { get { return "Integer"; } }
+    internal override string StringTypeName { get { return "String"; } }
+    internal override string BinaryTypeName { get { return "Byte()"; } }
+    internal override string DecimalTypeName { get { return "Decimal"; } }
+    internal override string Int16TypeName { get { return "Short"; } }
+    internal override string SingleTypeName { get { return "Single"; } }
+    internal override string BooleanTypeName { get { return "Boolean"; } }
+    internal override string DoubleTypeName { get { return "Double"; } }
+    internal override string GuidTypeName { get { return "Global.System.Guid"; } }
+    internal override string ByteTypeName { get { return "Byte"; } }
+    internal override string Int64TypeName { get { return "Long"; } }
+    internal override string SByteTypeName { get { return "SByte"; } }
+    internal override string DataServiceStreamLinkTypeName { get { return "Global.Microsoft.OData.Client.DataServiceStreamLink"; } }
+    internal override string GeographyTypeName { get { return "Global.Microsoft.Spatial.Geography"; } }
+    internal override string GeographyPointTypeName { get { return "Global.Microsoft.Spatial.GeographyPoint"; } }
+    internal override string GeographyLineStringTypeName { get { return "Global.Microsoft.Spatial.GeographyLineString"; } }
+    internal override string GeographyPolygonTypeName { get { return "Global.Microsoft.Spatial.GeographyPolygon"; } }
+    internal override string GeographyCollectionTypeName { get { return "Global.Microsoft.Spatial.GeographyCollection"; } }
+    internal override string GeographyMultiPolygonTypeName { get { return "Global.Microsoft.Spatial.GeographyMultiPolygon"; } }
+    internal override string GeographyMultiLineStringTypeName { get { return "Global.Microsoft.Spatial.GeographyMultiLineString"; } }
+    internal override string GeographyMultiPointTypeName { get { return "Global.Microsoft.Spatial.GeographyMultiPoint"; } }
+    internal override string GeometryTypeName { get { return "Global.Microsoft.Spatial.Geometry"; } }
+    internal override string GeometryPointTypeName { get { return "Global.Microsoft.Spatial.GeometryPoint"; } }
+    internal override string GeometryLineStringTypeName { get { return "Global.Microsoft.Spatial.GeometryLineString"; } }
+    internal override string GeometryPolygonTypeName { get { return "Global.Microsoft.Spatial.GeometryPolygon"; } }
+    internal override string GeometryCollectionTypeName { get { return "Global.Microsoft.Spatial.GeometryCollection"; } }
+    internal override string GeometryMultiPolygonTypeName { get { return "Global.Microsoft.Spatial.GeometryMultiPolygon"; } }
+    internal override string GeometryMultiLineStringTypeName { get { return "Global.Microsoft.Spatial.GeometryMultiLineString"; } }
+    internal override string GeometryMultiPointTypeName { get { return "Global.Microsoft.Spatial.GeometryMultiPoint"; } }
+    internal override string DateTypeName { get { return "Global.Microsoft.OData.Edm.Date"; } }
+    internal override string DateTimeOffsetTypeName { get { return "Global.System.DateTimeOffset"; } }
+    internal override string DurationTypeName { get { return "Global.System.TimeSpan"; } }
+    internal override string TimeOfDayTypeName { get { return "Global.Microsoft.OData.Edm.TimeOfDay"; } }
+    internal override string XmlConvertClassName { get { return "Global.System.Xml.XmlConvert"; } }
+    internal override string EnumTypeName { get { return "Global.System.Enum"; } }
+    internal override string FixPattern { get { return "[{0}]"; } }
+    internal override string EnumUnderlyingTypeMarker { get { return " As "; } }
+    internal override string ConstantExpressionConstructorWithType { get { return "Global.System.Linq.Expressions.Expression.Constant({0}, GetType({1}))"; } }
+    internal override string TypeofFormatter { get { return "GetType({0})"; } }    
+    internal override string UriOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.UriOperationParameter(\"{0}\", {1})"; } }
+    internal override string UriEntityOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.UriEntityOperationParameter(\"{0}\", {1}, {2})"; } }
+    internal override string BodyOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.BodyOperationParameter(\"{0}\", {1})"; } }
+    internal override string BaseEntityType { get { return "\r\n        Inherits Global.Microsoft.OData.Client.BaseEntityType"; } }
+    internal override string OverloadsModifier { get { return "Overloads "; } }
+    internal override string ODataVersion { get { return "Global.Microsoft.OData.ODataVersion.V4"; } }
+    internal override string ParameterDeclarationTemplate { get { return "{1} As {0}"; } }
+    internal override string DictionaryItemConstructor { get { return "{{ {0}, {1} }}"; } }
+    internal override HashSet<string> LanguageKeywords { get { 
+        if (VBKeywords == null)
+        {
+            VBKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "AddHandler", "AddressOf", "Alias", "And", "AndAlso", "As", "Boolean", "ByRef", "Byte", "ByVal",
+                "Call", "Case", "Catch", "CBool", "", "CByte", "CChar", "CDate", "CDbl", "CDec", "Char", 
+                "CInt", "Class", "CLng", "CObj", "Const", "Continue", "CSByte", "CShort", "CSng", "CStr",
+                "CType", "CUInt", "CULng", "CUShort", "Date", "Decimal", "Declare", "Default", "Delegate", "Dim",
+                "DirectCast", "Do", "Double", "Each", "Else", "ElseIf", "End", "EndIf", "Enum", "Erase",
+                "Error", "Event", "Exit", "False", "Finally", "For", "Friend", "Function", "Get", "GetType",
+                "GetXMLNamespace", "Global", "GoSub", "GoTo", "Handles", "If", "Implements", "Imports", "In", "Inherits",
+                "Integer", "Interface", "Is", "IsNot", "Let", "Lib", "Like", "Long", "Loop", "Me",
+                "Mod", "Module", "MustInherit", "MustOverride", "MyBase", "MyClass", "Namespace", "Narrowing", "New", "Next",
+                "Not", "Nothing", "NotInheritable", "NotOverridable", "Object", "Of", "On", "Operator", "Option", "Optional",
+                "Or", "OrElse", "Out", "Overloads", "Overridable", "Overrides", "ParamArray", "Partial", "Private", "Property",
+                "Protected", "Public", "RaiseEvent", "ReadOnly", "ReDim", "REM", "RemoveHandler", "Resume", "Return", "SByte",
+                "Select", "Set", "Shadows", "Shared", "Short", "Single", "Static", "Step", "Stop", "String", 
+                "Structure", "Sub", "SyncLock", "Then", "Throw", "To", "True", "Try", "TryCast", "TypeOf", 
+                "UInteger", "ULong", "UShort", "Using", "Variant", "Wend", "When", "While", "Widening", "With", 
+                "WithEvents", "WriteOnly", "Xor"
+            };
+        }
+        return VBKeywords;
+    } }
+    private HashSet<string> VBKeywords;
+
+    internal override void WriteFileHeader()
+    {
+#>'------------------------------------------------------------------------------
+' <auto-generated>
+'     This code was generated by a tool.
+'     Runtime Version:<#= Environment.Version #>
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </auto-generated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+'Generation date: <#= DateTime.Now.ToString(System.Globalization.CultureInfo.CurrentCulture) #>
+<#+
+    }
+
+    internal override void WriteNamespaceStart(string fullNamespace)
+    {
+#>
+Namespace <#= fullNamespace #>
+<#+
+    }
+
+    internal override void WriteClassStartForEntityContainer(string originalContainerName, string containerName, string fixedContainerName)
+    {
+#>
+    '''<summary>
+    '''There are no comments for <#= containerName #> in the schema.
+    '''</summary>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+    <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalContainerName #>")>  _
+<#+
+        }
+#>
+    Partial Public Class <#= fixedContainerName #>
+        Inherits Global.Microsoft.OData.Client.DataServiceContext
+<#+
+    }
+
+    internal override void WriteMethodStartForEntityContainerConstructor(string containerName, string fixedContainerName)
+    {
+#>
+        '''<summary>
+        '''Initialize a new <#= containerName #> object.
+        '''</summary>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Public Sub New(ByVal serviceRoot As Global.System.Uri)
+            MyBase.New(serviceRoot, Global.Microsoft.OData.Client.ODataProtocolVersion.V4)
+<#+
+    }
+
+    internal override void WriteKeyAsSegmentUrlConvention()
+    {
+#>
+            Me.UrlKeyDelimiter = Global.Microsoft.OData.Client.DataServiceUrlKeyDelimiter.Slash
+<#+
+    }
+
+    internal override void WriteInitializeResolveName()
+    {
+#>
+            Me.ResolveName = AddressOf Me.ResolveNameFromType
+<#+
+    }
+
+    internal override void WriteInitializeResolveType()
+    {
+#>
+            Me.ResolveType = AddressOf Me.ResolveTypeFromName
+<#+
+    }
+
+    internal override void WriteClassEndForEntityContainerConstructor()
+    {
+#>
+            Me.OnContextCreated
+            Me.Format.LoadServiceModel = AddressOf GeneratedEdmModel.GetInstance
+            Me.Format.UseJson()
+        End Sub
+        Partial Private Sub OnContextCreated()
+        End Sub
+<#+
+    }
+
+    internal override void WriteMethodStartForResolveTypeFromName()
+    {
+#>
+        '''<summary>
+        '''Since the namespace configured for this service reference
+        '''in Visual Studio is different from the one indicated in the
+        '''server schema, use type-mappers to map between the two.
+        '''</summary>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Protected Function ResolveTypeFromName(ByVal typeName As String) As Global.System.Type
+<#+
+    }
+
+    internal override void WriteResolveNamespace(string typeName, string fullNamespace, string languageDependentNamespace)
+    {
+        if (!string.IsNullOrEmpty(typeName))
+        {
+#>
+            Dim resolvedType As <#= typeName #>= Me.DefaultResolveType(typeName, "<#= fullNamespace #>", String.Concat(ROOTNAMESPACE, "<#= languageDependentNamespace #>"))
+<#+
+        }
+        else
+        {
+#>
+            resolvedType = Me.DefaultResolveType(typeName, "<#= fullNamespace #>", String.Concat(ROOTNAMESPACE, "<#= languageDependentNamespace #>"))
+<#+
+        }
+#>
+            If (Not (resolvedType) Is Nothing) Then
+                Return resolvedType
+            End If
+<#+
+    }
+
+    internal override void WriteMethodEndForResolveTypeFromName()
+    {
+#>
+            Return Nothing
+        End Function
+<#+
+    }
+    
+    internal override void WritePropertyRootNamespace(string containerName, string fullNamespace)
+    {
+#>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Private Shared ROOTNAMESPACE As String = GetType(<#= containerName #>).Namespace.Remove(GetType(<#= containerName #>).Namespace.LastIndexOf("<#= fullNamespace #>"))
+<#+
+    }
+
+    internal override void WriteMethodStartForResolveNameFromType(string containerName, string fullNamespace)
+    {
+#>
+        '''<summary>
+        '''Since the namespace configured for this service reference
+        '''in Visual Studio is different from the one indicated in the
+        '''server schema, use type-mappers to map between the two.
+        '''</summary>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Protected Function ResolveNameFromType(ByVal clientType As Global.System.Type) As String
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+            Dim originalNameAttribute As Global.Microsoft.OData.Client.OriginalNameAttribute =
+                CType(Global.System.Linq.Enumerable.SingleOrDefault(Global.Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, GetType(Global.Microsoft.OData.Client.OriginalNameAttribute), true)), Global.Microsoft.OData.Client.OriginalNameAttribute)
+<#+
+    }
+    }
+
+    internal override void WriteResolveType(string fullNamespace, string languageDependentNamespace)
+    {
+#>
+            If clientType.Namespace.Equals(String.Concat(ROOTNAMESPACE, "<#= languageDependentNamespace #>"), Global.System.StringComparison.OrdinalIgnoreCase) Then
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+                If (Not (originalNameAttribute) Is Nothing) Then
+                    Return String.Concat("<#= fullNamespace #>.", originalNameAttribute.OriginalName)
+                End If
+<#+
+        }
+#>
+                Return String.Concat("<#= fullNamespace #>.", clientType.Name)
+            End If
+<#+
+    }
+
+    internal override void WriteMethodEndForResolveNameFromType(bool modelHasInheritance)
+    {
+        if (this.context.EnableNamingAlias && modelHasInheritance)
+        {
+#>
+            If (Not (originalNameAttribute) Is Nothing) Then
+                Dim fullName As String = clientType.FullName.Substring(ROOTNAMESPACE.Length)
+                Return fullName.Remove(fullName.LastIndexOf(clientType.Name)) + originalNameAttribute.OriginalName
+            End If
+<#+
+        }
+#>
+            Return <#= modelHasInheritance ? "clientType.FullName.Substring(ROOTNAMESPACE.Length)" : "Nothing" #>
+        End Function
+<#+
+    }
+
+    internal override void WriteConstructorForSingleType(string singleTypeName, string baseTypeName)
+    {
+#>
+        ''' <summary>
+        ''' Initialize a new <#= singleTypeName #> object.
+        ''' </summary>
+        Public Sub New(ByVal context As Global.Microsoft.OData.Client.DataServiceContext, ByVal path As String)
+            MyBase.New(context, path)
+        End Sub
+
+        ''' <summary>
+        ''' Initialize a new <#= singleTypeName #> object.
+        ''' </summary>
+        Public Sub New(ByVal context As Global.Microsoft.OData.Client.DataServiceContext, ByVal path As String, ByVal isComposable As Boolean)
+            MyBase.New(context, path, isComposable)
+        End Sub
+
+        ''' <summary>
+        ''' Initialize a new <#= singleTypeName #> object.
+        ''' </summary>
+        Public Sub New(ByVal query As <#= baseTypeName #>)
+            MyBase.New(query)
+        End Sub
+<#+
+    }
+
+    internal override void WriteContextEntitySetProperty(string entitySetName, string entitySetFixedName, string originalEntitySetName, string entitySetElementTypeName, bool inContext)
+    {
+#>
+        '''<summary>
+        '''There are no comments for <#= entitySetName #> in the schema.
+        '''</summary>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalEntitySetName #>")>  _
+<#+
+        }
+#>
+        Public ReadOnly Property <#= entitySetFixedName #>() As Global.Microsoft.OData.Client.DataServiceQuery(Of <#= entitySetElementTypeName #>)
+            Get
+<#+
+        if (!inContext)
+        {
+#>
+                If Not Me.IsComposable Then
+                    Throw New Global.System.NotSupportedException("The previous function is not composable.")
+                End If
+<#+
+        }
+#>
+                If (Me._<#= entitySetName #> Is Nothing) Then
+                    Me._<#= entitySetName #> = <#= inContext ? "MyBase" : "Context"#>.CreateQuery(Of <#= entitySetElementTypeName #>)(<#= inContext ? "\"" + originalEntitySetName + "\"" : "GetPath(\"" + originalEntitySetName + "\")" #>)
+                End If
+                Return Me._<#= entitySetName #>
+            End Get
+        End Property
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Private _<#= entitySetName #> As Global.Microsoft.OData.Client.DataServiceQuery(Of <#= entitySetElementTypeName #>)
+<#+
+    }
+
+    internal override void WriteContextSingletonProperty(string singletonName, string singletonFixedName, string originalSingletonName, string singletonElementTypeName, bool inContext)
+    {
+#>
+        '''<summary>
+        '''There are no comments for <#= singletonName #> in the schema.
+        '''</summary>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalSingletonName #>")>  _
+<#+
+        }
+#>
+        Public ReadOnly Property <#= singletonFixedName #>() As <#= singletonElementTypeName #>
+            Get
+<#+
+        if (!inContext)
+        {
+#>
+                If Not Me.IsComposable Then
+                    Throw New Global.System.NotSupportedException("The previous function is not composable.")
+                End If
+<#+
+        }
+#>
+                If (Me._<#= singletonName #> Is Nothing) Then
+                    Me._<#= singletonName #> = New <#= singletonElementTypeName #>(<#= inContext ? "Me" : "Me.Context" #>, <#= inContext ? "\"" + originalSingletonName + "\"" : "GetPath(\"" + originalSingletonName + "\")" #>)
+                End If
+                Return Me._<#= singletonName #>
+            End Get
+        End Property
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Private _<#= singletonName #> As <#= singletonElementTypeName #>
+<#+
+    }
+
+    internal override void WriteContextAddToEntitySetMethod(string entitySetName, string originalEntitySetName, string typeName, string parameterName)
+    {
+#>
+        '''<summary>
+        '''There are no comments for <#= entitySetName #> in the schema.
+        '''</summary>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Public Sub AddTo<#= entitySetName #>(ByVal <#= parameterName #> As <#= typeName #>)
+            MyBase.AddObject("<#= originalEntitySetName #>", <#= parameterName #>)
+        End Sub
+<#+
+    }
+
+    internal override void WriteGeneratedEdmModel(string escapedEdmxString)
+    {
+        escapedEdmxString = escapedEdmxString.Replace("\r\n", "\" & _\r\n \"");
+#>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Private MustInherit Class GeneratedEdmModel
+<#+
+        if (this.context.ReferencesMap != null)
+        {
+#>
+            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+            Private Shared ReferencesMap As Global.System.Collections.Generic.Dictionary(Of String, String) = New Global.System.Collections.Generic.Dictionary(Of String, String) From
+                {
+<#+
+            int count = this.context.ReferencesMap.Count();
+            foreach(var reference in this.context.ReferencesMap)
+            {
+#>
+                    {"<#= reference.Key.OriginalString.Replace("\"", "\"\"") #>", "<#= Utils.SerializeToString(reference.Value).Replace("\"", "\"\"").Replace("\r\n", "\" & _\r\n \"") #>"}<#= (--count>0?",":"")#>
+<#+
+            }
+#>
+                }
+<#+
+        }
+#>
+            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+            Private Shared ParsedModel As Global.Microsoft.OData.Edm.IEdmModel = LoadModelFromString
+            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+            Private Const Edmx As String = "<#= escapedEdmxString #>"
+            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+            Public Shared Function GetInstance() As Global.Microsoft.OData.Edm.IEdmModel
+                Return ParsedModel
+            End Function
+<#+
+        if (this.context.ReferencesMap != null)
+        {
+#>
+            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+            Private Shared Function getReferencedModelFromMap(ByVal uri As Global.System.Uri) As Global.System.Xml.XmlReader
+                Dim referencedEdmx As String = Nothing
+                If (ReferencesMap.TryGetValue(uri.OriginalString, referencedEdmx)) Then
+                    Return CreateXmlReader(referencedEdmx)
+                End If
+                Return Nothing
+            End Function
+            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+            Private Shared Function LoadModelFromString() As Global.Microsoft.OData.Edm.IEdmModel
+                Dim reader As Global.System.Xml.XmlReader = CreateXmlReader(Edmx)
+                Try
+                    Return Global.Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader, AddressOf getReferencedModelFromMap)
+                Finally
+                    CType(reader,Global.System.IDisposable).Dispose
+                End Try
+            End Function
+<#+
+        }
+        else
+        {
+#>
+            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+            Private Shared Function LoadModelFromString() As Global.Microsoft.OData.Edm.IEdmModel
+                Dim reader As Global.System.Xml.XmlReader = CreateXmlReader(Edmx)
+                Try
+                    Return Global.Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader)
+                Finally
+                    CType(reader,Global.System.IDisposable).Dispose
+                End Try
+            End Function
+<#+
+        }
+#>
+            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+            Private Shared Function CreateXmlReader(ByVal edmxToParse As String) As Global.System.Xml.XmlReader
+                Return Global.System.Xml.XmlReader.Create(New Global.System.IO.StringReader(edmxToParse))
+            End Function
+        End Class
+<#+
+    }
+
+    internal override void WriteClassEndForEntityContainer()
+    {
+#>
+    End Class
+<#+
+    }
+
+    internal override void WriteSummaryCommentForStructuredType(string typeName)
+    {
+#>
+    '''<summary>
+    '''There are no comments for <#= typeName #> in the schema.
+    '''</summary>
+<#+
+    }
+
+    internal override void WriteKeyPropertiesCommentAndAttribute(IEnumerable<string> keyProperties, string keyString)
+    {
+#>
+    '''<KeyProperties>
+<#+
+        foreach (string key in keyProperties)
+        {
+#>
+    '''<#= key #>
+<#+
+        } 
+#>
+    '''</KeyProperties>
+    <Global.Microsoft.OData.Client.Key("<#= keyString #>")>  _
+<#+
+    }
+
+    internal override void WriteEntityTypeAttribute()
+    {
+#>
+    <Global.Microsoft.OData.Client.EntityType()>  _
+<#+
+    }
+
+    internal override void WriteEntitySetAttribute(string entitySetName)
+    {
+#>
+    <Global.Microsoft.OData.Client.EntitySet("<#= entitySetName #>")>  _
+<#+
+    }
+
+    internal override void WriteEntityHasStreamAttribute()
+    {
+#>
+    <Global.Microsoft.OData.Client.HasStream()>  _
+<#+
+    }
+
+    internal override void WriteClassStartForStructuredType(string abstractModifier, string typeName, string originalTypeName, string baseTypeName)
+    {
+        if (this.context.EnableNamingAlias)
+    {
+#>
+    <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalTypeName #>")>  _
+<#+
+        }
+#>
+    Partial Public<#= abstractModifier #> Class <#= typeName #><#= baseTypeName #>
+<#+
+    }
+
+    internal override void WriteSummaryCommentForStaticCreateMethod(string typeName)
+    {
+#>
+        '''<summary>
+        '''Create a new <#= typeName #> object.
+        '''</summary>
+<#+
+    }
+
+    internal override void WriteParameterCommentForStaticCreateMethod(string parameterName, string propertyName)
+    {
+#>
+        '''<param name="<#= parameterName #>">Initial value of <#= propertyName #>.</param>
+<#+
+    }
+
+    internal override void WriteDeclarationStartForStaticCreateMethod(string typeName, string fixedTypeName)
+    {
+#>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Public Shared Function Create<#= typeName #>(<#+
+
+    }
+
+    internal override void WriteParameterForStaticCreateMethod(string parameterTypeName, string parameterName, string parameterSeparater)
+    {
+#>ByVal <#= parameterName #> As <#= parameterTypeName #><#= parameterSeparater #><#+
+    }
+
+    internal override void WriteDeclarationEndForStaticCreateMethod(string typeName, string instanceName)
+    {
+          #>) As <#= typeName #>
+            Dim <#= instanceName #> As <#= typeName #> = New <#= typeName #>()
+<#+
+    }
+
+    internal override void  WriteParameterNullCheckForStaticCreateMethod(string parameterName)
+    {
+#>
+            If (<#= parameterName #> Is Nothing) Then
+                Throw New Global.System.ArgumentNullException("<#= parameterName #>")
+            End If
+<#+
+    }
+
+    internal override void WritePropertyValueAssignmentForStaticCreateMethod(string instanceName, string propertyName, string parameterName)
+    {
+#>
+            <#= instanceName #>.<#= propertyName #> = <#= parameterName #>
+<#+
+    }
+
+    internal override void WriteMethodEndForStaticCreateMethod(string instanceName)
+    {
+#>
+            Return <#= instanceName #>
+        End Function
+<#+
+    }
+
+    internal override void WritePropertyForStructuredType(string propertyType, string originalPropertyName, string propertyName, string fixedPropertyName, string privatePropertyName, string propertyInitializationValue, bool writeOnPropertyChanged)
+    {
+#>
+        '''<summary>
+        '''There are no comments for Property <#= propertyName #> in the schema.
+        '''</summary>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+<#+
+        if (this.context.EnableNamingAlias || IdentifierMappings.ContainsKey(originalPropertyName))
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalPropertyName #>")>  _
+<#+
+        }
+#>
+        Public Property <#= fixedPropertyName #>() As <#= propertyType #>
+            Get
+                Return Me.<#= privatePropertyName #>
+            End Get
+            Set
+                Me.On<#= propertyName #>Changing(value)
+                Me.<#= privatePropertyName #> = value
+                Me.On<#= propertyName #>Changed
+<#+
+        if (writeOnPropertyChanged)
+        {
+#>
+                Me.OnPropertyChanged("<#= originalPropertyName #>")
+<#+
+        }
+#>
+            End Set
+        End Property
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+<#+
+        string constructorString = string.Empty;
+        if (!string.IsNullOrEmpty(propertyInitializationValue))
+        {
+            constructorString = " = " + propertyInitializationValue;
+        }
+#>
+        Private <#= privatePropertyName #> As <#= propertyType #><#= constructorString #>
+        Partial Private Sub On<#= propertyName #>Changing(ByVal value As <#= propertyType #>)
+        End Sub
+        Partial Private Sub On<#= propertyName #>Changed()
+        End Sub
+<#+
+    }
+
+    internal override void WriteINotifyPropertyChangedImplementation()
+    {
+#>
+        ''' <summary>
+        ''' This event is raised when the value of the property is changed
+        ''' </summary>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Public Event PropertyChanged As Global.System.ComponentModel.PropertyChangedEventHandler Implements Global.System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+        ''' <summary>
+        ''' The value of the property is changed
+        ''' </summary>
+        ''' <param name="property">property name</param>
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")>  _
+        Protected Overridable Sub OnPropertyChanged(ByVal [property] As String)
+            If (Not (Me.PropertyChangedEvent) Is Nothing) Then
+                RaiseEvent PropertyChanged(Me, New Global.System.ComponentModel.PropertyChangedEventArgs([property]))
+            End If
+        End Sub
+<#+
+    }
+
+    internal override void WriteClassEndForStructuredType()
+    {
+#>
+    End Class
+<#+
+    }
+    
+    internal override void WriteEnumFlags()
+    {
+#>
+    <Global.System.Flags()>
+<#+
+    }
+
+    internal override void WriteSummaryCommentForEnumType(string enumName)
+    {
+#>
+    '''<summary>
+    '''There are no comments for <#= enumName #> in the schema.
+    '''</summary>
+<#+
+    }
+
+    internal override void WriteEnumDeclaration(string enumName, string originalEnumName, string underlyingType)
+    {
+        if (this.context.EnableNamingAlias)
+    {
+#>
+    <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalEnumName #>")>  _
+<#+
+        }
+#>
+    Public Enum <#= enumName #><#= underlyingType #>
+<#+
+    }
+
+    internal override void WriteMemberForEnumType(string member, string originalMemberName, bool last)
+    {
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalMemberName #>")>  _
+<#+
+        }
+#>
+        <#= member #>
+<#+
+    }
+
+    internal override void WriteEnumEnd()
+    {
+#>
+    End Enum
+<#+
+    }
+    
+    internal override void WriteFunctionImportReturnCollectionResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool useEntityReference)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= functionName #> in the schema.
+        ''' </summary>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+<#+
+        }
+#>
+        Public Function <#= functionName #>(<#= parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As Global.Microsoft.OData.Client.DataServiceQuery(Of <#= returnTypeName #>)
+            Return Me.CreateFunctionQuery(Of <#= returnTypeName #>)("", "/<#= originalFunctionName #>", <#= isComposable #> <#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)
+        End Function
+<#+
+    }
+
+    internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= functionName #> in the schema.
+        ''' </summary>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+<#+
+        }
+#>
+        Public Function <#= functionName #>(<#= parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
+            Return <#= isReturnEntity ? "New " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>Me.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)("", "/<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
+        End Function
+<#+
+    }
+
+    internal override void WriteBoundFunctionInEntityTypeReturnCollectionResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= functionName #> in the schema.
+        ''' </summary>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+<#+
+        }
+#>
+        Public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #>Function <#= functionName #>(<#= parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As Global.Microsoft.OData.Client.DataServiceQuery(Of <#= returnTypeName #>)
+            Dim requestUri As Global.System.Uri = Nothing
+            Context.TryGetUri(Me, requestUri)
+            Return Me.Context.CreateFunctionQuery(Of <#= returnTypeName #>)("", String.Join("/", Global.System.Linq.Enumerable.Select(Global.System.Linq.Enumerable.Skip(requestUri.Segments, Me.Context.BaseUri.Segments.Length), Function(s) s.Trim("/"C))) + "/<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)
+        End Function
+<#+
+    }
+
+    internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= functionName #> in the schema.
+        ''' </summary>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+<#+
+        }
+#>
+        Public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #>Function <#= functionName #>(<#= parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
+            Dim requestUri As Global.System.Uri = Nothing
+            Context.TryGetUri(Me, requestUri)
+            Return <#= isReturnEntity ? "New " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>Me.Context.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)(String.Join("/", Global.System.Linq.Enumerable.Select(Global.System.Linq.Enumerable.Skip(requestUri.Segments, Me.Context.BaseUri.Segments.Length), Function(s) s.Trim("/"C))), "/<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
+        End Function
+<#+
+    }
+    
+    internal override void WriteActionImport(string actionName, string originalActionName, string returnTypeName, string parameters, string parameterValues)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= actionName #> in the schema.
+        ''' </summary>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")>  _
+<#+
+        }
+#>
+        Public Function <#= actionName #>(<#= parameters #>) As <#= returnTypeName #>
+            Return New <#= returnTypeName #>(Me, Me.BaseUri.OriginalString.Trim("/"C) + "/<#= originalActionName #>"<#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)
+        End Function
+<#+
+    }
+    
+    internal override void WriteBoundActionInEntityType(bool hideBaseMethod, string actionName, string originalActionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= actionName #> in the schema.
+        ''' </summary>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")>  _
+<#+
+        }
+#>
+        Public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #>Function <#= actionName #>(<#= parameters #>) As <#= returnTypeName #>
+            Dim resource As Global.Microsoft.OData.Client.EntityDescriptor = Context.EntityTracker.TryGetEntityDescriptor(Me)
+            If resource Is Nothing Then
+                Throw New Global.System.Exception("cannot find entity")
+            End If
+
+            Return New <#= returnTypeName #>(Me.Context, resource.EditLink.OriginalString.Trim("/"C) + "/<#= fullNamespace #>.<#= originalActionName #>"<#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)
+        End Function
+<#+
+    }
+
+    internal override void WriteExtensionMethodsStart()
+    {
+#>
+    ''' <summary>
+    ''' Class containing all extension methods
+    ''' </summary>
+    Public Module ExtensionMethods
+<#+
+    }
+
+    internal override void WriteExtensionMethodsEnd()
+    {
+#>
+    End Module
+<#+
+    }
+
+    internal override void WriteByKeyMethods(string entityTypeName, string returnTypeName, IEnumerable<string> keys, string keyParameters, string keyDictionaryItems)
+    {
+#>
+        ''' <summary>
+        ''' Get an entity of type <#= entityTypeName #> as <#= returnTypeName #> specified by key from an entity set
+        ''' </summary>
+        ''' <param name="source">source entity set</param>
+        ''' <param name="keys">dictionary with the names and values of keys</param>
+        <Global.System.Runtime.CompilerServices.Extension()>
+        Public Function ByKey(ByVal source As Global.Microsoft.OData.Client.DataServiceQuery(Of <#= entityTypeName #>), ByVal keys As Global.System.Collections.Generic.Dictionary(Of String, Object)) As <#= returnTypeName #>
+            Return New <#= returnTypeName #>(source.Context, source.GetKeyPath(Global.Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)))
+        End Function
+        ''' <summary>
+        ''' Get an entity of type <#= entityTypeName #> as <#= returnTypeName #> specified by key from an entity set
+        ''' </summary>
+        ''' <param name="source">source entity set</param>
+<#+
+        foreach (var key in keys)
+        {
+#>
+        ''' <param name="<#= key #>">The value of <#= key #></param>
+<#+
+        }
+#>
+        <Global.System.Runtime.CompilerServices.Extension()>
+        Public Function ByKey(ByVal source As Global.Microsoft.OData.Client.DataServiceQuery(Of <#= entityTypeName #>),
+            <#= keyParameters #>) As <#= returnTypeName #>
+            Dim keys As Global.System.Collections.Generic.Dictionary(Of String, Object) = New Global.System.Collections.Generic.Dictionary(Of String, Object)() From
+            {
+                <#= keyDictionaryItems #>
+            }
+            Return New <#= returnTypeName #>(source.Context, source.GetKeyPath(Global.Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)))
+        End Function
+<#+
+    }
+
+    internal override void WriteCastToMethods(string baseTypeName, string derivedTypeName, string derivedTypeFullName, string returnTypeName)
+    {
+#>
+        ''' <summary>
+        ''' Cast an entity of type <#= baseTypeName #> to its derived type <#= derivedTypeFullName #>
+        ''' </summary>
+        ''' <param name="source">source entity</param>
+        <Global.System.Runtime.CompilerServices.Extension()>
+        Public Function CastTo<#= derivedTypeName #>(ByVal source As Global.Microsoft.OData.Client.DataServiceQuerySingle(Of <#= baseTypeName #>)) As <#= returnTypeName #>
+            Dim query As Global.Microsoft.OData.Client.DataServiceQuerySingle(Of <#= derivedTypeFullName #>) = source.CastTo(Of <#= derivedTypeFullName #>)()
+            Return New <#= returnTypeName #>(source.Context, query.GetPath(Nothing))
+        End Function
+<#+
+    }
+
+    internal override void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= functionName #> in the schema.
+        ''' </summary>
+        <Global.System.Runtime.CompilerServices.Extension()>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+<#+
+        }
+#>
+        Public Function <#= functionName #>(ByVal source As <#= boundTypeName #><#= string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
+            If Not source.IsComposable Then
+                Throw New Global.System.NotSupportedException("The previous function is not composable.")
+            End If
+            
+            Return <#= isReturnEntity ? "New " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>source.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)("<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
+        End Function
+<#+
+    }
+
+    internal override void WriteBoundFunctionReturnCollectionResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= functionName #> in the schema.
+        ''' </summary>
+        <Global.System.Runtime.CompilerServices.Extension()>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+<#+
+        }
+#>
+        Public Function <#= functionName #>(ByVal source As <#= boundTypeName #><#= string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As Global.Microsoft.OData.Client.DataServiceQuery(Of <#= returnTypeName #>)
+            If Not source.IsComposable Then
+                Throw New Global.System.NotSupportedException("The previous function is not composable.")
+            End If
+            
+            Return source.CreateFunctionQuery(Of <#= returnTypeName #>)("<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)
+        End Function
+<#+
+    }
+
+    internal override void WriteBoundActionAsExtension(string actionName, string originalActionName, string boundSourceType, string returnTypeName, string parameters, string fullNamespace, string parameterValues)
+    {
+#>
+        ''' <summary>
+        ''' There are no comments for <#= actionName #> in the schema.
+        ''' </summary>
+        <Global.System.Runtime.CompilerServices.Extension()>
+<#+
+        if (this.context.EnableNamingAlias)
+        {
+#>
+        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")>  _
+<#+
+        }
+#>
+        Public Function <#= actionName #>(ByVal source As <#= boundSourceType #><#= string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters #>) As <#= returnTypeName #>
+            If Not source.IsComposable Then
+                Throw New Global.System.NotSupportedException("The previous function is not composable.")
+            End If
+            Return New <#= returnTypeName #>(source.Context, source.AppendRequestUri("<#= fullNamespace #>.<#= originalActionName #>")<#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)
+        End Function
+<#+
+    }
+
+    internal override void WriteNamespaceEnd()
+    {
+#>
+End Namespace
+<#+
+    }
+}
+#>

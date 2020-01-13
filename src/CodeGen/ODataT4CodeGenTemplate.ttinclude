@@ -1,0 +1,1314 @@
+﻿<#+
+    /// <summary>
+/// The template class to generate the OData client code.
+/// </summary>
+public abstract class ODataClientTemplate : TemplateBase
+{
+    protected const string T4Version  = "#VersionNumber#";
+
+    /// <summary>
+    /// The code generation context.
+    /// </summary>
+    protected readonly CodeGenerationContext context;
+
+    /// <summary>
+    /// The Dictionary to store identifier mappings when there are duplicate names between properties and Entity/Complex types
+    /// </summary>
+    protected Dictionary<string, string> IdentifierMappings = new Dictionary<string, string>(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Creates an instance of the ODataClientTemplate.
+    /// </summary>
+    /// <param name="context">The code generation context.</param>
+    public ODataClientTemplate(CodeGenerationContext context)
+    {
+        this.context = context;
+    }
+
+    internal string SingleSuffix
+    {
+        get { return "Single"; }
+    }
+
+    #region Get Language specific keyword names.
+    internal abstract string GlobalPrefix { get; }
+    internal abstract string SystemTypeTypeName { get; }
+    internal abstract string AbstractModifier { get; }
+    internal abstract string DataServiceActionQueryTypeName { get; }
+    internal abstract string DataServiceActionQuerySingleOfTStructureTemplate { get; }
+    internal abstract string DataServiceActionQueryOfTStructureTemplate { get; }
+    internal abstract string NotifyPropertyChangedModifier { get; }
+    internal abstract string ClassInheritMarker { get; }
+    internal abstract string ParameterSeparator { get; }
+    internal abstract string KeyParameterSeparator { get; }
+    internal abstract string KeyDictionaryItemSeparator { get; }
+    internal abstract string SystemNullableStructureTemplate { get; }
+    internal abstract string ICollectionOfTStructureTemplate { get; }
+    internal abstract string DataServiceCollectionStructureTemplate { get; }
+    internal abstract string DataServiceQueryStructureTemplate { get; }
+    internal abstract string DataServiceQuerySingleStructureTemplate { get; }
+    internal abstract string ObservableCollectionStructureTemplate { get; }
+    internal abstract string ObjectModelCollectionStructureTemplate { get; }
+    internal abstract string DataServiceCollectionConstructorParameters { get; }
+    internal abstract string NewModifier { get; }
+    internal abstract string GeoTypeInitializePattern { get; }
+    internal abstract string Int32TypeName { get; }
+    internal abstract string StringTypeName { get; }
+    internal abstract string BinaryTypeName { get; }
+    internal abstract string DecimalTypeName { get; }
+    internal abstract string Int16TypeName { get; }
+    internal abstract string SingleTypeName { get; }
+    internal abstract string BooleanTypeName { get; }
+    internal abstract string DoubleTypeName { get; }
+    internal abstract string GuidTypeName { get; }
+    internal abstract string ByteTypeName { get; }
+    internal abstract string Int64TypeName { get; }
+    internal abstract string SByteTypeName { get; }
+    internal abstract string DataServiceStreamLinkTypeName { get; }
+    internal abstract string GeographyTypeName { get; }
+    internal abstract string GeographyPointTypeName { get; }
+    internal abstract string GeographyLineStringTypeName { get; }
+    internal abstract string GeographyPolygonTypeName { get; }
+    internal abstract string GeographyCollectionTypeName { get; }
+    internal abstract string GeographyMultiPolygonTypeName { get; }
+    internal abstract string GeographyMultiLineStringTypeName { get; }
+    internal abstract string GeographyMultiPointTypeName { get; }
+    internal abstract string GeometryTypeName { get; }
+    internal abstract string GeometryPointTypeName { get; }
+    internal abstract string GeometryLineStringTypeName { get; }
+    internal abstract string GeometryPolygonTypeName { get; }
+    internal abstract string GeometryCollectionTypeName { get; }
+    internal abstract string GeometryMultiPolygonTypeName { get; }
+    internal abstract string GeometryMultiLineStringTypeName { get; }
+    internal abstract string GeometryMultiPointTypeName { get; }
+    internal abstract string DateTypeName { get; }
+    internal abstract string DateTimeOffsetTypeName { get; }
+    internal abstract string DurationTypeName { get; }
+    internal abstract string TimeOfDayTypeName { get; }
+    internal abstract string XmlConvertClassName { get; }
+    internal abstract string EnumTypeName { get; }
+    internal abstract HashSet<string> LanguageKeywords { get; }
+    internal abstract string FixPattern { get; }
+    internal abstract string EnumUnderlyingTypeMarker { get; }
+    internal abstract string ConstantExpressionConstructorWithType { get; }
+    internal abstract string TypeofFormatter { get; }
+    internal abstract string UriOperationParameterConstructor { get; }
+    internal abstract string UriEntityOperationParameterConstructor { get; }
+    internal abstract string BodyOperationParameterConstructor { get; }
+    internal abstract string BaseEntityType { get; }
+    internal abstract string OverloadsModifier { get; }
+    internal abstract string ODataVersion { get; }
+    internal abstract string ParameterDeclarationTemplate { get; }
+    internal abstract string DictionaryItemConstructor { get; }
+    #endregion Get Language specific keyword names.
+
+    #region Language specific write methods.
+    internal abstract void WriteFileHeader();
+    internal abstract void WriteNamespaceStart(string fullNamespace);
+    internal abstract void WriteClassStartForEntityContainer(string originalContainerName, string containerName, string fixedContainerName);
+    internal abstract void WriteMethodStartForEntityContainerConstructor(string containerName, string fixedContainerName);
+    internal abstract void WriteKeyAsSegmentUrlConvention();
+    internal abstract void WriteInitializeResolveName();
+    internal abstract void WriteInitializeResolveType();
+    internal abstract void WriteClassEndForEntityContainerConstructor();
+    internal abstract void WriteMethodStartForResolveTypeFromName();
+    internal abstract void WriteResolveNamespace(string typeName, string fullNamespace, string languageDependentNamespace);
+    internal abstract void WriteMethodEndForResolveTypeFromName();
+    internal abstract void WriteMethodStartForResolveNameFromType(string containerName, string fullNamespace);
+    internal abstract void WriteResolveType(string fullNamespace, string languageDependentNamespace);
+    internal abstract void WriteMethodEndForResolveNameFromType(bool modelHasInheritance);
+    internal abstract void WriteContextEntitySetProperty(string entitySetName, string entitySetFixedName, string originalEntitySetName, string entitySetElementTypeName, bool inContext = true);
+    internal abstract void WriteContextSingletonProperty(string singletonName, string singletonFixedName, string originalSingletonName, string singletonElementTypeName, bool inContext = true);
+    internal abstract void WriteContextAddToEntitySetMethod(string entitySetName, string originalEntitySetName, string typeName, string parameterName);
+    internal abstract void WriteGeneratedEdmModel(string escapedEdmxString);
+    internal abstract void WriteClassEndForEntityContainer();
+    internal abstract void WriteSummaryCommentForStructuredType(string typeName);
+    internal abstract void WriteKeyPropertiesCommentAndAttribute(IEnumerable<string> keyProperties, string keyString);
+    internal abstract void WriteEntityTypeAttribute();
+    internal abstract void WriteEntitySetAttribute(string entitySetName);
+    internal abstract void WriteEntityHasStreamAttribute();
+    internal abstract void WriteClassStartForStructuredType(string abstractModifier, string typeName, string originalTypeName, string baseTypeName);
+    internal abstract void WriteSummaryCommentForStaticCreateMethod(string typeName);
+    internal abstract void WriteParameterCommentForStaticCreateMethod(string parameterName, string propertyName);
+    internal abstract void WriteDeclarationStartForStaticCreateMethod(string typeName,string fixedTypeName );
+    internal abstract void WriteParameterForStaticCreateMethod(string parameterTypeName, string parameterName, string parameterSeparater);
+    internal abstract void WriteDeclarationEndForStaticCreateMethod(string typeName, string instanceName);
+    internal abstract void WriteParameterNullCheckForStaticCreateMethod(string parameterName);
+    internal abstract void WritePropertyValueAssignmentForStaticCreateMethod(string instanceName, string propertyName, string parameterName);
+    internal abstract void WriteMethodEndForStaticCreateMethod(string instanceName);
+    internal abstract void WritePropertyForStructuredType(string propertyType, string originalPropertyName, string propertyName, string fixedPropertyName, string privatePropertyName, string propertyInitializationValue, bool writeOnPropertyChanged);
+    internal abstract void WriteINotifyPropertyChangedImplementation();
+    internal abstract void WriteClassEndForStructuredType();
+    internal abstract void WriteNamespaceEnd();
+    internal abstract void WriteEnumFlags();
+    internal abstract void WriteSummaryCommentForEnumType(string enumName);
+    internal abstract void WriteEnumDeclaration(string enumName, string originalEnumName, string underlyingType);
+    internal abstract void WriteMemberForEnumType(string member, string originalMemberName, bool last);
+    internal abstract void WriteEnumEnd();
+    internal abstract void WritePropertyRootNamespace(string containerName, string fullNamespace);
+    internal abstract void WriteFunctionImportReturnCollectionResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool useEntityReference);
+    internal abstract void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
+    internal abstract void WriteBoundFunctionInEntityTypeReturnCollectionResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference);
+    internal abstract void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
+    internal abstract void WriteActionImport(string actionName, string originalActionName, string returnTypeName, string parameters, string parameterValues);
+    internal abstract void WriteBoundActionInEntityType(bool hideBaseMethod, string actionName, string originalActionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues);
+    internal abstract void WriteConstructorForSingleType(string singleTypeName, string baseTypeName);
+    internal abstract void WriteExtensionMethodsStart();
+    internal abstract void WriteExtensionMethodsEnd();
+    internal abstract void WriteByKeyMethods(string entityTypeName, string returnTypeName, IEnumerable<string> keys, string keyParameters, string keyDictionaryItems);
+    internal abstract void WriteCastToMethods(string baseTypeName, string derivedTypeName, string derivedTypeFullName, string returnTypeName);
+    internal abstract void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
+    internal abstract void WriteBoundFunctionReturnCollectionResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference);
+    internal abstract void WriteBoundActionAsExtension(string actionName, string originalActionName, string boundSourceType, string returnTypeName, string parameters, string fullNamespace, string parameterValues);
+    #endregion Language specific write methods.
+
+    internal HashSet<EdmPrimitiveTypeKind> ClrReferenceTypes { get { 
+        if (clrReferenceTypes == null)
+        {
+            clrReferenceTypes = new HashSet<EdmPrimitiveTypeKind>()
+            {
+                EdmPrimitiveTypeKind.String, EdmPrimitiveTypeKind.Binary, EdmPrimitiveTypeKind.Geography, EdmPrimitiveTypeKind.Stream,
+                EdmPrimitiveTypeKind.GeographyPoint, EdmPrimitiveTypeKind.GeographyLineString, EdmPrimitiveTypeKind.GeographyPolygon,
+                EdmPrimitiveTypeKind.GeographyCollection, EdmPrimitiveTypeKind.GeographyMultiPolygon, EdmPrimitiveTypeKind.GeographyMultiLineString,
+                EdmPrimitiveTypeKind.GeographyMultiPoint, EdmPrimitiveTypeKind.Geometry, EdmPrimitiveTypeKind.GeometryPoint,
+                EdmPrimitiveTypeKind.GeometryLineString, EdmPrimitiveTypeKind.GeometryPolygon, EdmPrimitiveTypeKind.GeometryCollection,
+                EdmPrimitiveTypeKind.GeometryMultiPolygon, EdmPrimitiveTypeKind.GeometryMultiLineString, EdmPrimitiveTypeKind.GeometryMultiPoint
+            };
+        }
+        return clrReferenceTypes;
+    } }
+    private HashSet<EdmPrimitiveTypeKind> clrReferenceTypes;
+
+    /// <summary>
+    /// Generates code for the OData client.
+    /// </summary>
+    /// <returns>The generated code for the OData client.</returns>
+    public override string TransformText()
+    {
+        this.WriteFileHeader();
+        this.WriteNamespaces();
+        return this.GenerationEnvironment.ToString();
+    }
+
+    internal void WriteNamespaces()
+    {
+        foreach(string fullNamespace in context.NamespacesInModel)
+        {
+            this.WriteNamespace(fullNamespace);
+        }
+    }
+
+    internal void WriteNamespace(string fullNamespace)
+    {
+        this.WriteNamespaceStart(this.context.GetPrefixedNamespace(fullNamespace, this, true, false));
+
+        IEdmSchemaElement[] schemaElements = this.context.GetSchemaElements(fullNamespace).ToArray();
+        if (schemaElements.OfType<IEdmEntityContainer>().Any()) {
+            IEdmEntityContainer container = schemaElements.OfType<IEdmEntityContainer>().Single();
+            this.WriteEntityContainer(container, fullNamespace);
+        }
+
+        Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap = new Dictionary<IEdmStructuredType, List<IEdmOperation>>();
+        foreach (IEdmOperation operation in schemaElements.OfType<IEdmOperation>())
+        {
+            if (operation.IsBound)
+            {
+                IEdmType edmType = operation.Parameters.First().Type.Definition;
+                IEdmStructuredType edmStructuredType = edmType as IEdmStructuredType;
+                if (edmStructuredType != null)
+                {
+                    List<IEdmOperation> operationList;
+                    if (!boundOperationsMap.TryGetValue(edmStructuredType, out operationList))
+                    {
+                        operationList = new List<IEdmOperation>();
+                    }
+
+                    operationList.Add(operation);
+                    boundOperationsMap[edmStructuredType] = operationList;
+                }
+            }
+        }
+
+        Dictionary<IEdmStructuredType, List<IEdmStructuredType>> structuredBaseTypeMap = new Dictionary<IEdmStructuredType, List<IEdmStructuredType>>();
+        foreach(IEdmSchemaType type in schemaElements.OfType<IEdmSchemaType>())
+        {
+            IEdmEnumType enumType = type as IEdmEnumType;
+            if (enumType != null)
+            {
+                this.WriteEnumType(enumType);
+            }
+            else
+            {
+                IEdmComplexType complexType = type as IEdmComplexType;
+                if (complexType != null)
+                {
+                    this.WriteComplexType(complexType, boundOperationsMap);
+                }
+                else
+                {
+                    IEdmEntityType entityType = type as IEdmEntityType;
+                    this.WriteEntityType(entityType, boundOperationsMap);
+                }
+
+                IEdmStructuredType structuredType = type as IEdmStructuredType;
+                if (structuredType.BaseType != null)
+                {
+                    List<IEdmStructuredType> derivedTypes;
+                    if (!structuredBaseTypeMap.TryGetValue(structuredType.BaseType, out derivedTypes))
+                    {
+                       structuredBaseTypeMap[structuredType.BaseType] = new List<IEdmStructuredType>();
+                    }
+
+                    structuredBaseTypeMap[structuredType.BaseType].Add(structuredType);
+                }
+            }
+        }
+
+        if (schemaElements.OfType<IEdmEntityType>().Any() ||
+            schemaElements.OfType<IEdmOperation>().Any(o => o.IsBound))
+        {
+            this.WriteExtensionMethodsStart();
+            foreach (IEdmEntityType type in schemaElements.OfType<IEdmEntityType>())
+            {
+                string entityTypeName = type.Name;
+                entityTypeName = context.EnableNamingAlias ? Customization.CustomizeNaming(entityTypeName) : entityTypeName;
+                string entityTypeFullName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName), this);
+                string returnTypeName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName + this.SingleSuffix), this);
+
+                var keyProperties = type.Key();
+                if(keyProperties != null && keyProperties.Any())
+                {
+                    List<string> keyParameters = new List<string>();
+                    List<string> keyDictionaryItems = new List<string>();
+                    List<string> keyNames = new List<string>();
+                    foreach (IEdmProperty key in keyProperties)
+                    {
+                        string typeName = Utils.GetClrTypeName(key.Type, this.context.UseDataServiceCollection, this, this.context);
+                        string keyName = Utils.CamelCase(key.Name);
+                        keyNames.Add(keyName);
+                        keyParameters.Add(string.Format(this.ParameterDeclarationTemplate, typeName, this.GetFixedName(keyName)));
+                        keyDictionaryItems.Add(string.Format(this.DictionaryItemConstructor, "\"" + key.Name + "\"", this.GetFixedName(keyName)));
+                    }
+
+                    string keyParametersString = string.Join(this.KeyParameterSeparator, keyParameters);
+                    string keyDictionaryItemsString = string.Join(this.KeyDictionaryItemSeparator, keyDictionaryItems);
+                    this.WriteByKeyMethods(entityTypeFullName, returnTypeName, keyNames, keyParametersString, keyDictionaryItemsString);
+                }
+
+                IEdmEntityType current = (IEdmEntityType)type.BaseType;
+                while (current != null)
+                {
+                    string baseTypeName = current.Name;
+                    baseTypeName = context.EnableNamingAlias ? Customization.CustomizeNaming(baseTypeName) : baseTypeName;
+                    baseTypeName = context.GetPrefixedFullName(current, GetFixedName(baseTypeName), this);
+                    this.WriteCastToMethods(baseTypeName, entityTypeName, entityTypeFullName, returnTypeName);
+                    current = (IEdmEntityType)current.BaseType;
+                }
+            }
+
+            HashSet<string> boundOperations = new HashSet<string>(StringComparer.Ordinal);
+            foreach (IEdmFunction function in schemaElements.OfType<IEdmFunction>())
+            {
+                if (function.IsBound)
+                {
+                    IEdmTypeReference edmTypeReference = function.Parameters.First().Type;
+                    string functionName = this.context.EnableNamingAlias ? Customization.CustomizeNaming(function.Name) : function.Name;
+                    string parameterString, parameterExpressionString, parameterTypes, parameterValues;
+                    bool useEntityReference;
+                    this.GetParameterStrings(function.IsBound, false, function.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
+                    string sourceTypeName = GetSourceOrReturnTypeName(edmTypeReference);
+                    sourceTypeName = string.Format(edmTypeReference.IsCollection() ? this.DataServiceQueryStructureTemplate : this.DataServiceQuerySingleStructureTemplate, sourceTypeName);
+                    string returnTypeName = GetSourceOrReturnTypeName(function.ReturnType);
+                    string returnTypeNameWithSingleSuffix = GetSourceOrReturnTypeName(function.ReturnType, true);
+                    string fixedFunctionName = GetFixedName(functionName);
+                    string func = string.Format("{0}({1},{2})", fixedFunctionName, sourceTypeName, parameterTypes );
+
+                    if (!boundOperations.Contains(func))
+                    {
+                        boundOperations.Add(func);
+
+                        if (function.ReturnType.IsCollection())
+                        {
+                            this.WriteBoundFunctionReturnCollectionResultAsExtension(fixedFunctionName, function.Name, sourceTypeName, returnTypeName, parameterString, function.Namespace, parameterValues, function.IsComposable, useEntityReference);
+                        }
+                        else
+                        {
+                            this.WriteBoundFunctionReturnSingleResultAsExtension(fixedFunctionName, function.Name, sourceTypeName, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
+                        }
+                    }
+
+                    IEdmStructuredType structuredType;
+                    if (edmTypeReference.IsCollection())
+                    {
+                        IEdmCollectionType collectionType = edmTypeReference.Definition as IEdmCollectionType;
+                        structuredType = (IEdmStructuredType)collectionType.ElementType.Definition;
+                    }
+                    else
+                    {
+                        structuredType = (IEdmStructuredType)edmTypeReference.Definition;
+                    }
+
+                    List<IEdmStructuredType> derivedTypes;
+                        if (structuredBaseTypeMap.TryGetValue(structuredType, out derivedTypes))
+                    {
+                        foreach (IEdmStructuredType type in derivedTypes)
+                        {
+                            IEdmTypeReference derivedTypeReference = new EdmEntityTypeReference((IEdmEntityType)type, true);
+                            List<IEdmTypeReference> currentParameters = function.Parameters.Select(p => p.Type).ToList();
+                            currentParameters[0] = derivedTypeReference;
+
+                            sourceTypeName = string.Format(edmTypeReference.IsCollection() ? this.DataServiceQueryStructureTemplate : this.DataServiceQuerySingleStructureTemplate, GetSourceOrReturnTypeName(derivedTypeReference));
+                            string currentFunc = string.Format("{0}({1},{2})", fixedFunctionName, sourceTypeName, parameterTypes );
+                            if (!boundOperations.Contains(currentFunc))
+                            {
+                                boundOperations.Add(currentFunc);
+
+                                if (function.ReturnType.IsCollection())
+                                {
+                                    this.WriteBoundFunctionReturnCollectionResultAsExtension(fixedFunctionName, function.Name, sourceTypeName, returnTypeName, parameterString, function.Namespace, parameterValues, function.IsComposable, useEntityReference);
+                                }
+                                else
+                                {
+                                    this.WriteBoundFunctionReturnSingleResultAsExtension(fixedFunctionName, function.Name, sourceTypeName, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (IEdmAction action in schemaElements.OfType<IEdmAction>())
+            {
+                if (action.IsBound)
+                {
+                    IEdmTypeReference edmTypeReference = action.Parameters.First().Type;
+                    string actionName = this.context.EnableNamingAlias ? Customization.CustomizeNaming(action.Name) : action.Name;
+                    string parameterString, parameterExpressionString, parameterTypes, parameterValues;
+                    bool useEntityReference;
+                    this.GetParameterStrings(action.IsBound, true, action.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
+                    string sourceTypeName = GetSourceOrReturnTypeName(edmTypeReference);
+                    sourceTypeName = string.Format(edmTypeReference.IsCollection() ? this.DataServiceQueryStructureTemplate : this.DataServiceQuerySingleStructureTemplate, sourceTypeName);
+                    string returnTypeName;
+                    if (action.ReturnType != null)
+                    {
+                        returnTypeName = GetSourceOrReturnTypeName(action.ReturnType);
+                        if (action.ReturnType.IsCollection())
+                        {
+                            returnTypeName = string.Format(this.DataServiceActionQueryOfTStructureTemplate, returnTypeName);
+                        }
+                        else
+                        {
+                            returnTypeName = string.Format(this.DataServiceActionQuerySingleOfTStructureTemplate, returnTypeName);
+                        }
+                    }
+                    else
+                    {
+                        returnTypeName = this.DataServiceActionQueryTypeName;
+                    }
+
+                    string fixedActionName = GetFixedName(actionName);
+                    string ac = string.Format("{0}({1},{2})", fixedActionName, sourceTypeName, parameterTypes );
+                    if (!boundOperations.Contains(ac))
+                    {
+                        boundOperations.Add(ac);
+                        this.WriteBoundActionAsExtension(fixedActionName, action.Name, sourceTypeName, returnTypeName, parameterString, action.Namespace, parameterValues);
+                    }
+
+                    IEdmStructuredType structuredType;
+                    if (edmTypeReference.IsCollection())
+                    {
+                        IEdmCollectionType collectionType = edmTypeReference.Definition as IEdmCollectionType;
+                        structuredType = (IEdmStructuredType)collectionType.ElementType.Definition;
+                    }
+                    else
+                    {
+                        structuredType = (IEdmStructuredType)edmTypeReference.Definition;
+                    }
+
+                    List<IEdmStructuredType> derivedTypes;
+                    if (structuredBaseTypeMap.TryGetValue(structuredType, out derivedTypes))
+                    {
+                        foreach (IEdmStructuredType type in derivedTypes)
+                        {
+                            IEdmTypeReference derivedTypeReference = new EdmEntityTypeReference((IEdmEntityType)type, true);
+                            List<IEdmTypeReference> currentParameters = action.Parameters.Select(p => p.Type).ToList();
+                            currentParameters[0] = derivedTypeReference;
+
+                            sourceTypeName = string.Format(edmTypeReference.IsCollection() ? this.DataServiceQueryStructureTemplate : this.DataServiceQuerySingleStructureTemplate, GetSourceOrReturnTypeName(derivedTypeReference));
+                            string currentAc = string.Format("{0}({1},{2})", fixedActionName, sourceTypeName, parameterTypes );
+                            if (!boundOperations.Contains(currentAc))
+                            {
+                                boundOperations.Add(currentAc);
+                                this.WriteBoundActionAsExtension(fixedActionName, action.Name, sourceTypeName, returnTypeName, parameterString, action.Namespace, parameterValues);
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.WriteExtensionMethodsEnd();
+        }
+
+        this.WriteNamespaceEnd();
+    }
+    
+    internal bool HasBoundOperations(IEnumerable<IEdmOperation> operations)
+    {
+        foreach (IEdmOperation opeartion in operations)
+        {
+            if (opeartion.IsBound)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    internal void WriteEntityContainer(IEdmEntityContainer container, string fullNamespace)
+    {
+        string camelCaseContainerName = container.Name;
+        string path = this.context.TempFilePath;
+        bool useTempFile = !String.IsNullOrEmpty(path);
+        if (this.context.EnableNamingAlias)
+        {
+            camelCaseContainerName = Customization.CustomizeNaming(camelCaseContainerName);
+        }
+
+        this.WriteClassStartForEntityContainer(container.Name, camelCaseContainerName, GetFixedName(camelCaseContainerName));
+        this.WriteEntityContainerConstructor(container);
+
+        if (this.context.NeedResolveNameFromType)
+        {
+            this.WritePropertyRootNamespace(GetFixedName(camelCaseContainerName), this.context.GetPrefixedNamespace(fullNamespace, this, false, false));
+        }
+
+        this.WriteResolveTypeFromName();
+        this.WriteResolveNameFromType(camelCaseContainerName, fullNamespace);
+
+        foreach (IEdmEntitySet entitySet in container.EntitySets())
+        {
+            IEdmEntityType entitySetElementType = entitySet.EntityType();
+            string entitySetElementTypeName = GetElementTypeName(entitySetElementType, container);
+
+            string camelCaseEntitySetName = entitySet.Name;
+            if (this.context.EnableNamingAlias)
+            {
+                camelCaseEntitySetName = Customization.CustomizeNaming(camelCaseEntitySetName);
+            }
+
+            this.WriteContextEntitySetProperty(camelCaseEntitySetName, GetFixedName(camelCaseEntitySetName), entitySet.Name, GetFixedName(entitySetElementTypeName));
+            List<IEdmNavigationSource> edmNavigationSourceList = null;
+            if (!this.context.ElementTypeToNavigationSourceMap.TryGetValue(entitySet.EntityType(), out edmNavigationSourceList))
+            {
+                edmNavigationSourceList = new List<IEdmNavigationSource>();
+                this.context.ElementTypeToNavigationSourceMap.Add(entitySet.EntityType(), edmNavigationSourceList);
+            }
+
+            edmNavigationSourceList.Add(entitySet);
+        }
+
+        foreach (IEdmEntitySet entitySet in container.EntitySets())
+        {
+            IEdmEntityType entitySetElementType = entitySet.EntityType();
+            
+            string entitySetElementTypeName = GetElementTypeName(entitySetElementType, container);
+
+            UniqueIdentifierService uniqueIdentifierService = new UniqueIdentifierService(/*IsLanguageCaseSensitive*/true);
+            string parameterName = GetFixedName(uniqueIdentifierService.GetUniqueParameterName(entitySetElementType.Name));
+
+            string camelCaseEntitySetName = entitySet.Name;
+            if (this.context.EnableNamingAlias)
+            {
+                camelCaseEntitySetName = Customization.CustomizeNaming(camelCaseEntitySetName);
+        }
+
+            this.WriteContextAddToEntitySetMethod(camelCaseEntitySetName, entitySet.Name, GetFixedName(entitySetElementTypeName), parameterName);
+        }
+
+        foreach (IEdmSingleton singleton in container.Singletons())
+        {
+            IEdmEntityType singletonElementType = singleton.EntityType();
+            string singletonElementTypeName = GetElementTypeName(singletonElementType, container);
+            string camelCaseSingletonName = singleton.Name;
+            if (this.context.EnableNamingAlias)
+            {
+                camelCaseSingletonName = Customization.CustomizeNaming(camelCaseSingletonName);
+            }
+
+            this.WriteContextSingletonProperty(camelCaseSingletonName, GetFixedName(camelCaseSingletonName), singleton.Name, singletonElementTypeName + "Single");
+
+            List<IEdmNavigationSource> edmNavigationSourceList = null;
+            if (this.context.ElementTypeToNavigationSourceMap.TryGetValue(singleton.EntityType(), out edmNavigationSourceList))
+            {
+                edmNavigationSourceList.Add(singleton);
+            }
+        }
+    
+        if(useTempFile) 
+        {
+            this.WriteGeneratedEdmModel(Utils.SerializeToString(this.context.Edmx));
+        }
+        else
+        {
+            this.WriteGeneratedEdmModel(Utils.SerializeToString(this.context.Edmx).Replace("\"", "\"\""));
+        }
+         
+        bool hasOperationImport = container.OperationImports().OfType<IEdmOperationImport>().Any();
+        foreach (IEdmFunctionImport functionImport in container.OperationImports().OfType<IEdmFunctionImport>())
+        {
+            string parameterString, parameterTypes, parameterExpressionString, parameterValues;
+            bool useEntityReference;
+            this.GetParameterStrings(false, false, functionImport.Function.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
+            string returnTypeName = GetSourceOrReturnTypeName(functionImport.Function.ReturnType);
+            string returnTypeNameWithSingleSuffix = GetSourceOrReturnTypeName(functionImport.Function.ReturnType, true);
+            string fixedContainerName = this.GetFixedName(functionImport.Container.Name);
+            bool isCollectionResult = functionImport.Function.ReturnType.IsCollection();
+            string functionImportName = functionImport.Name;
+            if (this.context.EnableNamingAlias)
+            {
+                functionImportName = Customization.CustomizeNaming(functionImportName);
+                fixedContainerName = Customization.CustomizeNaming(fixedContainerName);
+            }
+
+            if (functionImport.Function.ReturnType.IsCollection())
+            {
+                this.WriteFunctionImportReturnCollectionResult(this.GetFixedName(functionImportName), functionImport.Name, returnTypeName, parameterString, parameterValues, functionImport.Function.IsComposable, useEntityReference);
+            }
+            else
+            {
+                this.WriteFunctionImportReturnSingleResult(this.GetFixedName(functionImportName), functionImport.Name, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, parameterValues, functionImport.Function.IsComposable, functionImport.Function.ReturnType.IsEntity(), useEntityReference);
+            }
+        }
+        
+        foreach (IEdmActionImport actionImport in container.OperationImports().OfType<IEdmActionImport>())
+        {
+            string parameterString, parameterTypes, parameterExpressionString, parameterValues;
+            bool useEntityReference;
+            this.GetParameterStrings(false, true, actionImport.Action.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
+            string returnTypeName = null;
+            string fixedContainerName = this.GetFixedName(actionImport.Container.Name);
+
+            if (actionImport.Action.ReturnType != null)
+            {
+                returnTypeName = GetSourceOrReturnTypeName(actionImport.Action.ReturnType);
+                if (actionImport.Action.ReturnType.IsCollection())
+                {
+                    returnTypeName = string.Format(this.DataServiceActionQueryOfTStructureTemplate, returnTypeName);
+            }
+                else
+                {
+                    returnTypeName = string.Format(this.DataServiceActionQuerySingleOfTStructureTemplate, returnTypeName);
+                }
+            }
+            else
+            {
+                returnTypeName = this.DataServiceActionQueryTypeName;
+            }
+
+            string actionImportName = actionImport.Name;
+            if (this.context.EnableNamingAlias)
+            {
+                actionImportName = Customization.CustomizeNaming(actionImportName);
+                fixedContainerName = Customization.CustomizeNaming(fixedContainerName);
+            }
+
+            this.WriteActionImport(this.GetFixedName(actionImportName), actionImport.Name, returnTypeName, parameterString, parameterValues);
+        }
+
+        this.WriteClassEndForEntityContainer();
+    }
+
+    internal void WriteEntityContainerConstructor(IEdmEntityContainer container)
+    {
+        string camelCaseContainerName = container.Name;
+        if (this.context.EnableNamingAlias)
+        {
+            camelCaseContainerName = Customization.CustomizeNaming(camelCaseContainerName);
+        }
+        
+        this.WriteMethodStartForEntityContainerConstructor(camelCaseContainerName, GetFixedName(camelCaseContainerName));
+        
+        if (this.context.UseKeyAsSegmentUrlConvention(container))
+        {
+            this.WriteKeyAsSegmentUrlConvention();
+        }
+
+        if (this.context.NeedResolveNameFromType)
+        {
+            this.WriteInitializeResolveName();
+        }
+
+        if (this.context.NeedResolveTypeFromName)
+        {
+            this.WriteInitializeResolveType();
+        }
+
+        this.WriteClassEndForEntityContainerConstructor();
+    }
+
+    internal void WriteResolveTypeFromName()
+    {
+        if (!this.context.NeedResolveTypeFromName)
+        {
+            return;
+        }
+
+        this.WriteMethodStartForResolveTypeFromName();
+
+        // NOTE: since multiple namespaces can have the same prefix and match the namespace
+        // prefix condition, it's important that the prefix check is done is prefix-length
+        // order, starting with the longest prefix.
+        IEnumerable<KeyValuePair<string, string>> namespaceToPrefixedNamespacePairs = this.context.NamespaceMap.OrderByDescending(p => p.Key.Length).ThenBy(p => p.Key);
+        
+        string typeName = this.SystemTypeTypeName + " ";
+        foreach(KeyValuePair<string, string> namespaceToPrefixedNamespacePair in namespaceToPrefixedNamespacePairs)
+        {
+            this.WriteResolveNamespace(typeName, namespaceToPrefixedNamespacePair.Key, namespaceToPrefixedNamespacePair.Value);
+            typeName = string.Empty;
+        }
+
+        this.WriteMethodEndForResolveTypeFromName();
+    }
+
+    internal void WriteResolveNameFromType(string containerName, string fullNamespace)
+    {
+        if (!this.context.NeedResolveNameFromType)
+        {
+            return;
+        }
+
+        this.WriteMethodStartForResolveNameFromType(GetFixedName(containerName), fullNamespace);
+
+        // NOTE: in this case order also matters, but the length of the CLR
+        // namespace is what needs to be considered.
+        IEnumerable<KeyValuePair<string, string>> namespaceToPrefixedNamespacePairs = this.context.NamespaceMap.OrderByDescending(p => p.Value.Length).ThenBy(p => p.Key);
+
+        foreach(KeyValuePair<string, string> namespaceToPrefixedNamespacePair in namespaceToPrefixedNamespacePairs)
+        {
+            this.WriteResolveType(namespaceToPrefixedNamespacePair.Key, namespaceToPrefixedNamespacePair.Value);
+        }
+
+        this.WriteMethodEndForResolveNameFromType(this.context.ModelHasInheritance);
+    }
+
+    internal void WritePropertiesForSingleType(IEnumerable<IEdmProperty> properties)
+    {
+        foreach (IEdmProperty property in properties.Where(i => i.PropertyKind == EdmPropertyKind.Navigation))
+        {
+            string propertyType;
+            string propertyName = this.context.EnableNamingAlias ? Customization.CustomizeNaming(property.Name) : property.Name;
+            if (property.Type is Microsoft.OData.Edm.EdmCollectionTypeReference)
+            {
+                propertyType = GetSourceOrReturnTypeName(property.Type);
+                WriteContextEntitySetProperty(propertyName, GetFixedName(propertyName), property.Name, propertyType, false);
+            }
+            else
+            {
+                propertyType = Utils.GetClrTypeName(property.Type, true, this, this.context, true, isEntitySingleType : true);
+                WriteContextSingletonProperty(propertyName, GetFixedName(propertyName), property.Name, propertyType, false);
+            }
+        }
+    }
+
+    internal void WriteEntityType(IEdmEntityType entityType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
+    {
+        string entityTypeName = ((IEdmSchemaElement)entityType).Name;
+        entityTypeName = this.context.EnableNamingAlias ? Customization.CustomizeNaming(entityTypeName) : entityTypeName;
+        this.WriteSummaryCommentForStructuredType(entityTypeName + this.SingleSuffix);
+        this.WriteStructurdTypeDeclaration(entityType,
+            this.ClassInheritMarker + string.Format(this.DataServiceQuerySingleStructureTemplate, GetFixedName(entityTypeName)),
+            this.SingleSuffix);
+        string singleTypeName = (this.context.EnableNamingAlias ?
+            Customization.CustomizeNaming(((IEdmSchemaElement)entityType).Name) : ((IEdmSchemaElement)entityType).Name) + this.SingleSuffix;
+        this.WriteConstructorForSingleType(GetFixedName(singleTypeName), string.Format(this.DataServiceQuerySingleStructureTemplate, GetFixedName(entityTypeName)));
+        IEdmEntityType current = entityType;
+        while (current != null)
+        {
+            this.WritePropertiesForSingleType(current.DeclaredProperties);
+            current = (IEdmEntityType)current.BaseType;
+        }
+
+        this.WriteClassEndForStructuredType();
+
+        this.WriteSummaryCommentForStructuredType(this.context.EnableNamingAlias ? Customization.CustomizeNaming(entityType.Name) : entityType.Name);
+
+        if (entityType.Key().Any())
+        {
+            IEnumerable<string> keyProperties = entityType.Key().Select(k => k.Name);
+            this.WriteKeyPropertiesCommentAndAttribute(
+                this.context.EnableNamingAlias ? keyProperties.Select(k => Customization.CustomizeNaming(k)) : keyProperties,
+                string.Join("\", \"", keyProperties));
+        }
+        else
+        {
+            this.WriteEntityTypeAttribute();
+        }
+
+        if (this.context.UseDataServiceCollection)
+        {
+            List<IEdmNavigationSource> navigationSourceList;
+            if (this.context.ElementTypeToNavigationSourceMap.TryGetValue(entityType, out navigationSourceList))
+            {
+                if(navigationSourceList.Count == 1)
+                {
+                    this.WriteEntitySetAttribute(navigationSourceList[0].Name);
+                }
+            }
+        }
+
+        if (entityType.HasStream)
+        {
+            this.WriteEntityHasStreamAttribute();
+        }
+
+        this.WriteStructurdTypeDeclaration(entityType, this.BaseEntityType);
+        this.SetPropertyIdentifierMappingsIfNameConflicts(entityType.Name, entityType);
+        this.WriteTypeStaticCreateMethod(entityType.Name, entityType);
+        this.WritePropertiesForStructuredType(entityType.DeclaredProperties);
+
+        if (entityType.BaseType == null && this.context.UseDataServiceCollection)
+        {
+            this.WriteINotifyPropertyChangedImplementation();
+        }
+
+        this.WriteBoundOperations(entityType, boundOperationsMap);
+
+        this.WriteClassEndForStructuredType();
+    }
+
+    internal void WriteComplexType(IEdmComplexType complexType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
+    {
+        this.WriteSummaryCommentForStructuredType(this.context.EnableNamingAlias ? Customization.CustomizeNaming(complexType.Name) : complexType.Name);
+        this.WriteStructurdTypeDeclaration(complexType, string.Empty);
+        this.SetPropertyIdentifierMappingsIfNameConflicts(complexType.Name, complexType);
+        this.WriteTypeStaticCreateMethod(complexType.Name, complexType);
+        this.WritePropertiesForStructuredType(complexType.DeclaredProperties);
+
+        if (complexType.BaseType == null && this.context.UseDataServiceCollection)
+        {
+            this.WriteINotifyPropertyChangedImplementation();
+        }
+
+        this.WriteClassEndForStructuredType();    
+    }
+
+    internal void WriteBoundOperations(IEdmStructuredType structuredType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
+    {
+        List<IEdmOperation> operations;
+        if (boundOperationsMap.TryGetValue(structuredType, out operations))
+        {
+            foreach (IEdmFunction function in operations.OfType<IEdmFunction>())
+            {
+                string parameterString, parameterExpressionString, parameterTypes, parameterValues;
+                bool useEntityReference;
+                bool hideBaseMethod = this.CheckMethodsInBaseClass(structuredType.BaseType, function, boundOperationsMap);
+                this.GetParameterStrings(function.IsBound, false, function.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
+                string returnTypeName = GetSourceOrReturnTypeName(function.ReturnType);
+                string returnTypeNameWithSingleSuffix = GetSourceOrReturnTypeName(function.ReturnType, true);
+                string functionName = function.Name;
+                if (this.context.EnableNamingAlias)
+                {
+                    functionName = Customization.CustomizeNaming(functionName);
+                }
+
+                if (function.ReturnType.IsCollection())
+                {
+                    this.WriteBoundFunctionInEntityTypeReturnCollectionResult(hideBaseMethod, GetFixedName(functionName), function.Name, returnTypeName, parameterString, function.Namespace, parameterValues, function.IsComposable, useEntityReference);
+                }
+                else
+                {
+                    this.WriteBoundFunctionInEntityTypeReturnSingleResult(hideBaseMethod, GetFixedName(functionName), function.Name, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
+                }
+            }
+
+            foreach (IEdmAction action in operations.OfType<IEdmAction>())
+            {
+                string parameterString, parameterExpressionString, parameterTypes, parameterValues;
+                bool useEntityReference;
+                bool hideBaseMethod = this.CheckMethodsInBaseClass(structuredType.BaseType, action, boundOperationsMap);
+                this.GetParameterStrings(action.IsBound, true, action.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
+                string returnTypeName;
+                if (action.ReturnType != null)
+                {
+                    returnTypeName = GetSourceOrReturnTypeName(action.ReturnType);
+                    if (action.ReturnType.IsCollection())
+                    {
+                        returnTypeName = string.Format(this.DataServiceActionQueryOfTStructureTemplate, returnTypeName);
+                    }
+                    else
+                    {
+                        returnTypeName = string.Format(this.DataServiceActionQuerySingleOfTStructureTemplate, returnTypeName);
+                    }
+                }
+                else
+                {
+                    returnTypeName = this.DataServiceActionQueryTypeName;
+                }
+
+                string actionName = action.Name;
+                if (this.context.EnableNamingAlias)
+                {
+                    actionName = Customization.CustomizeNaming(actionName);
+                }
+
+                this.WriteBoundActionInEntityType(hideBaseMethod, GetFixedName(actionName), action.Name, returnTypeName, parameterString, action.Namespace, parameterValues);
+            }
+        }
+    }
+    
+    internal bool CheckMethodsInBaseClass(IEdmStructuredType structuredType, IEdmOperation operation, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
+    {
+        if (structuredType != null)
+        {
+            List<IEdmOperation> operations;
+            if (boundOperationsMap.TryGetValue(structuredType, out operations))
+            {
+                foreach (IEdmOperation op in operations)
+                {
+                    if (this.context.TargetLanguage == LanguageOption.VB)
+                    {
+                        if (operation.Name == op.Name)
+                        {
+                            return true;
+                        }
+                    }
+
+                    List<IEdmOperationParameter> targetParameter = operation.Parameters.ToList();
+                    List<IEdmOperationParameter> checkParameter = op.Parameters.ToList();
+                    if (operation.Name == op.Name && targetParameter.Count == checkParameter.Count)
+                    {
+                        bool areSame = true;
+                        for (int i = 1; i < targetParameter.Count; ++i)
+                        {
+                            var targetParameterType = targetParameter[i].Type;
+                            var checkParameterType = checkParameter[i].Type;
+                            if (!targetParameterType.Definition.Equals(checkParameterType.Definition)
+                                || targetParameterType.IsNullable != checkParameterType.IsNullable)
+                            {
+                                areSame = false;
+                                break;
+                            }
+                        }
+
+                        if (areSame)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return CheckMethodsInBaseClass(structuredType.BaseType, operation, boundOperationsMap);
+        }
+
+        return false;
+    }
+
+    internal void WriteEnumType(IEdmEnumType enumType)
+    {
+        this.WriteSummaryCommentForEnumType(this.context.EnableNamingAlias ? Customization.CustomizeNaming(enumType.Name) : enumType.Name);
+        if (enumType.IsFlags)
+        {
+            this.WriteEnumFlags();
+        }
+
+        string underlyingType = string.Empty;
+        if (enumType.UnderlyingType != null && enumType.UnderlyingType.PrimitiveKind != EdmPrimitiveTypeKind.Int32)
+        {
+            underlyingType = Utils.GetClrTypeName(enumType.UnderlyingType, this);
+            underlyingType = this.EnumUnderlyingTypeMarker + underlyingType;
+        }
+
+        this.WriteEnumDeclaration(this.context.EnableNamingAlias ? GetFixedName(Customization.CustomizeNaming(enumType.Name)) : GetFixedName(enumType.Name), enumType.Name, underlyingType);
+        this.WriteMembersForEnumType(enumType.Members);
+        this.WriteEnumEnd();
+    }
+
+    internal void WriteStructurdTypeDeclaration(IEdmStructuredType structuredType, string baseEntityType, string typeNameSuffix = null)
+    {
+        string abstractModifier = structuredType.IsAbstract && typeNameSuffix == null ? this.AbstractModifier : string.Empty;
+        string baseTypeName = baseEntityType;
+
+        if (typeNameSuffix == null)
+        {
+            if (structuredType.BaseType == null)
+            {
+                if (this.context.UseDataServiceCollection)
+                {
+                    if (this.context.TargetLanguage == LanguageOption.CSharp)
+                    {
+                        baseTypeName += string.IsNullOrEmpty(baseTypeName) ? this.ClassInheritMarker : ", ";
+                    }
+
+                    baseTypeName += this.NotifyPropertyChangedModifier;
+                }
+            }
+            else
+            {
+                IEdmSchemaElement baseType = (IEdmSchemaElement)structuredType.BaseType;
+                string baseTypeFixedName = this.context.EnableNamingAlias ? GetFixedName(Customization.CustomizeNaming(baseType.Name)) : GetFixedName(baseType.Name);
+                baseTypeName = ((IEdmSchemaElement)structuredType).Namespace == baseType.Namespace ? baseTypeFixedName : this.context.GetPrefixedFullName(baseType, baseTypeFixedName, this);
+                baseTypeName = this.ClassInheritMarker + baseTypeName;
+            }
+        }
+
+        string structuredTypeName = this.context.EnableNamingAlias ?
+            Customization.CustomizeNaming(((IEdmSchemaElement)structuredType).Name) : ((IEdmSchemaElement)structuredType).Name;
+        this.WriteClassStartForStructuredType(abstractModifier, GetFixedName(structuredTypeName + typeNameSuffix), ((IEdmSchemaElement)structuredType).Name + typeNameSuffix, baseTypeName);
+    }
+    
+    internal string GetSourceOrReturnTypeName(IEdmTypeReference typeReference, bool isEntitySingleType = false)
+    {
+        IEdmCollectionType edmCollectionType = typeReference.Definition as IEdmCollectionType;
+        bool addNullableTemplate = true;
+        if (edmCollectionType != null)
+        {
+            typeReference = edmCollectionType.ElementType;
+            addNullableTemplate = false;
+        }
+
+        return Utils.GetClrTypeName(typeReference, this.context.UseDataServiceCollection, this, this.context, addNullableTemplate, isEntitySingleType:isEntitySingleType);
+    }
+    
+    internal void GetParameterStrings(bool isBound, bool isAction, IEdmOperationParameter[] parameters, out string parameterString, out string parameterTypes, out string parameterExpressionString, out string parameterValues,  out bool useEntityReference)
+    {
+        parameterString = string.Empty;
+        parameterExpressionString = string.Empty;
+        parameterTypes = string.Empty;
+        parameterValues = string.Empty;
+        useEntityReference = false;
+
+        int n = parameters.Count();
+        for (int i = isBound ? 1 : 0; i < n; ++i)
+        {
+            IEdmOperationParameter param = parameters[i];
+            if (i == (isBound ? 1 : 0))
+            {
+                if (this.context.TargetLanguage == LanguageOption.CSharp)
+                {
+                    parameterExpressionString += "\r\n                        ";
+                }
+                else
+                {
+                    parameterExpressionString += "\r\n                            ";
+                }
+            }
+            
+            string typeName = Utils.GetClrTypeName(param.Type, this.context.UseDataServiceCollection, this, this.context, true, true, true);
+            if (this.context.TargetLanguage == LanguageOption.CSharp)
+            {
+                parameterString += typeName;
+                parameterString += (" " + GetFixedName(param.Name));
+            }
+            else if (this.context.TargetLanguage == LanguageOption.VB)
+            {
+                parameterString += GetFixedName(param.Name);
+                parameterString += (this.EnumUnderlyingTypeMarker + typeName);
+            }
+            
+            parameterString += i == n - 1 ? string.Empty : ", ";
+            parameterTypes += string.Format(this.TypeofFormatter, typeName) + ", ";
+            parameterExpressionString += this.GetParameterExpressionString(param, typeName) + ", ";
+            
+            if (i != (isBound ? 1 : 0))
+            {
+                parameterValues += ",\r\n                    ";
+            }
+            
+            if (isAction)
+            {
+                parameterValues += string.Format(this.BodyOperationParameterConstructor, param.Name, GetFixedName(param.Name));
+            }
+            else  if (param.Type.IsEntity() || (param.Type.IsCollection() && param.Type.AsCollection().ElementType().IsEntity()))
+            {
+                useEntityReference = true;
+                parameterValues += string.Format(this.UriEntityOperationParameterConstructor, param.Name, GetFixedName(param.Name),"useEntityReference");
+            }
+            else
+            {
+                parameterValues += string.Format(this.UriOperationParameterConstructor, param.Name, GetFixedName(param.Name));
+            }
+        }
+    }
+
+    internal string GetParameterExpressionString(IEdmOperationParameter param, string typeName)
+    {
+        string clrTypeName;
+        IEdmType edmType = param.Type.Definition;
+        IEdmPrimitiveType edmPrimitiveType = edmType as IEdmPrimitiveType;
+        if (edmPrimitiveType != null)
+        {
+            clrTypeName = Utils.GetClrTypeName(edmPrimitiveType, this);                
+            if (param.Type.IsNullable && !this.ClrReferenceTypes.Contains(edmPrimitiveType.PrimitiveKind))
+            {
+                clrTypeName += "?";
+            }
+
+            return string.Format(this.ConstantExpressionConstructorWithType, GetFixedName(param.Name), clrTypeName);
+        }
+
+        return string.Format(this.ConstantExpressionConstructorWithType, GetFixedName(param.Name), typeName); 
+    }
+
+    // This is to solve duplicate names between property and type
+    internal void SetPropertyIdentifierMappingsIfNameConflicts(string typeName, IEdmStructuredType structuredType)
+    {
+        if (this.context.EnableNamingAlias)
+        {
+            typeName = Customization.CustomizeNaming(typeName);
+        }
+
+        // PropertyName in VB is case-insensitive.
+        bool isLanguageCaseSensitive = this.context.TargetLanguage == LanguageOption.CSharp;
+
+        // In VB, it is allowed that a type has a property whose name is same with the type's name
+        bool allowPropertyNameSameWithTypeName = this.context.TargetLanguage == LanguageOption.VB;
+
+        Func<string, string> customizePropertyName = (name) => { return this.context.EnableNamingAlias ? Customization.CustomizeNaming(name) : name; };
+
+        var propertyGroups = structuredType.Properties()
+            .GroupBy(p => isLanguageCaseSensitive ? customizePropertyName(p.Name) : customizePropertyName(p.Name).ToUpperInvariant());
+
+        // If the group contains more than one property, or the property in the group has the same name with the type (only for C#), we need to rename the property
+        var propertyToBeRenamedGroups = propertyGroups.Where(g => g.Count() > 1 || !allowPropertyNameSameWithTypeName && g.Key == typeName);
+
+        var knownIdentifiers = propertyGroups.Select(g => customizePropertyName(g.First().Name)).ToList();
+        if(!allowPropertyNameSameWithTypeName && !knownIdentifiers.Contains(typeName))
+        {
+            knownIdentifiers.Add(typeName);
+        }
+        UniqueIdentifierService uniqueIdentifierService =
+            new UniqueIdentifierService(knownIdentifiers, isLanguageCaseSensitive);
+
+        IdentifierMappings.Clear();
+        foreach (IGrouping<string, IEdmProperty> g in propertyToBeRenamedGroups)
+        { 
+            bool hasPropertyNameSameWithCustomizedPropertyName = false;
+            int itemCount = g.Count();
+            for (int i = 0; i < itemCount; i++)
+            {
+                var property = g.ElementAt(i);
+                var customizedPropertyName = customizePropertyName(property.Name);
+
+                if(this.context.EnableNamingAlias && customizedPropertyName == property.Name)
+                {
+                    hasPropertyNameSameWithCustomizedPropertyName = true;
+                }
+                
+                if(isLanguageCaseSensitive)
+                {
+                    // If a property name is same as its customized property name, then we don't rename it.
+                    // Or we don't rename the last property in the group
+                    if(customizedPropertyName != typeName
+                        && (customizedPropertyName == property.Name
+                            || (!hasPropertyNameSameWithCustomizedPropertyName && i == itemCount-1)))
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    // When EnableNamingAlias = true, If a property name is same as its customized property name, then we don't rename it.
+                    // Or we don't rename the last property in the group.
+                    if((this.context.EnableNamingAlias && customizedPropertyName == property.Name)
+                        || (!hasPropertyNameSameWithCustomizedPropertyName && i == itemCount-1))
+                    {
+                        continue;
+                    }
+                }
+                var renamedPropertyName = uniqueIdentifierService.GetUniqueIdentifier(customizedPropertyName);
+                    IdentifierMappings.Add(property.Name, renamedPropertyName);
+            }
+        }
+    }
+
+    internal void WriteTypeStaticCreateMethod(string typeName, IEdmStructuredType structuredType)
+    {
+        Debug.Assert(structuredType != null, "structuredType != null");
+        if (structuredType.IsAbstract)
+        {
+            return;
+        }
+
+        Func<IEdmProperty, bool> hasDefault = p => p.PropertyKind == EdmPropertyKind.Structural && ((IEdmStructuralProperty)p).DefaultValueString != null;
+
+        if (this.context.EnableNamingAlias)
+        {
+            typeName = Customization.CustomizeNaming(typeName);
+        }
+
+        IEnumerable<IEdmProperty> parameters = structuredType.Properties()
+            .Where(p => !p.Type.IsNullable && !p.Type.IsCollection() && !hasDefault(p));
+        if (!parameters.Any())
+        {
+            return;
+        }
+
+        this.WriteSummaryCommentForStaticCreateMethod(typeName);
+
+        UniqueIdentifierService uniqueIdentifierService = new UniqueIdentifierService( /*IsLanguageCaseSensitive*/true);
+        string instanceName = GetFixedName(uniqueIdentifierService.GetUniqueParameterName(typeName));
+        KeyValuePair<IEdmProperty, string>[] propertyToParameterNamePairs = parameters
+            .Select(p =>
+                new KeyValuePair<IEdmProperty, string>(p,
+                    uniqueIdentifierService.GetUniqueParameterName(
+                        IdentifierMappings.ContainsKey(p.Name) ? IdentifierMappings[p.Name] : p.Name)))
+            .ToArray();
+
+        foreach (var propertyToParameterNamePair in propertyToParameterNamePairs)
+        {
+            string propertyName = propertyToParameterNamePair.Key.Name;
+            propertyName = IdentifierMappings.ContainsKey(propertyName) ?
+                IdentifierMappings[propertyName] : (this.context.EnableNamingAlias ? Customization.CustomizeNaming(propertyName) : propertyName);
+            this.WriteParameterCommentForStaticCreateMethod(propertyToParameterNamePair.Value, propertyName);
+        }
+
+        propertyToParameterNamePairs = propertyToParameterNamePairs
+            .Select(p => p = new KeyValuePair<IEdmProperty, string>(p.Key, GetFixedName(p.Value)))
+            .ToArray();
+
+        this.WriteDeclarationStartForStaticCreateMethod(typeName, GetFixedName(typeName));
+        this.WriteStaticCreateMethodParameters(propertyToParameterNamePairs);
+        this.WriteDeclarationEndForStaticCreateMethod(GetFixedName(typeName), instanceName);
+
+        foreach (var propertyToParameterNamePair in propertyToParameterNamePairs)
+        {
+            IEdmProperty property = propertyToParameterNamePair.Key;
+            string parameterName = propertyToParameterNamePair.Value;
+
+            Debug.Assert(!property.Type.IsCollection(), "!property.Type.IsCollection()");
+            Debug.Assert(!property.Type.IsNullable, "!property.Type.IsNullable");
+            
+            // The static create method only sets non-nullable properties. We should add the null check if the type of the property is not a clr ValueType.
+            // For now we add the null check if the property type is non-primitive. We should add the null check for non-ValueType primitives in the future.
+            if (!property.Type.IsPrimitive() && !property.Type.IsEnum())
+            {
+                this.WriteParameterNullCheckForStaticCreateMethod(parameterName);
+            }
+
+            var uniqIdentifier = IdentifierMappings.ContainsKey(property.Name) ?
+                IdentifierMappings[property.Name] : (this.context.EnableNamingAlias ? Customization.CustomizeNaming(property.Name) : property.Name);
+            this.WritePropertyValueAssignmentForStaticCreateMethod(instanceName,
+                GetFixedName(uniqIdentifier),
+                parameterName);
+        }
+
+        this.WriteMethodEndForStaticCreateMethod(instanceName);
+    }
+
+    internal void WriteStaticCreateMethodParameters(KeyValuePair<IEdmProperty, string>[] propertyToParameterPairs)
+    {
+        if (propertyToParameterPairs.Length == 0)
+        {
+            return;
+        }
+
+        // If the number of parameters are greater than 5, we put them in separate lines.
+        string parameterSeparator = propertyToParameterPairs.Length > 5 ? this.ParameterSeparator : ", ";
+        for (int idx = 0; idx < propertyToParameterPairs.Length; idx++)
+        {
+            KeyValuePair<IEdmProperty, string> propertyToParameterPair = propertyToParameterPairs[idx];
+
+            string parameterType = Utils.GetClrTypeName(propertyToParameterPair.Key.Type, this.context.UseDataServiceCollection, this, this.context);
+            string parameterName = propertyToParameterPair.Value;
+            if (idx == propertyToParameterPairs.Length - 1)
+            {
+                // No separator after the last parameter.
+                parameterSeparator = string.Empty;
+            }
+
+            this.WriteParameterForStaticCreateMethod(parameterType, GetFixedName(parameterName), parameterSeparator);
+        }
+    }
+
+    internal void WritePropertiesForStructuredType(IEnumerable<IEdmProperty> properties)
+    {
+         bool useDataServiceCollection = this.context.UseDataServiceCollection;
+
+        var propertyInfos = properties.Select(property =>
+        {
+            string propertyName = IdentifierMappings.ContainsKey(property.Name) ?
+                IdentifierMappings[property.Name] : (this.context.EnableNamingAlias ? Customization.CustomizeNaming(property.Name) : property.Name);
+
+            return new
+                {
+                    PropertyType = Utils.GetClrTypeName(property.Type, useDataServiceCollection, this, this.context),
+                    PropertyVanillaName = property.Name,
+                    PropertyName = propertyName,
+                    FixedPropertyName = GetFixedName(propertyName),
+                    PrivatePropertyName = "_" + propertyName,
+                    PropertyInitializationValue = Utils.GetPropertyInitializationValue(property, useDataServiceCollection, this, this.context)
+                };
+        }).ToList();
+
+        // Private name should not confict with field name
+        UniqueIdentifierService uniqueIdentifierService = new UniqueIdentifierService(propertyInfos.Select(_ => _.FixedPropertyName),
+            this.context.TargetLanguage == LanguageOption.CSharp);
+
+        foreach (var propertyInfo in propertyInfos)
+        {
+            string privatePropertyName = uniqueIdentifierService.GetUniqueIdentifier("_" + propertyInfo.PropertyName);
+
+            this.WritePropertyForStructuredType(
+                propertyInfo.PropertyType,
+                propertyInfo.PropertyVanillaName,
+                propertyInfo.PropertyName,
+                propertyInfo.FixedPropertyName,
+                privatePropertyName,
+                propertyInfo.PropertyInitializationValue,
+                useDataServiceCollection);
+        }
+    }
+
+    internal void WriteMembersForEnumType(IEnumerable<IEdmEnumMember> members)
+    {
+        int n = members.Count();
+        for (int idx = 0; idx < n; ++idx)
+        {
+            IEdmEnumMember member = members.ElementAt(idx);
+            string value = string.Empty;
+            if (member.Value != null)
+            {
+                IEdmEnumMemberValue integerValue = member.Value as IEdmEnumMemberValue;
+                if (integerValue != null)
+                {
+                    value = " = " + integerValue.Value.ToString(CultureInfo.InvariantCulture);
+                }
+            }
+
+            string memberName = this.context.EnableNamingAlias ? Customization.CustomizeNaming(member.Name) : member.Name;
+            this.WriteMemberForEnumType(GetFixedName(memberName) + value, member.Name, idx == n - 1);
+        }
+    }
+
+    internal string GetFixedName(string originalName)
+    {
+        string fixedName = originalName;
+
+        if (this.LanguageKeywords.Contains(fixedName))
+        {
+            fixedName = string.Format(this.FixPattern, fixedName);
+        }
+
+        return fixedName;
+    }
+
+    internal string GetElementTypeName(IEdmEntityType elementType, IEdmEntityContainer container)
+    {
+        string elementTypeName = elementType.Name;
+
+        if (this.context.EnableNamingAlias)
+        {
+            elementTypeName = Customization.CustomizeNaming(elementTypeName);
+        }
+
+        if (elementType.Namespace != container.Namespace)
+        {
+            elementTypeName = this.context.GetPrefixedFullName(elementType, GetFixedName(elementTypeName), this);
+        }
+
+        return elementTypeName;
+    }
+}
+#>

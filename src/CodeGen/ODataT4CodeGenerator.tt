@@ -28,6 +28,10 @@ public static class Configuration
 	// This flag indicates whether to ignore unexpected elements and attributes in the metadata document and generate
 	// the client code if any. The value must be set to true or false.
 	public const bool IgnoreUnexpectedElementsAndAttributes = true;
+
+    //This files indicates whether to generate the files into multiple files or single.
+    //If set to true then multiple files will be generated. Otherwise only a single file is generated.
+    public const bool SplitGeneratedFileIntoMultipleFiles = false;
 }
 
 public static class Customization

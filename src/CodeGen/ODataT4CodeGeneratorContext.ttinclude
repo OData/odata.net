@@ -1,0 +1,551 @@
+﻿<#+
+/// <summary>
+/// Context object to provide the model and configuration info to the code generator.
+/// </summary>
+public class CodeGenerationContext
+{
+    /// <summary>
+    /// The namespace of the term to use when building annotations for indicating the conventions used.
+    /// </summary>
+    private const string ConventionTermNamespace = "Com.Microsoft.OData.Service.Conventions.V1";
+
+    /// <summary>
+    /// The name of the term to use when building annotations for indicating the conventions used.
+    /// </summary>
+    private const string ConventionTermName = "UrlConventions";
+
+    /// <summary>
+    /// The string value for indicating that the key-as-segment convention is being used in annotations and headers.
+    /// </summary>
+    private const string KeyAsSegmentConventionName = "KeyAsSegment";
+
+    /// <summary>
+    /// The XElement for the edmx
+    /// </summary>
+    private readonly XElement edmx;
+
+    /// <summary>
+    /// The namespacePrefix is used as the only namespace in generated code when there's only one schema in edm model,
+    /// and as a prefix for the namespace from the model with multiple schemas. If this argument is null, the
+    /// namespaces from the model are used for all types.
+    /// </summary>
+    private readonly string namespacePrefix;
+
+    /// <summary>
+    /// The EdmModel to generate code for.
+    /// </summary>
+    private IEdmModel edmModel;
+
+    /// <summary>
+    /// The array of namespaces in the current edm model.
+    /// </summary>
+    private string[] namespacesInModel;
+
+    /// <summary>
+    /// The array of warnings occured when parsing edm model.
+    /// </summary>
+    private string[] warnings;
+
+    /// <summary>
+    /// true if the model contains any structural type with inheritance, false otherwise.
+    /// </summary>
+    private bool? modelHasInheritance;
+
+    /// <summary>
+    /// If the namespacePrefix is not null, this contains the mapping of namespaces in the model to the corresponding prefixed namespaces.
+    /// Otherwise this is an empty dictionary.
+    /// </summary>
+    private Dictionary<string, string> namespaceMap;
+
+    /// <summary>
+    /// Maps the element type of a navigation source to the navigation source.
+    /// </summary>
+    private Dictionary<IEdmEntityType, List<IEdmNavigationSource>> elementTypeToNavigationSourceMap;
+
+    /// <summary>
+    /// HashSet contains the pair of Names and Namespaces of EntityContainers using KeyAsSegment url convention
+    /// </summary>
+    private HashSet<string> keyAsSegmentContainers;
+
+    /// <summary>
+    /// Constructs an instance of <see cref="CodeGenerationContext"/>.
+    /// </summary>
+    /// <param name="metadataUri">The Uri to the metadata document. The supported scheme are File, http and https.</param>
+    public CodeGenerationContext(Uri metadataUri, string namespacePrefix)
+        : this(GetEdmxStringFromMetadataPath(metadataUri), namespacePrefix)
+    {
+    }
+
+    /// <summary>
+    /// Constructs an instance of <see cref="CodeGenerationContext"/>.
+    /// </summary>
+    /// <param name="edmx">The string for the edmx.</param>
+    /// <param name="namespacePrefix">The namespacePrefix is used as the only namespace in generated code
+    /// when there's only one schema in edm model, and as a prefix for the namespace from the model with multiple
+    /// schemas. If this argument is null, the namespaces from the model are used for all types.</param>
+    public CodeGenerationContext(string edmx, string namespacePrefix)
+    {
+        this.edmx = XElement.Parse(edmx);
+        this.namespacePrefix = namespacePrefix;
+    }
+
+    /// <summary>
+    /// The EdmModel to generate code for.
+    /// </summary>
+    public XElement Edmx
+    {
+        get { return this.edmx; }
+    }
+    
+    /// <summary>
+    /// The EdmModel to generate code for.
+    /// </summary>
+    public IEdmModel EdmModel
+    {
+        get
+        {
+            if (this.edmModel == null)
+            {
+                Debug.Assert(this.edmx != null, "this.edmx != null");
+
+                IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors;
+                CsdlReaderSettings edmxReaderSettings = new CsdlReaderSettings()
+                {
+                    GetReferencedModelReaderFunc = this.GetReferencedModelReaderFuncWrapper,
+                    IgnoreUnexpectedAttributesAndElements = this.IgnoreUnexpectedElementsAndAttributes
+                };
+                if (!CsdlReader.TryParse(this.edmx.CreateReader(ReaderOptions.None), Enumerable.Empty<IEdmModel>(), edmxReaderSettings, out this.edmModel, out errors))
+                {
+                    Debug.Assert(errors != null, "errors != null");
+                    throw new InvalidOperationException(errors.FirstOrDefault().ErrorMessage);
+                }
+                else if (this.IgnoreUnexpectedElementsAndAttributes)
+                {
+                    if (errors != null && errors.Any())
+                    {
+                        this.warnings = errors.Select(e => e.ErrorMessage).ToArray();
+                    }
+                }
+            }
+
+            return this.edmModel;
+        }
+    }
+
+    /// <summary>
+    /// The func for user code to overwrite and provide referenced model's XmlReader.
+    /// </summary>
+    public Func<Uri,XmlReader> GetReferencedModelReaderFunc
+    {
+        get { return getReferencedModelReaderFunc; }
+        set { this.getReferencedModelReaderFunc = value; }
+    }
+
+    /// <summary>
+    /// Basic setting for XmlReader.
+    /// </summary>
+    private static readonly XmlReaderSettings settings = new XmlReaderSettings() { IgnoreWhitespace = true };
+
+    /// <summary>
+    /// The func for user code to overwrite and provide referenced model's XmlReader.
+    /// </summary>
+    private Func<Uri, XmlReader> getReferencedModelReaderFunc = uri => XmlReader.Create(GetEdmxStreamFromUri(uri), settings);
+
+    /// <summary>
+    /// The Wrapper func for user code to overwrite and provide referenced model's stream.
+    /// </summary>
+    public Func<Uri, XmlReader> GetReferencedModelReaderFuncWrapper
+    {
+        get
+        {
+            return (uri) =>
+            {
+                using (XmlReader reader = GetReferencedModelReaderFunc(uri))
+                {
+                    if (reader == null)
+                    {
+                        return null;
+                    }
+
+                    XElement element = XElement.Load(reader);
+                    if (this.ReferencesMap == null)
+                    {
+                        this.ReferencesMap = new Dictionary<Uri, XElement>();
+                    }
+
+                    this.ReferencesMap.Add(uri, element);
+                    return element.CreateReader(ReaderOptions.None);
+                }
+            };
+        }
+    }
+
+    /// <summary>
+    /// Dictionary that stores uri and referenced xml mapping.
+    /// </summary>
+    public Dictionary<Uri, XElement> ReferencesMap
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// The array of namespaces in the current edm model.
+    /// </summary>
+    public string[] NamespacesInModel
+    {
+        get
+        {
+            if (this.namespacesInModel == null)
+            {
+                Debug.Assert(this.EdmModel != null, "this.EdmModel != null");
+                this.namespacesInModel = GetElementsFromModelTree(this.EdmModel, (m) => m.SchemaElements.Select(e => e.Namespace)).Distinct().ToArray();
+            }
+
+            return this.namespacesInModel;
+        }
+    }
+
+    /// <summary>
+    /// The array of warnings occured when parsing edm model.
+    /// </summary>
+    public string[] Warnings
+    {
+        get { return this.warnings ?? (this.warnings = new string[] {}); }
+    }
+
+    /// <summary>
+    /// true if the model contains any structural type with inheritance, false otherwise.
+    /// </summary>
+    public bool ModelHasInheritance
+    {
+        get
+        {
+            if (!this.modelHasInheritance.HasValue)
+            {
+                Debug.Assert(this.EdmModel != null, "this.EdmModel != null");
+                this.modelHasInheritance = this.EdmModel.SchemaElementsAcrossModels()
+                            .OfType<IEdmStructuredType>().Any(t => !t.FullTypeName().StartsWith("Org.OData.Authorization.V1") &&
+                             !t.FullTypeName().StartsWith("Org.OData.Capabilities.V1") &&
+                             !t.FullTypeName().StartsWith("Org.OData.Core.V1") && t.BaseType != null);
+            }
+
+            return this.modelHasInheritance.Value;
+        }
+    }
+
+    /// <summary>
+    /// true if we need to generate the ResolveNameFromType method, false otherwise.
+    /// </summary>
+    public bool NeedResolveNameFromType
+    {
+        get    { return this.ModelHasInheritance || this.NamespaceMap.Count > 0 || this.EnableNamingAlias; }
+    }
+
+    /// <summary>
+    /// true if we need to generate the ResolveTypeFromName method, false otherwise.
+    /// </summary>
+    public bool NeedResolveTypeFromName
+    {
+        get { return this.NamespaceMap.Count > 0 || this.EnableNamingAlias; }
+    }
+
+    /// <summary>
+    /// If the namespacePrefix is not null, this contains the mapping of namespaces in the model to the corresponding prefixed namespaces.
+    /// Otherwise this is an empty dictionary.
+    /// </summary>
+    public Dictionary<string, string> NamespaceMap
+    {
+        get
+        {
+            if (this.namespaceMap == null)
+            {
+                if (!string.IsNullOrEmpty(this.namespacePrefix))
+                {
+                    if (this.NamespacesInModel.Count() == 1)
+                    {
+                        IEdmEntityContainer container = this.EdmModel.EntityContainer;
+                        string containerNamespace = container == null ? null : container.Namespace;
+                        this.namespaceMap = this.NamespacesInModel
+                            .Distinct()
+                            .ToDictionary(
+                                ns => ns,
+                                ns => ns == containerNamespace ?
+                                    this.namespacePrefix :
+                                    this.namespacePrefix + "." + (this.EnableNamingAlias ? Customization.CustomizeNamespace(ns) : ns));
+                    }
+                    else
+                    {
+                        this.namespaceMap = this.NamespacesInModel
+                            .Distinct()
+                            .ToDictionary(
+                                ns => ns,
+                                ns => this.namespacePrefix + "." + (this.EnableNamingAlias ? Customization.CustomizeNamespace(ns) : ns));
+                    }
+                }
+                else if (this.EnableNamingAlias)
+                {
+                    this.namespaceMap = this.NamespacesInModel
+                            .Distinct()
+                            .ToDictionary(
+                                ns => ns,
+                                ns => Customization.CustomizeNamespace(ns));
+                }
+                else
+                {
+                    this.namespaceMap = new Dictionary<string, string>();
+                }
+            }
+
+            return this.namespaceMap;
+        }
+    }
+
+    /// <summary>
+    /// true to use DataServiceCollection in the generated code, false otherwise.
+    /// </summary>
+    public bool UseDataServiceCollection
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// Specifies which specific .Net Framework language the generated code will target.
+    /// </summary>
+    public LanguageOption TargetLanguage
+    {
+        get;
+        set;
+    }
+    
+    /// <summary>
+    /// The path for the temporary file where the metadata xml document can be stored.
+    /// </summary>
+    public string TempFilePath
+    {
+        get;
+        set;
+    }
+    /// <summary>
+    /// true to use Upper camel case for all class and property names, false otherwise.
+    /// </summary>
+    public bool EnableNamingAlias
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// true to ignore unknown elements or attributes in metadata, false otherwise.
+    /// </summary>
+    public bool IgnoreUnexpectedElementsAndAttributes
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// Maps the element type of an entity set to the entity set.
+    /// </summary>
+    public Dictionary<IEdmEntityType, List<IEdmNavigationSource>> ElementTypeToNavigationSourceMap
+    {
+        get
+        {
+            return this.elementTypeToNavigationSourceMap ?? (this.elementTypeToNavigationSourceMap = new Dictionary<IEdmEntityType, List<IEdmNavigationSource>>(EqualityComparer<IEdmEntityType>.Default));
+        }
+    }
+
+    /// <summary>
+    /// true if this EntityContainer need to set the UrlConvention to KeyAsSegment, false otherwise.
+    /// </summary>
+    public bool UseKeyAsSegmentUrlConvention(IEdmEntityContainer currentContainer)
+    {
+        if (this.keyAsSegmentContainers == null)
+        {
+            this.keyAsSegmentContainers = new HashSet<string>();
+            Debug.Assert(this.EdmModel != null, "this.EdmModel != null");
+            IEnumerable<IEdmVocabularyAnnotation> annotations = this.EdmModel.VocabularyAnnotations;
+            foreach(IEdmVocabularyAnnotation valueAnnotation in annotations)
+            {
+                IEdmEntityContainer container = valueAnnotation.Target as IEdmEntityContainer;
+                IEdmTerm valueTerm = valueAnnotation.Term;
+                IEdmStringConstantExpression expression = valueAnnotation.Value as IEdmStringConstantExpression;
+                if (container != null && valueTerm != null && expression != null)
+                {
+                    if (valueTerm.Namespace == ConventionTermNamespace &&
+                        valueTerm.Name == ConventionTermName &&
+                        expression.Value == KeyAsSegmentConventionName)
+                    {
+                        this.keyAsSegmentContainers.Add(container.FullName());
+                    }
+                }
+            }
+        }
+
+        return this.keyAsSegmentContainers.Contains(currentContainer.FullName());
+    }
+
+    /// <summary>
+    /// Gets the enumeration of schema elements with the given namespace.
+    /// </summary>
+    /// <param name="ns">The namespace of the schema elements to get.</param>
+    /// <returns>The enumeration of schema elements with the given namespace.</returns>
+    public IEnumerable<IEdmSchemaElement> GetSchemaElements(string ns)
+    {
+        Debug.Assert(ns != null, "ns != null");
+        Debug.Assert(this.EdmModel != null, "this.EdmModel != null");
+        return GetElementsFromModelTree(this.EdmModel, m => m.SchemaElements.Where(e => e.Namespace == ns));
+    }
+
+    /// <summary>
+    /// Gets the namespace qualified name for the given <paramref name="schemaElement"/> with the namespace prefix applied if this.NamespacePrefix is specified.
+    /// </summary>
+    /// <param name="schemaElement">The schema element to get the full name for.</param>
+    /// <param name="schemaElementFixedName">The fixed name of this schemaElement.</param>
+    /// <param name="template">The current code generate template.</param>
+    /// <returns>The namespace qualified name for the given <paramref name="schemaElement"/> with the namespace prefix applied if this.NamespacePrefix is specified.</returns>
+    public string GetPrefixedFullName(IEdmSchemaElement schemaElement, string schemaElementFixedName, ODataClientTemplate template, bool needGlobalPrefix = true)
+    {
+        if (schemaElement == null)
+        {
+            return null;
+        }
+
+        return this.GetPrefixedNamespace(schemaElement.Namespace, template, true, needGlobalPrefix) + "." + schemaElementFixedName;
+    }
+
+    /// <summary>
+    /// Gets the prefixed namespace for the given <paramref name="ns"/>.
+    /// </summary>
+    /// <param name="ns">The namespace without the prefix.</param>
+    /// <param name="template">The current code generate template.</param>
+    /// <param name="needFix">The flag indicates whether the namespace need to be fixed now.</param>
+    /// <param name="needGlobalPrefix">The flag indicates whether the namespace need to be added by gloabal prefix.</param>
+    /// <returns>The prefixed namespace for the given <paramref name="ns"/>.</returns>
+    public string GetPrefixedNamespace(string ns, ODataClientTemplate template, bool needFix, bool needGlobalPrefix)
+    {
+        if (ns == null)
+        {
+            return null;
+        }
+
+        string prefixedNamespace;
+        if (!this.NamespaceMap.TryGetValue(ns, out prefixedNamespace))
+        {
+            prefixedNamespace = ns;
+        }
+
+        if (needFix)
+        {
+            string[] segments = prefixedNamespace.Split('.');
+            prefixedNamespace = string.Empty;
+            int n = segments.Length;
+            for (int i = 0; i < n; ++i)
+            {
+                if (template.LanguageKeywords.Contains(segments[i]))
+                {
+                    prefixedNamespace += string.Format(template.FixPattern, segments[i]);
+                }
+                else
+                {
+                    prefixedNamespace += segments[i];
+                }
+
+                prefixedNamespace += (i == n - 1 ? string.Empty : ".");
+            }
+        }
+
+        if (needGlobalPrefix)
+        {
+            prefixedNamespace = template.GlobalPrefix + prefixedNamespace;
+        }
+        
+        return prefixedNamespace;
+    }
+
+    /// <summary>
+    /// Reads the edmx string from a file path or a http/https path.
+    /// </summary>
+    /// <param name="metadataUri">The Uri to the metadata document. The supported scheme are File, http and https.</param>
+    private static string GetEdmxStringFromMetadataPath(Uri metadataUri)
+    {
+        string content = null;
+        using (StreamReader streamReader = new StreamReader(GetEdmxStreamFromUri(metadataUri)))
+        {
+            content = streamReader.ReadToEnd();
+        }
+
+        return content;
+    }
+
+    /// <summary>
+    /// Get the metadata stream from a file path or a http/https path.
+    /// </summary>
+    /// <param name="metadataUri">The Uri to the stream. The supported scheme are File, http and https.</param>
+    private static Stream GetEdmxStreamFromUri(Uri metadataUri)
+    {
+        Debug.Assert(metadataUri != null, "metadataUri != null");
+        Stream metadataStream = null;
+        if (metadataUri.Scheme == "file")
+        {
+            metadataStream = new FileStream(Uri.UnescapeDataString(metadataUri.AbsolutePath), FileMode.Open, FileAccess.Read);
+        }
+        else if (metadataUri.Scheme == "http" || metadataUri.Scheme == "https")
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(metadataUri);
+                WebResponse webResponse = webRequest.GetResponse();
+                metadataStream = webResponse.GetResponseStream();
+            }
+            catch (WebException e)
+            {
+                HttpWebResponse webResponse = e.Response as HttpWebResponse;
+                if (webResponse != null && webResponse.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new WebException("Failed to access the metadata document. The OData service requires authentication for accessing it. Please download the metadata, store it into a local file, and set the value of “MetadataDocumentUri” in the .odata.config file to the file path. After that, run custom tool again to generate the OData Client code.");
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Only file, http, https schemes are supported for paths to metadata source locations.");
+        }
+
+        return metadataStream;
+    }
+
+    private static IEnumerable<T> GetElementsFromModelTree<T>(IEdmModel mainModel, Func<IEdmModel, IEnumerable<T>> getElementFromOneModelFunc)
+    {
+        List<T> ret = new List<T>();
+        if(mainModel is EdmCoreModel || mainModel.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency) != null)
+        {
+            return ret;
+        }
+
+        ret.AddRange(getElementFromOneModelFunc(mainModel));
+        foreach (var tmp in mainModel.ReferencedModels)
+        {
+            if (tmp is EdmCoreModel ||
+                tmp.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency) != null ||
+                tmp.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
+                tmp.FindDeclaredTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null ||
+                tmp.FindDeclaredTerm("Org.OData.Authorization.V1.Authorizations") != null ||
+                tmp.FindDeclaredTerm("Org.OData.Validation.V1.DerivedTypeConstraint") != null ||
+                tmp.FindDeclaredTerm("Org.OData.Community.V1.UrlEscapeFunction") != null)
+            {
+                continue;
+            }
+
+            ret.AddRange(getElementFromOneModelFunc(tmp));
+        }
+
+        return ret;
+    }
+}
+#>
