@@ -743,12 +743,6 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            if (parenthesesSection.Length > 1  && parenthesesSection[parenthesesSection.Length - 1] == ':')
-            {
-                this.nextSegmentCanBeEscapeFunction = true;
-                parenthesesSection = parenthesesSection.Substring(0, parenthesesSection.Length - 1);
-            }
-
             ODataPathSegment keySegment;
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
