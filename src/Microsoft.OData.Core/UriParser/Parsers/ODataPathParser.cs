@@ -743,7 +743,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            if (parenthesesSection[parenthesesSection.Length - 1] == ':')
+            if (parenthesesSection.Length > 1  && parenthesesSection[parenthesesSection.Length - 1] == ':')
             {
                 this.nextSegmentCanBeEscapeFunction = true;
                 parenthesesSection = parenthesesSection.Substring(0, parenthesesSection.Length - 1);
