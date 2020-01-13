@@ -58,11 +58,6 @@ namespace Microsoft.OData.UriParser
         private IEdmNavigationSource lastNavigationSource;
 
         /// <summary>
-        /// Indicates that the next segment can be related to escape function
-        /// </summary>
-        private bool nextSegmentCanBeEscapeFunction;
-
-        /// <summary>
         /// Initializes a new instance of <see cref="ODataPathParser"/>.
         /// </summary>
         /// <param name="configuration">The parser's current configuration.</param>
@@ -84,7 +79,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="parenthesisExpression">The query portion that was found. Will be null after the call if no query portion was present.</param>
         internal static void ExtractSegmentIdentifierAndParenthesisExpression(string segmentText, out string identifier, out string parenthesisExpression)
         {
-            //Debug.Assert(segmentText != null, "segment != null");
+            Debug.Assert(segmentText != null, "segment != null");
             if (segmentText == null)
             {
                 identifier = "";
@@ -113,7 +108,7 @@ namespace Microsoft.OData.UriParser
                    segmentText.Substring(parenthesisStart + 1, segmentText.Length - identifier.Length - 2);
             }
             else
-            { 
+            {
                 if (segmentText[segmentText.Length - 1] != ')')
                 {
                     throw ExceptionUtil.CreateSyntaxError();
@@ -168,12 +163,6 @@ namespace Microsoft.OData.UriParser
                     {
                         lastNavigationSource = navigationSource;
                     }
-                }
-
-                //Create the segment handling empty string if the no arguements found
-                if (this.nextSegmentCanBeEscapeFunction)
-                {
-                    this.CreateNextSegment(null);
                 }
             }
             catch (ODataUnrecognizedPathException ex)
@@ -393,18 +382,20 @@ namespace Microsoft.OData.UriParser
 
             KeySegment keySegment;
 
+            bool trybindingEscapeFunction = false;
+
             if (segmentText.Length > 0 && segmentText[segmentText.Length - 1] == ':' && previous.EdmType != null)
             {
                 IEdmFunction function = configuration.Model.FindBoundOperations(previous.EdmType).OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(configuration.Model, f));
                 if (function != null)
                 {
-                    this.nextSegmentCanBeEscapeFunction = true;
+                    trybindingEscapeFunction = true;
                     segmentText = segmentText.Substring(0, segmentText.Length - 1);
-                    
-                    // Handle /:/ escape function pattern
+
+                    // If nothing to bind for key then bind the escape function directly. 
                     if (segmentText.Length == 0)
                     {
-                        return true;
+                        return this.TryBindEscapeFunction();
                     }
                 }
             }
@@ -412,8 +403,16 @@ namespace Microsoft.OData.UriParser
             if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlKeyDelimiter, this.configuration.Resolver, out keySegment, this.configuration.EnableUriTemplateParsing))
             {
                 this.parsedSegments.Add(keySegment);
+               
+                if (trybindingEscapeFunction)
+                {
+                    this.TryBindEscapeFunction();
+                }
+
                 return true;
             }
+
+
 
             return false;
         }
@@ -971,10 +970,12 @@ namespace Microsoft.OData.UriParser
             IEdmEntitySet targetEdmEntitySet;
             IEdmSingleton targetEdmSingleton;
 
+            bool tryBindingEscapeFunction = false;
+
             if (identifier[identifier.Length - 1] == ':')
             {
                 identifier = identifier.Substring(0, identifier.Length - 1);
-                this.nextSegmentCanBeEscapeFunction = true;
+                tryBindingEscapeFunction = true;
             }
 
             IEdmNavigationSource source = this.configuration.Resolver.ResolveNavigationSource(this.configuration.Model, identifier);
@@ -992,6 +993,21 @@ namespace Microsoft.OData.UriParser
             {
                 this.parsedSegments.Add(segment);
                 this.TryBindKeyFromParentheses(parenthesisExpression);
+
+                if (tryBindingEscapeFunction && !this.TryBindEscapeFunction())
+                {
+                    // If it is not an escape function then revert binding it as property and continue trying to bind as other segments. 
+                    // If the last segment added was a key segment then we need to pop last two segments from the l
+                    if (this.parsedSegments[parsedSegments.Count - 1] is KeySegment)
+                    {
+                        this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
+                    }
+
+                    this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
+
+                    return false;
+                }
+                
                 return true;
             }
 
@@ -1057,28 +1073,28 @@ namespace Microsoft.OData.UriParser
         /// <param name="previousSegment">The previous segment before the operation to be invoked.</param>
         /// <param name="identifier">The name of the segment</param>
         /// <param name="parenthesisExpression">The query portion</param>
+        /// <param name="bindingType">Type to which the operation is bound. It is an optional parameter that can be evalulated from the previous segment if it is null.</param>
         /// <returns>Whether or not the identifier referred to an action.</returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
-        private bool TryCreateSegmentForOperation(ODataPathSegment previousSegment, string identifier, string parenthesisExpression)
+        private bool TryCreateSegmentForOperation(ODataPathSegment previousSegment, string identifier, string parenthesisExpression, IEdmType bindingType = null)
         {
             // Parse Arguments syntactically
-            IEdmType bindingType = null;
-            if (previousSegment != null)
+            if (previousSegment != null && bindingType == null)
             {
                 // Use TargetEdmType for EachSegment to represent a pseudo-single entity.
                 bindingType = (previousSegment is EachSegment) ? previousSegment.TargetEdmType : previousSegment.EdmType;
             }
 
-            string newIdentifier, newParenthesisExpression;
-
-            if (this.nextSegmentCanBeEscapeFunction && TryResolveEscapeFunction(identifier, bindingType, configuration.Model, out newIdentifier, out newParenthesisExpression))
-            {
-                identifier = newIdentifier;
-                parenthesisExpression = newParenthesisExpression;
-            }
-
             ICollection<OperationSegmentParameter> resolvedParameters;
             IEdmOperation singleOperation;
+
+            bool tryBindingEscapeFunction = false;
+            if (identifier.Length > 0 && identifier[identifier.Length -1] == ':')
+            {
+                identifier = identifier.Substring(0, identifier.Length - 1);
+                tryBindingEscapeFunction = true;
+            }
+
             if (!TryBindingParametersAndMatchingOperation(identifier, parenthesisExpression, bindingType, this.configuration, out resolvedParameters, out singleOperation))
             {
                 return false;
@@ -1120,6 +1136,11 @@ namespace Microsoft.OData.UriParser
 
             this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisExpression, returnType, resolvedParameters, segment);
 
+            if (tryBindingEscapeFunction)
+            {
+                this.TryBindEscapeFunction();
+            }
+
             return true;
         }
 
@@ -1134,12 +1155,6 @@ namespace Microsoft.OData.UriParser
             ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
 
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
-
-            if (this.nextSegmentCanBeEscapeFunction && string.IsNullOrEmpty(text))
-            {
-                this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression);
-                return;
-            }
 
             /*
              * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceded by an escape - marker segment('$').
@@ -1209,11 +1224,27 @@ namespace Microsoft.OData.UriParser
                     // if the segment corresponds to a declared property, handle it
                     // otherwise, fall back to type-segments, actions, and dynamic/open properties
                     IEdmProperty projectedProperty;
-                    if (this.TryBindProperty(identifier, out projectedProperty))
+                    bool tryBindingToEscapeFunction;
+                    if (this.TryBindProperty(identifier, out projectedProperty, out tryBindingToEscapeFunction))
                     {
                         CheckSingleResult(previous.SingleResult, previous.Identifier);
                         this.CreatePropertySegment(previous, projectedProperty, parenthesisExpression);
-                        return;
+
+                        if (tryBindingToEscapeFunction && !this.TryBindEscapeFunction())
+                        {
+                            // If it is not an escape function then revert binding it as property and continue trying to bind as other segments. 
+                            // If the last segment added was a key segment then we need to pop last two segments from the l
+                            if (this.parsedSegments[parsedSegments.Count - 1] is KeySegment)
+                            {
+                                this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
+                            }
+
+                            this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
             }
@@ -1253,12 +1284,15 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="identifier">The identifier to bind.</param>
         /// <param name="projectedProperty">The property, if one was found.</param>
+        /// <param name="bindEscapeFunction">Determines if an escape function needs to be bound.</param>
         /// <returns>Whether a property matching the identifier was found.</returns>
-        private bool TryBindProperty(string identifier, out IEdmProperty projectedProperty)
+        private bool TryBindProperty(string identifier, out IEdmProperty projectedProperty, out bool bindEscapeFunction)
         {
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             Debug.Assert(previous.TargetEdmType != null, "Previous wasn't open, so it should have a resource type");
             Debug.Assert(previous.TargetEdmNavigationSource == null || previous.TargetEdmType.IsStructuredOrStructuredCollectionType(), "if the previous segment has a target resource set, then its target resource type must be an entity or a complex");
+
+            bindEscapeFunction = false;
 
             // Note that we try resolve the property on the root entity type for the set. Properties/Name streams defined on derived types
             // are not supported. This is a general problem with properties as we don't have the entity instance here to validate
@@ -1274,10 +1308,10 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            if (identifier[identifier.Length-1] == ':')
+            if (identifier[identifier.Length - 1] == ':')
             {
-                this.nextSegmentCanBeEscapeFunction = true;
                 identifier = identifier.Substring(0, identifier.Length - 1);
+                bindEscapeFunction = true;
             }
 
             if (structuredType == null)
@@ -1289,471 +1323,513 @@ namespace Microsoft.OData.UriParser
             return projectedProperty != null;
         }
 
-        /// <summary>
-        /// Tries to create a type name segment if the given identifier refers to a known type.
-        /// </summary>
-        /// <param name="previous">previous segment info.</param>
-        /// <param name="identifier">The current raw segment identifier being interpreted.</param>
-        /// <param name="parenthesisExpression">Parenthesis expression of this segment.</param>
-        /// <returns>Whether or not a type segment was created for the identifier.</returns>
-        private bool TryCreateTypeNameSegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
+        private bool TryBindEscapeFunction()
         {
-            IEdmType targetEdmType;
-            if (previous.TargetEdmType == null || (targetEdmType = UriEdmHelpers.FindTypeFromModel(this.configuration.Model, identifier, this.configuration.Resolver)) == null)
-            {
-                return false;
-            }
-
-            // if the new type segment prevents any results from possibly being returned, then short-circuit and throw a 404.
-            IEdmType previousEdmType = previous.TargetEdmType;
-            Debug.Assert(previousEdmType != null, "previous.TargetEdmType != null");
-
-            if (previousEdmType.TypeKind == EdmTypeKind.Collection)
-            {
-                previousEdmType = ((IEdmCollectionType)previousEdmType).ElementType.Definition;
-            }
-
-            if (!targetEdmType.IsOrInheritsFrom(previousEdmType) && !previousEdmType.IsOrInheritsFrom(targetEdmType))
-            {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(targetEdmType.FullTypeName(), previousEdmType.FullTypeName()));
-            }
-
-            CheckTypeCastSegmentRestriction(previous, targetEdmType);
-
-            // We want the type of the type segment to be a collection if the previous segment was a collection
-            IEdmType actualTypeOfTheTypeSegment = targetEdmType;
-
-            if (previous.EdmType.TypeKind == EdmTypeKind.Collection)
-            {
-                // creating a new collection type here because the type in the request is just the item type, there is no user-provided collection type.
-                var actualEntityTypeOfTheTypeSegment = actualTypeOfTheTypeSegment as IEdmEntityType;
-                if (actualEntityTypeOfTheTypeSegment != null)
-                {
-                    actualTypeOfTheTypeSegment = new EdmCollectionType(new EdmEntityTypeReference(actualEntityTypeOfTheTypeSegment, false));
-                }
-                else
-                {
-                    // Complex collection supports type cast too.
-                    var actualComplexTypeOfTheTypeSegment = actualTypeOfTheTypeSegment as IEdmComplexType;
-                    if (actualComplexTypeOfTheTypeSegment != null)
-                    {
-                        actualTypeOfTheTypeSegment = new EdmCollectionType(new EdmComplexTypeReference(actualComplexTypeOfTheTypeSegment, false));
-                    }
-                    else
-                    {
-                        throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedAfterStructuralCollection(identifier));
-                    }
-                }
-            }
-
-            var typeNameSegment = (ODataPathSegment)new TypeSegment(actualTypeOfTheTypeSegment, previous.EdmType, previous.TargetEdmNavigationSource)
-            {
-                Identifier = identifier,
-                TargetKind = previous.TargetKind,
-                SingleResult = previous.SingleResult,
-                TargetEdmType = targetEdmType
-            };
-
-            this.parsedSegments.Add(typeNameSegment);
-
-            // Key expressions are allowed on Type segments
-            this.TryBindKeyFromParentheses(parenthesisExpression);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Creates a property segment
-        /// </summary>
-        /// <param name="previous">previous segment info.</param>
-        /// <param name="property">property to create the segment for.</param>
-        /// <param name="queryPortion">query portion for this segment, if specified.</param>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
-        private void CreatePropertySegment(ODataPathSegment previous, IEdmProperty property, string queryPortion)
-        {
-            Debug.Assert(previous != null, "previous != null");
-
-            if (property.Type.IsStream())
-            {
-                // The server used to allow arbitrary key expressions after named streams because this check was missing.
-                if (queryPortion != null)
-                {
-                    throw ExceptionUtil.CreateSyntaxError();
-                }
-
-                this.CreateNamedStreamSegment(previous, property);
-                return;
-            }
-
-            // Handle a strongly-typed property.
-            ODataPathSegment segment = null;
-
-            if (property.PropertyKind == EdmPropertyKind.Navigation)
-            {
-                var navigationProperty = (IEdmNavigationProperty)property;
-
-                IEdmNavigationSource navigationSource = null;
-                if (previous.TargetEdmNavigationSource != null)
-                {
-                    IEdmPathExpression bindingPath;
-                    navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
-                }
-
-                // Relationship between TargetMultiplicity and navigation property:
-                //  1) EdmMultiplicity.Many <=> collection navigation property
-                //  2) EdmMultiplicity.ZeroOrOne <=> nullable singleton navigation property
-                //  3) EdmMultiplicity.One <=> non-nullable singleton navigation property
-                //
-                // According to OData Spec CSDL 7.1.3:
-                //  1) non-nullable singleton navigation property => navigation source required
-                //  2) the other cases => navigation source optional
-                if (navigationProperty.TargetMultiplicity() == EdmMultiplicity.One
-                    && navigationSource is IEdmUnknownEntitySet)
-                {
-                    // Specifically not throwing ODataUriParserException since it's more an an internal server error
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_TargetEntitySetNotFound(property.Name));
-                }
-
-                segment = new NavigationPropertySegment(navigationProperty, navigationSource);
-            }
-            else
-            {
-                segment = new PropertySegment((IEdmStructuralProperty)property);
-                switch (property.Type.TypeKind())
-                {
-                    case EdmTypeKind.Complex:
-                        segment.TargetKind = RequestTargetKind.Resource;
-                        segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
-                        break;
-                    case EdmTypeKind.Collection:
-                        if (property.Type.IsStructuredCollectionType())
-                        {
-                            segment.TargetKind = RequestTargetKind.Resource;
-                            segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
-                        }
-
-                        segment.TargetKind = RequestTargetKind.Collection;
-                        break;
-                    case EdmTypeKind.Enum:
-                        segment.TargetKind = RequestTargetKind.Enum;
-                        break;
-                    default:
-                        Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "must be primitive type or type definition property");
-                        segment.TargetKind = RequestTargetKind.Primitive;
-                        break;
-                }
-            }
-
-            this.parsedSegments.Add(segment);
-
-            if (!(queryPortion == null || property.Type.IsCollection() && property.Type.AsCollection().ElementType().IsEntity()))
-            {
-                throw ExceptionUtil.CreateSyntaxError();
-            }
-
-            this.TryBindKeyFromParentheses(queryPortion);
-        }
-
-        /// <summary>
-        /// Check whether identifiers matches according to case in sensitive option.
-        /// </summary>
-        /// <param name="expected">The expected identifier.</param>
-        /// <param name="identifier">Identifier to be evaluated.</param>
-        /// <returns>Whether the identifier matches.</returns>
-        private bool IdentifierIs(string expected, string identifier)
-        {
-            return string.Equals(
-                expected,
-                identifier,
-                this.configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
-        }
-
-        /// <summary>
-        /// Validates the existing parsed segments and returns a list of validated segments.
-        /// </summary>
-        /// <returns>List of validated path segments.</returns>
-        private List<ODataPathSegment> CreateValidatedPathSegments()
-        {
-            List<ODataPathSegment> validatedSegments = new List<ODataPathSegment>(this.parsedSegments.Count);
-            for (int index = 0, segmentCount = this.parsedSegments.Count; index < segmentCount; ++index)
-            {
-                CheckDollarEachSegmentRestrictions(index);
-#if DEBUG
-                this.parsedSegments[index].AssertValid();
-#endif
-                validatedSegments.Add(this.parsedSegments[index]);
-            }
-
-            return validatedSegments;
-        }
-
-        /// <summary>
-        /// Per OData 4.01 spec, only one operation may follow $each. This function enforces that restriction.
-        /// </summary>
-        /// <param name="index">Index of path segment to examine in the list of parsed segments.</param>
-        /// <exception cref="ODataException">Throws if there's a violation of $each restrictions.</exception>
-        /// <remarks>Should the restrictions on the $each be removed, this function can be deleted.</remarks>
-        private void CheckDollarEachSegmentRestrictions(int index)
-        {
-            Debug.Assert(index < this.parsedSegments.Count, "index < this.parsedSegments.Count");
-
-            int numOfSegmentsAfterDollarEach = this.parsedSegments.Count - index - 1;
-
-            // Perform restriction checks only if the current segment being examined is $each and there are subsequent segments.
-            if (this.parsedSegments[index] is EachSegment && numOfSegmentsAfterDollarEach > 0)
-            {
-                // Only one segment is allowed after $each...
-                if (numOfSegmentsAfterDollarEach > 1)
-                {
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
-                }
-
-                // And if there exists a single segment after $each, then it must be an OperationSegment.
-                if (!(this.parsedSegments[index + 1] is OperationSegment))
-                {
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
-                }
-            }
-        }
-
-        private void CheckTypeCastSegmentRestriction(ODataPathSegment previous, IEdmType targetEdmType)
-        {
-            Debug.Assert(previous != null);
-            Debug.Assert(targetEdmType != null);
-
-            // Make sure: cast to itself can pass the validation.
-            IEdmType previousTargetEdmType = previous.TargetEdmType.AsElementType();
-            if (previousTargetEdmType == targetEdmType)
-            {
-                return;
-            }
-
-            string fullTypeName = targetEdmType.FullTypeName();
-
-            // Singleton, for example: ~/Me/NS.Cast
-            SingletonSegment singletonSegment = previous as SingletonSegment;
-            if (singletonSegment != null)
-            {
-                VerifyDerivedTypeConstraints(this.configuration.Model, singletonSegment.Singleton, fullTypeName, "singleton", singletonSegment.Singleton.Name);
-                return;
-            }
-
-            // EntitySet, for example: ~/Users/NS.Cast
-            EntitySetSegment entitySetSegment = previous as EntitySetSegment;
-            if (entitySetSegment != null)
-            {
-                VerifyDerivedTypeConstraints(this.configuration.Model, entitySetSegment.EntitySet, fullTypeName, "entity set", entitySetSegment.EntitySet.Name);
-                return;
-            }
-
-            // EntitySet with key, for example: ~/Users(1)/NS.Cast
-            // Or Navigation Property with key ~/Users(1)/Orders(2)/NS.Cast
-            NavigationPropertySegment navigationPropertySegment;
-            KeySegment keySegment = previous as KeySegment;
-            if (keySegment != null)
-            {
-                ODataPathSegment previousPrevious = this.parsedSegments[this.parsedSegments.Count - 2]; // -2 means skip the "KeySegment"
-                entitySetSegment = previousPrevious as EntitySetSegment;
-                navigationPropertySegment = previousPrevious as NavigationPropertySegment;
-                if (entitySetSegment != null || navigationPropertySegment != null)
-                {
-                    // entitySet or  Navigation property
-                    IEdmVocabularyAnnotatable target;
-                    string kind, name;
-                    if (entitySetSegment != null)
-                    {
-                        target = entitySetSegment.EntitySet;
-                        kind = "entity set";
-                        name = entitySetSegment.EntitySet.Name;
-                    }
-                    else
-                    {
-                        target = navigationPropertySegment.NavigationProperty;
-                        kind = "navigation property";
-                        name = navigationPropertySegment.NavigationProperty.Name;
-                    }
-
-                    VerifyDerivedTypeConstraints(this.configuration.Model, target, fullTypeName, kind, name);
-                }
-
-                return;
-            }
-
-            // Navigation property: ~/Users(1)/Orders/NS.Cast
-            navigationPropertySegment = previous as NavigationPropertySegment;
-            if (navigationPropertySegment != null)
-            {
-                VerifyDerivedTypeConstraints(this.configuration.Model, navigationPropertySegment.NavigationProperty, fullTypeName, "navigation property", navigationPropertySegment.NavigationProperty.Name);
-                return;
-            }
-
-            // Structural property:  ~/Users(1)/Addresses/NS.Cast
-            PropertySegment propertySegment = previous as PropertySegment;
-            if (propertySegment != null)
-            {
-                // Verify the DerivedTypeConstrictions on property.
-                IEdmProperty edmProperty = propertySegment.Property;
-                VerifyDerivedTypeConstraints(this.configuration.Model, edmProperty, fullTypeName, "property", edmProperty.Name);
-
-                // Verify the Type Definition, the following codes should work if fix: https://github.com/OData/odata.net/issues/1326
-                /*
-                IEdmTypeReference propertyTypeReference = edmProperty.Type;
-                if (edmProperty.Type.IsCollection())
-                {
-                    propertyTypeReference = edmProperty.Type.AsCollection().ElementType();
-                }
-
-                if (propertyTypeReference.IsTypeDefinition())
-                {
-                    IEdmTypeDefinition edmTypeDefinition = propertyTypeReference.AsTypeDefinition().TypeDefinition();
-                    VerifyDerivedTypeConstraints(this.configuration.Model, edmTypeDefinition, fullTypeName, "type definition", edmTypeDefinition.FullName());
-                }
-                */
-
-                return;
-            }
-
-            // operation: ~/Users(1)/NS.Operation(...)/NS.Cast
-            // TODO: we should support to verify the casting for the operation return type.
-            // however, ODL doesn't support to annotation on the return type, see https://github.com/OData/odata.net/issues/52
-            // Once ODL supports to annotation on the return type, we should support to verify it.
-            /*
-            OperationSegment operationSegment = previous as OperationSegment;
-            if (operationSegment != null)
-            {
-            }
-            */
-        }
-
-        private void CheckOperationTypeCastSegmentRestriction(IEdmOperation operation)
-        {
-            Debug.Assert(operation != null);
-
-            if (this.parsedSegments == null)
-            {
-                return;
-            }
-
-            TypeSegment lastTypeSegment = this.parsedSegments.LastOrDefault(s => s is TypeSegment) as TypeSegment;
-            if (lastTypeSegment == null)
-            {
-                return;
-            }
 
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
-            ODataPathSegment previousPrevious = this.parsedSegments.Count >= 2 ? this.parsedSegments[this.parsedSegments.Count - 2] : null;
-
-            if ((lastTypeSegment == previous) || (lastTypeSegment == previousPrevious && previous is KeySegment))
+            IEdmType bindingType = null;
+            if (previous != null)
             {
-                if (!operation.IsBound)
-                {
-                    return;
-                }
-
-                string fullTypeName = lastTypeSegment.TargetEdmType.FullTypeName();
-                IEdmOperationParameter bindingParameter = operation.Parameters.First();
-                IEdmType bindingType = bindingParameter.Type.Definition;
-                bindingType = bindingType.AsElementType();
-                if (fullTypeName == bindingType.FullTypeName())
-                {
-                    return;
-                }
-
-                VerifyDerivedTypeConstraints(this.configuration.Model, bindingParameter, fullTypeName, "operation", operation.Name);
-            }
-        }
-
-        private static void VerifyDerivedTypeConstraints(IEdmModel model, IEdmVocabularyAnnotatable target, string fullTypeName, string kind, string name)
-        {
-            IEnumerable<string> derivedTypes = model.GetDerivedTypeConstraints(target);
-            if (derivedTypes == null || derivedTypes.Any(d => d == fullTypeName))
-            {
-                return;
+                bindingType = (previous is EachSegment) ? previous.TargetEdmType : previous.EdmType;
             }
 
-            throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(fullTypeName, kind, name));
-        }
+            string newIdentifier, newParenthesisExpression;
+            bool anotherEscapeFunctionStarts = false;
 
-        private bool TryResolveEscapeFunction(string identifier, IEdmType bindingType, IEdmModel model, out string qualifiedName, out string parenthesisExpression)
-        {
-            qualifiedName = null;
-            parenthesisExpression = null;
-
-            if (bindingType == null)  // escape function is only for bind function
-
+            if (this.TryResolveEscapeFunction(bindingType, configuration.Model, out newIdentifier, out newParenthesisExpression, out anotherEscapeFunctionStarts))
             {
-                return false;
-            }
-
-            string nextPiece = null;
-            bool anotherEscapeFunctionStarting = false;
-            if (!string.IsNullOrEmpty(identifier) && identifier[identifier.Length - 1] != ':')
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append(identifier);
-
-                while (this.TryGetNextSegmentText(out nextPiece))
+                if (this.TryCreateSegmentForOperation(previous, newIdentifier, newParenthesisExpression, bindingType))
                 {
-                    sb.Append('/');
-                    sb.Append(nextPiece);
-
-                    if (nextPiece[nextPiece.Length - 1] == ':')
+                    if (anotherEscapeFunctionStarts)
                     {
-                        break;
+                        TryBindEscapeFunction();
                     }
-                }
-
-                identifier = sb.ToString();
-            }
-
-            if (identifier != null && identifier.Length >= 2 && identifier[identifier.Length - 2] == ':')
-            {
-                anotherEscapeFunctionStarting = true;
-            }
-
-            this.nextSegmentCanBeEscapeFunction = anotherEscapeFunctionStarting;
-            bool isComposableRequired = identifier.Length >= 1 && identifier[identifier.Length - 1] == ':';
-
-            IEdmFunction function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
-            if (function == null)
-            {
-                return false;
-            }
-
-            if (function.Parameters == null || function.Parameters.Count() != 2 || !function.Parameters.ElementAt(1).Type.IsString())
-            {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter(function.FullName()));
-            }
-
-            parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(0, identifier.Length - 1) : identifier.Substring(0)) + "'";
-            qualifiedName = function.FullName();
-            
-            return true;
-        }
-
-        internal static bool IsUrlEscapeFunction(IEdmModel model, IEdmFunction function)
-        {
-            Debug.Assert(model != null);
-            Debug.Assert(function != null);
-
-            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(function,
-                Edm.Vocabularies.Community.V1.CommunityVocabularyModel.UrlEscapeFunctionTerm).FirstOrDefault();
-            if (annotation != null)
-            {
-                if (annotation.Value == null)
-                {
-                    // If the annotation is applied but a value is not specified then the value is assumed to be true.
+                    
                     return true;
-                }
-
-                IEdmBooleanConstantExpression tagConstant = annotation.Value as IEdmBooleanConstantExpression;
-                if (tagConstant != null)
-                {
-                    return tagConstant.Value;
                 }
             }
 
             return false;
         }
+
+    /// <summary>
+    /// Tries to create a type name segment if the given identifier refers to a known type.
+    /// </summary>
+    /// <param name="previous">previous segment info.</param>
+    /// <param name="identifier">The current raw segment identifier being interpreted.</param>
+    /// <param name="parenthesisExpression">Parenthesis expression of this segment.</param>
+    /// <returns>Whether or not a type segment was created for the identifier.</returns>
+    private bool TryCreateTypeNameSegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
+    {
+        IEdmType targetEdmType;
+        if (previous.TargetEdmType == null || (targetEdmType = UriEdmHelpers.FindTypeFromModel(this.configuration.Model, identifier, this.configuration.Resolver)) == null)
+        {
+            return false;
+        }
+
+        // if the new type segment prevents any results from possibly being returned, then short-circuit and throw a 404.
+        IEdmType previousEdmType = previous.TargetEdmType;
+        Debug.Assert(previousEdmType != null, "previous.TargetEdmType != null");
+
+        if (previousEdmType.TypeKind == EdmTypeKind.Collection)
+        {
+            previousEdmType = ((IEdmCollectionType)previousEdmType).ElementType.Definition;
+        }
+
+        if (!targetEdmType.IsOrInheritsFrom(previousEdmType) && !previousEdmType.IsOrInheritsFrom(targetEdmType))
+        {
+            throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(targetEdmType.FullTypeName(), previousEdmType.FullTypeName()));
+        }
+
+        CheckTypeCastSegmentRestriction(previous, targetEdmType);
+
+        // We want the type of the type segment to be a collection if the previous segment was a collection
+        IEdmType actualTypeOfTheTypeSegment = targetEdmType;
+
+        if (previous.EdmType.TypeKind == EdmTypeKind.Collection)
+        {
+            // creating a new collection type here because the type in the request is just the item type, there is no user-provided collection type.
+            var actualEntityTypeOfTheTypeSegment = actualTypeOfTheTypeSegment as IEdmEntityType;
+            if (actualEntityTypeOfTheTypeSegment != null)
+            {
+                actualTypeOfTheTypeSegment = new EdmCollectionType(new EdmEntityTypeReference(actualEntityTypeOfTheTypeSegment, false));
+            }
+            else
+            {
+                // Complex collection supports type cast too.
+                var actualComplexTypeOfTheTypeSegment = actualTypeOfTheTypeSegment as IEdmComplexType;
+                if (actualComplexTypeOfTheTypeSegment != null)
+                {
+                    actualTypeOfTheTypeSegment = new EdmCollectionType(new EdmComplexTypeReference(actualComplexTypeOfTheTypeSegment, false));
+                }
+                else
+                {
+                    throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedAfterStructuralCollection(identifier));
+                }
+            }
+        }
+
+        var typeNameSegment = (ODataPathSegment)new TypeSegment(actualTypeOfTheTypeSegment, previous.EdmType, previous.TargetEdmNavigationSource)
+        {
+            Identifier = identifier,
+            TargetKind = previous.TargetKind,
+            SingleResult = previous.SingleResult,
+            TargetEdmType = targetEdmType
+        };
+
+        this.parsedSegments.Add(typeNameSegment);
+
+        // Key expressions are allowed on Type segments
+        this.TryBindKeyFromParentheses(parenthesisExpression);
+
+        return true;
     }
+
+    /// <summary>
+    /// Creates a property segment
+    /// </summary>
+    /// <param name="previous">previous segment info.</param>
+    /// <param name="property">property to create the segment for.</param>
+    /// <param name="queryPortion">query portion for this segment, if specified.</param>
+    [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
+    private void CreatePropertySegment(ODataPathSegment previous, IEdmProperty property, string queryPortion)
+    {
+        Debug.Assert(previous != null, "previous != null");
+
+        if (property.Type.IsStream())
+        {
+            // The server used to allow arbitrary key expressions after named streams because this check was missing.
+            if (queryPortion != null)
+            {
+                throw ExceptionUtil.CreateSyntaxError();
+            }
+
+            this.CreateNamedStreamSegment(previous, property);
+            return;
+        }
+
+        // Handle a strongly-typed property.
+        ODataPathSegment segment = null;
+
+        if (property.PropertyKind == EdmPropertyKind.Navigation)
+        {
+            var navigationProperty = (IEdmNavigationProperty)property;
+
+            IEdmNavigationSource navigationSource = null;
+            if (previous.TargetEdmNavigationSource != null)
+            {
+                IEdmPathExpression bindingPath;
+                navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
+            }
+
+            // Relationship between TargetMultiplicity and navigation property:
+            //  1) EdmMultiplicity.Many <=> collection navigation property
+            //  2) EdmMultiplicity.ZeroOrOne <=> nullable singleton navigation property
+            //  3) EdmMultiplicity.One <=> non-nullable singleton navigation property
+            //
+            // According to OData Spec CSDL 7.1.3:
+            //  1) non-nullable singleton navigation property => navigation source required
+            //  2) the other cases => navigation source optional
+            if (navigationProperty.TargetMultiplicity() == EdmMultiplicity.One
+                && navigationSource is IEdmUnknownEntitySet)
+            {
+                // Specifically not throwing ODataUriParserException since it's more an an internal server error
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_TargetEntitySetNotFound(property.Name));
+            }
+
+            segment = new NavigationPropertySegment(navigationProperty, navigationSource);
+        }
+        else
+        {
+            segment = new PropertySegment((IEdmStructuralProperty)property);
+            switch (property.Type.TypeKind())
+            {
+                case EdmTypeKind.Complex:
+                    segment.TargetKind = RequestTargetKind.Resource;
+                    segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
+                    break;
+                case EdmTypeKind.Collection:
+                    if (property.Type.IsStructuredCollectionType())
+                    {
+                        segment.TargetKind = RequestTargetKind.Resource;
+                        segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
+                    }
+
+                    segment.TargetKind = RequestTargetKind.Collection;
+                    break;
+                case EdmTypeKind.Enum:
+                    segment.TargetKind = RequestTargetKind.Enum;
+                    break;
+                default:
+                    Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "must be primitive type or type definition property");
+                    segment.TargetKind = RequestTargetKind.Primitive;
+                    break;
+            }
+        }
+
+        this.parsedSegments.Add(segment);
+
+        if (!(queryPortion == null || property.Type.IsCollection() && property.Type.AsCollection().ElementType().IsEntity()))
+        {
+            throw ExceptionUtil.CreateSyntaxError();
+        }
+
+        this.TryBindKeyFromParentheses(queryPortion);
+    }
+
+    /// <summary>
+    /// Check whether identifiers matches according to case in sensitive option.
+    /// </summary>
+    /// <param name="expected">The expected identifier.</param>
+    /// <param name="identifier">Identifier to be evaluated.</param>
+    /// <returns>Whether the identifier matches.</returns>
+    private bool IdentifierIs(string expected, string identifier)
+    {
+        return string.Equals(
+            expected,
+            identifier,
+            this.configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Validates the existing parsed segments and returns a list of validated segments.
+    /// </summary>
+    /// <returns>List of validated path segments.</returns>
+    private List<ODataPathSegment> CreateValidatedPathSegments()
+    {
+        List<ODataPathSegment> validatedSegments = new List<ODataPathSegment>(this.parsedSegments.Count);
+        for (int index = 0, segmentCount = this.parsedSegments.Count; index < segmentCount; ++index)
+        {
+            CheckDollarEachSegmentRestrictions(index);
+#if DEBUG
+            this.parsedSegments[index].AssertValid();
+#endif
+            validatedSegments.Add(this.parsedSegments[index]);
+        }
+
+        return validatedSegments;
+    }
+
+    /// <summary>
+    /// Per OData 4.01 spec, only one operation may follow $each. This function enforces that restriction.
+    /// </summary>
+    /// <param name="index">Index of path segment to examine in the list of parsed segments.</param>
+    /// <exception cref="ODataException">Throws if there's a violation of $each restrictions.</exception>
+    /// <remarks>Should the restrictions on the $each be removed, this function can be deleted.</remarks>
+    private void CheckDollarEachSegmentRestrictions(int index)
+    {
+        Debug.Assert(index < this.parsedSegments.Count, "index < this.parsedSegments.Count");
+
+        int numOfSegmentsAfterDollarEach = this.parsedSegments.Count - index - 1;
+
+        // Perform restriction checks only if the current segment being examined is $each and there are subsequent segments.
+        if (this.parsedSegments[index] is EachSegment && numOfSegmentsAfterDollarEach > 0)
+        {
+            // Only one segment is allowed after $each...
+            if (numOfSegmentsAfterDollarEach > 1)
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
+            }
+
+            // And if there exists a single segment after $each, then it must be an OperationSegment.
+            if (!(this.parsedSegments[index + 1] is OperationSegment))
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
+            }
+        }
+    }
+
+    private void CheckTypeCastSegmentRestriction(ODataPathSegment previous, IEdmType targetEdmType)
+    {
+        Debug.Assert(previous != null);
+        Debug.Assert(targetEdmType != null);
+
+        // Make sure: cast to itself can pass the validation.
+        IEdmType previousTargetEdmType = previous.TargetEdmType.AsElementType();
+        if (previousTargetEdmType == targetEdmType)
+        {
+            return;
+        }
+
+        string fullTypeName = targetEdmType.FullTypeName();
+
+        // Singleton, for example: ~/Me/NS.Cast
+        SingletonSegment singletonSegment = previous as SingletonSegment;
+        if (singletonSegment != null)
+        {
+            VerifyDerivedTypeConstraints(this.configuration.Model, singletonSegment.Singleton, fullTypeName, "singleton", singletonSegment.Singleton.Name);
+            return;
+        }
+
+        // EntitySet, for example: ~/Users/NS.Cast
+        EntitySetSegment entitySetSegment = previous as EntitySetSegment;
+        if (entitySetSegment != null)
+        {
+            VerifyDerivedTypeConstraints(this.configuration.Model, entitySetSegment.EntitySet, fullTypeName, "entity set", entitySetSegment.EntitySet.Name);
+            return;
+        }
+
+        // EntitySet with key, for example: ~/Users(1)/NS.Cast
+        // Or Navigation Property with key ~/Users(1)/Orders(2)/NS.Cast
+        NavigationPropertySegment navigationPropertySegment;
+        KeySegment keySegment = previous as KeySegment;
+        if (keySegment != null)
+        {
+            ODataPathSegment previousPrevious = this.parsedSegments[this.parsedSegments.Count - 2]; // -2 means skip the "KeySegment"
+            entitySetSegment = previousPrevious as EntitySetSegment;
+            navigationPropertySegment = previousPrevious as NavigationPropertySegment;
+            if (entitySetSegment != null || navigationPropertySegment != null)
+            {
+                // entitySet or  Navigation property
+                IEdmVocabularyAnnotatable target;
+                string kind, name;
+                if (entitySetSegment != null)
+                {
+                    target = entitySetSegment.EntitySet;
+                    kind = "entity set";
+                    name = entitySetSegment.EntitySet.Name;
+                }
+                else
+                {
+                    target = navigationPropertySegment.NavigationProperty;
+                    kind = "navigation property";
+                    name = navigationPropertySegment.NavigationProperty.Name;
+                }
+
+                VerifyDerivedTypeConstraints(this.configuration.Model, target, fullTypeName, kind, name);
+            }
+
+            return;
+        }
+
+        // Navigation property: ~/Users(1)/Orders/NS.Cast
+        navigationPropertySegment = previous as NavigationPropertySegment;
+        if (navigationPropertySegment != null)
+        {
+            VerifyDerivedTypeConstraints(this.configuration.Model, navigationPropertySegment.NavigationProperty, fullTypeName, "navigation property", navigationPropertySegment.NavigationProperty.Name);
+            return;
+        }
+
+        // Structural property:  ~/Users(1)/Addresses/NS.Cast
+        PropertySegment propertySegment = previous as PropertySegment;
+        if (propertySegment != null)
+        {
+            // Verify the DerivedTypeConstrictions on property.
+            IEdmProperty edmProperty = propertySegment.Property;
+            VerifyDerivedTypeConstraints(this.configuration.Model, edmProperty, fullTypeName, "property", edmProperty.Name);
+
+            // Verify the Type Definition, the following codes should work if fix: https://github.com/OData/odata.net/issues/1326
+            /*
+            IEdmTypeReference propertyTypeReference = edmProperty.Type;
+            if (edmProperty.Type.IsCollection())
+            {
+                propertyTypeReference = edmProperty.Type.AsCollection().ElementType();
+            }
+
+            if (propertyTypeReference.IsTypeDefinition())
+            {
+                IEdmTypeDefinition edmTypeDefinition = propertyTypeReference.AsTypeDefinition().TypeDefinition();
+                VerifyDerivedTypeConstraints(this.configuration.Model, edmTypeDefinition, fullTypeName, "type definition", edmTypeDefinition.FullName());
+            }
+            */
+
+            return;
+        }
+
+        // operation: ~/Users(1)/NS.Operation(...)/NS.Cast
+        // TODO: we should support to verify the casting for the operation return type.
+        // however, ODL doesn't support to annotation on the return type, see https://github.com/OData/odata.net/issues/52
+        // Once ODL supports to annotation on the return type, we should support to verify it.
+        /*
+        OperationSegment operationSegment = previous as OperationSegment;
+        if (operationSegment != null)
+        {
+        }
+        */
+    }
+
+    private void CheckOperationTypeCastSegmentRestriction(IEdmOperation operation)
+    {
+        Debug.Assert(operation != null);
+
+        if (this.parsedSegments == null)
+        {
+            return;
+        }
+
+        TypeSegment lastTypeSegment = this.parsedSegments.LastOrDefault(s => s is TypeSegment) as TypeSegment;
+        if (lastTypeSegment == null)
+        {
+            return;
+        }
+
+        ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
+        ODataPathSegment previousPrevious = this.parsedSegments.Count >= 2 ? this.parsedSegments[this.parsedSegments.Count - 2] : null;
+
+        if ((lastTypeSegment == previous) || (lastTypeSegment == previousPrevious && previous is KeySegment))
+        {
+            if (!operation.IsBound)
+            {
+                return;
+            }
+
+            string fullTypeName = lastTypeSegment.TargetEdmType.FullTypeName();
+            IEdmOperationParameter bindingParameter = operation.Parameters.First();
+            IEdmType bindingType = bindingParameter.Type.Definition;
+            bindingType = bindingType.AsElementType();
+            if (fullTypeName == bindingType.FullTypeName())
+            {
+                return;
+            }
+
+            VerifyDerivedTypeConstraints(this.configuration.Model, bindingParameter, fullTypeName, "operation", operation.Name);
+        }
+    }
+
+    private static void VerifyDerivedTypeConstraints(IEdmModel model, IEdmVocabularyAnnotatable target, string fullTypeName, string kind, string name)
+    {
+        IEnumerable<string> derivedTypes = model.GetDerivedTypeConstraints(target);
+        if (derivedTypes == null || derivedTypes.Any(d => d == fullTypeName))
+        {
+            return;
+        }
+
+        throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(fullTypeName, kind, name));
+    }
+
+    private bool TryResolveEscapeFunction(IEdmType bindingType, IEdmModel model, out string qualifiedName, out string parenthesisExpression, out bool anotherEscapeFunctionStarts)
+    {
+        qualifiedName = null;
+        parenthesisExpression = null;
+        anotherEscapeFunctionStarts = false;
+
+        if (bindingType == null)  // escape function is only for bind function
+
+        {
+            return false;
+        }
+
+        IEdmFunction function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(model, f));
+
+        if (function == null)
+        {
+            return false;
+        }
+
+        string nextPiece = null;
+        StringBuilder sb = new StringBuilder();
+
+        while (this.TryGetNextSegmentText(out nextPiece))
+        {
+            if (sb.Length >= 1)
+            {
+                sb.Append('/');
+            }
+
+            sb.Append(nextPiece);
+
+            if (nextPiece[nextPiece.Length - 1] == ':')
+            {
+                break;
+            }
+        }
+
+        string identifier = sb.ToString();
+
+
+        if (identifier != null && identifier.Length >= 2 && identifier[identifier.Length - 2] == ':')
+        {
+            anotherEscapeFunctionStarts = true;
+        }
+
+        bool isComposableRequired = identifier.Length >= 1 && identifier[identifier.Length - 1] == ':';
+
+        if (isComposableRequired && !function.IsComposable)
+        {
+            function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
+        }
+
+        if (function == null)
+        {
+                return false;
+                // should be an exception instead. 
+            //throw ExceptionUtil.CreateBadRequestError("Bound function is not composable.");
+        }
+
+        if (function.Parameters == null || function.Parameters.Count() != 2 || !function.Parameters.ElementAt(1).Type.IsString())
+        {
+            throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter(function.FullName()));
+        }
+
+        parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(0, identifier.Length - 1) : identifier.Substring(0)) + "'";
+        qualifiedName = function.FullName();
+
+        return true;
+    }
+
+    internal static bool IsUrlEscapeFunction(IEdmModel model, IEdmFunction function)
+    {
+        Debug.Assert(model != null);
+        Debug.Assert(function != null);
+
+        IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(function,
+            Edm.Vocabularies.Community.V1.CommunityVocabularyModel.UrlEscapeFunctionTerm).FirstOrDefault();
+        if (annotation != null)
+        {
+            if (annotation.Value == null)
+            {
+                // If the annotation is applied but a value is not specified then the value is assumed to be true.
+                return true;
+            }
+
+            IEdmBooleanConstantExpression tagConstant = annotation.Value as IEdmBooleanConstantExpression;
+            if (tagConstant != null)
+            {
+                return tagConstant.Value;
+            }
+        }
+
+        return false;
+    }
+}
 }
