@@ -277,7 +277,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot write a delta deleted resource, link, or deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter."
+        /// A string like "Cannot write a deleted resource, link, deleted link, or nested delta resource set to a non-delta payload. Please use a delta resource set writer, or a request resource writer."
         /// </summary>
         internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter {
             get {
@@ -3583,6 +3583,17 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty, p0);
+        }
+
+        /// <summary>
+        /// A string like "Encountered a deleted entity when reading a non-delta response payload. Deleted entities are only supported in request payloads and delta responses."
+        /// </summary>
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
+            }
         }
 
         /// <summary>

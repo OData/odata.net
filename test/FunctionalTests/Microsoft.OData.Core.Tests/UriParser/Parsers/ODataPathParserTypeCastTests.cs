@@ -19,6 +19,40 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class ODataPathParserTypeCastTests
     {
+        #region Type cast with Namespace alias
+        [Fact]
+        public void ParseTypeCastOnSingletonWithoutAliasSettingThrows()
+        {
+            IEdmModel edmModel = GetSingletonEdmModel(""); // without Derived type constraint
+
+            ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
+            Action parsePath = () => pathParser.ParsePath(new[] { "Me", "MyAlias.VipCustomer" });
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ResourceNotFound("MyAlias.VipCustomer"));
+        }
+
+        [Theory]
+        [InlineData("Customer", "NS.")]
+        [InlineData("Customer", "MyAlias.")]
+        [InlineData("VipCustomer", "NS.")]
+        [InlineData("VipCustomer", "MyAlias.")]
+        [InlineData("NormalCustomer", "NS.")]
+        [InlineData("NormalCustomer", "MyAlias.")]
+        public void ParseTypeCastOnSingletonWithNamespaceAndAliasWorks(string typeCastName, string namespaceOrAlias)
+        {
+            IEdmModel edmModel = GetSingletonEdmModel(""); // without Derived type constraint
+            edmModel.SetNamespaceAlias("NS", "MyAlias");
+
+            IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
+            IEdmEntityType targetType = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == typeCastName);
+
+            ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
+
+            // ~/Me/NS.Customer
+            var path = pathParser.ParsePath(new[] { "Me", namespaceOrAlias + typeCastName });
+            path[1].ShouldBeTypeSegment(targetType, customer);
+        }
+        #endregion
+
         #region Singleton Type cast
         [Theory]
         [InlineData("Customer")]
