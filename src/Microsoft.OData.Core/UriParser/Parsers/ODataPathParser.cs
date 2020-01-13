@@ -80,12 +80,6 @@ namespace Microsoft.OData.UriParser
         internal static void ExtractSegmentIdentifierAndParenthesisExpression(string segmentText, out string identifier, out string parenthesisExpression)
         {
             Debug.Assert(segmentText != null, "segment != null");
-            if (segmentText == null)
-            {
-                identifier = "";
-                parenthesisExpression = "";
-                return;
-            }
 
             int parenthesisStart = segmentText.IndexOf('(');
             if (parenthesisStart < 0)
@@ -996,7 +990,7 @@ namespace Microsoft.OData.UriParser
 
                 if (tryBindingEscapeFunction && !this.TryBindEscapeFunction())
                 {
-                    // If it is not an escape function then revert binding it as property and continue trying to bind as other segments. 
+                    // If it is not an escape function then revert binding it as an entityset or singleton segment and continue trying to bind as other segments. 
                     // If the last segment added was a key segment then we need to pop last two segments from the l
                     if (this.parsedSegments[parsedSegments.Count - 1] is KeySegment)
                     {
@@ -1136,9 +1130,14 @@ namespace Microsoft.OData.UriParser
 
             this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisExpression, returnType, resolvedParameters, segment);
 
-            if (tryBindingEscapeFunction)
+            if (tryBindingEscapeFunction && !this.TryBindEscapeFunction())
             {
-                this.TryBindEscapeFunction();
+                if (this.parsedSegments[parsedSegments.Count - 1] is KeySegment)
+                {
+                    this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
+                }
+
+                this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
             }
 
             return true;
@@ -1325,7 +1324,6 @@ namespace Microsoft.OData.UriParser
 
         private bool TryBindEscapeFunction()
         {
-
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             IEdmType bindingType = null;
             if (previous != null)
