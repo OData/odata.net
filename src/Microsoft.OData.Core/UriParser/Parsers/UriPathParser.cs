@@ -75,7 +75,6 @@ namespace Microsoft.OData.UriParser
                 string[] uriSegments = uri.Segments;
 #endif
 
-                //int escapedStart = -1;
                 List<string> segments = new List<string>();
                 for (int i = numberOfSegmentsToSkip; i < uriSegments.Length; i++)
                 {
