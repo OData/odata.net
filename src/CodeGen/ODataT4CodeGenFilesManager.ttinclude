@@ -12,23 +12,23 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 #>
 <#@ assembly name="System.Core"
-#><#@ assembly name="System.Data.Linq"
 #><#@ assembly name="EnvDTE"
 #><#@ assembly name="System.Xml"
 #><#@ assembly name="System.Xml.Linq"
 #><#@ import namespace="System"
-#><#@ import namespace="System.CodeDom"
-#><#@ import namespace="System.CodeDom.Compiler"
 #><#@ import namespace="System.Collections.Generic"
-#><#@ import namespace="System.Data.Linq"
-#><#@ import namespace="System.Data.Linq.Mapping"
 #><#@ import namespace="System.IO"
 #><#@ import namespace="System.Linq"
-#><#@ import namespace="System.Reflection"
 #><#@ import namespace="System.Text"
 #><#@ import namespace="System.Xml.Linq"
 #><#@ import namespace="Microsoft.VisualStudio.TextTemplating"
 #><#+
+
+/// <summary>
+/// Creates an instance of the FilesManager. The object used to generate and manage
+/// multiple source files.
+/// </summary>
+/// <param name="context">The code generation context.</param>
 public class FilesManager {
     
         private class Block {

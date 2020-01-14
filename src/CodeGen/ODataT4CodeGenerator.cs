@@ -25,7 +25,7 @@ namespace Microsoft.OData.Client.Design.T4
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.Edm.Vocabularies.Community.V1;
     using System.Net;
-
+    
     /// <summary>
     /// Class to produce the template output
     /// </summary>
@@ -76,7 +76,9 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             TargetLanguage = this.TargetLanguage,
             EnableNamingAlias = this.EnableNamingAlias,
             TempFilePath = this.TempFilePath,
-            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes
+            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes,
+            MultipleFilesManager = FilesManager.Create(this.Host, null),
+            SplitGeneratedFileIntoMultipleFiles = this.SplitGeneratedFileIntoMultipleFiles
         };
     }
     else
@@ -93,7 +95,9 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             TargetLanguage = this.TargetLanguage,
             EnableNamingAlias = this.EnableNamingAlias,
             TempFilePath = this.TempFilePath,
-            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes
+            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes,
+            MultipleFilesManager = FilesManager.Create(this.Host, null),
+            SplitGeneratedFileIntoMultipleFiles = this.SplitGeneratedFileIntoMultipleFiles
         };
     }
 
@@ -355,6 +359,15 @@ public bool IgnoreUnexpectedElementsAndAttributes
 }
 
 /// <summary>
+/// true to generate multiple files, false generate a single file.
+/// </summary>
+public bool SplitGeneratedFileIntoMultipleFiles
+{
+    get;
+    set;
+}
+
+/// <summary>
 /// Generate code targeting a specific .Net Framework language.
 /// </summary>
 public enum LanguageOption
@@ -458,6 +471,7 @@ private void ApplyParametersFromConfigurationClass()
     this.EnableNamingAlias = Configuration.EnableNamingAlias;
     this.TempFilePath = Configuration.TempFilePath;
     this.IgnoreUnexpectedElementsAndAttributes = Configuration.IgnoreUnexpectedElementsAndAttributes;
+    this.SplitGeneratedFileIntoMultipleFiles = Configuration.SplitGeneratedFileIntoMultipleFiles;
 }
 
 /// <summary>
@@ -1315,6 +1329,12 @@ internal static class Utils
 }
 
 
+
+/// <summary>
+/// Creates an instance of the FilesManager. The object used to generate and manage
+/// multiple source files.
+/// </summary>
+/// <param name="context">The code generation context.</param>
 public class FilesManager {
     
         private class Block {
@@ -3803,6 +3823,16 @@ public class CodeGenerationContext
         get;
         set;
     }
+
+    /// <summary>
+    /// Object instance of a file manager responsible for splitting generating multiple files.
+    /// </summary>
+    public FilesManager MultipleFilesManager
+    {
+        get;
+        set;
+    }
+
     /// <summary>
     /// true to use Upper camel case for all class and property names, false otherwise.
     /// </summary>
@@ -3816,6 +3846,15 @@ public class CodeGenerationContext
     /// true to ignore unknown elements or attributes in metadata, false otherwise.
     /// </summary>
     public bool IgnoreUnexpectedElementsAndAttributes
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// true to generate multiple files, false generate a single file.
+    /// </summary>
+    public bool SplitGeneratedFileIntoMultipleFiles
     {
         get;
         set;
@@ -4026,7 +4065,19 @@ public class CodeGenerationContext
 }
 
 
-    /// <summary>
+    /*
+OData Client T4 Template ver. 7.5.1
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/// <summary>
 /// The template class to generate the OData client code.
 /// </summary>
 public abstract class ODataClientTemplate : TemplateBase
@@ -4050,6 +4101,7 @@ public abstract class ODataClientTemplate : TemplateBase
     public ODataClientTemplate(CodeGenerationContext context)
     {
         this.context = context;
+        context.MultipleFilesManager.template = this.GenerationEnvironment;
     }
 
     internal string SingleSuffix
@@ -4212,9 +4264,12 @@ public abstract class ODataClientTemplate : TemplateBase
     /// <returns>The generated code for the OData client.</returns>
     public override string TransformText()
     {
+        context.MultipleFilesManager.StartHeader();
         this.WriteFileHeader();
+        context.MultipleFilesManager.EndBlock();
         this.WriteNamespaces();
-        return this.GenerationEnvironment.ToString();
+        context.MultipleFilesManager.Process(context.SplitGeneratedFileIntoMultipleFiles);
+        return context.MultipleFilesManager.template.ToString();
     }
 
     internal void WriteNamespaces()
@@ -4274,7 +4329,17 @@ public abstract class ODataClientTemplate : TemplateBase
                 else
                 {
                     IEdmEntityType entityType = type as IEdmEntityType;
+                    context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs",false);
+                    if(context.SplitGeneratedFileIntoMultipleFiles) 
+                        {
+                            this.WriteNamespaceStart(this.context.GetPrefixedNamespace(fullNamespace, this, true, false));
+                        }
                     this.WriteEntityType(entityType, boundOperationsMap);
+                    if(context.SplitGeneratedFileIntoMultipleFiles) 
+                        {
+                            this.WriteNamespaceEnd();
+                        }
+                    context.MultipleFilesManager.EndBlock();
                 }
 
                 IEdmStructuredType structuredType = type as IEdmStructuredType;
@@ -5340,6 +5405,21 @@ public abstract class ODataClientTemplate : TemplateBase
 }
 
 
+/*
+OData Client T4 Template ver. 7.5.1
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/// <summary>
+/// ODataClientCSharpTemplate object to generate C# files.
+/// </summary>
 public sealed class ODataClientCSharpTemplate : ODataClientTemplate
 {
     /// <summary>

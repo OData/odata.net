@@ -327,6 +327,16 @@ public class CodeGenerationContext
         get;
         set;
     }
+
+    /// <summary>
+    /// Object instance of a file manager responsible for splitting generating multiple files.
+    /// </summary>
+    public FilesManager MultipleFilesManager
+    {
+        get;
+        set;
+    }
+
     /// <summary>
     /// true to use Upper camel case for all class and property names, false otherwise.
     /// </summary>
@@ -340,6 +350,15 @@ public class CodeGenerationContext
     /// true to ignore unknown elements or attributes in metadata, false otherwise.
     /// </summary>
     public bool IgnoreUnexpectedElementsAndAttributes
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// true to generate multiple files, false generate a single file.
+    /// </summary>
+    public bool SplitGeneratedFileIntoMultipleFiles
     {
         get;
         set;

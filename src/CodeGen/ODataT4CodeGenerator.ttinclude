@@ -54,7 +54,9 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             TargetLanguage = this.TargetLanguage,
             EnableNamingAlias = this.EnableNamingAlias,
             TempFilePath = this.TempFilePath,
-            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes
+            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes,
+            MultipleFilesManager = FilesManager.Create(this.Host, null),
+            SplitGeneratedFileIntoMultipleFiles = this.SplitGeneratedFileIntoMultipleFiles
         };
     }
     else
@@ -71,7 +73,9 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             TargetLanguage = this.TargetLanguage,
             EnableNamingAlias = this.EnableNamingAlias,
             TempFilePath = this.TempFilePath,
-            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes
+            IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes,
+            MultipleFilesManager = FilesManager.Create(this.Host, null),
+            SplitGeneratedFileIntoMultipleFiles = this.SplitGeneratedFileIntoMultipleFiles
         };
     }
 
@@ -231,6 +235,15 @@ public bool IgnoreUnexpectedElementsAndAttributes
 }
 
 /// <summary>
+/// true to generate multiple files, false generate a single file.
+/// </summary>
+public bool SplitGeneratedFileIntoMultipleFiles
+{
+    get;
+    set;
+}
+
+/// <summary>
 /// Generate code targeting a specific .Net Framework language.
 /// </summary>
 public enum LanguageOption
@@ -334,6 +347,7 @@ private void ApplyParametersFromConfigurationClass()
     this.EnableNamingAlias = Configuration.EnableNamingAlias;
     this.TempFilePath = Configuration.TempFilePath;
     this.IgnoreUnexpectedElementsAndAttributes = Configuration.IgnoreUnexpectedElementsAndAttributes;
+    this.SplitGeneratedFileIntoMultipleFiles = Configuration.SplitGeneratedFileIntoMultipleFiles;
 }
 
 /// <summary>
