@@ -1184,6 +1184,22 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void ParseEscapeFunctionUrlThrowsWithoutEscapeFunction()
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: false);
+
+            // Act
+            var fullUriString = ServiceRoot + "/root:/photos/2018/February";
+            var parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            Action test = () => parser.ParsePath();
+
+            // Assert
+            var odataException = Assert.Throws<ODataUnrecognizedPathException>(test);
+            Assert.Equal(ODataErrorStrings.RequestUriProcessor_ResourceNotFound("root:"), odataException.Message);
+        }
+
+        [Fact]
         public void ParseEscapeFunctionUrlThrowsInvalidEscapeFunction()
         {
             // Arrange
@@ -1289,6 +1305,22 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("xyz/abc", ((ConstantNode)parameter.Value).Value);
         }
 
+        [Fact]
+        public void ParseEscapeFunctionUrlWithoutEndingDelimiterThrowsWithoutNonComposableFunction()
+        {
+            // Arrange
+            IEdmModel model = GetCustomerOrderEdmModelWithEscapeFunction();
+
+            // Act
+            string fullUriString = ServiceRoot + "/Customers(2)/MyOrders:/xyz/abc";
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            Action test = () => parser.ParsePath();
+
+            // Assert
+            var odataException = Assert.Throws<ODataException>(test);
+            Assert.Equal(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported("Collection(NS.Order)"), odataException.Message);
+        }
+
         [Theory]
         [InlineData("Customers(2):/abc:/:/xyz")]
         [InlineData("Customers(2):/abc::/xyz")]
@@ -1316,7 +1348,7 @@ namespace Microsoft.OData.Tests.UriParser
             EdmModel model = new EdmModel();
 
             EdmEntityType orderType = new EdmEntityType("NS", "Order");
-            orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             orderType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
             model.AddElement(orderType);
 

@@ -89,14 +89,15 @@ namespace Microsoft.OData.UriParser
             }
             else if (segmentText[segmentText.Length - 1] == ':')
             {
-
                 if (segmentText.Length < 2 ||
                     segmentText[segmentText.Length - 2] != ')')
                 {
+                    // throw if segment ends in a colon, contains an open parenthesis without a closing parenthesis.
                     throw ExceptionUtil.CreateSyntaxError();
                 }
 
-
+                // This is to support escape function with parentheses, 
+                // "entityset(key):" segment in "entityset(key):/escape-function-path" will processed with identifier as entityset: and parentheses expression as key.
                 identifier = segmentText.Substring(0, parenthesisStart) + ":";
                 parenthesisExpression =
                    segmentText.Substring(parenthesisStart + 1, segmentText.Length - identifier.Length - 2);
@@ -378,7 +379,7 @@ namespace Microsoft.OData.UriParser
 
             bool trybindingEscapeFunction = false;
 
-            if (segmentText.Length > 0 && segmentText[segmentText.Length - 1] == ':' && previous.EdmType != null)
+            if (segmentText[segmentText.Length - 1] == ':' && previous.EdmType != null)
             {
                 IEdmFunction function = configuration.Model.FindBoundOperations(previous.EdmType).OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(configuration.Model, f));
                 if (function != null)
@@ -405,8 +406,6 @@ namespace Microsoft.OData.UriParser
 
                 return true;
             }
-
-
 
             return false;
         }
@@ -1328,7 +1327,7 @@ namespace Microsoft.OData.UriParser
             IEdmType bindingType = null;
             if (previous != null)
             {
-                bindingType = (previous is EachSegment) ? previous.TargetEdmType : previous.EdmType;
+                bindingType = previous.EdmType;
             }
 
             string newIdentifier, newParenthesisExpression;
@@ -1742,7 +1741,6 @@ namespace Microsoft.OData.UriParser
             anotherEscapeFunctionStarts = false;
 
             if (bindingType == null)  // escape function is only for bind function
-
             {
                 return false;
             }
@@ -1774,7 +1772,6 @@ namespace Microsoft.OData.UriParser
 
             string identifier = sb.ToString();
 
-
             if (identifier != null && identifier.Length >= 2 && identifier[identifier.Length - 2] == ':')
             {
                 anotherEscapeFunctionStarts = true;
@@ -1782,16 +1779,14 @@ namespace Microsoft.OData.UriParser
 
             bool isComposableRequired = identifier.Length >= 1 && identifier[identifier.Length - 1] == ':';
 
-            if (isComposableRequired && !function.IsComposable)
+            if (isComposableRequired && !function.IsComposable || (!isComposableRequired && function.IsComposable))
             {
                 function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
             }
 
             if (function == null)
             {
-                return false;
-                // should be an exception instead. 
-                //throw ExceptionUtil.CreateBadRequestError("Bound function is not composable.");
+                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported(bindingType.FullTypeName()));
             }
 
             if (function.Parameters == null || function.Parameters.Count() != 2 || !function.Parameters.ElementAt(1).Type.IsString())

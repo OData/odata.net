@@ -63,6 +63,7 @@ namespace Microsoft.OData.UriParser
                 // uri (so that we can skip over http://blah.com/basePath for example,
                 // get only the odata specific parts of the path).
                 //
+
                 // because of differences in system.uri between portable lib and
                 // the desktop library, we need to handle this differently.
                 // in this case we get the number of segments to skip as simply
