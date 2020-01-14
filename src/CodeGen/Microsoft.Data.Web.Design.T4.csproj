@@ -14,7 +14,16 @@
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\sln\packages\EnvDTE.8.0.2\lib\net10\EnvDTE.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(BuildInOSS)' == 'true'" />
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\sln\packages\stdole.7.0.3302\lib\net10\stdole.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -49,6 +58,12 @@
       <CustomToolNamespace>Microsoft.OData.Client.Design.T4</CustomToolNamespace>
       <LastGenOutput>ODataT4CodeGenerator.cs</LastGenOutput>
     </None>
+    <None Include="ODataT4CodeGeneratorContext.ttinclude" />
+    <None Include="ODataT4CodeGeneratorCSharp.ttinclude" />
+    <None Include="ODataT4CodeGenFilesManager.ttinclude" />
+    <None Include="ODataT4CodeGenTemplate.ttinclude" />
+    <None Include="ODataT4CodeGenVBTemplate.ttinclude" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

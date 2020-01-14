@@ -10,14 +10,9 @@
 namespace Microsoft.OData.Client.Design.T4
 {
     using System;
-    using System.CodeDom;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Data.Linq;
-    using System.Data.Linq.Mapping;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Text;
     using System.Xml.Linq;
     using Microsoft.VisualStudio.TextTemplating;
@@ -30,7 +25,7 @@ namespace Microsoft.OData.Client.Design.T4
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.Edm.Vocabularies.Community.V1;
     using System.Net;
-    
+
     /// <summary>
     /// Class to produce the template output
     /// </summary>
