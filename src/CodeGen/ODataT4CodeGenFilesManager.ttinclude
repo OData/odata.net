@@ -173,16 +173,10 @@ public class FilesManager {
             foreach(EnvDTE.ProjectItem projectItem in templateProjectItem.ProjectItems)
                 projectFiles.Add(projectItem.get_FileNames(0), projectItem);
 
-            /// <summary>
-            /// Removes files to the project.
-            /// </summary>
             foreach(var pair in projectFiles)
                 if (!keepFileNames.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key) + ".").StartsWith(originalFilePrefix))
                     pair.Value.Delete();
 
-            /// <summary>
-            /// Add missing files to the project.
-            /// </summary>
             foreach(String fileName in keepFileNameSet)
                 if (!projectFiles.ContainsKey(fileName))
                     templateProjectItem.ProjectItems.AddFromFile(fileName);
