@@ -875,7 +875,7 @@ namespace Microsoft.OData
             {
                 Debug.Assert(charset != null, "charset != null");
                 Debug.Assert(charset.Length > 0, "charset.Length > 0");
-                Debug.Assert(0 <= quality && quality <= 1000, "0 <= quality && quality <= 1000");
+                Debug.Assert(quality >= 0 && quality <= 1000, "quality >= 0 && quality <= 1000");
 
                 this.Charset = charset;
                 this.Quality = quality;

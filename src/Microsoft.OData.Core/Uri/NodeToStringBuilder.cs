@@ -394,7 +394,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
 
-            if (false == IsValidSearchWord(node.Text))
+            if (IsValidSearchWord(node.Text) == false)
             {
                 return String.Concat("\"", node.Text, "\"");
             }

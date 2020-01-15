@@ -27,6 +27,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="model">The model.</param>
         /// <param name="edmType">the type of the current scope based on type segments.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
+        /// <param name="state">The binding state.</param>
         /// <returns>The segment created from the token.</returns>
         public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver, BindingState state = null)
         {
