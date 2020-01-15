@@ -1185,6 +1185,11 @@ namespace Microsoft.OData.Tests.UriParser
 
         [Theory]
         [InlineData("/entitySetEscaped/32:/photos%2F2018%2F%2fFebruary:/Name", "/entitySetEscaped/32/NS.ComposableFunction(arg='photos%2F2018%2F%2fFebruary')/Name", true)]
+        [InlineData("/entitySetEscaped/32:/:/Name", "/entitySetEscaped/32/NS.ComposableFunction(arg='')/Name", true)]
+        [InlineData("/entitySetEscaped/32/:/:/Name", "/entitySetEscaped/32/NS.ComposableFunction(arg='')/Name", true)]
+        [InlineData("/entitySetEscaped/32:/", "/entitySetEscaped/32/NS.NormalFunction(path='')", false)]
+        [InlineData("/entitySetEscaped/32/:/", "/entitySetEscaped/32/NS.NormalFunction(path='')", false)]
+        [InlineData("/entitySetEscaped/32/:", "/entitySetEscaped/32/NS.NormalFunction(path='')", false)]
         [InlineData("/entitySetEscaped/32:/photos%2F2018%2F%2fFebruary", "/entitySetEscaped/32/NS.NormalFunction(path='photos%2F2018%2F%2fFebruary')", false)]
         public void ParseEscapeFunctionWithColonInKeyValue(string escapeFunctionUri, string functionUri, bool isComposable)
         {
@@ -1269,6 +1274,27 @@ namespace Microsoft.OData.Tests.UriParser
                 Assert.True(functionSegment.Parameters.First().Name == escapeUriSegment.Parameters.First().Name);
                 Assert.True(((ConstantNode)functionSegment.Parameters.First().Value).LiteralText == ((ConstantNode)escapeUriSegment.Parameters.First().Value).LiteralText);
             }
+        }
+
+        [Theory]
+        [InlineData("/entitySetEscaped::/32:/NonComposableParameter", typeof(ODataUnrecognizedPathException))]
+        [InlineData("/entitySetEscaped('32')/NS.SpecialDrive::/ComposableParameter::/nestedNonComposableParameter:", typeof(ODataUnrecognizedPathException))]
+        [InlineData("/entitySetEscaped(32)/:NS.SpecialDrive:/ComposableParameter::/nestedNonComposableParameter:", typeof(ODataException))]
+        [InlineData("/entitySetEscaped('32')::/NS.SpecialDrive:/ComposableParameter::/nestedNonComposableParameter:", typeof(ODataException))]
+        public void ParseInvalidEscapeURIShouldThrow(string escapeFunctionUri, Type exceptionType)
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
+
+            // Act
+            string fullUriString = ServiceRoot + escapeFunctionUri;
+            var parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+
+            // Assert
+            Action test = () => parser.ParsePath();
+
+            // Assert
+            Assert.Throws(exceptionType, test);
         }
 
         [Fact]
