@@ -1802,7 +1802,26 @@ namespace Microsoft.OData.UriParser
 
             bool isComposableRequired = identifier.Length >= 1 && identifier[identifier.Length - 1] == ':';
 
-            if (isComposableRequired && !function.IsComposable || (!isComposableRequired && function.IsComposable))
+            if ((function.Parameters.FirstOrDefault().Type.Definition != bindingType) || (isComposableRequired && !function.IsComposable) || (!isComposableRequired && function.IsComposable))
+            {
+                IEdmFunction candidate = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => f.Parameters.FirstOrDefault().Type.Definition == bindingType && f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
+                // if exact match found use that.
+                if (candidate != null)
+                {
+                    function = candidate;
+                }
+                else
+                {
+                    // Look for another function if composability does not match. 
+                    if (function.IsComposable != isComposableRequired)
+                    {
+                        function = null;
+                    }
+                }
+            }
+
+            // If no exact match found for binding type, use base type to find bound functions. 
+            if (function == null)
             {
                 function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
             }
