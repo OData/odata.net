@@ -43,7 +43,7 @@
     <T4VersionFullSemantic>$(T4VersionMajor).$(T4VersionMinor).$(T4VersionBuildNumber)</T4VersionFullSemantic>
     <VersionT4Semantic>$(T4VersionFullSemantic)</VersionT4Semantic>
   </PropertyGroup>
-
+  
   <!-- For NuGet Packages -->
   <PropertyGroup>
     <VersionNuGetSemantic>$(VersionFullSemantic)</VersionNuGetSemantic>
