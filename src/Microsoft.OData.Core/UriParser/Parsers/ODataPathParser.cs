@@ -378,19 +378,32 @@ namespace Microsoft.OData.UriParser
             KeySegment keySegment;
 
             bool trybindingEscapeFunction = false;
+            IEdmFunction function = null;
 
             if (segmentText[segmentText.Length - 1] == ':' && previous.EdmType != null)
             {
-                IEdmFunction function = configuration.Model.FindBoundOperations(previous.EdmType).OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(configuration.Model, f));
+
+                IEdmType bindingType = segmentText.Length == 1 ? previous.EdmType : previous.EdmType.AsElementType();
+                function = configuration.Model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(configuration.Model, f));
                 if (function != null)
                 {
-                    trybindingEscapeFunction = true;
-                    segmentText = segmentText.Substring(0, segmentText.Length - 1);
+                    trybindingEscapeFunction = ModifyIdentifierForEscapeFunction(ref segmentText);
 
-                    // If nothing to bind for key then bind the escape function directly. 
+                    // if it is a single colon then return true if we are able to successfully handle the segment otherwise continue
                     if (segmentText.Length == 0)
                     {
-                        return this.TryBindEscapeFunction();
+                        // Since we don't try and roll back errors in nested escape functions. This will either be true or throw an error. 
+                        // It will be true because top-most escape function always exists here as we have checked for it.  
+                        // We should continue binding : as the key if we start supporting roll backs for nested escape function binding errors. 
+                        if (this.TryBindEscapeFunction(0))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            trybindingEscapeFunction = false;
+                            segmentText = ":";
+                        }
                     }
                 }
             }
@@ -401,7 +414,7 @@ namespace Microsoft.OData.UriParser
 
                 if (trybindingEscapeFunction)
                 {
-                    this.TryBindEscapeFunction();
+                    this.TryBindEscapeFunction(1, function);
                 }
 
                 return true;
@@ -963,13 +976,7 @@ namespace Microsoft.OData.UriParser
             IEdmEntitySet targetEdmEntitySet;
             IEdmSingleton targetEdmSingleton;
 
-            bool tryBindingEscapeFunction = false;
-
-            if (identifier[identifier.Length - 1] == ':')
-            {
-                identifier = identifier.Substring(0, identifier.Length - 1);
-                tryBindingEscapeFunction = true;
-            }
+            bool tryBindingEscapeFunction = ModifyIdentifierForEscapeFunction(ref identifier);
 
             IEdmNavigationSource source = this.configuration.Resolver.ResolveNavigationSource(this.configuration.Model, identifier);
 
@@ -989,18 +996,20 @@ namespace Microsoft.OData.UriParser
 
                 if (tryBindingEscapeFunction && !this.TryBindEscapeFunction())
                 {
-                    // If it is not an escape function then revert binding it as an entityset or singleton segment and continue trying to bind as other segments. 
-                    // If the last segment added was a key segment then we need to pop last two segments from the l
-                    if (this.parsedSegments[parsedSegments.Count - 1] is KeySegment)
-                    {
-                        this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
-                    }
-
-                    this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
-
                     return false;
                 }
 
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool ModifyIdentifierForEscapeFunction(ref string identifier)
+        {
+            if (identifier[identifier.Length - 1] == ':')
+            {
+                identifier = identifier.Substring(0, identifier.Length - 1);
                 return true;
             }
 
@@ -1018,6 +1027,9 @@ namespace Microsoft.OData.UriParser
         {
             ICollection<OperationSegmentParameter> resolvedParameters;
             IEdmOperationImport singleImport;
+
+            bool tryBindingToEscapeFunction = ModifyIdentifierForEscapeFunction(ref identifier);
+
             if (!TryBindingParametersAndMatchingOperationImport(identifier, parenthesisExpression, this.configuration, out resolvedParameters, out singleImport))
             {
                 return false;
@@ -1036,6 +1048,11 @@ namespace Microsoft.OData.UriParser
             this.parsedSegments.Add(segment);
 
             this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisExpression, returnType, resolvedParameters, segment);
+
+            if (tryBindingToEscapeFunction && !this.TryBindEscapeFunction())
+            {
+                return false;
+            }
 
             return true;
         }
@@ -1081,12 +1098,7 @@ namespace Microsoft.OData.UriParser
             ICollection<OperationSegmentParameter> resolvedParameters;
             IEdmOperation singleOperation;
 
-            bool tryBindingEscapeFunction = false;
-            if (identifier.Length > 0 && identifier[identifier.Length - 1] == ':')
-            {
-                identifier = identifier.Substring(0, identifier.Length - 1);
-                tryBindingEscapeFunction = true;
-            }
+            bool tryBindingEscapeFunction = ModifyIdentifierForEscapeFunction(ref identifier);
 
             if (!TryBindingParametersAndMatchingOperation(identifier, parenthesisExpression, bindingType, this.configuration, out resolvedParameters, out singleOperation))
             {
@@ -1131,12 +1143,7 @@ namespace Microsoft.OData.UriParser
 
             if (tryBindingEscapeFunction && !this.TryBindEscapeFunction())
             {
-                if (this.parsedSegments[parsedSegments.Count - 1] is KeySegment)
-                {
-                    this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
-                }
-
-                this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
+                return false;
             }
 
             return true;
@@ -1228,18 +1235,11 @@ namespace Microsoft.OData.UriParser
                         CheckSingleResult(previous.SingleResult, previous.Identifier);
                         this.CreatePropertySegment(previous, projectedProperty, parenthesisExpression);
 
-                        if (tryBindingToEscapeFunction && !this.TryBindEscapeFunction())
+                        if (tryBindingToEscapeFunction && this.TryBindEscapeFunction())
                         {
-                            // If it is not an escape function then revert binding it as property and continue trying to bind as other segments. 
-                            // If the last segment added was a key segment then we need to pop last two segments from the l
-                            if (this.parsedSegments[parsedSegments.Count - 1] is KeySegment)
-                            {
-                                this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
-                            }
-
-                            this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
+                            return;
                         }
-                        else
+                        else if (!tryBindingToEscapeFunction)
                         {
                             return;
                         }
@@ -1282,15 +1282,13 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="identifier">The identifier to bind.</param>
         /// <param name="projectedProperty">The property, if one was found.</param>
-        /// <param name="bindEscapeFunction">Determines if an escape function needs to be bound.</param>
+        /// <param name="tryBindingEscapeFunction">Determines if an escape function needs to be bound.</param>
         /// <returns>Whether a property matching the identifier was found.</returns>
-        private bool TryBindProperty(string identifier, out IEdmProperty projectedProperty, out bool bindEscapeFunction)
+        private bool TryBindProperty(string identifier, out IEdmProperty projectedProperty, out bool tryBindingEscapeFunction)
         {
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             Debug.Assert(previous.TargetEdmType != null, "Previous wasn't open, so it should have a resource type");
             Debug.Assert(previous.TargetEdmNavigationSource == null || previous.TargetEdmType.IsStructuredOrStructuredCollectionType(), "if the previous segment has a target resource set, then its target resource type must be an entity or a complex");
-
-            bindEscapeFunction = false;
 
             // Note that we try resolve the property on the root entity type for the set. Properties/Name streams defined on derived types
             // are not supported. This is a general problem with properties as we don't have the entity instance here to validate
@@ -1306,11 +1304,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            if (identifier[identifier.Length - 1] == ':')
-            {
-                identifier = identifier.Substring(0, identifier.Length - 1);
-                bindEscapeFunction = true;
-            }
+            tryBindingEscapeFunction = ModifyIdentifierForEscapeFunction(ref identifier);
 
             if (structuredType == null)
             {
@@ -1321,7 +1315,7 @@ namespace Microsoft.OData.UriParser
             return projectedProperty != null;
         }
 
-        private bool TryBindEscapeFunction()
+        private bool TryBindEscapeFunction(int segmentToRemove = 2, IEdmFunction escapeFunctionCandidate = null)
         {
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             IEdmType bindingType = null;
@@ -1333,17 +1327,34 @@ namespace Microsoft.OData.UriParser
             string newIdentifier, newParenthesisExpression;
             bool anotherEscapeFunctionStarts = false;
 
-            if (this.TryResolveEscapeFunction(bindingType, configuration.Model, out newIdentifier, out newParenthesisExpression, out anotherEscapeFunctionStarts))
+            if (this.TryResolveEscapeFunction(bindingType, configuration.Model, out newIdentifier, out newParenthesisExpression, out anotherEscapeFunctionStarts, escapeFunctionCandidate))
             {
                 if (this.TryCreateSegmentForOperation(previous, newIdentifier, newParenthesisExpression, bindingType))
                 {
                     if (anotherEscapeFunctionStarts)
                     {
-                        TryBindEscapeFunction();
+                        // When we encounter an invalid escape function as a parameter, we should throw.
+                        // i.e. we should throw for entitySet(key):/ComposableEscapeFunctionPath::/InvalidEscapeFunction
+                        if (!TryBindEscapeFunction(2))
+                        {
+                            throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_ComposableEscapeFunctionShouldHaveValidParameter);
+                        }
                     }
 
                     return true;
                 }
+            }
+
+            // If it is not an escape function then revert binding and continue trying to bind as other segments. 
+            // If the last segment added was a key segment while parsing a different segment then we need to pop last two segments from the list.
+            if (segmentToRemove >= 2 && this.parsedSegments[parsedSegments.Count - 1] is KeySegment)
+            {
+                this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
+            }
+
+            if (segmentToRemove >= 1)
+            {
+                this.parsedSegments.RemoveAt(parsedSegments.Count - 1);
             }
 
             return false;
@@ -1359,6 +1370,9 @@ namespace Microsoft.OData.UriParser
         private bool TryCreateTypeNameSegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
         {
             IEdmType targetEdmType;
+
+            bool tryBindingEscapeFunction = ModifyIdentifierForEscapeFunction(ref identifier);
+
             if (previous.TargetEdmType == null || (targetEdmType = UriEdmHelpers.FindTypeFromModel(this.configuration.Model, identifier, this.configuration.Resolver)) == null)
             {
                 return false;
@@ -1418,6 +1432,11 @@ namespace Microsoft.OData.UriParser
 
             // Key expressions are allowed on Type segments
             this.TryBindKeyFromParentheses(parenthesisExpression);
+
+            if (tryBindingEscapeFunction && !this.TryBindEscapeFunction())
+            {
+                return false;
+            }
 
             return true;
         }
@@ -1734,18 +1753,22 @@ namespace Microsoft.OData.UriParser
             throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(fullTypeName, kind, name));
         }
 
-        private bool TryResolveEscapeFunction(IEdmType bindingType, IEdmModel model, out string qualifiedName, out string parenthesisExpression, out bool anotherEscapeFunctionStarts)
+        private bool TryResolveEscapeFunction(IEdmType bindingType, IEdmModel model, out string qualifiedName, out string parenthesisExpression, out bool anotherEscapeFunctionStarts, IEdmFunction function = null)
         {
             qualifiedName = null;
             parenthesisExpression = null;
             anotherEscapeFunctionStarts = false;
 
-            if (bindingType == null)  // escape function is only for bind function
+            if (bindingType == null)  // escape function is only for bound functions
             {
                 return false;
             }
 
-            IEdmFunction function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(model, f));
+            // If a candidate for a function is not provided then find one. 
+            if (function == null)
+            {
+                function = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().FirstOrDefault(f => IsUrlEscapeFunction(model, f));
+            }
 
             if (function == null)
             {

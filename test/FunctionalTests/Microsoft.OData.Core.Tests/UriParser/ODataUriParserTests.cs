@@ -1183,6 +1183,33 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("Name", proSegment.Property.Name);
         }
 
+        [Theory]
+        [InlineData("/entitySetEscaped/32:/photos%2F2018%2F%2fFebruary:/Name", "/entitySetEscaped/32/NS.ComposableFunction(arg='photos%2F2018%2F%2fFebruary')/Name")]
+        public void ParseEscapeFunctionWithColonInKeyValue(string escapeFunctionUri, string functionUri)
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
+
+            // Act
+            string fullUriString = ServiceRoot + functionUri;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var functionPath = parser.ParsePath();
+
+            fullUriString = ServiceRoot + escapeFunctionUri;
+            parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.True(functionPath.Equals(escapePath));
+
+            Assert.Equal(4, escapePath.Count());
+            OperationSegment segment = escapePath.First(c => c is OperationSegment) as OperationSegment;
+            Assert.Equal("NS.ComposableFunction", segment.Operations.First().FullName());
+
+            PropertySegment proSegment = Assert.IsType<PropertySegment>(escapePath.Last());
+            Assert.Equal("Name", proSegment.Property.Name);
+        }
+
         [Fact]
         public void ParseEscapeFunctionUrlThrowsWithoutEscapeFunction()
         {
@@ -1242,6 +1269,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
             container.AddSingleton("root", entityType);
+            container.AddEntitySet("entitySetEscaped", entityType);
             model.AddElement(container);
 
             if (escape)

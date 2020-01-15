@@ -896,6 +896,7 @@ RequestUriProcessor_Forbidden=Forbidden
 RequestUriProcessor_OperationSegmentBoundToANonEntityType=Found an operation bound to a non-entity type.
 RequestUriProcessor_NoBoundEscapeFunctionSupported=The request URI is not valid. The bound function binding to '{0}' does not match the composability of the escape function in the URI.  
 RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter=The UrlEscape function '{0}' must have exactly one non-binding parameter of type 'Edm.String'.
+RequestUriProcessor_ComposableEscapeFunctionShouldHaveValidParameter=A composable escape function must have a valid operation passed as a parameter.
 
 ; Note: The below list of error messages are common to both the OData and the OData.Query project.
 General_InternalError=An internal error '{0}' occurred.
