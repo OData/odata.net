@@ -32,6 +32,11 @@ namespace Microsoft.OData
         /// <summary>Singleton which indicates that the entire subtree is selected.</summary>
         internal static readonly SelectedPropertiesNode EntireSubtree = new SelectedPropertiesNode(SelectionType.EntireSubtree);
 
+        /// <summary>
+        /// Boolean flag indicating whether this is an expanded navigation property.
+        /// </summary>
+        private readonly bool isExpandedNavigationProperty;
+
         /// <summary>An empty set of stream properties to return when nothing is selected.</summary>
         private static readonly Dictionary<string, IEdmStructuralProperty> EmptyStreamProperties = new Dictionary<string, IEdmStructuralProperty>(StringComparer.Ordinal);
 
@@ -40,11 +45,6 @@ namespace Microsoft.OData
 
         /// <summary>The type of the current node.</summary>
         private SelectionType selectionType = SelectionType.PartialSubtree;
-
-        /// <summary>
-        /// Boolean flag indicating whether this is an expanded navigation property.
-        /// </summary>
-        internal readonly bool isExpandedNavigationProperty;
 
         /// <summary>The Edm structured type of the current node.</summary>
         private IEdmStructuredType structuredType;
@@ -93,95 +93,12 @@ namespace Microsoft.OData
             this.Parse(selectClause);
         }
 
-        private void Parse(string selectClause)
-        {
-            string[] paths = GetTopLevelItems(selectClause);
-            Debug.Assert(paths.Length > 0, "Paths should never be empty");
-            foreach (string t in paths)
-            {
-                string[] segments = null;
-                int idxLP = t.IndexOf('(');
-                if (-1 == idxLP)
-                {
-                    segments = t.Split(PathSeparator);
-                }
-                else
-                {
-                    // Take the substring before the left parenthesis and get the path segments.
-                    segments = t.Substring(0, idxLP).Split(PathSeparator);
-
-                    // Add parenthesized part to the last path segment.
-                    segments[segments.Length - 1] += t.Substring(idxLP);
-                }
-
-                this.ParsePathSegment(segments, 0);
-            }
-
-            DetermineSelectionType();
-        }
-
-        private void DetermineSelectionType()
-        {
-            if (this.children != null)
-            {
-                foreach (SelectedPropertiesNode childNode in this.children.Values)
-                {
-                    childNode.DetermineSelectionType();
-                }
-            }
-
-            if ((this.selectedProperties == null || this.selectedProperties.Count == 0)
-                && (this.children == null || this.children.Values.All(n => n.selectionType == SelectionType.EntireSubtree)))
-            {
-                this.selectionType = SelectionType.EntireSubtree;
-            }
-        }
-
-        private static string[] GetTopLevelItems(string selectClause)
-        {
-            List<string> result = new List<string>();
-            int parenBalance = 0;
-            int startIdx = 0;
-            char[] chars = selectClause.ToCharArray();
-            for (int i = 0; i < chars.Length; i++)
-            {
-                switch (chars[i])
-                {
-                    case '(':
-                        ++parenBalance;
-                        break;
-                    case ')':
-                        --parenBalance;
-                        break;
-                    case ItemSeparator:
-                        if (parenBalance == 0)
-                        {
-                            string item = selectClause.Substring(startIdx, i - startIdx);
-                            if (item.Length != 0)
-                            {
-                                // Add non-empty item only.
-                                result.Add(item);
-                            }
-                            startIdx = i + 1;
-                        }
-                        break;
-                }
-            }
-
-            if (startIdx < chars.Length)
-            {
-                // Add the last item, which is non-empty.
-                result.Add(selectClause.Substring(startIdx, chars.Length - startIdx));
-            }
-            return result.ToArray();
-        }
-
         /// <summary>
         /// Prevents a default instance of the <see cref="SelectedPropertiesNode"/> class from being created.
         /// </summary>
         /// <param name="selectionType">Type of the selection.</param>
         internal SelectedPropertiesNode(SelectionType selectionType)
-            :this(selectionType, /*isExpandedNavigationProperty*/ false)
+            : this(selectionType, /*isExpandedNavigationProperty*/ false)
         {
         }
 
@@ -424,7 +341,7 @@ namespace Microsoft.OData
             }
 
             if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard
-                || ((this.selectedProperties == null || this.selectedProperties.Count() == 0) && this.children.Values.All( n => n.isExpandedNavigationProperty)))
+                || ((this.selectedProperties == null || this.selectedProperties.Count() == 0) && this.children.Values.All(n => n.isExpandedNavigationProperty)))
             {
                 return structuredType.NavigationProperties();
             }
@@ -522,10 +439,96 @@ namespace Microsoft.OData
         /// <summary>
         /// Returns whether the selection type of this node is <code>SelectionType.EntireSubtree</code>.
         /// </summary>
-        /// <return><c>true</c> if entire subtree is selected; otherwise <c>false</c>.</return>
+        /// <returns><c>true</c> if entire subtree is selected; otherwise <c>false</c>.</returns>
         internal bool IsEntireSubtree()
         {
             return this.selectionType == SelectionType.EntireSubtree;
+        }
+
+        private void Parse(string selectClause)
+        {
+            string[] paths = GetTopLevelItems(selectClause);
+            Debug.Assert(paths.Length > 0, "Paths should never be empty");
+            foreach (string t in paths)
+            {
+                string[] segments = null;
+                int idxLP = t.IndexOf('(');
+                if (-1 == idxLP)
+                {
+                    segments = t.Split(PathSeparator);
+                }
+                else
+                {
+                    // Take the substring before the left parenthesis and get the path segments.
+                    segments = t.Substring(0, idxLP).Split(PathSeparator);
+
+                    // Add parenthesized part to the last path segment.
+                    segments[segments.Length - 1] += t.Substring(idxLP);
+                }
+
+                this.ParsePathSegment(segments, 0);
+            }
+
+            DetermineSelectionType();
+        }
+
+        private void DetermineSelectionType()
+        {
+            if (this.children != null)
+            {
+                foreach (SelectedPropertiesNode childNode in this.children.Values)
+                {
+                    childNode.DetermineSelectionType();
+                }
+            }
+
+            if ((this.selectedProperties == null || this.selectedProperties.Count == 0)
+                && (this.children == null || this.children.Values.All(n => n.selectionType == SelectionType.EntireSubtree)))
+            {
+                this.selectionType = SelectionType.EntireSubtree;
+            }
+        }
+
+        private static string[] GetTopLevelItems(string selectClause)
+        {
+            List<string> result = new List<string>();
+            int parenBalance = 0;
+            int startIdx = 0;
+            char[] chars = selectClause.ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                switch (chars[i])
+                {
+                    case '(':
+                        ++parenBalance;
+                        break;
+                    case ')':
+                        --parenBalance;
+                        break;
+                    case ItemSeparator:
+                        if (parenBalance == 0)
+                        {
+                            string item = selectClause.Substring(startIdx, i - startIdx);
+                            if (item.Length != 0)
+                            {
+                                // Add non-empty item only.
+                                result.Add(item);
+                            }
+
+                            startIdx = i + 1;
+                        }
+
+                        break;
+                }
+            }
+
+            if (startIdx < chars.Length)
+            {
+                // Add the last item, which is non-empty.
+                result.Add(selectClause.Substring(startIdx, chars.Length - startIdx));
+            }
+
+            return result.ToArray();
         }
 
         /// <summary>
@@ -618,7 +621,7 @@ namespace Microsoft.OData
         /// <returns>true if token can be resolved to a navigation property; false otherwise.</returns>
         private bool IsNavigationPropertyToken(string token)
         {
-            const char nameSpaceSeparator = '.';
+            const char NameSpaceSeparator = '.';
 
             /* Decision tree:
              #1. if the name contains a dot => it's not a navigation property
@@ -629,7 +632,7 @@ namespace Microsoft.OData
 
             // For better readability, set the value in if-else branches corresponding to decision tree above.
             bool found;
-            if (token.IndexOf(nameSpaceSeparator) != -1)
+            if (token.IndexOf(NameSpaceSeparator) != -1)
             {
                 // #1
                 found = false;
@@ -643,7 +646,7 @@ namespace Microsoft.OData
             }
             else if (this.edmModel != null && this.edmModel.FindBoundOperations(this.structuredType).Any(op => op.Name.Equals(token, StringComparison.Ordinal)))
             {
-                //#3
+                // #3
                 found = false;
             }
             else
@@ -757,7 +760,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="segmentName">The segment name to get the child node for.</param>
         /// <param name="isExpandedNavigationProperty">Boolean flag indicating whether this is an expanded navigation property.</param>
-
         /// <returns>The existing or newly created child node for the <paramref name="segmentName"/>.</returns>
         private SelectedPropertiesNode EnsureChildNode(string segmentName, bool isExpandedNavigationProperty)
         {
@@ -795,7 +797,7 @@ namespace Microsoft.OData
                 return true;
             }
 
-            if (this.selectionType == SelectionType.Empty || this.selectedProperties == null )
+            if (this.selectionType == SelectionType.Empty || this.selectedProperties == null)
             {
                 return false;
             }
@@ -836,7 +838,7 @@ namespace Microsoft.OData
             List<string> rawSelect = selectList.ToList();
             rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
 
-            if (rawSelect.Count == 0 && expandList.All( n => n.IsEntireSubtree()))
+            if (rawSelect.Count == 0 && expandList.All(n => n.IsEntireSubtree()))
             {
                 return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
