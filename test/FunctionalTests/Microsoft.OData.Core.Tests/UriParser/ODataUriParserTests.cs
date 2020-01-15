@@ -1244,7 +1244,7 @@ namespace Microsoft.OData.Tests.UriParser
         [InlineData("/entitySetEscaped/32:/NonComposableParameter", "/entitySetEscaped/32/NS.NormalFunction(path='NonComposableParameter')")]
         [InlineData("/entitySetEscaped/32/NS.SpecialDrive:/ComposableParameter::/nestedComposableParameter:", "/entitySetEscaped/32/NS.SpecialDrive/NS.SpecialOrders(path ='ComposableParameter')/NS.SpecialOrders(path ='nestedComposableParameter')")]
         [InlineData("/entitySetEscaped/32/NS.SpecialDrive:/ComposableParameter::/nestedNonComposableParameter:", "/entitySetEscaped/32/NS.SpecialDrive/NS.SpecialOrders(path ='ComposableParameter')/NS.SpecialOrders(path ='nestedNonComposableParameter')")]
-        public void ParseTypeCastEscaped(string escapeFunctionUri, string functionUri)
+        public void ParseEscapeFunctionWithInheritance(string escapeFunctionUri, string functionUri)
         {
             // Arrange
             IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
