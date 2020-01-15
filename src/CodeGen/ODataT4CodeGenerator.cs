@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client.Design.T4
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Security;
     using System.Xml.Linq;
     using Microsoft.VisualStudio.TextTemplating;
     using System.Diagnostics;
@@ -35,6 +36,7 @@ namespace Microsoft.OData.Client.Design.T4
         /// <summary>
         /// Create the template output
         /// </summary>
+        [SecurityCritical]
         public virtual string TransformText()
         {
 
@@ -49,6 +51,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 
             this.Write(" \r\n");
 
@@ -136,10 +139,12 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         /// </summary>
         public virtual global::Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost Host
         {
+            [SecurityCritical]
             get
             {
                 return this.hostValue;
             }
+            [SecurityCritical]
             set
             {
                 this.hostValue = value;
@@ -1351,6 +1356,7 @@ public class FilesManager {
     protected List<String> generatedFileNames = new List<String>();
     public StringBuilder template{get; set;}
 
+    [SecurityCritical]
     public static FilesManager Create(ITextTemplatingEngineHost host, StringBuilder template) {
         return (host is IServiceProvider) ? new VSManager(host, template) : new FilesManager(host, template);
     }
@@ -1412,7 +1418,8 @@ public class FilesManager {
     protected bool IsFileContentDifferent(String fileName, String newContent) {
         return !(File.Exists(fileName) && File.ReadAllText(fileName) == newContent);
     }
-
+    
+    [SecurityCritical]
     private FilesManager(ITextTemplatingEngineHost host, StringBuilder template) {
         this.host = host;
         this.template = template;
@@ -4101,8 +4108,11 @@ public abstract class ODataClientTemplate : TemplateBase
     public ODataClientTemplate(CodeGenerationContext context)
     {
         this.context = context;
-        context.MultipleFilesManager.template = this.GenerationEnvironment;
-    }
+        if(context.MultipleFilesManager != null)
+        {
+            context.MultipleFilesManager.template = this.GenerationEnvironment;
+        }  
+}
 
     internal string SingleSuffix
     {
@@ -4329,17 +4339,18 @@ public abstract class ODataClientTemplate : TemplateBase
                 else
                 {
                     IEdmEntityType entityType = type as IEdmEntityType;
-                    context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs",false);
                     if(context.SplitGeneratedFileIntoMultipleFiles) 
                         {
+                            context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs", false);
                             this.WriteNamespaceStart(this.context.GetPrefixedNamespace(fullNamespace, this, true, false));
                         }
                     this.WriteEntityType(entityType, boundOperationsMap);
                     if(context.SplitGeneratedFileIntoMultipleFiles) 
                         {
                             this.WriteNamespaceEnd();
-                        }
-                    context.MultipleFilesManager.EndBlock();
+                            context.MultipleFilesManager.EndBlock();
+                            }
+                    
                 }
 
                 IEdmStructuredType structuredType = type as IEdmStructuredType;

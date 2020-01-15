@@ -12,7 +12,6 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 #>
 <#@ assembly name="System.Core"
-#><#@ assembly name="EnvDTE"
 #><#@ assembly name="System.Xml"
 #><#@ assembly name="System.Xml.Linq"
 #><#@ import namespace="System"
@@ -20,8 +19,10 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #><#@ import namespace="System.IO"
 #><#@ import namespace="System.Linq"
 #><#@ import namespace="System.Text"
+#><#@ import namespace="System.Security"
 #><#@ import namespace="System.Xml.Linq"
 #><#@ import namespace="Microsoft.VisualStudio.TextTemplating"
+#><#@ assembly name="EnvDTE"
 #><#+
 
 /// <summary>
@@ -29,6 +30,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /// multiple source files.
 /// </summary>
 /// <param name="context">The code generation context.</param>
+[SecurityCritical]
 public class FilesManager {
     
         private class Block {
@@ -45,6 +47,7 @@ public class FilesManager {
     protected List<String> generatedFileNames = new List<String>();
     public StringBuilder template{get; set;}
 
+    [SecurityCritical]
     public static FilesManager Create(ITextTemplatingEngineHost host, StringBuilder template) {
         return (host is IServiceProvider) ? new VSManager(host, template) : new FilesManager(host, template);
     }
@@ -106,7 +109,8 @@ public class FilesManager {
     protected bool IsFileContentDifferent(String fileName, String newContent) {
         return !(File.Exists(fileName) && File.ReadAllText(fileName) == newContent);
     }
-
+    
+    [SecurityCritical]
     private FilesManager(ITextTemplatingEngineHost host, StringBuilder template) {
         this.host = host;
         this.template = template;

@@ -37,6 +37,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <#@ Import Namespace="System.Linq" #>
 <#@ Import Namespace="System.Xml"#>
 <#@ Import Namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Security"#>
 <#@ Import Namespace="System.Collections.Generic" #>
 <#@ Import Namespace="Microsoft.OData.Edm.Csdl" #>
 <#@ Import Namespace="Microsoft.OData.Edm" #>

@@ -36,8 +36,11 @@ public abstract class ODataClientTemplate : TemplateBase
     public ODataClientTemplate(CodeGenerationContext context)
     {
         this.context = context;
-        context.MultipleFilesManager.template = this.GenerationEnvironment;
-    }
+        if(context.MultipleFilesManager != null)
+        {
+            context.MultipleFilesManager.template = this.GenerationEnvironment;
+        }  
+}
 
     internal string SingleSuffix
     {
@@ -264,17 +267,19 @@ public abstract class ODataClientTemplate : TemplateBase
                 else
                 {
                     IEdmEntityType entityType = type as IEdmEntityType;
-                    context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs",false);
+                    ;
                     if(context.SplitGeneratedFileIntoMultipleFiles) 
                         {
+                            context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs",false)
                             this.WriteNamespaceStart(this.context.GetPrefixedNamespace(fullNamespace, this, true, false));
                         }
                     this.WriteEntityType(entityType, boundOperationsMap);
                     if(context.SplitGeneratedFileIntoMultipleFiles) 
                         {
                             this.WriteNamespaceEnd();
+                            context.MultipleFilesManager.EndBlock();
                         }
-                    context.MultipleFilesManager.EndBlock();
+                    
                 }
 
                 IEdmStructuredType structuredType = type as IEdmStructuredType;
