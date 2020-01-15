@@ -144,7 +144,7 @@ namespace Microsoft.OData.UriParser
                         // if one of the select items has options.
                         foreach (PathSelectItem existingItem in selectExpandItems.OfType<PathSelectItem>())
                         {
-                            if ((selectPathItem.HasOptions && overLaps(selectPathItem, existingItem)) || (existingItem.HasOptions && overLaps(existingItem, selectPathItem)))
+                            if ((selectPathItem.HasOptions && OverLaps(selectPathItem, existingItem)) || (existingItem.HasOptions && OverLaps(existingItem, selectPathItem)))
                             {
                                 throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(selectTermToken.PathToProperty)));
                             }
@@ -217,10 +217,10 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Determines whether the first path is entirely contained in the second path.
         /// </summary>
-        /// <param name="first">First path item</param>
-        /// <param name="second">Second path item</param>
-        /// <returns></returns>
-        private static bool overLaps(PathSelectItem firstPath, PathSelectItem secondPath)
+        /// <param name="firstPath">First path item</param>
+        /// <param name="secondPath">Second path item</param>
+        /// <returns>The boolean value.</returns>
+        private static bool OverLaps(PathSelectItem firstPath, PathSelectItem secondPath)
         {
             IEnumerator<ODataPathSegment> first = firstPath.SelectedPath.GetEnumerator();
             IEnumerator<ODataPathSegment> second = secondPath.SelectedPath.GetEnumerator();
@@ -270,6 +270,7 @@ namespace Microsoft.OData.UriParser
             {
                 targetElementType = collection.ElementType.Definition;
             }
+
             IEdmTypeReference elementTypeReference = targetElementType.ToTypeReference();
 
             // $compute
@@ -412,7 +413,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Bind the apply clause <see cref="ApplyClause"/> at this level.
         /// </summary>
-        /// <param name="applyOptions">The apply options to visit.</param>
+        /// <param name="applyToken">The apply tokens to visit.</param>
+        /// <param name="navigationSource">The navigation source.</param>
         /// <returns>The null or the built apply clause.</returns>
         private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource navigationSource)
         {
@@ -449,6 +451,10 @@ namespace Microsoft.OData.UriParser
         /// Bind the filter clause <see cref="FilterClause"/> at this level.
         /// </summary>
         /// <param name="filterToken">The filter token to visit.</param>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="generatedProperties">The generated properties.</param>
+        /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built filter clause.</returns>
         private FilterClause BindFilter(QueryToken filterToken, IEdmNavigationSource navigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
@@ -467,6 +473,11 @@ namespace Microsoft.OData.UriParser
         /// Bind the orderby clause <see cref="OrderByClause"/> at this level.
         /// </summary>
         /// <param name="orderByToken">The orderby token to visit.</param>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="generatedProperties">The generated properties.</param>
+        /// <param name="collapsed">The collapsed boolean value.</param>
+        /// <returns>The null or the built filter clause.</returns>
         /// <returns>The null or the built orderby clause.</returns>
         private OrderByClause BindOrderby(IEnumerable<OrderByToken> orderByToken, IEdmNavigationSource navigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
@@ -485,6 +496,8 @@ namespace Microsoft.OData.UriParser
         /// Bind the search clause <see cref="SearchClause"/> at this level.
         /// </summary>
         /// <param name="searchToken">The search token to visit.</param>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="elementType">The Edm element type.</param>
         /// <returns>The null or the built search clause.</returns>
         private SearchClause BindSearch(QueryToken searchToken, IEdmNavigationSource navigationSource, IEdmTypeReference elementType)
         {
@@ -504,10 +517,14 @@ namespace Microsoft.OData.UriParser
         /// <param name="expandToken">The expand token to visit.</param>
         /// <param name="selectToken">The select token to visit.</param>
         /// <param name="segments">The parsed segments to visit.</param>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="generatedProperties">The generated properties.</param>
+        /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built select and expand clause.</returns>
         private SelectExpandClause BindSelectExpand(ExpandToken expandToken, SelectToken selectToken,
             IList<ODataPathSegment> segments, IEdmNavigationSource navigationSource, IEdmTypeReference elementType,
-            HashSet < EndPathToken> generatedProperties = null, bool collapsed = false)
+            HashSet<EndPathToken> generatedProperties = null, bool collapsed = false)
         {
             if (expandToken != null || selectToken != null)
             {
@@ -531,6 +548,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="selectToken">the select token to process.</param>
         /// <param name="newSelectItem">the built select item to out.</param>
+        /// <returns>A boolean value indicates the result of processing wildcard token path.</returns>
         private bool ProcessWildcardTokenPath(SelectTermToken selectToken, out SelectItem newSelectItem)
         {
             newSelectItem = null;
@@ -560,6 +578,7 @@ namespace Microsoft.OData.UriParser
         /// Process a <see cref="PathSegmentToken"/> following any type segments if necessary.
         /// </summary>
         /// <param name="tokenIn">the path token to process.</param>
+        /// <returns>The processed OData segments.</returns>
         private List<ODataPathSegment> ProcessSelectTokenPath(PathSegmentToken tokenIn)
         {
             Debug.Assert(tokenIn != null, "tokenIn != null");
@@ -800,9 +819,6 @@ namespace Microsoft.OData.UriParser
             return new LevelsClause(levelsOption.Value < 0, levelsOption.Value);
         }
 
-        /// <summary>
-        /// Build a new MetadataBinder to use for expand options.
-        /// </summary>
         private static MetadataBinder BuildNewMetadataBinder(ODataUriParserConfiguration config,
             IEdmNavigationSource targetNavigationSource,
             IEdmTypeReference elementType,
@@ -882,7 +898,7 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        internal static void AddToSelectedItems(SelectItem itemToAdd, List<SelectItem> selectItems)
+        private static void AddToSelectedItems(SelectItem itemToAdd, List<SelectItem> selectItems)
         {
             if (itemToAdd == null)
             {

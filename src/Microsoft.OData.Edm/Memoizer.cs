@@ -98,13 +98,13 @@ namespace Microsoft.OData.Edm
 
             internal Result(Func<TResult> createValueDelegate)
             {
-                Debug.Assert(null != createValueDelegate, "delegate must be given");
+                Debug.Assert(createValueDelegate != null, "delegate must be given");
                 this.createValueDelegate = createValueDelegate;
             }
 
             internal TResult GetValue()
             {
-                if (null == this.createValueDelegate)
+                if (this.createValueDelegate == null)
                 {
                     // if the delegate has been cleared, it means we have already computed the value
                     return this.value;
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Edm
                 // don't simultaneously do the work
                 lock (this)
                 {
-                    if (null == this.createValueDelegate)
+                    if (this.createValueDelegate == null)
                     {
                         // between our initial check and our acquisition of the lock, some other
                         // thread may have computed the value

@@ -18,8 +18,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class CsdlSemanticsTerm : CsdlSemanticsElement, IEdmTerm, IEdmFullNamedElement
     {
         protected readonly CsdlSemanticsSchema Context;
-        private readonly string fullName;
         protected CsdlTerm term;
+
+        private readonly string fullName;
 
         private readonly Cache<CsdlSemanticsTerm, IEdmTypeReference> typeCache = new Cache<CsdlSemanticsTerm, IEdmTypeReference>();
         private static readonly Func<CsdlSemanticsTerm, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
