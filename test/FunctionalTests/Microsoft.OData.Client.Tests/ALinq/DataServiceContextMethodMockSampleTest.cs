@@ -22,8 +22,8 @@ namespace Microsoft.OData.Client.Tests.ALinq
             string str = "user";
             Mock<DataServiceContext> mockObject = new Mock<DataServiceContext>();
             mockObject.Setup(x => x.AddObject(It.IsAny<string>(), It.IsAny<object>())).Callback(()=> { str = "Saved Successfully"; });
-            DoSomething doSomething = new DoSomething() ;
-            string result = doSomething.SaveUser(mockObject.Object);
+            SaveUserDetails saveUserDetails = new SaveUserDetails() ;
+            string result = saveUserDetails.SaveUser(mockObject.Object);
             Assert.Equal(str, result);
         }
     }
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
     /// <summary>
     /// A sample implementation class with methods calling the DataserviceContext.cs methods
     /// </summary>
-    public class DoSomething
+    public class SaveUserDetails
     {
         /// <summary>
         /// A simple method to save a user's details
