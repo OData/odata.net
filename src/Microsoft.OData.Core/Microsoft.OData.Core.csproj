@@ -110,6 +110,7 @@
     <Compile Include="UriParser\Aggregation\EntitySetAggregateToken.cs" />
     <Compile Include="UriParser\Aggregation\AggregateExpression.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
+    <Compile Include="UriParser\Parsers\AllowedSegments.cs" />
     <Compile Include="UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs" />
     <Compile Include="UriParser\SemanticAst\AnnotationSegment.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
