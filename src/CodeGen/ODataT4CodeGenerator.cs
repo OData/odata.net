@@ -4338,10 +4338,10 @@ public abstract class ODataClientTemplate : TemplateBase
                 }
                 else
                 {
-                    IEdmEntityType entityType = type as IEdmEntityType;
+                    IEdmEntityType entityType = type as IEdmEntityType;                   
                     if(context.SplitGeneratedFileIntoMultipleFiles) 
                         {
-                            context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs", false);
+                                context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs", false);
                             this.WriteNamespaceStart(this.context.GetPrefixedNamespace(fullNamespace, this, true, false));
                         }
                     this.WriteEntityType(entityType, boundOperationsMap);
@@ -4349,7 +4349,7 @@ public abstract class ODataClientTemplate : TemplateBase
                         {
                             this.WriteNamespaceEnd();
                             context.MultipleFilesManager.EndBlock();
-                            }
+                        }
                     
                 }
 
