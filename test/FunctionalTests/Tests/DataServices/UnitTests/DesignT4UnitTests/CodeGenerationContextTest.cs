@@ -294,5 +294,84 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 Assert.AreEqual(ex.Message, "Only file, http, https schemes are supported for paths to metadata source locations.");
             }
         }
+
+        [TestMethod]
+        public void SetOneCustomHeaderCorrectlyShouldNotThrowException()
+        {
+            ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
+            string customHeaderString = @"Authorization:Bearer bearer-token";
+            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            Assert.IsNotNull(codegen.CustomHttpHeaders);
+            Assert.AreEqual(1, codegen.CustomHttpHeaders.Count);
+            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void SetMultipleCustomHeadersCorrectlyShouldNotThrowException()
+        {
+            ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
+            string customHeaderString = @"Authorization:Bearer bearer-token
+                                          odata.continue-on-error:true";
+            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            Assert.IsNotNull(codegen.CustomHttpHeaders);
+            Assert.AreEqual(2, codegen.CustomHttpHeaders.Count);
+            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.FirstOrDefault());
+            Assert.AreEqual("odata.continue-on-error:true", codegen.CustomHttpHeaders.LastOrDefault());
+        }
+
+        [TestMethod]
+        public void SetCustomHeaderInCorrectlyShouldThrowException()
+        {
+            ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
+            string customHeaderString = @"Authorization Bearer bearer-token";
+            
+            try
+            {
+                codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            }
+            catch(ArgumentException exception)
+            {
+                StringAssert.Contains(exception.Message, "A http header string must have a colon delimeter");
+                return;
+            }
+            Assert.Fail("Expected ArgumentException is not thrown");
+            
+        }
+
+        [TestMethod]
+        public void SetNullCustomHeaderShouldNotThrowException()
+        {
+            ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
+            string customHeaderString = null;
+            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            Assert.IsNull(codegen.CustomHttpHeaders);
+        }
+
+        [TestMethod]
+        public void SetCustomHeadersWithQuotesShouldNotThrowException()
+        {
+            // Quotes are sent as part of the header value
+            ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
+            string customHeaderString = @"If-Match:'67ab43'";
+            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            Assert.IsNotNull(codegen.CustomHttpHeaders);
+            Assert.AreEqual(1, codegen.CustomHttpHeaders.Count);
+            Assert.AreEqual("If-Match:'67ab43'", codegen.CustomHttpHeaders.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void SetMultipleCustomHeadersWithEmptyNewLinesShouldNotThrowError()
+        {
+            ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
+            string customHeaderString = @"Authorization:Bearer bearer-token
+
+
+                                          odata.continue-on-error:true";
+            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            Assert.IsNotNull(codegen.CustomHttpHeaders);
+            Assert.AreEqual(2, codegen.CustomHttpHeaders.Count);
+            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.FirstOrDefault());
+            Assert.AreEqual("odata.continue-on-error:true", codegen.CustomHttpHeaders.LastOrDefault());
+        }
     }
 }

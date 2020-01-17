@@ -70,7 +70,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             this.ApplyParametersFromConfigurationClass();
         }
 
-        context = new CodeGenerationContext(new Uri(this.MetadataDocumentUri, UriKind.Absolute), this.NamespacePrefix)
+        context = new CodeGenerationContext(new Uri(this.MetadataDocumentUri, UriKind.Absolute), this.NamespacePrefix, this.CustomHttpHeaders)
         {
             UseDataServiceCollection = this.UseDataServiceCollection,
             TargetLanguage = this.TargetLanguage,
@@ -153,6 +153,12 @@ public static class Configuration
 	// This flag indicates whether to ignore unexpected elements and attributes in the metadata document and generate
 	// the client code if any. The value must be set to true or false.
 	public const bool IgnoreUnexpectedElementsAndAttributes = true;
+
+	// (Optional) Custom http headers as a verbatim string in the format below: 
+	// CustomHttpHeaders = @"headerKey:headerValue
+	// headerKey:headerValue
+	// headerKey:headerValue";
+	public const string CustomHttpHeaders = "";
 }
 
 public static class Customization
@@ -346,6 +352,15 @@ public enum LanguageOption
 }
 
 /// <summary>
+/// Stores Custom Http Headers to be added to the WebRequest.Headers property.
+/// </summary>
+public virtual IList<string> CustomHttpHeaders
+{
+    get;
+    set;
+}
+
+/// <summary>
 /// Set the UseDataServiceCollection property with the given value.
 /// </summary>
 /// <param name="stringValue">The value to set.</param>
@@ -426,6 +441,38 @@ public void ValidateAndSetIgnoreUnexpectedElementsAndAttributesFromString(string
 }
 
 /// <summary>
+/// Set the CustomHttpHeaders property from the custom http headers string.
+/// </summary>
+/// <param name="stringValue">The value to set.</param>
+public void ValidateAndSetCustomHttpHeadersFromString(string headersValue) 
+{
+    if (String.IsNullOrWhiteSpace(headersValue))
+    {
+        return;
+    }
+
+    this.CustomHttpHeaders = new List<string>();
+
+    string[] headerElements = headersValue.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+    foreach (var headerElement in headerElements)
+    {
+        // Trim header for empty spaces
+        var header = headerElement.Trim();
+
+        // A header string must have atleast one colon
+        if (header.Contains(':'))
+        {
+            CustomHttpHeaders.Add(header);
+        }
+        else
+        {
+            throw new ArgumentException("A http header string must have a colon delimeter");
+        }
+    }
+
+}
+
+/// <summary>
 /// Reads the parameter values from the Configuration class and applies them.
 /// </summary>
 private void ApplyParametersFromConfigurationClass()
@@ -437,6 +484,7 @@ private void ApplyParametersFromConfigurationClass()
     this.EnableNamingAlias = Configuration.EnableNamingAlias;
     this.TempFilePath = Configuration.TempFilePath;
     this.IgnoreUnexpectedElementsAndAttributes = Configuration.IgnoreUnexpectedElementsAndAttributes;
+    this.ValidateAndSetCustomHttpHeadersFromString(Configuration.CustomHttpHeaders);
 }
 
 /// <summary>
@@ -558,8 +606,8 @@ public class CodeGenerationContext
     /// Constructs an instance of <see cref="CodeGenerationContext"/>.
     /// </summary>
     /// <param name="metadataUri">The Uri to the metadata document. The supported scheme are File, http and https.</param>
-    public CodeGenerationContext(Uri metadataUri, string namespacePrefix)
-        : this(GetEdmxStringFromMetadataPath(metadataUri), namespacePrefix)
+    public CodeGenerationContext(Uri metadataUri, string namespacePrefix, IList<string> CustomHttpHeaders = null)
+        : this(GetEdmxStringFromMetadataPath(metadataUri, CustomHttpHeaders), namespacePrefix)
     {
     }
 
@@ -955,10 +1003,10 @@ public class CodeGenerationContext
     /// Reads the edmx string from a file path or a http/https path.
     /// </summary>
     /// <param name="metadataUri">The Uri to the metadata document. The supported scheme are File, http and https.</param>
-    private static string GetEdmxStringFromMetadataPath(Uri metadataUri)
+    private static string GetEdmxStringFromMetadataPath(Uri metadataUri, IList<string> CustomHttpHeaders = null)
     {
         string content = null;
-        using (StreamReader streamReader = new StreamReader(GetEdmxStreamFromUri(metadataUri)))
+        using (StreamReader streamReader = new StreamReader(GetEdmxStreamFromUri(metadataUri, CustomHttpHeaders)))
         {
             content = streamReader.ReadToEnd();
         }
@@ -970,7 +1018,7 @@ public class CodeGenerationContext
     /// Get the metadata stream from a file path or a http/https path.
     /// </summary>
     /// <param name="metadataUri">The Uri to the stream. The supported scheme are File, http and https.</param>
-    private static Stream GetEdmxStreamFromUri(Uri metadataUri)
+    private static Stream GetEdmxStreamFromUri(Uri metadataUri, IList<string> CustomHttpHeaders  = null)
     {
         Debug.Assert(metadataUri != null, "metadataUri != null");
         Stream metadataStream = null;
@@ -983,6 +1031,13 @@ public class CodeGenerationContext
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(metadataUri);
+                if (CustomHttpHeaders != null)
+                {
+                    foreach (var header in CustomHttpHeaders)
+                    {
+                        webRequest.Headers.Add(header);
+                    }
+                }
                 WebResponse webResponse = webRequest.GetResponse();
                 metadataStream = webResponse.GetResponseStream();
             }
