@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser
             {
                 Type nodeValueType = constantNode.Value.GetType();
                 Assert.True(typeof(TValue).IsAssignableFrom(nodeValueType));
-                Assert.Equal(constantNode.Value, constantNode.Value);
+                Assert.Equal(expectedValue, constantNode.Value);
             }
 
             return constantNode;
