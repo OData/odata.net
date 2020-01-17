@@ -75,23 +75,23 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\..\src\CodeGen\ODataT4CodeGeneratorContext.ttinclude">
+    <None Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGeneratorContext.ttinclude">
       <Link>ODataT4CodeGeneratorContext.ttinclude</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\..\..\src\CodeGen\ODataT4CodeGeneratorCSharp.ttinclude">
+    <None Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGeneratorCSharp.ttinclude">
       <Link>ODataT4CodeGeneratorCSharp.ttinclude</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\..\..\src\CodeGen\ODataT4CodeGenFilesManager.ttinclude">
+    <None Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenFilesManager.ttinclude">
       <Link>ODataT4CodeGenFilesManager.ttinclude</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\..\..\src\CodeGen\ODataT4CodeGenTemplate.ttinclude">
+    <None Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenTemplate.ttinclude">
       <Link>ODataT4CodeGenTemplate.ttinclude</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\..\..\src\CodeGen\ODataT4CodeGenVBTemplate.ttinclude">
+    <None Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenVBTemplate.ttinclude">
       <Link>ODataT4CodeGenVBTemplate.ttinclude</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
