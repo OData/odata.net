@@ -58,18 +58,30 @@
       <CustomToolNamespace>Microsoft.OData.Client.Design.T4</CustomToolNamespace>
       <LastGenOutput>ODataT4CodeGenerator.cs</LastGenOutput>
     </None>
-    <None Include="ODataT4CodeGeneratorContext.ttinclude" />
-    <None Include="ODataT4CodeGeneratorCSharp.ttinclude" />
-    <None Include="ODataT4CodeGenFilesManager.ttinclude" />
-    <None Include="ODataT4CodeGenTemplate.ttinclude" />
-    <None Include="ODataT4CodeGenVBTemplate.ttinclude" />
+    <EmbeddedResource Include="ODataT4CodeGeneratorContext.ttinclude">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODataT4CodeGeneratorCSharp.ttinclude">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODataT4CodeGenFilesManager.ttinclude">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODataT4CodeGenTemplate.ttinclude">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODataT4CodeGenVBTemplate.ttinclude">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ODataT4CodeGenerator.ttinclude" />
+    <EmbeddedResource Include="ODataT4CodeGenerator.ttinclude">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

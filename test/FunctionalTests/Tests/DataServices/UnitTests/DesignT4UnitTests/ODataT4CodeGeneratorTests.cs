@@ -6,6 +6,7 @@
 
 using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -35,8 +36,13 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
         private static string T4TemplatePath;
         private static string T4IncludeTemplatePath;
         private static string TempFilePath;
+        private string T4TemplateContextPath;
+        private string T4IncludeTemplateCSharpPath;
+        private string T4TemplateFilesManagerPath;
+        private string T4IncludeCodeGenTemplatPath;
+        private string T4IncludeVBTemplatePath;
 
-        [TestInitialize]
+    [TestInitialize]
         public void Init()
         {
             AssemblyPath = Directory.GetCurrentDirectory();
@@ -65,35 +71,59 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
 
             string T4TemplateName = "ODataT4CodeGenerator.tt";
             string T4IncludeTemplateName = "ODataT4CodeGenerator.ttinclude";
+            string T4TemplateContextName = "ODataT4CodeGeneratorContext.ttinclude";
+            string T4IncludeTemplateCSharpName = "ODataT4CodeGeneratorCSharp.ttinclude";
+            string T4TemplateFilesManagerName = "ODataT4CodeGenFilesManager.ttinclude";
+            string T4IncludeCodeGenTemplatName = "ODataT4CodeGenTemplate.ttinclude";
+            string T4IncludeVBTemplateName = "ODataT4CodeGenVBTemplate.ttinclude";
+
             T4TemplatePath = AssemblyPath + "\\ODataT4CodeGenerator.tt";
             T4IncludeTemplatePath = AssemblyPath + "\\ODataT4CodeGenerator.ttinclude";
+            string T4TemplateContextPath = AssemblyPath + "\\ODataT4CodeGeneratorContext.ttinclude";
+            string T4IncludeTemplateCSharpPath = AssemblyPath + "\\ODataT4CodeGeneratorCSharp.ttinclude";
+            string T4TemplateFilesManagerPath = AssemblyPath + "\\ODataT4CodeGenFilesManager.ttinclude";
+            string T4IncludeCodeGenTemplatPath = AssemblyPath + "\\ODataT4CodeGenTemplate.ttinclude";
+            string T4IncludeVBTemplatePath = AssemblyPath + "\\ODataT4CodeGenVBTemplate.ttinclude";
+
             string ttSourceCode = string.Empty;
             string ttinlucdeSourceCode = string.Empty;
             Assembly assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream(T4TemplateName))
-            {
-                using (StreamReader reader = new StreamReader(stream))
+            var templateNames = new Dictionary<string, string>
                 {
-                    ttSourceCode = reader.ReadToEnd();
-                }
-            }
-
-            using (StreamWriter writer = new StreamWriter(T4TemplatePath))
-            {
-                writer.Write(ttSourceCode);
-            }
-
-            using (Stream stream = assembly.GetManifestResourceStream(T4IncludeTemplateName))
-            {
-                using (StreamReader reader = new StreamReader(stream))
+                {T4TemplateName, T4IncludeTemplatePath},
+                {T4IncludeTemplateName, T4IncludeTemplatePath},
+                {T4TemplateContextName, T4TemplateContextPath},
+                {T4IncludeTemplateCSharpName, T4IncludeTemplateCSharpPath},
+                {T4TemplateFilesManagerName, T4TemplateFilesManagerPath},
+                {T4IncludeCodeGenTemplatName, T4IncludeCodeGenTemplatPath},
+                {T4IncludeVBTemplateName, T4IncludeVBTemplatePath}
+                };
+            foreach (var templateItem in templateNames) {
+                using (Stream stream = assembly.GetManifestResourceStream(templateItem.Key))
                 {
-                    ttinlucdeSourceCode = reader.ReadToEnd();
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        ttSourceCode = reader.ReadToEnd();
+                    }
                 }
-            }
 
-            using (StreamWriter writer = new StreamWriter(T4IncludeTemplatePath))
-            {
-                writer.Write(ttinlucdeSourceCode);
+                using (StreamWriter writer = new StreamWriter(templateItem.Value))
+                {
+                    writer.Write(ttSourceCode);
+                }
+
+                //using (Stream stream = assembly.GetManifestResourceStream(T4IncludeTemplateName))
+                //{
+                //    using (StreamReader reader = new StreamReader(stream))
+                //    {
+                //        ttinlucdeSourceCode = reader.ReadToEnd();
+                //    }
+                //}
+
+                //using (StreamWriter writer = new StreamWriter(T4IncludeTemplatePath))
+                //{
+                //    writer.Write(ttinlucdeSourceCode);
+                //}
             }
         }
 
