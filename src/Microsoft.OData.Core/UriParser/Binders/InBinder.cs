@@ -34,14 +34,6 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Delegate for a function that normalizes a string item representing a certain type.
-        /// Each type should define a different implementation of the delegate.
-        /// </summary>
-        /// <param name="item">The item to be normalized.</param>
-        /// <returns>Normalized string of the item.</returns>
-        private delegate string NormalizeFunction(string item);
-
-        /// <summary>
         /// Binds an In operator token.
         /// </summary>
         /// <param name="inToken">The In operator token to bind.</param>
@@ -108,17 +100,18 @@ namespace Microsoft.OData.UriParser
                     if (expectedTypeFullName.Equals("Edm.String"))
                     {
                         // For collection of strings, need to convert single-quoted string to double-quoted string,
-                        // and also, per ABNF, two consecutive single quotes  to one single quote.
+                        // and also, per ABNF, a single quote within a string literal is "encoded" as two consecutive single quotes in either
+                        // literal or percent - encoded representation.
                         // Sample: ['a''bc','''def','xyz'''] ==> ["a'bc","'def","xyz'"], which is legitimate Json format.
-                        bracketLiteralText = NormalizeCollectionItems(bracketLiteralText, NormalizeStringItem);
+                        bracketLiteralText = NormalizeStringCollectionItems(bracketLiteralText);
                     }
                     else if (expectedTypeFullName.Equals("Edm.Guid"))
                     {
                         // For collection of Guids, need to convert the Guid literals to single-quoted form, so that it is compatible
                         // with the Json reader used for deserialization.
-                        // Sample: (D01663CF-EB21-4A0E-88E0-361C10ACE7FD, 492CF54A-84C9-490C-A7A4-B5010FAD8104)
-                        //    ==>  ('D01663CF-EB21-4A0E-88E0-361C10ACE7FD', '492CF54A-84C9-490C-A7A4-B5010FAD8104')
-                        bracketLiteralText = NormalizeCollectionItems(bracketLiteralText, NormalizeGuidItem);
+                        // Sample: [D01663CF-EB21-4A0E-88E0-361C10ACE7FD, 492CF54A-84C9-490C-A7A4-B5010FAD8104]
+                        //    ==>  ['D01663CF-EB21-4A0E-88E0-361C10ACE7FD', '492CF54A-84C9-490C-A7A4-B5010FAD8104']
+                        bracketLiteralText = NormalizeGuidCollectionItems(bracketLiteralText);
                     }
                 }
 
@@ -139,72 +132,144 @@ namespace Microsoft.OData.UriParser
             return operand;
         }
 
-        private static string NormalizeCollectionItems(string bracketLiteralText, NormalizeFunction normalizeFunc)
+        private static string NormalizeStringCollectionItems(string literalText)
+        {
+            // a comma-separated list of primitive values, enclosed in parentheses, or a single expression that resolves to a collection
+            // However, for String collection, we should process:
+            // 1) comma could be part of the string value
+            // 2) single quote could not be part of string value
+            // 3) double quote could be part of string value, double quote also could be the starting and ending character.
+
+            // remove the "[" and "]"
+            string normalizedText = literalText.Substring(1, literalText.Length - 2).Trim();
+            int length = normalizedText.Length;
+            bool itemStarted = false;
+            int itemIndex = 0;
+            char[] updated = new char[length + 2];
+            updated[0] = '[';
+            char startingChar = normalizedText[0];
+            int j = 1;
+            for (int i = 0; i < length; i++)
+            {
+                char character = normalizedText[i];
+                if (character == '"')
+                {
+                    // double quote could be part of the string value
+                    // double quote could the enclosed character, back compatitible
+                    updated[j++] = '"';
+                    if (itemStarted)
+                    {
+                        // if the string item is enclosed with double quote, end the current item.
+                        // otherwise, do nothing because it's the part of the string value. recorded above.
+                        if (startingChar == '"')
+                        {
+                            itemStarted = false;
+                        }
+                    }
+                    else
+                    {
+                        // find a string item, save double quote as the starting character.
+                        itemStarted = true;
+                        itemIndex = i;
+                        startingChar = '"';
+                    }
+                }
+                else if (character == '\'')
+                {
+                    if (itemStarted)
+                    {
+                        if (i + 1 == length)
+                        {
+                            if (startingChar != '\'')
+                            {
+                                string errorMessaage = normalizedText.Substring(itemIndex, i + 1 - itemIndex);
+                                throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(errorMessaage));
+                            }
+
+                            // last one
+                            updated[j++] = '"';
+                            itemStarted = false;
+                        }
+                        else
+                        {
+                            if (normalizedText[i + 1] == '\'')
+                            {
+                                updated[j++] = character;
+                                updated[j++] = normalizedText[i + 1];
+                                i++;
+                            }
+                            else
+                            {
+                                if (startingChar != '\'')
+                                {
+                                    string errorMessaage = normalizedText.Substring(itemIndex, i + 1 - itemIndex);
+                                    throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(errorMessaage));
+                                }
+
+                                updated[j++] = '"';
+                                itemStarted = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        itemStarted = true;
+                        itemIndex = i;
+                        updated[j++] = '"';
+                        startingChar = character;
+                    }
+                }
+                else
+                {
+                    if (itemStarted)
+                    {
+                        // in the item string, it can be any char, just save it.
+                        updated[j++] = character;
+                    }
+                    else
+                    {
+                        if (character == ' ')
+                        {
+                            // skip the whitespace outside the item
+                        }
+                        else if (character == ',')
+                        {
+                            // it's the seperate, save it
+                            updated[j++] = character;
+                        }
+                        else
+                        {
+                            // any other character is not valid.
+                            throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(character));
+                        }
+                    }
+                }
+            }
+
+            if (itemStarted)
+            {
+                string errorMessaage = normalizedText.Substring(itemIndex, length - itemIndex);
+                throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(errorMessaage));
+            }
+
+            updated[j++] = ']';
+            return new string(updated, 0, j);
+        }
+
+        private static string NormalizeGuidCollectionItems(string bracketLiteralText)
         {
             string[] items = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Split(',')
                 .Select(s => s.Trim()).ToArray();
 
-            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < items.Length; i++)
             {
-                string convertedItem = normalizeFunc(items[i]);
-                if (i != items.Length - 1)
+                if (items[i][0] != '\'' && items[i][0] != '"')
                 {
-                    builder.AppendFormat(CultureInfo.InvariantCulture, "{0},", convertedItem);
-                }
-                else
-                {
-                    // No trailing comma separator for last str of the collection.
-                    builder.Append(convertedItem);
+                    items[i] = String.Format(CultureInfo.InvariantCulture, "'{0}'", items[i]);
                 }
             }
 
-            return String.Format(CultureInfo.InvariantCulture, "[{0}]", builder.ToString());
-        }
-
-        /// <summary>
-        /// Function to normalize quoted string, ensuring single quotes are escaped properly.
-        /// If the string is double-quoted, no op since single quote doesn't need to be escaped.
-        /// </summary>
-        /// <param name="str">The quoted string item to be normalized.</param>
-        /// <returns>The double-quoted string with single quotes properly escaped.</returns>
-        private static string NormalizeStringItem(string str)
-        {
-            // Validate the string item is quoted properly.
-            if (!((str[0] == '\'' && str[str.Length - 1] == '\'') || (str[0] == '"' && str[str.Length - 1] == '"')))
-            {
-                throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(str));
-            }
-
-            // Skip conversion if the items are already in double-quote format (for backward compatibility).
-            // Note that per ABNF, query option strings should use single quotes.
-            string convertedString = str;
-            if (str[0] == '\'')
-            {
-                convertedString = String.Format(CultureInfo.InvariantCulture, "\"{0}\"", UriParserHelper.RemoveQuotes(str));
-            }
-
-            return convertedString;
-        }
-
-        /// <summary>
-        /// Function to normalize string representing GUID so that it is compatible with Json reader for de-serialization.
-        /// No op if the input string is ready in quoted form.
-        /// </summary>
-        /// <param name="guid">The GUID.</param>
-        /// <returns>A Guid string in quoted form.</returns>
-        private static string NormalizeGuidItem(string guid)
-        {
-            // Skip conversion if the items are already in quoted format (for backward compatibility).
-            // Otherwise, make it single-quoted.
-            if (guid[0] == '\'' || guid[0] == '"')
-            {
-                return guid;
-            }
-            else
-            {
-                return String.Format(CultureInfo.InvariantCulture, "'{0}'", guid);
-            }
+            return "[" + String.Join(",", items) + "]";
         }
     }
 }
