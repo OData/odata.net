@@ -90,7 +90,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             Assembly assembly = Assembly.GetExecutingAssembly();
             var templateNames = new Dictionary<string, string>
                 {
-                {T4TemplateName, T4IncludeTemplatePath},
+                {T4TemplateName, T4TemplatePath},
                 {T4IncludeTemplateName, T4IncludeTemplatePath},
                 {T4TemplateContextName, T4TemplateContextPath},
                 {T4IncludeTemplateCSharpName, T4IncludeTemplateCSharpPath},
