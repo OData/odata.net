@@ -75,25 +75,26 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="D:\Repos\odata.net\src\CodeGen\ODataT4CodeGeneratorContext.ttinclude">
-      <Link>ODataT4CodeGeneratorContext.ttinclude</Link>
+    <EmbeddedResource Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGeneratorContext.ttinclude">
+      <LogicalName>ODataT4CodeGeneratorContext.ttinclude</LogicalName>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <None Include="D:\Repos\odata.net\src\CodeGen\ODataT4CodeGeneratorCSharp.ttinclude">
-      <Link>ODataT4CodeGeneratorCSharp.ttinclude</Link>
+    <EmbeddedResource Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGeneratorCSharp.ttinclude">
+      <LogicalName>ODataT4CodeGeneratorCSharp.ttinclude</LogicalName>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="D:\Repos\odata.net\src\CodeGen\ODataT4CodeGenFilesManager.ttinclude">
-      <Link>ODataT4CodeGenFilesManager.ttinclude</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenFilesManager.ttinclude">
+      <LogicalName>ODataT4CodeGenFilesManager.ttinclude</LogicalName>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="D:\Repos\odata.net\src\CodeGen\ODataT4CodeGenTemplate.ttinclude">
-      <Link>ODataT4CodeGenTemplate.ttinclude</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenTemplate.ttinclude">
+      <LogicalName>ODataT4CodeGenTemplate.ttinclude</LogicalName>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="D:\Repos\odata.net\src\CodeGen\ODataT4CodeGenVBTemplate.ttinclude">
-      <Link>ODataT4CodeGenVBTemplate.ttinclude</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenVBTemplate.ttinclude">
+      <LogicalName>ODataT4CodeGenVBTemplate.ttinclude</LogicalName>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
