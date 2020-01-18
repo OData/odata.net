@@ -1,5 +1,4 @@
-﻿<#
-/*
+﻿<#/*
 OData Client T4 Template ver. #VersionNumber#
 Copyright (c) Microsoft Corporation
 All rights reserved. 
@@ -9,16 +8,8 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-#>
-<#@ template debug="true" hostSpecific="true" visibility="internal" linePragmas="false"#> 
-<#@include file="ODataT4CodeGenFilesManager.ttinclude"#>
-<#@include file="ODataT4CodeGenVBTemplate.ttinclude"#>
-<#@include file="ODataT4CodeGeneratorContext.ttinclude"#> 
-<#@include file="ODataT4CodeGenTemplate.ttinclude"#> 
-<#@include file="ODataT4CodeGeneratorCSharp.ttinclude"#>
-<#@ output extension=".cs" #>
+*/#><#@ template debug="true" hostSpecific="true" visibility="internal" linePragmas="false"
+#><#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ Assembly Name="System.IO.dll" #>
 <#@ Assembly Name="System.Runtime.dll" #>
@@ -46,7 +37,12 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <#@ Import Namespace="Microsoft.OData.Edm.Vocabularies.Community.V1" #>
 <#@ Import Namespace="System.Text"#>
 <#@ Import Namespace="System.Net"#>
-<#
+<#@include file="ODataT4CodeGenFilesManager.ttinclude"
+#><#@include file="ODataT4CodeGenVBTemplate.ttinclude"
+#><#@include file="ODataT4CodeGeneratorContext.ttinclude"
+#><#@include file="ODataT4CodeGenTemplate.ttinclude"
+#><#@include file="ODataT4CodeGeneratorCSharp.ttinclude"
+#><#   
     CodeGenerationContext context;
     if (!string.IsNullOrWhiteSpace(this.Edmx))
     {

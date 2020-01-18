@@ -10,22 +10,22 @@
 namespace Microsoft.OData.Client.Design.T4
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Security;
-    using System.Xml.Linq;
-    using Microsoft.VisualStudio.TextTemplating;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
     using System.Xml;
+    using System.Xml.Linq;
+    using System.Security;
+    using System.Collections.Generic;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.Edm.Vocabularies.Community.V1;
+    using System.Text;
     using System.Net;
+    using Microsoft.VisualStudio.TextTemplating;
     
     /// <summary>
     /// Class to produce the template output
@@ -39,7 +39,6 @@ namespace Microsoft.OData.Client.Design.T4
         [SecurityCritical]
         public virtual string TransformText()
         {
-
 /*
 OData Client T4 Template ver. #VersionNumber#
 Copyright (c) Microsoft Corporation
@@ -51,25 +50,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-
-
-            this.Write(" \r\n");
-
-/*
-OData Client T4 Template ver. 7.5.1
-Copyright (c) Microsoft Corporation
-All rights reserved. 
-MIT License
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-            this.Write(" \r\n");
-            this.Write(" \r\n");
-
+   
     CodeGenerationContext context;
     if (!string.IsNullOrWhiteSpace(this.Edmx))
     {
@@ -1332,7 +1313,6 @@ internal static class Utils
         return type;
     }
 }
-
 
 
 /// <summary>
@@ -4072,18 +4052,6 @@ public class CodeGenerationContext
 }
 
 
-    /*
-OData Client T4 Template ver. 7.5.1
-Copyright (c) Microsoft Corporation
-All rights reserved. 
-MIT License
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
 /// <summary>
 /// The template class to generate the OData client code.
 /// </summary>
@@ -4338,10 +4306,10 @@ public abstract class ODataClientTemplate : TemplateBase
                 }
                 else
                 {
-                    IEdmEntityType entityType = type as IEdmEntityType;                   
+                    IEdmEntityType entityType = type as IEdmEntityType;
                     if(context.SplitGeneratedFileIntoMultipleFiles) 
                         {
-                                context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs", false);
+                            context.MultipleFilesManager.StartNewFile($"{entityType.Name}.cs",false);
                             this.WriteNamespaceStart(this.context.GetPrefixedNamespace(fullNamespace, this, true, false));
                         }
                     this.WriteEntityType(entityType, boundOperationsMap);
@@ -5416,21 +5384,6 @@ public abstract class ODataClientTemplate : TemplateBase
 }
 
 
-/*
-OData Client T4 Template ver. 7.5.1
-Copyright (c) Microsoft Corporation
-All rights reserved. 
-MIT License
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-/// <summary>
-/// ODataClientCSharpTemplate object to generate C# files.
-/// </summary>
 public sealed class ODataClientCSharpTemplate : ODataClientTemplate
 {
     /// <summary>

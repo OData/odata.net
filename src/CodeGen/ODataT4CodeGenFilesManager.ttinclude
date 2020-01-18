@@ -1,17 +1,4 @@
-﻿<#
-/*
-OData Client T4 Template ver. 7.5.1
-Copyright (c) Microsoft Corporation
-All rights reserved. 
-MIT License
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-#>
-<#@ assembly name="System.Core"
+﻿<#@ assembly name="System.Core"
 #><#@ assembly name="System.Xml"
 #><#@ assembly name="System.Xml.Linq"
 #><#@ import namespace="System"
@@ -24,13 +11,11 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #><#@ import namespace="Microsoft.VisualStudio.TextTemplating"
 #><#@ assembly name="EnvDTE"
 #><#+
-
 /// <summary>
 /// Creates an instance of the FilesManager. The object used to generate and manage
 /// multiple source files.
 /// </summary>
 /// <param name="context">The code generation context.</param>
-[SecurityCritical]
 public class FilesManager {
     
         private class Block {
