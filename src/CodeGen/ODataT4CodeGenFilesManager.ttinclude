@@ -112,7 +112,7 @@ public class FilesManager {
         }
     }
 
-    private class VSManager: FilesManager {
+    private class VSManager : FilesManager {
         private EnvDTE.ProjectItem templateProjectItem;
         private EnvDTE.DTE dte;
         private Action<String> checkOutAction;
