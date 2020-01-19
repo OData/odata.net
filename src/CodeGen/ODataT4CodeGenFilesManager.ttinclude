@@ -19,7 +19,7 @@
 public class FilesManager {
     
         private class Block {
-            public String Name;
+            public string Name;
             public int Start, Length;
             public bool IsContainer;
         }
@@ -63,7 +63,7 @@ public class FilesManager {
     public virtual void Process(bool split) {
         if (split) {
             EndBlock();
-            String headerText = template.ToString(header.Start, header.Length);
+            string headerText = template.ToString(header.Start, header.Length);
             String footerText = template.ToString(footer.Start, footer.Length);
             String outputPath = Path.GetDirectoryName(host.TemplateFile);
             files.Reverse();
@@ -78,16 +78,16 @@ public class FilesManager {
         }
     }
 
-    protected virtual void CreateFile(String fileName, String content) {
+    protected virtual void CreateFile(string fileName, string content) {
         if (IsFileContentDifferent(fileName, content))
             File.WriteAllText(fileName, content);
     }
 
-    public virtual String GetCustomToolNamespace(String fileName) {
+    public virtual string GetCustomToolNamespace(String fileName) {
         return null;
     }
 
-    public virtual String DefaultProjectNamespace {
+    public virtual string DefaultProjectNamespace {
         get { return null; }
     }
 

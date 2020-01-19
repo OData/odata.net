@@ -30,7 +30,7 @@ public static class Configuration
 	public const bool IgnoreUnexpectedElementsAndAttributes = true;
 
     //This files indicates whether to generate the files into multiple files or single.
-    //If set to true then multiple files will be generated. Otherwise only a single file is generated.
+    // If set to true then multiple files will be generated. Otherwise only a single file is generated.
     public const bool SplitGeneratedFileIntoMultipleFiles = false;
 }
 
