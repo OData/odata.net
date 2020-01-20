@@ -196,6 +196,16 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             Verify = (code, isCSharp, useDSC) => VerifyGeneratedCode(code, Simple.ExpectedResults, isCSharp, useDSC, "Simple"),
         };
         #endregion
+        #region SimpleMultipleFiles
+        public static string EdmxSimpleMultipleFiles = LoadContentFromBaseline("SimpleMultipleFiles.xml");
+        public static string SimpleMultipleFilesCSharp = LoadContentFromBaseline("SimpleMultipleMain.cs");
+        public static ODataT4CodeGeneratorTestsDescriptor SimpleMultipleFiles = new ODataT4CodeGeneratorTestsDescriptor()
+        {
+            Metadata = EdmxSimpleMultipleFiles,
+            ExpectedResults = new Dictionary<string, string>() { { ExpectedCSharp, SimpleMultipleFilesCSharp }, { ExpectedCSharpUseDSC, SimpleCSharpUseDSC }, { ExpectedVB, SimpleVB }, { ExpectedVBUseDSC, SimpleVBUseDSC } },
+            Verify = (code, isCSharp, useDSC) => VerifyGeneratedCode(code, SimpleMultipleFiles.ExpectedResults, isCSharp, useDSC, "SimpleMultipleFiles"),
+        };
+        #endregion
 
         #region NamespacePrefix
 
