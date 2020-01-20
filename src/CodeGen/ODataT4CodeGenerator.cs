@@ -592,11 +592,12 @@ public abstract class TemplateBase
             this.sessionField = value;
         }
     }
-    #endregion
+            #endregion
 
-    /// <summary>
-    /// Create the template output
-    /// </summary>
+            /// <summary>
+            /// Create the template output
+            /// </summary>
+    [SecurityCritical]
     public abstract string TransformText();
 
     #region Transform-time helpers
@@ -1364,16 +1365,16 @@ public class FilesManager {
         currentBlock = null;
     }
 
+    [SecurityCritical]
     public virtual void Process(bool split) {
         if (split) {
             EndBlock();
             String headerText = template.ToString(header.Start, header.Length);
             String footerText = template.ToString(footer.Start, footer.Length);
-            String outputPath = Path.GetDirectoryName(host.TemplateFile);
             files.Reverse();
             foreach(Block block in files) {
                 if(block.IsContainer) continue;
-                String fileName = Path.Combine(outputPath, block.Name);
+                String fileName = block.Name;
                 String content = headerText + template.ToString(block.Start, block.Length) + footerText;
                 generatedFileNames.Add(fileName);
                 CreateFile(fileName, content);
@@ -1432,6 +1433,7 @@ public class FilesManager {
             return dte.Solution.FindProjectItem(fileName).Properties.Item("CustomToolNamespace").Value.ToString();
         }
 
+        [SecurityCritical]
         public override void Process(bool split) {
             if (templateProjectItem.ProjectItems == null)
                 return;
@@ -4236,10 +4238,11 @@ public abstract class ODataClientTemplate : TemplateBase
     } }
     private HashSet<EdmPrimitiveTypeKind> clrReferenceTypes;
 
-    /// <summary>
-    /// Generates code for the OData client.
-    /// </summary>
-    /// <returns>The generated code for the OData client.</returns>
+            /// <summary>
+            /// Generates code for the OData client.
+            /// </summary>
+            /// <returns>The generated code for the OData client.</returns>
+    [SecurityCritical]
     public override string TransformText()
     {
         context.MultipleFilesManager.StartHeader();

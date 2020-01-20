@@ -144,10 +144,10 @@ public class FilesManager {
 
         internal VSManager(ITextTemplatingEngineHost host, StringBuilder template)
             : base(host, template) {
-            var hostServiceProvider = (IServiceProvider) host;
+            var hostServiceProvider = host as IServiceProvider;
             if (hostServiceProvider == null)
                 throw new ArgumentNullException("Could not obtain IServiceProvider");
-            dte = (EnvDTE.DTE) hostServiceProvider.GetService(typeof(EnvDTE.DTE));
+            dte = hostServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
             if (dte == null)
                 throw new ArgumentNullException("Could not obtain DTE from host");
             templateProjectItem = dte.Solution.FindProjectItem(host.TemplateFile);
@@ -162,8 +162,8 @@ public class FilesManager {
             foreach(EnvDTE.ProjectItem projectItem in templateProjectItem.ProjectItems)
                 projectFiles.Add(projectItem.get_FileNames(0), projectItem);
 
-            foreach(var pair in projectFiles)
-                if (!keepFileNames.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key) + ".").StartsWith(originalFilePrefix))
+            foreach(KeyValuePair<string, EnvDTE.ProjectItem> pair in projectFiles)
+                if (!keepFileNameSet.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key) + ".").StartsWith(originalFilePrefix))
                     pair.Value.Delete();
 
             foreach(String fileName in keepFileNameSet)
