@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
     [TestClass]
     public class ODataT4CodeGeneratorTests
     {
-        private const bool CompileGeneratedCode = true;
+        private static bool CompileGeneratedCode = true;
         private static string AssemblyPath;
         private static string EdmxTestInputFile;
         private static string EdmxTestOutputFile;
@@ -36,6 +36,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
         private static string T4TemplatePath;
         private static string T4IncludeTemplatePath;
         private static string TempFilePath;
+        public static bool SplitFiles;
         private string T4TemplateContextPath;
         private string T4IncludeTemplateCSharpPath;
         private string T4TemplateFilesManagerPath;
@@ -111,19 +112,6 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 {
                     writer.Write(ttSourceCode);
                 }
-
-                //using (Stream stream = assembly.GetManifestResourceStream(T4IncludeTemplateName))
-                //{
-                //    using (StreamReader reader = new StreamReader(stream))
-                //    {
-                //        ttinlucdeSourceCode = reader.ReadToEnd();
-                //    }
-                //}
-
-                //using (StreamWriter writer = new StreamWriter(T4IncludeTemplatePath))
-                //{
-                //    writer.Write(ttinlucdeSourceCode);
-                //}
             }
         }
 
@@ -141,6 +129,16 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
 
             code = CodeGenWithT4Template(ODataT4CodeGeneratorTestDescriptors.Simple.Metadata, null, false, true, false, false, null, true);
             ODataT4CodeGeneratorTestDescriptors.Simple.Verify(code, false/*isCSharp*/, true/*useDSC*/);
+        }
+
+        [TestMethod]
+        public void CodeGenSimpleEdmxMultipleFiles()
+        {
+            SplitFiles = true;
+            CompileGeneratedCode = false;
+            string code = CodeGenWithT4Template(ODataT4CodeGeneratorTestDescriptors.SimpleMultipleFiles.Metadata, null, true, false);
+            ODataT4CodeGeneratorTestDescriptors.SimpleMultipleFiles.Verify(code, true/*isCSharp*/, false/*useDSC*/);
+
         }
 
         [TestMethod]
@@ -456,7 +454,8 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 NamespacePrefix = namespacePrefix,
                 TargetLanguage = isCSharp ? ODataT4CodeGenerator.LanguageOption.CSharp : ODataT4CodeGenerator.LanguageOption.VB,
                 EnableNamingAlias = enableNamingAlias,
-                IgnoreUnexpectedElementsAndAttributes = ignoreUnexpectedElementsAndAttributes
+                IgnoreUnexpectedElementsAndAttributes = ignoreUnexpectedElementsAndAttributes,
+                SplitGeneratedFileIntoMultipleFiles = SplitFiles
             };
 
             if(!String.IsNullOrEmpty(TempFilePath))
