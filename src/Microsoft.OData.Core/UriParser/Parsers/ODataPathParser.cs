@@ -935,7 +935,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>Creates the first <see cref="ODataPathSegment"/> for a request.</summary>
         /// <param name="segmentText">The text of the segment.</param>
-        private void CreateSegmentForEscapeFunction(string segmentText)
+        private bool CreateSegmentForEscapeFunction(string segmentText)
         {
             string identifier;
             string parenthesisExpression;
@@ -946,30 +946,19 @@ namespace Microsoft.OData.UriParser
             {
                 if (this.TryCreateSegmentForNavigationSource(identifier, parenthesisExpression))
                 {
-                    return;
+                    return true;
                 }
 
                 if (this.TryCreateSegmentForOperationImport(identifier, parenthesisExpression))
                 {
-                    return;
+                    return true;
                 }
             }
             else
             {
                 if (this.TryCreateFilterSegment(segmentText))
                 {
-                    return;
-                }
-
-                // $each
-                if (this.TryCreateEachSegment(identifier, parenthesisExpression))
-                {
-                    return;
-                }
-
-                if (identifier[identifier.Length - 1] == ':' && this.TryCreateEscapeFunctionSegment(segmentText))
-                {
-                    return;
+                    return true;
                 }
 
                 ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
@@ -1000,7 +989,7 @@ namespace Microsoft.OData.UriParser
                             CheckSingleResult(previous.SingleResult, previous.Identifier);
                             this.CreatePropertySegment(previous, projectedProperty, parenthesisExpression);
 
-                            return;
+                            return true;
                         }
                     }
                 }
@@ -1009,21 +998,23 @@ namespace Microsoft.OData.UriParser
                 if (segmentText.IndexOf('.') >= 0 && // type-cast should use qualified type names
                     this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
                 {
-                    return;
+                    return true;
                 }
 
                 // Operation
                 if (this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression))
                 {
-                    return;
+                    return true;
                 }
 
                 // For KeyAsSegment, try to handle as key segment
                 if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(segmentText))
                 {
-                    return;
+                    return true;
                 }
             }
+
+            return false;
         }
 
         /// <summary>
@@ -1310,9 +1301,9 @@ namespace Microsoft.OData.UriParser
             string newSegmentText = segmentText.Substring(0, segmentText.Length - 1);
 
             // Try to binding the segment optimisitically to which the escape function must bind to
-            if (newSegmentText.Length > 0)
+            if (newSegmentText.Length > 0 && !CreateSegmentForEscapeFunction(newSegmentText))
             {
-                CreateSegmentForEscapeFunction(newSegmentText);
+                return false;
             }
 
             if (this.TryBindEscapeFunction())
