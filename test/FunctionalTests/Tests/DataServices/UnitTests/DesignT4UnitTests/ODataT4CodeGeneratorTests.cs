@@ -138,7 +138,8 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             CompileGeneratedCode = false;
             string code = CodeGenWithT4Template(ODataT4CodeGeneratorTestDescriptors.SimpleMultipleFiles.Metadata, null, true, false);
             ODataT4CodeGeneratorTestDescriptors.SimpleMultipleFiles.Verify(code, true/*isCSharp*/, false/*useDSC*/);
-
+            SplitFiles = false;
+            CompileGeneratedCode = true;
         }
 
         [TestMethod]
@@ -429,6 +430,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             action.ShouldNotThrow<XmlException>();
 
             ODataT4CodeGeneratorTestDescriptors.ValidateEdmx(TempFilePath);
+            TempFilePath = null;
         }
 
         private static string CodeGenWithT4Template(string edmx, string namespacePrefix, bool isCSharp, bool useDataServiceCollection, bool enableNamingAlias = false, bool ignoreUnexpectedElementsAndAttributes = false, Func<Uri, XmlReader> getReferencedModelReaderFunc = null, bool appendDSCSuffix = false)
