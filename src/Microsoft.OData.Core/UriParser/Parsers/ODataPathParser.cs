@@ -15,7 +15,6 @@ using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Metadata;
-using Microsoft.OData.UriParser.Parsers;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.UriParser
@@ -146,11 +145,11 @@ namespace Microsoft.OData.UriParser
                 {
                     if (this.parsedSegments.Count == 0)
                     {
-                        this.CreateFirstSegment(segmentText, AllowedSegments.All);
+                        this.CreateFirstSegment(segmentText);
                     }
                     else
                     {
-                        this.CreateNextSegment(segmentText, AllowedSegments.All);
+                        this.CreateNextSegment(segmentText);
                     }
 
                     // Keep track of last navigation source.
@@ -846,7 +845,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>Creates the first <see cref="ODataPathSegment"/> for a request.</summary>
         /// <param name="segmentText">The text of the segment.</param>
-        private void CreateFirstSegment(string segmentText, AllowedSegments allowed)
+        private void CreateFirstSegment(string segmentText)
         {
             string identifier;
             string parenthesisExpression;
@@ -854,7 +853,7 @@ namespace Microsoft.OData.UriParser
 
             Debug.Assert(identifier != null, "identifier != null");
 
-            if (identifier[identifier.Length - 1] == ':' && ShouldParseSegment(allowed, AllowedSegments.EscapeFunctionSegment) && this.TryCreateEscapeFunctionSegment(segmentText))
+            if (identifier[identifier.Length - 1] == ':' && this.TryCreateEscapeFunctionSegment(segmentText))
             {
                 return;
             }
@@ -931,9 +930,99 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            if (ShouldParseSegment(allowed, AllowedSegments.DynamicSegment))
+            this.CreateDynamicPathSegment(null, identifier, parenthesisExpression);
+        }
+
+        /// <summary>Creates the first <see cref="ODataPathSegment"/> for a request.</summary>
+        /// <param name="segmentText">The text of the segment.</param>
+        private void CreateSegmentForEscapeFunction(string segmentText)
+        {
+            string identifier;
+            string parenthesisExpression;
+
+            ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
+
+            if (this.parsedSegments.Count == 0)
             {
-                this.CreateDynamicPathSegment(null, identifier, parenthesisExpression);
+                if (this.TryCreateSegmentForNavigationSource(identifier, parenthesisExpression))
+                {
+                    return;
+                }
+
+                if (this.TryCreateSegmentForOperationImport(identifier, parenthesisExpression))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (this.TryCreateFilterSegment(segmentText))
+                {
+                    return;
+                }
+
+                // $each
+                if (this.TryCreateEachSegment(identifier, parenthesisExpression))
+                {
+                    return;
+                }
+
+                if (identifier[identifier.Length - 1] == ':' && this.TryCreateEscapeFunctionSegment(segmentText))
+                {
+                    return;
+                }
+
+                ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
+
+                // property if previous is single
+                if (previous.SingleResult)
+                {
+                    // if its not one of the recognized special segments, then it must be a property, type-segment, or key value.
+                    Debug.Assert(
+                        previous.TargetKind == RequestTargetKind.Resource
+                        || previous.TargetKind == RequestTargetKind.Dynamic,
+                        "previous.TargetKind(" + previous.TargetKind + ") can have properties");
+
+                    if (previous.TargetEdmType == null)
+                    {
+                        // A segment will correspond to a property in the object model;
+                        // if we are processing an open type, anything further in the
+                        // URI also represents an open type property.
+                        Debug.Assert(previous.TargetKind == RequestTargetKind.Dynamic, "For open properties, the target resource type must be null");
+                    }
+                    else
+                    {
+                        // if the segment corresponds to a declared property, handle it
+                        // otherwise, fall back to type-segments, actions, and dynamic/open properties
+                        IEdmProperty projectedProperty;
+                        if (this.TryBindProperty(identifier, out projectedProperty))
+                        {
+                            CheckSingleResult(previous.SingleResult, previous.Identifier);
+                            this.CreatePropertySegment(previous, projectedProperty, parenthesisExpression);
+
+                            return;
+                        }
+                    }
+                }
+
+                // Type cast
+                if (segmentText.IndexOf('.') >= 0 && // type-cast should use qualified type names
+                    this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
+                {
+                    return;
+                }
+
+                // Operation
+                if (this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression))
+                {
+                    return;
+                }
+
+                // For KeyAsSegment, try to handle as key segment
+                if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(segmentText))
+                {
+                    return;
+                }
             }
         }
 
@@ -1094,7 +1183,7 @@ namespace Microsoft.OData.UriParser
         /// Creates the next segment.
         /// </summary>
         /// <param name="text">The text for the next segment.</param>
-        private void CreateNextSegment(string text, AllowedSegments allowed)
+        private void CreateNextSegment(string text)
         {
             string identifier;
             string parenthesisExpression;
@@ -1144,12 +1233,12 @@ namespace Microsoft.OData.UriParser
             }
 
             // $each
-            if (ShouldParseSegment(allowed, AllowedSegments.EachSegment) && this.TryCreateEachSegment(identifier, parenthesisExpression))
+            if (this.TryCreateEachSegment(identifier, parenthesisExpression))
             {
                 return;
             }
 
-            if (ShouldParseSegment(allowed, AllowedSegments.EscapeFunctionSegment) && identifier[identifier.Length-1] == ':' && this.TryCreateEscapeFunctionSegment(text))
+            if (identifier[identifier.Length - 1] == ':' && this.TryCreateEscapeFunctionSegment(text))
             {
                 return;
             }
@@ -1187,54 +1276,43 @@ namespace Microsoft.OData.UriParser
 
             // Type cast
             if (text.IndexOf('.') >= 0 && // type-cast should use qualified type names
-                ShouldParseSegment(allowed, AllowedSegments.TypeNameSegment) &&
                 this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
             {
                 return;
             }
 
             // Operation
-            if (ShouldParseSegment(allowed, AllowedSegments.OperationSegment) && this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression))
+            if (this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression))
             {
                 return;
             }
 
             // For KeyAsSegment, try to handle as key segment
-            if (ShouldParseSegment(allowed, AllowedSegments.KeyAsSegment) && this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(text))
+            if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
 
             // Parse as path template segment if EnableUriTemplateParsing is enabled.
-            if (ShouldParseSegment(allowed, AllowedSegments.UriTemplateSegment) && this.configuration.EnableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(text))
+            if (this.configuration.EnableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(text))
             {
                 this.parsedSegments.Add(new PathTemplateSegment(text));
                 return;
             }
 
             // Dynamic property
-            if (ShouldParseSegment(allowed, AllowedSegments.DynamicSegment))
-            {
-                this.CreateDynamicPathSegment(previous, identifier, parenthesisExpression);
-            }
+            this.CreateDynamicPathSegment(previous, identifier, parenthesisExpression);
         }
 
         private bool TryCreateEscapeFunctionSegment(string segmentText)
         {
             int numberOfSegmentsParsed = this.parsedSegments.Count;
-            string newSegmentText = string.Concat(segmentText.Substring(0, segmentText.Length - 1));
+            string newSegmentText = segmentText.Substring(0, segmentText.Length - 1);
 
             // Try to binding the segment optimisitically to which the escape function must bind to
             if (newSegmentText.Length > 0)
             {
-                if (numberOfSegmentsParsed == 0)
-                {
-                    CreateFirstSegment(newSegmentText, AllowedSegments.SegmentsSupportingEscapeFunction);
-                }
-                else
-                {
-                    CreateNextSegment(newSegmentText, AllowedSegments.SegmentsSupportingEscapeFunction);
-                }
+                CreateSegmentForEscapeFunction(newSegmentText);
             }
 
             if (this.TryBindEscapeFunction())
@@ -1245,7 +1323,7 @@ namespace Microsoft.OData.UriParser
             {
                 // The caller of this function will try binding the original segment as key value.
                 // We need to roll back the optimistic binding that we did in this step.
-                while(this.parsedSegments.Count > numberOfSegmentsParsed)
+                while (this.parsedSegments.Count > numberOfSegmentsParsed)
                 {
                     // Keep on poping the last segment. 
                     this.parsedSegments.RemoveAt(this.parsedSegments.Count - 1);
@@ -1253,11 +1331,6 @@ namespace Microsoft.OData.UriParser
             }
 
             return false;
-        }
-
-        private static bool ShouldParseSegment(AllowedSegments allowed, AllowedSegments currentSegment)
-        {
-            return  (allowed & currentSegment) != AllowedSegments.None;
         }
 
         /// <summary>
@@ -1297,7 +1370,12 @@ namespace Microsoft.OData.UriParser
 
         private bool TryBindEscapeFunction()
         {
-            ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
+            ODataPathSegment previous = null;
+            if (this.parsedSegments.Count > 0)
+            {
+                previous = this.parsedSegments[this.parsedSegments.Count - 1];
+            }
+
             IEdmType bindingType = null;
             if (previous != null)
             {
