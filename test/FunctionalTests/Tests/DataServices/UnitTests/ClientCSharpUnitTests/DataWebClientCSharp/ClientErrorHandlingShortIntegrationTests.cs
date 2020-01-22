@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm;
-
 namespace AstoriaUnitTests.Tests
 {
     using System;
@@ -19,6 +17,7 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Text;
+    using Microsoft.OData.Edm;
 
     [TestClass]
     public class ClientErrorHandlingShortIntegrationTests

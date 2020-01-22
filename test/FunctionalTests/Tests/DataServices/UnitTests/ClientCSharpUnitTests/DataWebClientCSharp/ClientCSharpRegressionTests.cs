@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm;
-
 namespace AstoriaUnitTests.Tests
 {
     using System;
@@ -29,6 +27,7 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using CustomDataClient = AstoriaUnitTests.Stubs.CustomDataClient;
     using DSClient = Microsoft.OData.Client;
+    using Microsoft.OData.Edm;
 
     // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [TestClass]
