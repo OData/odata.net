@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void UseComplexJsonReaderExpandAndSelect()
         {
-            // $Expand =PersonCity($select =Zipcode),Address/City
+            // $expand =PersonCity($select=Zipcode),Address/City
 
             var resDict = RunComplexReaderTest(null, "{\"@odata.context\":\"http://test/$metadata#People(PersonCity(ZipCode),Address/City())/$entity\"," +
             "\"PersonCity\":{\"ZipCode\":10001},"+

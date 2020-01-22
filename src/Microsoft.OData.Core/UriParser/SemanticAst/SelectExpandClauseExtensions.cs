@@ -136,7 +136,6 @@ namespace Microsoft.OData.UriParser
             foreach (SelectItem selectItem in selectExpandClause.SelectedItems)
             {
                 // $expand=..../$ref
-                ExpandedReferenceSelectItem expandRefItem = selectItem as ExpandedReferenceSelectItem;
                 ExpandedNavigationSelectItem expandSelectItem = selectItem as ExpandedNavigationSelectItem;
 
                 if (expandSelectItem != null)
@@ -159,15 +158,20 @@ namespace Microsoft.OData.UriParser
                         expandList.Add(expandItem);
                     }
                 }
-                else if (expandRefItem != null)
+                else
                 {
-                    string currentExpandClause = String.Join("/", expandRefItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
-                    currentExpandClause += "/$ref";
+                    ExpandedReferenceSelectItem expandRefItem = selectItem as ExpandedReferenceSelectItem;
 
-                    var expandItem = processSubResult(currentExpandClause, default(T));
-                    if (expandItem != null)
+                    if (expandRefItem != null)
                     {
-                        expandList.Add(expandItem);
+                        string currentExpandClause = String.Join("/", expandRefItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                        currentExpandClause += "/$ref";
+
+                        var expandItem = processSubResult(currentExpandClause, default(T));
+                        if (expandItem != null)
+                        {
+                            expandList.Add(expandItem);
+                        }
                     }
                 }
             }

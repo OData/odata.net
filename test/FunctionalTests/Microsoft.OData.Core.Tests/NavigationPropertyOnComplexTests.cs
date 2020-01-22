@@ -370,7 +370,11 @@ namespace Microsoft.OData.Tests
                 writer.WriteEnd();
             },isFullMetadata:true);
 
-            string expected = "{\"@odata.context\":\"http://host/$metadata#People(Address/City(ZipCode))/$entity\",\"@odata.id\":\"People('abc')\",\"@odata.editLink\":\"People('abc')\",\"UserName\":\"abc\",\"Address\":{\"Road\":\"Zixing\",\"City@odata.associationLink\":\"http://host/People('abc')/Address/City/$ref\",\"City@odata.navigationLink\":\"http://host/People('abc')/Address/City\",\"City\":{\"@odata.id\":\"City(111)\",\"@odata.editLink\":\"City(111)\",\"ZipCode\":111}}}";
+            string expected = "{\"@odata.context\":\"http://host/$metadata#People(Address/City(ZipCode))/$entity\"," +
+                "\"@odata.id\":\"People('abc')\",\"@odata.editLink\":\"People('abc')\",\"UserName\":\"abc\"," +
+                "\"Address\":{\"Road\":\"Zixing\",\"City@odata.associationLink\"" +
+                ":\"http://host/People('abc')/Address/City/$ref\",\"City@odata.navigationLink\"" +
+                ":\"http://host/People('abc')/Address/City\",\"City\":{\"@odata.id\":\"City(111)\",\"@odata.editLink\":\"City(111)\",\"ZipCode\":111}}}";
 
             Assert.Equal(actual, expected);
         }
@@ -1196,7 +1200,7 @@ namespace Microsoft.OData.Tests
             nestInfo = itemsList[2];
             Assert.Equal(new Uri("http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City"), nestInfo.Url);
 
-            // itemsList[3] is the nested info for complex property WorkAddress, skip the validation.
+            // itemsList[3] and itemsList[4] are the nested info for complex property WorkAddress and itemsList[5] is the complex property . so skip the validation.
 
             // City under Address
             nestInfo = itemsList[6];
