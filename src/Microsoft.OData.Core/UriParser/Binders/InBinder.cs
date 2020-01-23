@@ -140,120 +140,92 @@ namespace Microsoft.OData.UriParser
             // 2) single quote could not be part of string value
             // 3) double quote could be part of string value, double quote also could be the starting and ending character.
 
-            // remove the "[" and "]"
+            // remove the '[' and ']'
             string normalizedText = literalText.Substring(1, literalText.Length - 2).Trim();
             int length = normalizedText.Length;
-            bool itemStarted = false;
-            int itemIndex = 0;
-            char[] updated = new char[length + 2];
-            updated[0] = '[';
-            char startingChar = normalizedText[0];
-            int j = 1;
+            StringBuilder sb = new StringBuilder(length + 2);
+            sb.Append('[');
             for (int i = 0; i < length; i++)
             {
-                char character = normalizedText[i];
-                if (character == '"')
+                char ch = normalizedText[i];
+                switch (ch)
                 {
-                    // double quote could be part of the string value
-                    // double quote could the enclosed character, back compatitible
-                    updated[j++] = '"';
-                    if (itemStarted)
-                    {
-                        // if the string item is enclosed with double quote, end the current item.
-                        // otherwise, do nothing because it's the part of the string value. recorded above.
-                        if (startingChar == '"')
-                        {
-                            itemStarted = false;
-                        }
-                    }
-                    else
-                    {
-                        // find a string item, save double quote as the starting character.
-                        itemStarted = true;
-                        itemIndex = i;
-                        startingChar = '"';
-                    }
-                }
-                else if (character == '\'')
-                {
-                    if (itemStarted)
-                    {
-                        if (i + 1 == length)
-                        {
-                            if (startingChar != '\'')
-                            {
-                                string errorMessaage = normalizedText.Substring(itemIndex, i + 1 - itemIndex);
-                                throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(errorMessaage));
-                            }
+                    case '"':
+                    case '\'':
+                        sb.Append('"'); // no matter it's single quote or not, just starting it as double quote (JSON).
 
-                            // last one
-                            updated[j++] = '"';
-                            itemStarted = false;
-                        }
-                        else
+                        int k = i + 1;
+                        for (; k < length; k++)
                         {
-                            if (normalizedText[i + 1] == '\'')
+                            char next = normalizedText[k];
+                            if (next == ch)
                             {
-                                updated[j++] = character;
-                                updated[j++] = normalizedText[i + 1];
-                                i++;
+                                if (next == '\'')
+                                {
+                                    if (k + 1 >= length || normalizedText[k + 1] != '\'')
+                                    {
+                                        // match with single qutoe ('), stop it.
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        // Unescape the double single quotes as one single quote, and continue
+                                        sb.Append('\'');
+                                        k++;
+                                    }
+                                }
+                                else
+                                {
+                                    // match with double quote ("), stop it.
+                                    break;
+                                }
+                            }
+                            else if (next == '\\')
+                            {
+                                if (ch == '\'')
+                                {
+                                    sb.Append('\\'); // in single quote marked string, \ should escaped to double single slash.
+                                    sb.Append('\\');
+                                }
+                                else
+                                {
+                                    sb.Append(next); // in double quote marked string, \ should not escaped.
+                                }
                             }
                             else
                             {
-                                if (startingChar != '\'')
-                                {
-                                    string errorMessaage = normalizedText.Substring(itemIndex, i + 1 - itemIndex);
-                                    throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(errorMessaage));
-                                }
-
-                                updated[j++] = '"';
-                                itemStarted = false;
+                                sb.Append(next);
                             }
                         }
-                    }
-                    else
-                    {
-                        itemStarted = true;
-                        itemIndex = i;
-                        updated[j++] = '"';
-                        startingChar = character;
-                    }
-                }
-                else
-                {
-                    if (itemStarted)
-                    {
-                        // in the item string, it can be any char, just save it.
-                        updated[j++] = character;
-                    }
-                    else
-                    {
-                        if (character == ' ')
+
+                        if (k == length)
                         {
-                            // skip the whitespace outside the item
+                            string errorMessaage = normalizedText.Substring(i);
+                            throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(errorMessaage));
                         }
-                        else if (character == ',')
-                        {
-                            // it's the seperate, save it
-                            updated[j++] = character;
-                        }
-                        else
-                        {
-                            // any other character is not valid.
-                            throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(character));
-                        }
-                    }
+
+                        sb.Append('"'); // no matter it's single quote or not, just ending it as double quote.
+                        i = k;
+                        break;
+
+                    case ' ':
+                        // ignore all whitespaces between items
+                        break;
+
+                    case ',':
+                        // for multiple comma(s) between items, for example ('abc',,,'xyz'),
+                        // We let it go and let the next layer to identify the problem by design.
+                        sb.Append(',');
+                        break;
+
+                    default:
+                        // any other character between items is not valid.
+                        throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(ch));
                 }
             }
 
-            if (itemStarted)
-            {
-                string errorMessaage = normalizedText.Substring(itemIndex, length - itemIndex);
-                throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(errorMessaage));
-            }
-
-            updated[j++] = ']';
-            return new string(updated, 0, j);
+            sb.Append(']');
+            return sb.ToString();
         }
 
         private static string NormalizeGuidCollectionItems(string bracketLiteralText)
