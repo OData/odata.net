@@ -17,7 +17,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
     public class CustomizedHttpWebRequestMessage : HttpWebRequestMessage
     {
-        private MockResponse responseCreator;
         public string Response { get; set; }
         public Dictionary<string, string> CutomizedHeaders { get; set; }
 
@@ -31,8 +30,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         {
             this.Response = response;
             this.CutomizedHeaders = headers;
-            responseCreator = new MockResponse(GetResponse);
-
         }
 
 #if (NETCOREAPP1_0 || NETCOREAPP2_0)
@@ -51,11 +48,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 });
         }
 
-
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
         {
             // using this as APM was deprecated in.net core
-            return Task.Run((() => callback.Invoke(Task.Run((() => GetResponse())))));
+            return Task.Run((() => callback.Invoke(Task.Run((() =>
+            {
+                // simplified as in the EndResponse we ignore the return of this method
+            })))));
         }
 
         public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
@@ -63,6 +62,5 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             return GetResponse();
         }
 
-        private delegate IODataResponseMessage MockResponse();
     }
 }
