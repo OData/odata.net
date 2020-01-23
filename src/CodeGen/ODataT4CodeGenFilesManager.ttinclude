@@ -18,59 +18,66 @@
 /// <param name="context">The code generation context.</param>
 public class FilesManager {
     
-        private class Block {
-            public string Name;
-            public int Start, Length;
-            public bool IsContainer;
-        }
+    private class Block {
+        public string Name;
+        public int Start, Length;
+        public bool IsContainer;
+    }
 
-    private Block currentBlock;
-    private List<Block> files = new List<Block>();
-    private Block footer = new Block();
-    private Block header = new Block();
-    private ITextTemplatingEngineHost host;   
+    private Block _currentBlock;
+    private List<Block> _files = new List<Block>();
+    private Block _footer = new Block();
+    private Block _header = new Block();
+    private ITextTemplatingEngineHost _host;   
     protected List<String> generatedFileNames = new List<String>();
-    public StringBuilder template{get; set;}
+
+    public StringBuilder template
+        {
+            get; 
+            set;
+        }
 
     [SecurityCritical]
     public static FilesManager Create(ITextTemplatingEngineHost host, StringBuilder template) {
         return (host is IServiceProvider) ? new VSManager(host, template) : new FilesManager(host, template);
     }
 
-    public void StartNewFile(String name, bool isContainer) {
+    public void StartNewFile(string name, bool isContainer) {
         if (name == null)
             throw new ArgumentNullException("name");
         CurrentBlock = new Block { Name = name, IsContainer =  isContainer};
     }
 
     public void StartFooter() {
-        CurrentBlock = footer;
+        CurrentBlock = _footer;
     }
 
     public void StartHeader() {
-        CurrentBlock = header;
+        CurrentBlock = _header;
     }
 
     public void EndBlock() {
         if (CurrentBlock == null)
             return;
         CurrentBlock.Length = template.Length - CurrentBlock.Start;
-        if (CurrentBlock != header && CurrentBlock != footer)
-            files.Add(CurrentBlock);
-        currentBlock = null;
+        if (CurrentBlock != _header && CurrentBlock != _footer)
+            _files.Add(CurrentBlock);
+        _currentBlock = null;
     }
 
-    public virtual void Process(bool split) {
+    [SecurityCritical]
+    public virtual void GenerateFiles(bool split) {
         if (split) {
             EndBlock();
-            string headerText = template.ToString(header.Start, header.Length);
-            String footerText = template.ToString(footer.Start, footer.Length);
-            String outputPath = Path.GetDirectoryName(host.TemplateFile);
-            files.Reverse();
-            foreach(Block block in files) {
+            string headerText = template.ToString(_header.Start, _header.Length);
+            string footerText = template.ToString(_footer.Start, _footer.Length);
+            string outputPath = Path.GetDirectoryName(_host.TemplateFile);
+            
+            _files.Reverse();
+            foreach(Block block in _files) {
                 if(block.IsContainer) continue;
-                String fileName = Path.Combine(outputPath, block.Name);
-                String content = headerText + template.ToString(block.Start, block.Length) + footerText;
+                string fileName = Path.Combine(outputPath, block.Name);
+                string content = headerText + template.ToString(block.Start, block.Length) + footerText;
                 generatedFileNames.Add(fileName);
                 CreateFile(fileName, content);
                 template.Remove(block.Start, block.Length);
@@ -83,7 +90,7 @@ public class FilesManager {
             File.WriteAllText(fileName, content);
     }
 
-    public virtual string GetCustomToolNamespace(String fileName) {
+    public virtual string GetCustomToolNamespace(string fileName) {
         return null;
     }
 
@@ -91,24 +98,24 @@ public class FilesManager {
         get { return null; }
     }
 
-    protected bool IsFileContentDifferent(String fileName, String newContent) {
+    protected bool IsFileContentDifferent(string fileName, string newContent) {
         return !(File.Exists(fileName) && File.ReadAllText(fileName) == newContent);
     }
     
     [SecurityCritical]
     private FilesManager(ITextTemplatingEngineHost host, StringBuilder template) {
-        this.host = host;
+        _host = host;
         this.template = template;
     }
 
     private Block CurrentBlock {
-        get { return currentBlock; }
+        get { return _currentBlock; }
         set {
             if (CurrentBlock != null)
                 EndBlock();
             if (value != null)
                 value.Start = template.Length;
-            currentBlock = value;
+            _currentBlock = value;
         }
     }
 
@@ -118,24 +125,25 @@ public class FilesManager {
         private Action<String> checkOutAction;
         private Action<IEnumerable<String>> projectSyncAction;
 
-        public override String DefaultProjectNamespace {
+        public override string DefaultProjectNamespace {
             get {
                 return templateProjectItem.ContainingProject.Properties.Item("DefaultNamespace").Value.ToString();
             }
         }
 
-        public override String GetCustomToolNamespace(string fileName) {
+        public override string GetCustomToolNamespace(string fileName) {
             return dte.Solution.FindProjectItem(fileName).Properties.Item("CustomToolNamespace").Value.ToString();
         }
-
-        public override void Process(bool split) {
+        
+        [SecurityCritical]
+        public override void GenerateFiles(bool split) {
             if (templateProjectItem.ProjectItems == null)
                 return;
-            base.Process(split);
-            projectSyncAction.EndInvoke(projectSyncAction.BeginInvoke(generatedFileNames, null, null));
+            base.GenerateFiles(split);
+            projectSyncAction.Invoke(generatedFileNames);
         }
 
-        protected override void CreateFile(String fileName, String content) {
+        protected override void CreateFile(string fileName, string content) {
             if (IsFileContentDifferent(fileName, content)) {
                 CheckoutFileIfRequired(fileName);
                 File.WriteAllText(fileName, content);
@@ -151,7 +159,7 @@ public class FilesManager {
             if (dte == null)
                 throw new ArgumentNullException("Could not obtain DTE from host");
             templateProjectItem = dte.Solution.FindProjectItem(host.TemplateFile);
-            checkOutAction = (String fileName) => dte.SourceControl.CheckOutItem(fileName);
+            checkOutAction = (string fileName) => dte.SourceControl.CheckOutItem(fileName);
             projectSyncAction = (IEnumerable<String> keepFileNames) => ProjectSync(templateProjectItem, keepFileNames);
         }
 
@@ -166,14 +174,14 @@ public class FilesManager {
                 if (!keepFileNameSet.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key) + ".").StartsWith(originalFilePrefix))
                     pair.Value.Delete();
 
-            foreach(String fileName in keepFileNameSet)
+            foreach(string fileName in keepFileNameSet)
                 if (!projectFiles.ContainsKey(fileName))
                     templateProjectItem.ProjectItems.AddFromFile(fileName);
         }
 
-        private void CheckoutFileIfRequired(String fileName) {
-            var sc = dte.SourceControl;
-            if (sc != null && sc.IsItemUnderSCC(fileName) && !sc.IsItemCheckedOut(fileName))
+        private void CheckoutFileIfRequired(string fileName) {
+            var sourceControl = dte.SourceControl;
+            if (sourceControl != null && sourceControl.IsItemUnderSCC(fileName) && !sourceControl.IsItemCheckedOut(fileName))
                 checkOutAction.EndInvoke(checkOutAction.BeginInvoke(fileName, null, null));
         }
     }

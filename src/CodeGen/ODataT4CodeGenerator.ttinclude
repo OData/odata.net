@@ -485,6 +485,7 @@ public abstract class TemplateBase
     /// <summary>
     /// Create the template output
     /// </summary>
+     [SecurityCritical]
     public abstract string TransformText();
 
     #region Transform-time helpers

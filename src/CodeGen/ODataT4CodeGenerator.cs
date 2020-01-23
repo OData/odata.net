@@ -592,12 +592,12 @@ public abstract class TemplateBase
             this.sessionField = value;
         }
     }
-            #endregion
+    #endregion
 
-            /// <summary>
-            /// Create the template output
-            /// </summary>
-    [SecurityCritical]
+    /// <summary>
+    /// Create the template output
+    /// </summary>
+     [SecurityCritical]
     public abstract string TransformText();
 
     #region Transform-time helpers
@@ -1323,59 +1323,66 @@ internal static class Utils
 /// <param name="context">The code generation context.</param>
 public class FilesManager {
     
-        private class Block {
-            public String Name;
-            public int Start, Length;
-            public bool IsContainer;
-        }
+    private class Block {
+        public string Name;
+        public int Start, Length;
+        public bool IsContainer;
+    }
 
-    private Block currentBlock;
-    private List<Block> files = new List<Block>();
-    private Block footer = new Block();
-    private Block header = new Block();
-    private ITextTemplatingEngineHost host;   
+    private Block _currentBlock;
+    private List<Block> _files = new List<Block>();
+    private Block _footer = new Block();
+    private Block _header = new Block();
+    private ITextTemplatingEngineHost _host;   
     protected List<String> generatedFileNames = new List<String>();
-    public StringBuilder template{get; set;}
+
+    public StringBuilder template
+        {
+            get; 
+            set;
+        }
 
     [SecurityCritical]
     public static FilesManager Create(ITextTemplatingEngineHost host, StringBuilder template) {
         return (host is IServiceProvider) ? new VSManager(host, template) : new FilesManager(host, template);
     }
 
-    public void StartNewFile(String name, bool isContainer) {
+    public void StartNewFile(string name, bool isContainer) {
         if (name == null)
             throw new ArgumentNullException("name");
         CurrentBlock = new Block { Name = name, IsContainer =  isContainer};
     }
 
     public void StartFooter() {
-        CurrentBlock = footer;
+        CurrentBlock = _footer;
     }
 
     public void StartHeader() {
-        CurrentBlock = header;
+        CurrentBlock = _header;
     }
 
     public void EndBlock() {
         if (CurrentBlock == null)
             return;
         CurrentBlock.Length = template.Length - CurrentBlock.Start;
-        if (CurrentBlock != header && CurrentBlock != footer)
-            files.Add(CurrentBlock);
-        currentBlock = null;
+        if (CurrentBlock != _header && CurrentBlock != _footer)
+            _files.Add(CurrentBlock);
+        _currentBlock = null;
     }
 
     [SecurityCritical]
-    public virtual void Process(bool split) {
+    public virtual void GenerateFiles(bool split) {
         if (split) {
             EndBlock();
-            String headerText = template.ToString(header.Start, header.Length);
-            String footerText = template.ToString(footer.Start, footer.Length);
-            files.Reverse();
-            foreach(Block block in files) {
+            string headerText = template.ToString(_header.Start, _header.Length);
+            string footerText = template.ToString(_footer.Start, _footer.Length);
+            string outputPath = Path.GetDirectoryName(_host.TemplateFile);
+            
+            _files.Reverse();
+            foreach(Block block in _files) {
                 if(block.IsContainer) continue;
-                String fileName = block.Name;
-                String content = headerText + template.ToString(block.Start, block.Length) + footerText;
+                string fileName = Path.Combine(outputPath, block.Name);
+                string content = headerText + template.ToString(block.Start, block.Length) + footerText;
                 generatedFileNames.Add(fileName);
                 CreateFile(fileName, content);
                 template.Remove(block.Start, block.Length);
@@ -1383,65 +1390,65 @@ public class FilesManager {
         }
     }
 
-    protected virtual void CreateFile(String fileName, String content) {
+    protected virtual void CreateFile(string fileName, string content) {
         if (IsFileContentDifferent(fileName, content))
             File.WriteAllText(fileName, content);
     }
 
-    public virtual String GetCustomToolNamespace(String fileName) {
+    public virtual string GetCustomToolNamespace(string fileName) {
         return null;
     }
 
-    public virtual String DefaultProjectNamespace {
+    public virtual string DefaultProjectNamespace {
         get { return null; }
     }
 
-    protected bool IsFileContentDifferent(String fileName, String newContent) {
+    protected bool IsFileContentDifferent(string fileName, string newContent) {
         return !(File.Exists(fileName) && File.ReadAllText(fileName) == newContent);
     }
     
     [SecurityCritical]
     private FilesManager(ITextTemplatingEngineHost host, StringBuilder template) {
-        this.host = host;
+        _host = host;
         this.template = template;
     }
 
     private Block CurrentBlock {
-        get { return currentBlock; }
+        get { return _currentBlock; }
         set {
             if (CurrentBlock != null)
                 EndBlock();
             if (value != null)
                 value.Start = template.Length;
-            currentBlock = value;
+            _currentBlock = value;
         }
     }
 
-    private class VSManager: FilesManager {
+    private class VSManager : FilesManager {
         private EnvDTE.ProjectItem templateProjectItem;
         private EnvDTE.DTE dte;
         private Action<String> checkOutAction;
         private Action<IEnumerable<String>> projectSyncAction;
 
-        public override String DefaultProjectNamespace {
+        public override string DefaultProjectNamespace {
             get {
                 return templateProjectItem.ContainingProject.Properties.Item("DefaultNamespace").Value.ToString();
             }
         }
 
-        public override String GetCustomToolNamespace(string fileName) {
+        public override string GetCustomToolNamespace(string fileName) {
             return dte.Solution.FindProjectItem(fileName).Properties.Item("CustomToolNamespace").Value.ToString();
         }
-
+        
         [SecurityCritical]
-        public override void Process(bool split) {
+        public override void GenerateFiles(bool split) {
             if (templateProjectItem.ProjectItems == null)
                 return;
-            base.Process(split);
-            projectSyncAction.EndInvoke(projectSyncAction.BeginInvoke(generatedFileNames, null, null));
+            base.GenerateFiles(split);
+            projectSyncAction.Invoke(generatedFileNames);
         }
 
-        protected override void CreateFile(String fileName, String content) {
+        protected override void CreateFile(string fileName, string content) {
             if (IsFileContentDifferent(fileName, content)) {
                 CheckoutFileIfRequired(fileName);
                 File.WriteAllText(fileName, content);
@@ -1450,14 +1457,14 @@ public class FilesManager {
 
         internal VSManager(ITextTemplatingEngineHost host, StringBuilder template)
             : base(host, template) {
-            var hostServiceProvider = (IServiceProvider) host;
+            var hostServiceProvider = host as IServiceProvider;
             if (hostServiceProvider == null)
                 throw new ArgumentNullException("Could not obtain IServiceProvider");
-            dte = (EnvDTE.DTE) hostServiceProvider.GetService(typeof(EnvDTE.DTE));
+            dte = hostServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
             if (dte == null)
                 throw new ArgumentNullException("Could not obtain DTE from host");
             templateProjectItem = dte.Solution.FindProjectItem(host.TemplateFile);
-            checkOutAction = (String fileName) => dte.SourceControl.CheckOutItem(fileName);
+            checkOutAction = (string fileName) => dte.SourceControl.CheckOutItem(fileName);
             projectSyncAction = (IEnumerable<String> keepFileNames) => ProjectSync(templateProjectItem, keepFileNames);
         }
 
@@ -1468,18 +1475,18 @@ public class FilesManager {
             foreach(EnvDTE.ProjectItem projectItem in templateProjectItem.ProjectItems)
                 projectFiles.Add(projectItem.get_FileNames(0), projectItem);
 
-            foreach(var pair in projectFiles)
-                if (!keepFileNames.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key) + ".").StartsWith(originalFilePrefix))
+            foreach(KeyValuePair<string, EnvDTE.ProjectItem> pair in projectFiles)
+                if (!keepFileNameSet.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key) + ".").StartsWith(originalFilePrefix))
                     pair.Value.Delete();
 
-            foreach(String fileName in keepFileNameSet)
+            foreach(string fileName in keepFileNameSet)
                 if (!projectFiles.ContainsKey(fileName))
                     templateProjectItem.ProjectItems.AddFromFile(fileName);
         }
 
-        private void CheckoutFileIfRequired(String fileName) {
-            var sc = dte.SourceControl;
-            if (sc != null && sc.IsItemUnderSCC(fileName) && !sc.IsItemCheckedOut(fileName))
+        private void CheckoutFileIfRequired(string fileName) {
+            var sourceControl = dte.SourceControl;
+            if (sourceControl != null && sourceControl.IsItemUnderSCC(fileName) && !sourceControl.IsItemCheckedOut(fileName))
                 checkOutAction.EndInvoke(checkOutAction.BeginInvoke(fileName, null, null));
         }
     }
@@ -4238,18 +4245,18 @@ public abstract class ODataClientTemplate : TemplateBase
     } }
     private HashSet<EdmPrimitiveTypeKind> clrReferenceTypes;
 
-            /// <summary>
-            /// Generates code for the OData client.
-            /// </summary>
-            /// <returns>The generated code for the OData client.</returns>
-    [SecurityCritical]
+    /// <summary>
+    /// Generates code for the OData client.
+    /// </summary>
+    /// <returns>The generated code for the OData client.</returns>
+     [SecurityCritical]
     public override string TransformText()
     {
         context.MultipleFilesManager.StartHeader();
         this.WriteFileHeader();
         context.MultipleFilesManager.EndBlock();
         this.WriteNamespaces();
-        context.MultipleFilesManager.Process(context.SplitGeneratedFileIntoMultipleFiles);
+        context.MultipleFilesManager.GenerateFiles(context.SplitGeneratedFileIntoMultipleFiles);
         return context.MultipleFilesManager.template.ToString();
     }
 

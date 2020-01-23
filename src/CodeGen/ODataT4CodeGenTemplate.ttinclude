@@ -188,13 +188,14 @@ public abstract class ODataClientTemplate : TemplateBase
     /// Generates code for the OData client.
     /// </summary>
     /// <returns>The generated code for the OData client.</returns>
+     [SecurityCritical]
     public override string TransformText()
     {
         context.MultipleFilesManager.StartHeader();
         this.WriteFileHeader();
         context.MultipleFilesManager.EndBlock();
         this.WriteNamespaces();
-        context.MultipleFilesManager.Process(context.SplitGeneratedFileIntoMultipleFiles);
+        context.MultipleFilesManager.GenerateFiles(context.SplitGeneratedFileIntoMultipleFiles);
         return context.MultipleFilesManager.template.ToString();
     }
 
