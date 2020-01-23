@@ -164,9 +164,9 @@ public class FilesManager {
         }
 
         private static void ProjectSync(EnvDTE.ProjectItem templateProjectItem, IEnumerable<String> keepFileNames) {
-            var keepFileNameSet = new HashSet<String>(keepFileNames);
-            var projectFiles = new Dictionary<String, EnvDTE.ProjectItem>();
-            var originalFilePrefix = Path.GetFileNameWithoutExtension(templateProjectItem.get_FileNames(0)) + ".";
+            HashSet<String> keepFileNameSet = new HashSet<String>(keepFileNames);
+            Dictionary<String, EnvDTE.ProjectItem> projectFiles = new Dictionary<String, EnvDTE.ProjectItem>();
+            string originalFilePrefix = Path.GetFileNameWithoutExtension(templateProjectItem.get_FileNames(0)) + ".";
             foreach(EnvDTE.ProjectItem projectItem in templateProjectItem.ProjectItems)
                 projectFiles.Add(projectItem.get_FileNames(0), projectItem);
 
