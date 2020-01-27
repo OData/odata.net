@@ -1382,7 +1382,8 @@ public class FilesManager {
             {
                 Path.GetDirectoryName(_host.TemplateFile);
             }
-                    _files.Reverse();
+            
+            _files.Reverse();
             foreach(Block block in _files) {
                 if(block.IsContainer) continue;
                 string fileName = Path.Combine(outputPath, block.Name);
@@ -1473,9 +1474,9 @@ public class FilesManager {
         }
 
         private static void ProjectSync(EnvDTE.ProjectItem templateProjectItem, IEnumerable<String> keepFileNames) {
-            var keepFileNameSet = new HashSet<String>(keepFileNames);
-            var projectFiles = new Dictionary<String, EnvDTE.ProjectItem>();
-            var originalFilePrefix = Path.GetFileNameWithoutExtension(templateProjectItem.get_FileNames(0)) + ".";
+            HashSet<String> keepFileNameSet = new HashSet<String>(keepFileNames);
+            Dictionary<String, EnvDTE.ProjectItem> projectFiles = new Dictionary<String, EnvDTE.ProjectItem>();
+            string originalFilePrefix = Path.GetFileNameWithoutExtension(templateProjectItem.get_FileNames(0)) + ".";
             foreach(EnvDTE.ProjectItem projectItem in templateProjectItem.ProjectItems)
                 projectFiles.Add(projectItem.get_FileNames(0), projectItem);
 
@@ -4353,6 +4354,20 @@ public abstract class ODataClientTemplate : TemplateBase
             schemaElements.OfType<IEdmOperation>().Any(o => o.IsBound))
         {
             this.WriteExtensionMethodsStart();
+            this.WriteByKeyMethods(schemaElements);
+
+            HashSet<string> boundOperations = new HashSet<string>(StringComparer.Ordinal);
+
+            this.WriteBoundOperations(schemaElements,boundOperations,structuredBaseTypeMap);
+            this.WriteExtensionMethods(schemaElements,boundOperations,structuredBaseTypeMap);
+            this.WriteExtensionMethodsEnd();
+        }
+
+        this.WriteNamespaceEnd();
+    }
+
+    internal void WriteByKeyMethods(IEdmSchemaElement[] schemaElements)
+        {
             foreach (IEdmEntityType type in schemaElements.OfType<IEdmEntityType>())
             {
                 string entityTypeName = type.Name;
@@ -4390,8 +4405,10 @@ public abstract class ODataClientTemplate : TemplateBase
                     current = (IEdmEntityType)current.BaseType;
                 }
             }
+        }
 
-            HashSet<string> boundOperations = new HashSet<string>(StringComparer.Ordinal);
+    internal void WriteBoundOperations(IEdmSchemaElement[] schemaElements,HashSet<string> boundOperations,Dictionary<IEdmStructuredType, List<IEdmStructuredType>> structuredBaseTypeMap)
+        {
             foreach (IEdmFunction function in schemaElements.OfType<IEdmFunction>())
             {
                 if (function.IsBound)
@@ -4461,8 +4478,10 @@ public abstract class ODataClientTemplate : TemplateBase
                     }
                 }
             }
+        }
 
-            foreach (IEdmAction action in schemaElements.OfType<IEdmAction>())
+    internal void WriteExtensionMethods(IEdmSchemaElement[] schemaElements,HashSet<string> boundOperations,Dictionary<IEdmStructuredType, List<IEdmStructuredType>> structuredBaseTypeMap) {
+        foreach (IEdmAction action in schemaElements.OfType<IEdmAction>())
             {
                 if (action.IsBound)
                 {
@@ -4530,11 +4549,6 @@ public abstract class ODataClientTemplate : TemplateBase
                     }
                 }
             }
-
-            this.WriteExtensionMethodsEnd();
-        }
-
-        this.WriteNamespaceEnd();
     }
     
     internal bool HasBoundOperations(IEnumerable<IEdmOperation> operations)
@@ -4570,66 +4584,12 @@ public abstract class ODataClientTemplate : TemplateBase
 
         this.WriteResolveTypeFromName();
         this.WriteResolveNameFromType(camelCaseContainerName, fullNamespace);
+        this.WriteContextEntitySetProperty(container);
+        
 
-        foreach (IEdmEntitySet entitySet in container.EntitySets())
-        {
-            IEdmEntityType entitySetElementType = entitySet.EntityType();
-            string entitySetElementTypeName = GetElementTypeName(entitySetElementType, container);
+        this.WriteContextAddToEntitySetMethod(container);
+        this.WriteContextSingletonProperty(container);
 
-            string camelCaseEntitySetName = entitySet.Name;
-            if (this.context.EnableNamingAlias)
-            {
-                camelCaseEntitySetName = Customization.CustomizeNaming(camelCaseEntitySetName);
-            }
-
-            this.WriteContextEntitySetProperty(camelCaseEntitySetName, GetFixedName(camelCaseEntitySetName), entitySet.Name, GetFixedName(entitySetElementTypeName));
-            List<IEdmNavigationSource> edmNavigationSourceList = null;
-            if (!this.context.ElementTypeToNavigationSourceMap.TryGetValue(entitySet.EntityType(), out edmNavigationSourceList))
-            {
-                edmNavigationSourceList = new List<IEdmNavigationSource>();
-                this.context.ElementTypeToNavigationSourceMap.Add(entitySet.EntityType(), edmNavigationSourceList);
-            }
-
-            edmNavigationSourceList.Add(entitySet);
-        }
-
-        foreach (IEdmEntitySet entitySet in container.EntitySets())
-        {
-            IEdmEntityType entitySetElementType = entitySet.EntityType();
-            
-            string entitySetElementTypeName = GetElementTypeName(entitySetElementType, container);
-
-            UniqueIdentifierService uniqueIdentifierService = new UniqueIdentifierService(/*IsLanguageCaseSensitive*/true);
-            string parameterName = GetFixedName(uniqueIdentifierService.GetUniqueParameterName(entitySetElementType.Name));
-
-            string camelCaseEntitySetName = entitySet.Name;
-            if (this.context.EnableNamingAlias)
-            {
-                camelCaseEntitySetName = Customization.CustomizeNaming(camelCaseEntitySetName);
-        }
-
-            this.WriteContextAddToEntitySetMethod(camelCaseEntitySetName, entitySet.Name, GetFixedName(entitySetElementTypeName), parameterName);
-        }
-
-        foreach (IEdmSingleton singleton in container.Singletons())
-        {
-            IEdmEntityType singletonElementType = singleton.EntityType();
-            string singletonElementTypeName = GetElementTypeName(singletonElementType, container);
-            string camelCaseSingletonName = singleton.Name;
-            if (this.context.EnableNamingAlias)
-            {
-                camelCaseSingletonName = Customization.CustomizeNaming(camelCaseSingletonName);
-            }
-
-            this.WriteContextSingletonProperty(camelCaseSingletonName, GetFixedName(camelCaseSingletonName), singleton.Name, singletonElementTypeName + "Single");
-
-            List<IEdmNavigationSource> edmNavigationSourceList = null;
-            if (this.context.ElementTypeToNavigationSourceMap.TryGetValue(singleton.EntityType(), out edmNavigationSourceList))
-            {
-                edmNavigationSourceList.Add(singleton);
-            }
-        }
-    
         if(useTempFile) 
         {
             this.WriteGeneratedEdmModel(Utils.SerializeToString(this.context.Edmx));
@@ -4638,71 +4598,149 @@ public abstract class ODataClientTemplate : TemplateBase
         {
             this.WriteGeneratedEdmModel(Utils.SerializeToString(this.context.Edmx).Replace("\"", "\"\""));
         }
-         
-        bool hasOperationImport = container.OperationImports().OfType<IEdmOperationImport>().Any();
-        foreach (IEdmFunctionImport functionImport in container.OperationImports().OfType<IEdmFunctionImport>())
-        {
-            string parameterString, parameterTypes, parameterExpressionString, parameterValues;
-            bool useEntityReference;
-            this.GetParameterStrings(false, false, functionImport.Function.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
-            string returnTypeName = GetSourceOrReturnTypeName(functionImport.Function.ReturnType);
-            string returnTypeNameWithSingleSuffix = GetSourceOrReturnTypeName(functionImport.Function.ReturnType, true);
-            string fixedContainerName = this.GetFixedName(functionImport.Container.Name);
-            bool isCollectionResult = functionImport.Function.ReturnType.IsCollection();
-            string functionImportName = functionImport.Name;
-            if (this.context.EnableNamingAlias)
-            {
-                functionImportName = Customization.CustomizeNaming(functionImportName);
-                fixedContainerName = Customization.CustomizeNaming(fixedContainerName);
-            }
 
-            if (functionImport.Function.ReturnType.IsCollection())
-            {
-                this.WriteFunctionImportReturnCollectionResult(this.GetFixedName(functionImportName), functionImport.Name, returnTypeName, parameterString, parameterValues, functionImport.Function.IsComposable, useEntityReference);
-            }
-            else
-            {
-                this.WriteFunctionImportReturnSingleResult(this.GetFixedName(functionImportName), functionImport.Name, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, parameterValues, functionImport.Function.IsComposable, functionImport.Function.ReturnType.IsEntity(), useEntityReference);
-            }
-        }
-        
-        foreach (IEdmActionImport actionImport in container.OperationImports().OfType<IEdmActionImport>())
-        {
-            string parameterString, parameterTypes, parameterExpressionString, parameterValues;
-            bool useEntityReference;
-            this.GetParameterStrings(false, true, actionImport.Action.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
-            string returnTypeName = null;
-            string fixedContainerName = this.GetFixedName(actionImport.Container.Name);
-
-            if (actionImport.Action.ReturnType != null)
-            {
-                returnTypeName = GetSourceOrReturnTypeName(actionImport.Action.ReturnType);
-                if (actionImport.Action.ReturnType.IsCollection())
-                {
-                    returnTypeName = string.Format(this.DataServiceActionQueryOfTStructureTemplate, returnTypeName);
-            }
-                else
-                {
-                    returnTypeName = string.Format(this.DataServiceActionQuerySingleOfTStructureTemplate, returnTypeName);
-                }
-            }
-            else
-            {
-                returnTypeName = this.DataServiceActionQueryTypeName;
-            }
-
-            string actionImportName = actionImport.Name;
-            if (this.context.EnableNamingAlias)
-            {
-                actionImportName = Customization.CustomizeNaming(actionImportName);
-                fixedContainerName = Customization.CustomizeNaming(fixedContainerName);
-            }
-
-            this.WriteActionImport(this.GetFixedName(actionImportName), actionImport.Name, returnTypeName, parameterString, parameterValues);
-        }
-
+        this.WriteFunctionImport(container);
+        this.WriteActionImport(container);
         this.WriteClassEndForEntityContainer();
     }
+
+    internal void WriteContextEntitySetProperty(IEdmEntityContainer container)
+        {
+            foreach (IEdmEntitySet entitySet in container.EntitySets())
+                {
+                    IEdmEntityType entitySetElementType = entitySet.EntityType();
+                    string entitySetElementTypeName = GetElementTypeName(entitySetElementType, container);
+
+                    string camelCaseEntitySetName = entitySet.Name;
+                    if (this.context.EnableNamingAlias)
+                    {
+                        camelCaseEntitySetName = Customization.CustomizeNaming(camelCaseEntitySetName);
+                    }
+
+                    this.WriteContextEntitySetProperty(camelCaseEntitySetName, GetFixedName(camelCaseEntitySetName), entitySet.Name, GetFixedName(entitySetElementTypeName));
+                    List<IEdmNavigationSource> edmNavigationSourceList = null;
+                    if (!this.context.ElementTypeToNavigationSourceMap.TryGetValue(entitySet.EntityType(), out edmNavigationSourceList))
+                    {
+                        edmNavigationSourceList = new List<IEdmNavigationSource>();
+                        this.context.ElementTypeToNavigationSourceMap.Add(entitySet.EntityType(), edmNavigationSourceList);
+                    }
+
+                    edmNavigationSourceList.Add(entitySet);
+                }
+        }
+
+    internal void WriteContextAddToEntitySetMethod(IEdmEntityContainer container)
+        {
+            foreach (IEdmEntitySet entitySet in container.EntitySets())
+                {
+                    IEdmEntityType entitySetElementType = entitySet.EntityType();
+            
+                    string entitySetElementTypeName = GetElementTypeName(entitySetElementType, container);
+
+                    UniqueIdentifierService uniqueIdentifierService = new UniqueIdentifierService(/*IsLanguageCaseSensitive*/true);
+                    string parameterName = GetFixedName(uniqueIdentifierService.GetUniqueParameterName(entitySetElementType.Name));
+
+                    string camelCaseEntitySetName = entitySet.Name;
+                    if (this.context.EnableNamingAlias)
+                    {
+                        camelCaseEntitySetName = Customization.CustomizeNaming(camelCaseEntitySetName);
+                    }
+
+                this.WriteContextAddToEntitySetMethod(camelCaseEntitySetName, entitySet.Name, GetFixedName(entitySetElementTypeName), parameterName);
+            }
+        }
+
+    internal void WriteContextSingletonProperty(IEdmEntityContainer container)
+        {
+            foreach (IEdmSingleton singleton in container.Singletons())
+                {
+                    IEdmEntityType singletonElementType = singleton.EntityType();
+                    string singletonElementTypeName = GetElementTypeName(singletonElementType, container);
+                    string camelCaseSingletonName = singleton.Name;
+                    if (this.context.EnableNamingAlias)
+                    {
+                        camelCaseSingletonName = Customization.CustomizeNaming(camelCaseSingletonName);
+                    }
+
+                    this.WriteContextSingletonProperty(camelCaseSingletonName, GetFixedName(camelCaseSingletonName), singleton.Name, singletonElementTypeName + "Single");
+
+                    List<IEdmNavigationSource> edmNavigationSourceList = null;
+                    if (this.context.ElementTypeToNavigationSourceMap.TryGetValue(singleton.EntityType(), out edmNavigationSourceList))
+                    {
+                        edmNavigationSourceList.Add(singleton);
+                    }
+                }
+    
+        }
+
+    internal void WriteFunctionImport(IEdmEntityContainer container)
+        {
+            foreach (IEdmFunctionImport functionImport in container.OperationImports().OfType<IEdmFunctionImport>())
+                {
+                    string parameterString, parameterTypes, parameterExpressionString, parameterValues;
+                    bool useEntityReference;
+                    this.GetParameterStrings(false, false, functionImport.Function.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
+                    string returnTypeName = GetSourceOrReturnTypeName(functionImport.Function.ReturnType);
+                    string returnTypeNameWithSingleSuffix = GetSourceOrReturnTypeName(functionImport.Function.ReturnType, true);
+                    string fixedContainerName = this.GetFixedName(functionImport.Container.Name);
+                    bool isCollectionResult = functionImport.Function.ReturnType.IsCollection();
+                    string functionImportName = functionImport.Name;
+                    if (this.context.EnableNamingAlias)
+                    {
+                        functionImportName = Customization.CustomizeNaming(functionImportName);
+                        fixedContainerName = Customization.CustomizeNaming(fixedContainerName);
+                    }
+
+                    if (functionImport.Function.ReturnType.IsCollection())
+                    {
+                        this.WriteFunctionImportReturnCollectionResult(this.GetFixedName(functionImportName), functionImport.Name, returnTypeName, parameterString, parameterValues, functionImport.Function.IsComposable, useEntityReference);
+                    }
+                    else
+                    {
+                        this.WriteFunctionImportReturnSingleResult(this.GetFixedName(functionImportName), functionImport.Name, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, parameterValues, functionImport.Function.IsComposable, functionImport.Function.ReturnType.IsEntity(), useEntityReference);
+                    }
+                }
+        
+        }
+
+    internal void WriteActionImport(IEdmEntityContainer container)
+        {
+            foreach (IEdmActionImport actionImport in container.OperationImports().OfType<IEdmActionImport>())
+                {
+                    string parameterString, parameterTypes, parameterExpressionString, parameterValues;
+                    bool useEntityReference;
+                    this.GetParameterStrings(false, true, actionImport.Action.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
+                    string returnTypeName = null;
+                    string fixedContainerName = this.GetFixedName(actionImport.Container.Name);
+
+                    if (actionImport.Action.ReturnType != null)
+                    {
+                        returnTypeName = GetSourceOrReturnTypeName(actionImport.Action.ReturnType);
+                        if (actionImport.Action.ReturnType.IsCollection())
+                        {
+                            returnTypeName = string.Format(this.DataServiceActionQueryOfTStructureTemplate, returnTypeName);
+                    }
+                        else
+                        {
+                            returnTypeName = string.Format(this.DataServiceActionQuerySingleOfTStructureTemplate, returnTypeName);
+                        }
+                    }
+                    else
+                    {
+                        returnTypeName = this.DataServiceActionQueryTypeName;
+                    }
+
+                    string actionImportName = actionImport.Name;
+                    if (this.context.EnableNamingAlias)
+                    {
+                        actionImportName = Customization.CustomizeNaming(actionImportName);
+                        fixedContainerName = Customization.CustomizeNaming(fixedContainerName);
+                    }
+
+                    this.WriteActionImport(this.GetFixedName(actionImportName), actionImport.Name, returnTypeName, parameterString, parameterValues);
+                }
+
+        }
 
     internal void WriteEntityContainerConstructor(IEdmEntityContainer container)
     {
