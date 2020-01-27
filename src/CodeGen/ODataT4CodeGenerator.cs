@@ -1376,9 +1376,13 @@ public class FilesManager {
             EndBlock();
             string headerText = template.ToString(_header.Start, _header.Length);
             string footerText = template.ToString(_footer.Start, _footer.Length);
-            string outputPath = Path.GetDirectoryName(_host.TemplateFile);
-            
-            _files.Reverse();
+            string outputPath = "";
+
+            if (_host != null)
+            {
+                Path.GetDirectoryName(_host.TemplateFile);
+            }
+                    _files.Reverse();
             foreach(Block block in _files) {
                 if(block.IsContainer) continue;
                 string fileName = Path.Combine(outputPath, block.Name);
