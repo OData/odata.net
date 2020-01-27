@@ -1,5 +1,14 @@
-﻿
-<#+
+﻿<#/*
+OData Client T4 Template ver. #VersionNumber#
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/#><#+
 /// <summary>
 /// The template class to generate the OData client code.
 /// </summary>
@@ -26,7 +35,7 @@ public abstract class ODataClientTemplate : TemplateBase
         this.context = context;
         if(context.MultipleFilesManager != null)
         {
-            context.MultipleFilesManager.template = this.GenerationEnvironment;
+            context.MultipleFilesManager.Template = this.GenerationEnvironment;
         }  
 }
 
@@ -196,9 +205,12 @@ public abstract class ODataClientTemplate : TemplateBase
         context.MultipleFilesManager.EndBlock();
         this.WriteNamespaces();
         context.MultipleFilesManager.GenerateFiles(context.SplitGeneratedFileIntoMultipleFiles);
-        return context.MultipleFilesManager.template.ToString();
+        return context.MultipleFilesManager.Template.ToString();
     }
 
+    /// <summary>
+    /// Write code for all namespaces into a file.
+    /// </summary>
     internal void WriteNamespaces()
     {
         foreach(string fullNamespace in context.NamespacesInModel)
@@ -207,6 +219,10 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Writes code generated for the provided  <paramref name="fullNamespace"/> into a file.
+    /// </summary>
+    /// <param name="fullNamespace">The namespace to be written.</param>
     internal void WriteNamespace(string fullNamespace)
     {
         this.WriteNamespaceStart(this.context.GetPrefixedNamespace(fullNamespace, this, true, false));
@@ -300,6 +316,10 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteNamespaceEnd();
     }
 
+    /// <summary>
+    /// Writes ByKey() Methods for the entity types in <paramref name="schemaElements"/>.
+    /// </summary>
+    /// <param name="schemaElements">All the schema elements in the read from Edmx.</param>
     internal void WriteByKeyMethods(IEdmSchemaElement[] schemaElements)
         {
             foreach (IEdmEntityType type in schemaElements.OfType<IEdmEntityType>())
@@ -341,6 +361,12 @@ public abstract class ODataClientTemplate : TemplateBase
             }
         }
 
+    /// <summary>
+    /// Writes bound operations.
+    /// </summary>
+    /// <param name="schemaElements">All the schema elements in the read from Edmx.</param>
+    /// <param name="boundOperations">A set of bound operations.</param>
+    /// <param name="structuredBaseTypeMap">A map of structured types read from Edmx.</param>
     internal void WriteBoundOperations(IEdmSchemaElement[] schemaElements,HashSet<string> boundOperations,Dictionary<IEdmStructuredType, List<IEdmStructuredType>> structuredBaseTypeMap)
         {
             foreach (IEdmFunction function in schemaElements.OfType<IEdmFunction>())
@@ -414,6 +440,12 @@ public abstract class ODataClientTemplate : TemplateBase
             }
         }
 
+    /// <summary>
+    /// Write Extension methods given <paramref name="schemaElements"/> <paramref name="boundOperations"/> and <paramref name="structuredBaseTypeMap"/>.
+    /// </summary>
+    /// <param name="schemaElements">All the schema elements in the read from Edmx.</param>
+    /// <param name="boundOperations">A set of bound operations.</param>
+    /// <param name="structuredBaseTypeMap">A map of structured types read from Edmx.</param>
     internal void WriteExtensionMethods(IEdmSchemaElement[] schemaElements,HashSet<string> boundOperations,Dictionary<IEdmStructuredType, List<IEdmStructuredType>> structuredBaseTypeMap) {
         foreach (IEdmAction action in schemaElements.OfType<IEdmAction>())
             {
@@ -485,6 +517,11 @@ public abstract class ODataClientTemplate : TemplateBase
             }
     }
     
+    /// <summary>
+    /// check if the collection <paramref name="operations"/> contains atleast one bound operation.
+    /// </summary>
+    /// <param name="operations">A collection with operations.</param>
+    /// <returns>Returns true if  <paramref name="operations"/> has atleast one bound operation.</returns>
     internal bool HasBoundOperations(IEnumerable<IEdmOperation> operations)
     {
         foreach (IEdmOperation opeartion in operations)
@@ -498,6 +535,11 @@ public abstract class ODataClientTemplate : TemplateBase
         return false;
     }
 
+    /// <summary>
+    /// Generates class for the entity container <paramref name="container"/> in <paramref name="fullNamespace"/> namespace.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
+    /// <param name="fullNamespace">Namespace.</param>
     internal void WriteEntityContainer(IEdmEntityContainer container, string fullNamespace)
     {
         string camelCaseContainerName = container.Name;
@@ -538,6 +580,10 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassEndForEntityContainer();
     }
 
+    /// <summary>
+    /// Write entityset property.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteContextEntitySetProperty(IEdmEntityContainer container)
         {
             foreach (IEdmEntitySet entitySet in container.EntitySets())
@@ -563,6 +609,10 @@ public abstract class ODataClientTemplate : TemplateBase
                 }
         }
 
+    /// <summary>
+    /// Write entityset method.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteContextAddToEntitySetMethod(IEdmEntityContainer container)
         {
             foreach (IEdmEntitySet entitySet in container.EntitySets())
@@ -584,6 +634,10 @@ public abstract class ODataClientTemplate : TemplateBase
             }
         }
 
+    /// <summary>
+    /// Write singleton property.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteContextSingletonProperty(IEdmEntityContainer container)
         {
             foreach (IEdmSingleton singleton in container.Singletons())
@@ -607,6 +661,10 @@ public abstract class ODataClientTemplate : TemplateBase
     
         }
 
+    /// <summary>
+    /// Write singleton property.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteFunctionImport(IEdmEntityContainer container)
         {
             foreach (IEdmFunctionImport functionImport in container.OperationImports().OfType<IEdmFunctionImport>())
@@ -637,6 +695,10 @@ public abstract class ODataClientTemplate : TemplateBase
         
         }
 
+    /// <summary>
+    /// Write function import.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteActionImport(IEdmEntityContainer container)
         {
             foreach (IEdmActionImport actionImport in container.OperationImports().OfType<IEdmActionImport>())
@@ -676,6 +738,10 @@ public abstract class ODataClientTemplate : TemplateBase
 
         }
 
+    /// <summary>
+    /// Write constructor for the entity container <paramref name="container"/>.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteEntityContainerConstructor(IEdmEntityContainer container)
     {
         string camelCaseContainerName = container.Name;
@@ -704,6 +770,9 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassEndForEntityContainerConstructor();
     }
 
+    /// <summary>
+    /// Write resolve type.
+    /// </summary>
     internal void WriteResolveTypeFromName()
     {
         if (!this.context.NeedResolveTypeFromName)
@@ -728,6 +797,11 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteMethodEndForResolveTypeFromName();
     }
 
+    /// <summary>
+    /// Write resolve type given <paramref name="containerName"/> and <paramref name="fullNamespace"/>.
+    /// </summary>
+    /// <param name="containerName">An entity container.</param>
+    /// <param name="fullNamespace">Namespace.</param>
     internal void WriteResolveNameFromType(string containerName, string fullNamespace)
     {
         if (!this.context.NeedResolveNameFromType)
@@ -749,6 +823,10 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteMethodEndForResolveNameFromType(this.context.ModelHasInheritance);
     }
 
+    /// <summary>
+    /// Write properties for single type given <paramref name="properties"/>.
+    /// </summary>
+    /// <param name="properties">A collection of properties.</param>
     internal void WritePropertiesForSingleType(IEnumerable<IEdmProperty> properties)
     {
         foreach (IEdmProperty property in properties.Where(i => i.PropertyKind == EdmPropertyKind.Navigation))
@@ -768,6 +846,11 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Write an entity type given <paramref name="entityType"/> and <paramref name="boundOperationsMap"/>.
+    /// </summary>
+    /// <param name="entityType">Entity type.</param>
+    /// <param name="boundOperationsMap">A dictionary of bound operations.</param>
     internal void WriteEntityType(IEdmEntityType entityType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
     {
         string entityTypeName = ((IEdmSchemaElement)entityType).Name;
@@ -834,6 +917,11 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassEndForStructuredType();
     }
 
+    /// <summary>
+    /// Generate and write code for complex type given <paramref name="complexType"/> and <paramref name="boundOperationsMap"/>.
+    /// </summary>
+    /// <param name="complexType">A complex type.</param>
+    /// <param name="boundOperationsMap">A dictionary of bound operations.</param>
     internal void WriteComplexType(IEdmComplexType complexType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
     {
         this.WriteSummaryCommentForStructuredType(this.context.EnableNamingAlias ? Customization.CustomizeNaming(complexType.Name) : complexType.Name);
@@ -850,6 +938,11 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassEndForStructuredType();    
     }
 
+    /// <summary>
+    /// Write bound operations given <paramref name="structuredType"/> and <paramref name="boundOperationsMap"/>.
+    /// </summary>
+    /// <param name="complexType">A complex type.</param>
+    /// <param name="structuredType">Structured type.</param>
     internal void WriteBoundOperations(IEdmStructuredType structuredType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
     {
         List<IEdmOperation> operations;
@@ -914,6 +1007,13 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
     
+    /// <summary>
+    /// Write bound operations given <paramref name="structuredType"/> and <paramref name="boundOperationsMap"/>.
+    /// </summary>
+    /// <param name="complexType">A complex type.</param>
+    /// <param name="boundOperationsMap">Bound operations.</param>
+    /// <param name="operation">Structured type.</param>
+    /// <returns>Returns true if  <paramref name="structuredType"/> has <paramref name="operation"/> bound operation.</returns>
     internal bool CheckMethodsInBaseClass(IEdmStructuredType structuredType, IEdmOperation operation, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
     {
         if (structuredType != null)
@@ -962,6 +1062,11 @@ public abstract class ODataClientTemplate : TemplateBase
         return false;
     }
 
+    
+    /// <summary>
+    /// Generate and write code given <paramref name="enumType"/>.
+    /// </summary>
+    /// <param name="enumType">Enum type.</param>
     internal void WriteEnumType(IEdmEnumType enumType)
     {
         this.WriteSummaryCommentForEnumType(this.context.EnableNamingAlias ? Customization.CustomizeNaming(enumType.Name) : enumType.Name);
@@ -982,6 +1087,11 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteEnumEnd();
     }
 
+    /// <summary>
+    /// Write declaration for  <paramref name="structuredType"/> given <paramref name="structuredType"/> and <paramref name="baseEntityType"/>.
+    /// </summary>
+    /// <param name="structuredType">Structured type.</param>
+    /// <param name="baseEntityType">Base entity type.</param>
     internal void WriteStructurdTypeDeclaration(IEdmStructuredType structuredType, string baseEntityType, string typeNameSuffix = null)
     {
         string abstractModifier = structuredType.IsAbstract && typeNameSuffix == null ? this.AbstractModifier : string.Empty;
@@ -1015,6 +1125,9 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassStartForStructuredType(abstractModifier, GetFixedName(structuredTypeName + typeNameSuffix), ((IEdmSchemaElement)structuredType).Name + typeNameSuffix, baseTypeName);
     }
     
+    /// <summary>
+    /// Get source type.
+    /// </summary>
     internal string GetSourceOrReturnTypeName(IEdmTypeReference typeReference, bool isEntitySingleType = false)
     {
         IEdmCollectionType edmCollectionType = typeReference.Definition as IEdmCollectionType;
@@ -1028,6 +1141,9 @@ public abstract class ODataClientTemplate : TemplateBase
         return Utils.GetClrTypeName(typeReference, this.context.UseDataServiceCollection, this, this.context, addNullableTemplate, isEntitySingleType:isEntitySingleType);
     }
     
+    /// <summary>
+    /// Get source parameter string.
+    /// </summary>
     internal void GetParameterStrings(bool isBound, bool isAction, IEdmOperationParameter[] parameters, out string parameterString, out string parameterTypes, out string parameterExpressionString, out string parameterValues,  out bool useEntityReference)
     {
         parameterString = string.Empty;
@@ -1089,6 +1205,9 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Get source parameter Expression string.
+    /// </summary>
     internal string GetParameterExpressionString(IEdmOperationParameter param, string typeName)
     {
         string clrTypeName;
@@ -1108,7 +1227,9 @@ public abstract class ODataClientTemplate : TemplateBase
         return string.Format(this.ConstantExpressionConstructorWithType, GetFixedName(param.Name), typeName); 
     }
 
-    // This is to solve duplicate names between property and type
+    /// <summary>
+    /// This is to solve duplicate names between property and type.
+    /// </summary>
     internal void SetPropertyIdentifierMappingsIfNameConflicts(string typeName, IEdmStructuredType structuredType)
     {
         if (this.context.EnableNamingAlias)
@@ -1180,6 +1301,9 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Write static create method.
+    /// </summary>
     internal void WriteTypeStaticCreateMethod(string typeName, IEdmStructuredType structuredType)
     {
         Debug.Assert(structuredType != null, "structuredType != null");
@@ -1254,6 +1378,9 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteMethodEndForStaticCreateMethod(instanceName);
     }
 
+    /// <summary>
+    /// Write static create method parameters.
+    /// </summary>
     internal void WriteStaticCreateMethodParameters(KeyValuePair<IEdmProperty, string>[] propertyToParameterPairs)
     {
         if (propertyToParameterPairs.Length == 0)
@@ -1279,6 +1406,10 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    
+    /// <summary>
+    /// Write properties for structured type.
+    /// </summary>
     internal void WritePropertiesForStructuredType(IEnumerable<IEdmProperty> properties)
     {
          bool useDataServiceCollection = this.context.UseDataServiceCollection;
@@ -1318,6 +1449,10 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Write members for Enum type.
+    /// </summary>
+    /// <param name="members">Enum type members.</param>
     internal void WriteMembersForEnumType(IEnumerable<IEdmEnumMember> members)
     {
         int n = members.Count();
@@ -1339,6 +1474,10 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Get Fixed nameif Language keywords contains <paramref name="originalName"/> .
+    /// </summary>
+    /// <param name="originalName">Original name.</param>
     internal string GetFixedName(string originalName)
     {
         string fixedName = originalName;
@@ -1351,6 +1490,11 @@ public abstract class ODataClientTemplate : TemplateBase
         return fixedName;
     }
 
+    /// <summary>
+    /// Get element type name given <paramref name="elementType"/> and <paramref name="container"/> .
+    /// </summary>
+    /// <param name="elementType">Element type.</param>
+    /// <param name="container">Entity container.</param>
     internal string GetElementTypeName(IEdmEntityType elementType, IEdmEntityContainer container)
     {
         string elementTypeName = elementType.Name;

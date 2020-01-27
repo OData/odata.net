@@ -1,4 +1,14 @@
-﻿<#@ assembly name="System.Core"
+﻿<#/*
+OData Client T4 Template ver. #VersionNumber#
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/#><#@ assembly name="System.Core"
 #><#@ assembly name="System.Xml"
 #><#@ assembly name="System.Xml.Linq"
 #><#@ import namespace="System"
@@ -18,175 +28,331 @@
 /// <param name="context">The code generation context.</param>
 public class FilesManager {
     
+    /// <summary>
+    /// Creates an instance of the FilesManager. The object used to generate and manage
+    /// multiple source files.
+    /// </summary>
     private class Block {
+
+        /// <summary> Name of the block.</summary>
         public string Name;
-        public int Start, Length;
+
+        /// <summary> The line in the template from which the block starts.</summary>
+        public int Start;
+        
+        /// <summary> Length of the block.</summary>
+        public int Length;
+
+         /// <summary> Block currently being processed.</summary>
         public bool IsContainer;
     }
 
+    /// <summary> Block currently being processed.</summary>
     private Block _currentBlock;
+
+    /// <summary> A list of all the blocks of texts to be used to generate multiple files.</summary>
     private List<Block> _files = new List<Block>();
+
+    /// <summary> A block describing the footer of all files.</summary>
     private Block _footer = new Block();
+
+    /// <summary> A block describing the header of all files.</summary>
     private Block _header = new Block();
-    private ITextTemplatingEngineHost _host;   
+
+    /// <summary> Templating engine host being used.</summary>
+    private ITextTemplatingEngineHost _host; 
+  
+    /// <summary> A list of file names to be generated.</summary>
     protected List<String> generatedFileNames = new List<String>();
 
-    public StringBuilder template
+    /// <summary> Contains generated text.</summary>
+    public StringBuilder Template
         {
             get; 
             set;
         }
 
+
+    /// <summary> 
+    /// Creates FilesManager object given <paramref name="host"> and <param name="template">.
+    /// </summary>
+    /// <param name="host">Templating engine host</param>
+    /// <param name="template">Holds generated text</param>
     [SecurityCritical]
-    public static FilesManager Create(ITextTemplatingEngineHost host, StringBuilder template) {
+    public static FilesManager Create(ITextTemplatingEngineHost host, StringBuilder template) 
+    {
         return (host is IServiceProvider) ? new VSManager(host, template) : new FilesManager(host, template);
     }
 
-    public void StartNewFile(string name, bool isContainer) {
+    /// <summary>
+    /// Marks the start of a new file.
+    /// </summary>
+    public void StartNewFile(string name, bool isContainer) 
+    {
         if (name == null)
-            throw new ArgumentNullException("name");
+        {
+                throw new ArgumentNullException("name");
+        } 
+
         CurrentBlock = new Block { Name = name, IsContainer =  isContainer};
     }
 
-    public void StartFooter() {
+    /// <summary>
+    /// Marks the start of the footer for all files.
+    /// </summary>
+    public void StartFooter() 
+    {
         CurrentBlock = _footer;
     }
 
-    public void StartHeader() {
+    /// <summary>
+    /// Marks the start of the header for all files.
+    /// </summary>
+    public void StartHeader() 
+    {
         CurrentBlock = _header;
     }
 
-    public void EndBlock() {
+    
+    /// <summary>
+    /// Marks the End of a file.
+    /// </summary>
+    public void EndBlock() 
+    {
         if (CurrentBlock == null)
+        {
             return;
-        CurrentBlock.Length = template.Length - CurrentBlock.Start;
+        }
+           
+        CurrentBlock.Length = Template.Length - CurrentBlock.Start;
+
         if (CurrentBlock != _header && CurrentBlock != _footer)
+        {
             _files.Add(CurrentBlock);
+        }
+
         _currentBlock = null;
     }
 
+    /// <summary>
+    /// Generated multiple files depending on the number of blocks.
+    /// </summary>
+    /// <param name="split">If true the function is executed and multiple files generated
+    /// otherwoise only a single file is generated.</param>
     [SecurityCritical]
-    public virtual void GenerateFiles(bool split) {
-        if (split) {
+    public virtual void GenerateFiles(bool split) 
+    {
+        if (split) 
+        {
             EndBlock();
-            string headerText = template.ToString(_header.Start, _header.Length);
-            string footerText = template.ToString(_footer.Start, _footer.Length);
+            string headerText = Template.ToString(_header.Start, _header.Length);
+            string footerText = Template.ToString(_footer.Start, _footer.Length);
             string outputPath ="";
 
-            if(_host != null){
+            if(_host != null)
+            {
                 Path.GetDirectoryName(_host.TemplateFile);
             }
             
             _files.Reverse();
-            foreach(Block block in _files) {
+
+            foreach(Block block in _files) 
+            {
                 if(block.IsContainer) continue;
                 string fileName = Path.Combine(outputPath, block.Name);
-                string content = headerText + template.ToString(block.Start, block.Length) + footerText;
+                string content = headerText + Template.ToString(block.Start, block.Length) + footerText;
+
                 generatedFileNames.Add(fileName);
                 CreateFile(fileName, content);
-                template.Remove(block.Start, block.Length);
+                Template.Remove(block.Start, block.Length);
             }
         }
     }
 
-    protected virtual void CreateFile(string fileName, string content) {
+    /// <summary>
+    ///Creates a file with the name <paramref name="fileName"> and content <paramref name="content">.
+    /// </summary>
+    /// <param name="fileName">Name of the file to be created</param>
+    /// <param name="content">Content of the file to be created</param>
+    protected virtual void CreateFile(string fileName, string content) 
+    {
         if (IsFileContentDifferent(fileName, content))
-            File.WriteAllText(fileName, content);
+        {
+                 File.WriteAllText(fileName, content);
+        }
+           
     }
 
-    public virtual string GetCustomToolNamespace(string fileName) {
+    public virtual string GetCustomToolNamespace(string fileName) 
+    {
         return null;
     }
 
-    public virtual string DefaultProjectNamespace {
-        get { return null; }
+    public virtual string DefaultProjectNamespace 
+    {
+        get 
+        { 
+            return null; 
+        }
     }
 
-    protected bool IsFileContentDifferent(string fileName, string newContent) {
+    /// <summary>
+    /// checks if the generated content is different from the existing content.
+    /// </summary>
+    /// <param name="fileName">Name of the existing file</param>
+    /// <param name="newContent">Content of existing file</param>
+    /// <returns>true if the file content is different</returns>
+    protected bool IsFileContentDifferent(string fileName, string newContent) 
+    {
         return !(File.Exists(fileName) && File.ReadAllText(fileName) == newContent);
     }
     
+    /// <summary>
+    /// FilesManager constructor. Initializes the host and template variable.
+    /// </summary>
     [SecurityCritical]
-    private FilesManager(ITextTemplatingEngineHost host, StringBuilder template) {
+    private FilesManager(ITextTemplatingEngineHost host, StringBuilder template) 
+    {
         _host = host;
-        this.template = template;
+        Template = template;
     }
 
-    private Block CurrentBlock {
-        get { return _currentBlock; }
-        set {
+    private Block CurrentBlock 
+    {
+        get 
+        { 
+            return _currentBlock; 
+        }
+        set 
+        {
             if (CurrentBlock != null)
+            {
                 EndBlock();
+            }
+                
             if (value != null)
-                value.Start = template.Length;
+            {
+                value.Start = Template.Length;
+            }
             _currentBlock = value;
         }
     }
 
     private class VSManager : FilesManager {
-        private EnvDTE.ProjectItem templateProjectItem;
-        private EnvDTE.DTE dte;
-        private Action<String> checkOutAction;
-        private Action<IEnumerable<String>> projectSyncAction;
+        private EnvDTE.ProjectItem _templateProjectItem;
+        private EnvDTE.DTE _dte;
+        private Action<String> _checkOutAction;
+        private Action<IEnumerable<String>> _projectSyncAction;
 
-        public override string DefaultProjectNamespace {
-            get {
-                return templateProjectItem.ContainingProject.Properties.Item("DefaultNamespace").Value.ToString();
+        public override string DefaultProjectNamespace 
+        {
+            get 
+            {
+                return _templateProjectItem.ContainingProject.Properties.Item("DefaultNamespace").Value.ToString();
             }
         }
 
-        public override string GetCustomToolNamespace(string fileName) {
-            return dte.Solution.FindProjectItem(fileName).Properties.Item("CustomToolNamespace").Value.ToString();
+        public override string GetCustomToolNamespace(string fileName) 
+        {
+            return _dte.Solution.FindProjectItem(fileName).Properties.Item("CustomToolNamespace").Value.ToString();
         }
         
+        /// <summary>
+        /// Generated multiple files depending on the number of blocks.
+        /// </summary>
+        /// <param name="split">If true the function is executed and multiple files generated
+        /// otherwoise only a single file is generated.</param>
         [SecurityCritical]
-        public override void GenerateFiles(bool split) {
-            if (templateProjectItem.ProjectItems == null)
-                return;
+        public override void GenerateFiles(bool split) 
+        {
+            if (_templateProjectItem.ProjectItems == null)
+            {
+                    return;
+            }               
             base.GenerateFiles(split);
-            projectSyncAction.Invoke(generatedFileNames);
+            _projectSyncAction.Invoke(generatedFileNames);
         }
 
-        protected override void CreateFile(string fileName, string content) {
-            if (IsFileContentDifferent(fileName, content)) {
+        /// <summary>
+        ///Creates a file with the name <paramref name="fileName"> and content <paramref name="content">.
+        /// </summary>
+        /// <param name="fileName">Name of the file to be created</param>
+        /// <param name="content">Content of the file to be created</param>
+        protected override void CreateFile(string fileName, string content) 
+        {
+            if (IsFileContentDifferent(fileName, content)) 
+            {
                 CheckoutFileIfRequired(fileName);
                 File.WriteAllText(fileName, content);
             }
         }
 
+        /// <summary>
+        /// VSManager constructor. Initializes the host and template variable.
+        /// </summary>
         internal VSManager(ITextTemplatingEngineHost host, StringBuilder template)
-            : base(host, template) {
+            : base(host, template) 
+        {
             var hostServiceProvider = host as IServiceProvider;
+
             if (hostServiceProvider == null)
-                throw new ArgumentNullException("Could not obtain IServiceProvider");
-            dte = hostServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
-            if (dte == null)
+                {
+                    throw new ArgumentNullException("Could not obtain IServiceProvider");
+                }
+                
+            _dte = hostServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
+
+            if (_dte == null)
+            {
                 throw new ArgumentNullException("Could not obtain DTE from host");
-            templateProjectItem = dte.Solution.FindProjectItem(host.TemplateFile);
-            checkOutAction = (string fileName) => dte.SourceControl.CheckOutItem(fileName);
-            projectSyncAction = (IEnumerable<String> keepFileNames) => ProjectSync(templateProjectItem, keepFileNames);
+            }
+  
+            _templateProjectItem = _dte.Solution.FindProjectItem(host.TemplateFile);
+            _checkOutAction = (string fileName) => _dte.SourceControl.CheckOutItem(fileName);
+            _projectSyncAction = (IEnumerable<String> keepFileNames) => ProjectSync(_templateProjectItem, keepFileNames);
         }
 
-        private static void ProjectSync(EnvDTE.ProjectItem templateProjectItem, IEnumerable<String> keepFileNames) {
+        /// <summary>
+        /// Synchronizes the project by adding the project files in the projects file.
+        /// This ensures the files generated are referenced in the project file and can be built when building the project
+        /// </summary>
+        private static void ProjectSync(EnvDTE.ProjectItem templateProjectItem, IEnumerable<String> keepFileNames) 
+        {
             HashSet<String> keepFileNameSet = new HashSet<String>(keepFileNames);
             Dictionary<String, EnvDTE.ProjectItem> projectFiles = new Dictionary<String, EnvDTE.ProjectItem>();
-            string originalFilePrefix = Path.GetFileNameWithoutExtension(templateProjectItem.get_FileNames(0)) + ".";
+            string originalFilePrefix = Path.GetFileNameWithoutExtension(templateProjectItem.get_FileNames(0));
+
             foreach(EnvDTE.ProjectItem projectItem in templateProjectItem.ProjectItems)
+            {
                 projectFiles.Add(projectItem.get_FileNames(0), projectItem);
+            }   
 
             foreach(KeyValuePair<string, EnvDTE.ProjectItem> pair in projectFiles)
-                if (!keepFileNameSet.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key) + ".").StartsWith(originalFilePrefix))
+            {
+                if (!keepFileNameSet.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key)).StartsWith(originalFilePrefix))
+                {
                     pair.Value.Delete();
+                }
+            }
 
             foreach(string fileName in keepFileNameSet)
+            {
                 if (!projectFiles.ContainsKey(fileName))
+                {
                     templateProjectItem.ProjectItems.AddFromFile(fileName);
+                }
+            }
+               
         }
 
-        private void CheckoutFileIfRequired(string fileName) {
-            var sourceControl = dte.SourceControl;
+        private void CheckoutFileIfRequired(string fileName) 
+        {
+            var sourceControl = _dte.SourceControl;
+
             if (sourceControl != null && sourceControl.IsItemUnderSCC(fileName) && !sourceControl.IsItemCheckedOut(fileName))
-                checkOutAction.EndInvoke(checkOutAction.BeginInvoke(fileName, null, null));
+                {
+                    _checkOutAction.Invoke(fileName);
+                }    
         }
     }
 } #>

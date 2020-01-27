@@ -50,6 +50,61 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+/*
+OData Client T4 Template ver. #VersionNumber#
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+/*
+OData Client T4 Template ver. #VersionNumber#
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+/*
+OData Client T4 Template ver. #VersionNumber#
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+/*
+OData Client T4 Template ver. #VersionNumber#
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+/*
+OData Client T4 Template ver. #VersionNumber#
+Copyright (c) Microsoft Corporation
+All rights reserved. 
+MIT License
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
    
     CodeGenerationContext context;
     if (!string.IsNullOrWhiteSpace(this.Edmx))
@@ -1323,176 +1378,331 @@ internal static class Utils
 /// <param name="context">The code generation context.</param>
 public class FilesManager {
     
+    /// <summary>
+    /// Creates an instance of the FilesManager. The object used to generate and manage
+    /// multiple source files.
+    /// </summary>
     private class Block {
+
+        /// <summary> Name of the block.</summary>
         public string Name;
-        public int Start, Length;
+
+        /// <summary> The line in the template from which the block starts.</summary>
+        public int Start;
+        
+        /// <summary> Length of the block.</summary>
+        public int Length;
+
+         /// <summary> Block currently being processed.</summary>
         public bool IsContainer;
     }
 
+    /// <summary> Block currently being processed.</summary>
     private Block _currentBlock;
+
+    /// <summary> A list of all the blocks of texts to be used to generate multiple files.</summary>
     private List<Block> _files = new List<Block>();
+
+    /// <summary> A block describing the footer of all files.</summary>
     private Block _footer = new Block();
+
+    /// <summary> A block describing the header of all files.</summary>
     private Block _header = new Block();
-    private ITextTemplatingEngineHost _host;   
+
+    /// <summary> Templating engine host being used.</summary>
+    private ITextTemplatingEngineHost _host; 
+  
+    /// <summary> A list of file names to be generated.</summary>
     protected List<String> generatedFileNames = new List<String>();
 
-    public StringBuilder template
+    /// <summary> Contains generated text.</summary>
+    public StringBuilder Template
         {
             get; 
             set;
         }
 
+
+    /// <summary> 
+    /// Creates FilesManager object given <paramref name="host"> and <param name="template">.
+    /// </summary>
+    /// <param name="host">Templating engine host</param>
+    /// <param name="template">Holds generated text</param>
     [SecurityCritical]
-    public static FilesManager Create(ITextTemplatingEngineHost host, StringBuilder template) {
+    public static FilesManager Create(ITextTemplatingEngineHost host, StringBuilder template) 
+    {
         return (host is IServiceProvider) ? new VSManager(host, template) : new FilesManager(host, template);
     }
 
-    public void StartNewFile(string name, bool isContainer) {
+    /// <summary>
+    /// Marks the start of a new file.
+    /// </summary>
+    public void StartNewFile(string name, bool isContainer) 
+    {
         if (name == null)
-            throw new ArgumentNullException("name");
+        {
+                throw new ArgumentNullException("name");
+        } 
+
         CurrentBlock = new Block { Name = name, IsContainer =  isContainer};
     }
 
-    public void StartFooter() {
+    /// <summary>
+    /// Marks the start of the footer for all files.
+    /// </summary>
+    public void StartFooter() 
+    {
         CurrentBlock = _footer;
     }
 
-    public void StartHeader() {
+    /// <summary>
+    /// Marks the start of the header for all files.
+    /// </summary>
+    public void StartHeader() 
+    {
         CurrentBlock = _header;
     }
 
-    public void EndBlock() {
+    
+    /// <summary>
+    /// Marks the End of a file.
+    /// </summary>
+    public void EndBlock() 
+    {
         if (CurrentBlock == null)
+        {
             return;
-        CurrentBlock.Length = template.Length - CurrentBlock.Start;
+        }
+           
+        CurrentBlock.Length = Template.Length - CurrentBlock.Start;
+
         if (CurrentBlock != _header && CurrentBlock != _footer)
+        {
             _files.Add(CurrentBlock);
+        }
+
         _currentBlock = null;
     }
 
+    /// <summary>
+    /// Generated multiple files depending on the number of blocks.
+    /// </summary>
+    /// <param name="split">If true the function is executed and multiple files generated
+    /// otherwoise only a single file is generated.</param>
     [SecurityCritical]
-    public virtual void GenerateFiles(bool split) {
-        if (split) {
+    public virtual void GenerateFiles(bool split) 
+    {
+        if (split) 
+        {
             EndBlock();
-            string headerText = template.ToString(_header.Start, _header.Length);
-            string footerText = template.ToString(_footer.Start, _footer.Length);
-            string outputPath = "";
+            string headerText = Template.ToString(_header.Start, _header.Length);
+            string footerText = Template.ToString(_footer.Start, _footer.Length);
+            string outputPath ="";
 
-            if (_host != null)
+            if(_host != null)
             {
                 Path.GetDirectoryName(_host.TemplateFile);
             }
             
             _files.Reverse();
-            foreach(Block block in _files) {
+
+            foreach(Block block in _files) 
+            {
                 if(block.IsContainer) continue;
                 string fileName = Path.Combine(outputPath, block.Name);
-                string content = headerText + template.ToString(block.Start, block.Length) + footerText;
+                string content = headerText + Template.ToString(block.Start, block.Length) + footerText;
+
                 generatedFileNames.Add(fileName);
                 CreateFile(fileName, content);
-                template.Remove(block.Start, block.Length);
+                Template.Remove(block.Start, block.Length);
             }
         }
     }
 
-    protected virtual void CreateFile(string fileName, string content) {
+    /// <summary>
+    ///Creates a file with the name <paramref name="fileName"> and content <paramref name="content">.
+    /// </summary>
+    /// <param name="fileName">Name of the file to be created</param>
+    /// <param name="content">Content of the file to be created</param>
+    protected virtual void CreateFile(string fileName, string content) 
+    {
         if (IsFileContentDifferent(fileName, content))
-            File.WriteAllText(fileName, content);
+        {
+                 File.WriteAllText(fileName, content);
+        }
+           
     }
 
-    public virtual string GetCustomToolNamespace(string fileName) {
+    public virtual string GetCustomToolNamespace(string fileName) 
+    {
         return null;
     }
 
-    public virtual string DefaultProjectNamespace {
-        get { return null; }
+    public virtual string DefaultProjectNamespace 
+    {
+        get 
+        { 
+            return null; 
+        }
     }
 
-    protected bool IsFileContentDifferent(string fileName, string newContent) {
+    /// <summary>
+    /// checks if the generated content is different from the existing content.
+    /// </summary>
+    /// <param name="fileName">Name of the existing file</param>
+    /// <param name="newContent">Content of existing file</param>
+    /// <returns>true if the file content is different</returns>
+    protected bool IsFileContentDifferent(string fileName, string newContent) 
+    {
         return !(File.Exists(fileName) && File.ReadAllText(fileName) == newContent);
     }
     
+    /// <summary>
+    /// FilesManager constructor. Initializes the host and template variable.
+    /// </summary>
     [SecurityCritical]
-    private FilesManager(ITextTemplatingEngineHost host, StringBuilder template) {
+    private FilesManager(ITextTemplatingEngineHost host, StringBuilder template) 
+    {
         _host = host;
-        this.template = template;
+        Template = template;
     }
 
-    private Block CurrentBlock {
-        get { return _currentBlock; }
-        set {
+    private Block CurrentBlock 
+    {
+        get 
+        { 
+            return _currentBlock; 
+        }
+        set 
+        {
             if (CurrentBlock != null)
+            {
                 EndBlock();
+            }
+                
             if (value != null)
-                value.Start = template.Length;
+            {
+                value.Start = Template.Length;
+            }
             _currentBlock = value;
         }
     }
 
     private class VSManager : FilesManager {
-        private EnvDTE.ProjectItem templateProjectItem;
-        private EnvDTE.DTE dte;
-        private Action<String> checkOutAction;
-        private Action<IEnumerable<String>> projectSyncAction;
+        private EnvDTE.ProjectItem _templateProjectItem;
+        private EnvDTE.DTE _dte;
+        private Action<String> _checkOutAction;
+        private Action<IEnumerable<String>> _projectSyncAction;
 
-        public override string DefaultProjectNamespace {
-            get {
-                return templateProjectItem.ContainingProject.Properties.Item("DefaultNamespace").Value.ToString();
+        public override string DefaultProjectNamespace 
+        {
+            get 
+            {
+                return _templateProjectItem.ContainingProject.Properties.Item("DefaultNamespace").Value.ToString();
             }
         }
 
-        public override string GetCustomToolNamespace(string fileName) {
-            return dte.Solution.FindProjectItem(fileName).Properties.Item("CustomToolNamespace").Value.ToString();
+        public override string GetCustomToolNamespace(string fileName) 
+        {
+            return _dte.Solution.FindProjectItem(fileName).Properties.Item("CustomToolNamespace").Value.ToString();
         }
         
+        /// <summary>
+        /// Generated multiple files depending on the number of blocks.
+        /// </summary>
+        /// <param name="split">If true the function is executed and multiple files generated
+        /// otherwoise only a single file is generated.</param>
         [SecurityCritical]
-        public override void GenerateFiles(bool split) {
-            if (templateProjectItem.ProjectItems == null)
-                return;
+        public override void GenerateFiles(bool split) 
+        {
+            if (_templateProjectItem.ProjectItems == null)
+            {
+                    return;
+            }               
             base.GenerateFiles(split);
-            projectSyncAction.Invoke(generatedFileNames);
+            _projectSyncAction.Invoke(generatedFileNames);
         }
 
-        protected override void CreateFile(string fileName, string content) {
-            if (IsFileContentDifferent(fileName, content)) {
+        /// <summary>
+        ///Creates a file with the name <paramref name="fileName"> and content <paramref name="content">.
+        /// </summary>
+        /// <param name="fileName">Name of the file to be created</param>
+        /// <param name="content">Content of the file to be created</param>
+        protected override void CreateFile(string fileName, string content) 
+        {
+            if (IsFileContentDifferent(fileName, content)) 
+            {
                 CheckoutFileIfRequired(fileName);
                 File.WriteAllText(fileName, content);
             }
         }
 
+        /// <summary>
+        /// VSManager constructor. Initializes the host and template variable.
+        /// </summary>
         internal VSManager(ITextTemplatingEngineHost host, StringBuilder template)
-            : base(host, template) {
+            : base(host, template) 
+        {
             var hostServiceProvider = host as IServiceProvider;
+
             if (hostServiceProvider == null)
-                throw new ArgumentNullException("Could not obtain IServiceProvider");
-            dte = hostServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
-            if (dte == null)
+                {
+                    throw new ArgumentNullException("Could not obtain IServiceProvider");
+                }
+                
+            _dte = hostServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
+
+            if (_dte == null)
+            {
                 throw new ArgumentNullException("Could not obtain DTE from host");
-            templateProjectItem = dte.Solution.FindProjectItem(host.TemplateFile);
-            checkOutAction = (string fileName) => dte.SourceControl.CheckOutItem(fileName);
-            projectSyncAction = (IEnumerable<String> keepFileNames) => ProjectSync(templateProjectItem, keepFileNames);
+            }
+  
+            _templateProjectItem = _dte.Solution.FindProjectItem(host.TemplateFile);
+            _checkOutAction = (string fileName) => _dte.SourceControl.CheckOutItem(fileName);
+            _projectSyncAction = (IEnumerable<String> keepFileNames) => ProjectSync(_templateProjectItem, keepFileNames);
         }
 
-        private static void ProjectSync(EnvDTE.ProjectItem templateProjectItem, IEnumerable<String> keepFileNames) {
+        /// <summary>
+        /// Synchronizes the project by adding the project files in the projects file.
+        /// This ensures the files generated are referenced in the project file and can be built when building the project
+        /// </summary>
+        private static void ProjectSync(EnvDTE.ProjectItem templateProjectItem, IEnumerable<String> keepFileNames) 
+        {
             HashSet<String> keepFileNameSet = new HashSet<String>(keepFileNames);
             Dictionary<String, EnvDTE.ProjectItem> projectFiles = new Dictionary<String, EnvDTE.ProjectItem>();
-            string originalFilePrefix = Path.GetFileNameWithoutExtension(templateProjectItem.get_FileNames(0)) + ".";
+            string originalFilePrefix = Path.GetFileNameWithoutExtension(templateProjectItem.get_FileNames(0));
+
             foreach(EnvDTE.ProjectItem projectItem in templateProjectItem.ProjectItems)
+            {
                 projectFiles.Add(projectItem.get_FileNames(0), projectItem);
+            }   
 
             foreach(KeyValuePair<string, EnvDTE.ProjectItem> pair in projectFiles)
-                if (!keepFileNameSet.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key) + ".").StartsWith(originalFilePrefix))
+            {
+                if (!keepFileNameSet.Contains(pair.Key) && !(Path.GetFileNameWithoutExtension(pair.Key)).StartsWith(originalFilePrefix))
+                {
                     pair.Value.Delete();
+                }
+            }
 
             foreach(string fileName in keepFileNameSet)
+            {
                 if (!projectFiles.ContainsKey(fileName))
+                {
                     templateProjectItem.ProjectItems.AddFromFile(fileName);
+                }
+            }
+               
         }
 
-        private void CheckoutFileIfRequired(string fileName) {
-            var sourceControl = dte.SourceControl;
+        private void CheckoutFileIfRequired(string fileName) 
+        {
+            var sourceControl = _dte.SourceControl;
+
             if (sourceControl != null && sourceControl.IsItemUnderSCC(fileName) && !sourceControl.IsItemCheckedOut(fileName))
-                checkOutAction.EndInvoke(checkOutAction.BeginInvoke(fileName, null, null));
+                {
+                    _checkOutAction.Invoke(fileName);
+                }    
         }
     }
 } 
@@ -4092,7 +4302,7 @@ public abstract class ODataClientTemplate : TemplateBase
         this.context = context;
         if(context.MultipleFilesManager != null)
         {
-            context.MultipleFilesManager.template = this.GenerationEnvironment;
+            context.MultipleFilesManager.Template = this.GenerationEnvironment;
         }  
 }
 
@@ -4262,9 +4472,12 @@ public abstract class ODataClientTemplate : TemplateBase
         context.MultipleFilesManager.EndBlock();
         this.WriteNamespaces();
         context.MultipleFilesManager.GenerateFiles(context.SplitGeneratedFileIntoMultipleFiles);
-        return context.MultipleFilesManager.template.ToString();
+        return context.MultipleFilesManager.Template.ToString();
     }
 
+    /// <summary>
+    /// Write code for all namespaces into a file.
+    /// </summary>
     internal void WriteNamespaces()
     {
         foreach(string fullNamespace in context.NamespacesInModel)
@@ -4273,6 +4486,10 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Writes code generated for the provided  <paramref name="fullNamespace"/> into a file.
+    /// </summary>
+    /// <param name="fullNamespace">The namespace to be written.</param>
     internal void WriteNamespace(string fullNamespace)
     {
         this.WriteNamespaceStart(this.context.GetPrefixedNamespace(fullNamespace, this, true, false));
@@ -4366,6 +4583,10 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteNamespaceEnd();
     }
 
+    /// <summary>
+    /// Writes ByKey() Methods for the entity types in <paramref name="schemaElements"/>.
+    /// </summary>
+    /// <param name="schemaElements">All the schema elements in the read from Edmx.</param>
     internal void WriteByKeyMethods(IEdmSchemaElement[] schemaElements)
         {
             foreach (IEdmEntityType type in schemaElements.OfType<IEdmEntityType>())
@@ -4407,6 +4628,12 @@ public abstract class ODataClientTemplate : TemplateBase
             }
         }
 
+    /// <summary>
+    /// Writes bound operations.
+    /// </summary>
+    /// <param name="schemaElements">All the schema elements in the read from Edmx.</param>
+    /// <param name="boundOperations">A set of bound operations.</param>
+    /// <param name="structuredBaseTypeMap">A map of structured types read from Edmx.</param>
     internal void WriteBoundOperations(IEdmSchemaElement[] schemaElements,HashSet<string> boundOperations,Dictionary<IEdmStructuredType, List<IEdmStructuredType>> structuredBaseTypeMap)
         {
             foreach (IEdmFunction function in schemaElements.OfType<IEdmFunction>())
@@ -4480,6 +4707,12 @@ public abstract class ODataClientTemplate : TemplateBase
             }
         }
 
+    /// <summary>
+    /// Write Extension methods given <paramref name="schemaElements"/> <paramref name="boundOperations"/> and <paramref name="structuredBaseTypeMap"/>.
+    /// </summary>
+    /// <param name="schemaElements">All the schema elements in the read from Edmx.</param>
+    /// <param name="boundOperations">A set of bound operations.</param>
+    /// <param name="structuredBaseTypeMap">A map of structured types read from Edmx.</param>
     internal void WriteExtensionMethods(IEdmSchemaElement[] schemaElements,HashSet<string> boundOperations,Dictionary<IEdmStructuredType, List<IEdmStructuredType>> structuredBaseTypeMap) {
         foreach (IEdmAction action in schemaElements.OfType<IEdmAction>())
             {
@@ -4551,6 +4784,11 @@ public abstract class ODataClientTemplate : TemplateBase
             }
     }
     
+    /// <summary>
+    /// check if the collection <paramref name="operations"/> contains atleast one bound operation.
+    /// </summary>
+    /// <param name="operations">A collection with operations.</param>
+    /// <returns>Returns true if  <paramref name="operations"/> has atleast one bound operation.</returns>
     internal bool HasBoundOperations(IEnumerable<IEdmOperation> operations)
     {
         foreach (IEdmOperation opeartion in operations)
@@ -4564,6 +4802,11 @@ public abstract class ODataClientTemplate : TemplateBase
         return false;
     }
 
+    /// <summary>
+    /// Generates class for the entity container <paramref name="container"/> in <paramref name="fullNamespace"/> namespace.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
+    /// <param name="fullNamespace">Namespace.</param>
     internal void WriteEntityContainer(IEdmEntityContainer container, string fullNamespace)
     {
         string camelCaseContainerName = container.Name;
@@ -4604,6 +4847,10 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassEndForEntityContainer();
     }
 
+    /// <summary>
+    /// Write entityset property.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteContextEntitySetProperty(IEdmEntityContainer container)
         {
             foreach (IEdmEntitySet entitySet in container.EntitySets())
@@ -4629,6 +4876,10 @@ public abstract class ODataClientTemplate : TemplateBase
                 }
         }
 
+    /// <summary>
+    /// Write entityset method.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteContextAddToEntitySetMethod(IEdmEntityContainer container)
         {
             foreach (IEdmEntitySet entitySet in container.EntitySets())
@@ -4650,6 +4901,10 @@ public abstract class ODataClientTemplate : TemplateBase
             }
         }
 
+    /// <summary>
+    /// Write singleton property.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteContextSingletonProperty(IEdmEntityContainer container)
         {
             foreach (IEdmSingleton singleton in container.Singletons())
@@ -4673,6 +4928,10 @@ public abstract class ODataClientTemplate : TemplateBase
     
         }
 
+    /// <summary>
+    /// Write singleton property.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteFunctionImport(IEdmEntityContainer container)
         {
             foreach (IEdmFunctionImport functionImport in container.OperationImports().OfType<IEdmFunctionImport>())
@@ -4703,6 +4962,10 @@ public abstract class ODataClientTemplate : TemplateBase
         
         }
 
+    /// <summary>
+    /// Write function import.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteActionImport(IEdmEntityContainer container)
         {
             foreach (IEdmActionImport actionImport in container.OperationImports().OfType<IEdmActionImport>())
@@ -4742,6 +5005,10 @@ public abstract class ODataClientTemplate : TemplateBase
 
         }
 
+    /// <summary>
+    /// Write constructor for the entity container <paramref name="container"/>.
+    /// </summary>
+    /// <param name="container">An entity container.</param>
     internal void WriteEntityContainerConstructor(IEdmEntityContainer container)
     {
         string camelCaseContainerName = container.Name;
@@ -4770,6 +5037,9 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassEndForEntityContainerConstructor();
     }
 
+    /// <summary>
+    /// Write resolve type.
+    /// </summary>
     internal void WriteResolveTypeFromName()
     {
         if (!this.context.NeedResolveTypeFromName)
@@ -4794,6 +5064,11 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteMethodEndForResolveTypeFromName();
     }
 
+    /// <summary>
+    /// Write resolve type given <paramref name="containerName"/> and <paramref name="fullNamespace"/>.
+    /// </summary>
+    /// <param name="containerName">An entity container.</param>
+    /// <param name="fullNamespace">Namespace.</param>
     internal void WriteResolveNameFromType(string containerName, string fullNamespace)
     {
         if (!this.context.NeedResolveNameFromType)
@@ -4815,6 +5090,10 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteMethodEndForResolveNameFromType(this.context.ModelHasInheritance);
     }
 
+    /// <summary>
+    /// Write properties for single type given <paramref name="properties"/>.
+    /// </summary>
+    /// <param name="properties">A collection of properties.</param>
     internal void WritePropertiesForSingleType(IEnumerable<IEdmProperty> properties)
     {
         foreach (IEdmProperty property in properties.Where(i => i.PropertyKind == EdmPropertyKind.Navigation))
@@ -4834,6 +5113,11 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Write an entity type given <paramref name="entityType"/> and <paramref name="boundOperationsMap"/>.
+    /// </summary>
+    /// <param name="entityType">Entity type.</param>
+    /// <param name="boundOperationsMap">A dictionary of bound operations.</param>
     internal void WriteEntityType(IEdmEntityType entityType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
     {
         string entityTypeName = ((IEdmSchemaElement)entityType).Name;
@@ -4900,6 +5184,11 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassEndForStructuredType();
     }
 
+    /// <summary>
+    /// Generate and write code for complex type given <paramref name="complexType"/> and <paramref name="boundOperationsMap"/>.
+    /// </summary>
+    /// <param name="complexType">A complex type.</param>
+    /// <param name="boundOperationsMap">A dictionary of bound operations.</param>
     internal void WriteComplexType(IEdmComplexType complexType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
     {
         this.WriteSummaryCommentForStructuredType(this.context.EnableNamingAlias ? Customization.CustomizeNaming(complexType.Name) : complexType.Name);
@@ -4916,6 +5205,11 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassEndForStructuredType();    
     }
 
+    /// <summary>
+    /// Write bound operations given <paramref name="structuredType"/> and <paramref name="boundOperationsMap"/>.
+    /// </summary>
+    /// <param name="complexType">A complex type.</param>
+    /// <param name="structuredType">Structured type.</param>
     internal void WriteBoundOperations(IEdmStructuredType structuredType, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
     {
         List<IEdmOperation> operations;
@@ -4980,6 +5274,13 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
     
+    /// <summary>
+    /// Write bound operations given <paramref name="structuredType"/> and <paramref name="boundOperationsMap"/>.
+    /// </summary>
+    /// <param name="complexType">A complex type.</param>
+    /// <param name="boundOperationsMap">Bound operations.</param>
+    /// <param name="operation">Structured type.</param>
+    /// <returns>Returns true if  <paramref name="structuredType"/> has <paramref name="operation"/> bound operation.</returns>
     internal bool CheckMethodsInBaseClass(IEdmStructuredType structuredType, IEdmOperation operation, Dictionary<IEdmStructuredType, List<IEdmOperation>> boundOperationsMap)
     {
         if (structuredType != null)
@@ -5028,6 +5329,11 @@ public abstract class ODataClientTemplate : TemplateBase
         return false;
     }
 
+    
+    /// <summary>
+    /// Generate and write code given <paramref name="enumType"/>.
+    /// </summary>
+    /// <param name="enumType">Enum type.</param>
     internal void WriteEnumType(IEdmEnumType enumType)
     {
         this.WriteSummaryCommentForEnumType(this.context.EnableNamingAlias ? Customization.CustomizeNaming(enumType.Name) : enumType.Name);
@@ -5048,6 +5354,11 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteEnumEnd();
     }
 
+    /// <summary>
+    /// Write declaration for  <paramref name="structuredType"/> given <paramref name="structuredType"/> and <paramref name="baseEntityType"/>.
+    /// </summary>
+    /// <param name="structuredType">Structured type.</param>
+    /// <param name="baseEntityType">Base entity type.</param>
     internal void WriteStructurdTypeDeclaration(IEdmStructuredType structuredType, string baseEntityType, string typeNameSuffix = null)
     {
         string abstractModifier = structuredType.IsAbstract && typeNameSuffix == null ? this.AbstractModifier : string.Empty;
@@ -5081,6 +5392,9 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassStartForStructuredType(abstractModifier, GetFixedName(structuredTypeName + typeNameSuffix), ((IEdmSchemaElement)structuredType).Name + typeNameSuffix, baseTypeName);
     }
     
+    /// <summary>
+    /// Get source type.
+    /// </summary>
     internal string GetSourceOrReturnTypeName(IEdmTypeReference typeReference, bool isEntitySingleType = false)
     {
         IEdmCollectionType edmCollectionType = typeReference.Definition as IEdmCollectionType;
@@ -5094,6 +5408,9 @@ public abstract class ODataClientTemplate : TemplateBase
         return Utils.GetClrTypeName(typeReference, this.context.UseDataServiceCollection, this, this.context, addNullableTemplate, isEntitySingleType:isEntitySingleType);
     }
     
+    /// <summary>
+    /// Get source parameter string.
+    /// </summary>
     internal void GetParameterStrings(bool isBound, bool isAction, IEdmOperationParameter[] parameters, out string parameterString, out string parameterTypes, out string parameterExpressionString, out string parameterValues,  out bool useEntityReference)
     {
         parameterString = string.Empty;
@@ -5155,6 +5472,9 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Get source parameter Expression string.
+    /// </summary>
     internal string GetParameterExpressionString(IEdmOperationParameter param, string typeName)
     {
         string clrTypeName;
@@ -5174,7 +5494,9 @@ public abstract class ODataClientTemplate : TemplateBase
         return string.Format(this.ConstantExpressionConstructorWithType, GetFixedName(param.Name), typeName); 
     }
 
-    // This is to solve duplicate names between property and type
+    /// <summary>
+    /// This is to solve duplicate names between property and type.
+    /// </summary>
     internal void SetPropertyIdentifierMappingsIfNameConflicts(string typeName, IEdmStructuredType structuredType)
     {
         if (this.context.EnableNamingAlias)
@@ -5246,6 +5568,9 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Write static create method.
+    /// </summary>
     internal void WriteTypeStaticCreateMethod(string typeName, IEdmStructuredType structuredType)
     {
         Debug.Assert(structuredType != null, "structuredType != null");
@@ -5320,6 +5645,9 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteMethodEndForStaticCreateMethod(instanceName);
     }
 
+    /// <summary>
+    /// Write static create method parameters.
+    /// </summary>
     internal void WriteStaticCreateMethodParameters(KeyValuePair<IEdmProperty, string>[] propertyToParameterPairs)
     {
         if (propertyToParameterPairs.Length == 0)
@@ -5345,6 +5673,10 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    
+    /// <summary>
+    /// Write properties for structured type.
+    /// </summary>
     internal void WritePropertiesForStructuredType(IEnumerable<IEdmProperty> properties)
     {
          bool useDataServiceCollection = this.context.UseDataServiceCollection;
@@ -5384,6 +5716,10 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Write members for Enum type.
+    /// </summary>
+    /// <param name="members">Enum type members.</param>
     internal void WriteMembersForEnumType(IEnumerable<IEdmEnumMember> members)
     {
         int n = members.Count();
@@ -5405,6 +5741,10 @@ public abstract class ODataClientTemplate : TemplateBase
         }
     }
 
+    /// <summary>
+    /// Get Fixed nameif Language keywords contains <paramref name="originalName"/> .
+    /// </summary>
+    /// <param name="originalName">Original name.</param>
     internal string GetFixedName(string originalName)
     {
         string fixedName = originalName;
@@ -5417,6 +5757,11 @@ public abstract class ODataClientTemplate : TemplateBase
         return fixedName;
     }
 
+    /// <summary>
+    /// Get element type name given <paramref name="elementType"/> and <paramref name="container"/> .
+    /// </summary>
+    /// <param name="elementType">Element type.</param>
+    /// <param name="container">Entity container.</param>
     internal string GetElementTypeName(IEdmEntityType elementType, IEdmEntityContainer container)
     {
         string elementTypeName = elementType.Name;
