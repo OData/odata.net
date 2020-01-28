@@ -218,6 +218,31 @@ namespace Microsoft.OData.UriParser
                         sb.Append(',');
                         break;
 
+                    case 'n':
+                        // it maybe null
+                        int index = normalizedText.IndexOf(',', i + 1);
+                        string subStr;
+                        if (index < 0)
+                        {
+                            subStr = normalizedText.Substring(i).TrimEnd(' ');
+                            i = length - 1;
+                        }
+                        else
+                        {
+                            subStr = normalizedText.Substring(i, index - i).TrimEnd(' ');
+                            i = index - 1;
+                        }
+
+                        if (subStr == "null")
+                        {
+                            sb.Append("null");
+                        }
+                        else
+                        {
+                            throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(subStr));
+                        }
+                        break;
+
                     default:
                         // any other character between items is not valid.
                         throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(ch));
