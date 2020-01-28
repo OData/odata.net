@@ -7993,7 +7993,7 @@ public class Microsoft.OData.Client.SendingRequestEventArgs : System.EventArgs {
 }
 
 public class Microsoft.OData.Client.Serializer {
-	public static string GetKeyString (Microsoft.OData.Client.DataServiceContext context, System.Collections.Generic.Dictionary`2[[System.String],[System.Object]] keys)
+	public static string GetKeyString (Microsoft.OData.Client.DataServiceContext context, System.Collections.Generic.IDictionary`2[[System.String],[System.Object]] keys)
 	public static string GetParameterString (Microsoft.OData.Client.DataServiceContext context, Microsoft.OData.Client.OperationParameter[] parameters)
 }
 
