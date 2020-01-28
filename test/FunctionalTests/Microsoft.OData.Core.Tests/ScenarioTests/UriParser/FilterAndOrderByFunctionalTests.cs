@@ -2059,6 +2059,73 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("xy/z'");
         }
 
+        [Theory]
+        [InlineData("SSN in (null, 'abc')")]
+        [InlineData("SSN in (    null  , 'abc')")]
+        [InlineData("SSN in ( null , \"abc\")")]
+        public void FilterWithInOperationWithParensStringCollection_NullAtStartOfStringLiterals(string inLiteral)
+        {
+            FilterClause filter = ParseFilter(inLiteral, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Collection.Count);
+            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode<string>(null);
+            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("abc");
+        }
+
+        [Theory]
+        [InlineData("SSN in ('abc', null)")]
+        [InlineData("SSN in ('abc', null    )")]
+        [InlineData("SSN in (\"abc\", null    )")]
+        public void FilterWithInOperationWithParensStringCollection_NullAtEndOfStringLiterals(string inLiteral)
+        {
+            FilterClause filter = ParseFilter(inLiteral, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Collection.Count);
+            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
+            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode<string>(null);
+        }
+
+        [Theory]
+        [InlineData("SSN in ('abc', null, 'null')")]
+        [InlineData("SSN in (  'abc',   null,   'null'    )")]
+        [InlineData("SSN in (\"abc\", null , \"null\"   )")]
+        public void FilterWithInOperationWithParensStringCollection_NullAtMiddleOfStringLiterals(string inLiteral)
+        {
+            FilterClause filter = ParseFilter(inLiteral, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(3, collectionNode.Collection.Count);
+            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
+            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode<string>(null);
+            collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("null");
+        }
+
+        [Theory]
+        [InlineData("(nu ll)", "nu ll")]
+        [InlineData("(Null)", "N")]
+        [InlineData("('abc', Null)", "N")]
+        [InlineData("('abc', n  ull)", "n  ull")]
+        [InlineData("('abc', Null , 'xyz')", "N")]
+        [InlineData("('abc', n  ull, 'xyz')", "n  ull")]
+        [InlineData("('abc', n)", "n")]
+        public void FilterWithInOperationWithInvalidNullLiteral(string collection, string error)
+        {
+            string filterClause = $"SSN in {collection}";
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(ODataErrorStrings.StringItemShouldBeQuoted(error));
+        }
+
         [Fact]
         public void FilterWithEqOperation_EscapedSingleQuote()
         {
