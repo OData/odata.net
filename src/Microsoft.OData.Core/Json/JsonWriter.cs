@@ -482,21 +482,6 @@ namespace Microsoft.OData.Json
             }
         }
 
-        void IDisposable.Dispose()
-        {
-            if (this.binaryValueStream != null)
-            {
-                try
-                {
-                    this.binaryValueStream.Dispose();
-                }
-                finally
-                {
-                    this.binaryValueStream = null;
-                }
-            }
-        }
-
         /// <summary>
         /// Dispose the writer
         /// </summary>
@@ -507,6 +492,18 @@ namespace Microsoft.OData.Json
                 BufferUtils.ReturnToBuffer(this.ArrayPool, this.buffer);
                 this.ArrayPool = null;
                 this.buffer = null;
+            }
+
+            if (this.binaryValueStream != null)
+            {
+                try
+                {
+                    this.binaryValueStream.Dispose();
+                }
+                finally
+                {
+                    this.binaryValueStream = null;
+                }
             }
         }
 
