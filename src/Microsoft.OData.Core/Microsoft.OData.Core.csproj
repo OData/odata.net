@@ -8,15 +8,17 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
 
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>True</DelaySign>
-    <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
+    <!--<DelaySign>True</DelaySign>
+    <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>-->
 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
     <IsPackable>true</IsPackable>
     <IsShipping>true</IsShipping>
   </PropertyGroup>
+
+
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1' ">
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
@@ -42,7 +44,9 @@
     <Compile Include="..\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" Link="EdmValueWriter.cs" />
     <Compile Include="..\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" Link="EdmValueParser.cs" />
   </ItemGroup>
-
+  
+  <!--<Import Project="Build.props" />-->
+  
   <ItemGroup>
     <Resource Include="Microsoft.OData.Core.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

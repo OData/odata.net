@@ -1,4 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
   
   <PropertyGroup>
     <!-- Global settings that apply unconditionally. -->
@@ -7,9 +11,9 @@
     <SilverlightClientLibraries>$(MSBuildProgramFiles32)\Microsoft SDKs\Silverlight\$(TargetFrameworkVersion)\Libraries\Client</SilverlightClientLibraries>
 
     <!-- We only do test signing in OSS -->
-    <SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
+    <!--<SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
     <SigningScenario Condition="'$(SigningScenario)' == ''">Test</SigningScenario>
-    <SigningType Condition="'$(SigningType)' == ''">Test</SigningType>
+    <SigningType Condition="'$(SigningType)' == ''">Test</SigningType>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -39,7 +43,11 @@
     <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.5'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.1'">
+ <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.1'">
+    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.0'">
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
 
@@ -52,10 +60,10 @@
     <WarningsNotAsErrors>$(WarningsNotAsErrors);1058</WarningsNotAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.vbproj'">
-    <!-- VB's prejudices against semi-colons extend to the defines passed to the compiler, so convert them to commas.  Unescape string since string methods return escaped strings. -->
+ <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.vbproj'">
+ <!-- VB's prejudices against semi-colons extend to the defines passed to the compiler, so convert them to commas.  Unescape string since string methods return escaped strings. --> 
     <DefineConstants>$([MSBuild]::Unescape($(DefineConstants.Replace(';',','))))</DefineConstants>
-  </PropertyGroup>
+  </PropertyGroup> 
   
   <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
     <!--Overide the default full debug symbols regardless of configuration-->
@@ -73,28 +81,42 @@
     <PackagesConfig>$(NuGetToolsPath)\packages.config</PackagesConfig>
   </PropertyGroup>
 
- 
-  <!-- StyleCop settings -->
+  
+<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
+    <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11</DefineConstants>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
+    <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETCORE_10</DefineConstants>
+  </PropertyGroup>
+  
+   <!--StyleCop settings--> 
   <PropertyGroup>
     <StyleCopTargets>$(NuGetPack)\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.Targets</StyleCopTargets>
   </PropertyGroup>
 
   <PropertyGroup>
     <!--OData has some project files with the same name that are targeted for different framework platforms. Isolate their intermediate output folders-->
-    <IntermediateOutputPath Condition="$(TargetFrameworkFolderName) != ''">$(IntermediateOutputPath.TrimEnd('\'))\$(TargetFrameworkFolderName)</IntermediateOutputPath>
+    <IntermediateOutputPath Condition="$(TargetFrameworkFolderName) != ''">$(IntermediateOutputPath.TrimEnd('\'))\$(TargetFrameworkFolderName)\</IntermediateOutputPath>
 
     <!-- Scrub src/AssemblyInfo/AssemblyRefs.cs and .vb for conflicts and merge with AssemblyInfoCommon files. -->
     <DataFxIncPath>$(EnlistmentRoot)\src\AssemblyInfo</DataFxIncPath>
 
     <!-- Define where our AssemblyKeys.cs file which defines public keys for InternalsVisibleTo attributes is -->
-    <AssemblyKeysCSharpFilePath>$(DataFxIncPath)\AssemblyKeys.cs</AssemblyKeysCSharpFilePath>
+  <AssemblyKeysCSharpFilePath>$(DataFxIncPath)\AssemblyKeys.cs</AssemblyKeysCSharpFilePath>
     
-    <!-- Install directory of Visual Studio e.g. C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ -->
+     <!--Install directory of Visual Studio e.g. C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\--> 
+    <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '14.0'">$(VS140COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
     <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '16.0'">$(VS160COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
   </PropertyGroup>
 
   <!--These empty property groups are used to ensure x64, x86 and AnyCPU are included in the platform list. 
       VS will pick AnyCPU as the default purely because of alphabetic order.-->
 
-
+  <Target Name="RestoreNuGetPackages" BeforeTargets="$(GenerateTextStringResourcesDependsOn)">
+    <Exec Command="&quot;$(NuGetExePath)&quot; restore &quot;$(PackagesConfig)&quot; -PackageSaveMode nuspec -SolutionDirectory &quot;$(SolutionDir)\&quot;" />
+  </Target>
+  
+  
 </Project>
