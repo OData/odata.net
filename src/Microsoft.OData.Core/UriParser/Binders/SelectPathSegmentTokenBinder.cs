@@ -186,7 +186,7 @@ namespace Microsoft.OData.UriParser
             // If more than one overload matches, try to select based on optional parameters
             if (possibleFunctions.Count() > 1 && parameterNames.Count > 0)
             {
-                possibleFunctions = possibleFunctions.FindBestOverloadBasedOnParameters(parameterNames);
+                possibleFunctions = possibleFunctions.FilterOverloadsBasedOnParameterCount(parameterNames.Count);
             }
 
             if (!possibleFunctions.HasAny())
