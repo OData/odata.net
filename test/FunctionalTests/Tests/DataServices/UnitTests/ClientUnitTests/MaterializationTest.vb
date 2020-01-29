@@ -649,49 +649,49 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition2")> <TestMethod()> Public Sub ExecuteBatchApiFailure()
-            Try
-                ctx.ExecuteBatch(Nothing).QueryCount()   ' null
-                Assert.Fail("expected ArgumentException")
-            Catch ex As ArgumentNullException
-                Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
-            End Try
+        '<TestCategory("Partition2")> <TestMethod()> Public Sub ExecuteBatchApiFailure()
+        '    Try
+        '        ctx.ExecuteBatch(Nothing).QueryCount()   ' null
+        '        Assert.Fail("expected ArgumentException")
+        '    Catch ex As ArgumentNullException
+        '        Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
+        '    End Try
 
-            Try
-                ctx.ExecuteBatch().QueryCount() ' empty collection
-                Assert.Fail("expected ArgumentException")
-            Catch ex As ArgumentException
-                Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
-            End Try
+        '    Try
+        '        ctx.ExecuteBatch().QueryCount() ' empty collection
+        '        Assert.Fail("expected ArgumentException")
+        '    Catch ex As ArgumentException
+        '        Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
+        '    End Try
 
-            Try
-                ctx.ExecuteBatch(New DataServiceQuery(0) {}).QueryCount() ' explict empty collection
-                Assert.Fail("expected ArgumentException")
-            Catch ex As ArgumentException
-                Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
-            End Try
+        '    Try
+        '        ctx.ExecuteBatch(New DataServiceQuery(0) {}).QueryCount() ' explict empty collection
+        '        Assert.Fail("expected ArgumentException")
+        '    Catch ex As ArgumentException
+        '        Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
+        '    End Try
 
-            Try
-                ctx.ExecuteBatch(New DataServiceQuery() {ctx.Customers, Nothing}).QueryCount() ' with null collection
-                Assert.Fail("expected ArgumentException")
-            Catch ex As ArgumentException
-                Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
-            End Try
+        '    Try
+        '        ctx.ExecuteBatch(New DataServiceQuery() {ctx.Customers, Nothing}).QueryCount() ' with null collection
+        '        Assert.Fail("expected ArgumentException")
+        '    Catch ex As ArgumentException
+        '        Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
+        '    End Try
 
-            Try
-                ctx.ExecuteBatch(New DataServiceQuery() {Nothing, ctx.Customers}).QueryCount() ' with null collection
-                Assert.Fail("expected ArgumentException")
-            Catch ex As ArgumentException
-                Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
-            End Try
+        '    Try
+        '        ctx.ExecuteBatch(New DataServiceQuery() {Nothing, ctx.Customers}).QueryCount() ' with null collection
+        '        Assert.Fail("expected ArgumentException")
+        '    Catch ex As ArgumentException
+        '        Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
+        '    End Try
 
-            Try
-                ctx.ExecuteBatch(New DataServiceQuery() {ctx.Categories, Nothing, ctx.Customers}).QueryCount() ' with null collection
-                Assert.Fail("expected ArgumentException")
-            Catch ex As ArgumentException
-                Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
-            End Try
-        End Sub
+        '    Try
+        '        ctx.ExecuteBatch(New DataServiceQuery() {ctx.Categories, Nothing, ctx.Customers}).QueryCount() ' with null collection
+        '        Assert.Fail("expected ArgumentException")
+        '    Catch ex As ArgumentException
+        '        Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
+        '    End Try
+        'End Sub
 
         Private Function ExtraMissing(Of T)(ByVal expected As Exception) As T
             Try
