@@ -12,6 +12,7 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
+    using System.Diagnostics;
 
     /// <summary>
     /// Helper class to help bind function overloads.
@@ -124,22 +125,22 @@ namespace Microsoft.OData.UriParser
         /// <param name="matchingOperation">The single matching function found.</param>
         /// <param name="resolver">Resolver to be used.</param>
         /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
-        internal static bool ResolveOperationFromList(string identifier, IEnumerable<string> parameterNames, IEdmType bindingType, IEdmModel model, out IEdmOperation matchingOperation, ODataUriResolver resolver)
+        internal static bool ResolveOperationFromList(string identifier, IList<string> parameterNames, IEdmType bindingType, IEdmModel model, out IEdmOperation matchingOperation, ODataUriResolver resolver)
         {
             // TODO: update code that is duplicate between operation and operation import, add more tests.
             // If the previous segment is an open type, the service action name is required to be fully qualified or else we always treat it as an open property name.
+            matchingOperation = null;
             if (bindingType != null)
             {
                 // TODO: look up actual container names here?
                 // When using extension, there may be function call with unqualified name. So loose the restriction here.
                 if (bindingType.IsOpen() && !identifier.Contains(".") && resolver.GetType() == typeof(ODataUriResolver))
                 {
-                    matchingOperation = null;
                     return false;
                 }
             }
 
-            IEnumerable<IEdmOperation> candidateMatchingOperations = null;
+            IEnumerable<IEdmOperation> operationsFromModel;
 
             // The extension method FindBoundOperations & FindOperations call IEdmModel.FindDeclaredBoundOperations which can be implemented by anyone and it could throw any type of exception
             // so catching all of them and simply putting it in the inner exception.
@@ -147,11 +148,11 @@ namespace Microsoft.OData.UriParser
             {
                 if (bindingType != null)
                 {
-                    candidateMatchingOperations = resolver.ResolveBoundOperations(model, identifier, bindingType);
+                    operationsFromModel = resolver.ResolveBoundOperations(model, identifier, bindingType);
                 }
                 else
                 {
-                    candidateMatchingOperations = resolver.ResolveUnboundOperations(model, identifier);
+                    operationsFromModel = resolver.ResolveUnboundOperations(model, identifier);
                 }
             }
             catch (Exception exc)
@@ -164,98 +165,109 @@ namespace Microsoft.OData.UriParser
                 throw;
             }
 
-            IList<IEdmOperation> foundActionsWhenLookingForFunctions = new List<IEdmOperation>();
-            bool hasParameters = parameterNames.Count() > 0;
-
-            if (bindingType != null)
-            {
-                candidateMatchingOperations.EnsureOperationsBoundWithBindingParameter();
-            }
-
-            // If the number of parameters > 0 then this has to be a function as actions can't have parameters on the uri only in the payload. Filter further by parameters in this case, otherwise don't.
-            if (hasParameters)
-            {
-                // can only be a function as only functions have parameters on the uri.
-                candidateMatchingOperations = candidateMatchingOperations.RemoveActions(out foundActionsWhenLookingForFunctions)
-                    .FilterOperationsByParameterNames(parameterNames, resolver.EnableCaseInsensitive);
-            }
-            else if (bindingType != null)
-            {
-                // Filter out functions with more than one parameter. Actions should not be filtered as the parameters are in the payload not the uri
-                candidateMatchingOperations = candidateMatchingOperations.Where(o =>
-                (o.IsFunction() && (o.Parameters.Count() == 1 || o.Parameters.Skip(1).All(p => p is IEdmOptionalParameter))) || o.IsAction());
-            }
-            else
-            {
-                // Filter out functions with any parameters
-                candidateMatchingOperations = candidateMatchingOperations.Where(o => (o.IsFunction() && !o.Parameters.Any()) || o.IsAction());
-            }
+            bool foundActionsWhenLookingForFunctions;
+            // Filters candidates based on the parameter names specified in the uri, removes actions if there were parameters specified in the uri but set the out bool to indicate that.
+            // If no parameters specified, then matches based on binding type or matches with operations with no parameters.
+            IList<IEdmOperation> candidatesMatchingOperations = operationsFromModel.FilterOperationCandidatesBasedOnParameterList(bindingType, parameterNames, resolver.EnableCaseInsensitive, out foundActionsWhenLookingForFunctions);
 
             // Only filter if there is more than one and its needed.
-            if (candidateMatchingOperations.Count() > 1)
+            if (candidatesMatchingOperations.Count > 1)
             {
-                candidateMatchingOperations = candidateMatchingOperations.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(bindingType);
+                candidatesMatchingOperations = candidatesMatchingOperations.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(bindingType) as IList<IEdmOperation>;
+                
+                // This will be only null when no candidates are left. In that case, we can return false here. 
+                if (candidatesMatchingOperations == null)
+                {
+                    if (foundActionsWhenLookingForFunctions)
+                    {
+                        throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+                    }
+
+                    return false; 
+                }
             }
 
-            // If any of the things returned are an action, it better be the only thing returned, and there can't be parameters in the URL
-            if (candidateMatchingOperations.Any(f => f.IsAction()))
+            // If any of the candidates are an action, it better be the only thing returned, and there can't be parameters in the URL
+            if (ResolveActionFromCandidates(candidatesMatchingOperations, identifier, parameterNames.Count > 0,  out matchingOperation))
             {
-                if (candidateMatchingOperations.Count() > 1)
-                {
-                    if (candidateMatchingOperations.Any(o => o.IsFunction()))
-                    {
-                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationOverloads(identifier));
-                    }
-                    else
-                    {
-                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleActionOverloads(identifier));
-                    }
-                }
-
-                if (hasParameters)
-                {
-                    throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
-                }
-
-                matchingOperation = candidateMatchingOperations.Single();
                 return true;
             }
 
-            if (foundActionsWhenLookingForFunctions.Count > 0)
+            if (foundActionsWhenLookingForFunctions)
             {
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
             }
 
             // If more than one overload matches, try to select based on optional parameters
-            if (candidateMatchingOperations.Count() > 1)
+            if (candidatesMatchingOperations.Count > 1)
             {
-                candidateMatchingOperations = candidateMatchingOperations.FindBestOverloadBasedOnParameters(parameterNames);
+                candidatesMatchingOperations = candidatesMatchingOperations.FilterOverloadsBasedOnParameterCount(parameterNames.Count);
             }
 
-            if (candidateMatchingOperations.Count() > 1)
+            if (candidatesMatchingOperations.Count > 1)
             {
                 throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound(identifier, string.Join(",", parameterNames.ToArray())));
             }
 
-            matchingOperation = candidateMatchingOperations.SingleOrDefault();
+            matchingOperation = candidatesMatchingOperations.Count > 0 ? candidatesMatchingOperations[0] : null;
             return matchingOperation != null;
         }
 
+        private static bool ResolveActionFromCandidates(IList<IEdmOperation> candidatesMatchingOperations, string identifier, bool hasParameters, out IEdmOperation matchingOperation)
+        {
+            bool actionExists = false;
+            bool functionExists = false;
+            matchingOperation = null;
+            for (int i = 0; i < candidatesMatchingOperations.Count; i++)
+            {
+                if (candidatesMatchingOperations[i].IsFunction())
+                {
+                    if (actionExists)
+                    {
+                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationOverloads(identifier));
+                    }
+
+                    functionExists = true;
+                }
+
+                if (candidatesMatchingOperations[i].IsAction())
+                {
+                    if (functionExists)
+                    {
+                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationOverloads(identifier));
+                    }
+
+                    actionExists = true;
+                }
+            }
+
+            if (actionExists)
+            {
+                if (candidatesMatchingOperations.Count > 1)
+                {
+                    throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleActionOverloads(identifier));
+                }
+
+                Debug.Assert(!hasParameters);
+                matchingOperation = candidatesMatchingOperations.Count > 0 ? candidatesMatchingOperations[0] : null;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if there are elements in the enumerable. Performance is better for pure enumerables.
+        /// Use the other HasAny extension method if the underlying type is likely to be a list. 
+        /// </summary>
         internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T : class
         {
-            IList<T> list = enumerable as IList<T>;
-            if (list != null)
+            if (enumerable != null)
             {
-                return list.Count > 0;
+                return enumerable.GetEnumerator().MoveNext();
             }
 
-            T[] array = enumerable as T[];
-            if (array != null)
-            {
-                return array.Length > 0;
-            }
-
-            return enumerable.FirstOrDefault() != null;
+            return false;
         }
     }
 }
