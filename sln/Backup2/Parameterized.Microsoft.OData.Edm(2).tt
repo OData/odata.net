@@ -1,0 +1,19 @@
+﻿<#@ include file="..\..\tools\StringResourceGenerator\StringsClassGenerator.ttinclude" #>
+<#+
+public static class Configuration
+{
+    // The namespace where the generated resource classes reside.
+    public const string ResourceClassNamespace = "Microsoft.OData.Edm";
+    
+    // The assembly name where the generated resource classes will be linked.
+    public const string AssemblyName = "Microsoft.OData.Edm";
+    
+    // The name of the generated resource class.
+    public const string ResourceClassName = "EntityRes";
+
+    // The list of text files containing all the string resources.
+    public static readonly string[] TextFiles = {
+        "Microsoft.OData.Edm.txt"
+    };
+}
+#>

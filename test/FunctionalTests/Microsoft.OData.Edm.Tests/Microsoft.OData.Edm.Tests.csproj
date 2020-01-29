@@ -33,7 +33,7 @@
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
 
-  <!--<Import Project="..\Build.props" />-->
+  <Import Project="..\Build.props" />
 
   <!--<ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />

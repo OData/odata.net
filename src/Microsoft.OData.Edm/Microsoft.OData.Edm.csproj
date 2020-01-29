@@ -24,15 +24,32 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Microsoft.OData.Edm.xml" />
-    <None Remove="Microsoft.OData.Edm.tt" />
-    <None Remove="Parameterized.Microsoft.OData.Edm.tt" />
+    <TextStringResource Include="Microsoft.OData.Edm.txt">
+      <ResFile>Microsoft.OData.Edm</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Edm.EdmRes</FullClassName>
+      <SupportsAssemblyReferences>false</SupportsAssemblyReferences>
+      <SkipSRAttributes>true</SkipSRAttributes>
+    </TextStringResource>
   </ItemGroup>
+  
+  <!--<ItemGroup>
+    <None Remove="Microsoft.OData.Edm.txt" />
+    <None Remove="Microsoft.OData.Edm.xml" />
+    <None Remove="Parameterized.Microsoft.OData.Edm.tt" />
+  </ItemGroup>-->
 
   <ItemGroup>
     <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
     <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
   </ItemGroup>
+
+  <!--<ItemGroup>
+    <EmbeddedResource Include="Microsoft.OData.Edm.txt" />
+  </ItemGroup>-->
 
   <ItemGroup>
     <Resource Include="Microsoft.OData.Edm.tt">
@@ -89,6 +106,17 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Microsoft.OData.Edm.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Edm.cs</LastGenOutput>
+    </None>
+    <None Update="Parameterized.Microsoft.OData.Edm.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.OData.Edm.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

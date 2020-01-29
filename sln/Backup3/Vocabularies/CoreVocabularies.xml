@@ -1,0 +1,450 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Core.V1"  Alias="Core">
+  <Annotation Term="Core.Description">
+    <String>Core terms needed to write vocabularies</String>
+  </Annotation>
+  <Annotation Term="Core.Links">
+    <Collection>
+      <Record>
+        <PropertyValue Property="rel" String="latest-version" />
+        <PropertyValue Property="href"
+          String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" />
+      </Record>
+      <Record>
+        <PropertyValue Property="rel" String="alternate" />
+        <PropertyValue Property="href"
+          String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.json" />
+      </Record>
+      <Record>
+        <PropertyValue Property="rel" String="describedby" />
+        <PropertyValue Property="href"
+          String="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md" />
+      </Record>
+    </Collection>
+  </Annotation>
+
+  <!-- Versioning -->
+
+  <Term Name="ODataVersions" Type="Edm.String" AppliesTo="EntityContainer">
+    <Annotation Term="Core.Description" String="A space-separated list of supported versions of the OData Protocol. Note that 4.0 is implied by 4.01 and does not need to be separately listed." />
+  </Term>
+
+  <Term Name="SchemaVersion" Type="Edm.String" AppliesTo="Schema Reference">
+    <Annotation Term="Core.Description" String="Service-defined value representing the version of the schema. Services MAY use semantic versioning, but clients MUST NOT assume this is the case." />
+  </Term>
+
+  <Term Name="Revisions" Type="Collection(Core.RevisionType)" Nullable="false">
+    <Annotation Term="Core.Description" String="List of revisions of a model element" />
+  </Term>
+  <ComplexType Name="RevisionType">
+    <Property Name="Version" Type="Edm.String" Nullable="true">
+      <Annotation Term="Core.Description" String="The schema version with which this revision was first published" />
+    </Property>
+    <Property Name="Kind" Type="Core.RevisionKind" Nullable="false">
+      <Annotation Term="Core.Description" String="The kind of revision" />
+    </Property>
+    <Property Name="Description" Type="Edm.String" Nullable="false">
+      <Annotation Term="Core.Description" String="Text describing the reason for the revision" />
+    </Property>
+  </ComplexType>
+  <EnumType Name="RevisionKind">
+    <Member Name="Added">
+      <Annotation Term="Core.Description" String="Model element was added" />
+    </Member>
+    <Member Name="Modified">
+      <Annotation Term="Core.Description" String="Model element was modified" />
+    </Member>
+    <Member Name="Deprecated">
+      <Annotation Term="Core.Description" String="Model element was deprecated" />
+    </Member>
+  </EnumType>
+
+  <!--Documentation -->
+
+  <Term Name="Description" Type="Edm.String">
+    <Annotation Term="Core.Description" String="A brief description of a model element" />
+    <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+  </Term>
+
+  <Term Name="LongDescription" Type="Edm.String">
+    <Annotation Term="Core.Description" String="A lengthy description of a model element" />
+    <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+  </Term>
+
+  <Term Name="Links" Type="Collection(Core.Link)" Nullable="false">
+    <Annotation Term="Core.Description" String="Link to related information" />
+  </Term>
+  <ComplexType Name="Link">
+    <Annotation Term="Core.Description" String="The Link term is inspired by the `atom:link` element, see [RFC4287](https://tools.ietf.org/html/rfc4287#section-4.2.7), and the `Link` HTTP header, see [RFC5988](https://tools.ietf.org/html/rfc5988)" />
+    <Property Name="rel" Type="Edm.String" Nullable="false">
+      <Annotation Term="Core.Description" String="Link relation type, see [IANA Link Relations](http://www.iana.org/assignments/link-relations/link-relations.xhtml)" />
+    </Property>
+    <Property Name="href" Type="Edm.String" Nullable="false">
+      <Annotation Term="Core.IsURL" Bool="true" />
+      <Annotation Term="Core.Description" String="URL of related information" />
+    </Property>
+  </ComplexType>
+
+  <Term Name="Example" Type="Core.ExampleValue" Nullable="false"
+    AppliesTo="EntityType ComplexType TypeDefinition Term Property NavigationProperty Parameter ReturnType"
+  >
+    <Annotation Term="Core.Description" String="Example for an instance of the annotated model element" />
+    <Annotation Term="Core.Example">
+      <Record>
+        <PropertyValue Property="Description"
+          String="The value of Core.Example is a record/object containing the example value and/or annotation examples." />
+        <Annotation Term="Core.Example" Qualifier="primitive">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Description" String="Primitive example value" />
+            <PropertyValue Property="Value" String="Hello World" />
+          </Record>
+        </Annotation>
+        <Annotation Term="Core.Example" Qualifier="complex">
+          <Record Type="Core.ComplexExampleValue">
+            <PropertyValue Property="Description" String="Complex example value" />
+            <PropertyValue Property="Value">
+              <Record>
+                <PropertyValue Property="ExampleProperty" String="with value" />
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Core.Example" Qualifier="entity">
+          <Record Type="Core.EntityExampleValue">
+            <PropertyValue Property="Description" String="Entity example value" />
+            <PropertyValue Property="Value">
+              <Record>
+                <PropertyValue Property="ExampleKeyProperty" String="with value" />
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Core.Example" Qualifier="external">
+          <Record Type="Core.ExternalExampleValue">
+            <PropertyValue Property="Description" String="External example" />
+            <PropertyValue Property="ExternalValue"
+              String="https://services.odata.org/TripPinRESTierService/(S(5fjoyrzpnvzrrvmxzzq25i4q))/Me" />
+          </Record>
+        </Annotation>
+      </Record>
+    </Annotation>
+  </Term>
+  <ComplexType Name="ExampleValue">
+    <Property Name="Description" Type="Edm.String" Nullable="true">
+      <Annotation Term="Core.Description" String="Description of the example value" />
+    </Property>
+  </ComplexType>
+  <ComplexType Name="PrimitiveExampleValue" BaseType="Core.ExampleValue">
+    <Property Name="Value" Type="Edm.PrimitiveType" Nullable="false">
+      <Annotation Term="Core.Description" String="Example value for the custom parameter" />
+    </Property>
+  </ComplexType>
+  <ComplexType Name="ComplexExampleValue" BaseType="Core.ExampleValue">
+    <Property Name="Value" Type="Edm.ComplexType" Nullable="false">
+      <Annotation Term="Core.Description" String="Example value for the custom parameter" />
+    </Property>
+  </ComplexType>
+  <ComplexType Name="EntityExampleValue" BaseType="Core.ExampleValue">
+    <NavigationProperty Name="Value" Type="Edm.EntityType" Nullable="false">
+      <Annotation Term="Core.Description" String="Example value for the custom parameter" />
+    </NavigationProperty>
+  </ComplexType>
+  <ComplexType Name="ExternalExampleValue" BaseType="Core.ExampleValue">
+    <Property Name="ExternalValue" Type="Edm.String" Nullable="false">
+      <Annotation Term="Core.Description" String="Url reference to the value in its literal format" />
+      <Annotation Term="Core.IsURL" Bool="true" />
+    </Property>
+  </ComplexType>
+
+  <!-- Error, warning, and info messages in a (mostly) successful response -->
+
+  <Term Name="Messages" Type="Collection(Core.MessageType)" Nullable="false">
+    <Annotation Term="Core.Description" String="Instance annotation for warning and info messages" />
+  </Term>
+  <ComplexType Name="MessageType">
+    <Property Name="code" Type="Edm.String" Nullable="false">
+      <Annotation Term="Core.Description" String="Machine-readable, language-independent message code" />
+    </Property>
+    <Property Name="message" Type="Edm.String" Nullable="false">
+      <Annotation Term="Core.Description" String="Human-readable, language-dependent message text" />
+      <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+    </Property>
+    <Property Name="severity" Type="Core.MessageSeverity" Nullable="false">
+      <Annotation Term="Core.Description" String="Severity of the message" />
+    </Property>
+    <Property Name="target" Type="Edm.String" Nullable="true">
+      <Annotation Term="Core.Description"
+        String="A path to the target of the message detail, relative to the annotated instance" />
+    </Property>
+    <Property Name="details" Type="Collection(Core.MessageType)" Nullable="false">
+      <Annotation Term="Core.Description" String="List of detail messages" />
+    </Property>
+  </ComplexType>
+  <TypeDefinition Name="MessageSeverity" UnderlyingType="Edm.String">
+    <Annotation Term="Validation.AllowedValues">
+      <Collection>
+        <Record>
+          <PropertyValue Property="Value" String="success" />
+          <Annotation Term="Core.Description" String="Positive feedback - no action required" />
+        </Record>
+        <Record>
+          <PropertyValue Property="Value" String="info" />
+          <Annotation Term="Core.Description" String="Additional information - no action required" />
+        </Record>
+        <Record>
+          <PropertyValue Property="Value" String="warning" />
+          <Annotation Term="Core.Description" String="Warning - action may be required" />
+        </Record>
+        <Record>
+          <PropertyValue Property="Value" String="error" />
+          <Annotation Term="Core.Description" String="Error - action is required" />
+        </Record>
+      </Collection>
+    </Annotation>
+  </TypeDefinition>
+
+  <Term Name="ValueException" Type="Core.ValueExceptionType" Nullable="false">
+    <Annotation Term="Core.Description" String="The annotated value is problematic" />
+  </Term>
+  <ComplexType Name="ExceptionType" Abstract="true">
+    <Property Name="info" Type="Core.MessageType" Nullable="true">
+      <Annotation Term="Core.Description" String="Information about the exception" />
+    </Property>
+  </ComplexType>
+  <ComplexType Name="ValueExceptionType" BaseType="Core.ExceptionType">
+    <Property Name="value" Type="Edm.String" Nullable="true">
+      <Annotation Term="Core.Description" String="String representation of the exact value" />
+    </Property>
+  </ComplexType>
+
+  <Term Name="ResourceException" Type="Core.ResourceExceptionType" Nullable="false">
+    <Annotation Term="Core.Description" String="The annotated instance within a success payload is problematic" />
+  </Term>
+  <ComplexType Name="ResourceExceptionType" BaseType="Core.ExceptionType">
+    <Property Name="retryLink" Type="Edm.String" Nullable="true">
+      <Annotation Term="Core.Description" String="A GET request to this URL retries retrieving the problematic instance" />
+      <Annotation Term="Core.IsURL" Bool="true" />
+    </Property>
+  </ComplexType>
+
+  <Term Name="DataModificationException" Type="Core.DataModificationExceptionType" Nullable="false">
+    <Annotation Term="Core.Description"
+      String="A modification operation failed on the annotated instance or collection within a success payload" />
+  </Term>
+  <ComplexType Name="DataModificationExceptionType" BaseType="Core.ExceptionType">
+    <Property Name="failedOperation" Type="Core.DataModificationOperationKind" Nullable="false">
+      <Annotation Term="Core.Description" String="The kind of modification operation that failed" />
+    </Property>
+    <Property Name="responseCode" Type="Edm.Int16" Nullable="true">
+      <Annotation Term="Core.Description" String="Response code of the failed operation, e.g. 424 for a failed dependency" />
+      <Annotation Term="Validation.Minimum" Decimal="100" />
+      <Annotation Term="Validation.Maximum" Decimal="599" />
+    </Property>
+  </ComplexType>
+  <EnumType Name="DataModificationOperationKind" UnderlyingType="Edm.Int32">
+    <Member Name="insert">
+      <Annotation Term="Core.Description" String="Insert new instance" />
+    </Member>
+    <Member Name="update">
+      <Annotation Term="Core.Description" String="Update existing instance" />
+    </Member>
+    <Member Name="upsert">
+      <Annotation Term="Core.Description" String="Insert new instance or update it if it already exists" />
+    </Member>
+    <Member Name="delete">
+      <Annotation Term="Core.Description" String="Delete existing instance" />
+    </Member>
+    <Member Name="invoke">
+      <Annotation Term="Core.Description" String="Invoke action or function" />
+    </Member>
+    <Member Name="link">
+      <Annotation Term="Core.Description" String="Add link between entities" />
+    </Member>
+    <Member Name="unlink">
+      <Annotation Term="Core.Description" String="Remove link between entities" />
+    </Member>
+  </EnumType>
+  <!-- Localization -->
+
+  <Term Name="IsLanguageDependent" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Term Property">
+    <Annotation Term="Core.Description" String="Properties and terms annotated with this term are language-dependent" />
+    <Annotation Term="Core.RequiresType" String="Edm.String" />
+  </Term>
+
+  <TypeDefinition Name="Tag" UnderlyingType="Edm.Boolean">
+    <Annotation Term="Core.Description" String="This is the type to use for all tagging terms" />
+  </TypeDefinition>
+
+  <!-- Term Restrictions -->
+  <Term Name="RequiresType" Type="Edm.String" AppliesTo="Term">
+    <Annotation Term="Core.Description" String="Terms annotated with this term can only be applied to elements that have a type that is identical to or derived from the given type name" />
+  </Term>
+
+  <!--Resource Paths -->
+
+  <Term Name="ResourcePath" Type="Edm.String" AppliesTo="EntitySet Singleton ActionImport FunctionImport">
+    <Annotation Term="Core.Description" String="Resource path for entity container child, can be relative to xml:base and the request URL" />
+    <Annotation Term="Core.IsUrl" Bool="true" />
+  </Term>
+
+  <Term Name="DereferenceableIDs" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntityContainer">
+    <Annotation Term="Core.Description" String="Entity-ids are URLs that locate the identified entity" />
+  </Term>
+
+  <Term Name="ConventionalIDs" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntityContainer">
+    <Annotation Term="Core.Description" String="Entity-ids follow OData URL conventions" />
+  </Term>
+
+  <!-- Permissions -->
+
+  <Term Name="Permissions" Type="Core.Permission" AppliesTo="Property ComplexType TypeDefinition EntityType EntitySet NavigationProperty Action Function">
+    <Annotation Term="Core.Description" String="Permissions for accessing a resource" />
+  </Term>
+  <EnumType Name="Permission" IsFlags="true">
+    <Member Name="None" Value="0" >
+      <Annotation Term="Core.Description" String="No permissions" />
+    </Member>
+    <Member Name="Read" Value="1" >
+      <Annotation Term="Core.Description" String="Read permission" />
+    </Member>
+    <Member Name="Write" Value="2" >
+      <Annotation Term="Core.Description" String="Write permission" />
+    </Member>
+    <Member Name="ReadWrite" Value="3" >
+      <Annotation Term="Core.Description" String="Read and write permission" />
+    </Member>
+    <Member Name="Invoke" Value="4" >
+      <Annotation Term="Core.Description" String="Permission to invoke actions" />
+    </Member>
+  </EnumType>
+
+  <!-- Batch Content ID -->
+  <Term Name="ContentID" Type="Edm.String">
+    <Annotation Term="Core.Description" String="A unique identifier for nested entities within a request." />
+  </Term>
+
+  <!-- Metadata Extensions -->
+
+  <Term Name="DefaultNamespace" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Schema Include">
+    <Annotation Term="Core.Description" String="Functions, actions and types in this namespace can be referenced in URLs with or without namespace- or alias- qualification." />
+    <Annotation Term="Core.LongDescription" String="Data Modelers should ensure uniqueness of schema children across all default namespaces, and should avoid naming bound functions, actions, or derived types with the same name as a structural or navigational property of the type." />
+  </Term>
+
+  <Term Name="Immutable" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property">
+    <Annotation Term="Core.Description" String="A value for this non-key property can be provided by the client on insert and remains unchanged on update" />
+  </Term>
+
+  <Term Name="Computed" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property">
+    <Annotation Term="Core.Description" String="A value for this property is generated on both insert and update" />
+  </Term>
+
+  <Term Name="ComputedDefaultValue" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property">
+    <Annotation Term="Core.Description" String="A value for this property can be provided by the client on insert and update. If no value is provided on insert, a non-static default value is generated" />
+  </Term>
+  <Term Name="IsURL" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property Term">
+    <Annotation Term="Core.Description" String="Properties and terms annotated with this term MUST contain a valid URL" />
+    <Annotation Term="Core.RequiresType" String="Edm.String" />
+  </Term>
+
+  <Term Name="AcceptableMediaTypes" Type="Collection(Edm.String)" Nullable="false" AppliesTo="EntityType Property">
+    <Annotation Term="Core.Description" String="Lists the MIME types acceptable for the annotated entity type marked with HasStream=&quot;true&quot; or the annotated stream property" />
+    <Annotation Term="Core.IsMediaType" Bool="true" />
+  </Term>
+
+  <Term Name="MediaType" Type="Edm.String" AppliesTo="Property">
+    <Annotation Term="Core.Description" String="The media type of a binary resource" />
+    <Annotation Term="Core.IsMediaType" Bool="true" />
+    <Annotation Term="Core.RequiresType" String="Edm.Binary" />
+  </Term>
+
+  <Term Name="IsMediaType" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property Term">
+    <Annotation Term="Core.Description" String="Properties and terms annotated with this term MUST contain a valid MIME type" />
+    <Annotation Term="Core.RequiresType" String="Edm.String" />
+  </Term>
+
+  <Term Name="OptimisticConcurrency" Type="Collection(Edm.PropertyPath)" Nullable="false" AppliesTo="EntitySet">
+    <Annotation Term="Core.Description" String="Data modification requires the use of ETags. A non-empty collection contains the set of properties that are used to compute the ETag. An empty collection means that the service won't tell how it computes the ETag." />
+  </Term>
+
+  <Term Name="AdditionalProperties" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntityType ComplexType">
+    <Annotation Term="Core.Description" String="Instances of this type may contain properties in addition to those declared in $metadata" />
+    <Annotation Term="Core.LongDescription" String="If specified as false clients can assume that instances will not contain dynamic properties, irrespective of the value of the OpenType attribute." />
+  </Term>
+
+  <Term Name="AutoExpand" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="NavigationProperty Property">
+    <Annotation Term="Core.Description" String="The service will automatically expand this stream or navigation property even if not requested with $expand" />
+  </Term>
+
+  <Term Name="AutoExpandReferences" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="NavigationProperty">
+    <Annotation Term="Core.Description" String="The service will automatically expand this navigation property as entity references even if not requested with $expand=.../$ref" />
+  </Term>
+
+  <Term Name="MayImplement" Type="Collection(Core.QualifiedTypeName)" Nullable="false">
+    <Annotation Term="Core.Description" String="A collection of qualified type names outside of the type hierarchy that instances of this type might be addressable as by using a type-cast segment." />
+  </Term>
+
+  <TypeDefinition Name="QualifiedTermName" UnderlyingType="Edm.String">
+    <Annotation Term="Core.Description" String="The qualified name of a term in scope." />
+  </TypeDefinition>
+
+  <TypeDefinition Name="QualifiedTypeName" UnderlyingType="Edm.String">
+    <Annotation Term="Core.Description" String="The qualified name of a type in scope." />
+  </TypeDefinition>
+
+  <Term Name="Ordered" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property NavigationProperty EntitySet ReturnType">
+    <Annotation Term="Core.Description" String="Collection has a stable order. Ordered collections of primitive or complex types can be indexed by ordinal." />
+  </Term>
+
+  <Term Name="PositionalInsert" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property NavigationProperty EntitySet">
+    <Annotation Term="Core.Description" String="Items can be inserted at a given ordinal index." />
+  </Term>
+
+  <Term Name="AlternateKeys" Type="Collection(Core.AlternateKey)" Nullable="false" AppliesTo="EntityType EntitySet NavigationProperty">
+    <Annotation Term="Core.Description" String="Communicates available alternate keys" />
+  </Term>
+  <ComplexType Name="AlternateKey">
+    <Property Type="Collection(Core.PropertyRef)" Name="Key" Nullable="false">
+      <Annotation Term="Core.Description" String="The set of properties that make up this key" />
+    </Property>
+  </ComplexType>
+  <ComplexType Name="PropertyRef">
+    <Property Type="Edm.PropertyPath" Name="Name" Nullable="false">
+      <Annotation Term="Core.Description" String="A path expression resolving to a primitive property of the entity type itself or to a primitive property of a complex or navigation property (recursively) of the entity type. The names of the properties in the path are joined together by forward slashes." />
+    </Property>
+    <Property Type="Edm.String" Name="Alias" Nullable="false">
+      <Annotation Term="Core.Description" String="A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs" />
+    </Property>
+  </ComplexType>
+
+  <ComplexType Name="Dictionary" OpenType="true">
+    <Annotation Term="Core.Description" String="A dictionary of name-value pairs. Names must be valid property names, values may be restricted to a list of types via an annotation with term `Validation.OpenPropertyTypeConstraint`." />
+    <Annotation Term="Core.LongDescription">
+      <String>
+Property|Type
+:-------|:---
+Any simple identifier | Any type listed in `Validation.OpenPropertyTypeConstraint`, or any type if there is no constraint
+</String>
+    </Annotation>
+  </ComplexType>
+
+  <Term Name="OptionalParameter" Type="Core.OptionalParameterType" AppliesTo="Parameter">
+    <Annotation Term="Core.Description" String="Supplying a value for the action or function parameter is optional." />
+    <Annotation Term="Core.LongDescription" String="All parameters marked as optional must come after any parameters not marked as optional. The binding parameter must not be marked as optional." />
+  </Term>
+  <ComplexType Name="OptionalParameterType">
+    <Property Name="DefaultValue" Type="Edm.String" Nullable="true">
+      <Annotation Term="Core.Description" String="Default value for an optional parameter of primitive or enumeration type, using the same rules as the `cast` function in URLs." />
+      <Annotation Term="Core.LongDescription" String="If no explicit DefaultValue is specified, the service is free on how to interpret omitting the parameter from the request. For example, a service might interpret an omitted optional parameter `KeyDate` as having the current date." />
+    </Property>
+  </ComplexType>
+
+  <Term Name="OperationAvailable" Type="Edm.Boolean" Nullable="true" DefaultValue="true" AppliesTo="Action Function">
+    <Annotation Term="Core.Description" String="Action or function is available" />
+    <Annotation Term="Core.LongDescription" String="The annotation value will usually be an expression, e.g. using properties of the binding parameter type for instance-dependent availability, or using properties of a singleton for global availability. The static value `null` means that availability cannot be determined upfront and is instead expressed as an operation advertisement." />
+  </Term>
+
+  <TypeDefinition Name="LocalDateTime" UnderlyingType="Edm.String">
+    <Annotation Term="Core.Description" String="A string representing a Local Date-Time value with no offset." />
+    <Annotation Term="Validation.Pattern" String="^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]+)?)?$" />
+  </TypeDefinition>
+</Schema>

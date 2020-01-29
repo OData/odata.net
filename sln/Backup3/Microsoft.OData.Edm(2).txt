@@ -1,0 +1,326 @@
+; NOTE: don't use \", use ' instead
+; NOTE: don't use #, use ; instead for comments
+; NOTE: leave the [strings] alone
+
+; EDM Model messages
+EdmPrimitive_UnexpectedKind=Unexpected primitive type kind.
+EdmPath_UnexpectedKind=Unexpected path type kind.
+Annotations_TypeMismatch=Annotation of type '{0}' cannot be interpreted as '{1}'.
+Constructable_VocabularyAnnotationMustHaveTarget=The annotation must have non-null target.
+Constructable_EntityTypeOrCollectionOfEntityTypeExpected=An entity type or a collection of an entity type is expected.
+Constructable_TargetMustBeStock=Navigation target entity type must be '{0}'.
+TypeSemantics_CouldNotConvertTypeReference=The type '{0}' could not be converted to be a '{1}' type.
+EdmModel_CannotUseElementWithTypeNone=An element with type 'None' cannot be used in a model.
+EdmModel_CannotAddMoreThanOneEntityContainerToOneEdmModel=Cannot add more than one entity container to an edm model.
+EdmEntityContainer_CannotUseElementWithTypeNone=An element with type 'None' cannot be used in an entity container.
+ValueWriter_NonSerializableValue=The value writer cannot write a value of kind '{0}'.
+ValueHasAlreadyBeenSet=Value has already been set.
+PathSegmentMustNotContainSlash=Path segments must not contain '/' character.
+Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType=The number of dependent properties must match the number of key properties on the principal entity type. '{0}' principal properties were provided, but {1} dependent properties were provided.
+EdmType_UnexpectedEdmType=Unexpected Edm type.
+NavigationPropertyBinding_PathIsNotValid=The navigation property binding path is not valid.
+
+; Evaluation messages
+Edm_Evaluator_NoTermTypeAnnotationOnType=Type '{0}' must have a single type annotation with term type '{1}'.
+Edm_Evaluator_NoValueAnnotationOnType=Type '{0}' must have a single annotation with term '{1}'.
+Edm_Evaluator_NoValueAnnotationOnElement=Element must have a single annotation with term '{0}'.
+Edm_Evaluator_UnrecognizedExpressionKind=Expression with kind '{0}' cannot be evaluated.
+Edm_Evaluator_UnboundFunction=Function '{0}' is not present in the execution environment.
+Edm_Evaluator_UnboundPath=Path segment '{0}' has no binding in the execution environment.
+Edm_Evaluator_NoContextPath=A containing object cannot be null when getting value of an annotation with Path in the execution environment.
+Edm_Evaluator_FailedTypeAssertion=Value fails to match type '{0}'.
+Edm_Evaluator_TypeCastNeedsEdmModel=An edm model must be provided for type cast.
+
+;Error message for Semantic validation rules
+EdmModel_Validator_Semantic_SystemNamespaceEncountered=The namespace '{0}' is a system namespace and cannot be used by non-system types. Please choose a different namespace.
+EdmModel_Validator_Semantic_NavigationSourceTypeHasNoKeys=The entity set or singleton '{0}' is based on type '{1}' that has no keys defined.
+EdmModel_Validator_Semantic_DuplicateEndName=An end with the name '{0}' is already defined.
+EdmModel_Validator_Semantic_DuplicatePropertyNameSpecifiedInEntityKey=The key specified in entity type '{0}' is not valid. Property '{1}' is referenced more than once in the key element.
+EdmModel_Validator_Semantic_InvalidComplexTypeAbstract=The complex type '{0}' is marked as abstract. Abstract complex types are only supported in version 1.1 EDM models.
+EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic=The complex type '{0}' has a base type specified. Complex type inheritance is only supported in version 1.1 EDM models.
+EdmModel_Validator_Semantic_InvalidKeyNullablePart=The key part '{0}' for type '{1}' is not valid. All parts of the key must be non nullable.
+EdmModel_Validator_Semantic_EntityKeyMustBeScalar=The property '{0}' in entity type '{1}' is not valid. All properties that are part of the entity key must be of primitive type.
+EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne=The entity type '{0}' has more than one composable escape functions '{1}' defined.
+EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne=The entity type '{0}' has more than one non-composable escape functions '{1}' defined.
+EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass=The key usage is not valid. '{0}' cannot define keys because one of its base classes '{1}' defines keys.
+EdmModel_Validator_Semantic_KeyMissingOnEntityType=The entity type '{0}' has no key defined. Define the key for this entity type.
+EdmModel_Validator_Semantic_BadNavigationPropertyUndefinedRole=The navigation property '{0}' is not valid. The role '{1}' is not defined in relationship '{2}'.
+EdmModel_Validator_Semantic_BadNavigationPropertyRolesCannotBeTheSame=The navigation property '{0}'is not valid. The from role and to role are the same.
+EdmModel_Validator_Semantic_BadNavigationPropertyCouldNotDetermineType=The navigation property type could not be determined from the role '{0}'.
+EdmModel_Validator_Semantic_InvalidOperationMultipleEndsInAssociation=An on delete action can only be specified on one end of an association.
+EdmModel_Validator_Semantic_EndWithManyMultiplicityCannotHaveOperationsSpecified=The navigation property '{0}' cannot have 'OnDelete' specified since its multiplicity is '*'.
+EdmModel_Validator_Semantic_EndNameAlreadyDefinedDuplicate=Each name and plural name in a relationship must be unique. '{0}' is already defined.
+EdmModel_Validator_Semantic_SameRoleReferredInReferentialConstraint=In relationship '{0}', the principal and dependent role of the referential constraint refers to the same role in the relationship type.
+EdmModel_Validator_Semantic_NavigationPropertyPrincipalEndMultiplicityUpperBoundMustBeOne=The principal navigation property '{0}' has an invalid multiplicity. Valid values for the multiplicity of a principal end are '0..1' or '1'.
+EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNonnullable=Because all dependent properties of the navigation '{0}' are non-nullable, the multiplicity of the principal end must be '1'.
+EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNullable=Because all dependent properties of the navigation '{0}' are nullable, the multiplicity of the principal end must be '0..1'.
+EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeZeroOneOrOne=The multiplicity of the dependent end '{0}' is not valid. Because the dependent properties represent the dependent end key, the multiplicity of the dependent end must be '0..1' or '1'.
+EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeMany=The multiplicity of the dependent end '{0}' is not valid. Because the dependent properties don't represent the dependent end key, the the multiplicity of the dependent end must be '*'.
+EdmModel_Validator_Semantic_MismatchNumberOfPropertiesinRelationshipConstraint=The number of properties in the dependent and principal role in a relationship constraint must be exactly identical.
+EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint=The types of all properties in the dependent role of a referential constraint must be the same as the corresponding property types in the principal role. The type of property '{0}' on entity '{1}' does not match the type of property '{2}' on entity '{3}' in the referential constraint '{4}'.
+EdmModel_Validator_Semantic_InvalidPropertyInRelationshipConstraintDependentEnd=There is no property with name '{0}' defined in the type referred to by role '{1}'.
+EdmModel_Validator_Semantic_InvalidPropertyInRelationshipConstraintPrimaryEnd=The principal end properties in the referential constraint of the association '{0}' do not match the key of the type referred to by role '{1}'.
+EdmModel_Validator_Semantic_InvalidPropertyType=A property cannot be of type '{0}'. The property type must be a complex, a primitive, an enum, a type definition or an untyped type, or a collection of complex, primitive, enum types, or type definition.
+EdmModel_Validator_Semantic_BoundOperationMustHaveParameters=The Bound operation '{0}' must have at least one parameter.
+EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional=Required Parameter '{0}' must not follow an optional parameter.
+EdmModel_Validator_Semantic_OperationWithUnsupportedReturnType=The return type is not valid in operation '{0}'. The operation has an unsupported type.
+EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet=The operation import '{0}' returns entities of type '{1}' that cannot exist in the entity set '{2}' specified for the operation import.
+EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet2=The operation import '{0}' returns entities of type '{1}' that cannot be returned by the entity set path specified for the operation import.
+EdmModel_Validator_Semantic_OperationImportEntitySetExpressionKindIsInvalid=The operation import '{0}' specifies an entity set of kind '{1}' which is not supported in this context. Operation import entity set expression can be either an entity set reference or a path starting with a operation import parameter and traversing navigation properties.
+EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid=The operation import '{0}' specifies an entity set expression which is not valid. Operation import entity set expression can be either an entity set reference or a path starting with a operation import parameter and traversing navigation properties.
+EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType=The operation import '{0}' specifies an entity set but does not return entities.
+EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation=The operation import '{0}' imports operation '{1}' that is bound. Only an unbound operation can be imported using an operation import.
+EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument=The function import '{0}' should not be included in service document because it has parameter.
+EdmModel_Validator_Semantic_FunctionMustHaveReturnType=The function '{0}' must specify a return type.
+EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction=The UrlEscape function '{0}' must be a bound function.
+EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter=The UrlEscape function '{0}' must have and only have one 'Edm.String' parameter.
+EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate=Each parameter name in a operation must be unique. The parameter name '{0}' is already defined.
+EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName=Each member name in an EntityContainer must be unique. A member with name '{0}' is already defined.
+EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType=The function '{0}' has a different return type than other function overloads with the same name. Functions with the same name must have the same return type.
+EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation=The unbound operation '{0}' has an entity set path defined. Entity set path can only be defined on bound operations.
+EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName=The attribute '{0}' has an invalid value. The path doesn't contain the binding parameter name.
+EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName=The attribute '{0}' is invalid. The first item of the path '{2}' is '{3}' which does not match the first parameter name {3}. The first segment of the entity set path is required to be the name of the first parameter.
+EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType=The attribute '{0}' has an invalid value. The path '{1}' has a type cast segment '{2}' that is not an entity type.
+EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty=The attribute '{0}' has an invalid value. The path '{1}' has a navigation property segment '{2}' that is unknown.
+EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment=The attribute '{0}' has an invalid value. The path '{1}' has a type cast segment that doesn't derive from the entity type '{2}' for type segment '{3}'.
+EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter=The attribute '{0}' has an invalid value. The path '{1}' has a binding parameter that references a type '{2}' that is not an entity type.
+EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment=The attribute '{0}' has an invalid value. The path '{1}' has a type cast segment '{2}' that cannot be found in the model.
+EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid=The operation '{0}' has an entity set path and with an invalid return type. The return type is required to be an entity type or a collection of entity type.
+EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable=The operation '{0}' entity set path determined entity type '{1}' is not assignable to the return type '{2}'.
+EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType=The operation '{0}' entity set path was determined to be a reference property but the return type is a collection.
+EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined=An element with the name '{0}' is already defined.
+EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName=The member name '{0}' cannot be used in a type with the same name. Member names cannot be the same as their enclosing type.
+EdmModel_Validator_Semantic_PropertyNameAlreadyDefined=Each property name in a type must be unique. Property name '{0}' is already defined.
+EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind=The base type kind of a structured type must be the same as its derived type.
+EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen=The base type of open type '{0}' is not open type.
+EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity=The key property '{0}' must belong to the entity '{1}'.
+EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey=The 'Edm.PrimitiveType' cannot be used as the type of a key property '{0}' of an entity type '{1}'.
+EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType=The 'Edm.PrimitiveType' cannot be used as the underlying type of '{0}' type '{1}'.
+EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity=The dependent property '{0}' must belong to the dependent entity '{1}'.
+EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect=The property '{0}' cannot belong to a type other than its declaring type. 
+EdmModel_Validator_Semantic_InaccessibleType=The named type '{0}' could not be found from the model being validated.
+EdmModel_Validator_Semantic_AmbiguousType=The named type '{0}' is ambiguous from the model being validated.
+EdmModel_Validator_Semantic_InvalidNavigationPropertyType=The type of the navigation property '{0}' is invalid. The navigation target type must be an entity type or a collection of entity type. The navigation target entity type must match the declaring type of the partner property.
+EdmModel_Validator_Semantic_NavigationPropertyWithRecursiveContainmentTargetMustBeOptional=The target multiplicity of the navigation property '{0}' is invalid. If a navigation property has 'ContainsTarget' set to true and declaring entity type of the property is the same or inherits from the target entity type, then the property represents a recursive containment and it must have an optional target represented by a collection or a nullable entity type.
+EdmModel_Validator_Semantic_NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne=The source multiplicity of the navigation property '{0}' is invalid. If a navigation property has 'ContainsTarget' set to true and declaring entity type of the property is the same or inherits from the target entity type, then the property represents a recursive containment and the multiplicity of the navigation source must be zero or one.
+EdmModel_Validator_Semantic_NavigationPropertyWithNonRecursiveContainmentSourceMustBeFromOne=The source multiplicity of the navigation property '{0}' is invalid. If a navigation property has 'ContainsTarget' set to true and declaring entity type of the property is not the same as the target entity type, then the property represents a non-recursive containment and the multiplicity of the navigation source must be exactly one.
+EdmModel_Validator_Semantic_ComplexTypeMustHaveProperties=The complex type '{0}' is invalid. A complex type must contain at least one property.
+EdmModel_Validator_Semantic_DuplicateDependentProperty=The dependent property '{0}' of navigation property '{1}' is a duplicate.
+EdmModel_Validator_Semantic_ScaleOutOfRange=The scale value can range from 0 through the specified precision value.
+EdmModel_Validator_Semantic_PrecisionOutOfRange=Precision cannot be negative.
+EdmModel_Validator_Semantic_StringMaxLengthOutOfRange=The max length facet specifies the maximum length of an instance of the string type. For unicode equal to 'true', the max length can range from 1 to 2^30, or if 'false', 1 to 2^31.
+EdmModel_Validator_Semantic_MaxLengthOutOfRange=Max length can range from 1 to 2^31.
+EdmModel_Validator_Semantic_EnumMemberValueOutOfRange=The value of enum member '{0}' exceeds the range of its underlying type.
+EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined=Each member name of an enum type must be unique. Enum member name '{0}' is already defined.
+EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly=Only entity types can be open types.
+EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull=The string reference is invalid because if 'IsUnbounded' is true 'MaxLength' must be null.
+EdmModel_Validator_Semantic_InvalidElementAnnotationMismatchedTerm=The declared name and namespace of the annotation must match the name and namespace of its xml value.
+EdmModel_Validator_Semantic_InvalidElementAnnotationValueInvalidXml=The value of an annotation marked to be serialized as an xml element must have a well-formed xml value.
+EdmModel_Validator_Semantic_InvalidElementAnnotationNotIEdmStringValue=The value of an annotation marked to be serialized as an xml element must be IEdmStringValue.
+EdmModel_Validator_Semantic_InvalidElementAnnotationNullNamespaceOrName=The value of an annotation marked to be serialized as an xml element must be a string representing an xml element with non-empty name and namespace.
+EdmModel_Validator_Semantic_CannotAssertNullableTypeAsNonNullableType=Cannot assert the nullable type '{0}' as a non-nullable type.
+EdmModel_Validator_Semantic_ExpressionPrimitiveKindCannotPromoteToAssertedType=Cannot promote the primitive type '{0}' to the specified primitive type '{1}'.
+EdmModel_Validator_Semantic_NullCannotBeAssertedToBeANonNullableType=Null value cannot have a non-nullable type.
+EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType=The type of the expression is incompatible with the asserted type.
+EdmModel_Validator_Semantic_CollectionExpressionNotValidForNonCollectionType=A collection expression is incompatible with a non-collection type.
+EdmModel_Validator_Semantic_PrimitiveConstantExpressionNotValidForNonPrimitiveType=A primitive expression is incompatible with a non-primitive type.
+EdmModel_Validator_Semantic_RecordExpressionNotValidForNonStructuredType=A record expression is incompatible with a non-structured type.
+EdmModel_Validator_Semantic_RecordExpressionMissingProperty=The record expression does not have a constructor for a property named '{0}'.
+EdmModel_Validator_Semantic_RecordExpressionHasExtraProperties=The type of the record expression is not open and does not contain a property named '{0}'.
+EdmModel_Validator_Semantic_DuplicateAnnotation=The annotated element '{0}' has multiple annotations with the term '{1}' and the qualifier '{2}'.
+EdmModel_Validator_Semantic_IncorrectNumberOfArguments=The function application provides '{0}' arguments, but the function '{1}' expects '{2}' arguments.
+EdmModel_Validator_Semantic_DuplicateEntityContainerName=Each entity container name in a function must be unique. The name '{0}' is already defined.
+EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType=The primitive expression is not compatible with the asserted type.
+EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType=The enum expression is not compatible with the asserted type.
+EdmModel_Validator_Semantic_IntegerConstantValueOutOfRange=The value of the integer constant is out of range for the asserted type.
+EdmModel_Validator_Semantic_StringConstantLengthOutOfRange=The value of the string constant is '{0}' characters long, but the max length of its type is '{1}'.
+EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange=The value of the binary constant is '{0}' characters long, but the max length of its type is '{1}'.
+EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone=A type without other errors must not have kind of none.
+EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone=A schema element without other errors must not have kind of none. The kind of schema element '{0}' is none.
+EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone=A property without other errors must not have kind of none. The kind of property '{0}' is none.
+EdmModel_Validator_Semantic_PrimitiveTypeMustNotHaveKindOfNone=A primitive type without other errors must not have kind of none. The kind of primitive type '{0}' is none.
+EdmModel_Validator_Semantic_EntityContainerElementMustNotHaveKindOfNone=An entity container element without other errors must not have kind of none. The kind of entity container element '{0}' is none.
+EdmModel_Validator_Semantic_DuplicateNavigationPropertyMapping=The entity set '{0}' should have only a single mapping for the property '{1}'.
+EdmModel_Validator_Semantic_NavigationMappingMustBeBidirectional=The binding of the entity set or singleton '{0}' on navigation property '{1}' is invalid, the binding of bidirectional navigation property must be bidirectional if specified. 
+EdmModel_Validator_Semantic_EntitySetCanOnlyBeContainedByASingleNavigationProperty=The entity set '{0}' is invalid because it is contained by more than one navigation property.
+EdmModel_Validator_Semantic_TypeAnnotationMissingRequiredProperty=The type annotation is missing a binding for the property '{0}'.
+EdmModel_Validator_Semantic_TypeAnnotationHasExtraProperties=They type of the type annotation is not open, and does not contain a property named '{0}'.
+EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType=The underlying type of '{0}' is not valid. The underlying type of an enum type must be an integral type. 
+EdmModel_Validator_Semantic_InaccessibleTerm=The term '{0}' could not be found from the model being validated.
+EdmModel_Validator_Semantic_InaccessibleTarget=The target '{0}' could not be found from the model being validated.
+EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable=The target '{0}' of the annotation is not allowed in the AppliesTo '{1}' of the term '{2}'.".
+EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique=An element already has a direct annotation with the namespace '{0}' and name '{1}'.
+EdmModel_Validator_Semantic_NoEntitySetsFoundForType=The association set '{0}' cannot assume an entity set for the role '{2}' because there are no entity sets for the role type '{1}'.
+EdmModel_Validator_Semantic_CannotInferEntitySetWithMultipleSetsPerType=The association set '{0}' must specify an entity set for the role '{2}' because there are multiple entity sets for the role type '{1}'.
+EdmModel_Validator_Semantic_EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet=Because the navigation property '{0}' is recursive, the mapping from the entity set '{1}' must point back to itself.
+EdmModel_Validator_Semantic_NavigationPropertyEntityMustNotIndirectlyContainItself=The navigation property '{0}' is invalid because it indirectly contains itself.
+EdmModel_Validator_Semantic_PathIsNotValidForTheGivenContext=The path cannot be resolved in the given context. The segment '{0}' failed to resolve.
+EdmModel_Validator_Semantic_NavigationPropertyMappingMustPointToValidTargetForProperty=The entity set or singleton '{1}' is not a valid destination for the navigation property '{0}' because it cannot hold an element of the target entity type.
+EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames=The bound function '{0}' is a duplicate of other bound functions. For bound functions the combination of the namespace, name, binding parameter type and unordered set of parameter names uniquely identifies a bound function.
+EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes=The bound function '{0}' is a duplicate of other bound functions. For bound functions the combination of the namespace, name, binding parameter type and ordered set of parameter types uniquely identifies a bound function.
+EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames=The unbound function '{0}' is a duplicate of other unbound functions. For unbound functions the combination of the namespace, name and unordered set of parameter names uniquely identifies an unbound function.
+EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes=The unbound function '{0}' is a duplicate of other unbound functions. For unbound functions the combination of the namespace, name and ordered set of parameter types uniquely identifies an unbound function.
+EdmModel_Validator_Semantic_ModelDuplicateBoundActions=The bound action '{0}' is a duplicate of other bound actions. For bound actions the combination of the namespace, name, and binding parameter type uniquely identifies an bound action.
+EdmModel_Validator_Semantic_ModelDuplicateUnBoundActions=The unbound action '{0}' is a duplicate of other unbound actions. For unbound actions the combination of the namespace, and name uniquely identifies an unbound action.
+EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType=The bound function overload '{0}' does not have the same return type as other function overloads. Expected type '{1}'.
+EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType=The type '{0}' of the entity set '{1}' is not valid, it must be collection of entity type.
+EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType=The type '{0}' of the singleton '{1}' is not valid, it must be entity type.
+EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton=The navigation property mapping '{0}' is invalid because its type is collection but target to a singleton '{1}'.
+EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType=The type '{0}' cannot be the base type of an '{1}' type '{2}'.
+EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType=The type '{0}' cannot be used as the type of a property '{1}'.
+EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType=The type '{0}' cannot be used as the return type of a function '{1}'.
+EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton=The type 'Edm.EntityType' cannot be used as the type of a singleton '{0}' in an entity container.
+EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet=The type 'Edm.EntityType' cannot be used as the type of an entity set '{0}' in an entity container.
+EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty=The declaring type '{0}' of {1} '{2}' cannot include path type property.
+EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty=The type '{0}' of navigation property '{1}' on declaring type '{2}' cannot include path type property.
+
+;Error message for Syntactic validation rules
+EdmModel_Validator_Syntactic_MissingName=The name is missing or not valid.
+EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong=The specified name must not be longer than 480 characters: '{0}'.
+EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed=The specified name is not allowed: '{0}'.
+EdmModel_Validator_Syntactic_MissingNamespaceName=The namespace name is missing or not valid.
+EdmModel_Validator_Syntactic_EdmModel_NamespaceNameIsTooLong=The specified name must not be longer than 480 characters: '{0}'.
+EdmModel_Validator_Syntactic_EdmModel_NamespaceNameIsNotAllowed=The specified namespace name is not allowed: '{0}'.
+EdmModel_Validator_Syntactic_PropertyMustNotBeNull=The value of the property '{0}.{1}' must not be null.
+EdmModel_Validator_Syntactic_EnumPropertyValueOutOfRange=The property '{0}.{1}' of type '{2}' has value '{3}' that is not a valid enum member.
+EdmModel_Validator_Syntactic_InterfaceKindValueMismatch=An object with the value '{0}' of the '{1}.{2}' property must implement '{3}' interface.
+EdmModel_Validator_Syntactic_TypeRefInterfaceTypeKindValueMismatch=An object implementing '{0}' interface has type definition of kind '{1}'. The type reference interface must match to the kind of the  definition.
+EdmModel_Validator_Syntactic_InterfaceKindValueUnexpected=The value '{0}' of the property '{1}.{2}' is not semantically valid. A semantically valid model must not contain elements of kind '{0}'.
+EdmModel_Validator_Syntactic_EnumerableMustNotHaveNullElements=The value of the enumeration the property '{0}.{1}' contains a null element. Enumeration properties must not contain null elements.
+EdmModel_Validator_Syntactic_NavigationPartnerInvalid=The partner of the navigation property '{0}' must not be the same property, and must point back to the navigation property.
+EdmModel_Validator_Syntactic_InterfaceCriticalCycleInTypeHierarchy=The chain of base types of type '{0}' is cyclic.
+
+;Error message for Serializer
+Serializer_SingleFileExpected=Single file provided but model cannot be serialized into single file.
+Serializer_UnknownEdmVersion=Unknown Edm version.
+Serializer_UnknownEdmxVersion=Unknown Edmx version.
+Serializer_NonInlineOperationImportReturnType=The operation import '{0}' could not be serialized because its return type cannot be represented inline.
+Serializer_ReferencedTypeMustHaveValidName=A referenced type can not be serialized with an invalid name. The name '{0}' is invalid.
+Serializer_OutOfLineAnnotationTargetMustHaveValidName=The annotation can not be serialized with an invalid target name. The name '{0}' is invalid.
+Serializer_NoSchemasProduced=No CSDL is written because no schema elements could be produced. This is likely because the model is empty.
+
+XmlParser_EmptyFile={0} does not contain a schema definition, or the XmlReader provided started at the end of the file.
+XmlParser_EmptySchemaTextReader=The source XmlReader does not contain a schema definition or started at the end of the file.
+XmlParser_MissingAttribute=Required schema attribute '{0}' is not present on element '{1}'.
+XmlParser_TextNotAllowed=The current schema element does not support text '{0}'.
+XmlParser_UnexpectedAttribute=The attribute '{0}' was not expected in the given context.
+XmlParser_UnexpectedElement=The schema element '{0}' was not expected in the given context.
+XmlParser_UnusedElement=Unused schema element: '{0}'.
+XmlParser_UnexpectedNodeType=Unexpected XML node type: {0}.
+XmlParser_UnexpectedRootElement=The element '{0}' was unexpected for the root element. The root element should be {1}.
+XmlParser_UnexpectedRootElementWrongNamespace=The namespace '{0}' is invalid. The root element is expected to belong to one of the following namespaces: '{1}'.
+XmlParser_UnexpectedRootElementNoNamespace=The root element has no namespace. The root element is expected to belong to one of the following namespaces: '{0}'.
+
+; CSDL Parser
+CsdlParser_InvalidEntitySetPathWithUnboundAction=The {0} '{1}' is invalid. The entitySetPath value is not allowed when IsBound attribute is false.
+CsdlParser_InvalidAlias=The alias '{0}' is not a valid simple name.
+CsdlParser_InvalidDeleteAction=The delete action '{0}' is not valid. Action must be: 'None', 'Cascade', or 'Restrict'.
+CsdlParser_MissingTypeAttributeOrElement=An XML attribute or sub-element representing an EDM type is missing.
+CsdlParser_InvalidEndRoleInRelationshipConstraint=There is no Role with name '{0}' defined in relationship '{1}'.
+CsdlParser_InvalidMultiplicity=The multiplicity '{0}' is not valid. Multiplicity must be: '*', '0..1', or '1'.
+CsdlParser_ReferentialConstraintRequiresOneDependent=Referential constraints requires one dependent role. Multiple dependent roles were specified for this referential constraint.
+CsdlParser_ReferentialConstraintRequiresOnePrincipal=Referential constraints requires one principal role. Multiple principal roles were specified for this referential constraint.
+CsdlParser_InvalidIfExpressionIncorrectNumberOfOperands=If expression must contain 3 operands, the first being a boolean test, the second being being evaluated if the first is true, and the third being evaluated if the first is false.
+CsdlParser_InvalidIsTypeExpressionIncorrectNumberOfOperands=The IsType expression must contain 1 operand.
+CsdlParser_InvalidCastExpressionIncorrectNumberOfOperands=The Cast expression must contain 1 operand.
+CsdlParser_InvalidLabeledElementExpressionIncorrectNumberOfOperands=The LabeledElement expression must contain 1 operand.
+CsdlParser_InvalidTypeName=The type name '{0}' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.
+CsdlParser_InvalidQualifiedName=The qualified name '{0}' is invalid. A qualified name must have a valid namespace or alias, and a valid name.
+CsdlParser_NoReadersProvided=A model could not be produced because no XML readers were provided.
+CsdlParser_NullXmlReader=A model could not be produced because one of the XML readers was null.
+CsdlParser_InvalidEntitySetPath='{0}' is not a valid entity set path.
+CsdlParser_InvalidEnumMemberPath='{0}' is not a valid enum member path.
+CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType=The 'Nullable' attribute cannot be specified for a navigation property with collection type.
+CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer=Metadata document cannot have more than one entity container.
+CsdlSemantics_ReferentialConstraintMismatch= There was a mismatch in the principal and dependent ends of the referential constraint.
+CsdlSemantics_EnumMemberMustHaveValue=The enumeration member must have a value.
+CsdlSemantics_ImpossibleAnnotationsTarget=The annotation target '{0}' could not be resolved because it cannot refer to an annotatable element.
+CsdlSemantics_DuplicateAlias=The schema '{0}' contains the alias '{1}' more than once.
+
+;EdmxParser
+EdmxParser_EdmxVersionMismatch=The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element.
+EdmxParser_BodyElement=Unexpected {0} element while parsing Edmx. Edmx is expected to have at most one of 'Runtime' or 'DataServices' elements.
+EdmxParser_InvalidReferenceIncorrectNumberOfIncludes=edmx:Reference must contain at least one edmx:Includes or edmx:IncludeAnnotations.
+EdmxParser_UnresolvedReferenceUriInEdmxReference=Unresolved Uri found in edmx:Reference, getReferencedModelReaderFunc should not return null when the URI is not a well-known schema.
+
+;EdxmParseException
+EdmParseException_ErrorsEncounteredInEdmx=Encountered the following errors when parsing the EDMX document: \r\n{0}
+
+; Error message for the value parser
+ValueParser_InvalidBoolean=The value '{0}' is not a valid boolean. The value must be 'true' or 'false'.
+ValueParser_InvalidInteger=The value '{0}' is not a valid integer. The value must be a valid 32 bit integer.
+ValueParser_InvalidLong=The value '{0}' is not a valid integer. The value must be a valid 64 bit integer.
+ValueParser_InvalidFloatingPoint=The value '{0}' is not a valid floating point value. 
+ValueParser_InvalidMaxLength=The value '{0}' is not a valid integer. The value must be a valid 32 bit integer or 'Max'.
+ValueParser_InvalidSrid=The value '{0}' is not a valid SRID. The value must either be a 32 bit integer or 'Variable'.
+ValueParser_InvalidScale=The value '{0}' is not a valid scale. The value must either be a 32 bit integer or 'Variable'.
+ValueParser_InvalidGuid=The value '{0}' is not a valid Guid. 
+ValueParser_InvalidDecimal=The value '{0}' is not a valid decimal.
+ValueParser_InvalidDateTimeOffset=The value '{0}' is not a valid date time offset value.
+ValueParser_InvalidDateTime=The value '{0}' is not a valid date time value.
+ValueParser_InvalidDate=The value '{0}' is not a valid date value.
+ValueParser_InvalidDuration=The value '{0}' is not a valid duration value.
+ValueParser_InvalidBinary=The value '{0}' is not a valid binary value. The value must be a hexadecimal string and must not be prefixed by '0x'.
+ValueParser_InvalidTimeOfDay=The value '{0}' is not a valid TimeOfDay value.
+
+;Unknown enumerated type value errors
+UnknownEnumVal_Multiplicity=Invalid multiplicity: '{0}'
+UnknownEnumVal_SchemaElementKind=Invalid schema element kind: '{0}'
+UnknownEnumVal_TypeKind=Invalid type kind: '{0}'
+UnknownEnumVal_PrimitiveKind=Invalid primitive kind: '{0}'
+UnknownEnumVal_ContainerElementKind=Invalid container element kind: '{0}'
+UnknownEnumVal_CsdlTarget=Invalid CSDL target: '{0}'
+UnknownEnumVal_PropertyKind=Invalid property kind: '{0}'
+UnknownEnumVal_ExpressionKind=Invalid expression kind: '{0}'
+
+; Error message for 'Bad' types
+Bad_AmbiguousElementBinding=The name '{0}' is ambiguous.
+Bad_UnresolvedType=The type '{0}' could not be found.
+Bad_UnresolvedComplexType=The complex type '{0}' could not be found.
+Bad_UnresolvedEntityType=The entity type '{0}' could not be found.
+Bad_UnresolvedPrimitiveType=The primitive type '{0}' could not be found.
+Bad_UnresolvedOperation=The operation '{0}' could not be found.
+Bad_AmbiguousOperation=The operation '{0}' could not be resolved because more than one operation could be used for this application.
+Bad_OperationParametersDontMatch=The operation '{0}' could not be resolved because none of the operations with that name take the correct set of parameters.
+Bad_UnresolvedEntitySet=The entity set '{0}' could not be found.
+Bad_UnresolvedEntityContainer=The entity container '{0}' could not be found.
+Bad_UnresolvedEnumType=The enum type '{0}' could not be found.
+Bad_UnresolvedEnumMember=The enum member '{0}' could not be found.
+Bad_UnresolvedProperty=The property '{0}' could not be found.
+Bad_UnresolvedParameter=The parameter '{0}' could not be found.
+Bad_UnresolvedReturn=The return of operation '{0}' could not be found.
+Bad_UnresolvedLabeledElement=The labeled element '{0}' could not be found.
+Bad_CyclicEntity=The entity '{0}' is invalid because its base type is cyclic.
+Bad_CyclicComplex=The complex type '{0}' is invalid because its base type is cyclic.
+Bad_CyclicEntityContainer=The entity container '{0}' is invalid because its extends hierarchy is cyclic.
+Bad_UnresolvedNavigationPropertyPath=A navigation property could not be found for the path '{0}' starting from the type '{1}'.
+
+; Error messages for validation rulesets
+RuleSet_DuplicateRulesExistInRuleSet=The same rule cannot be in the same rule set twice.
+
+; Error messages for EDM to CLR conversion
+EdmToClr_UnsupportedType=Conversion of EDM values to a CLR type with type {0} is not supported.
+EdmToClr_StructuredValueMappedToNonClass=Conversion of an EDM structured value is supported only to a CLR class.
+EdmToClr_IEnumerableOfTPropertyAlreadyHasValue=Cannot initialize a property '{0}' on an object of type '{1}'. The property already has a value.
+EdmToClr_StructuredPropertyDuplicateValue=An EDM structured value contains multiple values for the property '{0}'. Conversion of an EDM structured value with duplicate property values is not supported.
+EdmToClr_CannotConvertEdmValueToClrType=Conversion of an EDM value of the type '{0}' to the CLR type '{1}' is not supported.
+EdmToClr_CannotConvertEdmCollectionValueToClrType=Conversion of an edm collection value to the CLR type '{0}' is not supported. EDM collection values can be converted to System.Collections.Generic.IEnumerable<T>, System.Collections.Generic.IList<T> or System.Collections.Generic.ICollection<T>.
+EdmToClr_TryCreateObjectInstanceReturnedWrongObject=The type '{0}' of the object returned by the TryCreateObjectInstance delegate is not assignable to the expected type '{1}'.
+
+;Error message for EdmUtil class
+EdmUtil_NullValueForMimeTypeAnnotation=The MIME type annotation must not have a null value.
+EdmUtil_InvalidAnnotationValue=An annotation of type string was expected for the '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' annotation, but an annotation of type '{1}' was found.
+
+; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
+PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.
+
+;Error message for Build-in type
+Date_InvalidAddedOrSubtractedResults=The added or subtracted value results in an un-representable Date.
+Date_InvalidDateParameters=The Year '{0}', Month '{1}' and Day '{2}' parameters describe an un-representable Date.
+Date_InvalidParsingString=String '{0}' was not recognized as a valid Date.
+Date_InvalidCompareToTarget=Target object '{0}' is not an instance with type of Date.
+TimeOfDay_InvalidTimeOfDayParameters=The Hour '{0}', Minute '{1}', Second '{2}' and Millisecond '{3}' parameters describe an un-representable TimeOfDay.
+TimeOfDay_TicksOutOfRange=The ticks value '{0}' is out of representable TimeOfDay range.
+TimeOfDay_ConvertErrorFromTimeSpan=The TimeSpan value '{0}' is out of representable TimeOfDay range.
+TimeOfDay_InvalidParsingString=String '{0}' was not recognized as a valid TimeOfDay.
+TimeOfDay_InvalidCompareToTarget=Target object '{0}' is not an instance with type of TimeOfDay.
