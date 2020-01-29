@@ -801,6 +801,17 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         [Fact]
+        public void TestHasAnyParity()
+        {
+            IList<IEdmEntityType> list = new List<IEdmEntityType>();
+            for(int i=1; i <10; i++)
+            {
+                Assert.Equal(HasAnyCheap(list), HasAnyExpensive(list));
+                list.Add(new EdmEntityType("NS", "f" + i, TestModel.Instance.EntitySet.EntityType()));
+            }
+        }
+
+        [Fact]
         public void FindDeclaredEntitySetWithSingletonName()
         {
             Assert.Null(TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.Singleton.Name));
@@ -1079,6 +1090,33 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             {
                 get { return type; }
             }
+        }
+
+        internal static bool HasAnyExpensive<T>(IEnumerable<T> enumerable) where T : class
+        {
+            IList<T> list = enumerable as IList<T>;
+            if (list != null)
+            {
+                return list.Count > 0;
+            }
+
+            T[] array = enumerable as T[];
+            if (array != null)
+            {
+                return array.Length > 0;
+            }
+
+            return enumerable.FirstOrDefault() != null;
+        }
+
+        internal static bool HasAnyCheap<T>(IEnumerable<T> enumerable) where T : class
+        {
+            if (enumerable != null && enumerable.GetEnumerator().MoveNext())
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
