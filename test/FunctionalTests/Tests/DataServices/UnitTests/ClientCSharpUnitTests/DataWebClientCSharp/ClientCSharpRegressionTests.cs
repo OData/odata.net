@@ -508,14 +508,16 @@ namespace AstoriaUnitTests.Tests
             TestUtil.RunCombinations(new SaveChangesOptions[] { SaveChangesOptions.None, SaveChangesOptions.ContinueOnError },
             (options) =>
             {
-                ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.NoContent;
+                DataServiceContext context = new DataServiceContext(new Uri("http://localhost/TheTest.svc"), ODataProtocolVersion.V4);
+                context.Format.UseJson(new EdmModel());
+                context.AddAndUpdateResponsePreference = DataServiceResponsePreference.NoContent;
 
                 Customer c = new Customer() { ID = 1, Name = "Foo" };
-                ctx.AttachTo("Customers", c);
+                context.AttachTo("Customers", c);
                 MemoryStream stream = new MemoryStream(new byte[] { 0, 1, 2, 3 });
-                ctx.SetSaveStream(c, stream, true, new DataServiceRequestArgs() { ContentType = "image/bmp" });
+                context.SetSaveStream(c, stream, true, new DataServiceRequestArgs() { ContentType = "image/bmp" });
 
-                DataServiceRequestException ex = TestUtil.RunCatching<DataServiceRequestException>(() => { ctx.SaveChanges(options); });
+                DataServiceRequestException ex = TestUtil.RunCatching<DataServiceRequestException>(() => { context.SaveChanges(options); });
                 TestUtil.AssertExceptionExpected(ex, true);
                 InvalidOperationException innerEx = ex.InnerException as InvalidOperationException;
                 Assert.IsNotNull(innerEx, "Expected invalid operation exception in the inner exception");
