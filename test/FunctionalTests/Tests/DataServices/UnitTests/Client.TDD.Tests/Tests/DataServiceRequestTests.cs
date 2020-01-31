@@ -11,10 +11,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.IO;
     using System.Linq;
     using System.Net;
-    using Microsoft.OData.Client;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Client;
     using Microsoft.OData.Client.TDDUnitTests;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class DataServiceRequestTests

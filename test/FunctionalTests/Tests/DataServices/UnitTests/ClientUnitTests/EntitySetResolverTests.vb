@@ -11,6 +11,7 @@ Imports System.Collections
 Imports System.Collections.Generic
 Imports Microsoft.OData.Service
 Imports Microsoft.OData.Client
+Imports Microsoft.OData.Edm
 Imports System.Data.Test.Astoria
 Imports AstoriaUnitTests.Stubs
 Imports Microsoft.Test.ModuleCore
@@ -22,7 +23,6 @@ Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests
 Imports System.Web
 Imports System.IO
-Imports Microsoft.OData.Edm
 
 Partial Public Class ClientModule
 
@@ -119,7 +119,6 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBeginExecute_NullBaseUri_AbsoluteRequestUri_Success()
             Dim context = New DataServiceContext()
-            'context.ReConfigureForNetworkLoadingTests()
             'context.EnableAtom = True
             context.Format.UseJson(New EdmModel())
             context.BeginExecute(Of Object)(entitySet1AbsoluteUri, Sub(ar As IAsyncResult)

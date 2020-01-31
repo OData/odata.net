@@ -7,9 +7,9 @@
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
-    using Microsoft.OData.Client;
     using System.IO;
     using System.Linq;
+    using Microsoft.OData.Client;
     using Microsoft.OData.Client.TDDUnitTests;
 
 #if !PORTABLELIB
@@ -242,9 +242,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void DisposeShouldBeCalledOnResponseMessageForExecuteWithNoContent()
         {
-            DataServiceContext context = new DataServiceContext().ReConfigureForNetworkLoadingTests();
             bool responseMessageDisposed = false;
-            context.Configurations.RequestPipeline.OnMessageCreating = args =>
+            testSubject.Configurations.RequestPipeline.OnMessageCreating = args =>
             {
                 var requestMessage = new InMemoryMessage { Url = args.RequestUri, Method = args.Method, Stream = new MemoryStream() };
                 var responseMessage = new InMemoryMessage { StatusCode = 204, Stream = new MemoryStream() };
@@ -252,7 +251,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 return new TestDataServiceClientRequestMessage(requestMessage, () => responseMessage);
             };
 
-            context.Execute(new Uri("http://host/voidAction", UriKind.Absolute), "POST").StatusCode.Should().Be(204);
+            testSubject.Execute(new Uri("http://host/voidAction", UriKind.Absolute), "POST").StatusCode.Should().Be(204);
             responseMessageDisposed.Should().BeTrue();
         }
 

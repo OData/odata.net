@@ -23,18 +23,25 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     [TestClass]
     public class ODataWriterWrapperUnitTests
     {
+        private DataServiceContext context;
+
+        [TestInitialize]
+        public void Init()
+        {
+             context = new DataServiceContext(new Uri("http://www.odata.org/Service.svc")).ReConfigureForNetworkLoadingTests();
+
+        }
         [TestMethod]
         public void EndToEndShortIntegrationWriteEntryEventTest()
         {
             List<KeyValuePair<string, object>> eventArgsCalled = new List<KeyValuePair<string, object>>();
-            var dataServiceContext = new DataServiceContext(new Uri("http://www.odata.org/Service.svc")).ReConfigureForNetworkLoadingTests();
-            dataServiceContext.Configurations.RequestPipeline.OnEntityReferenceLink((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntityReferenceLink", args)));
-            dataServiceContext.Configurations.RequestPipeline.OnEntryEnding((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntryEnded", args)));
-            dataServiceContext.Configurations.RequestPipeline.OnEntryStarting((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntryStarted", args)));
-            dataServiceContext.Configurations.RequestPipeline.OnNestedResourceInfoEnding((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnNestedResourceInfoEnded", args)));
-            dataServiceContext.Configurations.RequestPipeline.OnNestedResourceInfoStarting((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnNestedResourceInfoStarted", args)));
+            context.Configurations.RequestPipeline.OnEntityReferenceLink((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntityReferenceLink", args)));
+            context.Configurations.RequestPipeline.OnEntryEnding((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntryEnded", args)));
+            context.Configurations.RequestPipeline.OnEntryStarting((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntryStarted", args)));
+            context.Configurations.RequestPipeline.OnNestedResourceInfoEnding((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnNestedResourceInfoEnded", args)));
+            context.Configurations.RequestPipeline.OnNestedResourceInfoStarting((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnNestedResourceInfoStarted", args)));
 
-            Person person = SetupSerializerAndCallWriteEntry(dataServiceContext);
+            Person person = SetupSerializerAndCallWriteEntry(context);
 
             eventArgsCalled.Should().HaveCount(8);
             eventArgsCalled[0].Key.Should().Be("OnEntryStarted");
@@ -91,7 +98,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void EntityPropertiesShouldBePopulatedBeforeCallingWriteStart()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
             context.Configurations.RequestPipeline.OnEntryStarting(args =>
             {
                 args.Entry.Should().NotBeNull();
@@ -209,14 +215,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var car1 = new Car { ID = 1001 };
             var car2 = new Car { ID = 1002 };
 
-            DataServiceContext dataServiceContext = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
-            dataServiceContext.AttachTo("Persons", person);
-            dataServiceContext.AttachTo("Cars", car1);
-            dataServiceContext.AttachTo("Cars", car2);
-            dataServiceContext.AddLink(person, "Cars", car1);
-            dataServiceContext.AddLink(person, "Cars", car2);
+           
+            context.AttachTo("Persons", person);
+            context.AttachTo("Cars", car1);
+            context.AttachTo("Cars", car2);
+            context.AddLink(person, "Cars", car1);
+            context.AddLink(person, "Cars", car2);
 
-            var requestInfo = new RequestInfo(dataServiceContext);
+            var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             var headers = new HeaderCollection();
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
@@ -243,10 +249,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
         internal ODataWriterWrapper SetupTestActionExecuted(Action<DataServiceContext, DataServiceClientRequestPipelineConfiguration> setup)
         {
-            var dataServiceContext = new DataServiceContext();
             var writer = new TestODataWriter();
-            setup(dataServiceContext, dataServiceContext.Configurations.RequestPipeline);
-            return ODataWriterWrapper.CreateForEntryTest(writer, dataServiceContext.Configurations.RequestPipeline);
+            setup(context, context.Configurations.RequestPipeline);
+            return ODataWriterWrapper.CreateForEntryTest(writer, context.Configurations.RequestPipeline);
         }
 
         public enum MyColor : long

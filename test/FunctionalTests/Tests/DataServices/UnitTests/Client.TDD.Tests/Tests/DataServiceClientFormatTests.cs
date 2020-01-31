@@ -8,15 +8,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Client.Metadata;
+    using System.IO;
     using AstoriaUnitTests.TDD.Common;
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
-    using System.IO;
-    using Microsoft.OData.Client.TDDUnitTests.Tests;
+    using Microsoft.OData.Client;
+    using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Client.TDDUnitTests;
+    using Microsoft.OData.Client.TDDUnitTests.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 

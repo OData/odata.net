@@ -4,24 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
-
 namespace Microsoft.OData.Client
 {
     #region namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData;
-    using Edm;
+    using System.Collections.Generic;
+    using System.Net;
     using System.IO;
     using System.Xml;
-    using System.Net;
-    using Microsoft.OData.Edm.Csdl;
-    using System.Collections.Generic;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
+    using Edm;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm.Csdl;
+ 
 
     #endregion
     /// <summary>
@@ -92,24 +91,23 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                if (serviceModel == null && LoadServiceModel != null)
+                if (serviceModel != null)
+                    return serviceModel;
+
+                if (LoadServiceModel != null)
                 {
                     serviceModel = LoadServiceModel();
                 }
-                // For when the model is null and the user has not specified a method to load the service model
-                // default to fetching it from the metadata Uri
-                else if (serviceModel == null && LoadServiceModel == null)
+                else
                 {
                     serviceModel = LoadServiceModelUsingNetwork();
                 }
-             
                 return serviceModel;
             }
         }
 
         /// <summary>
         /// Invoked during test cases to fake out network calls to get the metadata
-        /// TODO: Change the visibility of this to internal after adding correct InternalsVisibleTo
         /// returns a string that is passed to the csdl parser and is used to bypass the network call while testing
         /// </summary>
         internal Func<HttpWebRequestMessage> InjectMetadataHttpNetworkRequest { get; set; }
@@ -271,8 +269,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="headers">The headers to update.</param>
         /// <param name="mediaType">The media type for the accept header.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822", Justification =
-            "If this becomes static, then so do its more visible callers, and we do not want to provide a mix of instance and static methods on this class.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822", Justification = "If this becomes static, then so do its more visible callers, and we do not want to provide a mix of instance and static methods on this class.")]
         private void SetAcceptHeaderAndCharset(HeaderCollection headers, string mediaType)
         {
             // NOTE: we intentionally do NOT set the DSV header for 'accept' as content-negotiation
@@ -309,7 +306,7 @@ namespace Microsoft.OData.Client
         internal IEdmModel LoadServiceModelUsingNetwork()
         {
             HttpWebRequestMessage httpRequest;
-            //internal method
+            // test hook for injecting a network request to use instead of the default
             if (InjectMetadataHttpNetworkRequest != null)
             {
                 httpRequest = InjectMetadataHttpNetworkRequest();
@@ -327,20 +324,18 @@ namespace Microsoft.OData.Client
             }
 #if !PORTABLELIB
             IODataResponseMessage response = httpRequest.GetResponse();
-
-#endif
-#if PORTABLELIB
+#else
             Task<IODataResponseMessage> asyncResponse =
                 Task<IODataResponseMessage>.Factory.FromAsync(httpRequest.BeginGetResponse, httpRequest.EndGetResponse,
                     httpRequest);
             IODataResponseMessage response = asyncResponse.GetAwaiter().GetResult();
 #endif
-
-            StreamReader streamReader = new StreamReader(response.GetStream());
-            string xmlResponse = streamReader.ReadToEnd();
-            XmlReader xmlReader = XmlReader.Create(new StringReader(xmlResponse));
-            return CsdlReader.Parse(xmlReader);
+            using (StreamReader streamReader = new StreamReader(response.GetStream()))
+            using (StringReader stringReader= new StringReader(streamReader.ReadToEnd()))
+            using (XmlReader xmlReader = XmlReader.Create(stringReader))
+            {
+                return CsdlReader.Parse(xmlReader);
+            }
         }
-
     }
 }
