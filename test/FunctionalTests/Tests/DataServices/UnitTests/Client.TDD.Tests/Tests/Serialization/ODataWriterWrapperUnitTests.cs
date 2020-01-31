@@ -28,7 +28,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestInitialize]
         public void Init()
         {
-             context = new DataServiceContext(new Uri("http://www.odata.org/Service.svc")).ReConfigureForNetworkLoadingTests();
+             context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
 
         }
         [TestMethod]
