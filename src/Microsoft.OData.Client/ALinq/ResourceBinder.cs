@@ -1324,9 +1324,13 @@ namespace Microsoft.OData.Client
 
             ValidationRules.RequireCanAddCount(rse);
             rse.ConvertKeyToFilterExpression();
-            rse.CountOption = CountOption.CountSegment;
 
-            return rse;
+            //Create a copy of ResourceExpression to prevent carrying over 
+            //of count an longcount functions to subsequent queries.
+            QueryableResourceExpression rseCopy = rse.CreateCloneResourceExpression() as QueryableResourceExpression;
+            rseCopy.CountOption = CountOption.CountSegment;
+
+            return rseCopy;
         }
 
         private static void AddSequenceQueryOption(ResourceExpression target, QueryOptionExpression qoe)

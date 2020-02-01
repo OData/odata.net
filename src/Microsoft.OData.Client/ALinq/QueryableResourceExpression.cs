@@ -230,6 +230,25 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Create a clone of the ResourceExpression.
+        /// </summary>
+        /// <returns>The new clone.</returns>
+        internal override ResourceExpression CreateCloneResourceExpression()
+        {
+            QueryableResourceExpression clone = this.CreateClone();
+
+            if (this.keyPredicateConjuncts != null && this.keyPredicateConjuncts.Count > 0)
+            {
+                clone.SetKeyPredicate(this.keyPredicateConjuncts);
+            }
+
+            clone.keyFilter = this.keyFilter;
+            clone.sequenceQueryOptions = this.sequenceQueryOptions;
+            clone.transparentScope = this.transparentScope;
+            return clone;
+        }
+
+        /// <summary>
         /// Creates a navigation resource expression
         /// </summary>
         /// <param name="expressionType">The expression type.</param>
@@ -439,6 +458,12 @@ namespace Microsoft.OData.Client
         /// <param name="newResourceType">The new resource type</param>
         /// <returns>A copy of this with the new types</returns>
         protected abstract QueryableResourceExpression CreateCloneWithNewTypes(Type newType, Type newResourceType);
+
+        /// <summary>
+        /// Creates a copy of the current ResourceSetExpression. Object references remain the same.
+        /// </summary>
+        /// <returns>A copy of this</returns>
+        internal abstract QueryableResourceExpression CreateClone();
 
         /// <summary>
         /// Represents the property accesses required to access both

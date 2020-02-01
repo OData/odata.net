@@ -22,6 +22,9 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using NorthwindModel;
+    using System.IO;
+    using System.Text;
+    using Microsoft.OData;
     #endregion Namespaces
 
     // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
@@ -8174,6 +8177,30 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [TestMethod]
+        public void VerifyCountIsNotCarriedOver()
+        {
+            var expectedLongCountFunctionUri = "/service.svc/Leagues/LongCountFunction(Param1='Param1',Param2='Param2')?$orderby=ID";
+            var expectedCountFunctionUri = "/service.svc/Leagues/CountFunction(Param1='Param1',Param2='Param2')?$orderby=ID";
+
+            var countQuery = context.CreateQuery<League>("Leagues");
+            var longcountQuery = context.CreateQuery<League>("Leagues");
+
+            var countFunctionQuery = countQuery.CreateFunctionQuery<League>("CountFunction", true, new UriOperationParameter("Param1", "Param1"),
+                    new UriOperationParameter("Param2", "Param2"));
+            var longCountFunctionQuery = longcountQuery.CreateFunctionQuery<League>("LongCountFunction", true, new UriOperationParameter("Param1", "Param1"),
+                    new UriOperationParameter("Param2", "Param2"));
+            
+            context.Configurations.RequestPipeline.OnMessageCreating = args => new CustomReqMsg(args);
+
+            countFunctionQuery.Count();
+            longCountFunctionQuery.LongCount();
+
+            var countOrderQuery = countFunctionQuery.OrderBy(x => x.ID);
+            var longCountOrderQuery = longCountFunctionQuery.OrderBy(x => x.ID);
+            Assert.IsTrue(countOrderQuery.ToString().EndsWith(expectedCountFunctionUri), "Wrong uri generated with count option");
+            Assert.IsTrue(longCountOrderQuery.ToString().EndsWith(expectedLongCountFunctionUri), "Wrong uri generated with longcount option");
+        }
         // [TestMethod]
         public void ProjectionAndCountTest()
         {
@@ -8813,5 +8840,19 @@ namespace AstoriaUnitTests.Tests
         }
         #endregion
 
+    }
+
+    class CustomReqMsg : HttpWebRequestMessage
+    {
+        public CustomReqMsg(DataServiceClientRequestMessageArgs args) : base(args) { }
+
+        public override IODataResponseMessage GetResponse()
+        {
+            return new HttpWebResponseMessage(
+                headers: new Dictionary<string, string>(),
+                statusCode: 200,
+                getResponseStream: () => new MemoryStream(Encoding.UTF8.GetBytes("2"))
+                );
+        }
     }
 }
