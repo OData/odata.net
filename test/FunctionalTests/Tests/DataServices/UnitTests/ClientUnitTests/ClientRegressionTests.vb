@@ -24,6 +24,7 @@ Imports AstoriaUnitTests.Tests
 Imports AstoriaUnitTests.ClientExtensions
 Imports Microsoft.OData.Client
 Imports Microsoft.OData.Edm
+Imports Microsoft.OData.Service
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports NorthwindModel
