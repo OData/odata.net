@@ -10,18 +10,12 @@ namespace Microsoft.OData.Client
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Collections.Generic;
-    using System.Net;
     using System.IO;
-    using System.Xml;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
-    using Edm;
+    using System.Xml;
     using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
- 
-
     #endregion
     /// <summary>
     /// Tracks the user-preferred format which the client should use when making requests.
@@ -92,7 +86,9 @@ namespace Microsoft.OData.Client
             get
             {
                 if (serviceModel != null)
+                {
                     return serviceModel;
+                }
 
                 if (LoadServiceModel != null)
                 {
@@ -100,7 +96,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    serviceModel = LoadServiceModelUsingNetwork();
+                    serviceModel = LoadServiceModelFromNetwork();
                 }
                 return serviceModel;
             }
@@ -303,9 +299,10 @@ namespace Microsoft.OData.Client
         /// This allows the user to use the DataServiceContext directly without having to manually pass an IEdmModel in the Format
         /// </summary>
         /// <returns>A service model to be used in format tracking</returns>
-        internal IEdmModel LoadServiceModelUsingNetwork()
+        internal IEdmModel LoadServiceModelFromNetwork()
         {
             HttpWebRequestMessage httpRequest;
+            BuildingRequestEventArgs requestEventArgs = null;
             // test hook for injecting a network request to use instead of the default
             if (InjectMetadataHttpNetworkRequest != null)
             {
@@ -313,26 +310,58 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(
+                requestEventArgs = new BuildingRequestEventArgs(
                     "GET",
                     context.GetMetadataUri(),
+                    null,
+                    null,
+                    context.HttpStack);
+
+                // fire the right events if they exist to allow user to modify the request
+                if (context.HasBuildingRequestEventHandlers)
+                {
+                    requestEventArgs = context.CreateRequestArgsAndFireBuildingRequest(
+                        requestEventArgs.Method,
+                        requestEventArgs.RequestUri,
+                        requestEventArgs.HeaderCollection,
+                        requestEventArgs.ClientHttpStack,
+                        requestEventArgs.Descriptor);
+                }
+
+                DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(
+                    requestEventArgs.Method,
+                    requestEventArgs.RequestUri,
                     context.UseDefaultCredentials,
                     context.UsePostTunneling,
-                    new Dictionary<string, string>());
+                    requestEventArgs.Headers);
 
                 httpRequest = new HttpWebRequestMessage(args);
             }
-#if !PORTABLELIB
-            IODataResponseMessage response = httpRequest.GetResponse();
-#else
+
+            Descriptor descriptor = requestEventArgs?.Descriptor;
+
+            // fire the right events if they exist
+            if (context.HasSendingRequest2EventHandlers)
+            {
+                SendingRequest2EventArgs eventArgs = new SendingRequest2EventArgs(
+                    httpRequest,
+                    descriptor,
+                    false);
+
+                context.FireSendingRequest2(eventArgs);
+            }
+
             Task<IODataResponseMessage> asyncResponse =
                 Task<IODataResponseMessage>.Factory.FromAsync(httpRequest.BeginGetResponse, httpRequest.EndGetResponse,
                     httpRequest);
             IODataResponseMessage response = asyncResponse.GetAwaiter().GetResult();
-#endif
+
+            ReceivingResponseEventArgs responseEvent = new ReceivingResponseEventArgs(response, descriptor);
+
+            context.FireReceivingResponseEvent(responseEvent);
+
             using (StreamReader streamReader = new StreamReader(response.GetStream()))
-            using (StringReader stringReader= new StringReader(streamReader.ReadToEnd()))
-            using (XmlReader xmlReader = XmlReader.Create(stringReader))
+            using (XmlReader xmlReader = XmlReader.Create(streamReader))
             {
                 return CsdlReader.Parse(xmlReader);
             }

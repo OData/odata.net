@@ -5,18 +5,19 @@
 '---------------------------------------------------------------------
 
 Imports System
-Imports System.Diagnostics
-Imports System.Text
 Imports System.Collections
 Imports System.Collections.Generic
+Imports System.Diagnostics
+Imports System.Text
 Imports System.Xml
 Imports System.Xml.Linq
-Imports Microsoft.OData.Service
+Imports AstoriaUnitTests.Data
+Imports AstoriaUnitTests.Stubs
 Imports Microsoft.OData.Client
 Imports Microsoft.OData.Edm
+Imports Microsoft.OData.Service
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports AstoriaUnitTests.Stubs
-Imports AstoriaUnitTests.Data
+
 
 Partial Public Class ClientModule
 

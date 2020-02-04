@@ -8,7 +8,6 @@ namespace AstoriaUnitTests.Tests
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -16,8 +15,9 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.ClientExtensions;
     using FluentAssertions;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class ClientErrorHandlingShortIntegrationTests
