@@ -1847,14 +1847,8 @@ namespace Microsoft.OData
             }
             else
             {
-#if PORTABLELIB
-                if (this.outputContext.Synchronous)
-                {
-                    throw new ODataException(Strings.ODataWriterCore_AsyncCallOnSyncWriter);
-                }
-#else
                 Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
+
             }
         }
 

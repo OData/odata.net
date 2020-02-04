@@ -12,9 +12,6 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
     #endregion Namespaces
 
     /// <summary>
@@ -135,24 +132,7 @@ namespace Microsoft.OData
             return contentStream;
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Asynchronously get the stream backing this message.
-        /// </summary>
-        /// <returns>The stream for this message.</returns>
-        public override Task<Stream> GetStreamAsync()
-        {
-            this.VerifyNotCompleted();
 
-            // notify the listener that the stream has been requested
-            Task listenerTask = this.operationListener.StreamRequestedAsync();
-
-            // now remember that we are done processing the part header data (and only the payload is missing)
-            Stream contentStream = this.contentStreamCreatorFunc();
-            this.PartHeaderProcessingCompleted();
-            return listenerTask.FollowOnSuccessWith(task => { return (Stream)contentStream; });
-        }
-#endif
 
         /// <summary>
         /// Queries the message for the specified interface type.

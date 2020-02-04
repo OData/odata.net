@@ -18,7 +18,18 @@
     <IsShipping>true</IsShipping>
   </PropertyGroup>
 
-
+  <ItemGroup>
+    <TextStringResource Include="Microsoft.OData.Core.txt">
+      <ResFile>Microsoft.OData.Core</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Core.TextRes</FullClassName>
+      <SupportsAssemblyReferences>false</SupportsAssemblyReferences>
+      <SkipSRAttributes>true</SkipSRAttributes>
+    </TextStringResource>
+  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1' ">
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
@@ -45,7 +56,7 @@
     <Compile Include="..\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" Link="EdmValueParser.cs" />
   </ItemGroup>
   
-  <!--<Import Project="Build.props" />-->
+  <Import Project="Build.props" />
   
   <ItemGroup>
     <Resource Include="Microsoft.OData.Core.tt">

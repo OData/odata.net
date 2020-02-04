@@ -7,9 +7,6 @@
 namespace Microsoft.OData.Edm
 {
     using System;
-#if PORTABLELIB
-    using System.Collections.Concurrent;
-#endif
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -22,11 +19,9 @@ namespace Microsoft.OData.Edm
     {
         private const int MaxHashElements = 100;
 
-#if PORTABLELIB
-        private static readonly ConcurrentDictionary<IEdmEnumType, HashEntry> fieldInfoHash = new ConcurrentDictionary<IEdmEnumType, HashEntry>(4, EnumHelper.MaxHashElements);
-#else
+
         private static readonly IDictionary<IEdmEnumType, HashEntry> fieldInfoHash = new Dictionary<IEdmEnumType, HashEntry>();
-#endif
+
 
         /// <summary>
         /// Parse an enum literal value to integer. The literal value can be Enum member name (e.g. "Red"), underlying value (e.g. "2"), or combined values (e.g. "Red, Green, Blue", "1,2,4").
@@ -284,21 +279,7 @@ namespace Microsoft.OData.Edm
             names = sortedDict.Select(d => d.Key).ToArray();
         }
 
-#if PORTABLELIB
-        private static HashEntry GetHashEntry(IEdmEnumType enumType)
-        {
-            try
-            {
-                return EnumHelper.fieldInfoHash.GetOrAdd(enumType, type => new HashEntry(null, null));
-            }
-            catch (OverflowException)
-            {
-                EnumHelper.fieldInfoHash.Clear();
-                return EnumHelper.fieldInfoHash.GetOrAdd(enumType, type => new HashEntry(null, null));
-            }
-        }
 
-#else
         private static HashEntry GetHashEntry(IEdmEnumType enumType)
         {
             if (fieldInfoHash.Count > MaxHashElements)
@@ -314,7 +295,7 @@ namespace Microsoft.OData.Edm
 
             return EdmUtil.DictionaryGetOrUpdate(fieldInfoHash, enumType, type => new HashEntry(null, null));
         }
-#endif
+
 
         private class HashEntry
         {

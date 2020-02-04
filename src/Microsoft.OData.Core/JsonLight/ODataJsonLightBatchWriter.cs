@@ -13,10 +13,6 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -163,25 +159,6 @@ namespace Microsoft.OData.JsonLight
             this.SetState(BatchWriterState.OperationStreamRequested);
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// This method is called to notify that the content stream for a batch operation has been requested.
-        /// </summary>
-        /// <returns>
-        /// A task representing any action that is running as part of the status change of the operation;
-        /// null if no such action exists.
-        /// </returns>
-        public override Task StreamRequestedAsync()
-        {
-            // Write any pending data and flush the batch writer to the async buffered stream
-            this.StartBatchOperationContent();
-
-            // Asynchronously flush the async buffered stream to the underlying message stream (if there's any);
-            // then dispose the batch writer (since we are now writing the operation content) and set the corresponding state.
-            return this.JsonLightOutputContext.FlushBuffersAsync()
-                .FollowOnSuccessWith(task => this.SetState(BatchWriterState.OperationStreamRequested));
-        }
-#endif
 
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
@@ -224,16 +201,6 @@ namespace Microsoft.OData.JsonLight
             this.JsonLightOutputContext.Flush();
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Flush the output.
-        /// </summary>
-        /// <returns>Task representing the pending flush operation.</returns>
-        protected override Task FlushAsynchronously()
-        {
-            return this.JsonLightOutputContext.FlushAsync();
-        }
-#endif
 
         /// <summary>
         /// Starts a new batch - implementation of the actual functionality.

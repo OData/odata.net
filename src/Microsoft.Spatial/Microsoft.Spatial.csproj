@@ -50,6 +50,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TextStringResource Include="Microsoft.Spatial.txt">
+      <ResFile>Microsoft.Spatial</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.Spatial.TextRes</FullClassName>
+      <SupportsAssemblyReferences>false</SupportsAssemblyReferences>
+      <SkipSRAttributes>true</SkipSRAttributes>
+    </TextStringResource>
+  </ItemGroup>
+  
+  <ItemGroup>
     <Resource Include="Microsoft.Spatial.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.Spatial.cs</LastGenOutput>

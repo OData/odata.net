@@ -218,6 +218,7 @@ namespace Microsoft.OData.Tests
                 throw new NotImplementedException();
             }
 
+#if ASSEMBLY_ATTRIBUTE_ON_NETCORE_10
             public override System.Threading.Tasks.Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings)
             {
                 throw new NotImplementedException();
@@ -232,6 +233,7 @@ namespace Microsoft.OData.Tests
             {
                 throw new NotImplementedException();
             }
+#endif
         }
 
         private class MyMediaTypeResolver : ODataMediaTypeResolver

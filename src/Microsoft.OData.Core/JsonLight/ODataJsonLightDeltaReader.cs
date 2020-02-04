@@ -10,9 +10,6 @@ namespace Microsoft.OData.JsonLight
 
     using System;
     using System.Diagnostics;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
@@ -167,40 +164,10 @@ namespace Microsoft.OData.JsonLight
             return response;
         }
 
-#if PORTABLELIB
-        /// <summary> Asynchronously reads the next <see cref="T:Microsoft.OData.ODataItem" /> from the message payload. </summary>
-        /// <returns>A task that when completed indicates whether more items were read.</returns>
-        public override Task<bool> ReadAsync()
-        {
-            return this.underlyingReader.ReadAsync().FollowOnSuccessWith(t =>
-            {
-                if (this.underlyingReader.State == ODataReaderState.DeletedResourceStart)
-                {
-                    this.SkipToDeletedResourceEnd();
-                }
-
-                this.SetNestedLevel();
-                return t.Result;
-            });
-        }
-#endif
 #endregion
 
 #region Private Methods
 
-#if PORTABLELIB
-        /// <summary> Sets nested level following a successful read. </summary>
-        private async void SkipToDeletedResourceEnd()
-        {
-            if (this.underlyingReader.State != ODataReaderState.DeletedResourceEnd)
-            {
-                await this.underlyingReader.ReadAsync().FollowOnSuccessWith(t =>
-                {
-                    this.SkipToDeletedResourceEnd();
-                });
-            }
-        }
-#endif
 
         /// <summary> Sets nested level following a successful read. </summary>
         private void SetNestedLevel()
