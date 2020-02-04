@@ -338,7 +338,7 @@ namespace Microsoft.OData.Client
                 httpRequest = new HttpWebRequestMessage(args);
             }
 
-            Descriptor descriptor = requestEventArgs?.Descriptor;
+            Descriptor descriptor = requestEventArgs != null ? requestEventArgs.Descriptor : null;
 
             // fire the right events if they exist
             if (context.HasSendingRequest2EventHandlers)
