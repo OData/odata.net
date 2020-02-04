@@ -7,19 +7,19 @@
 Imports System
 Imports System.Collections
 Imports System.Collections.Generic
-Imports Microsoft.OData.Service
-Imports Microsoft.OData.Client
 Imports System.Data.Test.Astoria
 Imports System.IO
 Imports System.Linq
+Imports System.Net
 Imports System.Xml
 Imports System.Xml.Linq
-Imports System.Net
+Imports System.Web
 Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests.Stubs
+Imports Microsoft.OData.Client
+Imports Microsoft.OData.Service
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports System.Web
 Imports Microsoft.OData.Edm
 
 Partial Public Class ClientModule
