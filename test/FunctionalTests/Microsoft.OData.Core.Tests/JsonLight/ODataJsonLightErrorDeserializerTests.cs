@@ -36,27 +36,27 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal("any msg", detail.Message);
         }
 
-        [Fact]
-        public void ReadTopLevelErrorAsync_Works()
-        {
-            // Arrange
-            const string payload =
-                @"{""error"":{""code"":"""",""message"":"""",""target"":""any target"","
-                + @"""details"":[{""code"":""500"",""target"":""another target"",""message"":""any msg""}]}}";
-            var context = GetInputContext(payload);
-            var deserializer = new ODataJsonLightErrorDeserializer(context);
+        //[Fact]
+        //public void ReadTopLevelErrorAsync_Works()
+        //{
+        //    // Arrange
+        //    const string payload =
+        //        @"{""error"":{""code"":"""",""message"":"""",""target"":""any target"","
+        //        + @"""details"":[{""code"":""500"",""target"":""another target"",""message"":""any msg""}]}}";
+        //    var context = GetInputContext(payload);
+        //    var deserializer = new ODataJsonLightErrorDeserializer(context);
 
-            // Act
-            var error = deserializer.ReadTopLevelErrorAsync().Result;
+        //    // Act
+        //    var error = deserializer.ReadTopLevelErrorAsync().Result;
 
-            // Assert
-            Assert.Equal("any target", error.Target);
-            Assert.Equal(1, error.Details.Count);
-            var detail = error.Details.Single();
-            Assert.Equal("500", detail.ErrorCode);
-            Assert.Equal("another target", detail.Target);
-            Assert.Equal("any msg", detail.Message);
-        }
+        //    // Assert
+        //    Assert.Equal("any target", error.Target);
+        //    Assert.Equal(1, error.Details.Count);
+        //    var detail = error.Details.Single();
+        //    Assert.Equal("500", detail.ErrorCode);
+        //    Assert.Equal("another target", detail.Target);
+        //    Assert.Equal("any msg", detail.Message);
+        //}
 
         [Fact]
         public void ReadTopLevelErrorWithResourceValueInstanceAnnotation_Works()

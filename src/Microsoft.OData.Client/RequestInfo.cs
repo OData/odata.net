@@ -446,7 +446,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="headers">Web headers.</param>
         /// <returns>The request DSV header value for this request as Version instance.</returns>
-        private static Version GetRequestVersion(WebHeaderCollection headers)
+        private static Version GetRequestVersion(System.Net.WebHeaderCollection headers)
         {
             string requestDSVHeaderValue = headers[XmlConstants.HttpODataVersion];
             if (!String.IsNullOrEmpty(requestDSVHeaderValue))

@@ -5,9 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-#if PORTABLELIB
-using System.Collections.Concurrent;
-#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -563,47 +560,7 @@ namespace Microsoft.OData.Edm
             return true;
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Query dictionary for certain key, and update it if not exist
-        /// </summary>
-        /// <typeparam name="TKey">Key type for dictionary</typeparam>
-        /// <typeparam name="TValue">Value type for dictionary</typeparam>
-        /// <param name="dictionary">The dictionary to look up</param>
-        /// <param name="key">The key property</param>
-        /// <param name="computeValue">The function to compute value if key not exist in dictionary</param>
-        /// <returns>The value for the key</returns>
-        internal static TValue DictionaryGetOrUpdate<TKey, TValue>(
-            ConcurrentDictionary<TKey, TValue> dictionary,
-            TKey key,
-            Func<TKey, TValue> computeValue)
-        {
-            CheckArgumentNull(dictionary, "dictionary");
-            CheckArgumentNull(computeValue, "computeValue");
 
-            return dictionary.GetOrAdd(key, computeValue);
-        }
-
-        /// <summary>
-        /// Query dictionary for certain key, return default if not present
-        /// </summary>
-        /// <typeparam name="TKey">Key type for dictionary</typeparam>
-        /// <typeparam name="TValue">Value type for dictionary</typeparam>
-        /// <param name="dictionary">The dictionary to look up</param>
-        /// <param name="key">The key property</param>
-        /// <returns>The value for the key, or default if the value does not exist</returns>
-        internal static TValue DictionarySafeGet<TKey, TValue>(
-            ConcurrentDictionary<TKey, TValue> dictionary,
-            TKey key)
-        {
-            CheckArgumentNull(dictionary, "dictionary");
-
-            TValue val;
-            dictionary.TryGetValue(key, out val);
-            return val;
-        }
-
-#else
         /// <summary>
         /// Query dictionary for certain key, and update it if not exist
         /// </summary>
@@ -668,7 +625,7 @@ namespace Microsoft.OData.Edm
 
             return val;
         }
-#endif
+
 
         /// <summary>
         /// Gets full name for the schema element with the provided namespace and name

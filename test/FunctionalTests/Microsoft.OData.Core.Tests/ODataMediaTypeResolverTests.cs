@@ -218,20 +218,22 @@ namespace Microsoft.OData.Tests
                 throw new NotImplementedException();
             }
 
-            public override System.Threading.Tasks.Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings)
-            {
-                throw new NotImplementedException();
-            }
 
-            public override System.Threading.Tasks.Task<ODataInputContext> CreateInputContextAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings)
-            {
-                throw new NotImplementedException();
-            }
+            //public override System.Threading.Tasks.Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings)
+            //{
+            //    throw new NotImplementedException();
+            //}
 
-            public override System.Threading.Tasks.Task<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings)
-            {
-                throw new NotImplementedException();
-            }
+            //public override System.Threading.Tasks.Task<ODataInputContext> CreateInputContextAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            //public override System.Threading.Tasks.Task<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
         }
 
         private class MyMediaTypeResolver : ODataMediaTypeResolver

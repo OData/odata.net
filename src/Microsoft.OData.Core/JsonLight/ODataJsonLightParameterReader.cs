@@ -9,9 +9,6 @@ namespace Microsoft.OData.JsonLight
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
@@ -78,38 +75,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtStartImplementationSynchronously();
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Implementation of the parameter reader logic when in state 'Start'.
-        /// </summary>
-        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet.
-        /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
-        ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
-        ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.
-        /// </remarks>
-        protected override Task<bool> ReadAtStartImplementationAsync()
-        {
-            Debug.Assert(this.State == ODataParameterReaderState.Start, "this.State == ODataParameterReaderState.Start");
-            Debug.Assert(this.jsonLightParameterDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None");
-
-            // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            this.propertyAndAnnotationCollector = this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
-
-            // The parameter payload looks like "{ param1 : value1, ..., paramN : valueN }", where each value can be primitive, complex, collection, entity, resource set or collection.
-            // Position the reader on the first node
-            return this.jsonLightParameterDeserializer.ReadPayloadStartAsync(
-                ODataPayloadKind.Parameter,
-                this.propertyAndAnnotationCollector,
-                /*isReadingNestedPayload*/false,
-                /*allowEmptyPayload*/true)
-
-                .FollowOnSuccessWith(t =>
-                    this.ReadAtStartImplementationSynchronously());
-        }
-#endif
-
         /// <summary>
         /// Implementation of the reader logic on the subsequent reads after the first parameter is read.
         /// </summary>
@@ -125,22 +90,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadNextParameterImplementationSynchronously();
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Implementation of the reader logic when in state Value, Resource, Resource Set or Collection state.
-        /// </summary>
-        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the beginning of the next parameter or at the end of the payload.
-        /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
-        ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
-        ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.
-        /// </remarks>
-        protected override Task<bool> ReadNextParameterImplementationAsync()
-        {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadNextParameterImplementationSynchronously);
-        }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.
@@ -152,18 +101,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceReaderSynchronously(expectedResourceType);
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.
-        /// </summary>
-        /// <param name="expectedResourceType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.</returns>
-        protected override Task<ODataReader> CreateResourceReaderAsync(IEdmStructuredType expectedResourceType)
-        {
-            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceReaderSynchronously(expectedResourceType));
-        }
-#endif
-
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
@@ -174,17 +111,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceSetReaderSynchronously(expectedResourceType);
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
-        /// </summary>
-        /// <param name="expectedResourceType">Expected resource set element type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
-        protected override Task<ODataReader> CreateResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
-        {
-            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceSetReaderSynchronously(expectedResourceType));
-        }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
@@ -201,22 +127,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateCollectionReaderSynchronously(expectedItemTypeReference);
         }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
-        /// </summary>
-        /// <param name="expectedItemTypeReference">Expected item type reference of the collection to read.</param>
-        /// <returns>An <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.</returns>
-        /// <remarks>
-        /// Pre-Condition:  Any:    the reader should be on the start array node of the collection value; if it is not we let the collection reader fail.
-        /// Post-Condition: Any:    the reader should be on the start array node of the collection value; if it is not we let the collection reader fail.
-        /// NOTE: this method does not move the reader.
-        /// </remarks>
-        protected override Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
-        {
-            return TaskUtils.GetTaskForSynchronousOperation<ODataCollectionReader>(() => this.CreateCollectionReaderSynchronously(expectedItemTypeReference));
-        }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.

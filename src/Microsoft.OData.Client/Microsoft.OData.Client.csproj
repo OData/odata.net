@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+      <TargetFrameworks>net45;netstandard2.0;</TargetFrameworks>
     <AssemblyName>Microsoft.OData.Client</AssemblyName>
     <RootNamespace>Microsoft.OData.Client</RootNamespace>
 
@@ -18,6 +18,8 @@
     <IsShipping>true</IsShipping>
   </PropertyGroup>
 
+  <Import Project="Build.props" />
+  
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1' ">
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
@@ -35,7 +37,6 @@
   <ItemGroup>
     <None Remove="Microsoft.OData.Client.xml" />
     <None Remove="Diagrams\**" />
-    <None Remove="Microsoft.OData.Client.tt" />
     <None Remove="Parameterized.Microsoft.OData.Client.tt" />
     <None Remove="Diagrams\ALinq.cd" />
     <None Remove="Diagrams\ALinq.cs" />
@@ -131,6 +132,31 @@
     </Compile>
   </ItemGroup>
 
+  <!--<ItemGroup>
+    <TextStringResource Include="Microsoft.OData.Client.Common.txt">
+      <ResFile>Microsoft.OData.Client</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Client.TextRes</FullClassName>
+      <SupportsAssemblyReferences>false</SupportsAssemblyReferences>
+      <SkipSRAttributes>true</SkipSRAttributes>
+    </TextStringResource>
+  </ItemGroup>-->
+
+  <ItemGroup>
+    <TextStringResource Include="Microsoft.OData.Client.txt">
+      <ResFile>Microsoft.OData.Client</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Client.TextRes</FullClassName>
+      <SRAttributes>skip</SRAttributes>
+    </TextStringResource>
+  </ItemGroup>
+  
   <ItemGroup>
     <Content Include="Microsoft.OData.Client.Common.txt" />
     <Content Include="Microsoft.OData.Client.Desktop.txt" />
@@ -138,6 +164,13 @@
   
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Microsoft.OData.Client.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Client.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

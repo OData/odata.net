@@ -7,9 +7,6 @@
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     using System;
-#if PORTABLELIB
-    using System.Collections.Concurrent;
-#endif
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -38,19 +35,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>> navigationTargetsCache = new Cache<CsdlSemanticsNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>>();
         private static readonly Func<CsdlSemanticsNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>> ComputeNavigationTargetsFunc = (me) => me.ComputeNavigationTargets();
 
-#if PORTABLELIB
-        private readonly ConcurrentDictionary<IEdmNavigationProperty, IEdmContainedEntitySet> containedNavigationPropertyCache =
-            new ConcurrentDictionary<IEdmNavigationProperty, IEdmContainedEntitySet>();
 
-        private readonly ConcurrentDictionary<IEdmNavigationProperty, IEdmUnknownEntitySet> unknownNavigationPropertyCache =
-            new ConcurrentDictionary<IEdmNavigationProperty, IEdmUnknownEntitySet>();
-#else
         private readonly Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet> containedNavigationPropertyCache =
             new Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet>();
 
         private readonly Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet> unknownNavigationPropertyCache =
             new Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet>();
-#endif
+
 
         public CsdlSemanticsNavigationSource(CsdlSemanticsEntityContainer container, CsdlAbstractNavigationSource navigationSource)
             : base(navigationSource)

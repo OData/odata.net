@@ -938,21 +938,13 @@ namespace Microsoft.OData
         private static IServiceProvider GetContainer<T>(T message)
             where T : class
         {
-#if PORTABLELIB
             var containerProvider = message as IContainerProvider;
             return containerProvider == null ? null : containerProvider.Container;
-#else
-            return null;
-#endif
         }
 
         private static IEdmModel GetModel(IServiceProvider container)
         {
-#if PORTABLELIB
-            return container == null ? EdmCoreModel.Instance : container.GetRequiredService<IEdmModel>();
-#else
             return EdmCoreModel.Instance;
-#endif
         }
 
         private ODataMessageInfo GetOrCreateMessageInfo(Stream messageStream, bool isAsync)

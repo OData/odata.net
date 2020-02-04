@@ -214,10 +214,10 @@ namespace Microsoft.OData.Tests
                 throw new NotImplementedException();
             }
 
-            protected override Task FlushAsynchronously()
-            {
-                throw new NotImplementedException();
-            }
+            //protected override Task FlushAsynchronously()
+            //{
+            //    throw new NotImplementedException();
+            //}
 
             protected override void StartPayload()
             {

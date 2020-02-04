@@ -11,6 +11,8 @@
 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute> <!--check this in attributes-->
+
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <ErrorReport>prompt</ErrorReport>

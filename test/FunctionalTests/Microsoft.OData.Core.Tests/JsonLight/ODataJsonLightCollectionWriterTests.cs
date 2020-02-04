@@ -153,7 +153,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private void WriteAndValidate(ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
         {
             WriteAndValidateSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
-            WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+            //WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
         }
 
         private void WriteAndValidateSync(IEdmTypeReference itemTypeReference, ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse)
@@ -171,20 +171,20 @@ namespace Microsoft.OData.Tests.JsonLight
             ValidateWrittenPayload(stream, expectedPayload);
         }
 
-        private void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse)
-        {
-            MemoryStream stream = new MemoryStream();
-            var outputContext = CreateJsonLightOutputContext(stream, this.model, writingResponse, synchronous: false);
-            var collectionWriter = new ODataJsonLightCollectionWriter(outputContext, itemTypeReference);
-            collectionWriter.WriteStartAsync(collectionStart).Wait();
-            foreach (object item in items)
-            {
-                collectionWriter.WriteItemAsync(item).Wait();
-            }
+        //private void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse)
+        //{
+        //    MemoryStream stream = new MemoryStream();
+        //    var outputContext = CreateJsonLightOutputContext(stream, this.model, writingResponse, synchronous: false);
+        //    var collectionWriter = new ODataJsonLightCollectionWriter(outputContext, itemTypeReference);
+        //    collectionWriter.WriteStartAsync(collectionStart).Wait();
+        //    foreach (object item in items)
+        //    {
+        //        collectionWriter.WriteItemAsync(item).Wait();
+        //    }
 
-            collectionWriter.WriteEndAsync().Wait();
-            ValidateWrittenPayload(stream, expectedPayload);
-        }
+        //    collectionWriter.WriteEndAsync().Wait();
+        //    ValidateWrittenPayload(stream, expectedPayload);
+        //}
 
         private static void ValidateWrittenPayload(MemoryStream stream, string expectedPayload)
         {

@@ -88,14 +88,14 @@ namespace Microsoft.OData.Tests.JsonLight
             this.ValidateTuples(tuples);
         }
 
-        [InlineData(/*isResponse*/true)]
-        [InlineData(/*isResponse*/false)]
-        [Theory]
-        public async void ReadExample30FromV4SpecAsync(bool isResponse)
-        {
-            var tuples = await this.ReadItemAsync(payload, Model, customers, customer, isResponse);
-            this.ValidateTuples(tuples);
-        }
+        //[InlineData(/*isResponse*/true)]
+        //[InlineData(/*isResponse*/false)]
+        //[Theory]
+        //public async void ReadExample30FromV4SpecAsync(bool isResponse)
+        //{
+        //    var tuples = await this.ReadItemAsync(payload, Model, customers, customer, isResponse);
+        //    this.ValidateTuples(tuples);
+        //}
 
         #region ReadExample30FromV4SpecWithNavigationLinks
 
@@ -206,14 +206,14 @@ namespace Microsoft.OData.Tests.JsonLight
             this.ValidateTuples(tuples);
         }
 
-        [InlineData(/*isResponse*/true)]
-        [InlineData(/*isResponse*/false)]
-        [Theory]
-        public async void ReadExpandedFeedAsync(bool isResponse)
-        {
-            var tuples = await this.ReadItemAsync(expandedPayload, this.Model, customers, customer, isResponse);
-            this.ValidateTuples(tuples);
-        }
+        //[InlineData(/*isResponse*/true)]
+        //[InlineData(/*isResponse*/false)]
+        //[Theory]
+        //public async void ReadExpandedFeedAsync(bool isResponse)
+        //{
+        //    var tuples = await this.ReadItemAsync(expandedPayload, this.Model, customers, customer, isResponse);
+        //    this.ValidateTuples(tuples);
+        //}
 
         [Fact]
         public void ReadExpandedFeedWithNavigationLink()
@@ -307,14 +307,14 @@ namespace Microsoft.OData.Tests.JsonLight
             this.ValidateTuples(tuples);
         }
 
-        [InlineData(/*isResponse*/true)]
-        [InlineData(/*isResponse*/false)]
-        [Theory]
-        public async void ReadMutlipleExpandedFeedsAsync(bool isResponse)
-        {
-            var tuples = await this.ReadItemAsync(multipleExpandedPayload, this.Model, customers, customer, isResponse);
-            this.ValidateTuples(tuples);
-        }
+        //[InlineData(/*isResponse*/true)]
+        //[InlineData(/*isResponse*/false)]
+        //[Theory]
+        //public async void ReadMutlipleExpandedFeedsAsync(bool isResponse)
+        //{
+        //    var tuples = await this.ReadItemAsync(multipleExpandedPayload, this.Model, customers, customer, isResponse);
+        //    this.ValidateTuples(tuples);
+        //}
 
         [InlineData(/*isResponse*/true)]
         [InlineData(/*isResponse*/false)]
@@ -1555,37 +1555,37 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-        private async Task<IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>> ReadItemAsync(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool isResponse = true, bool enableReadingODataAnnotationWithoutPrefix = false)
-        {
-            List<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> tuples = new List<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>();
-            var settings = new ODataMessageReaderSettings
-            {
-                ShouldIncludeAnnotation = s => true,
-            };
+        //private async Task<IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>> ReadItemAsync(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool isResponse = true, bool enableReadingODataAnnotationWithoutPrefix = false)
+        //{
+        //    List<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> tuples = new List<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>();
+        //    var settings = new ODataMessageReaderSettings
+        //    {
+        //        ShouldIncludeAnnotation = s => true,
+        //    };
 
-            var messageInfo = new ODataMessageInfo
-            {
-                IsResponse = isResponse,
-                MediaType = new ODataMediaType("application", "json"),
-                IsAsync = true,
-                Model = model ?? new EdmModel(),
-                Container = ContainerBuilderHelper.BuildContainer(null)
-            };
+        //    var messageInfo = new ODataMessageInfo
+        //    {
+        //        IsResponse = isResponse,
+        //        MediaType = new ODataMediaType("application", "json"),
+        //        IsAsync = true,
+        //        Model = model ?? new EdmModel(),
+        //        Container = ContainerBuilderHelper.BuildContainer(null)
+        //    };
 
-            using (var inputContext = new ODataJsonLightInputContext(
-                new StringReader(payload), messageInfo, settings))
-            {
-                inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
-                    .EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
-                var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
-                while (await jsonLightReader.ReadAsync())
-                {
-                    tuples.Add(new Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>(jsonLightReader.Item, jsonLightReader.State, jsonLightReader.SubState));
-                }
-            }
+        //    using (var inputContext = new ODataJsonLightInputContext(
+        //        new StringReader(payload), messageInfo, settings))
+        //    {
+        //        inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
+        //            .EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
+        //        var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
+        //        while (await jsonLightReader.ReadAsync())
+        //        {
+        //            tuples.Add(new Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>(jsonLightReader.Item, jsonLightReader.State, jsonLightReader.SubState));
+        //        }
+        //    }
 
-            return tuples;
-        }
+        //    return tuples;
+        //}
 
         private void ValidateTuples(IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> tuples, Uri nextLink = null, Uri feedDeltaLink = null)
         {

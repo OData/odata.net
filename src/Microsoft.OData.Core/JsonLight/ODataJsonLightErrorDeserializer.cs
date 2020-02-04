@@ -10,9 +10,6 @@ namespace Microsoft.OData.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -73,52 +70,6 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-#if PORTABLELIB
-
-        /// <summary>
-        /// Read a top-level error.
-        /// </summary>
-        /// <returns>A task which returns an <see cref="ODataError"/> representing the read error.</returns>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.None       - The reader must not have been used yet.
-        /// Post-Condition: JsonNodeType.EndOfInput
-        /// </remarks>
-        internal Task<ODataError> ReadTopLevelErrorAsync()
-        {
-            Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
-            Debug.Assert(!this.JsonReader.DisableInStreamErrorDetection, "!JsonReader.DisableInStreamErrorDetection");
-            this.JsonReader.AssertNotBuffering();
-
-            // prevent the buffering JSON reader from detecting in-stream errors - we read the error ourselves
-            // to throw proper exceptions
-            this.JsonReader.DisableInStreamErrorDetection = true;
-
-            // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
-
-            // Position the reader on the first node
-            return this.ReadPayloadStartAsync(
-                ODataPayloadKind.Error,
-                propertyAndAnnotationCollector,
-                /*isReadingNestedPayload*/false,
-                /*allowEmptyPayload*/false)
-
-                .FollowOnSuccessWith(t =>
-                {
-                    ODataError result = this.ReadTopLevelErrorImplementation();
-
-                    Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndOfInput, "Post-Condition: JsonNodeType.EndOfInput");
-                    this.JsonReader.AssertNotBuffering();
-
-                    return result;
-                })
-
-                .FollowAlwaysWith(t =>
-                {
-                    this.JsonReader.DisableInStreamErrorDetection = false;
-                });
-        }
-#endif
 
         /// <summary>
         /// Read a top-level error.
