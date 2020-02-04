@@ -1211,38 +1211,38 @@ namespace AstoriaUnitTests.Tests
                         var testCases = new[] {
                             new {  // Just entity set
                                 Query = (DataServiceQuery<XFeatureTestsEntity>)ctx.CreateQuery<XFeatureTestsEntity>("Entities"),
-                                TotalCount = 3,
+                                Count = 3,
                                 QueryCount = 3
                             },
                             new {  // $filter
                                 Query = (DataServiceQuery<XFeatureTestsEntity>)ctx.CreateQuery<XFeatureTestsEntity>("Entities").Where(e => e.ID < 2),
-                                TotalCount = 1,
+                                Count = 1,
                                 QueryCount = 1
                             },
                             new {  // $top
                                 Query = (DataServiceQuery<XFeatureTestsEntity>)ctx.CreateQuery<XFeatureTestsEntity>("Entities").Take(1),
-                                TotalCount = 3,
+                                Count = 3,
                                 QueryCount = 1
                             },
                             new {  // $skip
                                 Query = (DataServiceQuery<XFeatureTestsEntity>)ctx.CreateQuery<XFeatureTestsEntity>("Entities").Skip(1),
-                                TotalCount = 3,
+                                Count = 3,
                                 QueryCount = 2
                             },
                             new {  // $orderby
                                 Query = (DataServiceQuery<XFeatureTestsEntity>)ctx.CreateQuery<XFeatureTestsEntity>("Entities").OrderBy(e => e.Description),
-                                TotalCount = 3,
+                                Count = 3,
                                 QueryCount = 3
                             },
                             new {  // $select
                                 Query = (DataServiceQuery<XFeatureTestsEntity>)ctx.CreateQuery<XFeatureTestsEntity>("Entities")
                                     .Select(e => new XFeatureTestsEntity() { Strings = e.Strings }),
-                                TotalCount = 3,
+                                Count = 3,
                                 QueryCount = 3
                             },
                             new {  // $expand
                                 Query = (DataServiceQuery<XFeatureTestsEntity>)ctx.CreateQuery<XFeatureTestsEntity>("Entities").Expand("NextTestEntity"),
-                                TotalCount = 3,
+                                Count = 3,
                                 QueryCount = 3
                             },
                             new {  // $select and $expand
@@ -1250,7 +1250,7 @@ namespace AstoriaUnitTests.Tests
                                     .Select(e => new XFeatureTestsEntity() { 
                                         NextTestEntity = e.NextTestEntity == null ? null : new XFeatureTestsEntity() { Description = e.NextTestEntity.Description } 
                                     }),
-                                TotalCount = 3,
+                                Count = 3,
                                 QueryCount = 3
                             },
                         };
@@ -1263,8 +1263,8 @@ namespace AstoriaUnitTests.Tests
                             Assert.AreEqual(expectedCount, actualCount, "The $count query didn't return correct number.");
 
                             // query $count
-                            var response = (QueryOperationResponse<XFeatureTestsEntity>)testCase.Query.IncludeTotalCount().Execute();
-                            Assert.AreEqual(testCase.TotalCount, response.TotalCount, "The $count query didn't return correct number.");
+                            var response = (QueryOperationResponse<XFeatureTestsEntity>)testCase.Query.IncludeCount().Execute();
+                            Assert.AreEqual(testCase.Count, response.Count, "The $count query didn't return correct number.");
 
                             // The actual number of results returned
                             int expectedResultCount = expectedCount;

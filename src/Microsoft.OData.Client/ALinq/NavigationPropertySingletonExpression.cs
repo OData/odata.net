@@ -95,7 +95,8 @@ namespace Microsoft.OData.Client
             get
             {
                 return this.ExpandPaths.Count > 0 ||
-                    this.CountOption == CountOption.CountQuery ||
+                    this.CountOption == CountOption.CountQueryTrue ||
+                    this.CountOption == CountOption.CountQueryFalse ||
                     this.CustomQueryOptions.Count > 0 ||
                     this.Projection != null;
             }

@@ -1142,7 +1142,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             var q7 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Count();
 
             //$count=true
-            var q8 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").IncludeTotalCount();
+            var q8 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").IncludeCount();
             var q8Result = q8.ToList();
 
             //projection

@@ -111,9 +111,9 @@ namespace System.Data.Test.Astoria
             return SocketExceptionHandler.Execute(() => this._WebDataQuery.GetEnumerator());
         }
 
-        public Microsoft.OData.Client.DataServiceQuery<T> IncludeTotalCount()
+        public Microsoft.OData.Client.DataServiceQuery<T> IncludeCount()
         {
-            return this._WebDataQuery.IncludeTotalCount();
+            return this._WebDataQuery.IncludeCount();
         }
 
         public long LongCount()
@@ -414,7 +414,7 @@ namespace System.Data.Test.Astoria
         {
             get
             {
-                return this._QueryResponse.TotalCount;
+                return this._QueryResponse.Count;
             }
         }
         //public Uri GetNextLinkUri(IEnumerable results)
@@ -485,7 +485,7 @@ namespace System.Data.Test.Astoria
         {
             get
             {
-                return this._QueryOpResponse.TotalCount;
+                return this._QueryOpResponse.Count;
             }
         }
 

@@ -80,7 +80,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         IEdmEntitySetBase entitySet = (IEdmEntitySetBase)entitySource;
 
                         resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet, (IEdmStructuredType)this.QueryContext.Target.ElementType);
-                        ResponseWriter.WriteFeed(resultWriter, (IEdmStructuredType)this.QueryContext.Target.ElementType, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, null, this.QueryContext.NextLink, this.RequestHeaders);
+                        ResponseWriter.WriteFeed(resultWriter, (IEdmStructuredType)this.QueryContext.Target.ElementType, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.Count, null, this.QueryContext.NextLink, this.RequestHeaders);
                     }
                     else
                     {

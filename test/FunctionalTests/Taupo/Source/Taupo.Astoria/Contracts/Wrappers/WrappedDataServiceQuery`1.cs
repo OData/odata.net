@@ -168,12 +168,12 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         }
         
         /// <summary>
-        /// Wraps the 'Microsoft.OData.Client.DataServiceQuery`1[TElement] IncludeTotalCount()' on the 'Microsoft.OData.Client.DataServiceQuery`1' type.
+        /// Wraps the 'Microsoft.OData.Client.DataServiceQuery`1[TElement] IncludeCount()' on the 'Microsoft.OData.Client.DataServiceQuery`1' type.
         /// </summary>
         /// <returns>The value returned by the underlying method.</returns>
-        public virtual WrappedDataServiceQuery<TElement> IncludeTotalCount()
+        public virtual WrappedDataServiceQuery<TElement> IncludeCount()
         {
-            return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceQuery<TElement>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceQuery`1[TElement] IncludeTotalCount()"), new object[] { });
+            return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceQuery<TElement>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceQuery`1[TElement] IncludeCount()"), new object[] { });
         }
         
         /// <summary>
