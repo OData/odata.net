@@ -2879,6 +2879,7 @@ public enum Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocatio
 public abstract class Microsoft.OData.Edm.Csdl.CsdlWriter {
 	protected CsdlWriter (Microsoft.OData.Edm.IEdmModel model, System.Version edmxVersion)
 
+	protected static string GetVersionString (System.Version version)
 	public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.IO.TextWriter writer, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryWriteJson (Microsoft.OData.Edm.IEdmModel model, System.IO.TextWriter writer, Microsoft.OData.Edm.Csdl.Json.CsdlJsonWriterSettings settings, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
