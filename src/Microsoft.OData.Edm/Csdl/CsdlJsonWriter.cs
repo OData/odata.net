@@ -58,7 +58,7 @@ namespace Microsoft.OData.Edm.Csdl
             this.jsonWriter.StartObjectScope();
 
             // This document object MUST contain the member $Version.
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Version, edmxVersion.ToString());
+            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Version, GetVersionString(edmxVersion));
 
             // If the CSDL JSON document is the metadata document of an OData service, the document object MUST contain the member $EntityContainer.
             if (model.EntityContainer != null)

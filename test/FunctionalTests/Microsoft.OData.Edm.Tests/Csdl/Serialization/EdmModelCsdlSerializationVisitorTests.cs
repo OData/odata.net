@@ -590,7 +590,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
   ""$Kind"": ""Function"",
   ""$IsBound"": true,
   ""$EntitySetPath"": ""Customers/Orders"",
-  ""IsComposable"": ""true"",
+  ""$IsComposable"": ""true"",
   ""$Parameter"": [
     {
       ""$Name"": ""bindingParameter"",
@@ -629,7 +629,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
   ""$Kind"": ""Function"",
   ""$IsBound"": true,
   ""$EntitySetPath"": ""Customers/Orders"",
-  ""IsComposable"": ""true"",
+  ""$IsComposable"": ""true"",
   ""$Parameter"": [
     {
       ""$Name"": ""param1"",
@@ -847,11 +847,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
   ""Default"": {
     ""$Kind"": ""EntityContainer"",
     ""Set"": {
-      ""$Kind"": ""EntitySet"",
+      ""$Collection"": true,
       ""$Type"": ""NS.Entity""
     },
     ""Me"": {
-      ""$Kind"": ""Singleton"",
       ""$Type"": ""NS.Entity""
     },
     ""@Org.OData.Core.V1.Description"": ""Desciption for EntitySet container""
@@ -877,14 +876,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             VisitAndVerifyJson(v => v.VisitEntityContainerElements(new[] { entitySet }),
                 @"{
   ""Set"": {
-    ""$Kind"": ""EntitySet"",
+    ""$Collection"": true,
     ""$Type"": ""NS.EntityType""
   }
 }");
 
             // Act & Assert for non-indent JSON
             VisitAndVerifyJson(v => v.VisitEntityContainerElements(new[] { entitySet }),
-                @"{""Set"":{""$Kind"":""EntitySet"",""$Type"":""NS.EntityType""}}", false);
+                @"{""Set"":{""$Collection"":true,""$Type"":""NS.EntityType""}}", false);
         }
 
         [Fact]
@@ -957,7 +956,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             VisitAndVerifyJson(v => v.VisitEntityContainerElements(new[] { people }),
                 @"{
   ""People"": {
-    ""$Kind"": ""EntitySet"",
+    ""$Collection"": true,
     ""$Type"": ""NS.Person"",
     ""$NavigationPropertyBinding"": {
       ""Addresses/City"": ""City"",
@@ -985,13 +984,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             VisitAndVerifyJson(v => v.VisitEntityContainerElements(new[] { singleton }), @"{
   ""Me"": {
-    ""$Kind"": ""Singleton"",
     ""$Type"": ""NS.EntityType""
   }
 }");
 
             VisitAndVerifyJson(v => v.VisitEntityContainerElements(new[] { singleton }),
-                @"{""Me"":{""$Kind"":""Singleton"",""$Type"":""NS.EntityType""}}", false);
+                @"{""Me"":{""$Type"":""NS.EntityType""}}", false);
         }
 
         [Fact]
@@ -1020,7 +1018,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             VisitAndVerifyJson(v => v.VisitEntityContainerElements(new[] { singleton }), @"{
   ""Me"": {
-    ""$Kind"": ""Singleton"",
     ""$Type"": ""NS.EntityType"",
     ""@NS.MyTerm"": {
       ""$EnumMember"": ""NS.Permission/Read NS.Permission/Write""

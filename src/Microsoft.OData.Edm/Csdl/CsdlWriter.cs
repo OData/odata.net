@@ -104,16 +104,22 @@ namespace Microsoft.OData.Edm.Csdl
             return true;
         }
 
-        private void WriteEdmxElement()
-        {
-            this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Edmx, this.edmxNamespace);
-            this.writer.WriteAttributeString(CsdlConstants.Attribute_Version, GetVersionString(this.edmxVersion));
-        }
-
         /// <summary>
         /// Write CSDL output.
         /// </summary>
         protected abstract void WriteCsdl();
+
+        // Gets the string form of the EdmVersion.
+        // Note that Version 4.01 needs two digits of minor version precision.
+        protected static string GetVersionString(Version version)
+        {
+            if (version == EdmConstants.EdmVersion401)
+            {
+                return EdmConstants.EdmVersion401String;
+            }
+
+            return version.ToString();
+        }
 
         private static bool Verify(IEdmModel model, out Version edmxVersion, out IEnumerable<EdmError> errors)
         {
@@ -136,19 +142,10 @@ namespace Microsoft.OData.Edm.Csdl
                         new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmxVersion, Strings.Serializer_UnknownEdmxVersion)
                     };
 
-
-        private void WriteSchemas()
-        {
-            // TODO: for referenced model - write alias as is, instead of writing its namespace.
-            EdmModelCsdlSerializationVisitor visitor;
-            Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionDefault;
-            foreach (EdmSchema schema in this.schemas)
-
                     return false;
                 }
             }
-            else if (!CsdlConstants.EdmToEdmxVersions.TryGetValue(model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest, out edmxVersion))
-
+            else if (!CsdlConstants.EdmToEdmxVersions.TryGetValue(model.GetEdmVersion() ?? EdmConstants.EdmVersionDefault, out edmxVersion))
             {
                 errors = new EdmError[]
                 {
@@ -160,18 +157,6 @@ namespace Microsoft.OData.Edm.Csdl
 
             errors = Enumerable.Empty<EdmError>();
             return true;
-        }
-
-        // Gets the string form of the EdmVersion.
-        // Note that Version 4.01 needs two digits of minor version precision.
-        private static string GetVersionString(Version version)
-        {
-            if (version == EdmConstants.EdmVersion401)
-            {
-                return EdmConstants.EdmVersion401String;
-            }
-
-            return version.ToString();
         }
     }
 }

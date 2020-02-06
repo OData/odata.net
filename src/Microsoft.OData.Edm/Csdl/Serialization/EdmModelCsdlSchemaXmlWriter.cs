@@ -131,7 +131,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteOptionalAttribute(CsdlConstants.Attribute_HasStream, writeHasStream, CsdlConstants.Default_HasStream, EdmValueWriter.BooleanAsXml);
         }
 
-        internal override void WriteDelaredKeyPropertiesElementHeader()
+        internal override void WriteDeclaredKeyPropertiesElementHeader()
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Key);
         }

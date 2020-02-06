@@ -180,7 +180,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""Container"": {
       ""$Kind"": ""EntityContainer"",
       ""Products"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""NS1.Product"",
         ""@Org.OData.Core.V1.OptimisticConcurrency"": [
           {
@@ -359,7 +359,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""Container"": {
       ""$Kind"": ""EntityContainer"",
       ""People"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""DefaultNs.Person"",
         ""$NavigationPropertyBinding"": {
           ""Addresses/City"": ""City"",
@@ -368,11 +368,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
       },
       ""City"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""DefaultNs.City""
       },
       ""CountryOrRegion"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""DefaultNs.CountryOrRegion""
       }
     }
@@ -485,14 +485,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""Container"": {
       ""$Kind"": ""EntityContainer"",
       ""Entities"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""DefaultNs.EntityType"",
         ""$NavigationPropertyBinding"": {
           ""Complex/CollectionOfNav"": ""NavEntities""
         }
       },
       ""NavEntities"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""DefaultNs.NavEntityType""
       }
     }
@@ -629,14 +629,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""Container"": {
       ""$Kind"": ""EntityContainer"",
       ""Entities1"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""NS.EntityType"",
         ""$NavigationPropertyBinding"": {
           ""Complex/ContainedUnderComplex/NavUnderContained"": ""Entities2""
         }
       },
       ""Entities2"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""NS.EntityType""
       }
     }
@@ -1544,7 +1544,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""Default"": {
       ""$Kind"": ""EntityContainer"",
       ""VIP"": {
-        ""$Kind"": ""Singleton"",
         ""$Type"": ""Edm.EntityType""
       }
     }
@@ -1590,7 +1589,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""Default"": {
       ""$Kind"": ""EntityContainer"",
       ""Customers"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""Edm.EntityType""
       }
     }
@@ -2155,11 +2154,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""Default"": {
       ""$Kind"": ""EntityContainer"",
       ""Me"": {
-        ""$Kind"": ""Singleton"",
         ""$Type"": ""NS.Customer""
       },
       ""Customers"": {
-        ""$Kind"": ""EntitySet"",
+        ""$Collection"": true,
         ""$Type"": ""NS.Customer"",
         ""$NavigationPropertyBinding"": {
           ""ContainedOrders/OrderLines"": ""Me/ContainedOrderLines""

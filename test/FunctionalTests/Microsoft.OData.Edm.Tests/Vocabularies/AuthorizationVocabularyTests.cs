@@ -173,9 +173,15 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   },
   ""Org.OData.Authorization.V1"": {
     ""$Alias"": ""Auth"",
+    ""SchemeName"": {
+      ""$Kind"": ""TypeDefinition"",
+      ""$UnderlyingType"": ""Edm.String"",
+      ""@Org.OData.Core.V1.Description"": ""The name of the authorization scheme.""
+    },
     ""SecurityScheme"": {
       ""$Kind"": ""ComplexType"",
       ""Authorization"": {
+        ""$Type"": ""Auth.SchemeName"",
         ""@Org.OData.Core.V1.Description"": ""The name of a required authorization scheme""
       },
       ""RequiredScopes"": {

@@ -56,16 +56,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal abstract void WriteEntityContainerElementHeader(IEdmEntityContainer container);
 
-        internal void WriteDeclaredKeyPropertiesElementHeader()
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_Key);
-        }
-
         internal abstract void WriteEntitySetElementHeader(IEdmEntitySet entitySet);
 
         internal abstract void WriteSingletonElementHeader(IEdmSingleton singleton);
 
-        internal abstract void WriteDelaredKeyPropertiesElementHeader();
+        internal abstract void WriteDeclaredKeyPropertiesElementHeader();
 
         internal abstract void WritePropertyRefElement(IEdmStructuralProperty property);
 

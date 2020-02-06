@@ -81,7 +81,7 @@ namespace Microsoft.OData.Edm.Csdl
         private void WriteEdmxElement()
         {
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Edmx, this.edmxNamespace);
-            this.writer.WriteAttributeString(CsdlConstants.Attribute_Version, this.edmxVersion.ToString());
+            this.writer.WriteAttributeString(CsdlConstants.Attribute_Version, GetVersionString(this.edmxVersion));
         }
 
         private void WriteRuntimeElement()

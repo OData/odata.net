@@ -142,7 +142,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Write $Key
         /// </summary>
-        internal override void WriteDelaredKeyPropertiesElementHeader()
+        internal override void WriteDeclaredKeyPropertiesElementHeader()
         {
             // The value of $Key is an array with one item per key property.
             this.jsonWriter.WritePropertyName(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Key);
@@ -487,7 +487,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (function.IsComposable)
             {
-                this.jsonWriter.WriteRequiredProperty(CsdlConstants.Attribute_IsComposable, function.IsComposable, EdmValueWriter.BooleanAsXml);
+                this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_IsComposable, function.IsComposable, EdmValueWriter.BooleanAsXml);
             }
         }
 
@@ -572,8 +572,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // whose value is an object
             this.jsonWriter.StartObjectScope();
 
-            // The entity set object MUST contain the member $Kind with a string value of EntitySet.
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Kind, CsdlConstants.Element_EntitySet);
+            // The entity set object MUST contain the members $Collection, it's value as true
+            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Collection, true);
 
             // The entity set object MUST contain the member $Type whose string value is the qualified name of an entity type.
             this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Type, entitySet.EntityType().FullName());
@@ -585,7 +585,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Write Singleton object
         /// </summary>
-        /// <param name="entitySet">The Edm singleton.</param>
+        /// <param name="singleton">The Edm singleton.</param>
         internal override void WriteSingletonElementHeader(IEdmSingleton singleton)
         {
             // A singleton is represented as a member of the entity container object whose name is the name of the singleton
@@ -594,11 +594,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // whose value is an object
             this.jsonWriter.StartObjectScope();
 
-            // The singleton object MUST contain the member $Kind with a string value of Singleton.
-            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Kind, CsdlConstants.Element_Singleton);
-
             // The singleton object MUST contain the member $Type whose string value is the qualified name of an entity type.
             this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Type, singleton.EntityType().FullName());
+
+            // The singleton object MAY contain the member $Nullable. In OData 4.0 responses this member MUST NOT be specified.
+            // So far, IEdmSingleton doesn't have the property defined, so skip it now.
         }
 
         /// <summary>
