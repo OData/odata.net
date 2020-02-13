@@ -249,7 +249,9 @@ namespace Microsoft.OData.Client
                 message = statusCode.ToString();
             }
 
-            return new DataServiceClientException(message, (int)statusCode);
+            HttpWebResponseMessage httpWebResponseMessage = new HttpWebResponseMessage(null as IDictionary<string,string>,(int)statusCode, getResponseStream);
+            ODataMessageReader oDataMessageReader = new ODataMessageReader(httpWebResponseMessage);
+            return new DataServiceClientException(message, new ODataErrorException(oDataMessageReader.ReadError()), httpWebResponseMessage.StatusCode);
         }
 
         /// <summary>process the batch</summary>
