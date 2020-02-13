@@ -301,7 +301,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 materializerContext,
                 adapter,
                 null,
-                new Dictionary<IEnumerable, DataServiceQueryContinuation>());
+                new Dictionary<IEnumerable, DataServiceQueryContinuation>(),
+                materializerContext.Context
+                );
 
             evmp.ApplyItemsToCollection(
                 materializerEntry,

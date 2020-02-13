@@ -470,7 +470,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
             var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(materializerContext, lazyPrimitivePropertyConverter);
-            var entryPolicy = new EntryValueMaterializationPolicy(materializerContext, adapter, lazyPrimitivePropertyConverter, null);
+            var entryPolicy = new EntryValueMaterializationPolicy(materializerContext, adapter, lazyPrimitivePropertyConverter, null,materializerContext.Context);
             var collectionPolicy = new CollectionValueMaterializationPolicy(materializerContext, primitiveValueMaterializerPolicy);
             var intanceAnnotationPolicy = new InstanceAnnotationMaterializationPolicy(materializerContext);
 
