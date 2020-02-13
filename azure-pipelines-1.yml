@@ -16,6 +16,12 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: MSBuild@1
+  inputs:
+    solution: 'sln/OData.Net45.sln'
+    msbuildArchitecture: 'x64'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 # - task: PowerShell@2
 #   inputs:
 #     filePath: 'build.ps1'
@@ -36,8 +42,8 @@ steps:
 #   inputs:
 #     platform: '$(buildPlatform)'
 #     configuration: '$(buildConfiguration)'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: 'test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
-    arguments: '--collect "Code coverage"'
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'test'
+#     projects: 'test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
+#     arguments: '--collect "Code coverage"'
