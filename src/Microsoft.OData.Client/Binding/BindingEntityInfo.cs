@@ -58,18 +58,18 @@ namespace Microsoft.OData.Client
         /// <param name="entityType">Type for which to obtain information</param>
         /// <param name="model">the client model.</param>
         /// <returns>Info about the <paramref name="entityType"/></returns>
-        internal static IList<BindingPropertyInfo> GetObservableProperties(Type entityType, ClientEdmModel model)
+        internal static IList<BindingPropertyInfo> GetObservableProperties(Type entityType, ClientEdmModel model,DataServiceContext context)
         {
-            return GetBindingEntityInfoFor(entityType, model).ObservableProperties;
+            return GetBindingEntityInfoFor(entityType, model,context).ObservableProperties;
         }
 
         /// <summary>Gets the ClientType corresponding to the given type</summary>
         /// <param name="entityType">Input type</param>
         /// <param name="model">The client model.</param>
         /// <returns>Corresponding ClientType</returns>
-        internal static ClientTypeAnnotation GetClientType(Type entityType, ClientEdmModel model)
+        internal static ClientTypeAnnotation GetClientType(Type entityType, ClientEdmModel model,DataServiceContext context)
         {
-            return GetBindingEntityInfoFor(entityType, model).ClientType;
+            return GetBindingEntityInfoFor(entityType, model,context).ClientType;
         }
 
         /// <summary>
@@ -87,10 +87,11 @@ namespace Microsoft.OData.Client
         internal static string GetEntitySet(
             object target,
             string targetEntitySet,
-            ClientEdmModel model)
+            ClientEdmModel model,
+            DataServiceContext context)
         {
             Debug.Assert(target != null, "Argument 'target' cannot be null.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), model), "Argument 'target' must be an entity type.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), model,context), "Argument 'target' must be an entity type.");
 
             // Here's the rules in order of priority for resolving entity set name
             // 1. EntitySet name passed in the constructor or extension methods of DataServiceCollection
@@ -104,7 +105,7 @@ namespace Microsoft.OData.Client
             {
                 // If there is not a 'currently known' entity set name to validate against, then there must be
                 // EntitySet attribute on the entity type
-                return BindingEntityInfo.GetEntitySetAttribute(target.GetType(), model);
+                return BindingEntityInfo.GetEntitySetAttribute(target.GetType(), model,context);
             }
         }
 
@@ -119,7 +120,7 @@ namespace Microsoft.OData.Client
         /// <param name="collectionType">An object type specifier.</param>
         /// <param name="model">The client model.</param>
         /// <returns>true if the type is an DataServiceCollection; otherwise false.</returns>
-        internal static bool IsDataServiceCollection(Type collectionType, ClientEdmModel model)
+        internal static bool IsDataServiceCollection(Type collectionType, ClientEdmModel model,DataServiceContext context)
         {
             Debug.Assert(collectionType != null, "Argument 'collectionType' cannot be null.");
 
@@ -148,7 +149,7 @@ namespace Microsoft.OData.Client
                     // entity type parameter T, and is assignable to DataServiceCollection<T>
                     Type[] parms = type.GetGenericArguments();
 
-                    if (parms != null && parms.Length == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(parms[0]))
+                    if (parms != null && parms.Length == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(parms[0],context))
                     {
                         // if ObservableCollection is not available dataServiceCollection will be null
                         Type dataServiceCollection = WebUtil.GetDataServiceCollectionOfT(parms);
@@ -185,7 +186,7 @@ namespace Microsoft.OData.Client
         /// <param name="type">An object type specifier.</param>
         /// <param name="model">The client model.</param>
         /// <returns>true if the type is an entity type; otherwise false.</returns>
-        internal static bool IsEntityType(Type type, ClientEdmModel model)
+        internal static bool IsEntityType(Type type, ClientEdmModel model,DataServiceContext context)
         {
             Debug.Assert(type != null, "Argument 'type' cannot be null.");
 
@@ -205,12 +206,12 @@ namespace Microsoft.OData.Client
             bool isEntityType;
             try
             {
-                if (BindingEntityInfo.IsDataServiceCollection(type, model))
+                if (BindingEntityInfo.IsDataServiceCollection(type, model,context))
                 {
                     return false;
                 }
 
-                isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(type);
+                isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(type,context);
             }
             catch (InvalidOperationException)
             {
@@ -246,11 +247,11 @@ namespace Microsoft.OData.Client
         /// <param name="clientProperty">Instance of ClientProperty corresponding to <paramref name="sourceProperty"/></param>
         /// <param name="propertyValue">Value of the property</param>
         /// <returns>true if the property exists and the value was read; otherwise false.</returns>
-        internal static bool TryGetPropertyValue(object source, string sourceProperty, ClientEdmModel model, out BindingPropertyInfo bindingPropertyInfo, out ClientPropertyAnnotation clientProperty, out object propertyValue)
+        internal static bool TryGetPropertyValue(object source, string sourceProperty, ClientEdmModel model,DataServiceContext context, out BindingPropertyInfo bindingPropertyInfo, out ClientPropertyAnnotation clientProperty, out object propertyValue)
         {
             Type sourceType = source.GetType();
 
-            bindingPropertyInfo = BindingEntityInfo.GetObservableProperties(sourceType, model)
+            bindingPropertyInfo = BindingEntityInfo.GetObservableProperties(sourceType, model,context)
                                                    .SingleOrDefault(x => x.PropertyInfo.PropertyName == sourceProperty);
 
             bool propertyFound = bindingPropertyInfo != null;
@@ -258,7 +259,7 @@ namespace Microsoft.OData.Client
             // bindingPropertyInfo is null for primitive properties.
             if (!propertyFound)
             {
-                clientProperty = BindingEntityInfo.GetClientType(sourceType, model)
+                clientProperty = BindingEntityInfo.GetClientType(sourceType, model,context)
                     .GetProperty(sourceProperty, UndeclaredPropertyBehavior.Support);
 
                 propertyFound = clientProperty != null;
@@ -284,7 +285,7 @@ namespace Microsoft.OData.Client
         /// <param name="entityType">Type for which to obtain information</param>
         /// <param name="model">The client model.</param>
         /// <returns>Info about the <paramref name="entityType"/></returns>
-        private static BindingEntityInfoPerType GetBindingEntityInfoFor(Type entityType, ClientEdmModel model)
+        private static BindingEntityInfoPerType GetBindingEntityInfoFor(Type entityType, ClientEdmModel model,DataServiceContext context)
         {
             BindingEntityInfoPerType bindingEntityInfo;
 
@@ -326,17 +327,17 @@ namespace Microsoft.OData.Client
                 }
                 else if (p.IsPrimitiveOrEnumOrComplexCollection)
                 {
-                    Debug.Assert(!BindingEntityInfo.IsDataServiceCollection(propertyType, model), "DataServiceCollection cannot be the type that backs collections of primitives or complex types.");
+                    Debug.Assert(!BindingEntityInfo.IsDataServiceCollection(propertyType, model,context), "DataServiceCollection cannot be the type that backs collections of primitives or complex types.");
                     bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection };
                 }
                 else if (p.IsEntityCollection)
                 {
-                    if (BindingEntityInfo.IsDataServiceCollection(propertyType, model))
+                    if (BindingEntityInfo.IsDataServiceCollection(propertyType, model,context))
                     {
                         bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.BindingPropertyKindDataServiceCollection };
                     }
                 }
-                else if (BindingEntityInfo.IsEntityType(propertyType, model))
+                else if (BindingEntityInfo.IsEntityType(propertyType, model,context))
                 {
                     bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.BindingPropertyKindEntity };
                 }
@@ -391,9 +392,9 @@ namespace Microsoft.OData.Client
         /// <param name="entityType">Input type</param>
         /// <param name="model">The client model.</param>
         /// <returns>Entity set name for the type</returns>
-        private static string GetEntitySetAttribute(Type entityType, ClientEdmModel model)
+        private static string GetEntitySetAttribute(Type entityType, ClientEdmModel model,DataServiceContext context)
         {
-            return GetBindingEntityInfoFor(entityType, model).EntitySet;
+            return GetBindingEntityInfoFor(entityType, model,context).EntitySet;
         }
 
         /// <summary>Information about a property interesting for binding</summary>

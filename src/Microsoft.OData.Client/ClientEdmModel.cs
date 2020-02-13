@@ -43,6 +43,16 @@ namespace Microsoft.OData.Client
         private readonly Dictionary<string, ClientTypeAnnotation> typeNameToClientTypeAnnotationCache =
             new Dictionary<string, ClientTypeAnnotation>(StringComparer.Ordinal);
 
+        /// <summary>
+        /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
+        /// the fully-qualified name of types when TryAs converts are processed (C# "as", VB "TryCast").
+        /// Ideally the FQN is only required during URI translation, not during analysis. However,
+        /// the current code constructs the $select and $expand parts of the URI during analysis. This
+        /// could be refactored in the future to defer the $select and $expand URI construction until
+        /// the URI translation phase.
+        /// </summary>
+        private readonly DataServiceContext context;
+
         /// <summary>The annotations manager.</summary>
         private readonly EdmDirectValueAnnotationsManager directValueAnnotationsManager = new EdmDirectValueAnnotationsManager();
 
@@ -60,6 +70,10 @@ namespace Microsoft.OData.Client
         {
             this.maxProtocolVersion = maxProtocolVersion;
             this.EdmStructuredSchemaElements = new ConcurrentEdmSchemaDictionary();
+        }
+        internal ClientEdmModel(DataServiceContext context)
+        {
+            this.context = context;
         }
 
         /// <summary>
@@ -245,7 +259,7 @@ namespace Microsoft.OData.Client
                 {
                     PropertyInfo[] keyProperties;
                     bool hasProperties;
-                    Type[] hierarchy = ClientEdmModel.GetTypeHierarchy(type, out keyProperties, out hasProperties);
+                    Type[] hierarchy = ClientEdmModel.GetTypeHierarchy(type,out keyProperties, this.context, out hasProperties);
 
                     Debug.Assert(keyProperties == null || keyProperties.Length == 0 || keyProperties.All(p => p.DeclaringType == keyProperties[0].DeclaringType), "All key properties must be declared on the same type.");
 
@@ -287,11 +301,11 @@ namespace Microsoft.OData.Client
         /// <param name="keyProperties">Returns the list of key properties if <paramref name="type"/> is an entity type; null otherwise.</param>
         /// <param name="hasProperties">true if <paramref name="type"/> has any (declared or inherited) properties; otherwise false.</param>
         /// <returns>Returns <paramref name="type"/> and its base types, in the order of most base type first and <paramref name="type"/> last.</returns>
-        private static Type[] GetTypeHierarchy(Type type, out PropertyInfo[] keyProperties, out bool hasProperties)
+        private static Type[] GetTypeHierarchy(Type type, out PropertyInfo[] keyProperties,DataServiceContext context, out bool hasProperties)
         {
             Debug.Assert(type != null, "type != null");
 
-            keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(type, out hasProperties);
+            keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(type, context,out hasProperties);
 
             List<Type> hierarchy = new List<Type>();
             if (keyProperties != null)

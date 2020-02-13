@@ -28,6 +28,16 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly Type resourceType;
 
+        /// <summary>
+        /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
+        /// the fully-qualified name of types when TryAs converts are processed (C# "as", VB "TryCast").
+        /// Ideally the FQN is only required during URI translation, not during analysis. However,
+        /// the current code constructs the $select and $expand parts of the URI during analysis. This
+        /// could be refactored in the future to defer the $select and $expand URI construction until
+        /// the URI translation phase.
+        /// </summary>
+        private readonly DataServiceContext context;
+
         /// <summary>property member name</summary>
         private readonly Expression member;
 
@@ -98,7 +108,6 @@ namespace Microsoft.OData.Client
         {
             get { return this.member; }
         }
-
         /// <summary>
         /// Type of resources contained in this ResourceSet - it's element type.
         /// </summary>
@@ -301,6 +310,12 @@ namespace Microsoft.OData.Client
             return clone;
         }
 
+        internal QueryableResourceExpression(DataServiceContext context)
+            :base(context)
+        {
+            this.context = context;
+        }
+
         /// <summary>
         /// Converts the key expression to filter expression
         /// </summary>
@@ -421,7 +436,7 @@ namespace Microsoft.OData.Client
                 {
                     PropertyInfo property;
                     ConstantExpression constantValue;
-                    if (ResourceBinder.PatternRules.MatchKeyComparison(predicate, out property, out constantValue))
+                    if (ResourceBinder.PatternRules.MatchKeyComparison(predicate,this.context, out property, out constantValue))
                     {
                         keyValues.Add(property, constantValue);
                     }

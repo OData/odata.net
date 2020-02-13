@@ -35,8 +35,9 @@ namespace Microsoft.OData.Client.Materialization
             IODataMaterializerContext context,
             EntityTrackingAdapter entityTrackingAdapter,
             DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter,
-            Dictionary<IEnumerable, DataServiceQueryContinuation> nextLinkTable)
-            : base(context, lazyPrimitivePropertyConverter)
+            Dictionary<IEnumerable, DataServiceQueryContinuation> nextLinkTable,
+            DataServiceContext dataServiceContext)
+            : base(context, lazyPrimitivePropertyConverter,dataServiceContext)
         {
             this.nextLinkTable = nextLinkTable;
             this.EntityTrackingAdapter = entityTrackingAdapter;
@@ -470,7 +471,7 @@ namespace Microsoft.OData.Client.Materialization
                 // LoadProperty scenario versus regular collection creation scenario.
                 if (forLoadProperty)
                 {
-                    if (BindingEntityInfo.IsDataServiceCollection(collectionType, this.MaterializerContext.Model))
+                    if (BindingEntityInfo.IsDataServiceCollection(collectionType, this.MaterializerContext.Model,this.MaterializerContext.Context))
                     {
                         Debug.Assert(WebUtil.GetDataServiceCollectionOfT(property.EntityCollectionItemType) != null, "DataServiceCollection<> must be available here.");
 

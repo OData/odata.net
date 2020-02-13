@@ -37,12 +37,12 @@ namespace Microsoft.OData.Client
 
         #region Internal methods.
 
-        internal static LambdaExpression TryToRewrite(LambdaExpression le, ResourceExpression source)
+        internal static LambdaExpression TryToRewrite(LambdaExpression le, ResourceExpression source,DataServiceContext context)
         {
             Type proposedParameterType = source.ResourceType;
             LambdaExpression result;
             if (!ResourceBinder.PatternRules.MatchSingleArgumentLambda(le, out le) ||  // can only rewrite single parameter Lambdas.
-                ClientTypeUtil.TypeOrElementTypeIsEntity(le.Parameters[0].Type) || // only attempt to rewrite if lambda parameter is not an entity type
+                ClientTypeUtil.TypeOrElementTypeIsEntity(le.Parameters[0].Type,context) || // only attempt to rewrite if lambda parameter is not an entity type
                 !(le.Parameters[0].Type.GetProperties().Any(p => p.PropertyType == proposedParameterType))) // lambda parameter must have public property that is same as proposed type.
             {
                 result = le;

@@ -54,9 +54,18 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly Dictionary<Expression, Pattern> _patterns = new Dictionary<Expression, Pattern>(ReferenceEqualityComparer<Expression>.Instance);
 
+        /// <summary>
+        /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
+        /// the fully-qualified name of types when TryAs converts are processed (C# "as", VB "TryCast").
+        /// Ideally the FQN is only required during URI translation, not during analysis. However,
+        /// the current code constructs the $select and $expand parts of the URI during analysis. This
+        /// could be refactored in the future to defer the $select and $expand URI construction until
+        /// the URI translation phase.
+        /// </summary>
+        private readonly DataServiceContext context;
+
         /// <summary>Records the generated-to-source rewrites created.</summary>
         private readonly Dictionary<Expression, Expression> normalizerRewrites;
-
         #endregion Private fields
 
         #region Constructors
@@ -67,6 +76,11 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(normalizerRewrites != null, "normalizerRewrites != null");
             this.normalizerRewrites = normalizerRewrites;
+        }
+
+        private ExpressionNormalizer(DataServiceContext context)
+        {
+            this.context = context;
         }
 
         #endregion Constructors
@@ -174,7 +188,7 @@ namespace Microsoft.OData.Client
                 if (!PrimitiveType.IsKnownNullableType(visited.Operand.Type) && !PrimitiveType.IsKnownNullableType(visited.Type) || visited.Operand.Type == visited.Type)
                 {
                     // x is not a collection of entity types
-                    if(!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
+                    if(!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type,this.context) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
                     {
                         // x is not an enum type
                         if (!visited.Operand.Type.IsEnum())

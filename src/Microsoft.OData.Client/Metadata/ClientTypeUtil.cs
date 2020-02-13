@@ -44,6 +44,9 @@ namespace Microsoft.OData.Client.Metadata
 
             /// <summary> if the key property was attributed </summary>
             AttributedKey = 3,
+
+            /// <summary> if the key property was declared during the model building process and does not follow the conventions </summary>
+            DeclaredKey = 4,
         }
 
         /// <summary>
@@ -295,11 +298,11 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="type">Type to examine</param>
         /// <returns>bool indicating whether or not entity type</returns>
-        internal static bool TypeOrElementTypeIsEntity(Type type)
+        internal static bool TypeOrElementTypeIsEntity(Type type,DataServiceContext context)
         {
             type = TypeSystem.GetElementType(type);
             type = Nullable.GetUnderlyingType(type) ?? type;
-            return !PrimitiveType.IsKnownType(type) && ClientTypeUtil.GetKeyPropertiesOnType(type) != null;
+            return !PrimitiveType.IsKnownType(type) && ClientTypeUtil.GetKeyPropertiesOnType(type,context) != null;
         }
 
         /// <summary>
@@ -414,10 +417,10 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="type">Type in question.</param>
         /// <returns>Returns the list of key properties defined on <paramref name="type"/>; null if <paramref name="type"/> is complex.</returns>
-        internal static PropertyInfo[] GetKeyPropertiesOnType(Type type)
+        internal static PropertyInfo[] GetKeyPropertiesOnType(Type type,DataServiceContext context)
         {
             bool hasProperties;
-            return GetKeyPropertiesOnType(type, out hasProperties);
+            return GetKeyPropertiesOnType(type,context,out hasProperties);
         }
 
         /// <summary>
@@ -426,26 +429,41 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="type">Type in question.</param>
         /// <param name="hasProperties">true if <paramref name="type"/> has any (declared or inherited) properties; otherwise false.</param>
         /// <returns>Returns the list of key properties defined on <paramref name="type"/>; null if <paramref name="type"/> is complex.</returns>
-        internal static PropertyInfo[] GetKeyPropertiesOnType(Type type, out bool hasProperties)
+        internal static PropertyInfo[] GetKeyPropertiesOnType(Type type,DataServiceContext context,out bool hasProperties)
         {
             if (CommonUtil.IsUnsupportedType(type))
             {
                 throw new InvalidOperationException(c.Strings.ClientType_UnsupportedType(type));
             }
-
             string typeName = type.ToString();
             IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
+            bool isKeyDeclared = false;
+            if (customAttributes.Count() == 0)
+            {
+                IEdmModel model = context.Format.ServiceModel;
+                if (model != null)
+                {
+                    EdmEntityType edmEntityType = (EdmEntityType)model.SchemaElements.FirstOrDefault();
+                    if (edmEntityType != null)
+                    {
+                        var declaredKey = edmEntityType.DeclaredKey;
+                        if (declaredKey != null)
+                        {
+                            isKeyDeclared = true;
+                        }
+                    }
+                }
+            }
             bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
             KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
             List<PropertyInfo> keyProperties = new List<PropertyInfo>();
             PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
             hasProperties = properties.Length > 0;
-
             KeyKind currentKeyKind = KeyKind.NotKey;
             KeyKind newKeyKind = KeyKind.NotKey;
             foreach (PropertyInfo propertyInfo in properties)
             {
-                if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute)) != KeyKind.NotKey)
+                if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute,isKeyDeclared)) != KeyKind.NotKey)
                 {
                     if (newKeyKind > currentKeyKind)
                     {
@@ -477,7 +495,6 @@ namespace Microsoft.OData.Client.Metadata
                     throw c.Error.InvalidOperation(c.Strings.ClientType_KeysMustBeSimpleTypes(key.Name, typeName, key.PropertyType.FullName));
                 }
             }
-
             if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute.KeyNames.Count)
             {
                 var m = (from string a in dataServiceKeyAttribute.KeyNames
@@ -487,7 +504,6 @@ namespace Microsoft.OData.Client.Metadata
                          select a).First<string>();
                 throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
             }
-
             return keyProperties.Count > 0 ? keyProperties.ToArray() : (isEntity ? ClientTypeUtil.EmptyPropertyInfoArray : null);
         }
 
@@ -693,7 +709,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="propertyInfo">Property in question.</param>
         /// <param name="dataServiceKeyAttribute">DataServiceKeyAttribute instance.</param>
         /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.</returns>
-        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute)
+        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute,bool IsKeyDeclared)
         {
             Debug.Assert(propertyInfo != null, "propertyInfo != null");
 
@@ -718,10 +734,13 @@ namespace Microsoft.OData.Client.Metadata
                     keyKind = KeyKind.Id;
                 }
             }
+            else if (IsKeyDeclared)
+            {
+                keyKind = KeyKind.DeclaredKey;
+            }
 
             return keyKind;
         }
-
         /// <summary>
         /// Checks whether the specified <paramref name="type"/> is a
         /// closed constructed type of the generic type.
@@ -756,7 +775,6 @@ namespace Microsoft.OData.Client.Metadata
             {
                 return true;
             }
-
             return false;
         }
     }

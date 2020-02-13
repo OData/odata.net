@@ -351,7 +351,7 @@ namespace Microsoft.OData.Client
                         if (mce != null && ReflectionUtil.TryIdentifySequenceMethod(mce.Method, out sequenceMethod) && ReflectionUtil.IsAnyAllMethod(sequenceMethod))
                         {
                             Type filteredType = mce.Method.GetGenericArguments().SingleOrDefault();
-                            if (ClientTypeUtil.TypeOrElementTypeIsEntity(filteredType))
+                            if (ClientTypeUtil.TypeOrElementTypeIsEntity(filteredType,this.context))
                             {
                                 this.Visit(m.Arguments[0]);
                                 this.builder.Append(UriHelper.FORWARDSLASH);

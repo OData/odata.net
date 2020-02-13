@@ -38,6 +38,16 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly Stack<Expression> parameterExpressionTypes;
 
+        /// <summary>
+        /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
+        /// the fully-qualified name of types when TryAs converts are processed (C# "as", VB "TryCast").
+        /// Ideally the FQN is only required during URI translation, not during analysis. However,
+        /// the current code constructs the $select and $expand parts of the URI during analysis. This
+        /// could be refactored in the future to defer the $select and $expand URI construction until
+        /// the URI translation phase.
+        /// </summary>
+        private readonly DataServiceContext context;
+
         /// <summary>Stack of 'entry' parameter expressions.</summary>
         private readonly Stack<Expression> parameterEntries;
 
@@ -57,6 +67,11 @@ namespace Microsoft.OData.Client
             this.parameterExpressionTypes = new Stack<Expression>();
             this.parameterEntries = new Stack<Expression>();
             this.parameterProjectionTypes = new Stack<Type>();
+        }
+
+        internal ProjectionPathBuilder(DataServiceContext context)
+        {
+            this.context = context;
         }
 
         #endregion Constructors
@@ -137,7 +152,7 @@ namespace Microsoft.OData.Client
 
             ParameterExpression param = lambda.Parameters[0];
             Type projectionType = lambda.Body.Type;
-            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(projectionType);
+            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(projectionType,this.context);
 
             this.entityInScope.Push(isEntityType);
             this.parameterExpressions.Push(param);
@@ -153,7 +168,7 @@ namespace Microsoft.OData.Client
         /// <param name="init">Expression for initialization.</param>
         internal void EnterMemberInit(MemberInitExpression init)
         {
-            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(init.Type);
+            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(init.Type,this.context);
             this.entityInScope.Push(isEntityType);
         }
 

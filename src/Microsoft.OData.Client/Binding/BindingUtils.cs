@@ -55,7 +55,7 @@ namespace Microsoft.OData.Client
         /// <param name="sourceProperty">Collection property of the source object which is being assigned to</param>
         /// <param name="sourceType">Type of the source object</param>
         /// <param name="model">The client model.</param>
-        internal static void VerifyObserverNotPresent<T>(object oec, string sourceProperty, Type sourceType, ClientEdmModel model)
+        internal static void VerifyObserverNotPresent<T>(object oec, string sourceProperty, Type sourceType, ClientEdmModel model,DataServiceContext context)
 #else
         /// <summary>Verifies the absence of observer for an DataServiceCollection</summary>
         /// <typeparam name="T">Type of DataServiceCollection</typeparam>
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Client
 #endif
         {
 #if DEBUG
-            Debug.Assert(BindingEntityInfo.IsDataServiceCollection(oec.GetType(), model), "Must be an DataServiceCollection.");
+            Debug.Assert(BindingEntityInfo.IsDataServiceCollection(oec.GetType(), model,context), "Must be an DataServiceCollection.");
 #endif
             DataServiceCollection<T> typedCollection = oec as DataServiceCollection<T>;
 
