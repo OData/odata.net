@@ -13,6 +13,9 @@ namespace Microsoft.OData.JsonLight
     using System.Globalization;
     using System.Linq;
     using System.Text;
+#if PORTABLELIB
+    using System.Threading.Tasks;
+#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.OData.Evaluation;
@@ -260,6 +263,58 @@ namespace Microsoft.OData.JsonLight
             this.contextUriParseResultReady = true;
 #endif
         }
+
+#if PORTABLELIB
+
+        /// <summary>
+        /// Read the start of the top-level data wrapper in JSON responses.
+        /// </summary>
+        /// <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the context URI.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker.</param>
+        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a resource set or a collection within a parameters payload.</param>
+        /// <param name="allowEmptyPayload">true if we allow a completely empty payload; otherwise false.</param>
+        /// <returns>The parsed context URI.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
+        /// Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the context URI property.
+        ///                 Or the reader is positioned on an end-object node if there are no properties (other than the context URI which is required in responses and optional in requests).
+        /// </remarks>
+        internal Task ReadPayloadStartAsync(
+            ODataPayloadKind payloadKind,
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+            bool isReadingNestedPayload,
+            bool allowEmptyPayload)
+        {
+            this.JsonReader.AssertNotBuffering();
+            Debug.Assert(isReadingNestedPayload || this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: JSON reader must not have been used yet when not reading a nested payload.");
+
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+                {
+                    string contextUriAnnotationValue = this.ReadPayloadStartImplementation(
+                        payloadKind,
+                        propertyAndAnnotationCollector,
+                        isReadingNestedPayload,
+                        allowEmptyPayload);
+
+                    // The context URI is only recognized in non-error response top-level payloads.
+                    // If the payload is nested (for example when we read URL literals) we don't recognize the context URI.
+                    // Top-level error payloads don't need and use the context URI.
+                    if (!isReadingNestedPayload && payloadKind != ODataPayloadKind.Error && contextUriAnnotationValue != null)
+                    {
+                        this.contextUriParseResult = ODataJsonLightContextUriParser.Parse(
+                            this.Model,
+                            contextUriAnnotationValue,
+                            payloadKind,
+                            this.MessageReaderSettings.ClientCustomTypeResolver,
+                            this.JsonLightInputContext.ReadingResponse);
+                    }
+
+#if DEBUG
+                    this.contextUriParseResultReady = true;
+#endif
+                });
+        }
+#endif
 
         /// <summary>
         /// Reads the end of the top-level data wrapper in JSON responses.

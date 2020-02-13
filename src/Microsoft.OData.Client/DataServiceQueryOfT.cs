@@ -249,6 +249,34 @@ namespace Microsoft.OData.Client
             return nextTask;
         }
 
+#if !PORTABLELIB // Synchronous methods not available
+        /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.</summary>
+        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which TElement represents the type of the query results.</returns>
+        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
+        /// <exception cref="T:System.NotSupportedException">When during materialization an object is encountered in the input stream that cannot be deserialized to an instance of TElement.</exception>
+        public new IEnumerable<TElement> Execute()
+        {
+            if (this.IsFunction)
+            {
+                return this.Context.Execute<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, false);
+            }
+            else
+            {
+                return this.Execute<TElement>(this.Context, this.Translate());
+            }
+        }
+
+        /// <summary>
+        /// Get all items by auto iterating all pages, will send the request of first page as default, regardless if it's iterated.
+        /// </summary>
+        /// <returns>The items retrieved</returns>
+        public IEnumerable<TElement> GetAllPages()
+        {
+            QueryOperationResponse<TElement> response = this.Execute<TElement>(this.Context, this.Translate());
+            return this.GetRestPages(response);
+        }
+#endif
+
         /// <summary>Expands a query to include entities from a related entity set in the query response.</summary>
         /// <returns>A new query that includes the requested $expand query option appended to the URI of the supplied query.</returns>
         /// <param name="path">The expand path in the format Orders/Order_Details.</param>
@@ -312,10 +340,17 @@ namespace Microsoft.OData.Client
 
         /// <summary>Executes the query and returns the results as a collection.</summary>
         /// <returns>A typed enumerator over the results in which TElement represents the type of the query results.</returns>
+#if !PORTABLELIB // Synchronous methods not available
+        public IEnumerator<TElement> GetEnumerator()
+        {
+            return this.Execute().GetEnumerator();
+        }
+#else
         public IEnumerator<TElement> GetEnumerator()
         {
             throw Error.NotSupported(Strings.DataServiceQuery_EnumerationNotSupported);
         }
+#endif
 
         /// <summary>Represents the URI of the query to the data service.</summary>
         /// <returns>A URI as string that represents the query to the data service for this <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance.</returns>
@@ -423,6 +458,34 @@ namespace Microsoft.OData.Client
                 }
             }
         }
+
+#if !PORTABLELIB
+        /// Synchronous methods not available
+        /// <summary>
+        /// Returns an IEnumerable from an Internet resource.
+        /// </summary>
+        /// <param name="response">The response of the previous page</param>
+        /// <returns>An IEnumerable that contains the response from the Internet resource.</returns>
+        private IEnumerable<TElement> GetRestPages(IEnumerable<TElement> response)
+        {
+            foreach (var element in response)
+            {
+                yield return element;
+            }
+
+            var continuation = (response as QueryOperationResponse<TElement>).GetContinuation();
+            while (continuation != null)
+            {
+                response = this.Context.Execute(continuation);
+                foreach (var element in response)
+                {
+                    yield return element;
+                }
+
+                continuation = (response as QueryOperationResponse<TElement>).GetContinuation();
+            }
+        }
+#endif
 
         /// <summary>
         /// Ordered DataServiceQuery which implements IOrderedQueryable.

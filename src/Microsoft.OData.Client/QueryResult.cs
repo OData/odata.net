@@ -213,6 +213,82 @@ namespace Microsoft.OData.Client
             Debug.Assert((!this.CompletedSynchronously && !pereq.RequestCompletedSynchronously) || this.IsCompleted, "if CompletedSynchronously then MUST IsCompleted");
         }
 
+#if !PORTABLELIB
+        /// <summary>Synchronous web request</summary>
+        internal void ExecuteQuery()
+        {
+            try
+            {
+                if (this.requestContentStream != null && this.requestContentStream.Stream != null)
+                {
+                    this.Request.SetRequestStream(this.requestContentStream);
+                }
+#if false
+                if ((null != requestContent) && (0 < requestContent.Length))
+                {
+                    using (System.IO.Stream stream = Util.NullCheck(this.Request.GetRequestStream(), InternalError.InvalidGetRequestStream))
+                    {
+                        byte[] buffer = requestContent.GetBuffer();
+                        int bufferOffset = checked((int)requestContent.Position);
+                        int bufferLength = checked((int)requestContent.Length) - bufferOffset;
+
+                        // the following is useful in the debugging Immediate Window
+                        // string x = System.Text.Encoding.UTF8.GetString(buffer, bufferOffset, bufferLength);
+                        stream.Write(buffer, bufferOffset, bufferLength);
+                    }
+                }
+#endif
+                IODataResponseMessage response = null;
+                response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
+                this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
+
+                if (HttpStatusCode.NoContent != this.StatusCode)
+                {
+                    using (Stream stream = this.responseMessage.GetStream())
+                    {
+                        if (null != stream)
+                        {
+                            Stream copy = this.GetAsyncResponseStreamCopy();
+                            this.outputResponseStream = copy;
+
+                            Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
+
+                            long copied = WebUtil.CopyStream(stream, copy, ref buffer);
+                            if (this.responseStreamOwner)
+                            {
+                                if (0 == copied)
+                                {
+                                    this.outputResponseStream = null;
+                                }
+                                else if (copy.Position < copy.Length)
+                                {   // In Silverlight, generally 3 bytes less than advertised by ContentLength are read
+                                    ((MemoryStream)copy).SetLength(copy.Position);
+                                }
+                            }
+
+                            this.PutAsyncResponseStreamCopyBuffer(buffer);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(e);
+                throw;
+            }
+            finally
+            {
+                this.SetCompleted();
+                this.CompletedRequest();
+            }
+
+            if (null != this.Failure)
+            {
+                throw this.Failure;
+            }
+        }
+#endif
+
         /// <summary>
         /// Returns the response for the request.
         /// </summary>

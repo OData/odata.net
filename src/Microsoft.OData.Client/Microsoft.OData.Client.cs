@@ -12,6 +12,9 @@ using System.Globalization;
 using System.Reflection;
 using System.Resources;
 using System.Threading;
+#if !PORTABLELIB
+using System.Security.Permissions;
+#endif
 
 namespace Microsoft.OData.Client
 {
@@ -273,7 +276,11 @@ namespace Microsoft.OData.Client
 
         internal TextRes()
         {
+#if !PORTABLELIB
+            resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().Assembly);
+#else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().GetTypeInfo().Assembly);
+#endif
         }
 
         private static TextRes GetLoader()
@@ -345,5 +352,15 @@ namespace Microsoft.OData.Client
             usedFallback = false;
             return GetString(name);
         }
+
+#if !PORTABLELIB
+        public static object GetObject(string name)
+        {
+            TextRes sys = GetLoader();
+            if (sys == null)
+                return null;
+            return sys.resources.GetObject(name, TextRes.Culture);
+        }
+#endif
     }
 }

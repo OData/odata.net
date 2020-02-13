@@ -11,15 +11,19 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-
+#if PORTABLELIB
+    using System.Threading.Tasks;
+#endif
     #endregion Namespaces
 
     /// <summary>
     /// Message representing an operation in a batch response.
     /// </summary>
-
+#if PORTABLELIB
+    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessageAsync, IODataPayloadUriConverter, IContainerProvider
+#else
     public sealed class ODataBatchOperationResponseMessage : IODataResponseMessage, IODataPayloadUriConverter, IContainerProvider
-
+#endif
     {
         /// <summary>The Content-ID for this response message.</summary>
         public readonly string ContentId;
@@ -131,6 +135,14 @@ namespace Microsoft.OData
             return this.message.GetStream();
         }
 
+#if PORTABLELIB
+        /// <summary>Asynchronously get the stream backing for this message.</summary>
+        /// <returns>The stream backing for this message.</returns>
+        public Task<Stream> GetStreamAsync()
+        {
+            return this.message.GetStreamAsync();
+        }
+#endif
 
         /// <summary> Method to implement a custom URL resolution scheme. This method returns null if not custom resolution is desired. If the method returns a non-null URL that value will be used without further validation. </summary>
         /// <returns> A <see cref="T:System.Uri" /> instance that reflects the custom resolution of the method arguments into a URL or null if no custom resolution is desired; in that case the default resolution is used. </returns>

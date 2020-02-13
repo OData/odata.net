@@ -44,6 +44,18 @@ namespace Microsoft.OData.Client
         /// </summary>
         public Uri RequestUri { get; private set; }
 
+#if !PORTABLELIB // Synchronous methods not available
+        /// <summary>
+        /// Executes the action and returns the results as a collection.
+        /// </summary>
+        /// <returns>Action results.</returns>
+        /// <exception cref="InvalidOperationException">Problem materializing result of query into object.</exception>
+        public IEnumerable<T> Execute()
+        {
+            return Context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, false, Parameters);
+        }
+#endif
+
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
         /// <returns>The result of the operation.</returns>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
@@ -75,5 +87,16 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(asyncResult, "asyncResult");
             return Context.EndExecute<T>(asyncResult);
         }
+
+#if !PORTABLELIB // Synchronous methods not available
+        /// <summary>
+        /// Executes the query and returns the results as a collection.
+        /// </summary>
+        /// <returns>A typed enumerator over the results in which TElement represents the type of the query results.</returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return this.Execute().GetEnumerator();
+        }
+#endif
     }
 }

@@ -142,6 +142,43 @@ namespace Microsoft.OData.Client
             Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
         }
 
+#if !PORTABLELIB  // Synchronous methods not available
+        /// <summary>
+        /// Synchronous batch request
+        /// </summary>
+        internal void BatchRequest()
+        {
+            ODataRequestMessageWrapper batchRequestMessage = this.GenerateBatchRequest();
+
+            if (batchRequestMessage != null)
+            {
+                batchRequestMessage.SetRequestStream(batchRequestMessage.CachedRequestStream);
+
+                try
+                {
+                    this.batchResponseMessage = this.RequestInfo.GetSynchronousResponse(batchRequestMessage, false);
+                }
+                catch (DataServiceTransportException ex)
+                {
+                    InvalidOperationException exception = WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
+
+                    // For non-async batch requests we rethrow the WebException.  This is shipped behavior.
+                    throw exception;
+                }
+                finally
+                {
+                    if (this.batchResponseMessage != null)
+                    {
+                        // For non-async batch requests we call the test hook to get the response stream but we cannot consume it
+                        // because we rethrow what we caught and the customer need to be able to read the response stream from the WebException.
+                        // Note that on the async batch code path we do consume the response stream and throw a DataServiceRequestException.
+                        this.responseStream = this.batchResponseMessage.GetStream();
+                    }
+                }
+            }
+        }
+#endif
+
         /// <summary>Read and store response data for the current change</summary>
         /// <param name="pereq">The completed per request object</param>
         /// <remarks>This is called only from the async code paths, when the response to the batch has been read fully.</remarks>

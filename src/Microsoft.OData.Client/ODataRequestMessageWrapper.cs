@@ -149,6 +149,13 @@ namespace Microsoft.OData.Client
                 requestMessage.Credentials = requestInfo.Credentials;
             }
 
+#if !PORTABLELIB // Timeout not available
+            if (0 != requestInfo.Timeout)
+            {
+                requestMessage.Timeout = requestInfo.Timeout;
+            }
+#endif
+
             return new TopLevelRequestMessageWrapper(requestMessage, requestInfo, requestMessageArgs.Descriptor);
         }
 

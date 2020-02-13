@@ -8,10 +8,14 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// The exception that is thrown when the server returns an error.
     /// </summary>
+#if !PORTABLELIB
+    [Serializable]
+#endif
     [System.Diagnostics.DebuggerDisplay("{Message}")]
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "No longer relevant after .NET 4 introduction of SerializeObjectState event and ISafeSerializationData interface.")]
     public sealed class DataServiceClientException : InvalidOperationException
@@ -19,6 +23,9 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Contains the state for this exception.
         /// </summary>
+#if !PORTABLELIB
+        [NonSerialized]
+#endif
         private DataServiceClientExceptionSerializationState state;
 
         #region Constructors
@@ -60,6 +67,10 @@ namespace Microsoft.OData.Client
             : base(message, innerException)
         {
             this.state.StatusCode = statusCode;
+
+#if !PORTABLELIB
+            this.SerializeObjectState += (sender, e) => e.AddSerializedState(this.state);
+#endif
         }
 
         #endregion Constructors
@@ -78,12 +89,30 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Contains the state of the exception, used for serialization in security transparent code.
         /// </summary>
+#if !PORTABLELIB
+        [Serializable]
+#endif
         private struct DataServiceClientExceptionSerializationState
+#if !PORTABLELIB
+            : ISafeSerializationData
+#endif
         {
             /// <summary>
             /// Gets or sets the status code as returned by the server.
             /// </summary>
             public int StatusCode { get; set; }
+
+#if !PORTABLELIB
+            /// <summary>
+            /// Called when deserialization of the exception is complete.
+            /// </summary>
+            /// <param name="deserialized">The deserialized exception.</param>
+            void ISafeSerializationData.CompleteDeserialization(object deserialized)
+            {
+                var exception = (DataServiceClientException)deserialized;
+                exception.state = this;
+            }
+#endif
         }
     }
 }

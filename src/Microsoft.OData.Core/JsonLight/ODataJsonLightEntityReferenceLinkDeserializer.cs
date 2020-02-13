@@ -10,6 +10,9 @@ namespace Microsoft.OData.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+#if PORTABLELIB
+    using System.Threading.Tasks;
+#endif
     using Microsoft.OData.Json;
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
@@ -56,6 +59,39 @@ namespace Microsoft.OData.JsonLight
             return entityReferenceLinks;
         }
 
+#if PORTABLELIB
+        /// <summary>
+        /// Read a set of top-level entity reference links.
+        /// </summary>
+        /// <returns>A task which returns an <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
+        internal Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
+        {
+            Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
+            this.JsonReader.AssertNotBuffering();
+
+            // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
+
+            return this.ReadPayloadStartAsync(
+                ODataPayloadKind.EntityReferenceLinks,
+                propertyAndAnnotationCollector,
+                /*isReadingNestedPayload*/false,
+                /*allowEmptyPayload*/false)
+
+                .FollowOnSuccessWith(t =>
+                    {
+                        ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(propertyAndAnnotationCollector);
+
+                        this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
+
+                        Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndOfInput, "Post-Condition: expected JsonNodeType.EndOfInput");
+                        this.JsonReader.AssertNotBuffering();
+
+                        return entityReferenceLinks;
+                    });
+        }
+#endif
+
         /// <summary>
         /// Reads a top-level entity reference link - implementation of the actual functionality.
         /// </summary>
@@ -84,6 +120,38 @@ namespace Microsoft.OData.JsonLight
             return entityReferenceLink;
         }
 
+#if PORTABLELIB
+        /// <summary>
+        /// Reads a top-level entity reference link - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A task which returns an <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
+        internal Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
+        {
+            Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
+            this.JsonReader.AssertNotBuffering();
+
+            // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
+
+            return this.ReadPayloadStartAsync(
+                ODataPayloadKind.EntityReferenceLink,
+                propertyAndAnnotationCollector,
+                /*isReadingNestedPayload*/false,
+                /*allowEmptyPayload*/false)
+
+                .FollowOnSuccessWith(t =>
+                    {
+                        ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(propertyAndAnnotationCollector);
+
+                        this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
+
+                        Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndOfInput, "Post-Condition: expected JsonNodeType.EndOfInput");
+                        this.JsonReader.AssertNotBuffering();
+
+                        return entityReferenceLink;
+                    });
+        }
+#endif
 
         /// <summary>
         /// Read a set of top-level entity reference links.

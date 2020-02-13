@@ -5,6 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+#if PORTABLELIB
+using System.Collections.Concurrent;
+#endif
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,11 +18,15 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public abstract class EdmNavigationSource : EdmNamedElement, IEdmNavigationSource
     {
+#if PORTABLELIB
+        private readonly ConcurrentDictionary<IEdmNavigationProperty, ConcurrentDictionary<string, IEdmNavigationPropertyBinding>> navigationPropertyMappings = new ConcurrentDictionary<IEdmNavigationProperty, ConcurrentDictionary<string, IEdmNavigationPropertyBinding>>();
 
+        private readonly ConcurrentDictionary<IEdmNavigationProperty, IEdmUnknownEntitySet> unknownNavigationPropertyCache = new ConcurrentDictionary<IEdmNavigationProperty, IEdmUnknownEntitySet>();
+#else
         private readonly Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> navigationPropertyMappings = new Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>>();
         
         private readonly Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet> unknownNavigationPropertyCache = new Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet>();
-
+#endif
         private readonly Cache<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>> navigationTargetsCache = new Cache<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>>();
         private static readonly Func<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>> ComputeNavigationTargetsFunc = (me) => me.ComputeNavigationTargets();
 
@@ -115,8 +122,11 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
 
+#if PORTABLELIB
+            ConcurrentDictionary<string, IEdmNavigationPropertyBinding> result;
+#else
             IDictionary<string, IEdmNavigationPropertyBinding> result;
-
+#endif
 
             result = EdmUtil.DictionarySafeGet(this.navigationPropertyMappings, navigationProperty);
             if (result != null)
@@ -157,9 +167,11 @@ namespace Microsoft.OData.Edm
 
             bindingPath = bindingPath ?? new EdmPathExpression(navigationProperty.Name);
 
-
+#if PORTABLELIB
+            ConcurrentDictionary<string, IEdmNavigationPropertyBinding> result;
+#else
             IDictionary<string, IEdmNavigationPropertyBinding> result;
-
+#endif
 
             result = EdmUtil.DictionarySafeGet(this.navigationPropertyMappings, navigationProperty);
             if (result != null)
@@ -190,12 +202,17 @@ namespace Microsoft.OData.Edm
 
         private IEdmNavigationPropertyBinding AddNavigationPropertyBinding(IEdmNavigationProperty navigationProperty, IEdmNavigationSource target, IEdmPathExpression bindingPath)
         {
-
+#if PORTABLELIB
+            ConcurrentDictionary<string, IEdmNavigationPropertyBinding> mapping = EdmUtil.DictionaryGetOrUpdate(
+                this.navigationPropertyMappings,
+                navigationProperty,
+                navProperty => new ConcurrentDictionary<string, IEdmNavigationPropertyBinding>());
+#else
             IDictionary<string, IEdmNavigationPropertyBinding> mapping= EdmUtil.DictionaryGetOrUpdate(
                 this.navigationPropertyMappings,
                 navigationProperty,
                 navProperty => new Dictionary<string, IEdmNavigationPropertyBinding>());
-
+#endif
 
             IEdmNavigationPropertyBinding containedBinding = EdmUtil.DictionaryGetOrUpdate<string, IEdmNavigationPropertyBinding>(
                 mapping,
@@ -205,7 +222,24 @@ namespace Microsoft.OData.Edm
             return containedBinding;
         }
 
+#if PORTABLELIB
+        private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
+        {
+            List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
+            foreach (KeyValuePair<IEdmNavigationProperty, ConcurrentDictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationPropertyMappings)
+            {
+                if (!mapping.Key.ContainsTarget)
+                {
+                    foreach (KeyValuePair<string, IEdmNavigationPropertyBinding> kv in mapping.Value)
+                    {
+                        result.Add(kv.Value);
+                    }
+                }
+            }
 
+            return result.OrderBy(x => x?.Path?.Path);
+        }
+#else
         private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
         {
             List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
@@ -225,6 +259,6 @@ namespace Microsoft.OData.Edm
 
             return result;
         }
-
+#endif
     }
 }

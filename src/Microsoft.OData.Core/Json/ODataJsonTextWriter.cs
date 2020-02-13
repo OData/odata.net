@@ -10,6 +10,9 @@ namespace Microsoft.OData
     using System.IO;
     using System.Linq;
     using System.Text;
+#if PORTABLELIB
+    using System.Threading.Tasks;
+#endif
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Json;
 
@@ -291,7 +294,64 @@ namespace Microsoft.OData
 
         #region async methods
 
- 
+#if PORTABLELIB
+
+        /// <inheritdoc/>
+        public override Task FlushAsync()
+        {
+            return this.textWriter.FlushAsync();
+        }
+
+        /// <inheritdoc/>
+        public override Task WriteAsync(char value)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+                this.Write(value));
+        }
+
+        /// <inheritdoc/>
+        public override Task WriteAsync(char[] buffer, int index, int count)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+                this.Write(buffer, index, count));
+        }
+
+        /// <inheritdoc/>
+        public override Task WriteAsync(string value)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+                this.Write(value));
+        }
+
+        /// <inheritdoc/>
+        public override Task WriteLineAsync()
+        {
+            return this.textWriter.WriteLineAsync();
+        }
+
+        /// <inheritdoc/>
+        public override Task WriteLineAsync(char value)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+                this.WriteLine(value));
+        }
+
+        /// <inheritdoc/>
+        public override Task WriteLineAsync(char[] buffer, int index, int count)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+                this.WriteLine(buffer, index, count));
+        }
+
+        /// <inheritdoc/>
+        public override Task WriteLineAsync(string value)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+                this.WriteLine(value));
+        }
+
+#endif
+
         #endregion
 
         /// <summary>

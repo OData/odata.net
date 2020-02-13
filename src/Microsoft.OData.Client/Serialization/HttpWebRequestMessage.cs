@@ -13,8 +13,10 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Globalization;
     using System.Net;
+#if PORTABLELIB
     using System.Reflection;
     using System.Xml;
+#endif
     using Microsoft.OData;
 
     /// <summary> IODataRequestMessage interface implementation. </summary>
@@ -23,6 +25,7 @@ namespace Microsoft.OData.Client
     {
         #region Private Fields
 
+#if PORTABLELIB
         /// <summary> Running on silverlight </summary>
         internal static bool IsRunningOnSilverlight = false;
 
@@ -43,7 +46,7 @@ namespace Microsoft.OData.Client
 
         /// <summary> Indicates that the current platform doesn't support setting the header useragent property </summary>
         private static bool SettingContentLengthOnHeadersCollectionValidOnCurrentPlatform = true;
-
+#endif
         /// <summary>Request Url.</summary>
         private readonly Uri requestUrl;
 
@@ -62,6 +65,7 @@ namespace Microsoft.OData.Client
 
         #endregion // Private Fields
 
+#if PORTABLELIB
         /// <summary>
         /// Initializes the <see cref="HttpWebRequestMessage"/> class.
         /// </summary>
@@ -81,6 +85,7 @@ namespace Microsoft.OData.Client
                 UserAgentMethodSetter = pi.GetSetMethod();
             }
         }
+#endif
 
         /// <summary>
         /// Creates a new instance of HttpWebRequestMessage.
@@ -226,8 +231,17 @@ namespace Microsoft.OData.Client
         /// <returns>Stream to which the request payload needs to be written.</returns>
         public override Stream GetStream()
         {
+#if PORTABLELIB
             // not supported in async environments. Another IODataRequestMessage which buffers the request should be used.
             throw new NotSupportedException(Strings.ODataRequestMessage_GetStreamMethodNotSupported);
+#else
+            if (this.inSendingRequest2Event)
+            {
+                throw new NotSupportedException(Strings.ODataRequestMessage_GetStreamMethodNotSupported);
+            }
+
+            return this.httpRequest.GetRequestStream();
+#endif
         }
 
         /// <summary>
@@ -289,13 +303,12 @@ namespace Microsoft.OData.Client
             try
             {
                 HttpWebResponse httpResponse = (HttpWebResponse)this.httpRequest.EndGetResponse(asyncResult);
-
+#if PORTABLELIB
                 if (!httpResponse.SupportsHeaders)
                 {
-                    // TODO: Sam Xu
-                    throw new NotSupportedException(/*Strings.Silverlight_BrowserHttp_NotSupported*/);
+                    throw new NotSupportedException(Strings.Silverlight_BrowserHttp_NotSupported);
                 }
-
+#endif
                 return new HttpWebResponseMessage(httpResponse);
             }
             catch (WebException webException)
@@ -304,6 +317,25 @@ namespace Microsoft.OData.Client
             }
         }
 
+#if !PORTABLELIB
+        /// <summary>
+        /// Returns a response from an Internet resource.
+        /// </summary>
+        /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
+        public override IODataResponseMessage GetResponse()
+        {
+            try
+            {
+                HttpWebResponse httpResponse = (HttpWebResponse)this.httpRequest.GetResponse();
+                return new HttpWebResponseMessage(httpResponse);
+            }
+            catch (WebException webException)
+            {
+                throw ConvertToDataServiceWebException(webException);
+            }
+        }
+#endif
+
         /// <summary>
         /// Sets the Content length of the Http web request
         /// </summary>
@@ -311,6 +343,7 @@ namespace Microsoft.OData.Client
         /// <param name="contentLength">Length to set</param>
         internal static void SetHttpWebRequestContentLength(HttpWebRequest httpWebRequest, long contentLength)
         {
+#if PORTABLELIB
             // TODO: May need to add a special case for when the content length is zero
             bool headerSet = false;
             if (ContentLengthMethodSetter != null && SettingContentLengthPropertyValidOnCurrentPlatform)
@@ -339,6 +372,9 @@ namespace Microsoft.OData.Client
                     SettingContentLengthOnHeadersCollectionValidOnCurrentPlatform = false;
                 }
             }
+#else
+            httpWebRequest.ContentLength = contentLength;
+#endif
         }
 
         /// <summary>
@@ -348,10 +384,15 @@ namespace Microsoft.OData.Client
         /// <param name="headerValue">The header value.</param>
         internal static void SetAcceptCharset(HttpWebRequest httpWebRequest, string headerValue)
         {
+#if !PORTABLELIB
+            httpWebRequest.Headers[XmlConstants.HttpAcceptCharset] = headerValue;
+#endif
+#if PORTABLELIB
             if (!IsRunningOnSilverlight)
             {
                 httpWebRequest.Headers[XmlConstants.HttpAcceptCharset] = headerValue;
             }
+#endif
         }
 
         /// <summary>
@@ -361,6 +402,10 @@ namespace Microsoft.OData.Client
         /// <param name="headerValue">The value of the user agent.</param>
         internal static void SetUserAgentHeader(HttpWebRequest httpWebRequest, string headerValue)
         {
+#if !PORTABLELIB
+            httpWebRequest.UserAgent = headerValue;
+#endif
+#if PORTABLELIB
             if (IsRunningOnSilverlight || !SettingUserAgentPropertyValidOnCurrentPlatform)
             {
                 return;
@@ -402,6 +447,7 @@ namespace Microsoft.OData.Client
                     SettingUserAgentOnHeadersCollectionValidOnCurrentPlatform = false;
                 }
             }
+#endif
         }
 
         /// <summary>
@@ -435,13 +481,16 @@ namespace Microsoft.OData.Client
         private static HttpWebRequest CreateRequest(string method, Uri requestUrl, DataServiceClientRequestMessageArgs args)
         {
             HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(requestUrl);
-
+#if PORTABLELIB
             // Set same default as Silverlight when running silverlight in .Net Portable
             if (IsRunningOnSilverlight)
             {
                 httpRequest.UseDefaultCredentials = args.UseDefaultCredentials;
             }
-
+#else
+            // KeepAlive not available
+            httpRequest.KeepAlive = true;
+#endif
             httpRequest.Method = method;
             return httpRequest;
         }
@@ -499,6 +548,12 @@ namespace Microsoft.OData.Client
             {
                 return request.ContentType;
             }
+#if !PORTABLELIB
+            else if (string.Equals(headerName, XmlConstants.HttpContentLength, StringComparison.OrdinalIgnoreCase))
+            {
+                return request.ContentLength.ToString(CultureInfo.InvariantCulture);
+            }
+#endif
             else
             {
                 return request.Headers[headerName];
@@ -526,9 +581,9 @@ namespace Microsoft.OData.Client
         /// 
         /// </summary>
         /// <returns></returns>
-        public override IODataResponseMessage GetResponse()
-        {
-            throw new NotImplementedException();
-        }
+        //public override IODataResponseMessage GetResponse()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+#if PORTABLELIB
+using System.Threading.Tasks;
+#endif
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
@@ -422,6 +425,19 @@ namespace Microsoft.OData
             }
         }
 
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously flushes the write buffer to the underlying stream.
+        /// </summary>
+        /// <returns>A task instance that represents the asynchronous operation.</returns>
+        public sealed override Task FlushAsync()
+        {
+            this.VerifyCanFlush(false);
+
+            // Make sure we switch to writer state Error if an exception is thrown during flushing.
+            return this.FlushAsynchronously().FollowOnFaultWith(t => this.EnterScope(WriterState.Error, null));
+        }
+#endif
 
         /// <summary>
         /// Start writing a resourceSet.
@@ -433,7 +449,18 @@ namespace Microsoft.OData
             this.WriteStartResourceSetImplementation(resourceSet);
         }
 
-
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously start writing a resourceSet.
+        /// </summary>
+        /// <param name="resourceSet">Resource Set/collection to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public sealed override Task WriteStartAsync(ODataResourceSet resourceSet)
+        {
+            this.VerifyCanWriteStartResourceSet(false, resourceSet);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartResourceSetImplementation(resourceSet));
+        }
+#endif
 
         /// <summary>
         /// Start writing a delta resource Set.
@@ -445,7 +472,18 @@ namespace Microsoft.OData
             this.WriteStartDeltaResourceSetImplementation(deltaResourceSet);
         }
 
-
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously start writing a delta resourceSet.
+        /// </summary>
+        /// <param name="deltaResourceSet">Resource Set/collection to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public sealed override Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
+        {
+            this.VerifyCanWriteStartDeltaResourceSet(false, deltaResourceSet);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartDeltaResourceSetImplementation(deltaResourceSet));
+        }
+#endif
 
         /// <summary>
         /// Start writing a resource.
@@ -457,6 +495,18 @@ namespace Microsoft.OData
             this.WriteStartResourceImplementation(resource);
         }
 
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously start writing a resource.
+        /// </summary>
+        /// <param name="resource">Resource/item to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public sealed override Task WriteStartAsync(ODataResource resource)
+        {
+            this.VerifyCanWriteStartResource(false, resource);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartResourceImplementation(resource));
+        }
+#endif
 
         /// <summary>
         /// Start writing a delta deleted resource.
@@ -468,7 +518,21 @@ namespace Microsoft.OData
             this.WriteStartDeletedResourceImplementation(deletedResource);
         }
 
-
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously write a delta deleted resource.
+        /// </summary>
+        /// <param name="deletedResource">The delta deleted resource to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public sealed override Task WriteStartAsync(ODataDeletedResource deletedResource)
+        {
+            this.VerifyCanWriteStartDeletedResource(false, deletedResource);
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+            {
+                this.WriteStartDeletedResourceImplementation(deletedResource);
+            });
+        }
+#endif
 
         /// <summary>
         /// Writing a delta link.
@@ -480,7 +544,21 @@ namespace Microsoft.OData
             this.WriteDeltaLinkImplementation(deltaLink);
         }
 
-
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously writing a delta link.
+        /// </summary>
+        /// <param name="deltaLink">The delta link to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public override Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
+        {
+            this.VerifyCanWriteLink(false, deltaLink);
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+            {
+                this.WriteDeltaLinkImplementation(deltaLink);
+            });
+        }
+#endif
 
         /// <summary>
         /// Writing a delta deleted link.
@@ -492,6 +570,21 @@ namespace Microsoft.OData
             this.WriteDeltaLinkImplementation(deltaLink);
         }
 
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously writing a delta link.
+        /// </summary>
+        /// <param name="deltaLink">The delta link to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public override Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaLink)
+        {
+            this.VerifyCanWriteLink(false, deltaLink);
+            return TaskUtils.GetTaskForSynchronousOperation(() =>
+            {
+                this.WriteDeltaLinkImplementation(deltaLink);
+            });
+        }
+#endif
 
         /// <summary>
         /// Write a primitive value within an untyped collection.
@@ -503,7 +596,18 @@ namespace Microsoft.OData
             this.WritePrimitiveValueImplementation(primitiveValue);
         }
 
-
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously write a primitive value.
+        /// </summary>
+        /// <param name="primitiveValue"> Primitive value to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public sealed override Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
+        {
+            this.VerifyCanWritePrimitive(false, primitiveValue);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WritePrimitiveValueImplementation(primitiveValue));
+        }
+#endif
 
         /// <summary>Writes a primitive property within a resource.</summary>
         /// <param name="primitiveProperty">The primitive property to write.</param>
@@ -513,6 +617,16 @@ namespace Microsoft.OData
             this.WriteStartPropertyImplementation(primitiveProperty);
         }
 
+#if PORTABLELIB
+        /// <summary> Asynchronously write a primitive property within a resource. </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        public sealed override Task WriteStartAsync(ODataProperty primitiveProperty)
+        {
+            this.VerifyCanWriteProperty(false, primitiveProperty);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartPropertyImplementation(primitiveProperty));
+        }
+#endif
 
         /// <summary>Creates a stream for writing a binary value.</summary>
         /// <returns>A stream to write a binary value to.</returns>
@@ -522,6 +636,15 @@ namespace Microsoft.OData
             return this.CreateWriteStreamImplementation();
         }
 
+#if PORTABLELIB
+        /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public sealed override Task<Stream> CreateBinaryWriteStreamAsync()
+        {
+            this.VerifyCanCreateWriteStream(false);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateWriteStreamImplementation());
+        }
+#endif
 
         /// <summary>Creates a TextWriter for writing a string value.</summary>
         /// <returns>A TextWriter to write a string value to.</returns>
@@ -531,6 +654,15 @@ namespace Microsoft.OData
             return this.CreateTextWriterImplementation();
         }
 
+#if PORTABLELIB
+        /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public sealed override Task<TextWriter> CreateTextWriterAsync()
+        {
+            this.VerifyCanCreateWriteStream(false);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextWriterImplementation());
+        }
+#endif
 
         /// <summary>
         /// Start writing a nested resource info.
@@ -542,6 +674,18 @@ namespace Microsoft.OData
             this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo);
         }
 
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously start writing a nested resource info.
+        /// </summary>
+        /// <param name="nestedResourceInfo">Navigation link to writer.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public sealed override Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
+        {
+            this.VerifyCanWriteStartNestedResourceInfo(false, nestedResourceInfo);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo));
+        }
+#endif
 
         /// <summary>
         /// Finish writing a resourceSet/resource/nested resource info.
@@ -557,7 +701,30 @@ namespace Microsoft.OData
             }
         }
 
-
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously finish writing a resourceSet/resource/nested resource info.
+        /// </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public sealed override Task WriteEndAsync()
+        {
+            this.VerifyCanWriteEnd(false);
+            return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndImplementation)
+                .FollowOnSuccessWithTask(
+                    task =>
+                    {
+                        if (this.CurrentScope.State == WriterState.Completed)
+                        {
+                            // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
+                            return this.FlushAsync();
+                        }
+                        else
+                        {
+                            return TaskUtils.CompletedTask;
+                        }
+                    });
+        }
+#endif
 
         /// <summary>
         /// Writes an entity reference link, which is used to represent binding to an existing resource in a request payload.
@@ -575,6 +742,24 @@ namespace Microsoft.OData
             this.WriteEntityReferenceLinkImplementation(entityReferenceLink);
         }
 
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously writes an entity reference link, which is used to represent binding to an existing resource in a request payload.
+        /// </summary>
+        /// <param name="entityReferenceLink">The entity reference link to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        /// <remarks>
+        /// This method can only be called for writing request messages. The entity reference link must be surrounded
+        /// by a navigation link written through WriteStart/WriteEnd.
+        /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
+        /// as the binding URL to be written.
+        /// </remarks>
+        public sealed override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
+        {
+            this.VerifyCanWriteEntityReferenceLink(entityReferenceLink, false);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteEntityReferenceLinkImplementation(entityReferenceLink));
+        }
+#endif
 
         /// <summary>
         /// This method notifies the listener, that an in-stream error is to be written.
@@ -605,6 +790,16 @@ namespace Microsoft.OData
         {
         }
 
+#if PORTABLELIB
+        /// <summary>
+        /// This method is called when an async stream is requested. It is a no-op.
+        /// </summary>
+        /// <returns>A task for method called when a stream is requested.</returns>
+        Task IODataStreamListener.StreamRequestedAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataStreamListener)this).StreamRequested());
+        }
+#endif
 
         /// <summary>
         /// This method is called when a stream is disposed.
@@ -686,6 +881,13 @@ namespace Microsoft.OData
         /// </summary>
         protected abstract void FlushSynchronously();
 
+#if PORTABLELIB
+        /// <summary>
+        /// Flush the output.
+        /// </summary>
+        /// <returns>Task representing the pending flush operation.</returns>
+        protected abstract Task FlushAsynchronously();
+#endif
 
         /// <summary>
         /// Start writing an OData payload.
@@ -1645,8 +1847,14 @@ namespace Microsoft.OData
             }
             else
             {
+#if PORTABLELIB
+                if (this.outputContext.Synchronous)
+                {
+                    throw new ODataException(Strings.ODataWriterCore_AsyncCallOnSyncWriter);
+                }
+#else
                 Debug.Assert(false, "Async calls are not allowed in this build.");
-
+#endif
             }
         }
 
@@ -1661,11 +1869,11 @@ namespace Microsoft.OData
             }
         }
 
-         /// <summary>
-         /// Enters the 'ExceptionThrown' state and then throws an ODataException with the specified error message.
-         /// </summary>
-         /// <param name="errorMessage">The error message for the exception.</param>
-         /// <param name="item">The OData item to associate with the 'ExceptionThrown' state.</param>
+        /// <summary>
+        /// Enters the 'ExceptionThrown' state and then throws an ODataException with the specified error message.
+        /// </summary>
+        /// <param name="errorMessage">The error message for the exception.</param>
+        /// <param name="item">The OData item to associate with the 'ExceptionThrown' state.</param>
         private void ThrowODataException(string errorMessage, ODataItem item)
         {
             this.EnterScope(WriterState.Error, item);

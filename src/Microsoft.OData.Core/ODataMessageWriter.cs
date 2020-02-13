@@ -781,12 +781,16 @@ namespace Microsoft.OData
         {
             var containerProvider = message as IContainerProvider;
             return containerProvider == null ? null : containerProvider.Container;
+
         }
 
         private static IEdmModel GetModel(IServiceProvider container)
         {
-
+#if PORTABLELIB
+            return container == null ? EdmCoreModel.Instance : container.GetRequiredService<IEdmModel>();
+#else
             return EdmCoreModel.Instance;
+#endif
         }
 
         /// <summary>

@@ -44,6 +44,18 @@ namespace Microsoft.OData.Client
         /// </summary>
         public Uri RequestUri { get; private set; }
 
+#if !PORTABLELIB // Synchronous methods not available
+        /// <summary>
+        /// Executes the action and returns the result.
+        /// </summary>
+        /// <returns>Action result.</returns>
+        /// <exception cref="InvalidOperationException">Problem materializing result of query into object.</exception>
+        public T GetValue()
+        {
+            return context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, true, parameters).Single();
+        }
+#endif
+
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
         /// <returns>The result of the operation.</returns>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
