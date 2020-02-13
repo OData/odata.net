@@ -440,19 +440,22 @@ namespace Microsoft.OData.Client.Metadata
             bool isKeyDeclared = false;
             if (customAttributes.Count() == 0)
             {
-                IEdmModel model = context.Format.ServiceModel;
-                if (model != null)
+                if (context != null)
                 {
-                    EdmEntityType edmEntityType = (EdmEntityType)model.SchemaElements.FirstOrDefault();
-                    if (edmEntityType != null)
+                    IEdmModel model = context.Format.ServiceModel;
+                    if (model != null)
                     {
-                        var declaredKey = edmEntityType.DeclaredKey;
-                        if (declaredKey != null)
+                        EdmEntityType edmEntityType = (EdmEntityType)model.SchemaElements.FirstOrDefault();
+                        if (edmEntityType != null)
                         {
-                            isKeyDeclared = true;
+                            var declaredKey = edmEntityType.DeclaredKey;
+                            if (declaredKey != null)
+                            {
+                                isKeyDeclared = true;
+                            }
                         }
                     }
-                }
+                }      
             }
             bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
             KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
