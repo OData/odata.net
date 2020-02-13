@@ -16,16 +16,16 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: MSBuild@1
-  inputs:
-    solution: 'sln/OData.Net45.sln'
-    msbuildArchitecture: 'x64'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-# - task: PowerShell@2
+# - task: MSBuild@1
 #   inputs:
-#     filePath: 'build.ps1'
-#     arguments: 'EnableSkipStrongName'
+#     solution: 'sln/OData.Net45.sln'
+#     msbuildArchitecture: 'x64'
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
+- task: PowerShell@2
+  inputs:
+    filePath: 'build.ps1'
+    arguments: 'EnableSkipStrongName'
 # - task: NuGetToolInstaller@1
 
 # - task: NuGetCommand@2
