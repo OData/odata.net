@@ -38,7 +38,7 @@ steps:
 
   inputs:
 
-    projects: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj'
+    projects: '$(Build.SourcesDirectory)\src\**/*.csproj'
 
 - task: DotNetCoreCLI@2
 
