@@ -443,7 +443,7 @@ namespace Microsoft.OData.Client.Metadata
                 if (context != null)
                 {
                     IEdmModel model = context.Format.ServiceModel;
-                    if (model != null)
+                    if (model != null && model is ClientEdmModel)
                     {
                         EdmEntityType edmEntityType = (EdmEntityType)model.SchemaElements.FirstOrDefault();
                         if (edmEntityType != null)
