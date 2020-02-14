@@ -49,13 +49,13 @@ steps:
     command: 'build'
     projects: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj'
 
-# - task: DotNetCoreCLI@2
+- task: DotNetCoreCLI@2
 
-#   displayName: 'dotnet test'
+  displayName: 'dotnet test'
 
-#   inputs:
-#     command: 'test'
-#     projects: $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
+  inputs:
+    command: 'test'
+    projects: $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
 
     #Your build pipeline references an undefined variable named ‘ProductBinPath’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 
