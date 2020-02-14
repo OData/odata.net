@@ -113,10 +113,10 @@
 
   <!--These empty property groups are used to ensure x64, x86 and AnyCPU are included in the platform list. 
       VS will pick AnyCPU as the default purely because of alphabetic order.-->
-
+ <!--
   <Target Name="RestoreNuGetPackages" BeforeTargets="$(GenerateTextStringResourcesDependsOn)">
     <Exec Command="&quot;$(NuGetExePath)&quot; restore &quot;$(PackagesConfig)&quot; -PackageSaveMode nuspec -SolutionDirectory &quot;$(SolutionDir)\&quot;" />
   </Target>
-  
+  -->
   
 </Project>
