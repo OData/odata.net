@@ -6,16 +6,17 @@
     <RootNamespace>Microsoft.OData.Core</RootNamespace>
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <DefineConstants>$(DefineConstants);PORTABLELIB;ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
+    <DefineConstants>$(DefineConstants);PORTABLELIB;ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
 
-    <SignAssembly>false</SignAssembly>
-    <!--<DelaySign>True</DelaySign>
+    <!--<SignAssembly>true</SignAssembly>
+    <DelaySign>True</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>-->
 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-    <IsPackable>true</IsPackable>
-    <IsShipping>true</IsShipping>
+     
+    <!--<IsPackable>true</IsPackable>
+    <IsShipping>true</IsShipping>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,10 +36,7 @@
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-    <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-  </ItemGroup>
+ 
   
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Core.Tests" />
@@ -57,6 +55,11 @@
   </ItemGroup>
   
   <Import Project="Build.props" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+    <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+  </ItemGroup>
   
   <ItemGroup>
     <Resource Include="Microsoft.OData.Core.tt">

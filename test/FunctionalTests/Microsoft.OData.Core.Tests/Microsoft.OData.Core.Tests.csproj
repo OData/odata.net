@@ -14,14 +14,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-
  
-  <!--<PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>-->
 
 
   <ItemGroup>
@@ -33,7 +26,13 @@
     <PackageReference Include="xunit.core" Version="2.1.0.3179" />
   </ItemGroup>
 
-  <Import Project="..\Build.props" />
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
 
 
   <ItemGroup>

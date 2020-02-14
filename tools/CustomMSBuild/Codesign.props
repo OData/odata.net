@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-  </PropertyGroup>
+ 
 
   <PropertyGroup>
     <StrongNamePublicKeysPath>$(BuildToolsetRoot)\StrongNamePublicKeys</StrongNamePublicKeysPath>
@@ -24,67 +22,69 @@
 
   <Choose>
     <When Condition="'$(SigningScenario)' == 'Delay'">
-     <PropertyGroup>
-       <!-- ===============================================================
+      <PropertyGroup>
+        <!-- ===============================================================
        Delay sign Product. Test sign test. No PRSS submission.
        ================================================================ -->
-       <!-- DelaySignKeys Constant used in assemblyinfocommon.cs to set key strings -->
-       <DefineConstants Condition="'$(SigningType)' != 'None'">$(DefineConstants),DelaySignKeys</DefineConstants>
-       <!-- Submit to PRSS -->
-       <SubmitForSigning>false</SubmitForSigning>
-       <!-- Following are VS properties. -->
-       <DelaySign>true</DelaySign>
-       <DelaySign Condition="'$(SigningType)' != 'Product'">false</DelaySign>
-       <SignAssembly>true</SignAssembly>
-       <SignAssembly Condition="'$(SigningType)' == 'None'">false</SignAssembly>
+        <!-- DelaySignKeys Constant used in assemblyinfocommon.cs to set key strings -->
+        <DefineConstants Condition="'$(SigningType)' != 'None'">$(DefineConstants),DelaySignKeys</DefineConstants>
+        <!-- Submit to PRSS -->
+        <SubmitForSigning>false</SubmitForSigning>
+        <!-- Following are VS properties. -->
+        <DelaySign>true</DelaySign>
+        <DelaySign Condition="'$(SigningType)' != 'Product'">false</DelaySign>
+        <SignAssembly>true</SignAssembly>
+        <SignAssembly Condition="'$(SigningType)' == 'None'">false</SignAssembly>
 
-       <!-- Determine the assembly key file -->
-       <AssemblyOriginatorKeyFile>$(StrongNamePublicKeysPath)\$(StrongNameKeyFile)</AssemblyOriginatorKeyFile>
-       <AssemblyOriginatorKeyFile Condition="Exists('$(CustomStrongNamePublicKeysPath)\$(StrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(StrongNameKeyFile)</AssemblyOriginatorKeyFile>
-       <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test'">$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
-       <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test' and Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
-       <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>
-       <!-- ===============================================================
+        <!-- Determine the assembly key file -->
+        <AssemblyOriginatorKeyFile>$(StrongNamePublicKeysPath)\$(StrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="Exists('$(CustomStrongNamePublicKeysPath)\$(StrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(StrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test'">$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test' and Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>
+        <!-- ===============================================================
        End DelaySign Settings
        ================================================================ -->
-     </PropertyGroup>
+      </PropertyGroup>
     </When>
     <When Condition="'$(SigningScenario)' == 'Test'">
-     <PropertyGroup>
-       <!-- ===============================================================
+      <PropertyGroup>
+        <!-- ===============================================================
        Test sign only. No PRSS submission.
        ================================================================ -->
-       <!-- TestSignKeys Constant used in assemblyinfocommon.cs to set key strings -->
-       <DefineConstants Condition="'$(SigningType)' != 'None'">$(DefineConstants),TestSignKeys</DefineConstants>
-       <!-- Submit to PRSS -->
-       <SubmitForSigning>false</SubmitForSigning>
-       <!-- Following are VS properties. -->
-       <DelaySign>false</DelaySign>
-       <SignAssembly>true</SignAssembly>
-       <SignAssembly Condition="'$(SigningType)' == 'None'">false</SignAssembly>
-       <AssemblyOriginatorKeyFile>$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
-       <AssemblyOriginatorKeyFile Condition="Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
-       <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>
-       <!-- ===============================================================
+        <!-- TestSignKeys Constant used in assemblyinfocommon.cs to set key strings -->
+        <DefineConstants Condition="'$(SigningType)' != 'None'">$(DefineConstants),TestSignKeys</DefineConstants>
+        <!-- Submit to PRSS -->
+        <SubmitForSigning>false</SubmitForSigning>
+        <!-- Following are VS properties. -->
+        <DelaySign>false</DelaySign>
+        <SignAssembly>true</SignAssembly>
+        <SignAssembly Condition="'$(SigningType)' == 'None'">false</SignAssembly>
+        <AssemblyOriginatorKeyFile>$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>
+        <!-- ===============================================================
        End Test sign Settings
        ================================================================ -->
-     </PropertyGroup>
+      </PropertyGroup>
     </When>
     <Otherwise>
-     <PropertyGroup>
-       <!-- ===============================================================
+      <PropertyGroup>
+        <!-- ===============================================================
        Default - Unsigned
        ================================================================ -->
-       <!-- Submit to PRSS -->
-       <SubmitForSigning>false</SubmitForSigning>
-       <!-- Following are VS properties. -->
-       <DelaySign>false</DelaySign>
-       <SignAssembly>false</SignAssembly>
-       <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
-       <!-- ===============================================================
+        <!-- Submit to PRSS -->
+        <SubmitForSigning>false</SubmitForSigning>
+        <!-- Following are VS properties. -->
+        <DelaySign>false</DelaySign>
+        <SignAssembly>false</SignAssembly>
+        <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
+        <!-- ===============================================================
        End Default - Unsigned Settings
        ================================================================ -->
-     </PropertyGroup>
+      </PropertyGroup>
     </Otherwise>
   </Choose>
+
+
 </Project>

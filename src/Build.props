@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <Import Project="..\Build.props" />
-  <Import Project="$(CustomBuildExtensionsPath)\Versioning.props" />
+  <Import Project="$(CustomBuildExtensionsPath)\Versioning.props" /> 
 
   <!-- This PropertyGroup should always be after the import of Build.props because it's extending the value of NugetPackOptions which is defined in Nuget.props which is included using Build.props -->
   <PropertyGroup>

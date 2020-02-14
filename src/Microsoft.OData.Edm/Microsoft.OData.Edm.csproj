@@ -8,15 +8,15 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
 
-    <SignAssembly>false</SignAssembly>
+    <!--<SignAssembly>false</SignAssembly>-->
     <!--<DelaySign>True</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>-->
 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-    <IsPackable>true</IsPackable>
-    <IsShipping>true</IsShipping>
-    <DelaySign>false</DelaySign>
+    <!--<IsPackable>true</IsPackable>
+    <IsShipping>true</IsShipping>-->
+    <!--<DelaySign>false</DelaySign>-->
   </PropertyGroup>
 
   <ItemGroup>
