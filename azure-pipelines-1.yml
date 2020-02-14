@@ -38,7 +38,7 @@ steps:
 
   inputs:
 
-    projects: '$(Build.SourcesDirectory)\src\**/*.csproj'
+    projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
 
 - task: DotNetCoreCLI@2
 
