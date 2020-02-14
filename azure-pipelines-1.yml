@@ -37,9 +37,9 @@ steps:
   displayName: 'dotnet build'
 
   inputs:
-
-    #projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
-    projects: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj'
+    command: 'build'
+    projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
+    #projects: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj'
 
 - task: DotNetCoreCLI@2
 
@@ -47,7 +47,7 @@ steps:
 
   inputs:
 
-    projects: '$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
+    projects: $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
 
 # - task: PowerShell@2
 #   inputs:
