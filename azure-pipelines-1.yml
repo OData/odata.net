@@ -5,7 +5,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
 trigger:
-- master
+- Vsupgrade2
 
 pool:
   vmImage: 'windows-latest'
@@ -38,7 +38,7 @@ steps:
 
   inputs:
 
-    projects: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj'
+    projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
 
 - task: DotNetCoreCLI@2
 
