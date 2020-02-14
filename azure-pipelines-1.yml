@@ -38,7 +38,8 @@ steps:
 
   inputs:
 
-    projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
+    #projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
+    projects: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj'
 
 - task: DotNetCoreCLI@2
 
