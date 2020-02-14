@@ -55,7 +55,7 @@
     <IntermediateOutputPath Condition=" '$(IntermediateOutputPath)' =='' ">$(BaseIntermediateOutputPath)\$(Platform)\$(Configuration)\$(MSBuildProjectFile)\</IntermediateOutputPath>
   </PropertyGroup>
 
-  <!--<Import Project="$(BuildExtensionsPath)\Codesign.props" />-->
+  <Import Project="$(BuildExtensionsPath)\Codesign.props" />
 
   <PropertyGroup>
     <!-- Before/After injection Settings -->
