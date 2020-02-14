@@ -39,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Microsoft.OData.Client.txt" />
     <None Remove="Microsoft.OData.Client.xml" />
     <None Remove="Diagrams\**" />
     <None Remove="Parameterized.Microsoft.OData.Client.tt" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <Content Include="Microsoft.OData.Client.Common.txt" />
     <Content Include="Microsoft.OData.Client.Desktop.txt" />
+    <Content Include="Microsoft.OData.Client.txt" />
   </ItemGroup>
   
   <ItemGroup>
