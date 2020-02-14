@@ -32,22 +32,30 @@ steps:
 
   displayName: 'Command Line Script'
 
+# - task: DotNetCoreCLI@2
+
+#   displayName: 'dotnet build'
+
+#   inputs:
+#     command: 'build'
+#     projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
+#     #projects: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj'
+
 - task: DotNetCoreCLI@2
 
   displayName: 'dotnet build'
 
   inputs:
     command: 'build'
-    projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
-    #projects: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj'
+    projects: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj'
 
-- task: DotNetCoreCLI@2
+# - task: DotNetCoreCLI@2
 
-  displayName: 'dotnet test'
+#   displayName: 'dotnet test'
 
-  inputs:
-    command: 'test'
-    projects: $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
+#   inputs:
+#     command: 'test'
+#     projects: $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
 
     #Your build pipeline references an undefined variable named ‘ProductBinPath’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 
