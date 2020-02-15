@@ -34,14 +34,17 @@ steps:
   displayName: 'Command Line Script'
 
 - task: DotNetCoreCLI@2
-
   displayName: 'dotnet build1'
-
   inputs:
     command: 'build'
     #projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
-    projects: '$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
-#     #projects: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj'
+    #projects: '$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
+    projects: |
+     $(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
 # - task: DotNetCoreCLI@2
 
@@ -56,7 +59,7 @@ steps:
   displayName: 'dotnet test'
 
   inputs:
-    command: 'build'
+    command: 'test'
     projects: '$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
     #test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
     #arguments: --no-build
