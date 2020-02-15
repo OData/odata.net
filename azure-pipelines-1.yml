@@ -26,11 +26,25 @@ steps:
    echo Write your commands here
    
    echo Hello world
+   echo $(Build.SourcesDirectory)
    
    dotnet.exe --info
    
 
   displayName: 'Command Line Script'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build1'
+  inputs:
+    command: 'build'
+    #projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
+    #projects: '$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
+    projects: |
+     $(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
 # - task: DotNetCoreCLI@2
 
@@ -38,24 +52,16 @@ steps:
 
 #   inputs:
 #     command: 'build'
-#     projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
-#     #projects: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj'
-
-- task: DotNetCoreCLI@2
-
-  displayName: 'dotnet build'
-
-  inputs:
-    command: 'build'
-    projects: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj'
+#     projects: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj'
 
 - task: DotNetCoreCLI@2
 
   displayName: 'dotnet test'
 
   inputs:
-    command: 'build'
-    projects: test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
+    command: 'test'
+    projects: '$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
+    #test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
     #arguments: --no-build
     #Your build pipeline references an undefined variable named ‘ProductBinPath’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 
