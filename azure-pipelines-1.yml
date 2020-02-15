@@ -43,7 +43,7 @@ steps:
 
 - task: DotNetCoreCLI@2
 
-  displayName: 'dotnet build'
+  displayName: 'dotnet buil'
 
   inputs:
     command: 'build'
@@ -51,7 +51,7 @@ steps:
 
 - task: DotNetCoreCLI@2
 
-  displayName: 'dotnet test'
+  displayName: 'dotnet tes'
 
   inputs:
     command: 'build'
