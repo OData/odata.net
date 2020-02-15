@@ -44,6 +44,7 @@ steps:
      $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
      $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
      $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
 # - task: DotNetCoreCLI@2
