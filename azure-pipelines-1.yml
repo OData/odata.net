@@ -55,7 +55,7 @@ steps:
 
   inputs:
     command: 'build'
-    projects: $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Build.NetFramework\Microsoft.Spatial.Tests.csproj'
+    projects: test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
     #arguments: --no-build
     #Your build pipeline references an undefined variable named ‘ProductBinPath’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 
