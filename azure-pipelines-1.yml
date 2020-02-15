@@ -47,7 +47,8 @@ steps:
 
   inputs:
     command: 'build'
-    projects: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj'
+    #projects: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj'
+    projects: $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
 
 - task: DotNetCoreCLI@2
 
