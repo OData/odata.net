@@ -26,6 +26,7 @@ steps:
    echo Write your commands here
    
    echo Hello world
+   echo $(Build.SourcesDirectory)
    
    dotnet.exe --info
    
@@ -43,7 +44,7 @@ steps:
 
 - task: DotNetCoreCLI@2
 
-  displayName: 'dotnet buil'
+  displayName: 'dotnet build'
 
   inputs:
     command: 'build'
@@ -51,7 +52,7 @@ steps:
 
 - task: DotNetCoreCLI@2
 
-  displayName: 'dotnet tes'
+  displayName: 'dotnet test'
 
   inputs:
     command: 'build'
