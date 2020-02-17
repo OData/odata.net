@@ -33,6 +33,9 @@ steps:
 
   displayName: 'Command Line Script'
 
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: '2.0'
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build1'
   inputs:
