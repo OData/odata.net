@@ -23,19 +23,19 @@ variables:
 steps:
 
 - script: |
-   echo Write your commands here
-   
+   echo Write your commands here   
    echo Hello world
    echo $(Build.SourcesDirectory)
-   
    dotnet.exe --info
-   
-
   displayName: 'Command Line Script'
 
 - task: DotNetCoreInstaller@0
   inputs:
     version: '2.1.3'
+
+- task: DotNetCoreInstaller@1
+  inputs:
+    version: '1.0.4'
 # - task: DotNetCoreCLI@2
 #   displayName: 'dotnet build1'
 #   inputs:
