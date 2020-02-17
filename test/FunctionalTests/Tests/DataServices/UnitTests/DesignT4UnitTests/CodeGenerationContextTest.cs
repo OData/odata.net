@@ -324,18 +324,8 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
         {
             ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
             string customHeaderString = @"Authorization Bearer bearer-token";
-            
-            try
-            {
-                codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
-            }
-            catch(ArgumentException exception)
-            {
-                StringAssert.Contains(exception.Message, "A http header string must have a colon delimeter");
-                return;
-            }
-            Assert.Fail("Expected ArgumentException is not thrown");
-            
+            Action act = () => codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            act.ShouldThrow<ArgumentException>().WithMessage("A http header string must have a colon delimeter");
         }
 
         [TestMethod]
