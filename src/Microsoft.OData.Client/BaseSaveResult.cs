@@ -261,7 +261,7 @@ namespace Microsoft.OData.Client
                 {
                     message = statusCode.ToString();
                 }
-                else if (Util.IsJson(message))
+                else if (Util.CanBeJson(message))
                 {
                     headers.Add(ODataConstants.ContentTypeHeader, JsonContentTypeHeader);
                     httpWebResponseMessage = new HttpWebResponseMessage(headers, (int)statusCode, getResponseStream);

@@ -600,10 +600,11 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Quick check if the <paramref name="input"> is Json.
         /// Note that this does not check if the input is a well formed Json.
+        /// This can be used to check verify that the string is not xml
         /// </summary>
         /// <param name="input">the input string.</param>
         /// <returns>Return true if the input string can be Json.</returns>
-        public static bool IsJson(string input)
+        public static bool CanBeJson(string input)
         {
             return input.Trim().Substring(0, 1).IndexOfAny(new[] { '[', '{' }) == 0;
         }
