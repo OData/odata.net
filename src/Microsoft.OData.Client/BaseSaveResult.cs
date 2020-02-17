@@ -240,13 +240,11 @@ namespace Microsoft.OData.Client
             string message = null;
             HttpWebResponseMessage httpWebResponseMessage = null;
             DataServiceClientException dataServiceClientException;
-
-            IDictionary<string, string> headers = new Dictionary<string, string>()
-            {
-                { ODataConstants.ContentTypeHeader,JsonContentTypeHeader}
-            };
-
             ODataErrorException oDataErrorException = null;
+
+            IDictionary<string, string> headers = new Dictionary<string, string>();
+
+
             using (Stream stream = getResponseStream())
             {
                 if ((null != stream) && stream.CanRead)
@@ -263,8 +261,9 @@ namespace Microsoft.OData.Client
                 {
                     message = statusCode.ToString();
                 }
-                else
+                else if (Util.IsJson(message))
                 {
+                    headers.Add(ODataConstants.ContentTypeHeader, JsonContentTypeHeader);
                     httpWebResponseMessage = new HttpWebResponseMessage(headers, (int)statusCode, getResponseStream);
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(httpWebResponseMessage);
                     oDataErrorException = new ODataErrorException(oDataMessageReader.ReadError());

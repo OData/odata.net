@@ -114,12 +114,15 @@ namespace Microsoft.OData.Client
             catch (DataServiceQueryException ex)
             {
                 Exception inEx = ex;
+                Exception inExPrev = null;
                 while (inEx.InnerException != null)
                 {
+                    inExPrev = inEx;
                     inEx = inEx.InnerException;
                 }
 
                 DataServiceClientException serviceEx = inEx as DataServiceClientException;
+                serviceEx = serviceEx ?? inExPrev as DataServiceClientException;
                 if (context.IgnoreResourceNotFoundException && serviceEx != null && serviceEx.StatusCode == (int)HttpStatusCode.NotFound)
                 {
                     QueryOperationResponse qor = new QueryOperationResponse<TElement>(ex.Response.HeaderCollection, ex.Response.Query, MaterializeAtom.EmptyResults);
