@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client
         private readonly Func<Stream> getResponseStream;
 
         /// <summary>The response status code.</summary>
-        private readonly int statusCode;  
+        private readonly int statusCode;
 
         /// <summary>HttpWebResponse instance.</summary>
         private HttpWebResponse httpWebResponse;

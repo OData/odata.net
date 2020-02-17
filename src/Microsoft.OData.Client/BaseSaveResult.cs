@@ -247,7 +247,7 @@ namespace Microsoft.OData.Client
 
             using (Stream stream = getResponseStream())
             {
-                if ((null != stream) && stream.CanRead)
+                if ((null != stream) && stream.CanRead && stream.CanSeek)
                 {
                     Stream streamClone = new MemoryStream();
                     stream.CopyTo(streamClone);
