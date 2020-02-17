@@ -85,9 +85,7 @@ steps:
     ConnectedServiceName: 'ESRP CodeSigning - OData'
     FolderPath: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\Debug\netstandard2.0'
 
-    Pattern: |
-     Microsoft.Spatial.dll
-     Microsoft.OData.Edm.dll
+    Pattern: 'Microsoft.Spatial.dll,Microsoft.OData.Edm.dll'
 
     signConfigType: inlineSignParams
 
