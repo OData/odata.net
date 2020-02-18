@@ -28,16 +28,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary> The instance annotation materialization policy. </summary>
         private InstanceAnnotationMaterializationPolicy instanceAnnotationMaterializationPolicy;
 
-        /// <summary>
-        /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
-        /// the fully-qualified name of types when TryAs converts are processed (C# "as", VB "TryCast").
-        /// Ideally the FQN is only required during URI translation, not during analysis. However,
-        /// the current code constructs the $select and $expand parts of the URI during analysis. This
-        /// could be refactored in the future to defer the $select and $expand URI construction until
-        /// the URI translation phase.
-        /// </summary>
-        private readonly DataServiceContext context;
-
         /// <summary> The primitive property converter. </summary>
         private DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter;
 
@@ -46,12 +36,11 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="materializerContext">The materializer context.</param>
         /// <param name="lazyPrimitivePropertyConverter">The lazy primitive property converter.</param>
-        protected StructuralValueMaterializationPolicy(IODataMaterializerContext materializerContext, DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter,DataServiceContext context)
+        protected StructuralValueMaterializationPolicy(IODataMaterializerContext materializerContext, DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter)
         {
             Debug.Assert(materializerContext != null, "materializer!=null");
             this.MaterializerContext = materializerContext;
             this.lazyPrimitivePropertyConverter = lazyPrimitivePropertyConverter;
-            this.context = context;
         }
         /// <summary>
         /// Gets the collection value materialization policy.
@@ -272,7 +261,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 // we should throw if the property type on the client does not match with the property type in the server
                 // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
-                if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType,this.context))
+                if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType, this.MaterializerContext.Context))
                 {
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
                 }

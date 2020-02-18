@@ -10,10 +10,10 @@ namespace Microsoft.OData.Client
 
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client.Metadata;
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Microsoft.OData.Client.Metadata;
 
     #endregion Namespaces
 
@@ -78,6 +78,8 @@ namespace Microsoft.OData.Client
             this.normalizerRewrites = normalizerRewrites;
         }
 
+        /// <summary>Initializes a new <see cref="ExpressionNormalizer"/> instance.</summary>
+        /// <param name="context">The context used to normalize the expressions.</param>
         private ExpressionNormalizer(DataServiceContext context)
         {
             this.context = context;
@@ -188,7 +190,7 @@ namespace Microsoft.OData.Client
                 if (!PrimitiveType.IsKnownNullableType(visited.Operand.Type) && !PrimitiveType.IsKnownNullableType(visited.Type) || visited.Operand.Type == visited.Type)
                 {
                     // x is not a collection of entity types
-                    if(!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type,this.context) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
+                    if (!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type, this.context) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
                     {
                         // x is not an enum type
                         if (!visited.Operand.Type.IsEnum())

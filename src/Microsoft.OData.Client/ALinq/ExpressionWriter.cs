@@ -15,10 +15,10 @@ namespace Microsoft.OData.Client
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Text;
-    using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
-    using Microsoft.OData.UriParser;
+    using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
 
     #endregion Namespaces
 
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Client
                         if (mce != null && ReflectionUtil.TryIdentifySequenceMethod(mce.Method, out sequenceMethod) && ReflectionUtil.IsAnyAllMethod(sequenceMethod))
                         {
                             Type filteredType = mce.Method.GetGenericArguments().SingleOrDefault();
-                            if (ClientTypeUtil.TypeOrElementTypeIsEntity(filteredType,this.context))
+                            if (ClientTypeUtil.TypeOrElementTypeIsEntity(filteredType, this.context))
                             {
                                 this.Visit(m.Arguments[0]);
                                 this.builder.Append(UriHelper.FORWARDSLASH);

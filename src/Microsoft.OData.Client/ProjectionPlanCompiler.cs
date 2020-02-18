@@ -70,7 +70,8 @@ namespace Microsoft.OData.Client
         /// Initializes a new <see cref="ProjectionPlanCompiler"/> instance.
         /// </summary>
         /// <param name="normalizerRewrites">Rewrites introduces by normalizer.</param>
-        private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites,DataServiceContext context)
+        /// <param name="context">The data service context</param>
+        private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites, DataServiceContext context)
         {
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
@@ -78,6 +79,7 @@ namespace Microsoft.OData.Client
             this.pathBuilder = new ProjectionPathBuilder();
             this.context = context;
         }
+
         #endregion Constructors
 
         #region Internal methods.
@@ -86,7 +88,7 @@ namespace Microsoft.OData.Client
         /// <param name="projection">Projection expression.</param>
         /// <param name="normalizerRewrites">Tracks rewrite-to-source rewrites introduced by expression normalizer.</param>
         /// <returns>A new <see cref="ProjectionPlan"/> instance.</returns>
-        internal static ProjectionPlan CompilePlan(LambdaExpression projection, Dictionary<Expression, Expression> normalizerRewrites,DataServiceContext context)
+        internal static ProjectionPlan CompilePlan(LambdaExpression projection, Dictionary<Expression, Expression> normalizerRewrites, DataServiceContext context)
         {
             Debug.Assert(projection != null, "projection != null");
             Debug.Assert(projection.Parameters.Count == 1, "projection.Parameters.Count == 1");
@@ -99,7 +101,7 @@ namespace Microsoft.OData.Client
                 projection.Body.NodeType == ExpressionType.New,
                 "projection.Body.NodeType == Constant, MemberInit, MemberAccess, Convert(Checked) New");
 
-            ProjectionPlanCompiler rewriter = new ProjectionPlanCompiler(normalizerRewrites,context);
+            ProjectionPlanCompiler rewriter = new ProjectionPlanCompiler(normalizerRewrites, context);
 #if TRACE_CLIENT_PROJECTIONS
             Trace.WriteLine("Projection: " + projection);
 #endif
@@ -156,7 +158,7 @@ namespace Microsoft.OData.Client
             }
 
             var nullCheck = ResourceBinder.PatternRules.MatchNullCheck(this.pathBuilder.LambdaParameterInScope, conditional);
-            if (!nullCheck.Match || !ClientTypeUtil.TypeOrElementTypeIsEntity(ResourceBinder.StripConvertToAssignable(nullCheck.TestToNullExpression).Type,this.context))
+            if (!nullCheck.Match || !ClientTypeUtil.TypeOrElementTypeIsEntity(ResourceBinder.StripConvertToAssignable(nullCheck.TestToNullExpression).Type, this.context))
             {
                 Expression test = null;
 
@@ -409,7 +411,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(lambda != null, "lambda != null");
 
             Expression result;
-            if (!this.topLevelProjectionFound || lambda.Parameters.Count == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(lambda.Parameters[0].Type,this.context))
+            if (!this.topLevelProjectionFound || lambda.Parameters.Count == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(lambda.Parameters[0].Type, this.context))
             {
                 this.topLevelProjectionFound = true;
 
@@ -671,7 +673,7 @@ namespace Microsoft.OData.Client
                 //
                 // new T { t2 = new T2 { id2 = *.t2.id2 } }
                 // => ProjInit(pt, "t2", f(ProjInit(pt->t2), "id2", *.id2)))
-                if ((ClientTypeUtil.TypeOrElementTypeIsEntity(ClientTypeUtil.GetMemberType(assignment.Member),this.context) &&
+                if ((ClientTypeUtil.TypeOrElementTypeIsEntity(ClientTypeUtil.GetMemberType(assignment.Member), this.context) &&
                      assignment.Expression.NodeType == ExpressionType.MemberInit))
                 {
                     Expression nestedEntry = CallMaterializer(
@@ -1044,7 +1046,7 @@ namespace Microsoft.OData.Client
                 LambdaExpression le = call.Arguments[1] as LambdaExpression;
                 ParameterExpression pe = le.Parameters.Last();
                 Expression selectorExpression = this.Visit(call.Arguments[1]);
-                if (ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type,this.context))
+                if (ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type, this.context))
                 {
                     // With this information from an annotation:
                     // {t->*.Players}
@@ -1147,7 +1149,7 @@ namespace Microsoft.OData.Client
                     LambdaExpression le = call.Arguments[1] as LambdaExpression;
                     ParameterExpression pe = le.Parameters.Last();
                     Expression selectorExpression = this.Visit(call.Arguments[1]);
-                    if (ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type,this.context))
+                    if (ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type, this.context))
                     {
                         // With this information from an annotation:
                         // {t->*.Players}

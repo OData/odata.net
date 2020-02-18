@@ -7,8 +7,8 @@
 namespace Microsoft.OData.Client
 {
     using System;
-    using Microsoft.OData.Client.ALinq.UriParser;
     using Microsoft.OData;
+    using Microsoft.OData.Client.ALinq.UriParser;
 
     /// <summary>
     /// Translate from an expand path token to a string.

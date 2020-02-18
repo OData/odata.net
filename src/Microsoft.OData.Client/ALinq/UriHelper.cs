@@ -199,7 +199,7 @@ namespace Microsoft.OData.Client
                 throw new NotSupportedException(Strings.ALinq_TypeAsNotSupportedForMaxDataServiceVersionLessThan3);
             }
 
-            if (!ClientTypeUtil.TypeOrElementTypeIsEntity(type,context))
+            if (!ClientTypeUtil.TypeOrElementTypeIsEntity(type, context))
             {
                 throw new NotSupportedException(Strings.ALinq_TypeAsArgumentNotEntityType(type.FullName));
             }

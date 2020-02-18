@@ -305,7 +305,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(type != null, "type != null");
 
-            keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(type, context,out hasProperties);
+            keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(type, context, out hasProperties);
 
             List<Type> hierarchy = new List<Type>();
             if (keyProperties != null)

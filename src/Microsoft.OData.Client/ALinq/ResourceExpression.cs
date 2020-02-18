@@ -94,10 +94,6 @@ namespace Microsoft.OData.Client
         {
         }
 
-        internal ResourceExpression(DataServiceContext context)
-        {
-        }
-
         /// <summary>
         /// Creates a Resource expression
         /// </summary>
@@ -126,11 +122,6 @@ namespace Microsoft.OData.Client
             this.OperationParameters = operationParameters ?? new Dictionary<string, string>(StringComparer.Ordinal);
             this.isAction = isAction;
         }
-
-        //internal ResourceExpression(DataServiceContext context)
-        //{
-        //    this.context = context;
-        //}
 
         /// <summary>
         /// The <see cref="Type"/> of the value represented by this <see cref="Expression"/>.
