@@ -2413,7 +2413,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="methodInfo">The specified MethodInfo</param>
         /// <returns>return a bound <see cref="IEdmOperation"/> or an <see cref="IEdmOperationImport"/> if it is found, or return null.</returns>
-        internal  IEdmVocabularyAnnotatable GetEdmOperationOrOperationImport(MethodInfo methodInfo)
+        internal virtual IEdmVocabularyAnnotatable GetEdmOperationOrOperationImport(MethodInfo methodInfo)
         {
             var declaringType = methodInfo.DeclaringType;
             if (declaringType.IsSubclassOf(typeof(DataServiceContext)))
@@ -2717,7 +2717,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// This is used for example to determine the edit link for an entity if the payload didn't have one, or to determine the URL for a navigation when building a query through LINQ.
         /// </remarks>
-        internal  ODataResourceMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
+        internal virtual ODataResourceMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
         {
             return new ConventionalODataEntityMetadataBuilder(this.baseUriResolver, entitySetName, entityInstance, this.UrlKeyDelimiter);
         }
