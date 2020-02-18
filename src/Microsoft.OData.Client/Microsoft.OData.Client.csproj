@@ -14,8 +14,8 @@
 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-    <IsPackable>true</IsPackable>
-    <IsShipping>true</IsShipping>
+    <!--<IsPackable>true</IsPackable>
+    <IsShipping>true</IsShipping>-->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
