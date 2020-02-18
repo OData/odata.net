@@ -2,17 +2,21 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
- 
-    <TargetFrameworks>net452</TargetFrameworks>
-    <RootNamespace>Microsoft.OData.Client.Tests</RootNamespace>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\sln\</SolutionDir>
 
+
+    <Optimize>true</Optimize>
+    <AssemblyName>Microsoft.OData.Client.Tests</AssemblyName>
+    <TargetFrameworks>net452;netcoreapp2.0;</TargetFrameworks>
+
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\sln\</SolutionDir>
     <RestorePackages>true</RestorePackages>
 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+
   </PropertyGroup>
-  <!--<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+
+   <!--<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -62,8 +66,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
 
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
     <ProjectReference Include="..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
 
     <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
