@@ -443,10 +443,12 @@ namespace Microsoft.OData.Client.Metadata
             bool isKeyDeclared = false;
             if (!customAttributes.Any())
             {
-                if (context?.Format.ServiceModel is IEdmModel model)
+                if (context?.Format.ServiceModel is IEdmModel )
                 {
-                    if (model?.SchemaElements.FirstOrDefault() is EdmEntityType edmEntityType)
+                    var model = context.Format.ServiceModel as IEdmModel;
+                    if (model?.SchemaElements.FirstOrDefault() is EdmEntityType)
                     {
+                        var edmEntityType = model.SchemaElements.FirstOrDefault() as EdmEntityType;
                         if (edmEntityType?.DeclaredKey != null)
                         {
                             isKeyDeclared = true;

@@ -30,7 +30,7 @@ namespace Microsoft.OData.Client
     }
 
     /// <summary>Represents a dynamic entity collection that provides notifications when items get added, removed, or when the list is refreshed.</summary>
-        /// <typeparam name="T">An entity type.</typeparam>
+    /// <typeparam name="T">An entity type.</typeparam>
     public class DataServiceCollection<T> : ObservableCollection<T>
     {
         #region Private fields
@@ -714,7 +714,7 @@ namespace Microsoft.OData.Client
 
             // Verify that T corresponds to an entity type.
             // Validate here before any items are added to the collection because if this fails we want to prevent the collection from being populated.
-            if (!BindingEntityInfo.IsEntityType(typeof(T), context.Model,context))
+            if (!BindingEntityInfo.IsEntityType(typeof(T), context.Model, context))
             {
                 throw new ArgumentException(Strings.DataBinding_DataServiceCollectionArgumentMustHaveEntityType(typeof(T)));
             }

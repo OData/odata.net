@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Client
 {
-#region Namespaces
+    #region Namespaces
 
     using System;
     using System.Collections;
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Client.Metadata;
-#endregion
+    #endregion
 
     /// <summary>The BindingObserver class</summary>
     internal sealed class BindingObserver
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Client
         internal void StartTracking<T>(DataServiceCollection<T> collection, string collectionEntitySet)
         {
             Debug.Assert(collection != null, "Only constructed collections are tracked.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(typeof(T), this.Context.Model,this.Context), "DataServiceCollection type should already have been verified to be an entity type in DataServiceCollection<T>.StartTracking.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(typeof(T), this.Context.Model, this.Context), "DataServiceCollection type should already have been verified to be an entity type in DataServiceCollection<T>.StartTracking.");
 
             try
             {
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Client
                 object sourcePropertyValue;
 
                 // Try to get the new value for the changed property. Ignore this change event if the property doesn't exist.
-                if (BindingEntityInfo.TryGetPropertyValue(source, sourceProperty, this.Context.Model,this.Context, out bpi, out property, out sourcePropertyValue))
+                if (BindingEntityInfo.TryGetPropertyValue(source, sourceProperty, this.Context.Model, this.Context, out bpi, out property, out sourcePropertyValue))
                 {
                     // Check if it is an interesting property e.g. collection of entities, entity reference, complex type, or collection of primitives or complex types.
                     if (bpi != null)
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(collection, "collection");
             Util.CheckArgumentNull(eventArgs, "eventArgs");
 
-            Debug.Assert(BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.Context.Model,this.Context), "We only register this event for DataServiceCollections.");
+            Debug.Assert(BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.Context.Model, this.Context), "We only register this event for DataServiceCollections.");
 #if DEBUG
             Debug.Assert(this.bindingGraph.IsTracking(collection), "Collection must be part of the graph if it has the event notification registered.");
 #endif
@@ -464,7 +464,7 @@ namespace Microsoft.OData.Client
                 "source and sourceProperty should either both be present or both be absent.");
 
             Debug.Assert(target != null, "target must be provided by the caller.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model,this.Context), "target must be an entity type.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model, this.Context), "target must be an entity type.");
 
             // Do not handle add for already detached and deleted entities.
             if (source != null && this.IsDetachedOrDeletedFromContext(source))
@@ -602,7 +602,7 @@ namespace Microsoft.OData.Client
                 "source and sourceProperty should either both be present or both be absent.");
 
             Debug.Assert(target != null, "target must be provided by the caller.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model,this.Context), "target must be an entity type.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model, this.Context), "target must be an entity type.");
 
             Debug.Assert(!this.AttachBehavior, "AttachBehavior is only allowed during Construction and Load when this method should never be entered.");
 
@@ -679,7 +679,7 @@ namespace Microsoft.OData.Client
             }
 
             Debug.Assert(source != null, "source can not be null for update operations.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(source.GetType(), this.Context.Model,this.Context), "source must be an entity with keys.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(source.GetType(), this.Context.Model, this.Context), "source must be an entity with keys.");
             Debug.Assert(!String.IsNullOrEmpty(sourceProperty), "sourceProperty must be a non-empty string for update operations.");
 
             // Do not handle update for detached and deleted entities.
@@ -809,13 +809,13 @@ namespace Microsoft.OData.Client
             }
 
             // For complex types, we will perform notification and update on the closest ancestor entity using the farthest ancestor complex property.
-            if (!BindingEntityInfo.IsEntityType(entity.GetType(), this.Context.Model,this.Context))
+            if (!BindingEntityInfo.IsEntityType(entity.GetType(), this.Context.Model, this.Context))
             {
                 this.bindingGraph.GetAncestorEntityForComplexProperty(ref entity, ref propertyName, ref propertyValue);
             }
 
             Debug.Assert(entity != null, "entity must be provided for update operations.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(entity.GetType(), this.Context.Model,this.Context), "entity must be an entity with keys.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(entity.GetType(), this.Context.Model, this.Context), "entity must be an entity with keys.");
             Debug.Assert(!String.IsNullOrEmpty(propertyName) || propertyValue == null, "When propertyName is null no propertyValue should be provided.");
 
             // Do not handle update for detached and deleted entities.
@@ -880,7 +880,7 @@ namespace Microsoft.OData.Client
                         throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNull("Add"));
                     }
 
-                    if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model,this.Context))
+                    if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model, this.Context))
                     {
                         throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Add"));
                     }
@@ -1049,11 +1049,11 @@ namespace Microsoft.OData.Client
             }
 
             entitiesToUnTrack.Add(new UnTrackingInfo
-                                  {
-                                    Entity = currentEntity,
-                                    Parent = parentEntity,
-                                    ParentProperty = parentProperty
-                                  });
+            {
+                Entity = currentEntity,
+                Parent = parentEntity,
+                ParentProperty = parentProperty
+            });
         }
 
         /// <summary>Determine if the DataServiceContext is tracking link between <paramref name="source"/> and <paramref name="target"/>.</summary>
@@ -1064,12 +1064,12 @@ namespace Microsoft.OData.Client
         private bool IsContextTrackingLink(object source, string sourceProperty, object target)
         {
             Debug.Assert(source != null, "source entity must be provided.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(source.GetType(), this.Context.Model,this.Context), "source must be an entity with keys.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(source.GetType(), this.Context.Model, this.Context), "source must be an entity with keys.");
 
             Debug.Assert(!String.IsNullOrEmpty(sourceProperty), "sourceProperty must be provided.");
 
             Debug.Assert(target != null, "target entity must be provided.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model,this.Context), "target must be an entity with keys.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model, this.Context), "target must be an entity with keys.");
 
             return this.Context.GetLinkDescriptor(source, sourceProperty, target) != default(LinkDescriptor);
         }
@@ -1080,7 +1080,7 @@ namespace Microsoft.OData.Client
         private bool IsDetachedOrDeletedFromContext(object entity)
         {
             Debug.Assert(entity != null, "entity must be provided.");
-            Debug.Assert(BindingEntityInfo.IsEntityType(entity.GetType(), this.Context.Model,this.Context), "entity must be an entity with keys.");
+            Debug.Assert(BindingEntityInfo.IsEntityType(entity.GetType(), this.Context.Model, this.Context), "entity must be an entity with keys.");
 
             EntityDescriptor descriptor = this.Context.GetEntityDescriptor(entity);
             return descriptor == null || descriptor.State == EntityStates.Deleted;
@@ -1095,7 +1095,7 @@ namespace Microsoft.OData.Client
                 throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNull("Remove"));
             }
 
-            if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model,this.Context))
+            if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model, this.Context))
             {
                 throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Remove"));
             }
