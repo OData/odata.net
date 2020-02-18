@@ -44,16 +44,6 @@ namespace Microsoft.OData.Client
         /// <summary>The observer of the graph</summary>
         private BindingObserver observer;
 
-        /// <summary>
-        /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
-        /// the fully-qualified name of types when TryAs converts are processed (C# "as", VB "TryCast").
-        /// Ideally the FQN is only required during URI translation, not during analysis. However,
-        /// the current code constructs the $select and $expand parts of the URI during analysis. This
-        /// could be refactored in the future to defer the $select and $expand URI construction until
-        /// the URI translation phase.
-        /// </summary>
-        private readonly DataServiceContext context;
-
         /// <summary>Graph containing entities, collections and their relationships</summary>
         private Graph graph;
 
@@ -64,14 +54,6 @@ namespace Microsoft.OData.Client
             this.observer = observer;
             this.graph = new Graph();
         }
-
-        /// <summary>Constructor </summary>
-        /// <param name="context">The data service context</param>
-        public BindingGraph(DataServiceContext context)
-        {
-            this.context = context;
-        }
-
         /// <summary>Adds a DataServiceCollection to the graph</summary>
         /// <param name="source">Source object for the collection, this object has navigation property corresponding to collection</param>
         /// <param name="sourceProperty">Property in <paramref name="source"/> that corresponds to the collection</param>
@@ -87,7 +69,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(collection != null, "'collection' can not be null");
             Debug.Assert(
-                BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.observer.Context.Model, this.context),
+                BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.observer.Context.Model, this.observer.Context),
                 "Argument 'collection' must be an DataServiceCollection<T> of entity type T");
 
             if (this.graph.ExistsVertex(collection))
@@ -239,7 +221,7 @@ namespace Microsoft.OData.Client
                 {
                     entityVertex = this.graph.AddVertex(target);
 
-                    entityVertex.EntitySet = BindingEntityInfo.GetEntitySet(target, targetEntitySet, this.observer.Context.Model, this.context);
+                    entityVertex.EntitySet = BindingEntityInfo.GetEntitySet(target, targetEntitySet, this.observer.Context.Model, this.observer.Context);
 
                     // Register for entity notifications, fail if the entity does not implement INotifyPropertyChanged.
                     if (!this.AttachEntityOrComplexObjectNotification(target))
@@ -312,7 +294,7 @@ namespace Microsoft.OData.Client
             // When parentProperty is null, parent is itself a root collection
             if (parentProperty != null)
             {
-                BindingEntityInfo.BindingPropertyInfo bpi = BindingEntityInfo.GetObservableProperties(parent.GetType(), this.observer.Context.Model, this.context)
+                BindingEntityInfo.BindingPropertyInfo bpi = BindingEntityInfo.GetObservableProperties(parent.GetType(), this.observer.Context.Model, this.observer.Context)
                                                                              .Single(p => p.PropertyInfo.PropertyName == parentProperty);
                 Debug.Assert(bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindDataServiceCollection, "parentProperty must refer to an DataServiceCollection");
 
@@ -331,7 +313,7 @@ namespace Microsoft.OData.Client
                     out sourceEntitySet,
                     out targetEntitySet);
 
-            targetEntitySet = BindingEntityInfo.GetEntitySet(item, targetEntitySet, this.observer.Context.Model, this.context);
+            targetEntitySet = BindingEntityInfo.GetEntitySet(item, targetEntitySet, this.observer.Context.Model, this.observer.Context);
 
             this.observer.HandleDeleteEntity(
                             source,
@@ -419,7 +401,7 @@ namespace Microsoft.OData.Client
         public void RemoveNonTrackedEntities()
         {
             // Cleanup all untracked entities
-            foreach (var entity in this.graph.Select(o => !this.observer.IsContextTrackingEntity(o) && BindingEntityInfo.IsEntityType(o.GetType(), this.observer.Context.Model, this.context)))
+            foreach (var entity in this.graph.Select(o => !this.observer.IsContextTrackingEntity(o) && BindingEntityInfo.IsEntityType(o.GetType(), this.observer.Context.Model, this.observer.Context)))
             {
                 this.graph.ClearEdgesForVertex(this.graph.LookupVertex(entity));
             }
@@ -591,7 +573,7 @@ namespace Microsoft.OData.Client
         {
             // Once the entity is attached to the graph, we need to traverse all it's properties
             // and add related entities and collections to this entity.
-            foreach (BindingEntityInfo.BindingPropertyInfo bpi in BindingEntityInfo.GetObservableProperties(entity.GetType(), this.observer.Context.Model, this.context))
+            foreach (BindingEntityInfo.BindingPropertyInfo bpi in BindingEntityInfo.GetObservableProperties(entity.GetType(), this.observer.Context.Model, this.observer.Context))
             {
                 object propertyValue = bpi.PropertyInfo.GetValue(entity);
 
