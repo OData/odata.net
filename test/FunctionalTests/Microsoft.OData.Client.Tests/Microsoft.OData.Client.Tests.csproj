@@ -81,7 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ALinq\AddNewEndingTokenVisitorTests.cs" />
-    <Compile Include="ALinq\DataServiceContextMethodMockSampleTest.cs" />
     <Compile Include="ALinq\SelectExpandPathToStringVisitorTests.cs" />
     <Compile Include="ALinq\RemoveWildcardVisitorTests.cs" />
     <Compile Include="ALinq\SelectExpandPathBuilderTests.cs" />
