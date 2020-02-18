@@ -300,10 +300,10 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
         {
             ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
             string customHeaderString = @"Authorization:Bearer bearer-token";
-            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            codegen.SetCustomHttpHeadersFromString(customHeaderString);
             Assert.IsNotNull(codegen.CustomHttpHeaders);
             Assert.AreEqual(1, codegen.CustomHttpHeaders.Count);
-            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.FirstOrDefault());
+            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.First());
         }
 
         [TestMethod]
@@ -312,11 +312,11 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
             string customHeaderString = @"Authorization:Bearer bearer-token
                                           odata.continue-on-error:true";
-            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            codegen.SetCustomHttpHeadersFromString(customHeaderString);
             Assert.IsNotNull(codegen.CustomHttpHeaders);
             Assert.AreEqual(2, codegen.CustomHttpHeaders.Count);
-            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.FirstOrDefault());
-            Assert.AreEqual("odata.continue-on-error:true", codegen.CustomHttpHeaders.LastOrDefault());
+            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.First());
+            Assert.AreEqual("odata.continue-on-error:true", codegen.CustomHttpHeaders.Last());
         }
 
         [TestMethod]
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
         {
             ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
             string customHeaderString = @"Authorization Bearer bearer-token";
-            Action act = () => codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            Action act = () => codegen.SetCustomHttpHeadersFromString(customHeaderString);
             act.ShouldThrow<ArgumentException>().WithMessage("A http header string must have a colon delimeter");
         }
 
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
         {
             ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
             string customHeaderString = null;
-            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            codegen.SetCustomHttpHeadersFromString(customHeaderString);
             Assert.IsNull(codegen.CustomHttpHeaders);
         }
 
@@ -343,10 +343,10 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             // Quotes are sent as part of the header value
             ODataT4CodeGenerator codegen = new ODataT4CodeGenerator();
             string customHeaderString = @"If-Match:'67ab43'";
-            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            codegen.SetCustomHttpHeadersFromString(customHeaderString);
             Assert.IsNotNull(codegen.CustomHttpHeaders);
             Assert.AreEqual(1, codegen.CustomHttpHeaders.Count);
-            Assert.AreEqual("If-Match:'67ab43'", codegen.CustomHttpHeaders.FirstOrDefault());
+            Assert.AreEqual("If-Match:'67ab43'", codegen.CustomHttpHeaders.First());
         }
 
         [TestMethod]
@@ -357,11 +357,11 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
 
 
                                           odata.continue-on-error:true";
-            codegen.ValidateAndSetCustomHttpHeadersFromString(customHeaderString);
+            codegen.SetCustomHttpHeadersFromString(customHeaderString);
             Assert.IsNotNull(codegen.CustomHttpHeaders);
             Assert.AreEqual(2, codegen.CustomHttpHeaders.Count);
-            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.FirstOrDefault());
-            Assert.AreEqual("odata.continue-on-error:true", codegen.CustomHttpHeaders.LastOrDefault());
+            Assert.AreEqual("Authorization:Bearer bearer-token", codegen.CustomHttpHeaders.First());
+            Assert.AreEqual("odata.continue-on-error:true", codegen.CustomHttpHeaders.Last());
         }
     }
 }

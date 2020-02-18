@@ -441,10 +441,22 @@ public void ValidateAndSetIgnoreUnexpectedElementsAndAttributesFromString(string
 }
 
 /// <summary>
-/// Set the CustomHttpHeaders property from the custom http headers string.
+/// Validate the supplied custom http header string.
 /// </summary>
-/// <param name="stringValue">The value to set.</param>
-public void ValidateAndSetCustomHttpHeadersFromString(string headersValue) 
+/// <param name="header">Custom http header string.</param>
+public void ValidateCustomHttpHeaderString(string header) 
+{
+    if (!header.Contains(':'))
+    {
+        throw new ArgumentException("A http header string must have a colon delimeter");
+    }
+}
+
+/// <summary>
+/// Set the CustomHttpHeaders property using supplied custom http headers string.
+/// </summary>
+/// <param name="headersValue">Custom http headers string.</param>
+public void SetCustomHttpHeadersFromString(string headersValue) 
 {
     if (String.IsNullOrWhiteSpace(headersValue))
     {
@@ -458,16 +470,8 @@ public void ValidateAndSetCustomHttpHeadersFromString(string headersValue)
     {
         // Trim header for empty spaces
         var header = headerElement.Trim();
-
-        // A header string must have atleast one colon
-        if (header.Contains(':'))
-        {
-            CustomHttpHeaders.Add(header);
-        }
-        else
-        {
-            throw new ArgumentException("A http header string must have a colon delimeter");
-        }
+        ValidateCustomHttpHeaderString(header);
+        CustomHttpHeaders.Add(header);
     }
 
 }
@@ -484,7 +488,7 @@ private void ApplyParametersFromConfigurationClass()
     this.EnableNamingAlias = Configuration.EnableNamingAlias;
     this.TempFilePath = Configuration.TempFilePath;
     this.IgnoreUnexpectedElementsAndAttributes = Configuration.IgnoreUnexpectedElementsAndAttributes;
-    this.ValidateAndSetCustomHttpHeadersFromString(Configuration.CustomHttpHeaders);
+    this.SetCustomHttpHeadersFromString(Configuration.CustomHttpHeaders);
 }
 
 /// <summary>
