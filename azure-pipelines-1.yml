@@ -73,7 +73,7 @@ steps:
     command: 'test'
     projects: | 
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
-    # $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
     #  $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
     #  $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.Spatial.Tests.csproj
     #  $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.Spatial.Tests.csproj
@@ -91,7 +91,7 @@ steps:
     #FolderPath: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\Debug\netstandard2.0'
     FolderPath: '$(Build.SourcesDirectory)\src'
 
-    Pattern: 'Microsoft.Spatial.dll,Microsoft.OData.Edm.dll'
+    Pattern: 'Microsoft.Spatial.dll,Microsoft.OData.Edm.dll,Microsoft.OData.Core.dll,Microsoft.OData.Client.dll'
 
     signConfigType: inlineSignParams
 
