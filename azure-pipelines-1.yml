@@ -67,6 +67,16 @@ steps:
 
 - task: DotNetCoreCLI@2
 
+  displayName: 'dotnet test 2'
+
+  inputs:
+    command: 'test'
+    projects: | 
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+     #$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+     
+- task: DotNetCoreCLI@2
+
   displayName: 'dotnet test'
 
   inputs:
@@ -84,16 +94,7 @@ steps:
     #Your build pipeline references an undefined variable named ‘ProductBinPath’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 
 
-- task: DotNetCoreCLI@2
 
-  displayName: 'dotnet test 2'
-
-  inputs:
-    command: 'test'
-    projects: | 
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
-     
 
 - task: EsrpCodeSigning@1
 
