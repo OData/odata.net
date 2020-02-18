@@ -74,7 +74,7 @@ steps:
     projects: | 
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-    #  $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
     #  $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.Spatial.Tests.csproj
     #  $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.Spatial.Tests.csproj
 
