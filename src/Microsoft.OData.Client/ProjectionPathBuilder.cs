@@ -69,6 +69,10 @@ namespace Microsoft.OData.Client
             this.parameterProjectionTypes = new Stack<Type>();
         }
 
+        /// <summary>
+        /// Constrcutor
+        /// </summary>
+        /// <param name="context">the data service context</param>
         internal ProjectionPathBuilder(DataServiceContext context)
         {
             this.context = context;
@@ -152,7 +156,7 @@ namespace Microsoft.OData.Client
 
             ParameterExpression param = lambda.Parameters[0];
             Type projectionType = lambda.Body.Type;
-            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(projectionType,this.context);
+            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(projectionType, this.context);
 
             this.entityInScope.Push(isEntityType);
             this.parameterExpressions.Push(param);
@@ -168,7 +172,7 @@ namespace Microsoft.OData.Client
         /// <param name="init">Expression for initialization.</param>
         internal void EnterMemberInit(MemberInitExpression init)
         {
-            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(init.Type,this.context);
+            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(init.Type, this.context);
             this.entityInScope.Push(isEntityType);
         }
 

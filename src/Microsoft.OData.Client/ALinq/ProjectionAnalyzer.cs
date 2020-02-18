@@ -791,7 +791,7 @@ namespace Microsoft.OData.Client
             internal override NewExpression VisitNew(NewExpression nex)
             {
                 // Allow creation of DataServiceCollection<T> objects in projections, stop others that project entities
-                if (ClientTypeUtil.TypeOrElementTypeIsEntity(nex.Type.BaseType, this.context) &&
+                if (ClientTypeUtil.TypeOrElementTypeIsEntity(nex.Type, this.context) &&
                     !ResourceBinder.PatternRules.MatchNewDataServiceCollectionOfT(nex))
                 {
                     throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, nex.ToString()));
