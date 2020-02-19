@@ -40,56 +40,56 @@ steps:
 #   inputs:
 #     version: '1.0.4'
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'dotnet build1'
-#   inputs:
-#     command: 'build'
-# #     #projects: '$(Build.SourcesDirectory)\sln\OData.Net45.sln'
-# #     #projects: '$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
-#     projects: |
-#      $(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj
-#      $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
-#      $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
-#      $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
-#      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
-#      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
-#      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
-#      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-#      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
-
-# - task: DotNetCoreCLI@2
-
-#   displayName: 'dotnet build'
-
-# - task: DotNetCoreCLI@2
-#   inputs:
-#     command: 'build'
-#     projects: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj'
-
 - task: DotNetCoreCLI@2
-
-  displayName: 'dotnet test 2'
-
+  displayName: 'Build Product'  
   inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: | 
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
-     
-- task: DotNetCoreCLI@2
-
-  displayName: 'dotnet test'
-
-  inputs:
-    command: 'test'
-    projects: | 
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform)'
+    projects: |
+     $(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.Spatial.Tests.csproj
-    #  $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.Spatial.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Spatial Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'EDM Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Core Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Client Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform) --framework netcoreapp2.0'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+
 
     #test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
     #arguments: --no-build
