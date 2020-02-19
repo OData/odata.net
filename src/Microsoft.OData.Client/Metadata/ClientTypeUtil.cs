@@ -440,18 +440,21 @@ namespace Microsoft.OData.Client.Metadata
             }
             string typeName = type.ToString();
             IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
-            bool isKeyDeclared = false;
+            List<string> DeclaredKeys = new List<string>();
             if (!customAttributes.Any())
             {
-                if (context?.Format.ServiceModel is IEdmModel )
+                if (context?.Format.ServiceModel is EdmModel)
                 {
-                    var model = context.Format.ServiceModel as IEdmModel;
+                    var model = context.Format.ServiceModel as EdmModel;
                     if (model?.SchemaElements.FirstOrDefault() is EdmEntityType)
                     {
                         var edmEntityType = model.SchemaElements.FirstOrDefault() as EdmEntityType;
                         if (edmEntityType?.DeclaredKey != null)
                         {
-                            isKeyDeclared = true;
+                            foreach (EdmStructuralProperty edmStructuralProperty in edmEntityType.DeclaredKey)
+                            {
+                                DeclaredKeys.Add(edmStructuralProperty.Name);
+                            }
                         }
                     }
                 }
@@ -465,7 +468,7 @@ namespace Microsoft.OData.Client.Metadata
             KeyKind newKeyKind = KeyKind.NotKey;
             foreach (PropertyInfo propertyInfo in properties)
             {
-                if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute, isKeyDeclared)) != KeyKind.NotKey)
+                if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute, DeclaredKeys)) != KeyKind.NotKey)
                 {
                     if (newKeyKind > currentKeyKind)
                     {
@@ -710,7 +713,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="propertyInfo">Property in question.</param>
         /// <param name="dataServiceKeyAttribute">DataServiceKeyAttribute instance.</param>
         /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.</returns>
-        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute, bool IsKeyDeclared)
+        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute, List<string> declaredKeys)
         {
             Debug.Assert(propertyInfo != null, "propertyInfo != null");
 
@@ -735,11 +738,10 @@ namespace Microsoft.OData.Client.Metadata
                     keyKind = KeyKind.Id;
                 }
             }
-            else if (IsKeyDeclared)
+            else if (declaredKeys != null && declaredKeys.Contains(propertyName))
             {
                 keyKind = KeyKind.DeclaredKey;
             }
-
             return keyKind;
         }
         /// <summary>
