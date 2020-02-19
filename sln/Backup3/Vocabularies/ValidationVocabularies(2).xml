@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Validation.V1" Alias="Validation">
+  <Annotation Term="Core.Description">
+    <String>Terms describing validation rules</String>
+  </Annotation>
+  <Annotation Term="Core.Links">
+    <Collection>
+      <Record>
+        <PropertyValue Property="rel" String="latest-version" />
+        <PropertyValue Property="href"
+          String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml" />
+      </Record>
+      <Record>
+        <PropertyValue Property="rel" String="alternate" />
+        <PropertyValue Property="href"
+          String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.json" />
+      </Record>
+      <Record>
+        <PropertyValue Property="rel" String="describedby" />
+        <PropertyValue Property="href"
+          String="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md" />
+      </Record>
+    </Collection>
+  </Annotation>
+
+  <Term Name="Pattern" Type="Edm.String" AppliesTo="Property Parameter Term">
+    <Annotation Term="Core.Description" String="The pattern that a string property, parameter, or term must match. This SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect." />
+    <Annotation Term="Core.RequiresType" String="Edm.String" />
+  </Term>
+
+  <Term Name="Minimum" Type="Edm.Decimal" Scale="variable" AppliesTo="Property Parameter Term">
+    <Annotation Term="Core.Description" String="Minimum value that a property, parameter, or term can have." />
+    <Annotation Term="Validation.ApplicableTerms">
+      <Collection>
+        <String>Validation.Exclusive</String>
+      </Collection>
+    </Annotation>
+  </Term>
+
+  <Term Name="Maximum" Type="Edm.Decimal" Scale="variable" AppliesTo="Property Parameter Term">
+    <Annotation Term="Core.Description" String="Maximum value that a property, parameter, or term can have." />
+    <Annotation Term="Validation.ApplicableTerms">
+      <Collection>
+        <String>Validation.Exclusive</String>
+      </Collection>
+    </Annotation>
+  </Term>
+
+  <Term Name="Exclusive" Type="Core.Tag" DefaultValue="true" AppliesTo="Annotation">
+    <Annotation Term="Core.Description" String="Tags a Minimum or Maximum as exclusive, i.e. an open interval boundary." />
+  </Term>
+
+  <Term Name="AllowedValues" Type="Collection(Validation.AllowedValue)" Nullable="false" AppliesTo="Property Parameter TypeDefinition" >
+    <Annotation Term="Core.Description" String="A collection of valid values for the annotated property, parameter, or type definition" />
+  </Term>
+  <ComplexType Name="AllowedValue">
+    <Property Name="Value" Type="Edm.PrimitiveType" Nullable="true">
+      <Annotation Term="Core.Description" String="An allowed value for the property, parameter, or type definition" />
+    </Property>
+  </ComplexType>
+
+  <Term Name="MultipleOf" Type="Edm.Decimal" Scale="variable" AppliesTo="Property Parameter Term">
+    <Annotation Term="Core.Description" String="The value of the annotated property, parameter, or term must be an integer multiple of this positive value. For temporal types, the value is measured in seconds." />
+  </Term>
+
+  <Term Name="Constraint" Type="Validation.ConstraintType" AppliesTo="Property EntityType ComplexType">
+    <Annotation Term="Core.Description" String="Condition that the annotation target has to fulfill" />
+  </Term>
+  <ComplexType Name="ConstraintType">
+    <Property Name="FailureMessage" Type="Edm.String" Nullable="true">
+      <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+      <Annotation Term="Core.Description" String="Human-readable message that can be shown to end users if the constraint is not fulfilled" />
+    </Property>
+    <Property Name="Condition" Type="Edm.Boolean" Nullable="false">
+      <Annotation Term="Core.Description" String="Value MUST be a dynamic expression that evaluates to true if and only if the constraint is fulfilled" />
+    </Property>
+  </ComplexType>
+
+  <Term Name="ItemsOf" Type="Collection(Validation.ItemsOfType)" Nullable="false" AppliesTo="EntityType ComplexType">
+    <Annotation Term="Core.Description" String="A list of constraints describing that entities related via one navigation property MUST also be related via another, collection-valued navigation property. The same `path` value MUST NOT occur more than once." />
+    <Annotation Term="Core.LongDescription">
+      <String>Example: entity type `Customer` has navigation properties `AllOrders`, `OpenOrders`, and `ClosedOrders`. 
+The term allows to express that items of `OpenOrders` and `ClosedOrders` are also items of the `AllOrders` navigation property,
+even though they are defined in an `Orders` entity set.</String>
+    </Annotation>
+  </Term>
+  <ComplexType Name="ItemsOfType">
+    <Annotation Term="Core.Description" String="Entities related via the single- or collection-valued navigation property identified by `path` are also related via the collection-valued navigation property identified by `target`." />
+    <Property Name="path" Type="Edm.NavigationPropertyPath" Nullable="false">
+      <Annotation Term="Core.Description" String="A path to a single- or collection-valued navigation property" />
+    </Property>
+    <Property Name="target" Type="Edm.NavigationPropertyPath" Nullable="false">
+      <Annotation Term="Core.Description" String="A path to a collection-valued navigation property" />
+    </Property>
+  </ComplexType>
+
+  <Term Name="OpenPropertyTypeConstraint" Type="Collection(Core.QualifiedTypeName)" Nullable="false" AppliesTo="ComplexType EntityType" >
+    <Annotation Term="Core.Description" String="Dynamic properties added to the annotated open structured type are restricted to the listed types" />
+  </Term>
+
+  <Term Name="DerivedTypeConstraint" Type="Collection(Core.QualifiedTypeName)" Nullable="false" AppliesTo="EntitySet Singleton NavigationProperty Property TypeDefinition Parameter ReturnType">
+    <Annotation Term="Core.Description" String="Values are restricted to types that are both identical to or derived from the declared type and a type listed in this collection." />
+    <Annotation Term="Core.LongDescription" String="This allows restricting values to certain sub-trees of an inheritance hierarchy. Types listed in this collection that are not derived from the declared type of the annotated model element are ignored." />
+  </Term>
+
+  <Term Name="AllowedTerms" Type="Collection(Core.QualifiedTermName)" AppliesTo="Term Property">
+    <Annotation Term="Core.Description" String="Annotate a term of type Edm.AnnotationPath, or a property of type Edm.AnnotationPath that is used within a structured term, to restrict the terms that can be targeted by the path." />
+    <Annotation Term="Core.LongDescription" String="The annotation path expression is intended to end in a path segment with one of the listed terms. For forward compatibility, clients should be prepared for the annotation to reference terms besides those listed." />
+    <Annotation Term="Core.RequiresType" String="Edm.AnnotationPath" />
+  </Term>
+  <Term Name="ApplicableTerms" Type="Collection(Core.QualifiedTermName)">
+    <Annotation Term="Core.Description" String="Names of specific terms that are applicable and may be applied in the current context. This annotation does not restrict the use of other terms." />
+  </Term>
+
+  <Term Name="MaxItems" Type="Edm.Int64" Nullable="false" AppliesTo="Collection">
+    <Annotation Term="Core.Description" String="The annotated collection must have at most the specified number of items." />
+  </Term>
+
+  <Term Name="MinItems" Type="Edm.Int64" Nullable="false" AppliesTo="Collection">
+    <Annotation Term="Core.Description" String="The annotated collection must have at least the specified number of items." />
+  </Term>
+</Schema>

@@ -116,9 +116,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         public void ShouldThrowForComplexCollectionResponseWithoutUserModelAndWithoutItemTypeAndWithoutSerializationInfo()
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
-            Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
+          //  Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
             sync.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-            Assert.Throws<AggregateException>(async);
+           // Assert.Throws<AggregateException>(async);
         }
 
         [Fact]
@@ -185,9 +185,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         public void ShouldThrowForComplexCollectionResponseWithoutUserModelAndWithoutItemTypeAndWithoutSerializationInfo_Inherit()
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
-            Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
+            //Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
             sync.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-            Assert.Throws<AggregateException>(async);
+            //Assert.Throws<AggregateException>(async);
         }
 
         [Fact]
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         private static void WriteAndValidate(ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
         {
             WriteAndValidateSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
-            WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+            //WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
         }
 
         private static void WriteAndValidateSync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
@@ -221,23 +221,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             ValidateWrittenPayload(stream, expectedPayload);
         }
 
-        private static void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
-        {
-            MemoryStream stream = new MemoryStream();
-            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: false);
-            var createODataWriterTask = outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
-            createODataWriterTask.Wait();
-            var odataWriter = createODataWriterTask.Result;
-            odataWriter.WriteStartAsync(collectionStart).Wait();
-            foreach (ODataResource item in items)
-            {
-                odataWriter.WriteStartAsync(item).Wait();
-                odataWriter.WriteEndAsync().Wait();
-            }
+        //private static void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
+        //{
+        //    MemoryStream stream = new MemoryStream();
+        //    var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: false);
+        //    var createODataWriterTask = outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
+        //    createODataWriterTask.Wait();
+        //    var odataWriter = createODataWriterTask.Result;
+        //    odataWriter.WriteStartAsync(collectionStart).Wait();
+        //    foreach (ODataResource item in items)
+        //    {
+        //        odataWriter.WriteStartAsync(item).Wait();
+        //        odataWriter.WriteEndAsync().Wait();
+        //    }
 
-            odataWriter.WriteEndAsync().Wait();
-            ValidateWrittenPayload(stream, expectedPayload);
-        }
+        //    odataWriter.WriteEndAsync().Wait();
+        //    ValidateWrittenPayload(stream, expectedPayload);
+        //}
 
         private static void ValidateWrittenPayload(MemoryStream stream, string expectedPayload)
         {

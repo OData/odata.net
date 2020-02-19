@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Community.V1" Alias="Community">
+      <Term AppliesTo="Function" Type="Core.Tag" Name="UrlEscapeFunction">
+        <Annotation Term="Core.Description" String="Annotates a function to be substituted for a colon-escaped segment in a Url path"/>
+      </Term>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

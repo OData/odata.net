@@ -1,0 +1,1555 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AllowCrossTargeting>true</AllowCrossTargeting>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <AssemblyName>Microsoft.OData.Edm.NetFX35.V7</AssemblyName>
+    <OutputType>Library</OutputType>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <RootNamespace>System</RootNamespace>
+    <ProjectGuid>{69A15676-2469-4315-9617-F0FFC04D310D}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <PropertyGroup>
+    <EdmLibCrossTargettingSourcePath>..\</EdmLibCrossTargettingSourcePath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <XTargetOutputFile Include="$(MSBuildThisFile)">
+      <SourceProject>$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj</SourceProject>
+      <TargetPathPrefixName>EdmLibCrossTargettingSourcePath</TargetPathPrefixName>
+    </XTargetOutputFile>
+  </ItemGroup>
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\GlobalSuppressions.cs">
+      <Link>GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEnumMemberExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEnumMemberExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs">
+      <Link>Microsoft\OData\Edm\PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\CsdlLocation.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlLocation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmEnumValueParser.cs">
+      <Link>Microsoft\OData\Edm\Csdl\EdmEnumValueParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmParseException.cs">
+      <Link>Microsoft\OData\Edm\Csdl\EdmParseException.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmValueParser.cs">
+      <Link>Microsoft\OData\Edm\Csdl\EdmValueParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmValueWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\EdmValueWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlAction.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlAction.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlActionImport.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlActionImport.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlApplyExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlApplyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlCastExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlCastExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlCollectionExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlCollectionExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEnumMember.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEnumType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEnumType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlFunction.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlFunction.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlFunctionImport.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlFunctionImport.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlIfExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlIfExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlIsTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlIsTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlLabeledExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlLabeledExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlLabeledExpressionReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlLabeledExpressionReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlPropertyPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlPropertyPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlAnnotation.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlAnnotations.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlAnnotations.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlCollectionType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlCollectionType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlExpressionBase.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlExpressionBase.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlPropertyValue.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlPropertyValue.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlRecordExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlRecordExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlSingleton.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlSingleton.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlSpatialTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlSpatialTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\ICsdlTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\ICsdlTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedAction.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedAction.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\IUnresolvedElement.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\IUnresolvedElement.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedEnumType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedEnumType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedFunction.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedFunction.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsNavigationPropertyPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsNavigationPropertyPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTypeDefinitionDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTypeDefinitionDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsAction.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsAction.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsActionImport.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsActionImport.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsApplyExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsApplyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsCastExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsCastExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsCollectionExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsCollectionExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDateConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDateConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDateTimeOffsetConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDateTimeOffsetConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDirectValueAnnotationsManager.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDirectValueAnnotationsManager.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsFunction.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsFunction.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsFunctionImport.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsFunctionImport.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsNavigationSource.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsNavigationSource.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsGuidConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsGuidConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsBinaryConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsBinaryConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsIfExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsIfExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsIsTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsIsTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsLabeledExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsLabeledExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsLabeledExpressionReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsLabeledExpressionReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDirectValueAnnotation.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDirectValueAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEnumMember.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEnumTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEnumTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlTerm.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlTerm.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsAnnotations.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsAnnotations.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsBooleanConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsBooleanConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsCollectionTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsCollectionTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsCollectionTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsCollectionTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDecimalConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDecimalConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsElement.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsElement.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsFloatingConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsFloatingConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsIntConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsIntConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsNamedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsNamedTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsNullExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsNullExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsPropertyConstructor.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsPropertyConstructor.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsPropertyPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsPropertyPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsRecordExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsRecordExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsSingleton.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsSingleton.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsSpatialTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsSpatialTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsStringConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsStringConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTimeOfDayConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTimeOfDayConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDurationConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDurationConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsVocabularyAnnotation.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsVocabularyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelReferenceElementsVisitor.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelReferenceElementsVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\SerializationValidator.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Serialization\SerializationValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\SerializationExtensionMethods.cs">
+      <Link>Microsoft\OData\Edm\Csdl\SerializationExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlOperationReturn.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlOperationReturn.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOperationImport.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOperationImport.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelSchemaSeparationSerializationVisitor.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelSchemaSeparationSerializationVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\PrimitiveValueConverters\DefaultPrimitiveValueConverter.cs">
+      <Link>Microsoft\OData\Edm\PrimitiveValueConverters\DefaultPrimitiveValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\EdmLocation.cs">
+      <Link>Microsoft\OData\Edm\EdmLocation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\ExtensionMethods\EdmElementComparer.cs">
+      <Link>Microsoft\OData\Edm\ExtensionMethods\EdmElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\ExtensionMethods\EnumHelper.cs">
+      <Link>Microsoft\OData\Edm\ExtensionMethods\EnumHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\PrimitiveValueConverters\IPrimitiveValueConverter.cs">
+      <Link>Microsoft\OData\Edm\PrimitiveValueConverters\IPrimitiveValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Memoizer.cs">
+      <Link>Microsoft\OData\Edm\Memoizer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\PrimitiveValueConverters\PrimitiveValueConverterConstants.cs">
+      <Link>Microsoft\OData\Edm\PrimitiveValueConverters\PrimitiveValueConverterConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CapabilitiesVocabularyConstants.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\CapabilitiesVocabularyConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CapabilitiesVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\CapabilitiesVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularyConstants.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\AlternateKeysVocabularyConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CommunityVocabularyConstants.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\CommunityVocabularyConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CoreVocabularyConstants.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\CoreVocabularyConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CoreVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\CoreVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\ValidationVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\ValidationVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\AlternateKeysVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CommunityVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\CommunityVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\AuthorizationVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\VocabularyModelProvider.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\VocabularyModelProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\DuplicateOperationValidator.cs">
+      <Link>Microsoft\OData\Edm\Validation\DuplicateOperationValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VersioningDictionary.cs">
+      <Link>Microsoft\OData\Edm\VersioningDictionary.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VersioningList.cs">
+      <Link>Microsoft\OData\Edm\VersioningList.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VersioningTree.cs">
+      <Link>Microsoft\OData\Edm\VersioningTree.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\ObjectLocation.cs">
+      <Link>Microsoft\OData\Edm\Validation\ObjectLocation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\ExpressionTypeChecker.cs">
+      <Link>Microsoft\OData\Edm\Validation\ExpressionTypeChecker.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\ExtensionMethods\ToTraceStringExtensionMethods.cs">
+      <Link>Microsoft\OData\Edm\ExtensionMethods\ToTraceStringExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\CsdlConstants.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlDirectValueAnnotation.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlDirectValueAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlBinaryTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlBinaryTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlComplexType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlComplexType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlDecimalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlDecimalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlElement.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlElement.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEntityContainer.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEntityReferenceType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEntityReferenceType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEntityType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEntityType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlExpressionTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlExpressionTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlOperation.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlFunctionBase.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlFunctionBase.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlOperationImport.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlOperationImport.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlOperationParameter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlKey.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlKey.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlModel.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlNamedElement.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlNamedElement.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlNamedStructuredType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlNamedStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlNamedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlNamedTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlNavigationProperty.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlNavigationProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlNavigationPropertyBinding.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlNavigationPropertyBinding.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlOnDelete.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlOnDelete.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlPrimitiveTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlPrimitiveTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlProperty.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlPropertyReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlPropertyReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlReferentialConstraint.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlReferentialConstraint.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlReferentialConstraintRole.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlReferentialConstraintRole.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlSchema.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlSchema.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlStringTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlStringTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlStructuredType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlTemporalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlTemporalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlUntypedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlUntypedTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Common\EdmXmlDocumentParser.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Common\EdmXmlDocumentParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Common\XmlDocumentParser.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Common\XmlDocumentParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Common\XmlElementInfo.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Common\XmlElementInfo.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Common\XmlElementParser.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Common\XmlElementParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\CsdlDocumentParser.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\CsdlDocumentParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\CsdlParser.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\CsdlParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsBinaryTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsBinaryTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsComplexTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsComplexTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEntityContainer.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEntityReferenceTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntityReferenceTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEntityTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntityTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOperation.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOperationParameter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOperationReturn.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOperationReturn.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsModel.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsNavigationProperty.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsNavigationProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedOperation.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedLabeledElement.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedLabeledElement.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedEnumMember.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedParameter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedReturn.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedReturn.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsPrimitiveTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsPrimitiveTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsProperty.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsSchema.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsSchema.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsStringTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsStringTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsStructuredTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsStructuredTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTemporalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTemporalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTypeDefinitionReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTypeDefinitionReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelCsdlSchemaWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelCsdlSchemaWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelCsdlSerializationVisitor.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelCsdlSerializationVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmSchema.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmSchema.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\EdmModelVisitor.cs">
+      <Link>Microsoft\OData\Edm\EdmModelVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\ExtensionMethods\ExtensionMethods.cs">
+      <Link>Microsoft\OData\Edm\ExtensionMethods\ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Cache.cs">
+      <Link>Microsoft\OData\Edm\Cache.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\CacheHelper.cs">
+      <Link>Microsoft\OData\Edm\CacheHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\EdmUtil.cs">
+      <Link>Microsoft\OData\Edm\EdmUtil.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\HashSetInternal.cs">
+      <Link>Microsoft\OData\Edm\HashSetInternal.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\IDependencyTrigger.cs">
+      <Link>Microsoft\OData\Edm\IDependencyTrigger.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\IDependent.cs">
+      <Link>Microsoft\OData\Edm\IDependent.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\IFlushCaches.cs">
+      <Link>Microsoft\OData\Edm\IFlushCaches.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\TupleInternal.cs">
+      <Link>Microsoft\OData\Edm\TupleInternal.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\RegistrationHelper.cs">
+      <Link>Microsoft\OData\Edm\RegistrationHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedComplexType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedComplexType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedEntityContainer.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedEntityType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedEntityType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedProperty.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedNavigationPropertyPath.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedNavigationPropertyPath.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedType.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\ExtensionMethods\EdmTypeSemantics.cs">
+      <Link>Microsoft\OData\Edm\ExtensionMethods\EdmTypeSemantics.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\EdmError.cs">
+      <Link>Microsoft\OData\Edm\Validation\EdmError.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\EdmValidator.cs">
+      <Link>Microsoft\OData\Edm\Validation\EdmValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\ValidationContext.cs">
+      <Link>Microsoft\OData\Edm\Validation\ValidationContext.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\ValidationExtensionMethods.cs">
+      <Link>Microsoft\OData\Edm\Validation\ValidationExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\ValidationRules.cs">
+      <Link>Microsoft\OData\Edm\Validation\ValidationRules.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\ValidationRule.cs">
+      <Link>Microsoft\OData\Edm\Validation\ValidationRule.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\ValidationRuleSet.cs">
+      <Link>Microsoft\OData\Edm\Validation\ValidationRuleSet.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\EdmErrorCode.cs">
+      <Link>Microsoft\OData\Edm\Validation\EdmErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\..\PlatformHelper.cs">
+      <Link>Microsoft\OData\Edm\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlReader.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlReaderSettings.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlReaderSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlTarget.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Parsing\Ast\CsdlAnnotationPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlAnnotationPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\SchemaReader.cs">
+      <Link>Microsoft\OData\Edm\Csdl\SchemaReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\SchemaWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\SchemaWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\CsdlSemanticsAnnotationPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsAnnotationPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\CsdlSemanticsTerm.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTerm.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousEntityContainerBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousEntityContainerBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousEntitySetBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousEntitySetBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousLabeledExpressionBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousLabeledExpressionBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousOperationBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousOperationBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousOperationImportBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousOperationImportBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousPropertyBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousPropertyBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousSingletonBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousSingletonBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousTermBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousTermBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\AmbiguousTypeBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousTypeBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadBinaryTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadBinaryTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadCollectionType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadCollectionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadComplexType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadComplexTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadComplexTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadDecimalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadDecimalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadEdmEnumMemberValue.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadEdmEnumMemberValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadEntityContainer.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadEntityReferenceType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadEntityReferenceType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadEntityType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadEntityType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadEntityTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadEntityTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadEnumType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadEnumType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadLabeledExpression.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadLabeledExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadNamedStructuredType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadNamedStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadNavigationProperty.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadNavigationProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadPathType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadPathTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadPathTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadPrimitiveType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadPrimitiveType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadPrimitiveTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadPrimitiveTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadProperty.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadSpatialTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadSpatialTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadStringTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadStringTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadStructuredType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadTemporalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadTemporalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CyclicComplexType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CyclicComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CyclicEntityContainer.cs">
+      <Link>Microsoft\OData\Edm\Schema\CyclicEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CyclicEntityType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CyclicEntityType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Date.cs">
+      <Link>Microsoft\OData\Edm\Schema\Date.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmAction.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmActionImport.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmActionImport.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmBinaryTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmBinaryTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmCollectionType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmCollectionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmCollectionTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmCollectionTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmComplexType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmComplexTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmComplexTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmConstants.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmContainedEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmContainedEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmDecimalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmDecimalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEntityContainer.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEntityReferenceType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEntityReferenceType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEntityReferenceTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEntityReferenceTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEntitySetBase.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEntitySetBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEntityType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEntityType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEntityTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEntityTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEnumMember.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEnumMemberValue.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEnumMemberValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEnumType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEnumType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEnumTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEnumTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmFunction.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmFunctionImport.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmFunctionImport.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmInclude.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmInclude.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmIncludeAnnotations.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmIncludeAnnotations.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmModel.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmModelBase.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmModelBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmNamedElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmNamedElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmNavigationProperty.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmNavigationProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmNavigationPropertyBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmNavigationPropertyBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmNavigationPropertyInfo.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmNavigationPropertyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmNavigationSource.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmNavigationSource.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmOperation.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmOperationImport.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmOperationImport.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmOperationParameter.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmOperationReturn.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmOperationReturn.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmOptionalParameter.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmOptionalParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmPrimitiveTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmPrimitiveTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmProperty.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmReferentialConstraint.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmReferentialConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmSingleton.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmSingleton.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmSpatialTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmSpatialTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmStringTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmStringTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmStructuralProperty.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmStructuralProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmStructuredType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmTemporalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmTemporalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmTypeDefinitionReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmTypeDefinitionReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmUnknownEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmUnknownEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmUntypedStructuredType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmUntypedStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmUntypedStructuredTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmUntypedStructuredTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmPathTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmPathTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmUntypedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmUntypedTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\IEdmNavigationTargetMapping.cs">
+      <Link>Microsoft\OData\Edm\Schema\IEdmNavigationTargetMapping.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\IEdmRowType.cs">
+      <Link>Microsoft\OData\Edm\Schema\IEdmRowType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelComplexType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelPrimitiveType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelPrimitiveType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypedType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelUntypedType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\IEdmCoreModelElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelEntityType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelEntityType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelPathType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModel.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmAction.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmActionImport.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmActionImport.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmBinaryTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmBinaryTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmCheckable.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmCheckable.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmCollectionType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmCollectionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmCollectionTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmCollectionTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmComplexType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmComplexTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmComplexTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmContainedEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmContainedEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmDecimalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmDecimalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEntityContainer.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEntityContainerElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEntityContainerElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEntityReferenceType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEntityReferenceType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEntityReferenceTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEntityReferenceTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEntitySetBase.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEntitySetBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEntityType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEntityType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEntityTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEntityTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEnumMember.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEnumMemberValue.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEnumMemberValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEnumType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEnumType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEnumTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEnumTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmExpression.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmExpression.cs</Link>
+    </Compile> 
+    <Compile Include="..\Schema\Interfaces\IEdmFullNamedElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmFullNamedElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmFunction.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmFunctionImport.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmFunctionImport.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmInclude.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmInclude.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmIncludeAnnotations.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmIncludeAnnotations.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmLocatable.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmLocatable.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmModel.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmNamedElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmNamedElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmNavigationProperty.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmNavigationProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmNavigationPropertyBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmNavigationPropertyBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmNavigationSource.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmNavigationSource.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperation.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperationImport.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationImport.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOperationReturn.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationReturn.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOptionalParameter.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOptionalParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPathTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPrimitiveType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPrimitiveType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPrimitiveTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPrimitiveTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmProperty.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmReferentialConstraint.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmReferentialConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmSchemaElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmSchemaElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmSchemaType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmSchemaType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmSingleton.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmSingleton.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmSpatialTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmSpatialTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmStringTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmStringTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmStructuralProperty.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmStructuralProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmStructuredType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmStructuredTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmStructuredTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmTemporalTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmTemporalTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmTypeDefinition.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmUntypedType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmUntypedType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmUntypedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmUntypedTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmTypeDefinitionReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmTypeDefinitionReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmUnknownEntitySet.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmUnknownEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\TimeOfDay.cs">
+      <Link>Microsoft\OData\Edm\Schema\TimeOfDay.cs</Link>
+    </Compile>
+    <Compile Include="..\Validation\InterfaceValidator.cs">
+      <Link>Microsoft\OData\Edm\Validation\InterfaceValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\Validation\ValidationHelper.cs">
+      <Link>Microsoft\OData\Edm\Validation\ValidationHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\EdmDirectValueAnnotation.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmDirectValueAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\EdmDirectValueAnnotationBinding.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmDirectValueAnnotationBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\EdmDirectValueAnnotationsManager.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmDirectValueAnnotationsManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\EdmPropertyValueBinding.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmPropertyValueBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\EdmTerm.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmTerm.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\EdmTypedDirectValueAnnotationBinding.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmTypedDirectValueAnnotationBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\EdmVocabularyAnnotation.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmVocabularyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmDirectValueAnnotation.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmDirectValueAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmDirectValueAnnotationBinding.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmDirectValueAnnotationBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmDirectValueAnnotationsManager.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmDirectValueAnnotationsManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmPropertyValueBinding.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmPropertyValueBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmTerm.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmTerm.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmVocabularyAnnotation.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmVocabularyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\EdmExpressionEvaluator.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\EdmExpressionEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\EdmToClrConverter.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\EdmToClrConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\EdmToClrEvaluator.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\EdmToClrEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmApplyExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmApplyExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmCastExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmCastExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmCollectionExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmCollectionExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmEnumMemberExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmEnumMemberExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmIfExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmIfExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmIsTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmIsTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmLabeledExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmLabeledExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmLabeledExpressionReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmLabeledExpressionReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmNavigationPropertyPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmNavigationPropertyPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmNullExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmNullExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmPropertyConstructor.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPropertyConstructor.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmPropertyPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPropertyPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmRecordExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmRecordExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmApplyExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmApplyExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmBinaryConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmBinaryConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmBooleanConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmBooleanConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmCastExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmCastExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmCollectionExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmCollectionExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmDateConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmDateConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmDateTimeOffsetConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmDateTimeOffsetConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmDecimalConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmDecimalConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmDurationConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmDurationConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmEnumMemberExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmEnumMemberExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmFloatingConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmFloatingConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmGuidConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmGuidConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmIfExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmIfExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmIntegerConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmIntegerConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmIsTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmIsTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmLabeledExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmLabeledExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmLabeledExpressionReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmLabeledExpressionReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmNullExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmNullExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmPropertyConstructor.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmPropertyConstructor.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmRecordExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmRecordExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmStringConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmStringConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmTimeOfDayConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmTimeOfDayConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\TryCreateObjectInstance.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\TryCreateObjectInstance.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmBinaryConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmBinaryConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmBooleanConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmBooleanConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmCollectionValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmCollectionValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmDateConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmDateConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmDateTimeOffsetConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmDateTimeOffsetConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmDecimalConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmDecimalConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmDurationConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmDurationConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmEnumValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmEnumValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmFloatingConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmFloatingConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmGuidConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmGuidConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmIntegerConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmIntegerConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmPropertyValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmPropertyValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmStringConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmStringConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmStructuredValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmStructuredValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmTimeOfDayConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmTimeOfDayConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmBinaryValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmBinaryValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmBooleanValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmBooleanValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmCollectionValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmCollectionValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDateTimeOffsetValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDateTimeOffsetValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDateValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDateValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDecimalValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDecimalValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDelayedValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDelayedValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDurationValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDurationValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmEnumValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmEnumValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmFloatingValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmFloatingValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmGuidValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmGuidValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmIntegerValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmIntegerValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmNullValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmNullValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmPrimitiveValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmPrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmPropertyValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmPropertyValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmStringValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmStringValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmStructuredValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmStructuredValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmTimeOfDayValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmTimeOfDayValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmValue.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CapabilitiesVocabularies.xml">
+      <LogicalName>CapabilitiesVocabularies.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CoreVocabularies.xml">
+      <LogicalName>CoreVocabularies.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularies.xml">
+      <LogicalName>AlternateKeysVocabularies.xml</LogicalName>
+    </EmbeddedResource>    
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CommunityVocabularies.xml">
+      <LogicalName>CommunityVocabularies.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularies.xml">
+      <LogicalName>AuthorizationVocabularies.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\ValidationVocabularies.xml">
+      <LogicalName>ValidationVocabularies.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <TextStringResource Include="$(EdmLibCrossTargettingSourcePath)\Microsoft.OData.Edm.txt">
+      <ResFile>Microsoft.OData.Edm</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Edm.EntityRes</FullClassName>
+    </TextStringResource>
+    <Compile Include="..\Microsoft.OData.Edm.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="..\Parameterized.Microsoft.OData.Edm.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

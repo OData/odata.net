@@ -219,8 +219,8 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="firstPath">First path item</param>
         /// <param name="secondPath">Second path item</param>
-        /// <returns>The boolean value.</returns>
-        private static bool OverLaps(PathSelectItem firstPath, PathSelectItem secondPath)
+        /// <returns></returns>
+        private static bool overLaps(PathSelectItem firstPath, PathSelectItem secondPath)
         {
             IEnumerator<ODataPathSegment> first = firstPath.SelectedPath.GetEnumerator();
             IEnumerator<ODataPathSegment> second = secondPath.SelectedPath.GetEnumerator();
@@ -413,7 +413,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Bind the apply clause <see cref="ApplyClause"/> at this level.
         /// </summary>
-        /// <param name="applyToken">The apply tokens to visit.</param>
+        /// <param name="applyToken">The apply options to visit.</param>
         /// <param name="navigationSource">The navigation source.</param>
         /// <returns>The null or the built apply clause.</returns>
         private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource navigationSource)
@@ -447,15 +447,7 @@ namespace Microsoft.OData.UriParser
             return null;
         }
 
-        /// <summary>
-        /// Bind the filter clause <see cref="FilterClause"/> at this level.
-        /// </summary>
-        /// <param name="filterToken">The filter token to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
-        /// <param name="elementType">The Edm element type.</param>
-        /// <param name="generatedProperties">The generated properties.</param>
-        /// <param name="collapsed">The collapsed boolean value.</param>
-        /// <returns>The null or the built filter clause.</returns>
+
         private FilterClause BindFilter(QueryToken filterToken, IEdmNavigationSource navigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
         {
@@ -469,16 +461,7 @@ namespace Microsoft.OData.UriParser
             return null;
         }
 
-        /// <summary>
-        /// Bind the orderby clause <see cref="OrderByClause"/> at this level.
-        /// </summary>
-        /// <param name="orderByToken">The orderby token to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
-        /// <param name="elementType">The Edm element type.</param>
-        /// <param name="generatedProperties">The generated properties.</param>
-        /// <param name="collapsed">The collapsed boolean value.</param>
-        /// <returns>The null or the built filter clause.</returns>
-        /// <returns>The null or the built orderby clause.</returns>
+
         private OrderByClause BindOrderby(IEnumerable<OrderByToken> orderByToken, IEdmNavigationSource navigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
         {
@@ -492,13 +475,7 @@ namespace Microsoft.OData.UriParser
             return null;
         }
 
-        /// <summary>
-        /// Bind the search clause <see cref="SearchClause"/> at this level.
-        /// </summary>
-        /// <param name="searchToken">The search token to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
-        /// <param name="elementType">The Edm element type.</param>
-        /// <returns>The null or the built search clause.</returns>
+
         private SearchClause BindSearch(QueryToken searchToken, IEdmNavigationSource navigationSource, IEdmTypeReference elementType)
         {
             if (searchToken != null)
@@ -511,17 +488,6 @@ namespace Microsoft.OData.UriParser
             return null;
         }
 
-        /// <summary>
-        /// Bind the select and expand clause <see cref="SelectExpandClause"/> at this level.
-        /// </summary>
-        /// <param name="expandToken">The expand token to visit.</param>
-        /// <param name="selectToken">The select token to visit.</param>
-        /// <param name="segments">The parsed segments to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
-        /// <param name="elementType">The Edm element type.</param>
-        /// <param name="generatedProperties">The generated properties.</param>
-        /// <param name="collapsed">The collapsed boolean value.</param>
-        /// <returns>The null or the built select and expand clause.</returns>
         private SelectExpandClause BindSelectExpand(ExpandToken expandToken, SelectToken selectToken,
             IList<ODataPathSegment> segments, IEdmNavigationSource navigationSource, IEdmTypeReference elementType,
             HashSet<EndPathToken> generatedProperties = null, bool collapsed = false)

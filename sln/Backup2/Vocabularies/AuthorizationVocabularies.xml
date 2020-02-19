@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+  Technical Committee:
+  OASIS Open Data Protocol (OData) TC
+  https://www.oasis-open.org/committees/odata
+
+  Chairs:
+  - Ralf Handl (ralf.handl@sap.com), SAP SE
+  - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
+
+  Editors:
+  - Ralf Handl (ralf.handl@sap.com), SAP SE
+  - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
+  - Michael Pizzo (mikep@microsoft.com), Microsoft
+
+  Additional artifacts:
+  This vocabulary is one component of a Work Product that also includes the following vocabulary components:
+  - OData Core Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml.
+  - OData Measures Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml.
+  - OData Capabilities Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml.
+  - OData Validation Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml.
+  - OData Aggregation Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggretation.V1.xml.
+  - OData Authorization Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml.
+
+  Related work:
+  This vocabulary replaces or supersedes:
+  - None
+  This vocabulary is related to:
+  - OData Version 4.01 Part 1: Protocol. Latest version: http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html.
+  - OData Version 4.01 Part 2: URL Conventions. Latest version: http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html.
+  - OData Common Schema Definition Language (CSDL) JSON Representation Version 4.01. Latest version: http://docs.oasis-open.org/odata/odata-csdl-json/v4.01/odata-csdl-json-v4.01.html.
+  - OData Common Schema Definition Language (CSDL) XML Representation Version 4.01. Latest version: http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html.
+  - OData JSON Format Version 4.01. Latest version: http://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html.
+  - OData Extension for Data Aggregation Version 4.0. Latest version: http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/odata-data-aggregation-ext-v4.0.html.
+
+  Abstract:
+  This document contains terms for describing a web authorization flow.
+
+-->
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Authorization.V1" Alias="Auth">
+      <Annotation Term="Core.Description" String="The Authorization Vocabulary provides terms for describing authorization requirements of the service" />
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="latest-version" />
+            <PropertyValue Property="href"
+              String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml" />
+          </Record>
+          <Record>
+            <PropertyValue Property="rel" String="alternate" />
+            <PropertyValue Property="href"
+              String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.json" />
+          </Record>
+          <Record>
+            <PropertyValue Property="rel" String="describedby" />
+            <PropertyValue Property="href"
+              String="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Authorization.V1.md" />
+          </Record>
+        </Collection>
+      </Annotation>
+
+      <Term Name="SecuritySchemes" Type="Collection(Auth.SecurityScheme)" Nullable="false" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="At least one of the specified security schemes are required to make a request against the service."/> 
+      </Term>
+
+      <ComplexType Name="SecurityScheme">
+        <Property Name="Authorization" Type="Auth.SchemeName" Nullable="false">
+          <Annotation Term="Core.Description" String="The name of a required authorization scheme" />
+        </Property>
+        <Property Name="RequiredScopes" Type="Collection(Edm.String)" Nullable="false">
+          <Annotation Term="Core.Description" String="The names of scopes required from this authorization scheme" />
+        </Property>
+      </ComplexType>
+
+      <Term Name="Authorizations" Type="Collection(Auth.Authorization)" Nullable="false" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Lists the methods supported by the service to authorize access" />
+      </Term>
+
+      <ComplexType Name="Authorization" Abstract="true">
+        <Annotation Term="Core.Description" String="Base type for all Authorization types" />
+        <Property Name="Name" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Name that can be used to reference the authorization scheme" />
+        </Property>
+        <Property Name="Description" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="Description of the authorization scheme" />
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="OpenIDConnect" BaseType="Auth.Authorization">
+        <Property Name="IssuerUrl" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description"
+            String="Issuer location for the OpenID Provider. Configuration information can be obtained by appending `/.well-known/openid-configuration` to this Url." />
+          <Annotation Term="Core.IsURL" Bool="true"/>
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="Http" BaseType="Auth.Authorization">
+        <Property Name="Scheme" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="HTTP Authorization scheme to be used in the Authorization header, as per RFC7235" />
+        </Property>
+        <Property Name="BearerFormat" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="Format of the bearer token" />
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="OAuthAuthorization" BaseType="Auth.Authorization" Abstract="true">
+        <Property Name="Scopes" Type="Collection(Auth.AuthorizationScope)" Nullable="false">
+          <Annotation Term="Core.Description" String="Available scopes" />
+        </Property>
+        <Property Name="RefreshUrl" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="Refresh Url" />
+          <Annotation Term="Core.IsURL" Bool="true"/>
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="OAuth2ClientCredentials" BaseType="Auth.OAuthAuthorization">
+        <Property Name="TokenUrl" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Token Url" />
+          <Annotation Term="Core.IsURL" Bool="true"/>
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="OAuth2Implicit" BaseType="Auth.OAuthAuthorization">
+        <Property Name="AuthorizationUrl" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Authorization URL" />
+          <Annotation Term="Core.IsURL" Bool="true"/>
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="OAuth2Password" BaseType="Auth.OAuthAuthorization">
+        <Property Name="TokenUrl" Type="Edm.String" Nullable="false">
+         <Annotation Term="Core.Description" String="Token Url" />
+          <Annotation Term="Core.IsURL" Bool="true"/>
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="OAuth2AuthCode" BaseType="Auth.OAuthAuthorization">
+        <Property Name="AuthorizationUrl" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Authorization URL" />
+          <Annotation Term="Core.IsURL" Bool="true"/>
+        </Property>
+        <Property Name="TokenUrl" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Token Url" />
+          <Annotation Term="Core.IsURL" Bool="true"/>
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="AuthorizationScope">
+        <Property Name="Scope" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Scope name" />
+        </Property>
+        <Property Name="Grant" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="Identity that has access to the scope or can grant access to the scope." />
+        </Property>
+        <Property Name="Description" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Description of the scope" />
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="ApiKey" BaseType="Auth.Authorization">
+        <Property Name="KeyName" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="The name of the header or query parameter" />
+        </Property>
+        <Property Name="Location" Type="Auth.KeyLocation" Nullable="false">
+          <Annotation Term="Core.Description" String="Whether the API Key is passed in the header or as a query option" />
+        </Property>
+      </ComplexType>
+
+      <EnumType Name="KeyLocation">
+        <Member Name="Header">
+          <Annotation Term="Core.Description" String="API Key is passed in the header" />
+        </Member>
+        <Member Name="QueryOption">
+          <Annotation Term="Core.Description" String="API Key is passed as a query option" />
+        </Member>
+        <Member Name="Cookie">
+          <Annotation Term="Core.Description" String="API Key is passed as a cookie" />
+        </Member>
+      </EnumType>
+
+      <TypeDefinition Name="SchemeName" UnderlyingType="Edm.String">
+          <Annotation Term="Core.Description" String="The name of the authorization scheme." />
+      </TypeDefinition>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

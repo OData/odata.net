@@ -23,8 +23,11 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(edmEntityType);
             EdmEntityContainer container = new EdmEntityContainer("NS", "EntityContainer");
             model.AddElement(container);
-            container.AddEntitySet("People", edmEntityType);
-
+#if NETCOREAPP2_0
+            container.AddEntitySet("people", edmEntityType);
+#else
+             container.AddEntitySet("People", edmEntityType);
+#endif
             return model;
         }
 
@@ -37,6 +40,16 @@ namespace Microsoft.OData.Tests.JsonLight
             parseContextUri.Throws<ODataException>(ErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(relativeUrl));
         }
 
+
+#if NETCOREAPP2_0
+        [Fact]
+        public void ParseContextUrlWithEscapedSpecailMeaningCharactersShouldSucceed()
+        {
+            string urlWithUnescapedSpecialMeaningCharacters = "https://www.example.com/api/$metadata#people('i%3A0%23.f%7Cmembership%7Cexample%40example.org')/Dogs";
+            Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(GetModel(), urlWithUnescapedSpecialMeaningCharacters, ODataPayloadKind.Unsupported, null, true);
+            parseContextUri.DoesNotThrow();
+        }
+#else
         [Fact]
         public void ParseContextUrlWithEscapedSpecailMeaningCharactersShouldSucceed()
         {
@@ -44,5 +57,6 @@ namespace Microsoft.OData.Tests.JsonLight
             Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(GetModel(), urlWithUnescapedSpecialMeaningCharacters, ODataPayloadKind.Unsupported, null, true);
             parseContextUri.DoesNotThrow();
         }
+#endif
     }
 }

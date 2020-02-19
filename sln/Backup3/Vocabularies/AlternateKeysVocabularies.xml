@@ -1,0 +1,18 @@
+﻿<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="OData.Community.Keys.V1" Alias="Keys">
+  <Term AppliesTo="EntityType" Type="Collection(Keys.AlternateKey)" Name="AlternateKeys">
+    <Annotation Term="Core.Description" String="Communicates available alternate keys"/>
+  </Term>
+  <ComplexType Name="AlternateKey">
+    <Property Type="Collection(Keys.PropertyRef)" Name="Key">
+      <Annotation Term="Core.Description" String="The set of properties that make up this key"/>
+    </Property>
+  </ComplexType>
+  <ComplexType Name="PropertyRef">
+    <Property Type="Edm.PropertyPath" Name="Name">
+      <Annotation Term="Core.Description" String="A path expression resolving to a primitive property of the entity type itself or to a primitive property of a complex property (recursively) of the entity type. The names of the properties in the path are joined together by forward slashes."/>
+    </Property>
+    <Property Type="Edm.String" Name="Alias">
+      <Annotation Term="Core.Description" String="A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs"/>
+    </Property>
+  </ComplexType>
+</Schema>

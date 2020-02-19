@@ -4,18 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Microsoft.OData
 {
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-#if PORTABLELIB
-    using System.Threading;
-    using System.Threading.Tasks;
-#endif
-    #endregion Namespaces
-
     /// <summary>
     /// Stream wrapper for the message stream to ignore the Stream.Dispose method so that readers/writers on top of
     /// it can be disposed without affecting it.
@@ -98,7 +93,6 @@ namespace Microsoft.OData
             return this.innerStream.Read(buffer, offset, count);
         }
 
-#if PORTABLELIB
         /// <inheritdoc />
         public async override Task<int> ReadAsync(
             byte[] buffer,
@@ -109,31 +103,6 @@ namespace Microsoft.OData
             int bytesRead = await this.innerStream.ReadAsync(buffer, offset, count, cancellationToken);
             return bytesRead;
         }
-#else
-        /// <summary>
-        /// Begins a read operation from the stream.
-        /// </summary>
-        /// <param name="buffer">The buffer to read the data to.</param>
-        /// <param name="offset">The offset in the buffer to write to.</param>
-        /// <param name="count">The number of bytes to read.</param>
-        /// <param name="callback">The async callback.</param>
-        /// <param name="state">The async state.</param>
-        /// <returns>Async result representing the asynchornous operation.</returns>
-        public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
-        {
-            return this.innerStream.BeginRead(buffer, offset, count, callback, state);
-        }
-
-        /// <summary>
-        /// Ends a read operation from the stream.
-        /// </summary>
-        /// <param name="asyncResult">The async result representing the read operation.</param>
-        /// <returns>The number of bytes actually read.</returns>
-        public override int EndRead(IAsyncResult asyncResult)
-        {
-            return this.innerStream.EndRead(asyncResult);
-        }
-#endif
 
         /// <summary>
         /// Seeks the stream.
@@ -166,35 +135,10 @@ namespace Microsoft.OData
             this.innerStream.Write(buffer, offset, count);
         }
 
-#if PORTABLELIB
         /// <inheritdoc />
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             return this.innerStream.WriteAsync(buffer, offset, count, cancellationToken);
         }
-#else
-        /// <summary>
-        /// Begins an asynchronous write operation to the stream.
-        /// </summary>
-        /// <param name="buffer">The buffer to get data from.</param>
-        /// <param name="offset">The offset in the buffer to start from.</param>
-        /// <param name="count">The number of bytes to write.</param>
-        /// <param name="callback">The async callback.</param>
-        /// <param name="state">The async state.</param>
-        /// <returns>Async result representing the write operation.</returns>
-        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
-        {
-            return this.innerStream.BeginWrite(buffer, offset, count, callback, state);
-        }
-
-        /// <summary>
-        /// Ends the asynchronous write operation.
-        /// </summary>
-        /// <param name="asyncResult">Async result representing the write operation.</param>
-        public override void EndWrite(IAsyncResult asyncResult)
-        {
-            this.innerStream.EndWrite(asyncResult);
-        }
-#endif
     }
 }

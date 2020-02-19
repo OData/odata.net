@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Services.KeyAsSegmentService
 {
     using Microsoft.OData.Service;
     using Microsoft.Test.OData.Services.AstoriaDefaultService;
-
+    
     [System.ServiceModel.ServiceBehaviorAttribute(IncludeExceptionDetailInFaults = true)]
     public class KeyAsSegmentService : Service
     {

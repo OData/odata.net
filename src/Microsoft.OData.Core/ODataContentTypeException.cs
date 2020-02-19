@@ -6,17 +6,10 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-#if ORCAS
-using System.Runtime.Serialization;
-#endif
 
 namespace Microsoft.OData
 {
     /// <summary>Exception type representing exception when Content-Type of a message is not supported.</summary>
-#if !PORTABLELIB
-    [Serializable]
-#endif
     [DebuggerDisplay("{Message}")]
     public class ODataContentTypeException : ODataException
     {

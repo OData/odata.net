@@ -320,6 +320,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="target">Target set.</param>
         /// <param name="predicates">Candidate predicates.</param>
+        /// <param name="edmModel">edm model.</param>
         /// <param name="nonKeyPredicates">Returns list of non-key predicates.</param>
         /// <returns>List of key predicates if found, otherwise null</returns>
         private static List<Expression> ExtractKeyPredicate(
@@ -1809,11 +1810,9 @@ namespace Microsoft.OData.Client
                 // Call Order: Do not short circuit the get key properties call
                 // in V1 we will always call this for memberaccess expr, and thus always create a client type.
                 // There are certain types that we don't support and this could be throwing.
-#if PORTABLELIB
-                Type resourceType = pi.DeclaringType;
-#else
+
                 Type resourceType = pi.ReflectedType;
-#endif
+
                 if ((ClientTypeUtil.GetKeyPropertiesOnType(resourceType) ?? ClientTypeUtil.EmptyPropertyInfoArray).Contains(pi, PropertyInfoEqualityComparer.Instance) && boundTarget is InputReferenceExpression)
                 {
                     property = pi;
@@ -2877,11 +2876,9 @@ namespace Microsoft.OData.Client
                         {
                             foundInstance = unaryInstance.Operand;
                         }
-#if PORTABLELIB
-                        Type resourceType = propertyMember.Member.DeclaringType;
-#else
+
                         Type resourceType = propertyMember.Member.ReflectedType;
-#endif
+
                         if (foundInstance == le.Parameters[0] && ClientTypeUtil.TypeOrElementTypeIsEntity(resourceType))
                         {
                             Debug.Assert(propertyPath != null, "propertyPath != null");
