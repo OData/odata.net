@@ -72,7 +72,7 @@ steps:
 
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --framework netcoreapp2.0'
+    arguments: '--configuration $(BuildConfiguration)'
     projects: | 
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
