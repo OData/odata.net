@@ -62,7 +62,7 @@ steps:
   displayName: 'Spatial Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform)'
+    arguments: '--configuration $(BuildConfiguration)'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
@@ -70,7 +70,7 @@ steps:
   displayName: 'EDM Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform)'
+    arguments: '--configuration $(BuildConfiguration)'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
      
@@ -78,7 +78,7 @@ steps:
   displayName: 'Core Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform)'
+    arguments: '--configuration $(BuildConfiguration)'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
@@ -86,7 +86,7 @@ steps:
   displayName: 'Client Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --platform $(BuildPlatform) --framework netcoreapp2.0'
+    arguments: '--configuration $(BuildConfiguration) --framework netcoreapp2.0'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
