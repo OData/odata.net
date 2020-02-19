@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
         /// <param name="context">Wrapping context instance.</param>
         /// <param name="keys">The dictionary containing key pairs.</param>
         /// <returns>The string of keys.</returns>
-        public static string GetKeyString(DataServiceContext context, Dictionary<string, object> keys)
+        public static string GetKeyString(DataServiceContext context, IDictionary<string, object> keys)
         {
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);

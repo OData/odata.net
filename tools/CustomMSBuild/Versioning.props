@@ -4,17 +4,19 @@
   <PropertyGroup>
     <VersionMajor Condition="'$(VersionMajor)' == ''">7</VersionMajor>
     <VersionMinor Condition="'$(VersionMinor)' == ''">6</VersionMinor>
-    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">1</VersionBuildNumber>
+    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">4</VersionBuildNumber>
     <VersionRelease Condition="'$(VersionRelease)' == ''">beta</VersionRelease>
   </PropertyGroup>
 
   <!--
-      Revision number is a date code. Note that this only work for about 6 years before the year part (year-2017)
+      Revision number is a date code. Note that this only work for about 6 years before the year part (year-2020)
       overflows the Int16. The system convert below will throw errors when this happens.
     -->
   <PropertyGroup>
-    <VersionStartYear Condition="'$(VersionStartYear)' == ''">2017</VersionStartYear>
+
+    <VersionStartYear Condition="'$(VersionStartYear)' == ''">2020</VersionStartYear>
     <VersionDateCode>$([System.Convert]::ToInt32('$([MSBuild]::Add(1, $([MSBuild]::Subtract($([System.DateTime]::Now.Year), $(VersionStartYear)))))$([System.DateTime]::Now.ToString("MMdd"))'))</VersionDateCode>
+
     <VersionRevision Condition="'$(VersionRevision)' == '' OR '$(VersionRevision)' == '0'">$([System.Convert]::ToString($(VersionDateCode)))</VersionRevision>
   </PropertyGroup>
 

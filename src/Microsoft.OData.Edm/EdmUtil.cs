@@ -489,7 +489,7 @@ namespace Microsoft.OData.Edm
 
         internal static T CheckArgumentNull<T>([ValidatedNotNull]T value, string parameterName) where T : class
         {
-            if (null == value)
+            if (value == null)
             {
                 throw new ArgumentNullException(parameterName);
             }

@@ -144,7 +144,7 @@ namespace Microsoft.OData.UriParser
                         // if one of the select items has options.
                         foreach (PathSelectItem existingItem in selectExpandItems.OfType<PathSelectItem>())
                         {
-                            if ((selectPathItem.HasOptions && overLaps(selectPathItem, existingItem)) || (existingItem.HasOptions && overLaps(existingItem, selectPathItem)))
+                            if ((selectPathItem.HasOptions && OverLaps(selectPathItem, existingItem)) || (existingItem.HasOptions && OverLaps(existingItem, selectPathItem)))
                             {
                                 throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(selectTermToken.PathToProperty)));
                             }
@@ -270,6 +270,7 @@ namespace Microsoft.OData.UriParser
             {
                 targetElementType = collection.ElementType.Definition;
             }
+
             IEdmTypeReference elementTypeReference = targetElementType.ToTypeReference();
 
             // $compute
@@ -446,6 +447,7 @@ namespace Microsoft.OData.UriParser
             return null;
         }
 
+
         private FilterClause BindFilter(QueryToken filterToken, IEdmNavigationSource navigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
         {
@@ -459,6 +461,7 @@ namespace Microsoft.OData.UriParser
             return null;
         }
 
+
         private OrderByClause BindOrderby(IEnumerable<OrderByToken> orderByToken, IEdmNavigationSource navigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
         {
@@ -471,6 +474,7 @@ namespace Microsoft.OData.UriParser
 
             return null;
         }
+
 
         private SearchClause BindSearch(QueryToken searchToken, IEdmNavigationSource navigationSource, IEdmTypeReference elementType)
         {
@@ -486,7 +490,7 @@ namespace Microsoft.OData.UriParser
 
         private SelectExpandClause BindSelectExpand(ExpandToken expandToken, SelectToken selectToken,
             IList<ODataPathSegment> segments, IEdmNavigationSource navigationSource, IEdmTypeReference elementType,
-            HashSet < EndPathToken> generatedProperties = null, bool collapsed = false)
+            HashSet<EndPathToken> generatedProperties = null, bool collapsed = false)
         {
             if (expandToken != null || selectToken != null)
             {
@@ -510,6 +514,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="selectToken">the select token to process.</param>
         /// <param name="newSelectItem">the built select item to out.</param>
+        /// <returns>A boolean value indicates the result of processing wildcard token path.</returns>
         private bool ProcessWildcardTokenPath(SelectTermToken selectToken, out SelectItem newSelectItem)
         {
             newSelectItem = null;
@@ -539,6 +544,7 @@ namespace Microsoft.OData.UriParser
         /// Process a <see cref="PathSegmentToken"/> following any type segments if necessary.
         /// </summary>
         /// <param name="tokenIn">the path token to process.</param>
+        /// <returns>The processed OData segments.</returns>
         private List<ODataPathSegment> ProcessSelectTokenPath(PathSegmentToken tokenIn)
         {
             Debug.Assert(tokenIn != null, "tokenIn != null");
@@ -779,9 +785,6 @@ namespace Microsoft.OData.UriParser
             return new LevelsClause(levelsOption.Value < 0, levelsOption.Value);
         }
 
-        /// <summary>
-        /// Build a new MetadataBinder to use for expand options.
-        /// </summary>
         private static MetadataBinder BuildNewMetadataBinder(ODataUriParserConfiguration config,
             IEdmNavigationSource targetNavigationSource,
             IEdmTypeReference elementType,
@@ -861,7 +864,7 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        internal static void AddToSelectedItems(SelectItem itemToAdd, List<SelectItem> selectItems)
+        private static void AddToSelectedItems(SelectItem itemToAdd, List<SelectItem> selectItems)
         {
             if (itemToAdd == null)
             {

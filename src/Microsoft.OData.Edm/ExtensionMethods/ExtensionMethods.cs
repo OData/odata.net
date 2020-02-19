@@ -3180,6 +3180,10 @@ namespace Microsoft.OData.Edm
             return entitySet != null;
         }
 
+        /// <summary>
+        /// Returns true if there is any element in the list or collections. 
+        /// It tries to cast to list first and then an array, this method will be performant if the callers of this extension method implement IEnumerable through lists.
+        /// </summary>
         internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T : class
         {
             IList<T> list = enumerable as IList<T>;
@@ -3194,7 +3198,12 @@ namespace Microsoft.OData.Edm
                 return array.Length > 0;
             }
 
-            return enumerable.FirstOrDefault() != null;
+            if (enumerable != null)
+            {
+                return enumerable.GetEnumerator().MoveNext();
+            }
+
+            return false;
         }
 
         /// <summary>

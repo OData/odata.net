@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -829,12 +830,15 @@ namespace Microsoft.OData.UriParser
         /// <param name="segmentText">The text of the segment.</param>
         private void CreateFirstSegment(string segmentText)
         {
+            if (segmentText[segmentText.Length - 1] == ':' && this.TryCreateEscapeFunctionSegment(segmentText))
+            {
+                return;
+            }
+
             string identifier;
             string parenthesisExpression;
             ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
-
             Debug.Assert(identifier != null, "identifier != null");
-
             // Look for well-known system resource points.
             if (this.IdentifierIs(UriQueryConstants.MetadataSegment, identifier))
             {
@@ -908,6 +912,101 @@ namespace Microsoft.OData.UriParser
             }
 
             this.CreateDynamicPathSegment(null, identifier, parenthesisExpression);
+        }
+
+        /// <summary>Creates a <see cref="ODataPathSegment"/> that an escape function can bind to, which can be a
+        /// a navigation source or an operation import it is the first segment to be created. Otherwise, it can be a 
+        /// filter segment, property segment, typecast segment, operation segment or a key segment.
+        /// </summary>
+        /// <param name="segmentText">The text of the segment.</param>
+        private bool BindSegmentBeforeEscapeFunction(string segmentText)
+        {
+            string identifier;
+            string parenthesisExpression;
+            ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
+
+            if (this.parsedSegments.Count == 0)
+            {
+                if (this.TryCreateSegmentForNavigationSource(identifier, parenthesisExpression))
+                {
+                    return true;
+                }
+
+                if (this.TryCreateSegmentForOperationImport(identifier, parenthesisExpression))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (this.TryCreateFilterSegment(segmentText))
+                {
+                    return true;
+                }
+
+                ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
+
+                if (this.TryCreatePropertySegment(previous, identifier, parenthesisExpression))
+                {
+                    return true;
+                }
+
+                // Type cast
+                if (this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
+                {
+                    return true;
+                }
+
+                // Operation
+                if (this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression))
+                {
+                    return true;
+                }
+
+                // For KeyAsSegment, try to handle as key segment
+                if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(segmentText))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool TryCreatePropertySegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
+        {
+            // property if previous is single
+            if (previous.SingleResult)
+            {
+                // if its not one of the recognized special segments, then it must be a property, type-segment, or key value.
+                Debug.Assert(
+                    previous.TargetKind == RequestTargetKind.Resource
+                    || previous.TargetKind == RequestTargetKind.Dynamic,
+                    "previous.TargetKind(" + previous.TargetKind + ") can have properties");
+
+                if (previous.TargetEdmType == null)
+                {
+                    // A segment will correspond to a property in the object model;
+                    // if we are processing an open type, anything further in the
+                    // URI also represents an open type property.
+                    Debug.Assert(previous.TargetKind == RequestTargetKind.Dynamic, "For open properties, the target resource type must be null");
+                }
+                else
+                {
+                    // if the segment corresponds to a declared property, handle it
+                    // otherwise, fall back to type-segments, actions, and dynamic/open properties
+                    IEdmProperty projectedProperty;
+                    if (this.TryBindProperty(identifier, out projectedProperty))
+                    {
+                        CheckSingleResult(previous.SingleResult, previous.Identifier);
+                        this.CreatePropertySegment(previous, projectedProperty, parenthesisExpression);
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -1014,11 +1113,6 @@ namespace Microsoft.OData.UriParser
                 bindingType = (previousSegment is EachSegment) ? previousSegment.TargetEdmType : previousSegment.EdmType;
             }
 
-            if (!String.IsNullOrEmpty(identifier) && identifier[0] == ':' && bindingType != null)
-            {
-                identifier = ResolveEscapeFunction(identifier, bindingType, configuration.Model, out parenthesisExpression);
-            }
-
             ICollection<OperationSegmentParameter> resolvedParameters;
             IEdmOperation singleOperation;
             if (!TryBindingParametersAndMatchingOperation(identifier, parenthesisExpression, bindingType, this.configuration, out resolvedParameters, out singleOperation))
@@ -1036,6 +1130,13 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty(identifier));
             }
 
+            CreateOperationSegment(previousSegment, singleOperation, resolvedParameters, identifier, parenthesisExpression);
+
+            return true;
+        }
+
+        private void CreateOperationSegment(ODataPathSegment previousSegment, IEdmOperation singleOperation, ICollection<OperationSegmentParameter> resolvedParameters, string identifier, string parenthesisExpression)
+        {
             IEdmTypeReference returnType = singleOperation.ReturnType;
             IEdmEntitySetBase targetset = null;
 
@@ -1059,10 +1160,9 @@ namespace Microsoft.OData.UriParser
             };
 
             this.parsedSegments.Add(segment);
-
             this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisExpression, returnType, resolvedParameters, segment);
 
-            return true;
+            return;
         }
 
         /// <summary>
@@ -1071,10 +1171,14 @@ namespace Microsoft.OData.UriParser
         /// <param name="text">The text for the next segment.</param>
         private void CreateNextSegment(string text)
         {
+            if (text[text.Length - 1] == ':' && this.TryCreateEscapeFunctionSegment(text))
+            {
+                return;
+            }
+
             string identifier;
             string parenthesisExpression;
             ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
-
             /*
              * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceded by an escape - marker segment('$').
              * For KeyAsSegment, the following precedence rules should be supported[ODATA - 799]:
@@ -1123,39 +1227,13 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            // property if previous is single
-            if (previous.SingleResult)
+            if (this.TryCreatePropertySegment(previous, identifier, parenthesisExpression))
             {
-                // if its not one of the recognized special segments, then it must be a property, type-segment, or key value.
-                Debug.Assert(
-                    previous.TargetKind == RequestTargetKind.Resource
-                    || previous.TargetKind == RequestTargetKind.Dynamic,
-                    "previous.TargetKind(" + previous.TargetKind + ") can have properties");
-
-                if (previous.TargetEdmType == null)
-                {
-                    // A segment will correspond to a property in the object model;
-                    // if we are processing an open type, anything further in the
-                    // URI also represents an open type property.
-                    Debug.Assert(previous.TargetKind == RequestTargetKind.Dynamic, "For open properties, the target resource type must be null");
-                }
-                else
-                {
-                    // if the segment corresponds to a declared property, handle it
-                    // otherwise, fall back to type-segments, actions, and dynamic/open properties
-                    IEdmProperty projectedProperty;
-                    if (this.TryBindProperty(identifier, out projectedProperty))
-                    {
-                        CheckSingleResult(previous.SingleResult, previous.Identifier);
-                        this.CreatePropertySegment(previous, projectedProperty, parenthesisExpression);
-                        return;
-                    }
-                }
+                return;
             }
 
             // Type cast
-            if (text.IndexOf('.') >= 0 && // type-cast should use qualified type names
-                this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
+            if (this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
             {
                 return;
             }
@@ -1181,6 +1259,37 @@ namespace Microsoft.OData.UriParser
 
             // Dynamic property
             this.CreateDynamicPathSegment(previous, identifier, parenthesisExpression);
+        }
+
+        private bool TryCreateEscapeFunctionSegment(string segmentText)
+        {
+            Debug.Assert(segmentText[segmentText.Length - 1] == ':');
+
+            int numberOfSegmentsParsed = this.parsedSegments.Count;
+            string newSegmentText = segmentText.Substring(0, segmentText.Length - 1);
+
+            // Try to binding the segment optimisitically to which the escape function must bind to
+            if (newSegmentText.Length > 0 && !BindSegmentBeforeEscapeFunction(newSegmentText))
+            {
+                return false;
+            }
+
+            if (this.TryBindEscapeFunction())
+            {
+                return true;
+            }
+            else
+            {
+                // The caller of this function will try binding the original segment as key value.
+                // We need to roll back the optimistic binding that we did in this step.
+                while (this.parsedSegments.Count > numberOfSegmentsParsed)
+                {
+                    // Keep on poping the last segment. 
+                    this.parsedSegments.RemoveAt(this.parsedSegments.Count - 1);
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -1218,6 +1327,39 @@ namespace Microsoft.OData.UriParser
             return projectedProperty != null;
         }
 
+        private bool TryBindEscapeFunction()
+        {
+            ODataPathSegment previous = null;
+            if (this.parsedSegments.Count > 0)
+            {
+                previous = this.parsedSegments[this.parsedSegments.Count - 1];
+            }
+
+            string newIdentifier, newParenthesisExpression;
+            bool anotherEscapeFunctionStarts;
+            IEdmFunction escapeFunction;
+            if (this.TryResolveEscapeFunction(previous, out newIdentifier, out newParenthesisExpression, out anotherEscapeFunctionStarts, out escapeFunction))
+            {
+                ICollection<FunctionParameterToken> splitParameters;
+                FunctionParameterParser.TrySplitOperationParameters(newParenthesisExpression, configuration, out splitParameters);
+                ICollection<OperationSegmentParameter> resolvedParameters = FunctionCallBinder.BindSegmentParameters(configuration, escapeFunction, splitParameters);
+                CreateOperationSegment(previous, escapeFunction, resolvedParameters, newIdentifier, newParenthesisExpression);
+                if (anotherEscapeFunctionStarts)
+                {
+                    // When we encounter an invalid escape function as a parameter, we should throw.
+                    // i.e. we should throw for entitySet(key):/ComposableEscapeFunctionPath::/InvalidEscapeFunction
+                    if (!TryBindEscapeFunction())
+                    {
+                        throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_ComposableEscapeFunctionShouldHaveValidParameter);
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Tries to create a type name segment if the given identifier refers to a known type.
         /// </summary>
@@ -1227,6 +1369,11 @@ namespace Microsoft.OData.UriParser
         /// <returns>Whether or not a type segment was created for the identifier.</returns>
         private bool TryCreateTypeNameSegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
         {
+            if (identifier.IndexOf('.') < 0)
+            {
+                return false;
+            }
+
             IEdmType targetEdmType;
             if (previous.TargetEdmType == null || (targetEdmType = UriEdmHelpers.FindTypeFromModel(this.configuration.Model, identifier, this.configuration.Resolver)) == null)
             {
@@ -1603,26 +1750,139 @@ namespace Microsoft.OData.UriParser
             throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(fullTypeName, kind, name));
         }
 
-        private static string ResolveEscapeFunction(string identifier, IEdmType bindingType, IEdmModel model, out string parenthesisExpression)
+        private bool TryResolveEscapeFunction(ODataPathSegment previous, out string qualifiedName, out string parenthesisExpression, out bool anotherEscapeFunctionStarts, out IEdmFunction function)
         {
-            Debug.Assert(identifier != null && identifier.Length >= 1 && identifier[0] == ':');
-            Debug.Assert(bindingType != null);
+            qualifiedName = null;
+            parenthesisExpression = null;
+            anotherEscapeFunctionStarts = false;
+            IEdmType bindingType = null;
+            IEdmModel model = configuration.Model;
+            function = null;
 
-            bool isComposableRequired = identifier.Length >= 2 && identifier[identifier.Length - 1] == ':';
-            IEdmFunction function = model.FindBoundOperations(bindingType)
-                .OfType<IEdmFunction>().FirstOrDefault(f => f.IsComposable == isComposableRequired && IsUrlEscapeFunction(model, f));
+            if (previous != null)
+            {
+                bindingType = previous.TargetEdmType;
+            }
+
+            if (bindingType == null || model == null)  // escape function is only for bound functions
+            {
+                return false;
+            }
+
+            IEnumerable<IEdmFunction> candidates = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().Where(f => IsUrlEscapeFunction(model, f));
+
+            if (!candidates.HasAny())
+            {
+                return false;
+            }
+
+            string nextPiece = null;
+            StringBuilder sb = new StringBuilder();
+
+            while (this.TryGetNextSegmentText(out nextPiece))
+            {
+                if (sb.Length >= 1)
+                {
+                    sb.Append('/');
+                }
+
+                sb.Append(nextPiece);
+
+                if (nextPiece[nextPiece.Length - 1] == ':')
+                {
+                    break;
+                }
+            }
+
+            string identifier = sb.ToString();
+
+            if (identifier != null && identifier.Length >= 2 && identifier[identifier.Length - 2] == ':')
+            {
+                anotherEscapeFunctionStarts = true;
+            }
+
+            bool isComposableRequired = identifier != null && identifier.Length >= 1 && identifier[identifier.Length - 1] == ':';
+
+            function = FindBestMatchForEscapeFunction(candidates, isComposableRequired, bindingType);
+
             if (function == null)
             {
+                // We need to throw because we have consumed segments from the queue and we don't put them back. This is fair because early checks did show an escape function bound to the type. 
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported(bindingType.FullTypeName()));
             }
 
-            if (function.Parameters == null || function.Parameters.Count() != 2 || !function.Parameters.ElementAt(1).Type.IsString())
+            parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(0, identifier.Length - 1) : identifier) + "'";
+            qualifiedName = function.FullName();
+
+            return true;
+        }
+
+        private static IEdmFunction FindBestMatchForEscapeFunction(IEnumerable<IEdmFunction> candidates, bool isComposable, IEdmType bindingType)
+        {
+            IEdmFunction bestCandidate = null;
+            foreach (IEdmFunction f in candidates)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter(function.FullName()));
+                // If the composability of the above found function does not match, we cannot use the function
+                if (f.IsComposable != isComposable)
+                {
+                    continue;
+                }
+
+                IEdmOperationParameter firstParameter;
+                if (ParametersMatchEscapeFunction(f.Parameters, out firstParameter))
+                {
+                    // The first parameter of the function is not an exact match for the binding type then try to find a better match.
+                    if (firstParameter.Type.Definition == bindingType)
+                    {
+                        return f;
+                    }
+                    else if (bestCandidate != null)
+                    {
+                        // If the binding parameter for the  bestcandidate so far is a base type of first parameter of the current candidate
+                        // then we should use the more specific function, which is the current function. 
+                        if (bestCandidate.HasEquivalentBindingType(firstParameter.Type.Definition))
+                        {
+                            bestCandidate = f;
+                        }
+                    }
+                    else
+                    {
+                        bestCandidate = f;
+                    }
+                }
             }
 
-            parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(1, identifier.Length - 2) : identifier.Substring(1)) + "'";
-            return function.FullName();
+            return bestCandidate;
+        }
+
+        private static bool ParametersMatchEscapeFunction(IEnumerable<IEdmOperationParameter> parameters, out IEdmOperationParameter firstParameter)
+        {
+            firstParameter = null;
+            if (parameters == null)
+            {
+                return false;
+            }
+
+            int count = 0; 
+            foreach(IEdmOperationParameter p in parameters)
+            {
+                if (++count > 2)
+                {
+                    return false;
+                }
+
+                if (count == 1)
+                {
+                    firstParameter = p;
+                }
+
+                if (count == 2 && !p.Type.IsString())
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         internal static bool IsUrlEscapeFunction(IEdmModel model, IEdmFunction function)

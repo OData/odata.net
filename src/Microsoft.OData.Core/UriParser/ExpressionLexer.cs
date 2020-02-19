@@ -910,7 +910,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The kind of token recognized.</returns>
         private ExpressionTokenKind ParseFromDigit()
         {
-            Debug.Assert(this.IsValidDigit || ('-' == this.ch), "this.IsValidDigit || ('-' == this.ch)");
+            Debug.Assert(this.IsValidDigit || (this.ch == '-'), "this.IsValidDigit || (this.ch == '-')");
             ExpressionTokenKind result;
             int tokenPos = this.textPos;
             char startChar = this.ch.Value;
