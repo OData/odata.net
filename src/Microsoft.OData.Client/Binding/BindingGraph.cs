@@ -54,6 +54,7 @@ namespace Microsoft.OData.Client
             this.observer = observer;
             this.graph = new Graph();
         }
+
         /// <summary>Adds a DataServiceCollection to the graph</summary>
         /// <param name="source">Source object for the collection, this object has navigation property corresponding to collection</param>
         /// <param name="sourceProperty">Property in <paramref name="source"/> that corresponds to the collection</param>
@@ -69,7 +70,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(collection != null, "'collection' can not be null");
             Debug.Assert(
-                BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.observer.Context.Model, this.observer.Context),
+                BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.observer.Context.Model),
                 "Argument 'collection' must be an DataServiceCollection<T> of entity type T");
 
             if (this.graph.ExistsVertex(collection))
@@ -221,7 +222,7 @@ namespace Microsoft.OData.Client
                 {
                     entityVertex = this.graph.AddVertex(target);
 
-                    entityVertex.EntitySet = BindingEntityInfo.GetEntitySet(target, targetEntitySet, this.observer.Context.Model, this.observer.Context);
+                    entityVertex.EntitySet = BindingEntityInfo.GetEntitySet(target, targetEntitySet, this.observer.Context.Model);
 
                     // Register for entity notifications, fail if the entity does not implement INotifyPropertyChanged.
                     if (!this.AttachEntityOrComplexObjectNotification(target))
@@ -294,7 +295,7 @@ namespace Microsoft.OData.Client
             // When parentProperty is null, parent is itself a root collection
             if (parentProperty != null)
             {
-                BindingEntityInfo.BindingPropertyInfo bpi = BindingEntityInfo.GetObservableProperties(parent.GetType(), this.observer.Context.Model, this.observer.Context)
+                BindingEntityInfo.BindingPropertyInfo bpi = BindingEntityInfo.GetObservableProperties(parent.GetType(), this.observer.Context.Model)
                                                                              .Single(p => p.PropertyInfo.PropertyName == parentProperty);
                 Debug.Assert(bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindDataServiceCollection, "parentProperty must refer to an DataServiceCollection");
 
@@ -313,7 +314,7 @@ namespace Microsoft.OData.Client
                     out sourceEntitySet,
                     out targetEntitySet);
 
-            targetEntitySet = BindingEntityInfo.GetEntitySet(item, targetEntitySet, this.observer.Context.Model, this.observer.Context);
+            targetEntitySet = BindingEntityInfo.GetEntitySet(item, targetEntitySet, this.observer.Context.Model);
 
             this.observer.HandleDeleteEntity(
                             source,
@@ -401,7 +402,7 @@ namespace Microsoft.OData.Client
         public void RemoveNonTrackedEntities()
         {
             // Cleanup all untracked entities
-            foreach (var entity in this.graph.Select(o => !this.observer.IsContextTrackingEntity(o) && BindingEntityInfo.IsEntityType(o.GetType(), this.observer.Context.Model, this.observer.Context)))
+            foreach (var entity in this.graph.Select(o => !this.observer.IsContextTrackingEntity(o) && BindingEntityInfo.IsEntityType(o.GetType(), this.observer.Context.Model)))
             {
                 this.graph.ClearEdgesForVertex(this.graph.LookupVertex(entity));
             }
@@ -573,7 +574,7 @@ namespace Microsoft.OData.Client
         {
             // Once the entity is attached to the graph, we need to traverse all it's properties
             // and add related entities and collections to this entity.
-            foreach (BindingEntityInfo.BindingPropertyInfo bpi in BindingEntityInfo.GetObservableProperties(entity.GetType(), this.observer.Context.Model, this.observer.Context))
+            foreach (BindingEntityInfo.BindingPropertyInfo bpi in BindingEntityInfo.GetObservableProperties(entity.GetType(), this.observer.Context.Model))
             {
                 object propertyValue = bpi.PropertyInfo.GetValue(entity);
 

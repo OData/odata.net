@@ -296,7 +296,7 @@ namespace Microsoft.OData.Client
 
             if (rse.KeyPredicateConjuncts.Count > 0)
             {
-                this.context.UrlKeyDelimiter.AppendKeyExpression(rse.GetKeyProperties(this.context), kvp => ClientTypeUtil.GetServerDefinedName(kvp.Key), kvp => kvp.Value.Value, this.uriBuilder);
+                this.context.UrlKeyDelimiter.AppendKeyExpression(rse.GetKeyProperties(this.context.Model), kvp => ClientTypeUtil.GetServerDefinedName(kvp.Key), kvp => kvp.Value.Value, this.uriBuilder);
             }
 
             if (rse.IsOperationInvocation)

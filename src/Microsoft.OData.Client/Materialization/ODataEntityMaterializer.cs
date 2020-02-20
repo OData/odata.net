@@ -49,7 +49,7 @@ namespace Microsoft.OData.Client.Materialization
             ProjectionPlan materializeEntryPlan)
             : base(materializerContext, expectedType)
         {
-            this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents,materializerContext.Context);
+            this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents);
             this.EntityTrackingAdapter = entityTrackingAdapter;
             DSClient.SimpleLazy<PrimitivePropertyConverter> converter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
 
@@ -754,7 +754,7 @@ namespace Microsoft.OData.Client.Materialization
 
                         // So the payload is for non-entity types. If we encounter an entity in the client side, we should throw
                         // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
-                        if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType, this.MaterializerContext.Context))
+                        if (ClientTypeUtil.TypeOrElementTypeIsEntity(this.MaterializerContext.Model, property.PropertyType))
                         {
                             throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
                         }
@@ -908,7 +908,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>Creates an entry materialization plan for a given projection.</summary>
         /// <param name="queryComponents">Query components for plan to materialize.</param>
         /// <returns>A materialization plan.</returns>
-        private static ProjectionPlan CreatePlan(QueryComponents queryComponents,DataServiceContext context)
+        private static ProjectionPlan CreatePlan(QueryComponents queryComponents)
         {
             // Can we have a primitive property as well?
             LambdaExpression projection = queryComponents.Projection;
@@ -919,7 +919,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites,context);
+                result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites);
                 result.LastSegmentType = queryComponents.LastSegmentType;
             }
 

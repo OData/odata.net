@@ -49,18 +49,10 @@ namespace Microsoft.OData.Client
         /// <summary>Path builder used to help with tracking state while compiling.</summary>
         private ProjectionPathBuilder pathBuilder;
 
-        /// <summary>
-        /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
-        /// the fully-qualified name of types when TryAs converts are processed (C# "as", VB "TryCast").
-        /// Ideally the FQN is only required during URI translation, not during analysis. However,
-        /// the current code constructs the $select and $expand parts of the URI during analysis. This
-        /// could be refactored in the future to defer the $select and $expand URI construction until
-        /// the URI translation phase.
-        /// </summary>
-        private DataServiceContext context;
-
         /// <summary>Whether the top level projection has been found.</summary>
         private bool topLevelProjectionFound;
+
+        private readonly ClientEdmModel model;
 
         #endregion Private fields
 
@@ -70,14 +62,17 @@ namespace Microsoft.OData.Client
         /// Initializes a new <see cref="ProjectionPlanCompiler"/> instance.
         /// </summary>
         /// <param name="normalizerRewrites">Rewrites introduces by normalizer.</param>
-        /// <param name="context">The data service context</param>
-        private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites, DataServiceContext context)
+        private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites)
         {
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
             this.normalizerRewrites = normalizerRewrites;
             this.pathBuilder = new ProjectionPathBuilder();
-            this.context = context;
+        }
+
+        internal ProjectionPlanCompiler(ClientEdmModel model)
+        {
+            this.model = model;
         }
 
         #endregion Constructors
@@ -88,7 +83,7 @@ namespace Microsoft.OData.Client
         /// <param name="projection">Projection expression.</param>
         /// <param name="normalizerRewrites">Tracks rewrite-to-source rewrites introduced by expression normalizer.</param>
         /// <returns>A new <see cref="ProjectionPlan"/> instance.</returns>
-        internal static ProjectionPlan CompilePlan(LambdaExpression projection, Dictionary<Expression, Expression> normalizerRewrites, DataServiceContext context)
+        internal static ProjectionPlan CompilePlan(LambdaExpression projection, Dictionary<Expression, Expression> normalizerRewrites)
         {
             Debug.Assert(projection != null, "projection != null");
             Debug.Assert(projection.Parameters.Count == 1, "projection.Parameters.Count == 1");
@@ -101,7 +96,7 @@ namespace Microsoft.OData.Client
                 projection.Body.NodeType == ExpressionType.New,
                 "projection.Body.NodeType == Constant, MemberInit, MemberAccess, Convert(Checked) New");
 
-            ProjectionPlanCompiler rewriter = new ProjectionPlanCompiler(normalizerRewrites, context);
+            ProjectionPlanCompiler rewriter = new ProjectionPlanCompiler(normalizerRewrites);
 #if TRACE_CLIENT_PROJECTIONS
             Trace.WriteLine("Projection: " + projection);
 #endif
@@ -158,7 +153,7 @@ namespace Microsoft.OData.Client
             }
 
             var nullCheck = ResourceBinder.PatternRules.MatchNullCheck(this.pathBuilder.LambdaParameterInScope, conditional);
-            if (!nullCheck.Match || !ClientTypeUtil.TypeOrElementTypeIsEntity(ResourceBinder.StripConvertToAssignable(nullCheck.TestToNullExpression).Type, this.context))
+            if (!nullCheck.Match || !ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, ResourceBinder.StripConvertToAssignable(nullCheck.TestToNullExpression).Type))
             {
                 Expression test = null;
 
@@ -411,7 +406,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(lambda != null, "lambda != null");
 
             Expression result;
-            if (!this.topLevelProjectionFound || lambda.Parameters.Count == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(lambda.Parameters[0].Type, this.context))
+            if (!this.topLevelProjectionFound || lambda.Parameters.Count == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, lambda.Parameters[0].Type))
             {
                 this.topLevelProjectionFound = true;
 
@@ -673,7 +668,7 @@ namespace Microsoft.OData.Client
                 //
                 // new T { t2 = new T2 { id2 = *.t2.id2 } }
                 // => ProjInit(pt, "t2", f(ProjInit(pt->t2), "id2", *.id2)))
-                if ((ClientTypeUtil.TypeOrElementTypeIsEntity(ClientTypeUtil.GetMemberType(assignment.Member), this.context) &&
+                if ((ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, ClientTypeUtil.GetMemberType(assignment.Member)) &&
                      assignment.Expression.NodeType == ExpressionType.MemberInit))
                 {
                     Expression nestedEntry = CallMaterializer(
@@ -1046,7 +1041,7 @@ namespace Microsoft.OData.Client
                 LambdaExpression le = call.Arguments[1] as LambdaExpression;
                 ParameterExpression pe = le.Parameters.Last();
                 Expression selectorExpression = this.Visit(call.Arguments[1]);
-                if (ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type, this.context))
+                if (ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, pe.Type))
                 {
                     // With this information from an annotation:
                     // {t->*.Players}
@@ -1149,7 +1144,7 @@ namespace Microsoft.OData.Client
                     LambdaExpression le = call.Arguments[1] as LambdaExpression;
                     ParameterExpression pe = le.Parameters.Last();
                     Expression selectorExpression = this.Visit(call.Arguments[1]);
-                    if (ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type, this.context))
+                    if (ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, pe.Type))
                     {
                         // With this information from an annotation:
                         // {t->*.Players}

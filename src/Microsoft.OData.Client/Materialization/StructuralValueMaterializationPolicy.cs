@@ -42,6 +42,7 @@ namespace Microsoft.OData.Client.Materialization
             this.MaterializerContext = materializerContext;
             this.lazyPrimitivePropertyConverter = lazyPrimitivePropertyConverter;
         }
+
         /// <summary>
         /// Gets the collection value materialization policy.
         /// </summary>
@@ -261,7 +262,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 // we should throw if the property type on the client does not match with the property type in the server
                 // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
-                if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType, this.MaterializerContext.Context))
+                if (ClientTypeUtil.TypeOrElementTypeIsEntity(this.MaterializerContext.Model, property.PropertyType))
                 {
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
                 }

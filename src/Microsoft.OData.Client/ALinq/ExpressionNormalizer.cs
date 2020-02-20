@@ -10,10 +10,10 @@ namespace Microsoft.OData.Client
 
     using System;
     using System.Collections.Generic;
+    using Microsoft.OData.Client.Metadata;
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Client.Metadata;
 
     #endregion Namespaces
 
@@ -54,18 +54,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly Dictionary<Expression, Pattern> _patterns = new Dictionary<Expression, Pattern>(ReferenceEqualityComparer<Expression>.Instance);
 
-        /// <summary>
-        /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
-        /// the fully-qualified name of types when TryAs converts are processed (C# "as", VB "TryCast").
-        /// Ideally the FQN is only required during URI translation, not during analysis. However,
-        /// the current code constructs the $select and $expand parts of the URI during analysis. This
-        /// could be refactored in the future to defer the $select and $expand URI construction until
-        /// the URI translation phase.
-        /// </summary>
-        private readonly DataServiceContext context;
-
         /// <summary>Records the generated-to-source rewrites created.</summary>
         private readonly Dictionary<Expression, Expression> normalizerRewrites;
+
+        private readonly ClientEdmModel model;
+
         #endregion Private fields
 
         #region Constructors
@@ -78,12 +71,11 @@ namespace Microsoft.OData.Client
             this.normalizerRewrites = normalizerRewrites;
         }
 
-        /// <summary>Initializes a new <see cref="ExpressionNormalizer"/> instance.</summary>
-        /// <param name="context">The context used to normalize the expressions.</param>
-        private ExpressionNormalizer(DataServiceContext context)
+        internal ExpressionNormalizer(ClientEdmModel model)
         {
-            this.context = context;
+            this.model = model;
         }
+
 
         #endregion Constructors
 
@@ -190,7 +182,7 @@ namespace Microsoft.OData.Client
                 if (!PrimitiveType.IsKnownNullableType(visited.Operand.Type) && !PrimitiveType.IsKnownNullableType(visited.Type) || visited.Operand.Type == visited.Type)
                 {
                     // x is not a collection of entity types
-                    if (!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type, this.context) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
+                    if (!(ClientTypeUtil.TypeOrElementTypeIsEntity(model, visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
                     {
                         // x is not an enum type
                         if (!visited.Operand.Type.IsEnum())

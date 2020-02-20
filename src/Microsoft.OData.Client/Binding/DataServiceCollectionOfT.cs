@@ -714,7 +714,7 @@ namespace Microsoft.OData.Client
 
             // Verify that T corresponds to an entity type.
             // Validate here before any items are added to the collection because if this fails we want to prevent the collection from being populated.
-            if (!BindingEntityInfo.IsEntityType(typeof(T), context.Model, context))
+            if (!BindingEntityInfo.IsEntityType(typeof(T), context.Model))
             {
                 throw new ArgumentException(Strings.DataBinding_DataServiceCollectionArgumentMustHaveEntityType(typeof(T)));
             }

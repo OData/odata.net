@@ -98,6 +98,7 @@ namespace Microsoft.OData.Client
         {
             get { return this.member; }
         }
+
         /// <summary>
         /// Type of resources contained in this ResourceSet - it's element type.
         /// </summary>
@@ -409,10 +410,9 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Gets the key properties from KeyPredicateConjuncts
-        /// <param name="context">The Data context </param>
         /// </summary>
         /// <returns>The key properties.</returns>
-        internal Dictionary<PropertyInfo, ConstantExpression> GetKeyProperties(DataServiceContext context)
+        internal Dictionary<PropertyInfo, ConstantExpression> GetKeyProperties(ClientEdmModel model)
         {
             var keyValues = new Dictionary<PropertyInfo, ConstantExpression>(EqualityComparer<PropertyInfo>.Default);
             if (this.keyPredicateConjuncts.Count > 0)
@@ -421,7 +421,7 @@ namespace Microsoft.OData.Client
                 {
                     PropertyInfo property;
                     ConstantExpression constantValue;
-                    if (ResourceBinder.PatternRules.MatchKeyComparison(predicate, context, out property, out constantValue))
+                    if (ResourceBinder.PatternRules.MatchKeyComparison(predicate, model, out property, out constantValue))
                     {
                         keyValues.Add(property, constantValue);
                     }

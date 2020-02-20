@@ -16,13 +16,13 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData;
     using Microsoft.OData.Client.ALinq.UriParser;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Edm;
+    using Microsoft.OData;
     using Microsoft.OData.UriParser;
-    using NonSystemToken = Microsoft.OData.Client.ALinq.UriParser.NonSystemToken;
+    using Microsoft.OData.Edm;
     using PathSegmentToken = Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken;
+    using NonSystemToken = Microsoft.OData.Client.ALinq.UriParser.NonSystemToken;
     #endregion Namespaces
 
     /// <summary>
@@ -55,8 +55,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Initializes a new <see cref="ResourceBinder"/> instance.</summary>
-        /// <param name="context">The data context associated with the resource binder</param>
+
         private ResourceBinder(DataServiceContext context)
         {
             this.context = context;
@@ -160,7 +159,7 @@ namespace Microsoft.OData.Client
         /// <returns>
         /// An equivalent expression to <paramref name="mce"/>, possibly a different one with additional annotations.
         /// </returns>
-        private static Expression AnalyzePredicate(MethodCallExpression mce, ClientEdmModel model, DataServiceContext context)
+        private static Expression AnalyzePredicate(MethodCallExpression mce, ClientEdmModel model)
         {
             Debug.Assert(mce != null, "mce != null -- caller couldn't have know the expression kind otherwise");
             Debug.Assert(mce.Method.Name == "Where", "mce.Method.Name == 'Where' -- otherwise this isn't a predicate");
@@ -240,7 +239,7 @@ namespace Microsoft.OData.Client
                 QueryableResourceExpression target = predicates.Key;
                 List<Expression> clauses = predicates.Value;
                 List<Expression> nonKeyPredicates;
-                List<Expression> keyPredicates = ExtractKeyPredicate(target, clauses, model, context, out nonKeyPredicates);
+                List<Expression> keyPredicates = ExtractKeyPredicate(target, clauses, model, out nonKeyPredicates);
                 if (keyPredicates == null ||
                     (nonKeyPredicates != null && nonKeyPredicates.Count > 0))
                 {
@@ -274,7 +273,7 @@ namespace Microsoft.OData.Client
 
                 if (!input.UseFilterAsPredicate)
                 {
-                    keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, context, out nonKeyPredicates);
+                    keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
                 }
 
                 if (keyPredicates != null)
@@ -327,7 +326,6 @@ namespace Microsoft.OData.Client
             QueryableResourceExpression target,
             List<Expression> predicates,
             ClientEdmModel edmModel,
-            DataServiceContext context,
             out List<Expression> nonKeyPredicates)
         {
             Debug.Assert(target != null, "target != null");
@@ -341,7 +339,7 @@ namespace Microsoft.OData.Client
             {
                 PropertyInfo property;
                 ConstantExpression constantValue;
-                if (PatternRules.MatchKeyComparison(predicate, context, out property, out constantValue))
+                if (PatternRules.MatchKeyComparison(predicate, edmModel, out property, out constantValue))
                 {
                     if (keyValuesFromPredicates == null)
                     {
@@ -525,7 +523,7 @@ namespace Microsoft.OData.Client
                 }
 
                 // the projection might be over a transparent identifier, so first try to rewrite if that is the case
-                lambda = ProjectionRewriter.TryToRewrite(lambda, source, this.context);
+                lambda = ProjectionRewriter.TryToRewrite(lambda, source, this.context.Model);
 
                 ResourceExpression re = source.CreateCloneWithNewType(mce.Type);
 
@@ -1433,7 +1431,7 @@ namespace Microsoft.OData.Client
                     switch (sequenceMethod)
                     {
                         case SequenceMethod.Where:
-                            return AnalyzePredicate(mce, this.Model, this.context);
+                            return AnalyzePredicate(mce, this.Model);
                         case SequenceMethod.Select:
                             return AnalyzeNavigation(mce, this.context);
                         case SequenceMethod.SelectMany:
@@ -1790,7 +1788,7 @@ namespace Microsoft.OData.Client
             /// <param name="expression">Expression to check.</param>
             /// <param name="property">If this is a key access, the property for the key.</param>
             /// <returns>true if <paramref name="expression"/> is a member access to a key; false otherwise.</returns>
-            internal static bool MatchKeyProperty(Expression expression, DataServiceContext context, out PropertyInfo property)
+            internal static bool MatchKeyProperty(Expression expression, ClientEdmModel model, out PropertyInfo property)
             {
                 property = null;
 
@@ -1816,7 +1814,7 @@ namespace Microsoft.OData.Client
 #else
                 Type resourceType = pi.ReflectedType;
 #endif
-                if ((ClientTypeUtil.GetKeyPropertiesOnType(resourceType, context) ?? ClientTypeUtil.EmptyPropertyInfoArray).Contains(pi, PropertyInfoEqualityComparer.Instance) && boundTarget is InputReferenceExpression)
+                if ((ClientTypeUtil.GetKeyPropertiesOnType(model, resourceType) ?? ClientTypeUtil.EmptyPropertyInfoArray).Contains(pi, PropertyInfoEqualityComparer.Instance) && boundTarget is InputReferenceExpression)
                 {
                     property = pi;
                     return true;
@@ -1825,13 +1823,13 @@ namespace Microsoft.OData.Client
                 return false;
             }
 
-            internal static bool MatchKeyComparison(Expression e, DataServiceContext context, out PropertyInfo keyProperty, out ConstantExpression keyValue)
+            internal static bool MatchKeyComparison(Expression e, ClientEdmModel model, out PropertyInfo keyProperty, out ConstantExpression keyValue)
             {
                 if (PatternRules.MatchBinaryEquality(e))
                 {
                     BinaryExpression be = (BinaryExpression)e;
-                    if ((PatternRules.MatchKeyProperty(be.Left, context, out keyProperty) && PatternRules.MatchConstant(be.Right, out keyValue)) ||
-                        (PatternRules.MatchKeyProperty(be.Right, context, out keyProperty) && PatternRules.MatchConstant(be.Left, out keyValue)))
+                    if ((PatternRules.MatchKeyProperty(be.Left, model, out keyProperty) && PatternRules.MatchConstant(be.Right, out keyValue)) ||
+                        (PatternRules.MatchKeyProperty(be.Right, model, out keyProperty) && PatternRules.MatchConstant(be.Left, out keyValue)))
                     {
                         // if property is compared to null, expression is not key predicate comparison
                         return keyValue.Value != null;
@@ -2709,17 +2707,12 @@ namespace Microsoft.OData.Client
             {
                 private readonly SequenceMethod checkedMethod;
                 private readonly ClientEdmModel model;
-                private DataServiceContext context;
+
                 internal WhereAndOrderByChecker(ClientEdmModel model, SequenceMethod checkedMethod)
                 {
                     Debug.Assert(checkedMethod == SequenceMethod.Where || checkedMethod == SequenceMethod.OrderBy);
                     this.model = model;
                     this.checkedMethod = checkedMethod;
-                }
-
-                internal WhereAndOrderByChecker(DataServiceContext context)
-                {
-                    this.context = context;
                 }
 
                 internal override Expression VisitMethodCall(MethodCallExpression mce)
@@ -2734,7 +2727,7 @@ namespace Microsoft.OData.Client
                         }
 
                         Type filteredType = mce.Method.GetGenericArguments().SingleOrDefault();
-                        if (!ClientTypeUtil.TypeOrElementTypeIsEntity(filteredType, context))
+                        if (!ClientTypeUtil.TypeOrElementTypeIsEntity(model, filteredType))
                         {
                             Expression source = mce.Arguments[0];
                             MemberExpression me = StripTo<MemberExpression>(source);
@@ -2889,7 +2882,7 @@ namespace Microsoft.OData.Client
 #else
                         Type resourceType = propertyMember.Member.ReflectedType;
 #endif
-                        if (foundInstance == le.Parameters[0] && ClientTypeUtil.TypeOrElementTypeIsEntity(resourceType, context))
+                        if (foundInstance == le.Parameters[0] && ClientTypeUtil.TypeOrElementTypeIsEntity(context.Model, resourceType))
                         {
                             Debug.Assert(propertyPath != null, "propertyPath != null");
                             ExpandOnlyPathToStringVisitor expandPathVisitor = new ExpandOnlyPathToStringVisitor();

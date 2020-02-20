@@ -178,7 +178,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(pi != null, "pi != null");
 
-            bool propertyTypeisEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(pi.PropertyType, context);
+            bool propertyTypeisEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(context.Model, pi.PropertyType);
 
             string convertedSourceTypeName = (convertedSourceType == null) ?
                 null :

@@ -470,7 +470,7 @@ namespace Microsoft.OData.Client.Materialization
                 // LoadProperty scenario versus regular collection creation scenario.
                 if (forLoadProperty)
                 {
-                    if (BindingEntityInfo.IsDataServiceCollection(collectionType, this.MaterializerContext.Model, this.MaterializerContext.Context))
+                    if (BindingEntityInfo.IsDataServiceCollection(collectionType, this.MaterializerContext.Model))
                     {
                         Debug.Assert(WebUtil.GetDataServiceCollectionOfT(property.EntityCollectionItemType) != null, "DataServiceCollection<> must be available here.");
 
