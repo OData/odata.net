@@ -176,7 +176,7 @@ namespace Microsoft.Test.OData.Tests.Client
                     Assert.IsTrue(testCase.Value);
                     Assert.AreEqual(400, ex.Response.StatusCode);
                     StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(ex), "BadRequest_KeyCountMismatch", "Microsoft.Test.OData.Services.AstoriaDefaultService.Message");
-                    //InnerException for DataServiceClientException must be set with the exception response frpom the server.
+                    //InnerException for DataServiceClientException must be set with the exception response from the server.
                     ODataErrorException oDataErrorException = ex.InnerException.InnerException as ODataErrorException;
                     Assert.IsTrue(oDataErrorException != null, "InnerException for DataServiceClientException has not been set.");
                     Assert.AreEqual("An error was read from the payload. See the 'Error' property for more details.", oDataErrorException.Message);

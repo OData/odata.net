@@ -244,24 +244,20 @@ namespace Microsoft.OData.Client
 
             IDictionary<string, string> headers = new Dictionary<string, string>();
 
-
             using (Stream stream = getResponseStream())
             {
                 if ((null != stream) && stream.CanRead && stream.CanSeek)
                 {
-                    Stream streamClone = new MemoryStream();
-                    stream.CopyTo(streamClone);
-                    stream.Position = 0;
-                    streamClone.Position = 0;
                     // this StreamReader can go out of scope without dispose because the underlying stream is disposed of
-                    message = new StreamReader(streamClone).ReadToEnd();
+                    message = new StreamReader(stream).ReadToEnd();
+                    stream.Position = 0;
                 }
 
                 if (string.IsNullOrEmpty(message))
                 {
                     message = statusCode.ToString();
                 }
-                else if (Util.CanBeJson(message))
+                else if (Util.MayBeJson(message))
                 {
                     headers.Add(ODataConstants.ContentTypeHeader, JsonContentTypeHeader);
                     httpWebResponseMessage = new HttpWebResponseMessage(headers, (int)statusCode, getResponseStream);

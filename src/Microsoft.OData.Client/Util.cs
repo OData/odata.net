@@ -604,7 +604,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="input">the input string.</param>
         /// <returns>Return true if the input string can be Json.</returns>
-        public static bool CanBeJson(string input)
+        public static bool MayBeJson(string input)
         {
             return input.Trim().Substring(0, 1).IndexOfAny(new[] { '[', '{' }) == 0;
         }
