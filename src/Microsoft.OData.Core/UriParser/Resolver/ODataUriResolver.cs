@@ -285,7 +285,7 @@ namespace Microsoft.OData.UriParser
         public virtual IEnumerable<IEdmOperationImport> ResolveOperationImports(IEdmModel model, string identifier)
         {
             IEnumerable<IEdmOperationImport> results = model.FindDeclaredOperationImports(identifier);
-            if (results.Any() || !EnableCaseInsensitive)
+            if ((results != null && results.Any()) || !EnableCaseInsensitive)
             {
                 return results;
             }
