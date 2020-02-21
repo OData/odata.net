@@ -6,11 +6,11 @@
 
 namespace Microsoft.OData.Client
 {
-    #region Namespaces
+#region Namespaces
 
     using System;
     using System.Diagnostics;
-    #endregion
+#endregion
 
     /// <summary>Utilities for binding related operations</summary>
     internal static class BindingUtils

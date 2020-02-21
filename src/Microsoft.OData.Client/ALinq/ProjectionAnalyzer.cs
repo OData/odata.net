@@ -654,7 +654,7 @@ namespace Microsoft.OData.Client
 
             internal override Expression VisitTypeIs(TypeBinaryExpression b)
             {
-                if (ClientTypeUtil.TypeOrElementTypeIsEntity(b.Expression.Type ) || IsCollectionProducingExpression(b.Expression))
+                if (ClientTypeUtil.TypeOrElementTypeIsEntity(b.Expression.Type  ) || IsCollectionProducingExpression(b.Expression))
                 {
                     throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, b.ToString()));
                 }

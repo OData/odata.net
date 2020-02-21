@@ -30,7 +30,7 @@ namespace Microsoft.OData.Client
     }
 
     /// <summary>Represents a dynamic entity collection that provides notifications when items get added, removed, or when the list is refreshed.</summary>
-    /// <typeparam name="T">An entity type.</typeparam>
+        /// <typeparam name="T">An entity type.</typeparam>
     public class DataServiceCollection<T> : ObservableCollection<T>
     {
         #region Private fields

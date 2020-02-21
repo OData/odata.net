@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Client
 {
-    #region Namespaces
+#region Namespaces
 
     using System;
     using System.Collections;
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Client.Metadata;
-    #endregion
+#endregion
 
     /// <summary>The BindingObserver class</summary>
     internal sealed class BindingObserver
@@ -1049,11 +1049,11 @@ namespace Microsoft.OData.Client
             }
 
             entitiesToUnTrack.Add(new UnTrackingInfo
-            {
-                Entity = currentEntity,
-                Parent = parentEntity,
-                ParentProperty = parentProperty
-            });
+                                   {
+                                     Entity = currentEntity,
+                                     Parent = parentEntity,
+                                     ParentProperty = parentProperty
+                                   });
         }
 
         /// <summary>Determine if the DataServiceContext is tracking link between <paramref name="source"/> and <paramref name="target"/>.</summary>
