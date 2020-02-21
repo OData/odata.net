@@ -31,11 +31,6 @@ namespace Microsoft.OData.Client
         /// <summary>HttpWebResponse instance.</summary>
         private HttpWebResponse httpWebResponse;
 
-#if DEBUG
-        /// <summary>set to true once the GetStream was called.</summary>
-        private bool streamReturned;
-#endif
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -159,11 +154,6 @@ namespace Microsoft.OData.Client
         /// <returns>Stream from which the response payload can be read.</returns>
         public virtual Stream GetStream()
         {
-#if DEBUG
-            Debug.Assert(!this.streamReturned, "The GetStream can only be called once.");
-            this.streamReturned = true;
-#endif
-
             return this.getResponseStream();
         }
 

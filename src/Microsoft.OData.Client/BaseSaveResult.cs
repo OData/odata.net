@@ -63,6 +63,9 @@ namespace Microsoft.OData.Client
         /// </summary>
         protected Stream mediaResourceRequestStream;
 
+        /// <summary>application/json Content-Type header</summary>
+        private const string JsonContentTypeHeader = "application/json";
+
         /// <summary>temporary buffer when cache results from CUD op in non-batching save changes</summary>
         protected byte[] buildBatchBuffer;
 
@@ -235,21 +238,36 @@ namespace Microsoft.OData.Client
         internal static DataServiceClientException GetResponseText(Func<Stream> getResponseStream, HttpStatusCode statusCode)
         {
             string message = null;
+            HttpWebResponseMessage httpWebResponseMessage = null;
+            DataServiceClientException dataServiceClientException;
+            ODataErrorException oDataErrorException = null;
+
+            IDictionary<string, string> headers = new Dictionary<string, string>();
+
             using (Stream stream = getResponseStream())
             {
-                if ((null != stream) && stream.CanRead)
+                if ((null != stream) && stream.CanRead && stream.CanSeek)
                 {
-                    // this StreamReader can go out of scope without dispose because the underlying stream is disposed of
+                    // This StreamReader can go out of scope without dispose because the underlying stream is disposed of.
                     message = new StreamReader(stream).ReadToEnd();
+                    stream.Position = 0;
                 }
-            }
 
-            if (string.IsNullOrEmpty(message))
-            {
-                message = statusCode.ToString();
-            }
+                if (string.IsNullOrEmpty(message))
+                {
+                    message = statusCode.ToString();
+                }
+                else if (Util.MayBeJson(message))
+                {
+                    headers.Add(ODataConstants.ContentTypeHeader, JsonContentTypeHeader);
+                    httpWebResponseMessage = new HttpWebResponseMessage(headers, (int)statusCode, getResponseStream);
+                    ODataMessageReader oDataMessageReader = new ODataMessageReader(httpWebResponseMessage);
+                    oDataErrorException = new ODataErrorException(oDataMessageReader.ReadError());
+                }
 
-            return new DataServiceClientException(message, (int)statusCode);
+                dataServiceClientException = new DataServiceClientException(message, oDataErrorException, (int)statusCode);
+            }
+            return dataServiceClientException;
         }
 
         /// <summary>process the batch</summary>
