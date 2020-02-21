@@ -598,6 +598,18 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Quick check if the <paramref name="input"> is Json.
+        /// Note that this does not check if the input is a well formed Json.
+        /// This can be used to check verify that the string is not xml
+        /// </summary>
+        /// <param name="input">the input string.</param>
+        /// <returns>Return true if the input string can be Json.</returns>
+        public static bool MayBeJson(string input)
+        {
+            return input.Trim().Substring(0, 1).IndexOfAny(new[] { '[', '{' }) == 0;
+        }
+
+        /// <summary>
         /// A workaround to a problem with FxCop which does not recognize the CheckArgumentNotNull method
         /// as the one which validates the argument is not null.
         /// </summary>

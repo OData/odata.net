@@ -113,13 +113,16 @@ namespace Microsoft.OData.Client
             }
             catch (DataServiceQueryException ex)
             {
-                Exception inEx = ex;
-                while (inEx.InnerException != null)
+                Exception currentInnerException = ex;
+                Exception previousInnerException = null;
+                while (currentInnerException.InnerException != null)
                 {
-                    inEx = inEx.InnerException;
+                    previousInnerException = currentInnerException;
+                    currentInnerException = currentInnerException.InnerException;
                 }
 
-                DataServiceClientException serviceEx = inEx as DataServiceClientException;
+                DataServiceClientException serviceEx = currentInnerException as DataServiceClientException;
+                serviceEx = serviceEx ?? previousInnerException as DataServiceClientException;
                 if (context.IgnoreResourceNotFoundException && serviceEx != null && serviceEx.StatusCode == (int)HttpStatusCode.NotFound)
                 {
                     QueryOperationResponse qor = new QueryOperationResponse<TElement>(ex.Response.HeaderCollection, ex.Response.Query, MaterializeAtom.EmptyResults);
