@@ -44,8 +44,6 @@ namespace Microsoft.OData.Client
         /// <summary>Stack of projection (target-tree) types for parameters.</summary>
         private readonly Stack<Type> parameterProjectionTypes;
 
-        private readonly ClientEdmModel model;
-
         #endregion Private fields
 
         #region Constructors
@@ -59,11 +57,6 @@ namespace Microsoft.OData.Client
             this.parameterExpressionTypes = new Stack<Expression>();
             this.parameterEntries = new Stack<Expression>();
             this.parameterProjectionTypes = new Stack<Type>();
-        }
-
-        internal ProjectionPathBuilder(ClientEdmModel model)
-        {
-            this.model = model;
         }
 
         #endregion Constructors
@@ -144,7 +137,7 @@ namespace Microsoft.OData.Client
 
             ParameterExpression param = lambda.Parameters[0];
             Type projectionType = lambda.Body.Type;
-            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(model, projectionType);
+            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(projectionType);
 
             this.entityInScope.Push(isEntityType);
             this.parameterExpressions.Push(param);
@@ -160,7 +153,7 @@ namespace Microsoft.OData.Client
         /// <param name="init">Expression for initialization.</param>
         internal void EnterMemberInit(MemberInitExpression init)
         {
-            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(model, init.Type);
+            bool isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(init.Type);
             this.entityInScope.Push(isEntityType);
         }
 

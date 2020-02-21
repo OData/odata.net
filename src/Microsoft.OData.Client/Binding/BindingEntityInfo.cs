@@ -148,7 +148,7 @@ namespace Microsoft.OData.Client
                     // entity type parameter T, and is assignable to DataServiceCollection<T>
                     Type[] parms = type.GetGenericArguments();
 
-                    if (parms != null && parms.Length == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(model, parms[0]))
+                    if (parms != null && parms.Length == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(parms[0]))
                     {
                         // if ObservableCollection is not available dataServiceCollection will be null
                         Type dataServiceCollection = WebUtil.GetDataServiceCollectionOfT(parms);
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Client
                     return false;
                 }
 
-                isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(model, type);
+                isEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(type);
             }
             catch (InvalidOperationException)
             {

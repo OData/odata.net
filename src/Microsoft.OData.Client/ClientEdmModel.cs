@@ -245,7 +245,7 @@ namespace Microsoft.OData.Client
                 {
                     PropertyInfo[] keyProperties;
                     bool hasProperties;
-                    Type[] hierarchy = ClientEdmModel.GetTypeHierarchy(type, this, out keyProperties, out hasProperties);
+                    Type[] hierarchy = ClientEdmModel.GetTypeHierarchy(type, out keyProperties, out hasProperties);
 
                     Debug.Assert(keyProperties == null || keyProperties.Length == 0 || keyProperties.All(p => p.DeclaringType == keyProperties[0].DeclaringType), "All key properties must be declared on the same type.");
 
@@ -287,11 +287,11 @@ namespace Microsoft.OData.Client
         /// <param name="keyProperties">Returns the list of key properties if <paramref name="type"/> is an entity type; null otherwise.</param>
         /// <param name="hasProperties">true if <paramref name="type"/> has any (declared or inherited) properties; otherwise false.</param>
         /// <returns>Returns <paramref name="type"/> and its base types, in the order of most base type first and <paramref name="type"/> last.</returns>
-        private static Type[] GetTypeHierarchy(Type type, ClientEdmModel model, out PropertyInfo[] keyProperties, out bool hasProperties)
+        private static Type[] GetTypeHierarchy(Type type, out PropertyInfo[] keyProperties, out bool hasProperties)
         {
             Debug.Assert(type != null, "type != null");
 
-            keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(model, type, out hasProperties);
+            keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(type, out hasProperties);
 
             List<Type> hierarchy = new List<Type>();
             if (keyProperties != null)

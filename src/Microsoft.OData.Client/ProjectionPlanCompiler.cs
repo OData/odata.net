@@ -52,8 +52,6 @@ namespace Microsoft.OData.Client
         /// <summary>Whether the top level projection has been found.</summary>
         private bool topLevelProjectionFound;
 
-        private readonly ClientEdmModel model;
-
         #endregion Private fields
 
         #region Constructors
@@ -68,11 +66,6 @@ namespace Microsoft.OData.Client
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
             this.normalizerRewrites = normalizerRewrites;
             this.pathBuilder = new ProjectionPathBuilder();
-        }
-
-        internal ProjectionPlanCompiler(ClientEdmModel model)
-        {
-            this.model = model;
         }
 
         #endregion Constructors
@@ -153,7 +146,7 @@ namespace Microsoft.OData.Client
             }
 
             var nullCheck = ResourceBinder.PatternRules.MatchNullCheck(this.pathBuilder.LambdaParameterInScope, conditional);
-            if (!nullCheck.Match || !ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, ResourceBinder.StripConvertToAssignable(nullCheck.TestToNullExpression).Type))
+            if (!nullCheck.Match || !ClientTypeUtil.TypeOrElementTypeIsEntity(ResourceBinder.StripConvertToAssignable(nullCheck.TestToNullExpression).Type))
             {
                 Expression test = null;
 
@@ -406,7 +399,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(lambda != null, "lambda != null");
 
             Expression result;
-            if (!this.topLevelProjectionFound || lambda.Parameters.Count == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, lambda.Parameters[0].Type))
+            if (!this.topLevelProjectionFound || lambda.Parameters.Count == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(lambda.Parameters[0].Type))
             {
                 this.topLevelProjectionFound = true;
 
@@ -668,7 +661,7 @@ namespace Microsoft.OData.Client
                 //
                 // new T { t2 = new T2 { id2 = *.t2.id2 } }
                 // => ProjInit(pt, "t2", f(ProjInit(pt->t2), "id2", *.id2)))
-                if ((ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, ClientTypeUtil.GetMemberType(assignment.Member)) &&
+                if ((ClientTypeUtil.TypeOrElementTypeIsEntity(ClientTypeUtil.GetMemberType(assignment.Member)) &&
                      assignment.Expression.NodeType == ExpressionType.MemberInit))
                 {
                     Expression nestedEntry = CallMaterializer(
@@ -1041,7 +1034,7 @@ namespace Microsoft.OData.Client
                 LambdaExpression le = call.Arguments[1] as LambdaExpression;
                 ParameterExpression pe = le.Parameters.Last();
                 Expression selectorExpression = this.Visit(call.Arguments[1]);
-                if (ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, pe.Type))
+                if (ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type))
                 {
                     // With this information from an annotation:
                     // {t->*.Players}
@@ -1144,7 +1137,7 @@ namespace Microsoft.OData.Client
                     LambdaExpression le = call.Arguments[1] as LambdaExpression;
                     ParameterExpression pe = le.Parameters.Last();
                     Expression selectorExpression = this.Visit(call.Arguments[1]);
-                    if (ClientTypeUtil.TypeOrElementTypeIsEntity(this.model, pe.Type))
+                    if (ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type))
                     {
                         // With this information from an annotation:
                         // {t->*.Players}

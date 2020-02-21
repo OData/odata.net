@@ -754,7 +754,7 @@ namespace Microsoft.OData.Client.Materialization
 
                         // So the payload is for non-entity types. If we encounter an entity in the client side, we should throw
                         // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
-                        if (ClientTypeUtil.TypeOrElementTypeIsEntity(this.MaterializerContext.Model, property.PropertyType))
+                        if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType))
                         {
                             throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
                         }

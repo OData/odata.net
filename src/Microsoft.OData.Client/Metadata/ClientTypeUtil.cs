@@ -44,9 +44,6 @@ namespace Microsoft.OData.Client.Metadata
 
             /// <summary> if the key property was attributed </summary>
             AttributedKey = 3,
-
-            /// <summary> if the key property was declared during the model building process and does not follow the conventions </summary>
-            DeclaredKey = 4,
         }
 
         /// <summary>
@@ -298,11 +295,11 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="type">Type to examine</param>
         /// <returns>bool indicating whether or not entity type</returns>
-        internal static bool TypeOrElementTypeIsEntity(this ClientEdmModel model, Type type)
+        internal static bool TypeOrElementTypeIsEntity(Type type)
         {
             type = TypeSystem.GetElementType(type);
             type = Nullable.GetUnderlyingType(type) ?? type;
-            return !PrimitiveType.IsKnownType(type) && ClientTypeUtil.GetKeyPropertiesOnType(model, type) != null;
+            return !PrimitiveType.IsKnownType(type) && ClientTypeUtil.GetKeyPropertiesOnType(type) != null;
         }
 
         /// <summary>
@@ -417,10 +414,10 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="type">Type in question.</param>
         /// <returns>Returns the list of key properties defined on <paramref name="type"/>; null if <paramref name="type"/> is complex.</returns>
-        internal static PropertyInfo[] GetKeyPropertiesOnType(this ClientEdmModel model, Type type)
+        internal static PropertyInfo[] GetKeyPropertiesOnType(Type type)
         {
             bool hasProperties;
-            return GetKeyPropertiesOnType(model, type, out hasProperties);
+            return GetKeyPropertiesOnType(type, out hasProperties);
         }
 
         /// <summary>
@@ -429,7 +426,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="type">Type in question.</param>
         /// <param name="hasProperties">true if <paramref name="type"/> has any (declared or inherited) properties; otherwise false.</param>
         /// <returns>Returns the list of key properties defined on <paramref name="type"/>; null if <paramref name="type"/> is complex.</returns>
-        internal static PropertyInfo[] GetKeyPropertiesOnType(this ClientEdmModel model, Type type, out bool hasProperties)
+        internal static PropertyInfo[] GetKeyPropertiesOnType(Type type, out bool hasProperties)
         {
             if (CommonUtil.IsUnsupportedType(type))
             {
@@ -438,32 +435,28 @@ namespace Microsoft.OData.Client.Metadata
 
             string typeName = type.ToString();
             IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
-            IList<string> declaredKeys = new List<string>();
-            if (!customAttributes.Any())
-            {               
-                if (model != null)
-                {
-                    EdmEntityType edmEntityType = model.EdmStructuredSchemaElements.FirstOrDefault().Value as EdmEntityType;
-                    if (edmEntityType?.DeclaredKey != null)
-                    {
-                        foreach (EdmStructuralProperty edmStructuralProperty in edmEntityType.DeclaredKey)
-                        {
-                            declaredKeys.Add(edmStructuralProperty.Name);
-                        }                       
-                    }  
-                }
-            }
+            IList<string> propertyKeyAttributes = new List<string>();
             bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
             KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
             List<PropertyInfo> keyProperties = new List<PropertyInfo>();
             PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
+            if (!customAttributes.Any())
+            {
+                foreach (PropertyInfo propertyInfo in properties)
+                {
+                    if (propertyInfo.CustomAttributes.Any())
+                    {
+                        propertyKeyAttributes.Add(propertyInfo.Name);
+                    }
+                }
+            }
             hasProperties = properties.Length > 0;
 
             KeyKind currentKeyKind = KeyKind.NotKey;
             KeyKind newKeyKind = KeyKind.NotKey;
             foreach (PropertyInfo propertyInfo in properties)
             {
-                if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute, declaredKeys)) != KeyKind.NotKey)
+                if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute, propertyKeyAttributes)) != KeyKind.NotKey)
                 {
                     if (newKeyKind > currentKeyKind)
                     {
@@ -711,7 +704,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="propertyInfo">Property in question.</param>
         /// <param name="dataServiceKeyAttribute">DataServiceKeyAttribute instance.</param>
         /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.</returns>
-        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute, IList<string> declaredKeys)
+        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute, IList<string> propertyKeyAttributes)
         {
             Debug.Assert(propertyInfo != null, "propertyInfo != null");
 
@@ -722,9 +715,9 @@ namespace Microsoft.OData.Client.Metadata
             {
                 keyKind = KeyKind.AttributedKey;
             }
-            else if (declaredKeys != null && declaredKeys.Contains(propertyName))
+            if (propertyKeyAttributes != null && propertyKeyAttributes.Contains(propertyName))
             {
-                keyKind = KeyKind.DeclaredKey;
+                keyKind = KeyKind.AttributedKey;
             }
             else if (propertyName.EndsWith("ID", StringComparison.Ordinal))
             {

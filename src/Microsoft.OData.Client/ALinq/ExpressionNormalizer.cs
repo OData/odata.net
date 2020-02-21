@@ -57,8 +57,6 @@ namespace Microsoft.OData.Client
         /// <summary>Records the generated-to-source rewrites created.</summary>
         private readonly Dictionary<Expression, Expression> normalizerRewrites;
 
-        private readonly ClientEdmModel model;
-
         #endregion Private fields
 
         #region Constructors
@@ -70,12 +68,6 @@ namespace Microsoft.OData.Client
             Debug.Assert(normalizerRewrites != null, "normalizerRewrites != null");
             this.normalizerRewrites = normalizerRewrites;
         }
-
-        internal ExpressionNormalizer(ClientEdmModel model)
-        {
-            this.model = model;
-        }
-
 
         #endregion Constructors
 
@@ -182,7 +174,7 @@ namespace Microsoft.OData.Client
                 if (!PrimitiveType.IsKnownNullableType(visited.Operand.Type) && !PrimitiveType.IsKnownNullableType(visited.Type) || visited.Operand.Type == visited.Type)
                 {
                     // x is not a collection of entity types
-                    if (!(ClientTypeUtil.TypeOrElementTypeIsEntity(model, visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
+                    if (!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
                     {
                         // x is not an enum type
                         if (!visited.Operand.Type.IsEnum())

@@ -339,7 +339,7 @@ namespace Microsoft.OData.Client
             {
                 PropertyInfo property;
                 ConstantExpression constantValue;
-                if (PatternRules.MatchKeyComparison(predicate, edmModel, out property, out constantValue))
+                if (PatternRules.MatchKeyComparison(predicate, out property, out constantValue))
                 {
                     if (keyValuesFromPredicates == null)
                     {
@@ -523,7 +523,7 @@ namespace Microsoft.OData.Client
                 }
 
                 // the projection might be over a transparent identifier, so first try to rewrite if that is the case
-                lambda = ProjectionRewriter.TryToRewrite(lambda, source, this.context.Model);
+                lambda = ProjectionRewriter.TryToRewrite(lambda, source);
 
                 ResourceExpression re = source.CreateCloneWithNewType(mce.Type);
 
@@ -1788,7 +1788,7 @@ namespace Microsoft.OData.Client
             /// <param name="expression">Expression to check.</param>
             /// <param name="property">If this is a key access, the property for the key.</param>
             /// <returns>true if <paramref name="expression"/> is a member access to a key; false otherwise.</returns>
-            internal static bool MatchKeyProperty(Expression expression, ClientEdmModel model, out PropertyInfo property)
+            internal static bool MatchKeyProperty(Expression expression, out PropertyInfo property)
             {
                 property = null;
 
@@ -1814,7 +1814,7 @@ namespace Microsoft.OData.Client
 #else
                 Type resourceType = pi.ReflectedType;
 #endif
-                if ((ClientTypeUtil.GetKeyPropertiesOnType(model, resourceType) ?? ClientTypeUtil.EmptyPropertyInfoArray).Contains(pi, PropertyInfoEqualityComparer.Instance) && boundTarget is InputReferenceExpression)
+                if ((ClientTypeUtil.GetKeyPropertiesOnType(resourceType) ?? ClientTypeUtil.EmptyPropertyInfoArray).Contains(pi, PropertyInfoEqualityComparer.Instance) && boundTarget is InputReferenceExpression)
                 {
                     property = pi;
                     return true;
@@ -1823,13 +1823,13 @@ namespace Microsoft.OData.Client
                 return false;
             }
 
-            internal static bool MatchKeyComparison(Expression e, ClientEdmModel model, out PropertyInfo keyProperty, out ConstantExpression keyValue)
+            internal static bool MatchKeyComparison(Expression e, out PropertyInfo keyProperty, out ConstantExpression keyValue)
             {
                 if (PatternRules.MatchBinaryEquality(e))
                 {
                     BinaryExpression be = (BinaryExpression)e;
-                    if ((PatternRules.MatchKeyProperty(be.Left, model, out keyProperty) && PatternRules.MatchConstant(be.Right, out keyValue)) ||
-                        (PatternRules.MatchKeyProperty(be.Right, model, out keyProperty) && PatternRules.MatchConstant(be.Left, out keyValue)))
+                    if ((PatternRules.MatchKeyProperty(be.Left, out keyProperty) && PatternRules.MatchConstant(be.Right, out keyValue)) ||
+                        (PatternRules.MatchKeyProperty(be.Right, out keyProperty) && PatternRules.MatchConstant(be.Left, out keyValue)))
                     {
                         // if property is compared to null, expression is not key predicate comparison
                         return keyValue.Value != null;
@@ -2727,7 +2727,7 @@ namespace Microsoft.OData.Client
                         }
 
                         Type filteredType = mce.Method.GetGenericArguments().SingleOrDefault();
-                        if (!ClientTypeUtil.TypeOrElementTypeIsEntity(model, filteredType))
+                        if (!ClientTypeUtil.TypeOrElementTypeIsEntity(filteredType))
                         {
                             Expression source = mce.Arguments[0];
                             MemberExpression me = StripTo<MemberExpression>(source);
@@ -2882,7 +2882,7 @@ namespace Microsoft.OData.Client
 #else
                         Type resourceType = propertyMember.Member.ReflectedType;
 #endif
-                        if (foundInstance == le.Parameters[0] && ClientTypeUtil.TypeOrElementTypeIsEntity(context.Model, resourceType))
+                        if (foundInstance == le.Parameters[0] && ClientTypeUtil.TypeOrElementTypeIsEntity(resourceType))
                         {
                             Debug.Assert(propertyPath != null, "propertyPath != null");
                             ExpandOnlyPathToStringVisitor expandPathVisitor = new ExpandOnlyPathToStringVisitor();

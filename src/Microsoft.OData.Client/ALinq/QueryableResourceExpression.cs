@@ -412,7 +412,7 @@ namespace Microsoft.OData.Client
         /// Gets the key properties from KeyPredicateConjuncts
         /// </summary>
         /// <returns>The key properties.</returns>
-        internal Dictionary<PropertyInfo, ConstantExpression> GetKeyProperties(ClientEdmModel model)
+        internal Dictionary<PropertyInfo, ConstantExpression> GetKeyProperties()
         {
             var keyValues = new Dictionary<PropertyInfo, ConstantExpression>(EqualityComparer<PropertyInfo>.Default);
             if (this.keyPredicateConjuncts.Count > 0)
@@ -421,7 +421,7 @@ namespace Microsoft.OData.Client
                 {
                     PropertyInfo property;
                     ConstantExpression constantValue;
-                    if (ResourceBinder.PatternRules.MatchKeyComparison(predicate, model, out property, out constantValue))
+                    if (ResourceBinder.PatternRules.MatchKeyComparison(predicate, out property, out constantValue))
                     {
                         keyValues.Add(property, constantValue);
                     }
