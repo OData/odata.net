@@ -249,11 +249,8 @@ namespace Microsoft.OData.Client
                 if ((null != stream) && stream.CanRead && stream.CanSeek)
                 {
                     // this StreamReader can go out of scope without dispose because the underlying stream is disposed of
-                    using (StreamReader streamReader = new StreamReader(stream))
-                    {
-                        message = streamReader.ReadToEnd();
-                        stream.Position = 0;
-                    }
+                    message = new StreamReader(stream).ReadToEnd();
+                    stream.Position = 0;
                 }
 
                 if (string.IsNullOrEmpty(message))
