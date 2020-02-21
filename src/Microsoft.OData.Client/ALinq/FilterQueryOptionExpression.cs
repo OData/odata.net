@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly List<Expression> individualExpressions;
 
-        /// <summary>
+         /// <summary>
         /// Creates a FilterQueryOptionExpression expression
         /// </summary>
         /// <param name="type">the return type of the expression</param>

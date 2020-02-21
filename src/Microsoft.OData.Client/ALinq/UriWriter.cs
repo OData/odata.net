@@ -432,8 +432,8 @@ namespace Microsoft.OData.Client
                 if (re.CustomQueryOptions.Count > 0)
                 {
                     this.VisitCustomQueryOptions(re.CustomQueryOptions);
-                }
-
+                    }
+                
                 this.AppendCachedQueryOptionsToUriBuilder();
             }
         }

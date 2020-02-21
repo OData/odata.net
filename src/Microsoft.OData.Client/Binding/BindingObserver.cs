@@ -381,8 +381,8 @@ namespace Microsoft.OData.Client
                     break;
 #endif
 
-                default:
-                    throw new InvalidOperationException(Strings.DataBinding_DataServiceCollectionChangedUnknownActionCollection(eventArgs.Action));
+                default: // No Action
+                    break;
             }
         }
 
@@ -427,8 +427,8 @@ namespace Microsoft.OData.Client
                     case NotifyCollectionChangedAction.Reset:
                         this.bindingGraph.RemoveCollection(sender);
                         break;
-                    default:
-                        throw new InvalidOperationException(Strings.DataBinding_CollectionChangedUnknownActionCollection(e.Action, sender.GetType()));
+                    default: // No Action
+                        break;
                 }
             }
 

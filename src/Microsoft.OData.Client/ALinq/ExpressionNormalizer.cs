@@ -174,7 +174,7 @@ namespace Microsoft.OData.Client
                 if (!PrimitiveType.IsKnownNullableType(visited.Operand.Type) && !PrimitiveType.IsKnownNullableType(visited.Type) || visited.Operand.Type == visited.Type)
                 {
                     // x is not a collection of entity types
-                    if (!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
+                    if(!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
                     {
                         // x is not an enum type
                         if (!visited.Operand.Type.IsEnum())
