@@ -25,11 +25,6 @@ namespace Microsoft.OData.Edm
         public EdmEntitySet(IEdmEntityContainer container, string name, IEdmEntityType elementType)
             : this(container, name, elementType, true)
         {
-            EdmUtil.CheckArgumentNull(container, "container");
-
-            this.container = container;
-            this.type = new EdmCollectionType(new EdmEntityTypeReference(elementType, false));
-            this.path = new EdmPathExpression(this.container.FullName() + "." + this.Name);
         }
 
         /// <summary>
@@ -42,6 +37,11 @@ namespace Microsoft.OData.Edm
         public EdmEntitySet(IEdmEntityContainer container, string name, IEdmEntityType elementType, bool includeInServiceDocument)
             : base(name, elementType)
         {
+            EdmUtil.CheckArgumentNull(container, "container");
+
+            this.container = container;
+            this.type = new EdmCollectionType(new EdmEntityTypeReference(elementType, false));
+            this.path = new EdmPathExpression(this.container.FullName() + "." + this.Name);
             this.includeInServiceDocument = includeInServiceDocument;
         }
 
