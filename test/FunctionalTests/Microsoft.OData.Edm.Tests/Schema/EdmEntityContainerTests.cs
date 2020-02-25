@@ -99,5 +99,50 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.Same(actionImport, container.Elements.ToArray()[0]);
         }
         #endregion
+
+        #region AddEntitySet tests
+
+        [Fact]
+        public void EnsureAddedEntitySetHasAllPropertiesSet()
+        {
+            EdmModel model = new EdmModel();
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            model.AddElement(container);
+            EdmEntityType entityType = model.AddEntityType("NS", "Entity");
+
+            EdmEntitySet entitySetDefault = container.AddEntitySet("DefaultEntities", entityType);
+            EdmEntitySet entitySetIncludeInServiceDocumentTrue = container.AddEntitySet("IncludeInServiceDocumentTrueEntities", entityType, true);
+            EdmEntitySet entitySetIncludeInServiceDocumentFalse = container.AddEntitySet("IncludeInServiceDocumentFalseEntities", entityType, false);
+
+            Assert.NotNull(entitySetDefault.Container);
+            Assert.NotNull(entitySetIncludeInServiceDocumentTrue.Container);
+            Assert.NotNull(entitySetIncludeInServiceDocumentFalse.Container);
+
+            Assert.NotNull(entitySetDefault.Type);
+            Assert.NotNull(entitySetIncludeInServiceDocumentTrue.Type);
+            Assert.NotNull(entitySetIncludeInServiceDocumentFalse.Type);
+
+            Assert.NotNull(entitySetDefault.Path);
+            Assert.NotNull(entitySetIncludeInServiceDocumentTrue.Path);
+            Assert.NotNull(entitySetIncludeInServiceDocumentFalse.Path);
+
+            Assert.Same(entitySetDefault.Container, container);
+            Assert.Same(entitySetIncludeInServiceDocumentTrue.Container, container);
+            Assert.Same(entitySetIncludeInServiceDocumentFalse.Container, container);
+
+            Assert.Same(entitySetDefault.Type.AsElementType(), entityType);
+            Assert.Same(entitySetIncludeInServiceDocumentTrue.Type.AsElementType(), entityType);
+            Assert.Same(entitySetIncludeInServiceDocumentFalse.Type.AsElementType(), entityType);
+
+            Assert.Equal(entitySetDefault.Path.Path, "NS.Container.DefaultEntities");
+            Assert.Equal(entitySetIncludeInServiceDocumentTrue.Path.Path, "NS.Container.IncludeInServiceDocumentTrueEntities");
+            Assert.Equal(entitySetIncludeInServiceDocumentFalse.Path.Path, "NS.Container.IncludeInServiceDocumentFalseEntities");
+
+            Assert.True(entitySetDefault.IncludeInServiceDocument);
+            Assert.True(entitySetIncludeInServiceDocumentTrue.IncludeInServiceDocument);
+            Assert.False(entitySetIncludeInServiceDocumentFalse.IncludeInServiceDocument);
+        }
+
+        #endregion
     }
 }
