@@ -10,6 +10,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client;
     using FluentAssertions;
     using Microsoft.OData;
+    using Microsoft.OData.Client.TDDUnitTests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
@@ -25,7 +26,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestInitialize]
         public void Init()
         {
-            this.context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4);
+            this.context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4).ReConfigureForNetworkLoadingTests();
             this.requestInfo = new RequestInfo(context);
             this.writingHelper = new ODataMessageWritingHelper(this.requestInfo);
             this.atomRequestMessage = new ODataRequestMessageSimulator();
