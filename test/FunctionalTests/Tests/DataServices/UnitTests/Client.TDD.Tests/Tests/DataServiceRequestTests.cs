@@ -11,8 +11,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.IO;
     using System.Linq;
     using System.Net;
-    using Microsoft.OData.Client;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
+    using Microsoft.OData.Client.TDDUnitTests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -51,7 +52,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private void MaterializeTest(HttpStatusCode statusCode, ODataPayloadKind payloadKind)
         {
             var uri = new Uri("http://any");
-            var context = new DataServiceContext();
+            var context = new DataServiceContext().ReConfigureForNetworkLoadingTests();
             var requestInfo = new RequestInfo(context);
             var responseInfo = new ResponseInfo(requestInfo, MergeOption.OverwriteChanges);
             var queryComponents = new QueryComponents(uri, new Version(4, 0), typeof(Product), null, null);

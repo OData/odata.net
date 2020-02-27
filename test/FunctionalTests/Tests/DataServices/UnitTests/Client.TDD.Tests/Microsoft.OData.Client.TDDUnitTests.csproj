@@ -60,6 +60,7 @@
     <Compile Include="..\ClientExtensions\TestDataServiceClientRequestMessage.cs">
       <Link>TestDataServiceClientRequestMessage.cs</Link>
     </Compile>
+    <Compile Include="DataServiceContextUtil.cs" />
     <Compile Include="DateTimePrimitiveTypeReference.cs" />
     <Compile Include="Tests\Annotation\AnnotationTargetingOperationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientAnnotationTests.cs" />

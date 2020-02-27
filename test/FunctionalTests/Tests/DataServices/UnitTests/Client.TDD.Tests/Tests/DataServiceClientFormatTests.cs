@@ -8,12 +8,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Client.Metadata;
+    using System.IO;
     using AstoriaUnitTests.TDD.Common;
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
+    using Microsoft.OData.Client.Metadata;
+    using Microsoft.OData.Client.TDDUnitTests;
+    using Microsoft.OData.Client.TDDUnitTests.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
@@ -23,6 +26,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private readonly IEdmModel serviceModel = new EdmModel();
         private DataServiceClientFormat v3TestSubject;
         private DataServiceContext v3Context;
+
+
 #if (NETCOREAPP1_0 || NETCOREAPP2_0)
         private readonly QueryComponents queryComponentsWithSelect = new QueryComponents(new Uri("http://temp.org/?$select=foo"), new Version(1, 1, 1, 1), typeof(object), null, null);
         private readonly QueryComponents queryComponentsWithoutSelect = new QueryComponents(new Uri("http://temp.org/"), new Version(1, 1, 1, 1), typeof(object), null, null);
@@ -46,7 +51,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestInitialize]
         public void Init()
         {
-            this.v3Context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4);
+            this.v3Context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4).ReConfigureForNetworkLoadingTests();
             this.v3TestSubject = this.v3Context.Format;
         }
 
@@ -85,6 +90,16 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void AtomShouldBeTheDefault()
         {
             this.v3TestSubject.ODataFormat.Should().BeSameAs(ODataFormat.Json);
+        }
+
+        [TestMethod]
+        public void TestNetworkLoading()
+        {
+
+            // forces metadata to be loaded
+            this.v3Context.Format.UseJson();
+            this.v3Context.Format.ServiceModel.Should().NotBeNull();
+
         }
 
         [TestMethod]
@@ -183,10 +198,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void UseJsonOverloadWithNoParameterShouldFailIfNoDelegateProvided()
+        public void UseJsonOverloadWithNoParameterShouldPassIfNoDelegateProvided()
         {
-            Action callOverload = () => this.v3Context.Format.UseJson();
-            callOverload.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.DataServiceClientFormat_LoadServiceModelRequired);
+             this.v3Context.Format.UseJson();
+             this.v3TestSubject.ServiceModel.Should().NotBeNull();
         }
 
         [TestMethod]
