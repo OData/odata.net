@@ -5,17 +5,19 @@
 '---------------------------------------------------------------------
 
 Imports System
-Imports Microsoft.OData.Service
-Imports Microsoft.OData.Client
-Imports System.Diagnostics
-Imports System.Text
 Imports System.Collections
 Imports System.Collections.Generic
+Imports System.Diagnostics
+Imports System.Text
 Imports System.Xml
 Imports System.Xml.Linq
-Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports AstoriaUnitTests.Stubs
 Imports AstoriaUnitTests.Data
+Imports AstoriaUnitTests.Stubs
+Imports Microsoft.OData.Client
+Imports Microsoft.OData.Edm
+Imports Microsoft.OData.Service
+Imports Microsoft.VisualStudio.TestTools.UnitTesting
+
 
 Partial Public Class ClientModule
 
@@ -26,6 +28,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub BeforeEachTestMethod()
             ctx = New DataServiceContext(New Uri("http://localhost/svc"))
+            ctx.Format.UseJson(New EdmModel())
         End Sub
 
         <TestCleanup()> Public Sub AfterEachTestMethod()

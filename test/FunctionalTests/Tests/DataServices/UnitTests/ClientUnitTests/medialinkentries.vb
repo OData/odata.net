@@ -7,19 +7,20 @@
 Imports System
 Imports System.Collections
 Imports System.Collections.Generic
-Imports Microsoft.OData.Service
-Imports Microsoft.OData.Client
 Imports System.Data.Test.Astoria
 Imports System.IO
 Imports System.Linq
+Imports System.Net
 Imports System.Xml
 Imports System.Xml.Linq
-Imports System.Net
+Imports System.Web
 Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests.Stubs
+Imports Microsoft.OData.Client
+Imports Microsoft.OData.Service
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports System.Web
+Imports Microsoft.OData.Edm
 
 Partial Public Class ClientModule
     ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
@@ -375,6 +376,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New SpacesPhotos.SpacesPhotosService(web.ServiceRoot)
+            Me.ctx.Format.UseJson(New EdmModel())
             'Me.'ctx.EnableAtom = True
         End Sub
 

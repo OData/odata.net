@@ -8,19 +8,29 @@ namespace AstoriaUnitTests.Tests
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Text;
     using AstoriaUnitTests.ClientExtensions;
     using FluentAssertions;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
+    using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Text;
 
     [TestClass]
     public class ClientErrorHandlingShortIntegrationTests
     {
+        private DataServiceContextWithCustomTransportLayer context;
+
+        [TestInitialize]
+        public void Init()
+        {
+            IODataRequestMessage requestMessage = new ODataTestMessage();
+            context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, () => requestMessage, () => { throw new WebException("web exception on getting response"); });
+            context.Format.UseJson(new EdmModel());
+        }
         [TestMethod]
         public void TopBatchReturingODataError()
         {
@@ -39,6 +49,7 @@ namespace AstoriaUnitTests.Tests
             responseMessage.SetHeader("Content-Length", "0");
 
             var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, requestMessage, responseMessage);
+            context.Format.UseJson(new EdmModel());
             context.AddObject("Products", new SimpleNorthwind.Product() { ID = 1 });
             Action test = () => context.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
 
@@ -51,9 +62,6 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void WebExceptionShouldNotBeSurfacedWhenSaveChangesWithBatch()
         {
-            IODataRequestMessage requestMessage = new ODataTestMessage();
-
-            var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, () => requestMessage, () => { throw new WebException("web exception on getting response"); });
             context.AddObject("Products", new SimpleNorthwind.Product() { ID = 1 });
             Action test = () => context.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
 
@@ -63,9 +71,6 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void WebExceptionShouldNotBeSurfacedWhenSaveChangesWithNonBatch()
         {
-            IODataRequestMessage requestMessage = new ODataTestMessage();
-
-            var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, () => requestMessage, () => { throw new WebException("web exception on getting response"); });
             context.AddObject("Products", new SimpleNorthwind.Product() { ID = 1 });
             Action test = () => context.SaveChanges(SaveChangesOptions.None);
 
@@ -77,9 +82,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void WebExceptionShouldNotBeSurfacedWhenGetResponseThrowsOnBatch()
         {
-            IODataRequestMessage requestMessage = new ODataTestMessage();
-
-            var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, () => requestMessage, () => { throw new WebException("web exception on getting response"); });
+           
             Action test = () =>  context.ExecuteBatch(context.CreateQuery<NorthwindModel.Products>("Products"));
 
             test.ShouldThrow<WebException>().WithMessage("web exception on getting response");
@@ -91,9 +94,6 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void WebExceptionShouldeSurfacedWhenGetResponseThrowsOnNonBatch()
         {
-            IODataRequestMessage requestMessage = new ODataTestMessage();
-
-            var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, () => requestMessage, () => { throw new WebException("web exception on getting response"); });
             Action test = () => context.CreateQuery<NorthwindModel.Products>("Products").ToList();
 
             var exception = test.ShouldThrow<Exception>().And;
@@ -142,6 +142,7 @@ namespace AstoriaUnitTests.Tests
             var responseMessage = CreateResponseMessageWithGetStreamThrowingObjectDisposeException();
 
             var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, requestMessage, responseMessage);
+            context.Format.UseJson(new EdmModel());
             context.AddObject("Products", new SimpleNorthwind.Product() { ID = 1 });
             return  () => context.SaveChanges(saveChangesOptions);
         }
@@ -152,6 +153,7 @@ namespace AstoriaUnitTests.Tests
             var responseMessage = CreateResponseMessageWithGetStreamThrowingObjectDisposeException();
 
             var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, requestMessage, responseMessage);
+            context.Format.UseJson(new EdmModel());
             if (useExecuteBatch)
             {
                 return () => context.ExecuteBatch(context.CreateQuery<NorthwindModel.Products>("Products"));

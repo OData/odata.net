@@ -6,11 +6,14 @@
 
 namespace Microsoft.OData.Client.TDDUnitTests.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Client;
+    using System.Threading.Tasks;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
+   
 
     public class CustomizedHttpWebRequestMessage : HttpWebRequestMessage
     {
@@ -43,6 +46,20 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                     byte[] byteArray = Encoding.UTF8.GetBytes(this.Response);
                     return new MemoryStream(byteArray);
                 });
+        }
+
+        public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
+        {
+            // using this as APM was deprecated in.net core and Task.CompletedTask is not available in 4.5
+            callback.Invoke(Task.FromResult(0));
+            return Task.FromResult(0);
+
+
+        }
+
+        public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
+        {
+            return GetResponse();
         }
     }
 }

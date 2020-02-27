@@ -6,12 +6,17 @@
 
 namespace Microsoft.OData.Client
 {
+    #region namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Threading.Tasks;
+    using System.Xml;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-
+    using Microsoft.OData.Edm.Csdl;
+    #endregion
     /// <summary>
     /// Tracks the user-preferred format which the client should use when making requests.
     /// </summary>
@@ -80,14 +85,28 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                if (serviceModel == null && LoadServiceModel != null)
+                if (serviceModel != null)
+                {
+                    return serviceModel;
+                }
+
+                if (LoadServiceModel != null)
                 {
                     serviceModel = LoadServiceModel();
                 }
-
+                else
+                {
+                    serviceModel = LoadServiceModelFromNetwork();
+                }
                 return serviceModel;
             }
         }
+
+        /// <summary>
+        /// Invoked during test cases to fake out network calls to get the metadata
+        /// returns a string that is passed to the csdl parser and is used to bypass the network call while testing
+        /// </summary>
+        internal Func<HttpWebRequestMessage> InjectMetadataHttpNetworkRequest { get; set; }
 
         /// <summary>
         /// Indicates that the client should use the efficient JSON format.
@@ -273,6 +292,79 @@ namespace Microsoft.OData.Client
             }
 
             return MimeApplicationJsonODataLight;
+        }
+
+        /// <summary>
+        /// Loads the metadata and converts it into an EdmModel that is then used by a dataservice context
+        /// This allows the user to use the DataServiceContext directly without having to manually pass an IEdmModel in the Format
+        /// </summary>
+        /// <returns>A service model to be used in format tracking</returns>
+        internal IEdmModel LoadServiceModelFromNetwork()
+        {
+            HttpWebRequestMessage httpRequest;
+            BuildingRequestEventArgs requestEventArgs = null;
+            // test hook for injecting a network request to use instead of the default
+            if (InjectMetadataHttpNetworkRequest != null)
+            {
+                httpRequest = InjectMetadataHttpNetworkRequest();
+            }
+            else
+            {
+                requestEventArgs = new BuildingRequestEventArgs(
+                    "GET",
+                    context.GetMetadataUri(),
+                    null,
+                    null,
+                    context.HttpStack);
+
+                // fire the right events if they exist to allow user to modify the request
+                if (context.HasBuildingRequestEventHandlers)
+                {
+                    requestEventArgs = context.CreateRequestArgsAndFireBuildingRequest(
+                        requestEventArgs.Method,
+                        requestEventArgs.RequestUri,
+                        requestEventArgs.HeaderCollection,
+                        requestEventArgs.ClientHttpStack,
+                        requestEventArgs.Descriptor);
+                }
+
+                DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(
+                    requestEventArgs.Method,
+                    requestEventArgs.RequestUri,
+                    context.UseDefaultCredentials,
+                    context.UsePostTunneling,
+                    requestEventArgs.Headers);
+
+                httpRequest = new HttpWebRequestMessage(args);
+            }
+
+            Descriptor descriptor = requestEventArgs != null ? requestEventArgs.Descriptor : null;
+
+            // fire the right events if they exist
+            if (context.HasSendingRequest2EventHandlers)
+            {
+                SendingRequest2EventArgs eventArgs = new SendingRequest2EventArgs(
+                    httpRequest,
+                    descriptor,
+                    false);
+
+                context.FireSendingRequest2(eventArgs);
+            }
+
+            Task<IODataResponseMessage> asyncResponse =
+                Task<IODataResponseMessage>.Factory.FromAsync(httpRequest.BeginGetResponse, httpRequest.EndGetResponse,
+                    httpRequest);
+            IODataResponseMessage response = asyncResponse.GetAwaiter().GetResult();
+
+            ReceivingResponseEventArgs responseEvent = new ReceivingResponseEventArgs(response, descriptor);
+
+            context.FireReceivingResponseEvent(responseEvent);
+
+            using (StreamReader streamReader = new StreamReader(response.GetStream()))
+            using (XmlReader xmlReader = XmlReader.Create(streamReader))
+            {
+                return CsdlReader.Parse(xmlReader);
+            }
         }
     }
 }
