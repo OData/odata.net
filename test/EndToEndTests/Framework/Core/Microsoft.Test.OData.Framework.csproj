@@ -70,5 +70,5 @@
     <Compile Include="Verification\IStringResourceVerifier.cs" />
     <Compile Include="Verification\StringResourceVerifier.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

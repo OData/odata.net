@@ -2,7 +2,7 @@
   <PropertyGroup>
  
     <AssemblyName>Microsoft.Test.OData.Services.ODataModelRefService</AssemblyName>
-
+    <RestorePackages>true</RestorePackages>
 
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>

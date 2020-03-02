@@ -5,9 +5,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
 
     <AssemblyName>Microsoft.Test.OData.Tests.Client</AssemblyName>
- 
+
     <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
-    
+
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -15,10 +15,16 @@
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 
+
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup Condition="'$(BuildInOSS)' == 'true'">
     <DefineConstants>$(DefineConstants);ENABLE_AVRO</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <WarningsAsErrors>NU1605</WarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="LegacyReferences\**" />
@@ -31,7 +37,11 @@
   </ItemGroup>
 
   <ItemGroup>
-       <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(BuildInOSS)' == 'true'" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(BuildInOSS)' == 'true'" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -51,9 +61,10 @@
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />
 
+
   </ItemGroup>
 
-  
+
   <ItemGroup>
 
 
@@ -76,7 +87,9 @@
 
     <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
 
-    <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj">
+      <!--<Aliases>destination</Aliases>-->
+    </ProjectReference>
 
     <ProjectReference Include="..\..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj" />
 
@@ -102,6 +115,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ODataT4CodeGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <None Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenerator.tt">
       <Link>ODataT4CodeGenerator.tt</Link>
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -110,7 +124,124 @@
 
   </ItemGroup>
 
-
+  <ItemGroup>
+    <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousSingletonClientTest.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsDesktop.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsSilverlight.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousUpdateTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsyncMethodTests.cs" />
+    <Compile Include="..\DataDrivenClientTestExtensionMethods.cs" />
+    <Compile Include="..\BindingTests.cs" />
+    <Compile Include="..\EndToEndTestBase.cs" />
+    <Compile Include="..\ServiceGeneratorFactory.cs" />
+    <Compile Include="ActionOverloadingTests\ActionOverloadingEndToEndTests.cs" />
+    <Compile Include="ActionOverloadingTests\ActionOverloadingQueryTests.cs" />
+    <Compile Include="AnnotationTests\InstanceAnnotationTests.cs" />
+    <Compile Include="AsyncRequestTests\AsyncRequestTests.cs" />
+    <Compile Include="BatchRequestTests\BatchRequestWithRelativeUriTests.cs" />
+    <Compile Include="ClientTests\ClientEntityDescripterTests.cs" />
+    <Compile Include="ClientTests\ClientOpenTypeUpdateTests.cs" />
+    <Compile Include="ClientTests\ClientQueryTests.cs" />
+    <Compile Include="ClientTests\ClientDeleteTests.cs" />
+    <Compile Include="ClientWithoutTypeResolverTests\MismatchedClientModelWithoutTypeResolverTests.cs" />
+    <Compile Include="ClientWithoutTypeResolverTests\OpenTypesWithoutTypeResolverTests.cs" />
+    <Compile Include="ClientWithoutTypeResolverTests\JsonWithoutTypeResolverTests.cs" />
+    <Compile Include="CodeGenerationTests\CustomizeNamingTest.cs" />
+    <Compile Include="CodeGenerationTests\T4DelayQueryTest.cs" />
+    <Compile Include="Common\ODataAnnotatableExtensions.cs" />
+    <Compile Include="EdmDateAndTimeOfDay\DateAndTimeOfDayCRUDTestings.cs" />
+    <Compile Include="ODataSimplifiedServiceTests\ODataSimplifiedServiceTests.cs" />
+    <Compile Include="QueryOptionTests\EntityReferenceLinkTests.cs" />
+    <Compile Include="ModelReferenceTests\ModelReferenceClientTests.cs" />
+    <Compile Include="ModelReferenceTests\ModelReferenceCUDTests.cs" />
+    <Compile Include="ModelReferenceTests\ModelReferenceQueryTests.cs" />
+    <Compile Include="ODataWCFServiceTests\AbstractEntityTypeTests.cs" />
+    <Compile Include="OperationTests\OperationClientTests.cs" />
+    <Compile Include="PayloadValueConverterTests\PayloadValueConverterTests.cs" />
+    <Compile Include="PluggableFormatServiceTests\PluggableFormatServiceTests.cs" />
+    <Compile Include="PropertyTrackingTests\ChangeTrackingTest.cs" />
+    <Compile Include="CodeGenerationTests\T4OperationGenerationTests.cs" />
+    <Compile Include="CodeGenerationTests\T4CodeGenerationTests.cs" />
+    <Compile Include="CollectionTests\CollectionNullableFacetTest.cs" />
+    <Compile Include="Common\HttpWebRequestMessage.cs" />
+    <Compile Include="Common\HttpWebResponseMessage.cs" />
+    <Compile Include="Common\InMemoryMessage.cs" />
+    <Compile Include="Common\MimeTypes.cs" />
+    <Compile Include="Common\ODataValueAssertEqualHelper.cs" />
+    <Compile Include="Common\StreamRequestMessage.cs" />
+    <Compile Include="Common\StreamResponseMessage.cs" />
+    <Compile Include="ClientTests\ClientUpdateTests.cs" />
+    <Compile Include="ComplexTypeTests\ComplexTypeTests.cs" />
+    <Compile Include="ContainmentTest\ContainmentTest.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\ClientInstanceAnnotationsTests.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\CustomInstanceAnnotationsResponseTests.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\DuplicateAnnotationsErrorTest.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\Utils\CustomInstanceAnnotationsWriter.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\Utils\CustomInstanceAnnotationsDescriptor.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\Utils\CustomInstanceAnnotationsGenerator.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\Utils\CustomInstanceAnnotationsReader.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\Utils\CustomInstanceAnnotationsVerifier.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\Utils\Data.cs" />
+    <Compile Include="CustomInstanceAnnotationsTests\Utils\DuplicateAnnotationsDataServiceODataWriter.cs" />
+    <Compile Include="DeltaTests\DeltaTests.cs" />
+    <Compile Include="DesktopUriGenerator.cs" />
+    <Compile Include="DisableAtomTests\DisableAtomTests.cs" />
+    <Compile Include="EnumerationTypeTests\EnumerationTypeQueryTests.cs" />
+    <Compile Include="EnumerationTypeTests\EnumerationTypeUpdateTests.cs" />
+    <Compile Include="PropertyTrackingTests\PostPropertyTrackingTest.cs" />
+    <Compile Include="QueryOptionTests\ExpandQueryOptionTests.cs" />
+    <Compile Include="KeyAsSegmentTests\ClientEndToEndTests.cs" />
+    <Compile Include="KeyAsSegmentTests\ClientUrlConventionsTests.cs" />
+    <Compile Include="KeyAsSegmentTests\DefaultUrlConventionsTests.cs" />
+    <Compile Include="KeyAsSegmentTests\DollarSegmentTests.cs" />
+    <Compile Include="KeyAsSegmentTests\KeyAsSegmentTest.cs" />
+    <Compile Include="KeyAsSegmentTests\LiteralFormatTests.cs" />
+    <Compile Include="KeyAsSegmentTests\PrimitiveKeyValuesTests.cs" />
+    <Compile Include="KeyAsSegmentTests\StreamTests.cs" />
+    <Compile Include="KeyAsSegmentTests\UpdateTests.cs" />
+    <Compile Include="ODataWCFServiceTestsBase.cs" />
+    <Compile Include="ODataWCFServiceTests\IDReadLinkEditLinkTests.cs" />
+    <Compile Include="ODataWCFServiceTests\ODataWCFServiceUpdateTests.cs" />
+    <Compile Include="OperationTests\OperationT4Tests.cs" />
+    <Compile Include="PrimitiveTypesTests\DurationTests.cs" />
+    <Compile Include="ODataWCFServiceTests\ODataWCFServiceQueryTests.cs" />
+    <Compile Include="OpenTypesTests\OpenPropertyRoundtripTests.cs" />
+    <Compile Include="PipelineEventsTests\PipelineEventsCrossPlatformAsyncTests.cs" />
+    <Compile Include="PipelineEventsTests\PipelineEventsTests.cs" />
+    <Compile Include="PipelineEventsTests\PipelineEventsTestsHelper.cs" />
+    <Compile Include="PrimitiveTypesTests\PrimitiveValueFormatTest.cs" />
+    <Compile Include="PublicProviderTests\ReflectionServiceTests.cs" />
+    <Compile Include="PublicProviderTests\EFServiceTests.cs" />
+    <Compile Include="PublicProviderTests\HybridServiceTests.cs" />
+    <Compile Include="QueryCountTests.cs" />
+    <Compile Include="QueryOptionTests\OrderbyQueryTests.cs" />
+    <Compile Include="QueryOptionTests\QueryOptionOnCollectionTypePropertyTests.cs" />
+    <Compile Include="QueryOptionTests\QueryOptionTestsHelper.cs" />
+    <Compile Include="QueryOptionTests\FilterQueryTests.cs" />
+    <Compile Include="QueryOptionTests\SearchQueryTests.cs" />
+    <Compile Include="RegressionTests\ODataLibRegressionTests.cs" />
+    <Compile Include="SingletonTests\SingletonClientTests.cs" />
+    <Compile Include="SingletonTests\SingletonQueryTests.cs" />
+    <Compile Include="SingletonTests\SingletonUpdateTests.cs" />
+    <Compile Include="TransportLayerTests\RequestMessageArgsTests.cs" />
+    <Compile Include="TransportLayerTests\TransportLayerErrorTests.cs" />
+    <Compile Include="TransportLayerTests\HttpClientRequestMessage.cs" />
+    <Compile Include="TransportLayerTests\HttpClientTests.cs" />
+    <Compile Include="TransportLayerTests\TaskExtensionMethods.cs" />
+    <Compile Include="TripPinServiceTests\TripPinServiceTests.cs" />
+    <Compile Include="TripPinServiceTests\TripPinFilterTests.cs" />
+    <Compile Include="TypeDefinitionTests\TypeDefinitionTests.cs" />
+    <Compile Include="UriBuilderTests\UriBuilderTests.cs" />
+    <Compile Include="UrlModifyingTests\UrlModifyingTests.cs" />
+    <Compile Include="WriteJsonPayloadTests\JsonLightConstants.cs" />
+    <Compile Include="WriteJsonPayloadTests\VerifyPayloadHelper.cs" />
+    <Compile Include="WriteJsonPayloadTests\SerializationInfoEdgeTests.cs" />
+    <Compile Include="WriteJsonPayloadTests\WritePayloadHelper.cs" />
+    <Compile Include="WriteJsonPayloadTests\WriteJsonWithoutModelTests.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="App.config">

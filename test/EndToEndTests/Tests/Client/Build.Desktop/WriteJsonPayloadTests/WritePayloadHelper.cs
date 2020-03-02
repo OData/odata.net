@@ -6,6 +6,7 @@
 
 namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 {
+    //extern alias destination;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -14,6 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Tests.Client.Common;
+    using Microsoft.Test.OData;
 
     /// <summary>
     /// Some helper methods to create various ODataResourceSet/Entry/values.
@@ -741,7 +743,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             };
 
-            return new ODataResourceWrapper()
+            return new  ODataResourceWrapper()
             {
                 Resource = new ODataResource
                 {
@@ -1386,7 +1388,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry2Navigation;
         }
 
-        public static ODataResourceWrapper CreateCustomerResourceWrapperNoMetadata(bool hasModel)
+        public static  ODataResourceWrapper CreateCustomerResourceWrapperNoMetadata(bool hasModel)
         {
             var customerEntry = new ODataResource()
             {

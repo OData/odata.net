@@ -1,21 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{3C8CB60D-D2C0-495E-A8D2-C8B1B244F27B}</ProjectGuid>
+ 
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+ 
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <KeyOriginatorFile>..\..\Astoria.Test.Key.snk</KeyOriginatorFile>
     <AssemblyName>Astoria.EFFKModel</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+   
     <CreateMetaAssembly>false</CreateMetaAssembly>
     <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <RootNamespace>AstoriaUnitTests.EFFK</RootNamespace>
-    <WarningLevel>4</WarningLevel>
-    <OutputType>Library</OutputType>
+
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup>
@@ -28,10 +29,8 @@
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
-      <Name>Microsoft.OData.Service</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
+  
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomObjectContext.cs" />
@@ -44,5 +43,5 @@
     <EmbeddedResource Include="CustomObjectContext.ssdl" />
     <EmbeddedResource Include="CustomObjectContext1.csdl" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

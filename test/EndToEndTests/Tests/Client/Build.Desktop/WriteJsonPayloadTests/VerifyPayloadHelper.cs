@@ -104,7 +104,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <param name="mimeType">The mime type</param>
         public static void VerifyPayloadString(string writerOuput1, string writerOutput2, string mimeType)
         {
-            if (mimeType == MimeTypes.ApplicationAtomXml)
+            if (string.Equals(mimeType, MimeTypes.ApplicationAtomXml, StringComparison.Ordinal))
             {
                 // resulting atom payloads with/without model should be the same except for the updated time stamps
                 const string pattern = @"<updated>([A-Za-z0-9\-\:]{20})\</updated>";
@@ -206,7 +206,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (hasModel)
             {
-                foreach (var property in entityType.DeclaredProperties.Where(dp => dp.Type.FullName() == "Edm.Stream"))
+                foreach (var property in entityType.DeclaredProperties.Where(dp => string.Equals(dp.Type.FullName(), "Edm.Stream", StringComparison.Ordinal)))
                 {
                     expectedEntryObject.Add(property.Name + JsonLightConstants.ODataMediaEditLinkAnnotationName, ServiceUri + relativeEditLink + "/" + property.Name);
                     expectedEntryObject.Add(property.Name + JsonLightConstants.ODataMediaReadLinkAnnotationName, ServiceUri + relativeEditLink + "/" + property.Name);

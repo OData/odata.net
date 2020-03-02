@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Rules FriendlyName="Project Astoria Code Analysis Rules">
+  
+  <Rule TypeName="AtomMaterializerInvokerRule" Category="DataWeb.Design" CheckId="AC0001">
+    <Name>AtomMaterializerInvoker should contain exactly the methods used to support projection plans.</Name>
+    <Description>
+      AtomMaterializerInvoker is an intermediate type that can be used to compile lambdas with signatures
+      that do not contain parameter types referencing non-public types such as AtomEntry.
+      Its purpose is to support projection plans in Silverlight and other low-trust environments, and
+      simply forward functionality to AtomMaterializer.
+      This rule will be violated if the type contains methods that aren't used for project plan compilation.
+    </Description>
+    <Resolution>Remove the method '{0}' on AtomMaterializerInvoker if it's not needed for projection plan compilation.</Resolution>
+    <MessageLevel Certainty="80">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/AtomMaterializerInvokerRule.aspx</Url>
+    <Email>mruiz</Email>
+    <Owner>mruiz</Owner>
+  </Rule>
+
+  <Rule TypeName="HashSetCtorRule" Category="DataWeb.Performance" CheckId="AC0002">
+    <Name>Use a constructor for HashSet&lt;T&gt; or Dictionary&lt;TKey,TValue&gt; with an explicit object equality comparer</Name>
+    <Description>
+      A HashSet constructor or a Dictionary constructor that doesn't specify an EqualityComparer picks one based on the type.
+      This comparer may be more expensive than what is really needed, and it's hard to figure out the exact behavior from the call site code.
+      Prefer a constructor that takes an explicit EqualityComparer (use EqualityComparer&lt;T&gt;.Default to get the default).
+    </Description>
+    <Resolution>Change the use of constructor on '{0}' to specify an explicit EqualityComparer constructor.</Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/HashSetCtorRule.aspx</Url>
+    <Email>mruiz</Email>
+    <Owner>mruiz</Owner>
+  </Rule>
+
+  <Rule TypeName="MethodCallNotAllowed" Category="DataWeb.Usage" CheckId="AC0003">
+    <Name>Follow </Name>
+    <Description>
+      Provides rules to enforce that certain method calls are not allowed.
+    </Description>
+    <Resolution>Do not use method '{0}.{1}' from '{2}.{3}'. {4}</Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/MethodCallNotAllowed.aspx</Url>
+    <Email>jli</Email>
+    <Owner>jli</Owner>
+  </Rule>
+
+  <Rule TypeName="ProcessRequestUriRule" Category="DataWeb.Security" CheckId="AC0004">
+    <Name>Check rights immediately after calling ProcessRequestUri.</Name>
+    <Description>
+      ProcessRequestUri does not check rights on the last segment of the
+      given URI. It is up to the caller to perform this check, based on
+      what the inteded action is.
+    </Description>
+    <Resolution>
+      Add a call to DataServiceConfiguration.CheckResourceRights or
+      DataServiceConfiguration.CheckResourceRightsForRead to '{0}'.
+    </Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/ProcessRequestUriRule.aspx</Url>
+    <Email>mruiz</Email>
+    <Owner>mruiz</Owner>
+  </Rule>
+
+  <Rule TypeName="ThreadGetSetDataRule" Category="DataWeb.Performance" CheckId="AC0005">
+    <Name>Use ThreadStatic fields rather than Thread.GetData and Thread.SetData.</Name>
+    <Description>
+      ThreadStatic fields have better performance than Thread.GetData and Thread.SetData, and equivalent semantics.
+    </Description>
+    <Resolution>Change the use of Thread.GetData/Thread.SetData on '{0}' to use a ThreadStatic field instead.</Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/ThreadGetSetDataRule.aspx</Url>
+    <Email>mruiz</Email>
+    <Owner>mruiz</Owner>
+  </Rule>
+
+  <Rule TypeName="DataServiceExceptionCtorRule" Category="DataWeb.Usage" CheckId="AC0006">
+    <Name>Use a constructor for DataServiceException with an explicit error code.</Name>
+    <Description>A DataServiceException should always specify the status code for a response.</Description>
+    <Resolution>Change the use of constructor on  '{0}' to specify an explicit status code parameter.</Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/DataServiceExceptionCtorRule.aspx</Url>
+    <Email>mruiz</Email>
+    <Owner>mruiz</Owner>
+  </Rule>
+
+  <Rule TypeName="IDSPEnumerateTypesRule" Category="DataWeb.Usage" CheckId="AC0007">
+    <Name>Do not enumerate through all resource types except in the $metadata code path.</Name>
+    <Description>Do not enumerate through all resource types except in the $metadata code path.</Description>
+    <Resolution>Method '{0}' calls '{1}' which enumerates through all resource types.  You may only call it from inside the $metadata code path.</Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/IDSPEnumerateTypesRule.aspx</Url>
+    <Email>jli</Email>
+    <Owner>jli</Owner>
+  </Rule>
+
+  <Rule TypeName="SelfLinkRule" Category="DataWeb.Performance" CheckId="AC0008">
+    <Name>Do not call EntityDescriptor.SelfLink public property. Use EntityDescriptor.GetLink internal method instead.</Name>
+    <Description>
+      Since in V1, we did not support self links, we need to support scenarios where the self link is not specified. Hence we decided
+      that if the self link is not specified, we will fall back to the edit link. GetLink method encapsulates this logic inside it.
+    </Description>
+    <Resolution>Method '{0}' makes call to EntityDescriptor.SelfLink property. Use EntityDescriptor.GetLink method instead.</Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/SelfLinkRule.aspx</Url>
+    <Email>pratikp</Email>
+    <Owner>pratikp</Owner>
+  </Rule>
+  <Rule TypeName="TypeOfDataServiceCollectionOfTRule" Category="DataWeb.Usage" CheckId="AC0009">
+    <Name>Do not call typeof(DataServiceCollection&lt;&gt;). Use WebUtil.IsDataServiceCollectionType(Type t) or WebUtil.GetDataServiceCollectionOfT(params Type[] typeArguments) method instead.</Name>
+    <Description>DataServiceCollection&lt;&gt; derives from ObservableCollection&lt;&gt;. ObservableCollection&lt;&gt; lives in WindowsBase.dll assembly which may not exist on some platforms (e.g. IA64). To check if a type is DataServiceCollection&lt;&gt; use WebUtil.IsDataServiceCollectionType(Type t) method. To create a DataServiceCollection&lt;T&gt; object call WebUtil.GetDataServiceCollectionOfT(params Type[] typeArguments) method.</Description>
+    <Resolution>Method '{0}' is using typeof(DataServiceCollection&lt;&gt;) expression. Use WebUtil.IsDataServiceCollectionType(Type t) or WebUtil.GetDataServiceCollectionOfT(params Type[] typeArguments) method instead.</Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/TypeOfDataServiceCollectionOfTRule.aspx</Url>
+    <Email>pawelka</Email>
+    <Owner>pawelka</Owner>
+  </Rule>
+
+  <Rule TypeName="SystemUriToStringRule" Category="DataWeb.Usage" CheckId="AC0010">
+    <Name>Calling ToString() and OriginalString on Uri instance could lead to problems with escape sequences.</Name>
+    <Description>
+      Uri.ToString() will unescape escaped sequences in the uri, while OriginalString may not contain any escaped sequences.
+      This is potentially dangerous in Identities and payloads.
+    </Description>
+    <Resolution>
+      Uri.ToString() should only be used for final display purposes, while OriginalString should only be used in payloads and for verification purposes.
+      For usage of OriginalString, verify that the source of the Uri instance is fully escaped.
+      For all other cases when a Uri is needed to be converted to a string, use Microsoft.OData.Client.CommonUtil.UriToString()
+    </Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/SystemUriToStringRule.aspx</Url>
+    <Email>pqian</Email>
+    <Owner>pqian</Owner>
+  </Rule>
+
+  <Rule TypeName="EntityDescriptorPublicPropertiesRule" Category="DataWeb.Usage" CheckId="AC0011">
+    <Name>Do not call the following public properties on EntityDescriptor from SaveResult or BaseSaveResult files.</Name>
+    <Description>
+      The issue is that in non-batch SaveChanges scenario, we have transient entity descriptors which contain the latest metadata for an entity
+      from the response of a previous request within the SaveChanges call. We need to use the latest metadata, and hence we should be calling the
+      internal methods which check for the presence of transient entity descriptors.
+    </Description>
+    <Resolution>
+      Please call the equivalent internal methods instead of public properties.
+    </Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/EntityDescriptorPublicPropertiesRule.aspx</Url>
+    <Email>pratikp</Email>
+    <Owner>pratikp</Owner>
+  </Rule>
+  
+  <Rule TypeName="CodeTypeReferenceRule" Category="DataWeb.Usage" CheckId="AC0012">
+    <Name>Using CodeTypeReference without CodeTypeReferenceOptions.GlobalReference</Name>
+    <Description>
+      In order to generate correct code for users who uses customized System namespace, the CodeTypeReference should always include a GlobalReference
+    </Description>
+    <Resolution>
+      Change the method {0}: for creating CodeTypeReference, use the constructor overload with CodeTypeReferenceOptions instead. For creating CodeTypeReferenceExpression, use constructor overload which takes CodeTypeReference instead.
+    </Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/CodeTypeReferenceRule.aspx</Url>
+    <Email>pqian</Email>
+    <Owner>pqian</Owner>
+  </Rule>
+
+  <Rule TypeName="HttpWebRequestRule" Category="DataWeb.Usage" CheckId="AC0013">
+    <Name>Do not call certain methods on HttpWebRequest or HttpWebResponse directly.</Name>
+    <Description>
+      With the following HttpWebRequest and HttpWebResponse methods, we need to do either debug validation of the HTTP headers, or call a test hook
+      that helps with payload and header verification. See comments on the individual methods for more details.
+
+        HttpWebRequest: GetResponse, BeginGetResponse, EndGetResponse, GetRequestStream, BeginGetRequestStream, EndGetRequestStream
+        HttpWebResponse: GetResponseStream
+    </Description>
+    <Resolution>
+      All the methods on HttpWebRequest must be encapsulated within HttpWebRequestMessage. All the methods on HttpWebResponse must be encapsulated within HttpWebResponseMessage.
+    </Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/HttpWebRequestRule.aspx</Url>
+    <Email>pratikp</Email>
+    <Owner>pratikp</Owner>
+  </Rule>
+  <Rule TypeName="DoNotHandleProhibitedExceptionsRule" Category="DataWeb.Usage" CheckId="AC0014">
+    <Name>When catching the type Exception be sure to check CommonUtil.IsCatchableExceptionType</Name>
+    <Description>
+      catch(Exception) requires that we call CommonUtil.IsCatchableExceptionType and if it returns false, we need to simply rethrow (throw;) the exception.
+      Otherwise we end up eating system exceptions like OutOfMemoryException.
+    </Description>
+    <Resolution>DoNotHandleProhibitedExceptionsRule: Add a call to CommonUtil.IsCatchableExceptionType to check if this is a handlable exception, and rethrow if it is not.</Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/DoNotHandleProhibitedExceptionsRule.aspx</Url>
+    <Email>jeffreed</Email>
+    <Owner>jeffreed</Owner>
+  </Rule>
+
+  <Rule TypeName="SystemSpatialOperationsPropertyRule" Category="DataWeb.Usage" CheckId="AC0017">
+    <Name>Do not call the SpatialImplementation.Operations public property.</Name>
+    <Description>
+      SpatialImplementation.Operations property does not check for null value.
+    </Description>
+    <Resolution>
+      Call SpatialImplementation.VerifyAndGetNonNullOperations which does the null check.
+    </Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/SystemSpatialOperationsPropertyRule.aspx</Url>
+    <Email>pratikp</Email>
+    <Owner>pratikp</Owner>
+  </Rule>
+
+  <Rule TypeName="SystemUriEscapeDataStringRule" Category="DataWeb.Usage" CheckId="AC0018">
+    <Name>Calling System.Uri.EscapeDataString can cause problems if the data being escaped contains the single quote literal delimiter character.</Name>
+    <Description>
+      In .NET 4.0 and earlier, Uri.EscapeDataString does not escape single quotes. In .NET 4.5, this has been changed so that single quotes are included
+      in the list of characters the method escapes. See Dev11:93651 for more details. In order to be compatible with OData servers and clients that
+      are not expecting this character to be escaped when it is used as a literal delimiter, we need to ensure we do not escape this character.
+    </Description>
+    <Resolution>
+      Uri.EscapeDataString should only be used in cases where the string being escaped will never contain single quotes as a literal delimiter.
+      Where possible, call Uri.EscapeDataString on the data before the delimiters are added, or consider using DataStringEscapeBuilder.EscapeDataString instead.
+    </Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/SystemUriEscapeDataStringRule.aspx</Url>
+    <Email>sparra</Email>
+    <Owner>sparra</Owner>
+  </Rule>
+  
+  <Rule TypeName="ShouldNotDireclyAccessPayloadMetadataProperties" Category="DataWeb.Usage" CheckId="AC0019">
+    <Name>Using certain ODataLib object-model properties directly can break support for omitting certain payload annotations via a query option.</Name>
+    <Description>
+      Because certain payload metadata annotations may be computable client side, a user can choose to have them omitted from the response payload
+      using a query option. This is implemented by ignoring the values set by the serializer. Setting the properties directly will cause them to
+      be written regardless of what was specified in the request.
+      Getting a value of these properties is similarly dangerous because the value may be uninitialized due to it being omitted.
+    </Description>
+    <Resolution>
+      Do not get or set {1}.{0} directly. Instead, use an implementation of MetadataQueryOptionHandler to set the values on the {1} instance you are modifying.
+    </Resolution>
+    <MessageLevel Certainty="99">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Url>http://mswikis/dpdev/Astoria/ShouldNotDireclyAccessPayloadMetadataProperties.aspx</Url>
+    <Email>mmeehan</Email>
+    <Owner>mmeehan</Owner>
+  </Rule>
+</Rules>
