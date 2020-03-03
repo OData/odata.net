@@ -49,6 +49,15 @@ steps:
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
 
 - task: DotNetCoreCLI@2
+  displayName: 'Test Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     
+
+- task: DotNetCoreCLI@2
   displayName: 'Build Product'  
   inputs:
     command: 'build'
