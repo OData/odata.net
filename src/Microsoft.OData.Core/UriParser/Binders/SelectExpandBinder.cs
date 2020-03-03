@@ -144,7 +144,7 @@ namespace Microsoft.OData.UriParser
                         // if one of the select items has options.
                         foreach (PathSelectItem existingItem in selectExpandItems.OfType<PathSelectItem>())
                         {
-                            if ((selectPathItem.HasOptions && OverLaps(selectPathItem, existingItem)) || (existingItem.HasOptions && OverLaps(existingItem, selectPathItem)))
+                            if ((selectPathItem.HasOptions && overLaps(selectPathItem, existingItem)) || (existingItem.HasOptions && overLaps(existingItem, selectPathItem)))
                             {
                                 throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(selectTermToken.PathToProperty)));
                             }
