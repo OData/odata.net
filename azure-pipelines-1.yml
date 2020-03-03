@@ -41,6 +41,14 @@ steps:
 #     version: '1.0.4'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Build test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
+- task: DotNetCoreCLI@2
   displayName: 'Build Product'  
   inputs:
     command: 'build'
