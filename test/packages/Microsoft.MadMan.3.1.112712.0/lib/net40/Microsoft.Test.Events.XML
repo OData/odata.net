@@ -1,0 +1,627 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Test.Events</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Test.Events.Injection.ContextIdProperty">
+            <summary>
+            A property implementation for the context ID property used by the <see cref="T:Microsoft.Test.Events.Injection.TestClassContextAttribute"/>.
+            The property implements the interfaces required to insert a custom message sink into the sink chain
+            used when the .NET framework marshals calls from one context to another for a specific object.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.Injection.ContextIdProperty.idField">
+            <summary>The context ID string.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ContextIdProperty.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Events.Injection.ContextIdProperty"/> class.
+            </summary>
+            <param name="contextId">The context id string. This could be any unique identifier. 
+            It is better for this to be a GUID.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ContextIdProperty.Freeze(System.Runtime.Remoting.Contexts.Context)">
+            <summary>
+            Called when the context is frozen.
+            </summary>
+            <param name="newContext">The context to freeze.</param>
+            <PermissionSet>
+            	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="Infrastructure"/>
+            </PermissionSet>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ContextIdProperty.GetObjectSink(System.MarshalByRefObject,System.Runtime.Remoting.Messaging.IMessageSink)">
+            <summary>
+            Chains the message sink of the provided server object in front of the given sink chain.
+            </summary>
+            <param name="obj">The server object which provides the message sink that is to be chained in front of the given chain.</param>
+            <param name="nextSink">The chain of sinks composed so far.</param>
+            <returns>The composite sink chain.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ContextIdProperty.IsNewContextOK(System.Runtime.Remoting.Contexts.Context)">
+            <summary>
+            Returns a Boolean value indicating whether the context property is compatible with the new context.
+            </summary>
+            <param name="newCtx">The new context in which the <see cref="T:System.Runtime.Remoting.Contexts.ContextProperty"/> has been created.</param>
+            <returns>
+            true if the context property can coexist with the other context properties in the given context; otherwise, false.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Events.Injection.ContextIdProperty.Id">
+            <summary>
+            Gets the ID. 
+            </summary>
+            <value>The id.</value>
+        </member>
+        <member name="P:Microsoft.Test.Events.Injection.ContextIdProperty.Name">
+            <summary>
+            Gets the name of the property under which it will be added to the context.
+            </summary>
+            <value></value>
+            <returns>
+            The name of the property.
+            </returns>
+            <PermissionSet>
+            	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="Infrastructure"/>
+            </PermissionSet>
+        </member>
+        <member name="T:Microsoft.Test.Events.EventType">
+            <summary>
+            An enumeration of event types that can be raised by the eventing system.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.EventType.None">
+            <summary>
+            None. No events will be raised.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.EventType.Initialization">
+            <summary>
+            The current method that is being invoked is a test initialization method. Test
+            initialization methods will be raised.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.EventType.Cleanup">
+            <summary>
+            The current method that is being invoked is a test cleanup method. Test cleanup
+            events will be raised.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.EventType.Test">
+            <summary>
+            The current method that is being invoked is a test method. Test events will be
+            raised.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Events.ExceptionMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.FailedToRetrieveDefaultValidationContext">
+            <summary>
+              Looks up a localized string similar to Internal error. Failed to retrieve saved default validation context..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.ValidationContextCorruptedInCleanup">
+            <summary>
+              Looks up a localized string similar to Failed to retrieve saved validation context with ID &apos;{0}&apos;. Test cleanup events or methods seems to have corrupted the validation context stack..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.ValidationContextCorruptedInInitialize">
+            <summary>
+              Looks up a localized string similar to Failed to retrieve saved validation context with ID &apos;{0}&apos;. Test initialization events or methods seems to have corrupted the validation context stack.&quot;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.ValidationContextCorruptedInTestMethod">
+            <summary>
+              Looks up a localized string similar to Failed to retrieve saved validation context with ID &apos;{0}&apos;. Test execution events or methods seems to have corrupted the validation context stack..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.ValidationFailedInCleanup">
+            <summary>
+              Looks up a localized string similar to One or more registered validations in test cleanup failed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.ValidationFailedInDefaultContext">
+            <summary>
+              Looks up a localized string similar to One or more registered validations in default validation context failed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.ValidationFailedInInitialize">
+            <summary>
+              Looks up a localized string similar to One or more registered validations in test initialize failed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.ExceptionMessages.ValidationFailedInTestMethod">
+            <summary>
+              Looks up a localized string similar to One or more registered validations in test method failed..
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Events.TestBase">
+            <summary>
+            The base class for all tests that require test event notification.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.TestInstanceContextKey">
+            <summary>The key used to save the test instance for the current execution context in the call context.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.TestInitValidationContextKey">
+            <summary>The key used to name the validation context for test initialization.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.TestCleanupValidationContextKey">
+            <summary>The key used to name the validation context for test cleanup.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.TestExecValidationContextKey">
+            <summary>The key used to name the validation context for test execution.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.initCtxId">
+            <summary>The saved ID of the test initialization validation context.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.cleanupCtxId">
+            <summary>The saved ID of the test cleanup validation context.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.execCtxId">
+            <summary>The saved ID of the test execution validation context.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.uniqueInstanceId">
+            <summary>A unique instance ID to ensure this test instance can be identified.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestBase.testSystem">
+            <summary>The test system that is hosting this test instance.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestBase.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:TestBase"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestBase.OnAfterCleanup(Microsoft.Test.Events.TestEventArgs)">
+            <summary>
+            Invoked by the eventing system to fire the AfterCleanup event.
+            </summary>
+            <param name="args">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestBase.OnAfterInitialize(Microsoft.Test.Events.TestEventArgs)">
+            <summary>
+            Invoked by the eventing system to fire the AfterInitialize event.
+            </summary>
+            <param name="args">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestBase.OnAfterTest(Microsoft.Test.Events.TestEventArgs)">
+            <summary>
+            Raises the <see cref="E:AfterTest"/> event.
+            </summary>
+            <param name="args">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestBase.OnBeforeCleanup(Microsoft.Test.Events.TestEventArgs)">
+            <summary>
+            Invoked by the eventing system to fire the BeforeCleanup event.
+            </summary>
+            <param name="args">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestBase.OnBeforeInitialize(Microsoft.Test.Events.TestEventArgs)">
+            <summary>
+            Invoked by the eventing system to fire the BeforeInitialize event.
+            </summary>
+            <param name="args">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestBase.OnBeforeTest(Microsoft.Test.Events.TestEventArgs)">
+            <summary>
+            Raises the <see cref="E:BeforeTest"/> event.
+            </summary>
+            <param name="args">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestBase.OnDuringTest(Microsoft.Test.Events.TestEventArgs)">
+            <summary>
+            Invoked by test code to generate custom notifications during test progress.
+            </summary>
+            <param name="args">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="P:Microsoft.Test.Events.TestBase.TestInstance">
+            <summary>
+            Gets the test instance for the current execution context.
+            </summary>
+            <value>The test instance.</value>
+        </member>
+        <member name="E:Microsoft.Test.Events.TestBase.CleanedUp">
+            <summary>Occurs after a test is cleaned up.</summary>
+        </member>
+        <member name="E:Microsoft.Test.Events.TestBase.Initialized">
+            <summary>Occurs after a test is initialized.</summary>
+        </member>
+        <member name="E:Microsoft.Test.Events.TestBase.Tested">
+            <summary>Occurs after a the test in this test instance is executed.</summary>
+        </member>
+        <member name="E:Microsoft.Test.Events.TestBase.CleaningUp">
+            <summary>Occurs before a test is cleaned up.</summary>
+        </member>
+        <member name="E:Microsoft.Test.Events.TestBase.Initializing">
+            <summary>Occurs before a test is initialized.</summary>
+        </member>
+        <member name="E:Microsoft.Test.Events.TestBase.Testing">
+            <summary>Occurs before a test in this test instance is executed.</summary>
+        </member>
+        <member name="E:Microsoft.Test.Events.TestBase.DuringTest">
+            <summary>Event that can be raised on demand by executing test code.</summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.TestBase.InstanceId">
+            <summary>
+            Gets or sets the instance ID for this test instance.
+            </summary>
+            <remarks>
+            The instance ID is for use by the test event injection framework and is not meant
+            to be directly used from test code.
+            </remarks>
+            <value>The instance id.</value>
+        </member>
+        <member name="P:Microsoft.Test.Events.TestBase.TestSystem">
+            <summary>
+            Gets or sets the <see cref="T:TestSystemBase"/> that provides services specific to the test
+            framework that is hosting this test.
+            </summary>
+            <value>The test system.</value>
+        </member>
+        <member name="P:Microsoft.Test.Events.TestBase.ValidationOptions">
+            <summary>
+            Gets or sets the validation options used when performing automatic validation
+            post test initialize, test execution and test cleanup.
+            </summary>
+            <value>The options.</value>
+        </member>
+        <member name="T:Microsoft.Test.Events.Injection.TestClassContextAttribute">
+            <summary>
+            Attribute used to distinguish a test class that uses interception to generate test events.
+            This also ensures that the associated context property instance of type <see cref="T:Microsoft.Test.Events.Injection.ContextIdProperty"/> 
+            is invoked to install the appropriate method call interception sink.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.TestClassContextAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Events.Injection.TestClassContextAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.TestClassContextAttribute.#ctor(System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Events.Injection.TestClassContextAttribute"/> class.
+            </summary>
+            <param name="contextId">The context id.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.TestClassContextAttribute.GetPropertiesForNewContext(System.Runtime.Remoting.Activation.IConstructionCallMessage)">
+            <summary>
+            Adds the current context property to the given message.
+            </summary>
+            <param name="ctorMsg">The <see cref="T:System.Runtime.Remoting.Activation.IConstructionCallMessage"/> to which to add the context property.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="ctorMsg"/> parameter is null.
+            </exception>
+            <PermissionSet>
+            	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="Infrastructure"/>
+            </PermissionSet>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.TestClassContextAttribute.IsContextOK(System.Runtime.Remoting.Contexts.Context,System.Runtime.Remoting.Activation.IConstructionCallMessage)">
+            <summary>
+            Returns a Boolean value indicating whether the context parameter meets the context attribute's requirements.
+            </summary>
+            <param name="ctx">The context in which to check.</param>
+            <param name="ctorMsg">The <see cref="T:System.Runtime.Remoting.Activation.IConstructionCallMessage"/> to which to add the context property.</param>
+            <returns>
+            true if the passed in context is okay; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Either <paramref name="ctx"/> or <paramref name="ctorMsg"/> is null.
+            </exception>
+            <PermissionSet>
+            	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="Infrastructure"/>
+            </PermissionSet>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.TestClassContextAttribute.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Events.Injection.TestClassContextAttribute.ContextId">
+            <summary>
+            Gets the context ID.
+            </summary>
+            <value>The context id.</value>
+        </member>
+        <member name="T:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink">
+            <summary>
+            The message sink that intercepts method calls to the test class instance.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.nextSinkField">
+            <summary>The next message sink to pass messages to.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.testInstance">
+            <summary>The test instance.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.testSystem">
+            <summary>The test system that provides services required for the intercepted test instance.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.eventSyncRoot">
+            <summary>Object used to synchronize message routing.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.#ctor(System.MarshalByRefObject,System.Runtime.Remoting.Messaging.IMessageSink)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink"/> class.
+            </summary>
+            <param name="testInstance">The test instance.</param>
+            <param name="nextSink">The next sink in the chain.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.AsyncProcessMessage(System.Runtime.Remoting.Messaging.IMessage,System.Runtime.Remoting.Messaging.IMessageSink)">
+            <summary>
+            Asynchronously processes the given message.
+            </summary>
+            <param name="msg">The message to process.</param>
+            <param name="replySink">The reply sink for the reply message.</param>
+            <returns>
+            Returns an <see cref="T:System.Runtime.Remoting.Messaging.IMessageCtrl"/> interface that provides a way to control asynchronous messages after they have been dispatched.
+            </returns>
+            <exception cref="T:System.Security.SecurityException">
+            The immediate caller makes the call through a reference to the interface and does not have infrastructure permission.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.SyncProcessMessage(System.Runtime.Remoting.Messaging.IMessage)">
+            <summary>
+            Synchronously processes the given message.
+            </summary>
+            <param name="msg">The message to process.</param>
+            <returns>
+            A reply message in response to the request.
+            </returns>
+            <exception cref="T:System.Security.SecurityException">
+            The immediate caller makes the call through a reference to the interface and does not have infrastructure permission.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.GetEventType(System.Runtime.Remoting.Messaging.IMethodMessage)">
+            <summary>
+            Gets the type of the events to raise for the target method.
+            </summary>
+            <param name="callMessage">The method call message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.SyncMessagePostProcess(System.Runtime.Remoting.Messaging.IMessage,System.Runtime.Remoting.Messaging.IMessage)">
+            <summary>
+            Invoked to process the method call message after the message is passed onto
+            the next sink in the sink chain.
+            <remarks>This method is only invoked when messages
+            are processed synchronously.
+            </remarks>
+            </summary>
+            <param name="callMsg">The message.</param>
+            <param name="retMsg">The return message from a method call.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.SyncMessagePreprocess(System.Runtime.Remoting.Messaging.IMessage)">
+            <summary>
+            Invoked to process the method call message before the message is passed onto
+            the next sink in the sink chain. 
+            <remarks>This method is only invoked when messages
+            are processed synchronously.
+            </remarks>
+            </summary>
+            <param name="callMsg">The message.</param>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.InitializeCallContext">
+            <summary>
+            Saves data useful for the test event subscribers into the call context.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.CleanupCallContext">
+            <summary>
+            Removes all data saved into the call context.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.CreateEventArgs(System.Runtime.Remoting.Messaging.IMethodMessage)">
+            <summary>
+            Creates a <see cref="T:Microsoft.Test.Events.TestEventArgs"/> object containing data about the 
+            current method call for which a test event is being raised.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="P:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.NextSink">
+            <summary>
+            Gets the next message sink in the sink chain.
+            </summary>
+            <value></value>
+            <returns>
+            The next message sink in the sink chain.
+            </returns>
+            <exception cref="T:System.Security.SecurityException">
+            The immediate caller makes the call through a reference to the interface and does not have infrastructure permission.
+            </exception>
+            <PermissionSet>
+            	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="Infrastructure"/>
+            </PermissionSet>
+        </member>
+        <member name="P:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.TestInstance">
+            <summary>
+            Gets the test instance.
+            </summary>
+            <value>The test instance.</value>
+        </member>
+        <member name="P:Microsoft.Test.Events.Injection.ObjectInterceptionMessageSink.TestSystem">
+            <summary>
+            Gets the <see cref="T:Microsoft.Test.Events.TestSystemBase"/> that provides services required by this object interception
+            sink to handle the wrapped test instance.
+            </summary>
+            <value>The test system.</value>
+        </member>
+        <member name="T:Microsoft.Test.TestService">
+            <summary>
+            A base class for services that are part of the test engine such as the
+            validation engine. This base class provides behavior to capture the 
+            context in which the service was instantiated.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.TestService.creationStackTrace">
+            <summary>The stack trace when this artifact was created.</summary>
+        </member>
+        <member name="F:Microsoft.Test.TestService.creationThreadId">
+            <summary>The ID of the thread on which this artifact was created.</summary>
+        </member>
+        <member name="F:Microsoft.Test.TestService.creationThreadName">
+            <summary>The name of the thread on which this artifact was created.</summary>
+        </member>
+        <member name="F:Microsoft.Test.TestService.idField">
+            <summary>The ID of this validation engine instance. This ID is used to track the engine instances.</summary>
+        </member>
+        <member name="M:Microsoft.Test.TestService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.TestService"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.TestService.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.TestService.CaptureStackTrace">
+            <summary>
+            Captures the stack trace when at the time this method is invoked.
+            The first frame on the stack trace is automatically skipped to ensure
+            that this method is not included.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.TestService.CaptureThreadData">
+            <summary>
+            Captures the thread data at the time this method is invoked. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.TestService.CreationStackTrace">
+            <summary>
+            Gets the stack trace on the thread in which this artifact was created.
+            </summary>
+            <value>The creation stack trace.</value>
+        </member>
+        <member name="P:Microsoft.Test.TestService.CreationThreadId">
+            <summary>
+            Gets the ID of the thread on which this artifact was created.
+            </summary>
+            <value>The creation thread id.</value>
+        </member>
+        <member name="P:Microsoft.Test.TestService.CreationThreadName">
+            <summary>
+            Gets the name of the thread on which this artifact was created.
+            </summary>
+            <value>The name of the creation thread.</value>
+        </member>
+        <member name="P:Microsoft.Test.TestService.Id">
+            <summary>
+            Gets the unique ID of this validation engine instance.
+            </summary>
+            <value>The id.</value>
+        </member>
+        <member name="T:Microsoft.Test.Events.TestEventArgs">
+            <summary>
+            Contains data about a test event.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestEventArgs.#ctor(Microsoft.Test.Events.TestBase,System.Reflection.MethodInfo,System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Events.TestEventArgs"/> class.
+            </summary>
+            <param name="testInstance">The test instance.</param>
+            <param name="method">The method.</param>
+            <param name="parameters">The parameters.</param>
+        </member>
+        <member name="P:Microsoft.Test.Events.TestEventArgs.Method">
+            <summary>
+            Gets the method that is being invoked.
+            </summary>
+            <value>The method.</value>
+        </member>
+        <member name="P:Microsoft.Test.Events.TestEventArgs.Parameters">
+            <summary>
+            Gets the parameters passed to the method that is being invoked.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="P:Microsoft.Test.Events.TestEventArgs.TestInstance">
+            <summary>
+            Gets or sets the test instance on which the method is being invoked.
+            </summary>
+            <value>The test instance.</value>
+        </member>
+        <member name="T:Microsoft.Test.Events.TestSystemBase">
+            <summary>
+            Provides external test framework specific services used to determine how an instance of <see cref="T:EventingTestBase"/>
+            is handled by the eventing framework.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestSystemBase.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Events.TestSystemBase"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestSystemBase.CanHandle(Microsoft.Test.Events.TestBase)">
+            <summary>
+            Determines if this test system service handles the specified test instance.
+            </summary>
+            <param name="testInstance">The test instance.</param>
+            <returns><c>true</c> if this test system service can provide informationa about <paramref name="testInstance"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Events.TestSystemBase.GetEventType(System.Reflection.MethodInfo)">
+            <summary>
+            Gets the type of the event to raise for the specified method.
+            </summary>
+            <param name="method">The method.</param>
+            <returns>An instance of <see cref="T:EventType"/>.</returns>
+        </member>
+        <member name="F:Microsoft.Test.Events.TestSystemBase.testSystems">
+            <summary>The collection if <see cref="T:Microsoft.Test.Events.TestSystemBase"/> instances used to determine how each <see cref="T:TestBase"/> instance is handled.</summary>
+        </member>
+        <member name="P:Microsoft.Test.Events.TestSystemBase.TestSystems">
+            <summary>
+            Gets all the test system services that are configured or available.
+            </summary>
+            <value>A <see cref="T:System.Collections.Generic{T}"/> of all configured or available test systems.</value>
+        </member>
+        <member name="T:Microsoft.Test.Events.VisualStudioTestSystem">
+            <summary>
+            Provides test framework services for instances of <see cref="T:EventingTestBase"/> that are VSTS
+            coded tests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.VisualStudioTestSystem.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:VisualStudioTestSystem"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Events.VisualStudioTestSystem.CanHandle(Microsoft.Test.Events.TestBase)">
+            <summary>
+            Determines if this test system service handles the specified test instance.
+            </summary>
+            <param name="testInstance">The test instance.</param>
+            <returns>
+            	<c>true</c> if this test system service can provide informationa about <paramref name="testInstance"/>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Events.VisualStudioTestSystem.GetEventType(System.Reflection.MethodInfo)">
+            <summary>
+            Gets the type of the event to raise for the specified method.
+            </summary>
+            <param name="method">The method.</param>
+            <returns>
+            An instance of <see cref="T:EventType"/>.
+            </returns>
+        </member>
+    </members>
+</doc>

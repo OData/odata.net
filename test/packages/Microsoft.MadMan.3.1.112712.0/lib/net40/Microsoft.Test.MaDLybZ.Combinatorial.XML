@@ -1,0 +1,554 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Test.MaDLybZ.Combinatorial</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.AndCondition">
+            <summary>
+             A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.AndCondition"/> class
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.CompoundCondition">
+            <summary>
+             A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.CompoundCondition"/> class
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.Condition">
+            <summary>
+             A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.Condition"/> class
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.Condition.#ctor">
+            <summary>
+            Class constructor
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.Condition.#ctor(System.String,System.String)">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="baseValue">The parameter</param>
+            <param name="targetValue">The Enum type parameter value</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.Condition.Evaluate">
+            <summary>
+            Evaluates the current condition
+            Returns true if the base value equals the target value
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.Condition.Or(Microsoft.Test.MaDLybZ.Combinatorial.Condition)">
+            <summary>
+            Links the current and the specified conditions by 'OR' operator
+            </summary>
+            <param name="condition">Condition to link</param>
+            <returns>Type of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.OrCondition"/></returns>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.Condition.And(Microsoft.Test.MaDLybZ.Combinatorial.Condition)">
+            <summary>
+            Links the current and the specified conditions by 'AND' operator
+            </summary>
+            <param name="condition">Condition to link</param>
+            <returns>Type of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.AndCondition"/></returns>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.Condition.BaseValue">
+            <summary>
+            Property to get/set the base value to compare
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.Condition.TargetValue">
+            <summary>
+            Property to get/set the target value to be compared
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.CompoundCondition.#ctor(Microsoft.Test.MaDLybZ.Combinatorial.Condition,Microsoft.Test.MaDLybZ.Combinatorial.Condition)">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="first">First condition</param>
+            <param name="second">Second condition</param>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.CompoundCondition.First">
+            <summary>
+            Property to get/set the first condition
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.CompoundCondition.Second">
+            <summary>
+            Property to get/set the second condition
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.AndCondition.#ctor(Microsoft.Test.MaDLybZ.Combinatorial.Condition,Microsoft.Test.MaDLybZ.Combinatorial.Condition)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="first">First condition</param>
+            <param name="second">Second condition</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.AndCondition.Evaluate">
+            <summary>
+            Overridden evaluate method
+            Returns true only when both condition are true
+            </summary>
+            <returns>Evaluation result</returns>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialFactoryAttribute">
+            <summary>
+            CombinatorialFactory attribute is used to specify a DataFactory type
+            to be used with combinatorial factory expansion
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialFactoryAttribute.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialFactoryAttribute"/> class.
+            </summary>
+            <param name="factoryType">Type of the factory.</param>        
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialFactoryAttribute.ProcessAttributeData(System.Object,Microsoft.Test.DataDriven.Processing.ProcessorDiscoveryEventArgs)">
+            <summary>
+            Generates the data.
+            </summary>
+            <param name="sender">Sender of the event</param>
+            <param name="args">Arguments that describe the processor and allows the discovery method to populate data.</param>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialFactoryAttribute.FactoryType">
+            <summary>
+            Gets or sets the factory.
+            </summary>
+            <value>The factory.</value>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialFactoryAttribute.ProductUses">
+            <summary>
+            Gets or sets the Production options
+            </summary>
+            <value>The Production Options.</value>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator">
+            <summary>
+            A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator"/> class
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator.#ctor(Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor)">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="processor">Current instance of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor"/> class</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator.ProduceSet">
+            <summary>
+            Produces a new combinatorial set using parameters, RequestOptions and ProhibitedOptions
+            </summary>      
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator.ConvertObjectToProductionOptionCollection(System.Collections.Generic.IEnumerable{System.Data.DataRow})">
+            <summary>
+            Parse testcases from each DataRow and covert to a list of  <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.ProductionOptionList"/>  
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator.BuildConstraintsFromRequestedOptions(System.Data.DataRow)">
+            <summary>
+            Builds a 'If_Then' constraint accoring to the given requested options.
+            Only enums from the same FactoryMember are linked by 'OR' operator and the rest of conditoins are linked by 'AND' operator 
+            <example> 
+            If the given requested options are A.x, A.y, B.x, C.y then constraint will be built as:
+            (A=x OR A=y) AND B=x AND C=y
+            </example>
+            </summary>
+            <param name="testCase">Generated combinatorial set</param>
+            <returns>Value indicating whether the current combinatorial set satisfies the list of constraints</returns>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator.BuildConstraintsFromProhibitedOptions(System.Data.DataRow)">
+            <summary>
+            Builds a 'If_Then' constraint accoring to the given prohibited options
+            All the enums are linked by 'NotEqual' and 'AND' operators
+            <example> 
+            If the given prohibited options are A.x, A.y, B.x, C.y then constraint will be built as:
+            (A != x AND A != y AND B != x AND C != y)
+            </example>
+            </summary> 
+            <param name="testCase">Generated combinatorial set</param>
+            <returns>Value indicating whether the current combinatorial set satisfies the list of constraints</returns>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator.expansionProcessor">
+            <summary>
+            An instance of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor"/> class
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator.pairwiseCombination">
+            <summary>
+            Type of <see cref="T:Microsoft.Test.DataDriven.Combination"/>
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase">
+            <summary>
+             A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase"/> class
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.ResetParameter">
+            <summary>
+            Re-initialize the 'Parameters' variable
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.AddMember(Microsoft.Test.MaDLybZ.FactoryMember)">
+            <summary>
+            Add a new <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/> to the list
+            </summary>
+            <param name="member">Type of the of <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/> to add</param>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.combinatorialParameter">
+            <summary>
+            Combinatorial parameter collection
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.members">
+            <summary>
+            A list of <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/> type
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.seed">
+            <summary>
+            Type of <see cref="T:Microsoft.Test.MaDLybZ.Seed"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.parameters">
+            <summary>
+            List of <see cref="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.parameters"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.requestedOptions">
+            <summary>
+            List of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint"/> built from the requested options
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.prohibitedOptions">
+            <summary>
+            List of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint"/> built from the prohibited options
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.CurrentSeed">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.Test.MaDLybZ.Seed"/> for the component which the <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase"/> describes
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.Parameters">
+            <summary>
+            Gets or sets the list of <see cref="T:Microsoft.Test.DataDriven.ParameterData"/> for the component which the <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase"/> describes
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.RequestedOptions">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint"/> for the requested option component
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.ProhibitedOptions">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint"/> for the prohibited option component
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.CombinatorialParameter">
+            <summary>
+            Gets the Dictionary type of identified <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/> and its enum flags
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase.Members">
+            <summary>
+            Gets or sets the list of <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/> for the component which the <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase"/> describes
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor">
+            <summary>
+            A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor"/> derived from <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionBase"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.constraintTerminator">
+            <summary>
+            Constraint terminator character
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.ifThenConstant">
+            <summary>
+            IfThen string
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.andConstant">
+            <summary>
+            AND string
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.orConstant">
+            <summary>
+            OR string
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.#ctor(Microsoft.Test.MaDLybZ.DataFactory)">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="factory">Type of the <see cref="T:Microsoft.Test.MaDLybZ.DataFactory"/> to process</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.#ctor(Microsoft.Test.MaDLybZ.DataFactory,Microsoft.Test.MaDLybZ.ProductUses)">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="factory">Type of the <see cref="T:Microsoft.Test.MaDLybZ.DataFactory"/> to process</param>
+            <param name="productUses">The product uses to retrieve</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.Next">
+            <summary>
+            Generates a new combinatorial set using the next available seed and FactoryType.valid option 
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.RetrieveCombinatorialSet">
+            <summary> 
+            Produce and return a combinatorial set in the list of <see cref="T:Microsoft.Test.MaDLybZ.ProductionOption"/> lists
+            </summary>        
+            <returns>List of the <see cref="T:Microsoft.Test.MaDLybZ.ProductionOption"/> list </returns>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.WriteCombinatorialInputToFile(System.String)">
+            <summary>
+            Generates a combinatorial set, and writes input data to the specified file
+            </summary>
+            <example> 
+            If the given requested options are A.x, A.y, B.x, C.y then constraint will be built as:
+            (A=x OR A=y) AND B=x AND C=y
+            If the given prohibited options are A.x, A.y, B.x, C.y then constraint will be built as:
+            (A != x AND A != y AND B != x AND C != y)
+            </example>
+            <param name="fileName">File name to write input data</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.BuildCustomString(System.String,System.String,System.String)">
+            <summary>
+            Builds customized query string
+            </summary>
+            <param name="op">Operator to use</param>
+            <param name="parameterName">The name of paramter</param>
+            <param name="parameterValue">The value of parameter</param>
+            <returns>Query string</returns>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.WriteCombinatorialOutputToFile(System.String)">
+            <summary>
+            Generates a combinatorial set, and writes output data to the specified file
+            </summary>
+            <param name="fileName">File name to write the result </param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.WriteFile(System.String)">
+            <summary>
+            Write the specified list of string into a file
+            </summary>
+            <param name="fileName">The name of file</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.ExpandFactory">
+            <summary>
+            Expands the specified <see cref="T:Microsoft.Test.MaDLybZ.DataFactory"/> and retrieves factory member with matching enum options
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.ProcessFactoryMember(Microsoft.Test.MaDLybZ.FactoryMember)">
+            <summary>
+            Finds all the nested <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/> types
+            If the current member is type of <see cref="T:Microsoft.Test.MaDLybZ.DataSubFactory`1"/>, this gets all the inherited nested types
+            </summary>
+            <param name="member">Type of the <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/></param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.FindNestedEnumFactories(System.Type,System.Collections.Generic.List{System.Type})">
+            <summary>
+            Finds all the nested enum types, recursively through the inheritance chain to get inherited nested types
+            </summary>
+            <param name="factory">Type to search for nested enum types on</param>
+            <param name="nestedEnums">A list of the nested enums found already</param>
+            <returns>A list of all nested enum types, including inherited enums</returns>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.GenerateCombinatorialSet">
+            <summary>
+            Generates a new combinatorial set using the current seed 
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.GetMatchingOptions(Microsoft.Test.MaDLybZ.FactoryMember)">
+            <summary>
+            Gets attributes of type <see cref="T:Microsoft.Test.MaDLybZ.FactorySetAttribute"/> using given enum items
+            If the factory type of each attributes matches the specified FactoryType,add the option into the enum list 
+            If RequestedOption or ProhibitedOption is set for the current option, add it to a corresponding If_then constraint. 
+            </summary>
+            <param name="member">Type of the <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/> </param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.AddOptions(Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo,System.Object[],System.Boolean)">
+            <summary>
+            Adds the current condition to the corresponiding If_Then constraints
+            </summary>
+            <param name="ifPart">If condition</param>
+            <param name="options">Then conditions</param>
+            <param name="isRequestedOption">Specified options are requested option</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.AssortOptions(System.Collections.Generic.IList{Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo})">
+            <summary>
+            Assort the specified ParameterInfo list by <see cref="T:Microsoft.Test.MaDLybZ.FactoryMember"/> type
+            </summary>
+            <param name="parameterList"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.productUses">
+            <summary>
+            A variable type of <see cref="T:Microsoft.Test.MaDLybZ.ProductUses"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.dataFactory">
+            <summary>
+            Type of the <see cref="T:Microsoft.Test.MaDLybZ.DataFactory"/> to expand
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.setGenerator">
+            <summary>
+            Type of <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.CombinatorialSetGenerator"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.combinatorialResult">
+            <summary>
+            Combinatorial set generated by Pict tool
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.fileInfo">
+            <summary>
+            Type of <see cref="T:System.IO.FileInfo"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.streamWriter">
+            <summary>
+            Type of <see cref="T:System.IO.StreamWriter"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.context">
+            <summary>
+            List of strings to write to a file
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.FactoryExpansionProcessor.sb">
+            <summary>
+            Type of <see cref="T:System.Text.StringBuilder"/>
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint">
+            <summary>
+             A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint"/> class
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint.#ctor(Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo,System.Collections.Generic.IList{Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo})">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="ifPart">If condition</param>
+            <param name="thenPart">Then conditions</param>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint.ifPart">
+            <summary>
+            The 'If' part of the current constraint
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint.thenPart">
+            <summary>
+            The 'Then' part of the current constraint
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint.IfPart">
+            <summary>
+            Property to get/set the 'If' part of the current constraint
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.IfThenConstraint.ThenPart">
+            <summary>
+            Property to get/set the 'Then' part of the current constraint
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.NotCondition">
+            <summary>
+             A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.NotCondition"/> class
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.NotCondition.#ctor(System.String,System.String)">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="baseValue">The parameter</param>
+            <param name="targetValue">The Enum type parameter value</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.NotCondition.Evaluate">
+            <summary>
+            Overridden evaluate method
+            Returns true if the current paramter's value does not equal the curent Enum value
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.OrCondition">
+            <summary>
+             A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.OrCondition"/> class
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.OrCondition.#ctor(Microsoft.Test.MaDLybZ.Combinatorial.Condition,Microsoft.Test.MaDLybZ.Combinatorial.Condition)">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="first">First condition</param>
+            <param name="second">Second condition</param>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.OrCondition.Evaluate">
+            <summary>
+            Overridden evaluate method
+            Returns true when any of condition is true
+            </summary>
+            <returns>Evaluation result</returns>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo">
+            <summary>
+            A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo"/> class that associates the combinatorial parameter's name and enum value as a pair
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo.#ctor(System.String,System.Enum)">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="parameterName">String that be used as a parameter name</param>
+            <param name="parameterValue">Enum string that be used as a parameter value</param>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo.paramName">
+            <summary>
+            Parameter name string value
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo.paramValue">
+            <summary>
+            Parameter value string 
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo.ParameterName">
+            <summary>
+            Property to get/set the pairwise parameter name
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.ParameterInfo.ParameterValue">
+            <summary>
+            Property to get/set the pairwise parameter value
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.MaDLybZ.Combinatorial.ProductionOptionList">
+            <summary>
+             A <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.ProductionOptionList"/> class
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.MaDLybZ.Combinatorial.ProductionOptionList.#ctor(System.Collections.Generic.IList{Microsoft.Test.MaDLybZ.ProductionOption})">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="options">List of <see cref="T:Microsoft.Test.MaDLybZ.ProductionOption"/></param>
+        </member>
+        <member name="F:Microsoft.Test.MaDLybZ.Combinatorial.ProductionOptionList.productionOptions">
+            <summary>
+            List of <see cref="T:Microsoft.Test.MaDLybZ.ProductionOption"/> objects
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.MaDLybZ.Combinatorial.ProductionOptionList.Current">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.Test.MaDLybZ.ProductionOption"/> for the component which the <see cref="T:Microsoft.Test.MaDLybZ.Combinatorial.ProductionOptionList"/> describes
+            </summary>
+        </member>
+    </members>
+</doc>
