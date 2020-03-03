@@ -41,7 +41,7 @@
 
     <PackageReference Include="EntityFramework" Version="5.0.0" />
 
-    <PackageReference Include="Microsoft.MadMan" Version="3.1.112712" />
+    <!--<PackageReference Include="Microsoft.MadMan" Version="3.1.112712" />-->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
@@ -88,8 +88,8 @@
     <Reference Include="$(NuGetPack)\Microsoft.TextTemplating.CBT.10.1.0.1\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll" Condition="'$(BuildInOSS)' != 'true'" />
 
 
-    <!--<Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.DataDriven.dll" />-->
-    <!--<Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Extensions.dll" />-->
+    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.DataDriven.dll" />
+    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Extensions.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
