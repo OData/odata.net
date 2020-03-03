@@ -23,6 +23,8 @@
     <PackageReference Include="FluentAssertions" Version="4.1.0" />
 
     <PackageReference Include="EntityFramework" Version="5.0.0" />
+
+    <PackageReference Include="Microsoft.Hadoop.Avro2" Version="1.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
@@ -55,7 +57,7 @@
     <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />-->
   </ItemGroup>
   <ItemGroup Condition="'$(BuildInOSS)' == 'true'">
-    <Reference Include="$(NuGetPack)\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll" />
+    <!--<Reference Include="$(NuGetPack)\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll" />-->
     <Reference Include="$(NuGetPack)\Newtonsoft.Json.6.0.5\lib\net40\Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
