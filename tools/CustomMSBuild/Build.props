@@ -63,7 +63,7 @@
     <StrongNamePublicKeysPath>$(BuildToolsetRoot)\StrongNamePublicKeys</StrongNamePublicKeysPath>
     <CustomStrongNamePublicKeysPath>$(EnlistmentRoot)\tools\StrongNamePublicKeys</CustomStrongNamePublicKeysPath>
     <StrongNameKeyFile Condition="'$(StrongNameKeyFile)' == ''">35MSSharedLib1024.snk</StrongNameKeyFile>
-    <!--<TestStrongNameKeyFile Condition="'$(TestStrongNameKeyFile)' == ''">testkey.snk</TestStrongNameKeyFile>-->
+    <TestStrongNameKeyFile Condition="'$(TestStrongNameKeyFile)' == ''">testkey.snk</TestStrongNameKeyFile>
     <SigningType Condition="'$(SigningType)' == ''">None</SigningType>
     <SigningScenarioForRelease Condition="'$(SigningScenarioForRelease)' == ''">Delay</SigningScenarioForRelease>
 
@@ -96,8 +96,8 @@
         <!-- Determine the assembly key file -->
         <AssemblyOriginatorKeyFile>$(StrongNamePublicKeysPath)\$(StrongNameKeyFile)</AssemblyOriginatorKeyFile>
         <AssemblyOriginatorKeyFile Condition="Exists('$(CustomStrongNamePublicKeysPath)\$(StrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(StrongNameKeyFile)</AssemblyOriginatorKeyFile>
-        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test'">$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
-        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test' and Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <!--<AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test'">$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test' and Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>-->
         <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>
         <!-- ===============================================================
        End DelaySign Settings
