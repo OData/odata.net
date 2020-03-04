@@ -42,6 +42,15 @@ steps:
 
 
 - task: DotNetCoreCLI@2
+  displayName: 'Build test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
+
+- task: DotNetCoreCLI@2
   displayName: 'Build Product'  
   inputs:
     command: 'build'
@@ -57,14 +66,14 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
-
 - task: DotNetCoreCLI@2
-  displayName: 'Build test'  
+  displayName: 'Spatial Test'
   inputs:
-    command: 'build'
+    command: 'test'
     arguments: '--configuration $(BuildConfiguration)'
-    projects: |
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Test Test'
@@ -76,13 +85,6 @@ steps:
      
 
 
-- task: DotNetCoreCLI@2
-  displayName: 'Spatial Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
 - task: DotNetCoreCLI@2
   displayName: 'EDM Test'
