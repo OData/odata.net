@@ -96,8 +96,8 @@
         <!-- Determine the assembly key file -->
         <AssemblyOriginatorKeyFile>$(StrongNamePublicKeysPath)\$(StrongNameKeyFile)</AssemblyOriginatorKeyFile>
         <AssemblyOriginatorKeyFile Condition="Exists('$(CustomStrongNamePublicKeysPath)\$(StrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(StrongNameKeyFile)</AssemblyOriginatorKeyFile>
-        <!--<AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test'">$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
-        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test' and Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>-->
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test'">$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'Test' and Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
         <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>
         <!-- ===============================================================
        End DelaySign Settings
@@ -112,14 +112,14 @@
         <!-- TestSignKeys Constant used in assemblyinfocommon.cs to set key strings -->
         <DefineConstants Condition="'$(SigningType)' != 'None'">$(DefineConstants),TestSignKeys</DefineConstants>
         <!-- Submit to PRSS -->
-        <!--<SubmitForSigning>false</SubmitForSigning>
-        --><!-- Following are VS properties. --><!--
+         <SubmitForSigning>false</SubmitForSigning>
+        <!-- Following are VS properties. --> 
         <DelaySign>false</DelaySign>
         <SignAssembly>true</SignAssembly>
         <SignAssembly Condition="'$(SigningType)' == 'None'">false</SignAssembly>
         <AssemblyOriginatorKeyFile>$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
         <AssemblyOriginatorKeyFile Condition="Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
-        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>-->
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile> 
         <!-- ===============================================================
        End Test sign Settings
        ================================================================ -->
