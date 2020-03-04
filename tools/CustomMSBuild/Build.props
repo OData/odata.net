@@ -63,7 +63,7 @@
     <StrongNamePublicKeysPath>$(BuildToolsetRoot)\StrongNamePublicKeys</StrongNamePublicKeysPath>
     <CustomStrongNamePublicKeysPath>$(EnlistmentRoot)\tools\StrongNamePublicKeys</CustomStrongNamePublicKeysPath>
     <StrongNameKeyFile Condition="'$(StrongNameKeyFile)' == ''">35MSSharedLib1024.snk</StrongNameKeyFile>
-    <TestStrongNameKeyFile Condition="'$(TestStrongNameKeyFile)' == ''">testkey.snk</TestStrongNameKeyFile>
+    <!--<TestStrongNameKeyFile Condition="'$(TestStrongNameKeyFile)' == ''">testkey.snk</TestStrongNameKeyFile>-->
     <SigningType Condition="'$(SigningType)' == ''">None</SigningType>
     <SigningScenarioForRelease Condition="'$(SigningScenarioForRelease)' == ''">Delay</SigningScenarioForRelease>
 
@@ -112,14 +112,14 @@
         <!-- TestSignKeys Constant used in assemblyinfocommon.cs to set key strings -->
         <DefineConstants Condition="'$(SigningType)' != 'None'">$(DefineConstants),TestSignKeys</DefineConstants>
         <!-- Submit to PRSS -->
-        <SubmitForSigning>false</SubmitForSigning>
-        <!-- Following are VS properties. -->
+        <!--<SubmitForSigning>false</SubmitForSigning>
+        --><!-- Following are VS properties. --><!--
         <DelaySign>false</DelaySign>
         <SignAssembly>true</SignAssembly>
         <SignAssembly Condition="'$(SigningType)' == 'None'">false</SignAssembly>
         <AssemblyOriginatorKeyFile>$(StrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
         <AssemblyOriginatorKeyFile Condition="Exists('$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)')">$(CustomStrongNamePublicKeysPath)\$(TestStrongNameKeyFile)</AssemblyOriginatorKeyFile>
-        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition="'$(SigningType)' == 'None'"></AssemblyOriginatorKeyFile>-->
         <!-- ===============================================================
        End Test sign Settings
        ================================================================ -->
