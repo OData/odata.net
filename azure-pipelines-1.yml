@@ -40,22 +40,6 @@ steps:
 #   inputs:
 #     version: '1.0.4'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build test'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-
-- task: DotNetCoreCLI@2
-  displayName: 'Test Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-     
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Product'  
@@ -73,6 +57,23 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Test Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     
 
 
 - task: DotNetCoreCLI@2
