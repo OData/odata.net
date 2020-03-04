@@ -10,6 +10,9 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <!--<AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>-->
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
 

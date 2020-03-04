@@ -9,6 +9,12 @@
     <RestorePackages>true</RestorePackages>
 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <SignAssembly>true</SignAssembly>
+
+    <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
+
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <!--<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
