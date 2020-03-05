@@ -103,6 +103,13 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.Configurations.RequestPipeline.OnEntryEnding(onEntryEnding1);
             await context.SaveChangesAsync(SaveChangesOptions.None);
 
+            // Batch relative URIs
+            Customer c2 = new Customer { CustomerId = 11, Name = "customerTwo" };
+            customers.Add(c2);
+
+            var dataServiceResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseRelativeUri);
+            Assert.AreEqual((dataServiceResponse.First() as ChangeOperationResponse).StatusCode, 201, "StatusCode == 201");
+
             this.EnqueueTestComplete();
         }
 
@@ -265,6 +272,54 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             Assert.AreEqual(actualValues, ("-8-613"), "actualValues == -8-613");
             Assert.IsTrue(countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
+            this.EnqueueTestComplete();
+        }
+
+        [TestMethod, Asynchronous]
+        public async Task ExecuteBatchWithSaveChangesOptionsReturnsCorrectResults()
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var countOfBatchParts = 0;
+            var countOfTimesSenderCalled = 0;
+            context.SendingRequest2 += ((sender, args) =>
+            {
+                if (args.IsBatchPart)
+                {
+                    countOfBatchParts++;
+                }
+
+                countOfTimesSenderCalled++;
+            });
+
+            var queryResponse = await context.ExecuteBatchAsync(
+                SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseRelativeUri,
+                new DataServiceRequest[] 
+                {
+                    new DataServiceRequest<Customer>(((context.Customer.Where(c => c.CustomerId == -8)) as DataServiceQuery<Customer>).RequestUri),
+                    new DataServiceRequest<Customer>(((context.Customer.Where(c => c.CustomerId == -6)) as DataServiceQuery<Customer>).RequestUri),
+                    new DataServiceRequest<Driver>(((context.Driver.Where(c => c.Name == "1")) as DataServiceQuery<Driver>).RequestUri),
+                    new DataServiceRequest<Driver>(((context.Driver.Where(c => c.Name == "3")) as DataServiceQuery<Driver>).RequestUri)
+                });
+            var actualValues = "";
+            foreach (var r in queryResponse)
+            {
+                if (r is QueryOperationResponse<Customer>)
+                {
+                    var customer = (r as QueryOperationResponse<Customer>).Single();
+                    actualValues += customer.CustomerId;
+                }
+
+                if (r is QueryOperationResponse<Driver>)
+                {
+                    var driver = (r as QueryOperationResponse<Driver>).Single();
+                    actualValues += driver.Name;
+                }
+            }
+
+            bool isBatchPartsValid = countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1;
+
+            Assert.AreEqual(actualValues, ("-8-613"), "actualValues == -8-613");
+            Assert.IsTrue(isBatchPartsValid, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
             this.EnqueueTestComplete();
         }
 

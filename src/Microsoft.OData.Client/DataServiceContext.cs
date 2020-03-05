@@ -1533,8 +1533,19 @@ namespace Microsoft.OData.Client
         /// <param name="queries">The array of query requests to include in the batch request.</param>
         public IAsyncResult BeginExecuteBatch(AsyncCallback callback, object state, params DataServiceRequest[] queries)
         {
+            return BeginExecuteBatch(callback, state, SaveChangesOptions.BatchWithSingleChangeset, queries);
+        }
+
+        /// <summary>Asynchronously submits a group of queries as a batch to the data service.</summary>
+        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        /// <param name="callback">The delegate that is called when a response to the batch request is received.</param>
+        /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
+        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <param name="queries">The array of query requests to include in the batch request.</param>
+        public IAsyncResult BeginExecuteBatch(AsyncCallback callback, object state, SaveChangesOptions options, params DataServiceRequest[] queries)
+        {
             Util.CheckArgumentNotEmpty(queries, "queries");
-            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, callback, state);
+            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, options, callback, state);
             result.BatchBeginRequest();
             return result;
         }
@@ -1545,6 +1556,19 @@ namespace Microsoft.OData.Client
         public Task<DataServiceResponse> ExecuteBatchAsync(params DataServiceRequest[] queries)
         {
             return Task<DataServiceResponse>.Factory.FromAsync((callback, state) => this.BeginExecuteBatch(callback, state, queries), this.EndExecuteBatch, null);
+        }
+
+        /// <summary>Asynchronously submits a group of queries as a batch to the data service.</summary>
+        /// <returns>An Task that represents the DataServiceResult object that indicates the result of the batch operation.</returns>
+        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <param name="queries">The array of query requests to include in the batch request.</param>
+        public Task<DataServiceResponse> ExecuteBatchAsync(SaveChangesOptions options, params DataServiceRequest[] queries)
+        {
+            if (!Util.IsBatch(options))
+            {
+                throw new InvalidOperationException();
+            }
+            return Task<DataServiceResponse>.Factory.FromAsync((callback, state) => this.BeginExecuteBatch(callback, state, options, queries), this.EndExecuteBatch, null);
         }
 
         /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginExecuteBatch(System.AsyncCallback,System.Object,Microsoft.OData.Client.DataServiceRequest[])" />.</summary>
@@ -1563,8 +1587,22 @@ namespace Microsoft.OData.Client
         public DataServiceResponse ExecuteBatch(params DataServiceRequest[] queries)
         {
             Util.CheckArgumentNotEmpty(queries, "queries");
+            return ExecuteBatch(SaveChangesOptions.BatchWithSingleChangeset, queries);
+        }
 
-            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, null, null);
+        /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
+        /// <returns>The response to the batch operation.</returns>
+        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
+        public DataServiceResponse ExecuteBatch(SaveChangesOptions options, params DataServiceRequest[] queries)
+        {
+            Util.CheckArgumentNotEmpty(queries, "queries");
+            if (!Util.IsBatch(options))
+            {
+                throw new InvalidOperationException();
+            }
+
+            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, options, null, null);
             result.BatchRequest();
             return result.EndRequest();
         }
@@ -2959,7 +2997,7 @@ namespace Microsoft.OData.Client
         /// <param name="options">options as specified by the user.</param>
         private void ValidateSaveChangesOptions(SaveChangesOptions options)
         {
-            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties;
+            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties | SaveChangesOptions.UseRelativeUri;
 
             // Make sure no higher order bits are set.
             if ((options | All) != All)
@@ -2989,6 +3027,12 @@ namespace Microsoft.OData.Client
             if (Util.IsFlagSet(options, SaveChangesOptions.PostOnlySetProperties) && !this.UsingDataServiceCollection)
             {
                 throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.OnlyPostExplicitProperties", "DataServiceCollection"));
+            }
+
+            // UseRelativeUri can only be used in Batch Requests
+            if (Util.IsFlagSet(options, SaveChangesOptions.UseRelativeUri) && !Util.IsBatch(options))
+            {
+                throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.UseRelativeUri", "DataServiceCollection"));
             }
         }
 
