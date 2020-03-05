@@ -43,6 +43,15 @@ steps:
 
 
 - task: DotNetCoreCLI@2
+  displayName: 'Spatial Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+
+     
+- task: DotNetCoreCLI@2
   displayName: 'Test Test'
   inputs:
     command: 'test'
@@ -77,13 +86,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
-- task: DotNetCoreCLI@2
-  displayName: 'Spatial Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
 
 
