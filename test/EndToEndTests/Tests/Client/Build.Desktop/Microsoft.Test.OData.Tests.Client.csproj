@@ -20,7 +20,7 @@
 
     <SignAssembly>true</SignAssembly>
 
-    <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
 
     <DelaySign>false</DelaySign>
 
