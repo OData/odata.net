@@ -38,11 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
  
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
  
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
  
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
