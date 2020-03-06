@@ -52,7 +52,6 @@
       <HintPath>..\..\..\sln\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\sln\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -85,7 +84,6 @@
     <Compile Include="ALinq\RemoveWildcardVisitorTests.cs" />
     <Compile Include="ALinq\SelectExpandPathBuilderTests.cs" />
     <Compile Include="DataServiceContextMockTests.cs" />
-    <Compile Include="Metadata\ClientTypeUtilTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
