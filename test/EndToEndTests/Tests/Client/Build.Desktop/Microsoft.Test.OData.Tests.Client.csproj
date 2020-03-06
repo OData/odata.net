@@ -57,20 +57,7 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   
-  
-    
-  
  
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-
-    <Optimize>true</Optimize>
-
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
   
   
   <PropertyGroup>
