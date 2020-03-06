@@ -166,6 +166,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\..\..\test\FunctionalTests\Microsoft.OData.Edm.Tests\EdmUtilTests.cs" />
+  </ItemGroup>
+  
+  <!--<ItemGroup>
     <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" />
@@ -282,7 +286,7 @@
     <Compile Include="WriteJsonPayloadTests\SerializationInfoEdgeTests.cs" />
     <Compile Include="WriteJsonPayloadTests\WritePayloadHelper.cs" />
     <Compile Include="WriteJsonPayloadTests\WriteJsonWithoutModelTests.cs" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Include="App.config">
