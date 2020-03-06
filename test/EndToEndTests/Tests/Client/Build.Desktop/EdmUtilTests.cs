@@ -5,9 +5,10 @@
 //---------------------------------------------------------------------
 
 
+using Microsoft.OData.Edm;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.OData.Edm.Tests
+namespace Microsoft.Test.OData.Tests.Client
 {
     /// <summary>
     ///Tests EdmUtils functionalities
