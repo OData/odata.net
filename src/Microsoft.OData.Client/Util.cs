@@ -473,6 +473,16 @@ namespace Microsoft.OData.Client
             return false;
         }
 
+        /// <summary>
+        /// checks whether UseRelativeUri flag is set on the options
+        /// </summary>
+        /// <param name="options">options as specified by the user.</param>
+        /// <returns>true if the given flag is set, otherwise false.</returns>
+        internal static bool UseRelativeUri(SaveChangesOptions options)
+        {
+            return Util.IsFlagSet(options, SaveChangesOptions.UseRelativeUri);
+        }
+
         /// <summary>modified or unchanged</summary>
         /// <param name="x">state to test</param>
         /// <returns>true if modified or unchanged</returns>

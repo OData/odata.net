@@ -51,6 +51,9 @@ namespace Microsoft.OData.Client
         /// <summary>Buffer used for caching operation response body streams.</summary>
         private byte[] streamCopyBuffer;
 
+        /// <summary>If batch request is allowed to use Relative Uri.</summary>
+        private bool useRelativeUri = false;
+
         #endregion
 
         /// <summary>
@@ -68,6 +71,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(Util.IsBatch(options), "the options must have batch  flag set");
             this.Queries = queries;
             this.streamCopyBuffer = new byte[StreamCopyBufferSize];
+            this.useRelativeUri = Util.UseRelativeUri(options);
         }
 
         /// <summary>returns true since this class handles batch requests.</summary>
@@ -263,7 +267,7 @@ namespace Microsoft.OData.Client
         protected override ODataRequestMessageWrapper CreateRequestMessage(string method, Uri requestUri, HeaderCollection headers, HttpStack httpStack, Descriptor descriptor, string contentId)
         {
             BuildingRequestEventArgs args = this.RequestInfo.CreateRequestArgsAndFireBuildingRequest(method, requestUri, headers, this.RequestInfo.HttpStack, descriptor);
-            return ODataRequestMessageWrapper.CreateBatchPartRequestMessage(this.batchWriter, args, this.RequestInfo, contentId);
+            return ODataRequestMessageWrapper.CreateBatchPartRequestMessage(this.batchWriter, args, this.RequestInfo, contentId, this.useRelativeUri);
         }
 
         /// <summary>
@@ -317,6 +321,7 @@ namespace Microsoft.OData.Client
                     foreach (DataServiceRequest query in this.Queries)
                     {
                         QueryComponents queryComponents = query.QueryComponents(this.RequestInfo.Model);
+
                         Uri requestUri = this.RequestInfo.BaseUriResolver.GetOrCreateAbsoluteUri(queryComponents.Uri);
 
                         Debug.Assert(requestUri != null, "request uri is null");

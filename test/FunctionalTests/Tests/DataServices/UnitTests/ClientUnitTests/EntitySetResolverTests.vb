@@ -557,7 +557,7 @@ Partial Public Class ClientModule
             Assert.AreEqual(1, TypedCustomDataContext(Of MyAllTypes1).CurrentValues.Count, "Wrong number of objects added")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()>
+        '<TestCategory("Partition3")> <TestMethod()>
         Public Sub CaptureUriDuringAttachToCall()
             'Arrange
             TypedCustomDataContext(Of MyAllTypes1).ClearData()

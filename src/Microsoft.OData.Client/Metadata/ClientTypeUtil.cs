@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client.Metadata
     using Microsoft.OData.Edm;
     using c = Microsoft.OData.Client;
 
-    #endregion Namespaces.
+#endregion Namespaces.
 
     /// <summary>
     /// Utility methods for client types.
@@ -439,8 +439,8 @@ namespace Microsoft.OData.Client.Metadata
             KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
             List<PropertyInfo> keyProperties = new List<PropertyInfo>();
             PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
+ 
             hasProperties = properties.Length > 0;
-
             KeyKind currentKeyKind = KeyKind.NotKey;
             KeyKind newKeyKind = KeyKind.NotKey;
             foreach (PropertyInfo propertyInfo in properties)
@@ -478,7 +478,7 @@ namespace Microsoft.OData.Client.Metadata
                 }
             }
 
-            if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute.KeyNames.Count)
+            if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
             {
                 var m = (from string a in dataServiceKeyAttribute.KeyNames
                          where null == (from b in properties
@@ -704,6 +704,12 @@ namespace Microsoft.OData.Client.Metadata
             {
                 keyKind = KeyKind.AttributedKey;
             }
+#if !PORTABLELIB
+            else if (propertyInfo.GetCustomAttributes().OfType<System.ComponentModel.DataAnnotations.KeyAttribute>().Any())
+            {
+                keyKind = KeyKind.AttributedKey;              
+            }
+#endif
             else if (propertyName.EndsWith("ID", StringComparison.Ordinal))
             {
                 string declaringTypeName = propertyInfo.DeclaringType.Name;

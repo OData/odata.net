@@ -112,14 +112,22 @@ namespace Microsoft.OData.Client
         /// <param name="requestMessageArgs">RequestMessageArgs for the request.</param>
         /// <param name="requestInfo">RequestInfo instance.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        /// <param name="isRelativeUri">If the request is using a relative uri.</param>
         /// <returns>an instance of ODataRequestMessageWrapper.</returns>
         internal static ODataRequestMessageWrapper CreateBatchPartRequestMessage(
             ODataBatchWriter batchWriter,
             BuildingRequestEventArgs requestMessageArgs,
             RequestInfo requestInfo,
-            string contentId)
+            string contentId,
+            bool isRelativeUri)
         {
-            IODataRequestMessage requestMessage = batchWriter.CreateOperationRequestMessage(requestMessageArgs.Method, requestMessageArgs.RequestUri, contentId);
+            IODataRequestMessage requestMessage;
+
+            requestMessage = batchWriter.CreateOperationRequestMessage(
+                requestMessageArgs.Method,
+                requestMessageArgs.RequestUri,
+                contentId,
+                isRelativeUri ? BatchPayloadUriOption.RelativeUri : BatchPayloadUriOption.AbsoluteUri);
 
             foreach (var h in requestMessageArgs.Headers)
             {

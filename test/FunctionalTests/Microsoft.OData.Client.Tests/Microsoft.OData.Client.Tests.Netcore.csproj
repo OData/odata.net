@@ -9,8 +9,8 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
     <OutputPath>..\..\..\bin\AnyCPU\$(Configuration)\Test\.NETPortable</OutputPath>
+    <DefineConstants>$(DefineConstants);PORTABLELIB;</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="4.19.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
