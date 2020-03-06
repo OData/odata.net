@@ -157,7 +157,7 @@
  
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\..\test\FunctionalTests\Microsoft.OData.Edm.Tests\EdmUtilTests.cs" />
+    <Compile Include="EdmUtilTests.cs" />
   </ItemGroup>
   
   <!--<ItemGroup>
