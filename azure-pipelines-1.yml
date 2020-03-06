@@ -41,7 +41,12 @@ steps:
 #     version: '1.0.4'
 
 
-
+- task: VSTest@2
+  displayName: 'Test'
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: '$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
 
 - task: DotNetCoreCLI@2
   displayName: 'EDM Test'
