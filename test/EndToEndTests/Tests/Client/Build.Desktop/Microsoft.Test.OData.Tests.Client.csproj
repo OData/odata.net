@@ -20,11 +20,11 @@
 
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
 
-    <SignAssembly>true</SignAssembly>
+    <!--<SignAssembly>true</SignAssembly>
 
     <AssemblyOriginatorKeyFile>..\..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
 
-    <DelaySign>false</DelaySign>
+    <DelaySign>false</DelaySign>-->
 
  
   </PropertyGroup>
@@ -159,7 +159,7 @@
 
   </ItemGroup>
 
-  <!--<ItemGroup>
+  <ItemGroup>
     <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" />
@@ -276,7 +276,7 @@
     <Compile Include="WriteJsonPayloadTests\SerializationInfoEdgeTests.cs" />
     <Compile Include="WriteJsonPayloadTests\WritePayloadHelper.cs" />
     <Compile Include="WriteJsonPayloadTests\WriteJsonWithoutModelTests.cs" />
-  </ItemGroup>-->
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="App.config">
