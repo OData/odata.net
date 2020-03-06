@@ -11,7 +11,7 @@
     <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
 
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworks>net452</TargetFrameworks>
+    <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
@@ -159,7 +159,7 @@
 
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" />
@@ -276,7 +276,7 @@
     <Compile Include="WriteJsonPayloadTests\SerializationInfoEdgeTests.cs" />
     <Compile Include="WriteJsonPayloadTests\WritePayloadHelper.cs" />
     <Compile Include="WriteJsonPayloadTests\WriteJsonWithoutModelTests.cs" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Include="App.config">
