@@ -20,6 +20,12 @@
 
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
 
+    <SignAssembly>true</SignAssembly>
+
+    <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
+
+    <DelaySign>false</DelaySign>
+
     <!--<SignAssembly>true</SignAssembly>
 
     <AssemblyOriginatorKeyFile>..\..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
