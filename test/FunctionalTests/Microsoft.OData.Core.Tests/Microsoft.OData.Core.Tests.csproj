@@ -16,7 +16,7 @@
   </PropertyGroup>
 
 
-  <Import Project="..\Build.props" />
+  <!--<Import Project="..\Build.props" />-->
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
@@ -27,13 +27,13 @@
     <PackageReference Include="xunit.core" Version="2.1.0.3179" />
   </ItemGroup>
 
-  <PropertyGroup>
+  <!--<PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-  </PropertyGroup>
+  </PropertyGroup>-->
 
 
   <ItemGroup>
