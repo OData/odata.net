@@ -42,6 +42,17 @@ steps:
 
 
 
+
+- task: DotNetCoreCLI@2
+  displayName: 'EDM Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+     
+
+
 - task: DotNetCoreCLI@2
   displayName: 'Test Test'
   inputs:
@@ -98,15 +109,6 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
-
-- task: DotNetCoreCLI@2
-  displayName: 'EDM Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
-     
 
 - task: DotNetCoreCLI@2
   displayName: 'Client Test'
