@@ -111,13 +111,13 @@
 
     <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
 
-    <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
+    <!--<ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
 
    <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
 
      <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj">
       
-    <!--<Aliases>destination</Aliases>-->
+    --><!--<Aliases>destination</Aliases>--><!--
   
     </ProjectReference>
 
@@ -129,7 +129,7 @@
 
     <ProjectReference Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj" /> 
 
-    <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj" />
+    <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj" />-->
 
   </ItemGroup>
   <ItemGroup>
