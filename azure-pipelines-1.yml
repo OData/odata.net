@@ -41,7 +41,16 @@ steps:
 #     version: '1.0.4'
 
 
-     
+
+- task: DotNetCoreCLI@2
+  displayName: 'Core Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+
+
 - task: DotNetCoreCLI@2
   displayName: 'Test Test'
   inputs:
@@ -78,14 +87,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
 
-
-- task: DotNetCoreCLI@2
-  displayName: 'Core Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
 
 - task: DotNetCoreCLI@2
