@@ -26,20 +26,7 @@
 
  
   </PropertyGroup>
-   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Optimize>true</Optimize>
-    <AssemblyName>Microsoft.OData.Edm.Tests</AssemblyName>
-    <TargetFrameworks>net452;netcoreapp1.0;netcoreapp2.0;</TargetFrameworks>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\sln\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute> <!--check this in attributes-->
-
-  </PropertyGroup>
+ 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
