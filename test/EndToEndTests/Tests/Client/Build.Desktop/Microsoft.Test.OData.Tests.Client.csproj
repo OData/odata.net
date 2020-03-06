@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
+  
+  
+  <!--<PropertyGroup>
 
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -18,14 +20,46 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     
     
-    <!--<RunCodeAnalysis>false</RunCodeAnalysis>
+    --><!--<RunCodeAnalysis>false</RunCodeAnalysis>
 
-    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>-->
-
- 
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>--><!--
 
  
+
+ 
+  </PropertyGroup>-->
+  
+  
+  
+   <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Optimize>true</Optimize>
+    <AssemblyName>Microsoft.Test.OData.Tests.Client</AssemblyName>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\sln\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+      <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute> <!--check this in attributes-->
+
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+
+    <Optimize>true</Optimize>
+
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  
+  
+    
+  
  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <ErrorReport>prompt</ErrorReport>
