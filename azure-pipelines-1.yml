@@ -43,15 +43,6 @@ steps:
 
 
 - task: DotNetCoreCLI@2
-  displayName: 'Core Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-
-
-- task: DotNetCoreCLI@2
   displayName: 'Test Test'
   inputs:
     command: 'test'
@@ -59,6 +50,16 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Core Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+
 
 
 - task: DotNetCoreCLI@2
