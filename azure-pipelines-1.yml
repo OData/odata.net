@@ -41,12 +41,22 @@ steps:
 #     version: '1.0.4'
 
 
+- task: DotNetCoreCLI@2
+  displayName: 'Build Product 1'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
 - task: VSTest@2
   displayName: 'Test'
   inputs:
     testSelector: 'testAssemblies'
-    testAssemblyVer2: '$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
+    testAssemblyVer2: '$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\Microsoft.Test.OData.Tests.Client.dll' #'$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
     searchFolder: '$(System.DefaultWorkingDirectory)'
+
+#$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\
 
 - task: DotNetCoreCLI@2
   displayName: 'EDM Test'
