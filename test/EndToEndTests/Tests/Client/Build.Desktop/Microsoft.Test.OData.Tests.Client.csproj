@@ -71,14 +71,14 @@
   <!--<Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />-->
     
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="4.1.0" />
+    <!--<PackageReference Include="FluentAssertions" Version="4.1.0" />
 
-    <PackageReference Include="EntityFramework" Version="5.0.0" />
+    <PackageReference Include="EntityFramework" Version="5.0.0" />-->
 
     <!--<PackageReference Include="Microsoft.MadMan" Version="3.1.112712" />-->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <!--<PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />-->
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <!--<PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />-->
@@ -129,7 +129,7 @@
 
     <!--<ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />-->
 
-    <ProjectReference Include="..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+    <!--<ProjectReference Include="..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />-->
 
     <!--<ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />-->
 
@@ -279,11 +279,11 @@
     <Compile Include="WriteJsonPayloadTests\WriteJsonWithoutModelTests.cs" />
   </ItemGroup>-->
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
+  </ItemGroup>-->
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
