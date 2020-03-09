@@ -21,8 +21,8 @@ variables:
   skipComponentGovernanceDetection: true
   snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
   snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
-  ProductBinPath: '$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\bin\$(BuildConfiguration)\net45'
-  mainDll: 'Microsoft.Test.OData.Tests.Client.dll'
+  ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)\net45'
+  mainDll: 'Microsoft.OData.Client.dll'
   
 steps:
 
