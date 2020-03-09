@@ -48,6 +48,17 @@ steps:
 # because the assemblies are delay-signed, we need to disable
 # strong name validation so that the tests may run,
 # otherwise our assemblies will fail to load
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Product 1'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
+
 - task: Powershell@2
   displayName: 'Skip strong name validation'
   inputs:
@@ -73,14 +84,6 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build Product 1'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
 
 - task: VSTest@2
   displayName: 'Test'
