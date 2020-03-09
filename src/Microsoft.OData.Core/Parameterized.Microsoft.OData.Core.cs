@@ -775,7 +775,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The parameter '{0}' is of Edm type kind '{1}'. You cannot call WriteValue on a parameter that is not of Edm type kinds 'Primitive', 'Enum' or 'Complex'."
+        /// A string like "The parameter '{0}' is of Edm type kind '{1}'. You cannot call WriteValue on a parameter that is not of Edm type kinds 'Primitive' or 'Enum'."
         /// </summary>
         internal static string ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind, p0, p1);
