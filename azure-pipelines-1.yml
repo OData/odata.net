@@ -22,6 +22,7 @@ variables:
   snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
   snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
   ProductBinPath: '$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\bin\$(BuildConfiguration)\net45'
+  mainDll: 'Microsoft.Test.OData.Tests.Client.dll'
   
 steps:
 
@@ -54,9 +55,11 @@ steps:
     script: |
       & "$(snExe)" /Vr $(ProductBinPath)\$(mainDll)
       & "$(snExe64)" /Vr $(ProductBinPath)\$(mainDll)
-      & "$(snExe)" /Vr $(testBinPath)\$(testDll)
-      & "$(snExe64)" /Vr $(testBinPath)\$(testDll)
+      
   enabled: true
+
+# "$(snExe)" /Vr $(testBinPath)\$(testDll)
+      # "$(snExe64)" /Vr $(testBinPath)\$(testDll)
 
 # - task: DotNetCoreInstaller@1
 #   inputs:
