@@ -56,7 +56,7 @@ steps:
       & "$(snExe64)" /Vr $(ProductBinPath)\$(mainDll)
       & "$(snExe)" /Vr $(testBinPath)\$(testDll)
       & "$(snExe64)" /Vr $(testBinPath)\$(testDll)
-  enabled: false
+  enabled: true
 
 # - task: DotNetCoreInstaller@1
 #   inputs:
