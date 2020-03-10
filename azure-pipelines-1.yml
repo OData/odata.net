@@ -80,7 +80,7 @@ steps:
   displayName: 'Test Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration)'
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
