@@ -54,6 +54,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void OperationOverloadsWithSameNameWithoutBindingType()
+        {
+            var model = ModelBuildingHelpers.GetModelWithOperationOverloadsWithSameName();
+            var parameters = new string[] {};
+
+            IEdmOperation operation;
+            Action resolve = () => FunctionOverloadResolver.ResolveOperationFromList("Test.Action", parameters, null, model, out operation, DefaultUriResolver);
+            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleActionOverloads("Test.Action"));
+        }
+
+       [Fact]
         public void SingleFunctionSuccessfullyResolved()
         {
             var parameters = new[] { "inOffice" };

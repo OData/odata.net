@@ -176,6 +176,29 @@ namespace Microsoft.OData.Tests.UriParser
             return model;
         }
 
+        public static IEdmModel GetModelWithOperationOverloadsWithSameName()
+        {
+            EdmEntityType vegetableType = new EdmEntityType("Test", "Vegetable", null, true, false);
+            IEdmStructuralProperty id = vegetableType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            vegetableType.AddKeys(id);
+            EdmCollectionTypeReference collectionTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(vegetableType, false)));
+
+            EdmEntityContainer container = new EdmEntityContainer("Test", "Container");
+            var action1 = new EdmAction("Test", "Action", new EdmEntityTypeReference(vegetableType, true), true /*isBound*/, null /*entitySetPath*/);
+            action1.AddParameter("p1", collectionTypeReference);
+
+            var action2 = new EdmAction("Test", "Action", new EdmEntityTypeReference(vegetableType, true), true /*isBound*/, null /*entitySetPath*/);
+            action2.AddParameter("p2", new EdmEntityTypeReference(vegetableType, true));
+
+            EdmModel model = new EdmModel();
+            model.AddElement(container);
+            model.AddElement(vegetableType);
+            model.AddElement(action1);
+            model.AddElement(action2);
+
+            return model;
+        }
+
         public static IEdmModel GetModelWithMixedActionsAndFunctionsWithSameName()
         {
             EdmEntityType vegetableType = new EdmEntityType("Test", "Vegetable"); 
