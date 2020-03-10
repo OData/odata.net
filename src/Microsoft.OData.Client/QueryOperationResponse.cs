@@ -57,7 +57,19 @@ namespace Microsoft.OData.Client
         /// <summary>Gets the server result set count value from a query, if the query has requested the value.</summary>
         /// <returns>The return value can be either a zero or positive value equal to the number of entities in the set on the server.</returns>
         /// <exception cref="T:System.InvalidOperationException">Thrown when the count tag is not found in the response stream.</exception>
+        [Obsolete("Please use Count")]
         public virtual long TotalCount
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        /// <summary>Gets the server result set count value from a query, if the query has requested the value.</summary>
+        /// <returns>The return value can be either a zero or positive value equal to the number of entities in the set on the server.</returns>
+        /// <exception cref="T:System.InvalidOperationException">Thrown when the count tag is not found in the response stream.</exception>
+        public virtual long Count
         {
             get
             {

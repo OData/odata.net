@@ -424,9 +424,14 @@ namespace Microsoft.OData.Client
                     this.VisitProjectionPaths(re.Projection.Paths);
                 }
 
-                if (re.CountOption == CountOption.CountQuery)
+                if (re.CountOption == CountOption.CountQueryTrue)
                 {
-                    this.VisitCountQueryOptions();
+                    this.VisitCountQueryOptions(true);
+                }
+
+                if (re.CountOption == CountOption.CountQueryFalse)
+                {
+                    this.VisitCountQueryOptions(false);
                 }
 
                 if (re.CustomQueryOptions.Count > 0)
@@ -545,10 +550,18 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// VisitCountQueryOptions visit method.
+        /// <param name="countQueryOption">Count query option, either true or false</param>
         /// </summary>
-        internal void VisitCountQueryOptions()
+        internal void VisitCountQueryOptions(bool countQueryOption)
         {
-            this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONCOUNT, UriHelper.COUNTTRUE);
+            if(countQueryOption)
+            {
+                this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONCOUNT, UriHelper.COUNTTRUE);
+            }
+            else
+            {
+                this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONCOUNT, UriHelper.COUNTFALSE);
+            }
         }
 
         /// <summary>

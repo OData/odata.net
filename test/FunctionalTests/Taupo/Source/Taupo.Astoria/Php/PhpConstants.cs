@@ -84,7 +84,7 @@ namespace Microsoft.Test.Taupo.Astoria.Php
         /// <summary>
         /// The PHP Client API for adding the Include Total count option to query
         /// </summary>
-        public const string InlineCountOption = "IncludeTotalCount";
+        public const string InlineCountOption = "IncludeCount";
 
         /// <summary>
         /// The PHP Client API to instruct a query to return only the count of the enitities

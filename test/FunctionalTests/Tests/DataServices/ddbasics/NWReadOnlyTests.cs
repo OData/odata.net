@@ -332,10 +332,10 @@ namespace AstoriaUnitTests
             public void QueryRowCountBatchRequest()
             {
                 DataServiceRequest[] queries = new DataServiceRequest[] {
-                        (DataServiceRequest)(from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount() select c).Take(1),
-                        (DataServiceRequest)(from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount().Where(c=>c.ContactTitle=="Owner") select c).Take(1),
-                        (DataServiceRequest)(from c in ctx.CreateQuery<northwindClient.Orders>("Orders").IncludeTotalCount().Expand("Order_Details") select c).Take(1),
-                        (DataServiceRequest)(ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount().Where(c=>c.CustomerID=="QUICK").SelectMany(c => c.Orders)).Take(1)
+                        (DataServiceRequest)(from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount() select c).Take(1),
+                        (DataServiceRequest)(from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount().Where(c=>c.ContactTitle=="Owner") select c).Take(1),
+                        (DataServiceRequest)(from c in ctx.CreateQuery<northwindClient.Orders>("Orders").IncludeCount().Expand("Order_Details") select c).Take(1),
+                        (DataServiceRequest)(ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount().Where(c=>c.CustomerID=="QUICK").SelectMany(c => c.Orders)).Take(1)
                     };
 
                 DataServiceResponse response = ctx.ExecuteBatch(queries);
@@ -343,7 +343,7 @@ namespace AstoriaUnitTests
 
                 foreach (QueryOperationResponse r in response)
                 {
-                    long count = r.TotalCount;
+                    long count = r.Count;
                     Assert.IsTrue(count > 0);
                 }
             }
@@ -353,20 +353,20 @@ namespace AstoriaUnitTests
             {
                 var q = (QueryOperationResponse<northwindClient.Customers>)
                     ctx.Execute<northwindClient.Customers>("/Customers('QUICK')/Orders/$ref?$count=true");
-                long countValue = q.TotalCount;
+                long countValue = q.Count;
                 Assert.AreEqual(1, countValue);
             }
 
             [TestMethod]
             public void QueryRowCountInline()
             {
-                var q = from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount()
+                var q = from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount()
                         select c;
 
                 var ie = ((DataServiceQuery<northwindClient.Customers>)q).Execute();
                 QueryOperationResponse<northwindClient.Customers> dsr = ie as QueryOperationResponse<northwindClient.Customers>;
 
-                long sc1 = dsr.TotalCount;      // server count 1
+                long sc1 = dsr.Count;      // server count 1
 
                 int cc = 0;                     // client count
                 foreach (northwindClient.Customers c in ie)
@@ -374,7 +374,7 @@ namespace AstoriaUnitTests
                     ++cc;
                 }
 
-                long sc2 = dsr.TotalCount;      // server count 2 (after enumeration)
+                long sc2 = dsr.Count;      // server count 2 (after enumeration)
 
                 Assert.AreEqual(sc1, sc2);
                 Assert.AreEqual(sc1, cc, "Server count matches client count");
@@ -383,11 +383,11 @@ namespace AstoriaUnitTests
             [TestMethod]
             public void QueryRowCountInlineAndValue()
             {
-                DataServiceQuery<northwindClient.Customers> q = (DataServiceQuery<northwindClient.Customers>)(from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount()
+                DataServiceQuery<northwindClient.Customers> q = (DataServiceQuery<northwindClient.Customers>)(from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount()
                                                                                                               select c);
 
                 QueryOperationResponse<northwindClient.Customers> r = (QueryOperationResponse<northwindClient.Customers>)q.Execute();
-                long sc1 = r.TotalCount;
+                long sc1 = r.Count;
 
                 q = (DataServiceQuery<northwindClient.Customers>)(from c in ctx.CreateQuery<northwindClient.Customers>("Customers")
                                                                   select c);
@@ -399,7 +399,7 @@ namespace AstoriaUnitTests
             [TestMethod]
             public void QueryRowCountUriBuilder()
             {
-                var baseQuery = ctx.CreateQuery<northwindClient.Orders>("Orders").IncludeTotalCount();
+                var baseQuery = ctx.CreateQuery<northwindClient.Orders>("Orders").IncludeCount();
                 // having both $count=inline & $count=value - should fail
                 try
                 {
@@ -431,10 +431,10 @@ namespace AstoriaUnitTests
                 DataServiceQuery<northwindClient.Customers> q =
                     ((DataServiceQuery<northwindClient.Customers>)
                     (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").Where(cc => cc.CustomerID == "ALFKI")
-                     select c)).IncludeTotalCount();
+                     select c)).IncludeCount();
 
                 QueryOperationResponse<northwindClient.Customers> r = (QueryOperationResponse<northwindClient.Customers>)q.Execute();
-                long sc1 = r.TotalCount;
+                long sc1 = r.Count;
 
                 q = (DataServiceQuery<northwindClient.Customers>)
                     (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").Where(cc => cc.CustomerID == "ALFKI")
@@ -449,14 +449,14 @@ namespace AstoriaUnitTests
             {
                 bool asyncComplete = false;
                 long countValue = 0;
-                var q = ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount();
+                var q = ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount();
                 q.BeginExecute(
                     ar =>
                     {
                         try
                         {
                             QueryOperationResponse<northwindClient.Customers> qor = (QueryOperationResponse<northwindClient.Customers>)q.EndExecute(ar);
-                            countValue = qor.TotalCount;
+                            countValue = qor.Count;
                         }
                         finally
                         {
@@ -475,7 +475,7 @@ namespace AstoriaUnitTests
             public void QueryRowCountNotFoundException()
             {
                 var baseQuery = ctx.CreateQuery<northwindClient.Customers>("Customer");
-                var inlineQuery = baseQuery.IncludeTotalCount();
+                var inlineQuery = baseQuery.IncludeCount();
                 string countNotPresentMsg = DataServicesClientResourceUtil.GetString("MaterializeFromAtom_CountNotPresent");
                 string resourceNotFoundCustomerMsg = DataServicesResourceUtil.GetString("RequestUriProcessor_ResourceNotFound", "Customer");
                 string resourceNotFoundVar1Msg = DataServicesResourceUtil.GetString("RequestUriProcessor_ResourceNotFound", "VAR1");
@@ -494,7 +494,7 @@ namespace AstoriaUnitTests
                         Assert.AreEqual(qor.Count(), 0);
 
                         // server count should fail:
-                        long count = qor.TotalCount;
+                        long count = qor.Count;
 
                         Assert.Fail("Server count failed to throw on 404");
                     }
@@ -532,7 +532,7 @@ namespace AstoriaUnitTests
                         Assert.AreEqual(qor.Count(), 0);
 
                         // server count should fail:
-                        long count = qor.TotalCount;
+                        long count = qor.Count;
 
                         Assert.Fail("Server count failed to throw on 404");
                     }
@@ -557,7 +557,7 @@ namespace AstoriaUnitTests
                         {
                             QueryOperationResponse<northwindClient.Customers> qor = (QueryOperationResponse<northwindClient.Customers>)inlineQuery.EndExecute(ar);
                             Assert.AreEqual(qor.Count(), 0);
-                            long count = qor.TotalCount;
+                            long count = qor.Count;
                             Assert.Fail("Server count failed to throw on 404");
                         }
                         catch (DataServiceQueryException ex)
@@ -609,7 +609,7 @@ namespace AstoriaUnitTests
                     QueryOperationResponse<northwindClient.Customers> qor = (QueryOperationResponse<northwindClient.Customers>)responses[i];
                     try
                     {
-                        long count = qor.TotalCount;
+                        long count = qor.Count;
                         Assert.AreNotEqual(i, 0);
                         if (i == 2)
                         {
@@ -638,19 +638,19 @@ namespace AstoriaUnitTests
                         (from c in ctx.CreateQuery<northwindClient.Customers>("Customers") select c).Take(1),
 
                         // case 1: has count - should equal to 15
-                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount() select c).Take(1),
+                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount() select c).Take(1),
 
                         // case 2: has count with expand - should equal to 15
-                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").Expand("Orders").IncludeTotalCount() select c).Take(1),
+                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").Expand("Orders").IncludeCount() select c).Take(1),
                         
                         // case 3: has count with ordering, skipping - should equal to 15
-                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount().OrderBy( cc=>cc.ContactTitle).Skip(2).Take(1) select c),
+                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount().OrderBy( cc=>cc.ContactTitle).Skip(2).Take(1) select c),
                         
                         // case 4: has count with filtering - should equal to 4
-                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount().Where(cc=>cc.ContactTitle.Equals("owner")).Take(1) select c),
+                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount().Where(cc=>cc.ContactTitle.Equals("owner")).Take(1) select c),
                        
                         // case 5: has count with filtering & expanding - should equal to 4
-                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeTotalCount().Expand("Orders").Where(cc=>cc.ContactTitle.Equals("owner")).Take(1) select c),
+                        (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").IncludeCount().Expand("Orders").Where(cc=>cc.ContactTitle.Equals("owner")).Take(1) select c),
                         
                         // case 6: has count from Custom Query Option - should equal to 15
                         (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").AddQueryOption("$count", "true").Take(1) select c)
@@ -664,7 +664,7 @@ namespace AstoriaUnitTests
 
                     try
                     {
-                        long count = qor.TotalCount;
+                        long count = qor.Count;
                         Assert.AreNotEqual(i, 0);
                         if (i == 4 || i == 5)
                         {

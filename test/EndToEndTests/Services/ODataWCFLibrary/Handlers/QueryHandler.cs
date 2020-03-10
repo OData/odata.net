@@ -172,7 +172,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                     ODataWriter resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet, entityType);
 
-                    ResponseWriter.WriteFeed(resultWriter, entityType, iEnumerableResults, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, this.QueryContext.DeltaLink, this.QueryContext.NextLink, this.RequestHeaders);
+                    ResponseWriter.WriteFeed(resultWriter, entityType, iEnumerableResults, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.Count, this.QueryContext.DeltaLink, this.QueryContext.NextLink, this.RequestHeaders);
                     resultWriter.Flush();
                 }
                 else if ((this.QueryContext.Target.NavigationSource != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)
