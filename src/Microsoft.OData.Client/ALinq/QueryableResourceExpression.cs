@@ -147,7 +147,8 @@ namespace Microsoft.OData.Client
             {
                 return this.sequenceQueryOptions.Count > 0 ||
                     this.ExpandPaths.Count > 0 ||
-                    this.CountOption == CountOption.CountQuery ||        // value only count is not an option
+                    this.CountOption == CountOption.CountQueryTrue ||        // value only count is not an option
+                    this.CountOption == CountOption.CountQueryFalse ||       // value only count is not an option
                     this.CustomQueryOptions.Count > 0 ||
                     this.Projection != null;
             }

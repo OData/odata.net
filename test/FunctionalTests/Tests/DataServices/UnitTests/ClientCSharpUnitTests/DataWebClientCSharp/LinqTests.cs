@@ -3425,7 +3425,7 @@ namespace AstoriaUnitTests.Tests
             // with inline count
             ReadOnlyTestContext.ClearBaselineIncludes();
 
-            var val9 = (from s in context.CreateQuery<Stadium>("Stadiums").IncludeTotalCount()
+            var val9 = (from s in context.CreateQuery<Stadium>("Stadiums").IncludeCount()
                         where true
                         select new NarrowStadium
                         {
@@ -3644,9 +3644,9 @@ namespace AstoriaUnitTests.Tests
             }
             ReadOnlyTestContext.ClearBaselineIncludes();
 
-            //IncludeTotalCount - Entity Type.
+            //IncludeCount - Entity Type.
             ReadOnlyTestContext.ClearBaselineIncludes();
-            var queryable = from c in context.CreateQuery<BigCity>("BigCities").IncludeTotalCount()
+            var queryable = from c in context.CreateQuery<BigCity>("BigCities").IncludeCount()
                             select new LittleCity
                             {
                                 BigCityID = c.BigCityID,
@@ -3665,16 +3665,16 @@ namespace AstoriaUnitTests.Tests
 
             QueryOperationResponse qor = (QueryOperationResponse)(results);
 
-            if ((qor.TotalCount != baseline.Count()) || (qor.TotalCount != baseLineContext.BigCities.Count()))
+            if ((qor.Count != baseline.Count()) || (qor.Count != baseLineContext.BigCities.Count()))
             {
                 throw new Exception("Test failed");
             }
 
             RunTest(baseline, queryable, true);
 
-            //IncludeTotalCount - non Entity Type.
+            //IncludeCount - non Entity Type.
             ReadOnlyTestContext.ClearBaselineIncludes();
-            var queryable2 = from c in context.CreateQuery<BigCity>("BigCities").IncludeTotalCount()
+            var queryable2 = from c in context.CreateQuery<BigCity>("BigCities").IncludeCount()
                              select new
                              {
                                  BigCityID = c.BigCityID,
@@ -3693,21 +3693,21 @@ namespace AstoriaUnitTests.Tests
 
             QueryOperationResponse qor2 = (QueryOperationResponse)(results2);
 
-            if ((qor2.TotalCount != baseline.Count()) || (qor2.TotalCount != baseLineContext.BigCities.Count()))
+            if ((qor2.Count != baseline.Count()) || (qor2.Count != baseLineContext.BigCities.Count()))
             {
                 throw new Exception("Test failed");
             }
 
             RunTest(baseline2, queryable2, true);
 
-            //IncludeTotalCount - Entity Type, after projection
+            //IncludeCount - Entity Type, after projection
             ReadOnlyTestContext.ClearBaselineIncludes();
             var queryable3 = ((DataServiceQuery<LittleCity>)from c in context.CreateQuery<BigCity>("BigCities")
                                                             select new LittleCity
                                                             {
                                                                 BigCityID = c.BigCityID,
                                                                 Name = c.Name
-                                                            }).IncludeTotalCount();
+                                                            }).IncludeCount();
 
             var baseline3 = from c in baseLineContext.BigCities
                             select new LittleCity
@@ -3721,16 +3721,16 @@ namespace AstoriaUnitTests.Tests
 
             QueryOperationResponse qor3 = (QueryOperationResponse)(results3);
 
-            if ((qor3.TotalCount != baseline3.Count()) || (qor3.TotalCount != baseLineContext.BigCities.Count()))
+            if ((qor3.Count != baseline3.Count()) || (qor3.Count != baseLineContext.BigCities.Count()))
             {
                 throw new Exception("Test failed");
             }
 
             RunTest(baseline3, queryable3, true);
 
-            // IncludeTotalCount with query options
+            // IncludeCount with query options
             ReadOnlyTestContext.ClearBaselineIncludes();
-            var queryable4 = from c in context.CreateQuery<BigCity>("BigCities").IncludeTotalCount()
+            var queryable4 = from c in context.CreateQuery<BigCity>("BigCities").IncludeCount()
                              where c.BigCityID > 0
                              orderby c.Population
                              select new LittleCity
@@ -3753,7 +3753,7 @@ namespace AstoriaUnitTests.Tests
 
             QueryOperationResponse qor4 = (QueryOperationResponse)(results);
 
-            if (qor4.TotalCount != baseline.Count())
+            if (qor4.Count != baseline.Count())
             {
                 throw new Exception("Test failed");
             }
@@ -8141,8 +8141,9 @@ namespace AstoriaUnitTests.Tests
                 IQueryable q = baseQueries[i];
 
                 // 1: Inline Counting
-                MethodInfo IncludeTotalCountMethod = typeof(DataServiceQuery<>).MakeGenericType(q.ElementType).GetMethod("IncludeTotalCount");
-                IQueryable inlineQuery = (IQueryable)IncludeTotalCountMethod.Invoke(q, null);
+                MethodInfo IncludeCountMethod = typeof(DataServiceQuery<>).MakeGenericType(q.ElementType).GetMethods()
+                    .First(m => m.Name == "IncludeCount" && m.GetParameters().Length == 0);
+                IQueryable inlineQuery = (IQueryable)IncludeCountMethod.Invoke(q, null);
                 string uri = inlineQuery.ToString();
                 Assert.IsTrue(uri.EndsWith(expectedUris[i * 2]));
 
@@ -8156,14 +8157,14 @@ namespace AstoriaUnitTests.Tests
         // [TestMethod]
         public void ProjectionAndCountTest()
         {
-            DataServiceQuery q = (DataServiceQuery)from t in context.CreateQuery<Team>("Teams").IncludeTotalCount()
+            DataServiceQuery q = (DataServiceQuery)from t in context.CreateQuery<Team>("Teams").IncludeCount()
                                                    select new { TID = t.TeamID };
 
             // Try both the sync and async version
             var qor = (QueryOperationResponse)q.Execute();
             var qor1 = (QueryOperationResponse)q.EndExecute(q.BeginExecute(null, null));
 
-            Assert.IsTrue(qor.TotalCount == qor1.TotalCount, "The counts must be the same from sync and async versions");
+            Assert.IsTrue(qor.Count == qor1.Count, "The counts must be the same from sync and async versions");
         }
 
         // [TestMethod]

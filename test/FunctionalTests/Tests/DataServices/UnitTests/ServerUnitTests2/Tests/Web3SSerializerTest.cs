@@ -778,7 +778,7 @@ namespace AstoriaUnitTests.Tests
                     //ctx.EnableAtom = true;
                     //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<Customer>("Customers");
-                    q = includeCount ? q.IncludeTotalCount() : q;
+                    q = includeCount ? q.IncludeCount() : q;
 
                     long beforeCount = -1;
                     long afterCount = -1;
@@ -788,12 +788,12 @@ namespace AstoriaUnitTests.Tests
 
                     Exception exception = TestUtil.RunCatching(() =>
                         {
-                            if (askBefore) beforeCount = response.TotalCount;
+                            if (askBefore) beforeCount = response.Count;
                             foreach (Customer c in q)
                             {
                                 inlineCount++;
                             }
-                            if (askAfter) afterCount = response.TotalCount;
+                            if (askAfter) afterCount = response.Count;
                         });
 
                     if ((askBefore || askAfter) && !includeCount)
