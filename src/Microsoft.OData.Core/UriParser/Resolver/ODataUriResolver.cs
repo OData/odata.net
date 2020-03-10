@@ -293,7 +293,7 @@ namespace Microsoft.OData.UriParser
             IEdmEntityContainer container = model.EntityContainer;
             if (container == null)
             {
-                return null;
+                return Enumerable.Empty<IEdmOperationImport>();
             }
 
             return container.Elements.OfType<IEdmOperationImport>()
