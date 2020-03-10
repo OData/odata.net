@@ -1082,7 +1082,7 @@ namespace Microsoft.OData.Edm
         /// <returns>All operation imports that can be found by the specified name, returns an empty enumerable if no operation import exists.</returns>
         public static IEnumerable<IEdmOperationImport> FindDeclaredOperationImports(this IEdmModel model, string qualifiedName)
         {
-            IEnumerable<IEdmOperationImport> foundOperationImports = null;
+            IEnumerable<IEdmOperationImport> foundOperationImports;
             if (!model.TryFindContainerQualifiedOperationImports(qualifiedName, out foundOperationImports))
             {
                 // try searching by operation import name in container and extended containers:
@@ -1093,7 +1093,7 @@ namespace Microsoft.OData.Edm
                 }
             }
 
-            return foundOperationImports;
+            return foundOperationImports ?? Enumerable.Empty<IEdmOperationImport>();
         }
 
         /// <summary>

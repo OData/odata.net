@@ -287,6 +287,15 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "Segments with multiple key values must specify them in 'name=value' form.");
         }
 
+        [Fact]
+        public void ResolveOperationImportsReturnsEmptyEnumerableForNoEntityContainerInModel()
+        {
+            var operationImportName = "NonExistingOperationImport";
+            var odataUriResolver = new ODataUriResolver { EnableCaseInsensitive = true };
+            var result = odataUriResolver.ResolveOperationImports(new EdmModel(), operationImportName);
+            Assert.Empty(result);
+        }
+
         private void TestPos<TResult>(string originalStr, string caseInsensitiveStr, Func<ODataUriParser, TResult> parse, Action<TResult> verify, string errorMessage)
         {
             TestUriParserExtension(originalStr, caseInsensitiveStr, parse, verify, errorMessage, Model, parser => parser.Resolver = new Pos());
