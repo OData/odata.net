@@ -61,5 +61,5 @@
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
    
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

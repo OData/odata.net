@@ -21,7 +21,7 @@
     
     <PackageReference Include="EntityFramework" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <!--<PackageReference Include="MSTest.TestFramework" Version="2.1.0" />-->
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -30,6 +30,10 @@
 
 
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+      <HintPath>..\..\..\packages\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    </Reference>
+    
     <Reference Include="System.Core" />
     <Reference Include="System" />
     <Reference Include="System.ServiceModel" />
@@ -42,6 +46,9 @@
     <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Extensions.dll" />
     <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.MaDLybZ.dll" />
     <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Validation.dll" />
+
+ 
+
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
