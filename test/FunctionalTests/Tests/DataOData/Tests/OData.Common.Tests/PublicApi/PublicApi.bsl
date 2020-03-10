@@ -7844,7 +7844,18 @@ public class Microsoft.OData.Client.DataServiceQuery`1 : Microsoft.OData.Client.
 	public virtual IEnumerator`1 GetEnumerator ()
 	public string GetKeyPath (string keyString)
 	public string GetPath (string nextSegment)
+	public Microsoft.OData.Client.DataServiceQuery`1 IncludeCount ()
+	public Microsoft.OData.Client.DataServiceQuery`1 IncludeCount (bool countQuery)
+	[
+	ObsoleteAttribute(),
+	]
 	public Microsoft.OData.Client.DataServiceQuery`1 IncludeTotalCount ()
+
+	[
+	ObsoleteAttribute(),
+	]
+	public Microsoft.OData.Client.DataServiceQuery`1 IncludeTotalCount (bool countQuery)
+
 	internal virtual Microsoft.OData.Client.QueryComponents QueryComponents (Microsoft.OData.Client.ClientEdmModel model)
 	System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 	public virtual string ToString ()
@@ -7962,7 +7973,11 @@ public class Microsoft.OData.Client.MessageWriterSettingsArgs {
 }
 
 public class Microsoft.OData.Client.QueryOperationResponse : Microsoft.OData.Client.OperationResponse, IEnumerable {
+	long Count  { public virtual get; }
 	Microsoft.OData.Client.DataServiceRequest Query  { public get; }
+	[
+	ObsoleteAttribute(),
+	]
 	long TotalCount  { public virtual get; }
 
 	public Microsoft.OData.Client.DataServiceQueryContinuation GetContinuation ()
@@ -8285,6 +8300,10 @@ public sealed class Microsoft.OData.Client.OriginalNameAttribute : System.Attrib
 }
 
 public sealed class Microsoft.OData.Client.QueryOperationResponse`1 : Microsoft.OData.Client.QueryOperationResponse, IEnumerable`1, IEnumerable {
+	long Count  { public virtual get; }
+	[
+	ObsoleteAttribute(),
+	]
 	long TotalCount  { public virtual get; }
 
 	public DataServiceQueryContinuation`1 GetContinuation ()

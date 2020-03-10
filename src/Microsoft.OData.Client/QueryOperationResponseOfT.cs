@@ -42,7 +42,18 @@ namespace Microsoft.OData.Client
 
         /// <summary>The server result set count value from a query, if the query has requested the value.</summary>
         /// <returns>The return value can be either zero or a positive value equal to the number of entities in the set on the server.</returns>
+        [Obsolete("Please use Count")]
         public override long TotalCount
+        {
+            get
+            {
+                return Count;
+            }
+        }
+
+        /// <summary>The server result set count value from a query, if the query has requested the value.</summary>
+        /// <returns>The return value can be either zero or a positive value equal to the number of entities in the set on the server.</returns>
+        public override long Count
         {
             get
             {

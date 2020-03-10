@@ -34,7 +34,7 @@ namespace Microsoft.OData.Client
 
         private const string ExpandMethodName = "Expand";
 
-        private const string IncludeTotalCountMethodName = "IncludeTotalCount";
+        private const string IncludeCountMethodName = "IncludeCount";
 
         /// <summary>
         /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
@@ -1050,7 +1050,7 @@ namespace Microsoft.OData.Client
             return re;
         }
 
-        private static Expression AnalyzeAddCountOption(MethodCallExpression mce, CountOption countOption)
+        private static Expression AnalyzeAddCountOption(MethodCallExpression mce)
         {
             Expression obj = StripConvert(mce.Object, null);
             QueryableResourceExpression rse = obj as QueryableResourceExpression;
@@ -1061,7 +1061,16 @@ namespace Microsoft.OData.Client
 
             ValidationRules.RequireCanAddCount(rse);
             rse.ConvertKeyToFilterExpression();
-            rse.CountOption = countOption;
+
+            ConstantExpression countQueryOption = StripTo<ConstantExpression>(mce.Arguments[0]);
+            if ((bool)countQueryOption.Value == true)
+            {
+                rse.CountOption = CountOption.CountQueryTrue;
+            }
+            else
+            {
+                rse.CountOption = CountOption.CountQueryFalse;
+            }
 
             return rse;
         }
@@ -1500,9 +1509,9 @@ namespace Microsoft.OData.Client
                     {
                         return AnalyzeAddCustomQueryOption(mce);
                     }
-                    if (mce.Method.Name == IncludeTotalCountMethodName && mce.Method.DeclaringType == t)
+                    if (mce.Method.Name == IncludeCountMethodName && mce.Method.DeclaringType == t)
                     {
-                        return AnalyzeAddCountOption(mce, CountOption.CountQuery);
+                        return AnalyzeAddCountOption(mce);
                     }
                     else
                     {

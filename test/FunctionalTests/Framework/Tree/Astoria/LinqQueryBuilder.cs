@@ -585,7 +585,8 @@ namespace System.Data.Test.Astoria
                 }
                 else
                 {
-                    MethodInfo m = _queryable.GetType().GetMethod("IncludeTotalCount");
+                    MethodInfo m = _queryable.GetType().GetMethods()
+                        .First(method => method.Name == "IncludeCount" && method.GetParameters().Length == 0);
                     object obj = m.Invoke(_queryable, new object[] { });
                     _queryable = (IQueryable)obj;
                     this.WriteTrace("$inlinecount=allpages");

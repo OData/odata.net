@@ -33,7 +33,13 @@ namespace Microsoft.OData.Client
         /// Translates to the $count=true query option.
         /// Example: http://host/service/Products?$count=true
         /// </summary>
-        CountQuery
+        CountQueryTrue,
+
+        /// <summary>
+        /// Translates to the $count=false query option.
+        /// Example: http://host/service/Products?$count=false
+        /// </summary>
+        CountQueryFalse
     }
 
     /// <summary>

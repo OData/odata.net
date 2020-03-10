@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.Astoria.Php
         public string Top { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to call the includeTotalCount option
+        /// Gets or sets a value indicating whether to call the includeCount option
         /// </summary>
         public bool InlineCount { get; set; }
 

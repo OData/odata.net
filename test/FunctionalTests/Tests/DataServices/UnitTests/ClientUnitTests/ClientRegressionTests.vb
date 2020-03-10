@@ -457,7 +457,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
         <TestCategory("Partition2")> <TestMethod()> Public Sub BatchVersioning()
             Dim contentStream = FetchContentStream(
-                    New Action(Function() ctx.ExecuteBatch(ctx.CreateQuery(Of northwindClient.Customers)("Customers").IncludeTotalCount(),
+                    New Action(Function() ctx.ExecuteBatch(ctx.CreateQuery(Of northwindClient.Customers)("Customers").IncludeCount(),
                     ctx.CreateQuery(Of northwindClient.Customers)("Customers"))))
             Assert.IsNotNull(contentStream)
 
