@@ -171,7 +171,7 @@ namespace Microsoft.OData.UriParser
             IList<IEdmOperation> candidatesMatchingOperations = operationsFromModel.FilterOperationCandidatesBasedOnParameterList(bindingType, parameterNames, resolver.EnableCaseInsensitive, out foundActionsWhenLookingForFunctions);
 
             // Only filter if there is more than one and its needed.
-            if (candidatesMatchingOperations.Count > 1)
+            if (candidatesMatchingOperations.Count > 1 && bindingType != null)
             {
                 candidatesMatchingOperations = candidatesMatchingOperations.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(bindingType) as IList<IEdmOperation>;
                 

@@ -1962,7 +1962,7 @@ namespace Microsoft.OData.Metadata
 
             IEdmStructuredType currentType = structuredType;
             int inheritanceLevelsFromBase = 0;
-            while (currentType.InheritsFrom(rootType))
+            while (currentType != null && currentType.InheritsFrom(rootType))
             {
                 currentType = currentType.BaseType;
                 inheritanceLevelsFromBase++;
