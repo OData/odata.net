@@ -279,7 +279,6 @@ namespace Microsoft.OData.Client
             }
             catch (Exception e)
             {
-                throw new Exception("Test Msg " + msg + "  " + e.Message);
                 this.HandleFailure(e);
                 throw;
             }
