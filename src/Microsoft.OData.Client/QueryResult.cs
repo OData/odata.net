@@ -245,7 +245,6 @@ namespace Microsoft.OData.Client
                 response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
 
-                throw new Exception("Test Msg " + msg + "  ");
 
                 if (HttpStatusCode.NoContent != this.StatusCode)
                 {
