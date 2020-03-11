@@ -346,7 +346,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void SendRequestAndVerifyResponse(Dictionary<string, int> testCases)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
-            throw new Exception("msg----- " + ex.Message);
+            throw new Exception("msg----- ");
             foreach (var testCase in testCases)
             {
                 foreach (var mimeType in mimeTypes)
