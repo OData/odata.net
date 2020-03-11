@@ -217,9 +217,10 @@ namespace Microsoft.OData.Client
         /// <summary>Synchronous web request</summary>
         internal void ExecuteQuery()
         {
+            string msg = "";
             try
             {
-                throw new Exception("teest msg");
+                msg += "1";
                 if (this.requestContentStream != null && this.requestContentStream.Stream != null)
                 {
                     this.Request.SetRequestStream(this.requestContentStream);
@@ -239,6 +240,7 @@ namespace Microsoft.OData.Client
                     }
                 }
 #endif
+                msg += "2";
                 IODataResponseMessage response = null;
                 response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
@@ -274,6 +276,7 @@ namespace Microsoft.OData.Client
             }
             catch (Exception e)
             {
+                throw new Exception("Test Msg " + msg + "  " + e.Message);
                 this.HandleFailure(e);
                 throw;
             }
