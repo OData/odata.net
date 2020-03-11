@@ -351,6 +351,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 foreach (var mimeType in mimeTypes)
                 {
+                    throw new Exception("msg----- ");
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     IODataResponseMessage responseMessage;
