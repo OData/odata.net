@@ -354,11 +354,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
-                    throw new Exception("msg----- ");
+                
                     IODataResponseMessage responseMessage;
                     try
                     {
-                         responseMessage = requestMessage.GetResponse();
+                      responseMessage = requestMessage.GetResponse();
+
+                        throw new Exception("11msg----- ");
                     }
                     catch(Exception ex)
                     {
