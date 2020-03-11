@@ -21,8 +21,8 @@ variables:
   skipComponentGovernanceDetection: true
   snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
   snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
-  ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)\net45'
-  mainDll: 'Microsoft.OData.Client.dll'
+  ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)\net45'
+  mainDll: 'Microsoft.OData.Edm.dll'
   
 steps:
 
@@ -67,7 +67,7 @@ steps:
       & "$(snExe)" /Vr $(ProductBinPath)\$(mainDll)
       & "$(snExe64)" /Vr $(ProductBinPath)\$(mainDll)
       
-  enabled: false
+  enabled: true
 
 # "$(snExe)" /Vr $(testBinPath)\$(testDll)
       # "$(snExe64)" /Vr $(testBinPath)\$(testDll)
