@@ -241,9 +241,11 @@ namespace Microsoft.OData.Client
                 }
 #endif
                 msg += "2";
+                throw new Exception("Test Msg " + msg + "  ");
                 IODataResponseMessage response = null;
                 response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
+
 
                 if (HttpStatusCode.NoContent != this.StatusCode)
                 {
@@ -273,6 +275,9 @@ namespace Microsoft.OData.Client
                         }
                     }
                 }
+
+                throw new Exception("Test Msg " + msg + "  " );
+
             }
             catch (Exception e)
             {
