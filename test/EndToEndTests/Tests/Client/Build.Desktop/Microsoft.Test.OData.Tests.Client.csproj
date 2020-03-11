@@ -4,9 +4,6 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 
-
-
-
     <AssemblyName>Microsoft.Test.OData.Tests.Client</AssemblyName>
 
 
@@ -65,8 +62,7 @@
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
-    <!--<PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />-->
+ 
 
     <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
 
@@ -115,14 +111,14 @@
     <Reference Include="..\..\..\..\packages\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Extensions.dll" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Compile Include ="EdmUtilTests.cs"></Compile>
-  </ItemGroup>
+  </ItemGroup>-->
   
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
 
-    <!--<ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
 
     <ProjectReference Include="..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
 
@@ -134,7 +130,7 @@
 
     <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj">
 
-      --><!--<Aliases>destination</Aliases>--><!--
+      <!--<Aliases>destination</Aliases>-->
 
     </ProjectReference>
 
@@ -146,10 +142,10 @@
 
     <ProjectReference Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj" />
 
-    <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj" />-->
+    <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj" />
 
   </ItemGroup>
-  <!--<ItemGroup>
+  <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
       <Visible>False</Visible>
     </CodeAnalysisDependentAssemblyPaths>
@@ -303,7 +299,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  --><!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />--><!--
+
   <Target Name="AfterBuild">
     <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSDSCReferences" />
@@ -369,6 +365,6 @@
     <Copy SourceFiles="@(CSReferences)" DestinationFiles="@(CSReferences->'$(OutDir)CSReferences\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(VBDSCReferences)" DestinationFiles="@(VBReferences->'$(OutDir)VBDSCReferences\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(VBReferences)" DestinationFiles="@(VBReferences->'$(OutDir)VBReferences\%(Filename)%(Extension)')" />
-  </Target>-->
+  </Target>
   
 </Project>
