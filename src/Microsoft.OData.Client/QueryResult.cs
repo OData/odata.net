@@ -286,10 +286,7 @@ namespace Microsoft.OData.Client
             finally
             {
                 this.SetCompleted();
-                
-
-                this.CompletedRequest();
-                throw new Exception("Test Msg " + msg + "55  ");
+                this.CompletedRequest();                
             }
 
             if (null != this.Failure)
