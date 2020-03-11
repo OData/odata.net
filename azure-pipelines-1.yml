@@ -70,8 +70,8 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      & "$(snExe)" /Vr $(ProductBinPath4)\$(mainDll)
-      & "$(snExe64)" /Vr $(ProductBinPath4)\$(mainDll)
+      & "$(snExe)" /Vr $(ProductBinPath4)\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\$(mainDll4)
       & "$(snExe)" /Vr $(ProductBinPath1)\$(mainDll1)
       & "$(snExe64)" /Vr $(ProductBinPath1)\$(mainDll1)
       & "$(snExe)" /Vr $(ProductBinPath2)\$(mainDll2)
