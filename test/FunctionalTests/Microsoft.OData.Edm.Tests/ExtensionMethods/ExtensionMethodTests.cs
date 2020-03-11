@@ -889,6 +889,14 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         [Fact]
+        public void FindDeclaredOperationImportsReturnsEmptyEnumerableForNoEntityContainerInModel()
+        {
+            var operationImportName = "NonExistingOperationImport";
+            var result = new EdmModel().FindDeclaredOperationImports(operationImportName);
+            Assert.Empty(result);
+        }
+
+        [Fact]
         public void FindTypeByAliasName()
         {
             Assert.Equal("TestModelNameSpace.T1", TestModel.Instance.Model.FindType("TestModelAlias.T1").FullName());
