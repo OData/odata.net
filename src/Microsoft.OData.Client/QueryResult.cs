@@ -219,7 +219,7 @@ namespace Microsoft.OData.Client
         {
             try
             {
-                int i = 1 / 0;
+                throw new Exception("teest msg");
                 if (this.requestContentStream != null && this.requestContentStream.Stream != null)
                 {
                     this.Request.SetRequestStream(this.requestContentStream);
