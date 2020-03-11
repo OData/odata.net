@@ -352,7 +352,15 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
-                    var responseMessage = requestMessage.GetResponse();
+                    IODataResponseMessage responseMessage;
+                    try
+                    {
+                         responseMessage = requestMessage.GetResponse();
+                    }
+                    catch(Exception ex)
+                    {
+                        throw new Exception("msg----- " + ex.Message);
+                    }
                     Assert.AreEqual(200, responseMessage.StatusCode);
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
