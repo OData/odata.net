@@ -67,7 +67,7 @@ steps:
       & "$(snExe)" /Vr $(ProductBinPath)\$(mainDll)
       & "$(snExe64)" /Vr $(ProductBinPath)\$(mainDll)
       
-  enabled: true
+  enabled: false
 
 # "$(snExe)" /Vr $(testBinPath)\$(testDll)
       # "$(snExe64)" /Vr $(testBinPath)\$(testDll)
