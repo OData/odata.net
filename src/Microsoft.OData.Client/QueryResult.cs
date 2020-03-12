@@ -250,7 +250,7 @@ namespace Microsoft.OData.Client
                 response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
 
-                throw new Exception(msg);
+        
 
                 if (HttpStatusCode.NoContent != this.StatusCode)
                 {
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Client
                         {
                             Stream copy = this.GetAsyncResponseStreamCopy();
                             this.outputResponseStream = copy;
-
+                            throw new Exception(msg);
                             Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
 
                             long copied = WebUtil.CopyStream(stream, copy, ref buffer);
