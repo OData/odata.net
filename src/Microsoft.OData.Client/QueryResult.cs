@@ -293,11 +293,12 @@ namespace Microsoft.OData.Client
             {
                 this.SetCompleted();
                 this.CompletedRequest();
-                throw new Exception(msg);
+               
             }
 
             if (null != this.Failure)
             {
+                throw new Exception(msg);
                 throw this.Failure;
             }
         }
