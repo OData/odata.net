@@ -193,7 +193,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             return order;
         }
 
-        public Person GetPerson(Address address)
+        public Person GetPerson3(Address address)
         {
             IEnumerable<Person> persons = GetRootQuery("People") as IEnumerable<Person>;
             foreach (var person in persons)
