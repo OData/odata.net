@@ -298,7 +298,7 @@ namespace Microsoft.OData.Client
 
             if (null != this.Failure)
             {
-                throw new Exception(msg);
+                throw new Exception(msg+" "+this.Failure.Message);
                 throw this.Failure;
             }
         }
