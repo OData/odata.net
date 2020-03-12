@@ -294,6 +294,7 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         internal IODataResponseMessage GetResponse()
         {
+            throw new Exception("mmmtest2");
 #if DEBUG
             this.ValidateHeaders();
 #endif
