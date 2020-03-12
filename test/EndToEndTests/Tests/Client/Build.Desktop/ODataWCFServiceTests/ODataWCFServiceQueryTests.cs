@@ -351,15 +351,15 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 foreach (var mimeType in mimeTypes)
                 {
-                    
-                    var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
+                    var uri = new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute);
+                    var requestMessage = new HttpWebRequestMessage(uri);
                     requestMessage.SetHeader("Accept", mimeType);
                 
                     IODataResponseMessage responseMessage;
                     try
                     {
                       responseMessage = requestMessage.GetResponse();
-                        throw new Exception("11msg----- "+ ServiceBaseUri+" - "+responseMessage.StatusCode);
+                        throw new Exception("11msg----- "+ uri+" - "+responseMessage.StatusCode);
                     }
                     catch(Exception ex)
                     {
