@@ -260,7 +260,7 @@ namespace Microsoft.OData.Client
                         {
                             Stream copy = this.GetAsyncResponseStreamCopy();
                             this.outputResponseStream = copy;
-                            throw new Exception(msg);
+                           
                             Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
 
                             long copied = WebUtil.CopyStream(stream, copy, ref buffer);
@@ -281,6 +281,7 @@ namespace Microsoft.OData.Client
                     }
                 }
 
+                throw new Exception(msg);
 
             }
             catch (Exception e)
