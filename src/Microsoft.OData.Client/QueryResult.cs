@@ -255,7 +255,7 @@ namespace Microsoft.OData.Client
                 IODataResponseMessage response = null;
                 response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
 
-                throw new Exception(msg + response.StatusCode);
+                throw new Exception(msg +"  "+ response.StatusCode);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
 
         

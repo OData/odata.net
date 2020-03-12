@@ -245,7 +245,7 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         public override IODataResponseMessage GetResponse()
         {
-            throw new NotImplementedException();
+            throw new Exception("mmmtest");
         }
 #endif
     }

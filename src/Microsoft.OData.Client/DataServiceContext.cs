@@ -3330,6 +3330,7 @@ namespace Microsoft.OData.Client
         /// <returns>Returns the HttpWebResponse from the wrapped GetSynchronousResponse method.</returns>
         private IODataResponseMessage GetResponseHelper(ODataRequestMessageWrapper request, IAsyncResult asyncResult, bool handleWebException)
         {
+            throw new Exception("aaa test");
             Debug.Assert(request != null, "Expected a non-null request for all scenarios calling GetSynchronousResponse");
 
             IODataResponseMessage response = null;
