@@ -359,8 +359,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     try
                     {
                       responseMessage = requestMessage.GetResponse();
-
-                        throw new Exception("11msg----- ");
+                        throw new Exception("11msg----- "+ ServiceBaseUri+" - "+responseMessage.StatusCode);
                     }
                     catch(Exception ex)
                     {
