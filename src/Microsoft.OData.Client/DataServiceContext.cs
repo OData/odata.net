@@ -3343,7 +3343,6 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw new Exception("mmmtest1");
                     response = request.EndGetResponse(asyncResult);
                 }
 #else

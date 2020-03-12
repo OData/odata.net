@@ -298,7 +298,7 @@ namespace Microsoft.OData.Client
 #if DEBUG
             this.ValidateHeaders();
 #endif
-            throw new Exception("mmmtest2");
+            
             return this.requestMessage.GetResponse();
         }
 #endif
