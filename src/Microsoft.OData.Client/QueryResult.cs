@@ -217,8 +217,14 @@ namespace Microsoft.OData.Client
         /// <summary>Synchronous web request</summary>
         internal void ExecuteQuery()
         {
-            string msg = "";
-            
+            string msg = "ttttt---   ";
+
+            if (null != this.Failure)
+            {
+                throw new Exception(msg + " " + this.Failure.Message);
+                throw this.Failure;
+            }
+
             try
             {
                 msg += "1";
