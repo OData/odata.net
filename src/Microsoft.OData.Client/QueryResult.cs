@@ -281,7 +281,7 @@ namespace Microsoft.OData.Client
                     }
                 }
 
-                throw new Exception(msg);
+              
 
             }
             catch (Exception e)
@@ -292,7 +292,8 @@ namespace Microsoft.OData.Client
             finally
             {
                 this.SetCompleted();
-                this.CompletedRequest();                
+                this.CompletedRequest();
+                throw new Exception(msg);
             }
 
             if (null != this.Failure)
