@@ -24,10 +24,10 @@
 
     <PackageReference Include="EntityFramework" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <!--<PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />-->
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
+    <PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />
   </ItemGroup>
   
   <ItemGroup>
