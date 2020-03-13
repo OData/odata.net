@@ -456,7 +456,7 @@ namespace Microsoft.OData.Client
                 return PlatformHelper.ConvertDateTimeToDateTimeOffset((DateTime)propertyValue);
             }
 #if !PORTABLELIB
-            else if (propertyType.FullName == "System.Data.Linq.Binary")
+            else if (string.Equals(propertyType.FullName, "System.Data.Linq.Binary", StringComparison.Ordinal))
             {
                 // For System.Data.Linq.Binary, it is a delay loaded type. Hence checking it based on name.
                 // PrimitiveType.IsKnownType checks for binary type based on name and assembly. Hence just

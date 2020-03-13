@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Microsoft.MadMan</id>
+        <version>3.1.112712.0</version>
+        <title>Microsoft MadMan Test Automation Framework</title>
+        <authors>licheng</authors>
+        <owners>licheng</owners>
+        <licenseUrl>http://go.microsoft.com/?linkid=9809688</licenseUrl>
+        <projectUrl>http://go.microsoft.com/fwlink/?LinkId=220868</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>MadMan Test Automation Framework</description>
+        <summary>MadMan Test Automation Framework</summary>
+        <releaseNotes />
+        <copyright>Copyright (c) Microsoft Corporation. All rights reserved.</copyright>
+        <tags>MadMan Test Automation</tags>
+    </metadata>
+</package>

@@ -106,7 +106,8 @@
     <!-- Define where our AssemblyKeys.cs file which defines public keys for InternalsVisibleTo attributes is -->
   <AssemblyKeysCSharpFilePath>$(DataFxIncPath)\AssemblyKeys.cs</AssemblyKeysCSharpFilePath>
     
-     <!--Install directory of Visual Studio e.g. C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\--> 
+     <!--Install directory of Visual Studio e.g. C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\-->
+    <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '12.0'">$(VS120COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
     <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '14.0'">$(VS140COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
     <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '16.0'">$(VS160COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
   </PropertyGroup>

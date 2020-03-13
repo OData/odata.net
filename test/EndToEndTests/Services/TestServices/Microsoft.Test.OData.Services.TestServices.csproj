@@ -60,7 +60,9 @@
  
     <ProjectReference Include="..\ODataTypeDefinitionService\Microsoft.Test.OData.Services.ODataTypeDefinitionService.csproj" />
 
-    <ProjectReference Include="..\ODataWCFLibrary\ODataSamples.Services.Core.csproj" />
+    <ProjectReference Include="..\ODataWCFLibrary\ODataSamples.Services.Core.csproj" >
+        <!--<Aliases>destination</Aliases>-->
+    </ProjectReference>
      
     <ProjectReference Include="..\ODataWCFService\Microsoft.Test.OData.Services.ODataWCFService.csproj" />
 
@@ -196,5 +198,5 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

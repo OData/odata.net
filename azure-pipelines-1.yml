@@ -19,6 +19,16 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   skipComponentGovernanceDetection: true
+  snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
+  snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+  ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)\net45'
+  mainDll1: 'Microsoft.OData.Edm.dll'
+  ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)\net45'
+  mainDll2: 'Microsoft.OData.Core.dll'
+  ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)\net45'
+  mainDll3: 'Microsoft.Spatial.dll'
+  ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)\net45'
+  mainDll4: 'Microsoft.OData.Client.dll'
 
 steps:
 
@@ -36,9 +46,104 @@ steps:
   inputs:
     version: '2.1.3'
 
+
+- task: NuGetToolInstaller@0
+  inputs:
+    versionSpec: '>=5.2.0'
+
+# because the assemblies are delay-signed, we need to disable
+# strong name validation so that the tests may run,
+# otherwise our assemblies will fail to load
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Product 1'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
+
+- task: Powershell@2
+  displayName: 'Skip strong name validation'
+  inputs:
+    targetType: 'inline'
+    script: |
+      & "$(snExe)" /Vr $(ProductBinPath4)\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\$(mainDll4)
+      & "$(snExe)" /Vr $(ProductBinPath1)\$(mainDll1)
+      & "$(snExe64)" /Vr $(ProductBinPath1)\$(mainDll1)
+      & "$(snExe)" /Vr $(ProductBinPath2)\$(mainDll2)
+      & "$(snExe64)" /Vr $(ProductBinPath2)\$(mainDll2)
+      & "$(snExe)" /Vr $(ProductBinPath3)\$(mainDll3)
+      & "$(snExe64)" /Vr $(ProductBinPath3)\$(mainDll3)
+      
+  enabled: true
+
+# "$(snExe)" /Vr $(testBinPath)\$(testDll)
+      # "$(snExe64)" /Vr $(testBinPath)\$(testDll)
+
 # - task: DotNetCoreInstaller@1
 #   inputs:
 #     version: '1.0.4'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Test Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |      
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
+
+- task: VSTest@2
+  displayName: 'Test'
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: '$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\Microsoft.Test.OData.Tests.Client1.dll' #'$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+
+#$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\
+
+- task: DotNetCoreCLI@2
+  displayName: 'EDM Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+     
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Test Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Core Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Product'  
@@ -58,6 +163,7 @@ steps:
 
 
 
+
 - task: DotNetCoreCLI@2
   displayName: 'Spatial Test'
   inputs:
@@ -66,21 +172,6 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
-- task: DotNetCoreCLI@2
-  displayName: 'EDM Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
-     
-- task: DotNetCoreCLI@2
-  displayName: 'Core Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
 - task: DotNetCoreCLI@2
   displayName: 'Client Test'

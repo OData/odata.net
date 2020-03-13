@@ -4,18 +4,20 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 
     <AssemblyName>Microsoft.OData.Core.Tests</AssemblyName>
-    <TargetFrameworks>net452;netcoreapp1.0;netcoreapp2.0;</TargetFrameworks>
+    <TargetFrameworks>net45</TargetFrameworks>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\sln\</SolutionDir>
     <FileUpgradeFlags>40</FileUpgradeFlags>
     <UpgradeBackupLocation>C:\Users\srpazham\Documents\GitHub\odata.net\sln\Backup\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
- 
 
+
+  <!--<Import Project="..\Build.props" />-->
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />

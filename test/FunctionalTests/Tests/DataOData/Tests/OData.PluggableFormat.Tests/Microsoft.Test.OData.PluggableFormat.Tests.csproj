@@ -1,39 +1,42 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{1D872F31-6100-4C76-999E-ED948E2CD249}</ProjectGuid>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Test.OData.PluggableFormat.Tests</RootNamespace>
+    
     <AssemblyName>Microsoft.Test.OData.PluggableFormat.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <OutputType>Library</OutputType>
+
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup Condition="'$(BuildInOSS)' == 'true'">
     <DefineConstants>$(DefineConstants);ENABLE_AVRO</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
-      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
-      <Name>Microsoft.Spatial</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
-      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
-      <Name>Microsoft.OData.Edm</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj">
-      <Project>{1d872f31-6100-4c76-999e-ed948e2cd248}</Project>
-      <Name>Microsoft.Test.OData.PluggableFormat</Name>
-    </ProjectReference>
+    <PackageReference Include="EntityFramework" Version="5.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
+    <PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.1.13" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+ 
+    <ProjectReference Include="..\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj" />
+
+    <ProjectReference Include="$(EnlistmentRoot)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
+ 
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\..\sln\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -54,7 +57,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />-->
   </ItemGroup>
   <ItemGroup Condition="'$(BuildInOSS)' == 'true'">
     <Reference Include="$(NuGetPack)\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll" />
@@ -66,6 +69,7 @@
     <Compile Include="Avro\Test\ODataAvroWriterTests.cs" />
     <Compile Include="Avro\Test\ODataAvroTestModel.cs" />
     <Compile Include="Avro\Test\SchemaGenTests.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="VCard\Test\ODataVCardScenarioTests.cs" />
     <Compile Include="VCard\Test\VCardReaderTest.cs" />
   </ItemGroup>
@@ -81,5 +85,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

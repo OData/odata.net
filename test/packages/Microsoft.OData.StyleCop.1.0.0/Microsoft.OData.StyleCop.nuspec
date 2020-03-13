@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Microsoft.OData.StyleCop</id>
+        <version>1.0.0</version>
+        <title>Microsoft.OData.StyleCop</title>
+        <authors>Microsoft</authors>
+        <owners>Microsoft</owners>
+        <projectUrl>https://github.com/OData/RESTier</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>StyleCop Rules for OData</description>
+    </metadata>
+</package>

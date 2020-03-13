@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StatsLib</name>
+    </assembly>
+    <members>
+        <member name="T:StatsLib.ChiSquareTest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:StatsLib.ChiSquareTest.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StatsLib.ChiSquareTest"/> class.
+            </summary>
+        </member>
+        <member name="M:StatsLib.ChiSquareTest.AddSample(System.Double,System.Double)">
+            <summary>
+            Adds the sample.
+            </summary>
+            <param name="observed">The observed.</param>
+            <param name="expected">The expected.</param>
+        </member>
+        <member name="M:StatsLib.ChiSquareTest.PChiSQ(System.Double,System.Int32)">
+            <summary>
+            Ps the chi sq.
+            Return p-Value based on x=chiSquare and df = degrees of freedom
+            from Hill, I.D., Pike M.C. Algorithm
+            </summary>
+            <param name="value">The value.</param>
+            <param name="df">The df.</param>
+            <returns></returns>
+        </member>
+        <member name="M:StatsLib.ChiSquareTest.PChiSQHelper(System.Double,System.Int32)">
+            <summary>
+            Chi sq helper.
+            Note: this function only returns an approximation
+            If accuracy is vital, this function is not appropriate
+            </summary>
+            <param name="value">The value.</param>
+            <param name="df">The df.</param>
+            <returns></returns>
+        </member>
+        <member name="P:StatsLib.ChiSquareTest.ChiSquared">
+            <summary>
+            Gets the chi squared.
+            </summary>
+            <value>The chi squared.</value>
+        </member>
+        <member name="T:StatsLib.ZTest">
+            <summary>
+            Calculates continuous distribution function (cdf) for unit normal distribution
+            </summary>
+        </member>
+        <member name="M:StatsLib.ZTest.Cdf(System.Double)">
+            <summary>
+            CDF for the specified x.
+            consider just hard coding a z table
+            for quick lookups
+            this function returns culumative probabilities from 0
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="T:StatsLib.Gaussian">
+            <summary>    
+            from http://msdn.microsoft.com/msdnmag/issues/06/09/TestRun/default.aspx
+            generates normal distribution random numbers using Box-Mueller algorithm
+            </summary>
+        </member>
+        <member name="M:StatsLib.Gaussian.NextGaussian2(System.Double,System.Double)">
+            <summary>
+            Nexts the gaussian2.
+            </summary>
+            <param name="mean">The mean.</param>
+            <param name="sd">The sd.</param>
+            <returns></returns>
+        </member>
+        <member name="T:StatsLib.NormalityTest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:StatsLib.NormalityTest.ShapiroWilkMax">
+            <summary>
+            Only have precomputed values for n=50, for n>50, we fail.
+            </summary>
+        </member>
+        <member name="M:StatsLib.NormalityTest.CreateShapiroWilkProbabilityTable">
+            <summary>
+            Gets the shapiro wilk probability table.
+            </summary>
+            <value>The shapiro wilk probability table.</value>
+        </member>
+        <member name="F:StatsLib.NormalityTest.pTable">
+            <summary>
+            for n = 3 to 50.
+            for probability values = 0.01, 0.02, 0.05, 0.10, 0.50, 0.90, 0.95, 0.98, 0.99
+            From table 6 in Shapiro paper.
+            </summary>
+        </member>
+        <member name="M:StatsLib.NormalityTest.ShapiroWilk(System.Double[])">
+            <summary>
+            Implementation of Shapiro Wilk normality test
+            </summary>
+            <param name="data">The data.</param>
+            <returns></returns>
+        </member>
+        <member name="M:StatsLib.NormalityTest.IsNormal(System.Double[])">
+            <summary>
+            Determines whether the specified data is normal.
+            </summary>
+            <param name="data">The data.</param>
+            <returns>
+            	<c>true</c> if the specified data is normal; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:StatsLib.NormalityTest.ACoefficients(System.Int32)">
+            <summary>
+            From table 5 in
+            Shaprio and Wilk's paper titled "An Analysis of Variance Test for Normality(Complete Samples)"
+            http://sci2s.ugr.es/keel/pdf/algorithm/articulo/shapiro1965.pdf
+            Table 5 contains the coefficients they computed for n=3 to n=50
+            Consider using Royston, J.P. "Approximating the Shapiro-Wilk W-test for non-normality"
+            which gives polynomials to approximate the Shapiro-Wilk coefficients for n=3 to n=2000 and
+            data suggests that approximations are valid up to n=5000
+            However, even if we switch to the approximation, we should keep this method around at least
+            as a test oracle for the approximation function.
+            </summary>
+            <param name="samples">The samples.</param>
+            <returns></returns>
+        </member>
+        <member name="T:PerfSampler.PerfSampler">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:PerfSampler.PerfSampler.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:PerfSampler.PerfSampler.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:PerfSampler.PerfSampler.HistogramFormat">
+            <summary>
+              Looks up a localized string similar to \t{0} to {1}: {2}.
+            </summary>
+        </member>
+        <member name="P:PerfSampler.PerfSampler.HistogramOverflowFormat">
+            <summary>
+              Looks up a localized string similar to \tOther: {0}.
+            </summary>
+        </member>
+        <member name="T:StatsLib.ReservoirSampler`1">
+            <summary>
+            Resevoir sampling should be used when the number of samples is not know ahead of time
+            This class maintains a resevoir and each element in the resevoir will have a 1/n chance of 
+            being selected where n = the number of impressions seen so far.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:StatsLib.ReservoirSampler`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StatsLib.ReservoirSampler`1"/> class.
+            By default, the resevoir will contain 1000 elements
+            </summary>
+        </member>
+        <member name="M:StatsLib.ReservoirSampler`1.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StatsLib.ReservoirSampler`1"/> class.
+            This constructor allows a user specified resevoir size
+            </summary>
+            <param name="reservoirSize">Size of the reservoir.</param>
+        </member>
+        <member name="M:StatsLib.ReservoirSampler`1.Add(`0)">
+            <summary>
+            Adds the specified sample.
+            Each sample will have a 1/n chance of being selected into the resevoir
+            If selected, the current sample randomly replaces a sample in the current resevoir
+            </summary>
+            <param name="sample">The sample.</param>
+        </member>
+        <member name="M:StatsLib.ReservoirSampler`1.GetReservoir">
+            <summary>
+            Gets the reservoir.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:StatsLib.ReservoirSampler`1.DefaultReservoirSize">
+            <summary>
+            Default resevoir size is 1000
+            </summary>
+        </member>
+        <member name="P:StatsLib.ReservoirSampler`1.RandomClass">
+            <summary>
+            Gets or sets the random class.
+            </summary>
+            <value>The random class.</value>
+        </member>
+        <member name="T:StatsLib.Sampler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:StatsLib.Sampler.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StatsLib.Sampler"/> class.
+            </summary>
+        </member>
+        <member name="M:StatsLib.Sampler.CopyHistogram">
+            <summary>
+            Gets the histogram.
+            </summary>
+            <value>The histogram.</value>
+        </member>
+        <member name="M:StatsLib.Sampler.SetHistogramParameters(System.Int32,System.Int32)">
+            <summary>
+            Sets the histogram parameters.
+            </summary>
+            <param name="count">The count.</param>
+            <param name="step">The step.</param>
+        </member>
+        <member name="M:StatsLib.Sampler.OutputHistogram">
+            <summary>
+            Outputs the histogram.
+            </summary>
+        </member>
+        <member name="M:StatsLib.Sampler.AddSample(System.Double)">
+            <summary>
+            Adds the sample.
+            </summary>
+            <param name="dataPoint">The data point.</param>
+        </member>
+        <member name="M:StatsLib.Sampler.IsNormal">
+            <summary>
+            Determines whether this instance is normal.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance is normal; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="P:StatsLib.Sampler.Mean">
+            <summary>
+            Gets the mean.
+            </summary>
+            <value>The mean.</value>
+        </member>
+        <member name="P:StatsLib.Sampler.StandardDeviation">
+            <summary>
+            Gets the standard deviation.
+            </summary>
+            <value>The standard deviation.</value>
+        </member>
+        <member name="P:StatsLib.Sampler.Interval">
+            <summary>
+            Gets the interval.
+            </summary>
+            <value>The interval.</value>
+        </member>
+        <member name="P:StatsLib.Sampler.Samples">
+            <summary>
+            Gets the samples.
+            </summary>
+            <value>The samples.</value>
+        </member>
+        <member name="P:StatsLib.Sampler.Min">
+            <summary>
+            Gets the min.
+            </summary>
+            <value>The min.</value>
+        </member>
+        <member name="P:StatsLib.Sampler.Max">
+            <summary>
+            Gets the max.
+            </summary>
+            <value>The max.</value>
+        </member>
+        <member name="P:StatsLib.Sampler.HistogramOverflow">
+            <summary>
+            Gets the histogram overflow.
+            </summary>
+            <value>The histogram overflow.</value>
+        </member>
+        <member name="T:StatsLib.TTest">
+            <summary>
+            Provide an implementation of the Student-T test
+            see http://en.wikipedia.org/wiki/Student%27s_t-test
+            </summary>
+        </member>
+        <member name="F:StatsLib.TTest.T_Table_95">
+            <summary>
+            T-Table containing hard-coded t-score values for a 95% test.  The last four values represent
+            entries for n=40,60,120,infinity
+            </summary>
+        </member>
+        <member name="M:StatsLib.TTest.IndependentTTest(StatsLib.Sampler,StatsLib.Sampler)">
+            <summary>
+            Conducts an Independent T-Test on the two samples, and determines if the two samples
+            are significantly different or not.
+            </summary>
+            <param name="sample1">The first sample.</param>
+            <param name="sample2">The second sample.</param>
+            <returns>
+            Returns true if the results are significantly different.
+            </returns>
+        </member>
+        <member name="M:StatsLib.TTest.OneSampleTTest(StatsLib.Sampler,System.Double)">
+            <summary>
+            Conducts a One Sample T-Test to determine if the sample set mean
+            has deviated significantly from a target mean, or if the deviation
+            is small enough to have happend by random chance.  
+            </summary>
+            <param name="sample">The sample set to test.</param>
+            <param name="targetMean">The target mean that the sample mean will be compared against.</param>
+            <returns>True if the sample mean has deviated significanly from the target mean, such that
+            it is not likely to have happend by random chance, false otherwise.</returns>
+        </member>
+        <member name="M:StatsLib.TTest.IsSignificant(System.Double,System.UInt32)">
+            <summary>
+            Looks up a t-score in the T-Table to determine if it is statistically significant.
+            </summary>
+            <param name="tscore">The t-score to be tested for significance.</param>
+            <param name="degreesOfFreedom">The degrees of freedom.</param>
+            <returns>
+            True if this t-score is statistically significant, false otherwise.
+            </returns>
+        </member>
+    </members>
+</doc>

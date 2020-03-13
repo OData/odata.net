@@ -346,13 +346,25 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void SendRequestAndVerifyResponse(Dictionary<string, int> testCases)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
+            
             foreach (var testCase in testCases)
             {
                 foreach (var mimeType in mimeTypes)
                 {
-                    var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
+                    var uri = new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute);
+                    var requestMessage = new HttpWebRequestMessage(uri);
                     requestMessage.SetHeader("Accept", mimeType);
-                    var responseMessage = requestMessage.GetResponse();
+                
+                    IODataResponseMessage responseMessage;
+                    try
+                    {
+                      responseMessage = requestMessage.GetResponse();
+                      //  throw new Exception("11msg----- "+ uri+" - "+responseMessage.StatusCode);
+                    }
+                    catch(Exception ex)
+                    {
+                        throw new Exception("999msg----- " + ex.Message);
+                    }
                     Assert.AreEqual(200, responseMessage.StatusCode);
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {

@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Test.Management.Attributes</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Test.Management.Attributes.TestAreaAttribute">
+            <summary>
+            Attribute used to declare a single test area of a collection of test areas. 
+            </summary>
+            <remarks>
+            This attribute can be used on enumerations or enumeration members to declare them 
+            as test areas.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestAreaAttribute.AreaPathRoot">
+            <summary>The string used to override inherited area path components.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestAreaAttribute.AreaSeparator">
+            <summary>The key used to separate invidiual test areas in the test area path.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestAreaAttribute.testAreas">
+            <summary>The list of individual test areas in the area path.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Management.Attributes.TestAreaAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Management.Attributes.TestAreaAttribute"/> class.
+            </summary>
+            <param name="areaPath">The area path.</param>
+        </member>
+        <member name="M:Microsoft.Test.Management.Attributes.TestAreaAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Management.Attributes.TestAreaAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Management.Attributes.TestAreaAttribute.GetAreas(System.String)">
+            <summary>
+            Get a list of the individual test areas in the given test area path.
+            </summary>
+            <param name="areaPath">The test area path.</param>
+            <returns>A <see cref="T:System.Collections.Generic.ICollection{T}"/> of the individual test areas.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Management.Attributes.TestAreaAttribute.op_Addition(Microsoft.Test.Management.Attributes.TestAreaAttribute,Microsoft.Test.Management.Attributes.TestAreaAttribute)">
+            <summary>
+            Implements the operator + for combining two <see cref="T:Microsoft.Test.Management.Attributes.TestAreaAttribute"/> instances. The
+            returned <see cref="T:Microsoft.Test.Management.Attributes.TestAreaAttribute"/> instance that is the test area path from <paramref name="right"/>
+            prefixed with the test area path from <paramref name="left"/>.
+            </summary>
+            <param name="left">The left attribute.</param>
+            <param name="right">The right attribute.</param>
+            <returns>A <see cref="T:Microsoft.Test.Management.Attributes.TestAreaAttribute"/> instance that is the test area path from <paramref name="right"/>
+            prefixed with the test area path from <paramref name="left"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Management.Attributes.TestAreaAttribute.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Management.Attributes.TestAreaAttribute.AreaPath">
+            <summary>
+            Gets or sets the path for this test area. The area path defaults to the method, class or
+            assembly or namespace name if not set.
+            </summary>
+            <value>The area path.</value>
+        </member>
+        <member name="T:Microsoft.Test.Management.Attributes.TestCategories">
+            <summary>
+            Contains a list of all test categories defined at the Ads organizational level.
+            </summary>
+            <remarks>
+            See the ads R&amp;D Test Org site at http://sharepoint/sites/adsRD/TestOrg. Consult the document Test Scope &amp; Categories.docx in the folder
+            Shared Documents/Definitions and Policies.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.Unit">
+            <summary>Unit tests. Generally used with <see cref="E:TestScopes.Unit"/> scope.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.DesignVerification">
+            <summary>Design verification category. Applicable to the Unit test scope only.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.E2E">
+            <summary>E2E tests. Applicable to the System scope only.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.EVT">
+            <summary>EVT tests. Applicable to the System scope only.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.Functional">
+            <summary>Functional tests. Applicable to the Component and Service scopes only.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.Integration">
+            <summary>Integration tests. Applicable to the Service, Core and System scopes only.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.Internationalization">
+            <summary>Internationalization tests. Applicable to the Service and Core scopes only.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.ORTUAT">
+            <summary>ORT/UAT tests. Applicable to the System scope only.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.Performance">
+            <summary>Performance tests. Applicable to all test scopes.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.Security">
+            <summary>Security tests. Applicable to all test scopes.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestCategories.FaultTolerance">
+            <summary>Fault tolerance tests. Generlaly used with the <see cref="E:TestScopes.System"/> scope.</summary>
+        </member>
+        <member name="T:Microsoft.Test.Management.Attributes.TestScopeAttribute">
+            <summary>
+            Attribute used to define the scope of a single test.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestScopeAttribute.scope">
+            <summary>The test scope.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Management.Attributes.TestScopeAttribute.#ctor(Microsoft.Test.Management.Attributes.TestScopes)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TestScopeAttribute"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Management.Attributes.TestScopeAttribute.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TestScopeAttribute"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TestScopeAttribute"/>.</returns>
+        </member>
+        <member name="P:Microsoft.Test.Management.Attributes.TestScopeAttribute.Scope">
+            <summary>
+            Gets the test scope specified by this attribute.
+            </summary>
+            <value>The scope.</value>
+        </member>
+        <member name="T:Microsoft.Test.Management.Attributes.TestScopes">
+            <summary>
+            Enumeration that contains an entry for each test scope defined at the Ads organizational level.
+            </summary>
+            <remarks>
+            See the ads R&amp;D Test Org site at http://sharepoint/sites/adsRD/TestOrg. Consult the document Test Scope &amp; Categories.docx in the folder
+            Shared Documents/Definitions and Policies.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestScopes.None">
+            <summary>Not used.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestScopes.Unit">
+            <summary>Represents unit tests.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestScopes.Component">
+            <summary>Component level tests.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestScopes.Service">
+            <summary>Service level tests.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestScopes.Core">
+            <summary>Core tests.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Management.Attributes.TestScopes.System">
+            <summary>Represents all system wide tests.</summary>
+        </member>
+    </members>
+</doc>
