@@ -324,6 +324,7 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         public override IODataResponseMessage GetResponse()
         {
+            throw new Exception("oooo test");
             try
             {
                 HttpWebResponse httpResponse = (HttpWebResponse)this.httpRequest.GetResponse();
