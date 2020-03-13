@@ -333,7 +333,7 @@ namespace Microsoft.OData.Client
             }
             catch (WebException webException)
             {
-                throw new Exception("pppp test");
+                throw new Exception("pppp test" +this.httpRequest.Address+" "+webException.Message);
                 throw ConvertToDataServiceWebException(webException);
             }
         }
