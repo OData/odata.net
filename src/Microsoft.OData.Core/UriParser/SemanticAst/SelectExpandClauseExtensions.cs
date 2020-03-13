@@ -90,8 +90,7 @@ namespace Microsoft.OData.UriParser
           
             foreach (var selectItem in selectExpandClause.SelectedItems)
             {
-                WildcardSelectItem wildcardSelect = selectItem as WildcardSelectItem;
-                if (wildcardSelect != null)
+                if (selectItem is WildcardSelectItem)
                 {
                     levelSelectList.Add("*");
                     continue;
