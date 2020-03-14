@@ -15,11 +15,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal abstract class CsdlElement
     {
         protected List<object> annotations;
-        protected EdmLocation location;
 
+        public CsdlElement() { }
         public CsdlElement(CsdlLocation location)
         {
-            this.location = location;
+            Location = location;
         }
 
         public virtual bool HasDirectValueAnnotations
@@ -48,10 +48,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             }
         }
 
-        public EdmLocation Location
-        {
-            get { return this.location; }
-        }
+        public EdmLocation Location { get; set; }
 
         public void AddAnnotation(CsdlDirectValueAnnotation annotation)
         {

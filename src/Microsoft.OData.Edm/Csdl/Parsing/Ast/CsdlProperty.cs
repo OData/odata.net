@@ -11,24 +11,17 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal class CsdlProperty : CsdlNamedElement
     {
-        private readonly CsdlTypeReference type;
-        private readonly string defaultValue;
+        public CsdlProperty() { }
 
         public CsdlProperty(string name, CsdlTypeReference type, string defaultValue, CsdlLocation location)
             : base(name, location)
         {
-            this.type = type;
-            this.defaultValue = defaultValue;
+            Type = type;
+            DefaultValue = defaultValue;
         }
 
-        public CsdlTypeReference Type
-        {
-            get { return this.type; }
-        }
+        public CsdlTypeReference Type { get; set; }
 
-        public string DefaultValue
-        {
-            get { return this.defaultValue; }
-        }
+        public string DefaultValue { get; set; }
     }
 }

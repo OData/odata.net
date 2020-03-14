@@ -499,7 +499,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             string name = Required(CsdlConstants.Attribute_Name);
             string defaultValue = Optional(CsdlConstants.Attribute_DefaultValue);
 
-            return new CsdlProperty(name, type, defaultValue, element.Location);
+            return new CsdlProperty { Name = name, Type = type, DefaultValue = defaultValue, Location = element.Location };
         }
 
         private CsdlTerm OnTermElement(XmlElementInfo element, XmlElementValueCollection childValues)

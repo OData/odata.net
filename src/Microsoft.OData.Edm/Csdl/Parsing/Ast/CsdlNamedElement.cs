@@ -11,17 +11,16 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal abstract class CsdlNamedElement : CsdlElement
     {
-        private readonly string name;
+       // private readonly string name;
+
+        protected CsdlNamedElement() { }
 
         protected CsdlNamedElement(string name, CsdlLocation location)
             : base(location)
         {
-            this.name = name;
+            this.Name = name;
         }
 
-        public string Name
-        {
-            get { return this.name; }
-        }
+        public string Name { get; set; }
     }
 }

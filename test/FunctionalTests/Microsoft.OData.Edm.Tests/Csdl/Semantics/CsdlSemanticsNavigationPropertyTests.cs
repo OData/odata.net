@@ -35,8 +35,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
             var navigationWithoutPartner = new CsdlNavigationProperty("WithoutPartner", "FQ.NS.EntityType", false, null, false, null, Enumerable.Empty<CsdlReferentialConstraint>(), null);
 
-            var idProperty = new CsdlProperty("ID", new CsdlNamedTypeReference("Edm.Int32", false, null), null, null);
-            var fkProperty = new CsdlProperty("FK", new CsdlNamedTypeReference("Edm.Int32", false, null), null, null);
+            var idProperty = new CsdlProperty { Name = "ID", Type = new CsdlNamedTypeReference("Edm.Int32", false, null) };
+            var fkProperty = new CsdlProperty { Name = "FK", Type = new CsdlNamedTypeReference("Edm.Int32", false, null) };
             this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, new CsdlKey(new[] { new CsdlPropertyReference("ID", null) }, null), new[] { idProperty, fkProperty }, new[] { collectionProperty, referenceProperty, navigationWithoutPartner }, null);
 
             var csdlSchema = new CsdlSchema("FQ.NS", null, null, new[] { this.csdlEntityType }, Enumerable.Empty<CsdlEnumType>(), Enumerable.Empty<CsdlOperation>(),Enumerable.Empty<CsdlTerm>(),Enumerable.Empty<CsdlEntityContainer>(),Enumerable.Empty<CsdlAnnotations>(), Enumerable.Empty<CsdlTypeDefinition>(), null);

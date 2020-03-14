@@ -53,6 +53,16 @@
     <Compile Include="Csdl\CsdlTarget.cs" />
     <Compile Include="Csdl\EdmValueParser.cs" />
     <Compile Include="Csdl\EdmValueWriter.cs" />
+    <Compile Include="Csdl\Reader\CsdlJsonReader.cs" />
+    <Compile Include="Csdl\Reader\CsdlReader.cs" />
+    <Compile Include="Csdl\Reader\CsdlXmlReader.cs" />
+    <Compile Include="Csdl\Reader\IJsonReader.cs" />
+    <Compile Include="Csdl\Reader\JsonConstants.cs" />
+    <Compile Include="Csdl\Reader\JsonReader.cs" />
+    <Compile Include="Csdl\Reader\JsonReaderExtensions.cs" />
+    <Compile Include="Csdl\Reader\JsonReaderOptions.cs" />
+    <Compile Include="Csdl\Reader\JsonNodeType.cs" />
+    <Compile Include="Csdl\Reader\SchemaJsonReader.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlAction.cs" />
@@ -135,6 +145,8 @@
     <Compile Include="Csdl\Serialization\SerializationValidator.cs" />
     <Compile Include="Csdl\SerializationExtensionMethods.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlOperationReturn.cs" />
+    <Compile Include="Csdl\CsdlSerializer.cs" />
+    <Compile Include="Csdl\CsdlSerializerOptions.cs" />
     <Compile Include="Csdl\CsdlReader.cs" />
     <Compile Include="Csdl\CsdlWriter.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs" />

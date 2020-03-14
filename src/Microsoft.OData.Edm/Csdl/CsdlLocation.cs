@@ -9,6 +9,8 @@ using System.Globalization;
 
 namespace Microsoft.OData.Edm.Csdl
 {
+
+
     /// <summary>
     /// Defines a location in a XML file.
     /// </summary>
@@ -24,6 +26,11 @@ namespace Microsoft.OData.Edm.Csdl
             this.Source = source;
             this.LineNumber = number;
             this.LinePosition = position;
+        }
+
+        internal CsdlLocation(string source, string jsonPath)
+        {
+
         }
 
         /// <summary>
