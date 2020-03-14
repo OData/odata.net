@@ -19,10 +19,12 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Hadoop.Avro2" Version="1.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    <PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.1.13" />
+    <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.1.13" />-->
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
 
   </ItemGroup>
   
@@ -37,10 +39,10 @@
 
     <ProjectReference Include="$(EnlistmentRoot)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
  
-    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <!--<Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\..\sln\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
-    </Reference>
+    </Reference>-->
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />

@@ -80,9 +80,9 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             }
             catch (WebException webException)
             {
-                var msg = "testing testing ..";
-                msg += "007msg ---  " + request.RequestUri;// webException.Message;// + " " + webException.StackTrace + " " + webException.InnerException == null ? "" : (webException.InnerException.Message + " " + webException.InnerException.StackTrace);
-                throw new Exception(msg);
+                //var msg = "testing testing ..";
+                //msg += "007msg ---  " + request.RequestUri;// webException.Message;// + " " + webException.StackTrace + " " + webException.InnerException == null ? "" : (webException.InnerException.Message + " " + webException.InnerException.StackTrace);
+               // throw new Exception(msg);
 
                 if (webException.Response == null)
                 {

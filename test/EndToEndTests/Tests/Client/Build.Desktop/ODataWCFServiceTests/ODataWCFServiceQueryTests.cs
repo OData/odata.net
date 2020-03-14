@@ -363,7 +363,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     }
                     catch(Exception ex)
                     {
-                        throw new Exception("999msg----- " + ex.Message);
+                       throw new Exception("999msg----- " + ex.Message);
                     }
                     Assert.AreEqual(200, responseMessage.StatusCode);
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))

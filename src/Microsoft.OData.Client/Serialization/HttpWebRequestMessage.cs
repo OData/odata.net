@@ -328,12 +328,12 @@ namespace Microsoft.OData.Client
             try
             {
                 HttpWebResponse httpResponse = (HttpWebResponse)this.httpRequest.GetResponse();
-                throw new Exception("oooo test");
+                //throw new Exception("oooo test");
                 return new HttpWebResponseMessage(httpResponse);
             }
             catch (WebException webException)
             {
-                throw new Exception("pppp test" +this.httpRequest.Address+" "+webException.Message);
+                //throw new Exception("pppp test" +this.httpRequest.Address+" "+webException.Message);
                 throw ConvertToDataServiceWebException(webException);
             }
         }

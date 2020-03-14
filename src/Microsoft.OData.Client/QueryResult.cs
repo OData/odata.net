@@ -221,7 +221,7 @@ namespace Microsoft.OData.Client
 
             if (null != this.Failure)
             {
-                throw new Exception(msg + " " + this.Failure.Message);
+                //throw new Exception(msg + " " + this.Failure.Message);
                 throw this.Failure;
             }
 
@@ -255,7 +255,7 @@ namespace Microsoft.OData.Client
                 IODataResponseMessage response = null;
                 response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
 
-                throw new Exception(msg +"  "+ response.StatusCode);
+                //throw new Exception(msg +"  "+ response.StatusCode);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
 
         
@@ -306,7 +306,7 @@ namespace Microsoft.OData.Client
 
             if (null != this.Failure)
             {
-                throw new Exception(msg+" "+this.Failure.Message);
+                //throw new Exception(msg+" "+this.Failure.Message);
                 throw this.Failure;
             }
         }
