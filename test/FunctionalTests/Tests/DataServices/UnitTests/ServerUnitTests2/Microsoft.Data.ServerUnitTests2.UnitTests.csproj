@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Microsoft.Data.ServerUnitTests2.UnitTests</AssemblyName>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
