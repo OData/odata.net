@@ -62,7 +62,7 @@ steps:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration)'
     projects: |
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.NetCore.csproj
 
 
 - task: Powershell@2
@@ -94,7 +94,7 @@ steps:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |      
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.NetCore.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
 
 - task: VSTest@2
