@@ -17,7 +17,7 @@
 
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
 
-
+    <NoWarn>$(NoWarn);NU1605</NoWarn>
 
 
   </PropertyGroup>

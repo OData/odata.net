@@ -16,8 +16,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
- 
-    
+
+    <NoWarn>$(NoWarn);NU1605</NoWarn>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup Condition="'$(BuildInOSS)' == 'true'">
