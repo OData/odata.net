@@ -101,7 +101,7 @@ steps:
   displayName: 'Test'
   inputs:
     testSelector: 'testAssemblies'
-    testAssemblyVer2: '$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\Microsoft.Test.OData.Tests.Client1.dll' #'$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
+    testAssemblyVer2: '$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\Microsoft.Test.OData.Tests.Client.dll' #'$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
     searchFolder: '$(System.DefaultWorkingDirectory)'
 
 #$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\
