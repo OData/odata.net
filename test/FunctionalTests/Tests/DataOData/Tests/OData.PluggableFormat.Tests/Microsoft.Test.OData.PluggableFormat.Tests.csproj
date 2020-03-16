@@ -62,7 +62,7 @@
     <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />-->
   </ItemGroup>
   <ItemGroup Condition="'$(BuildInOSS)' == 'true'">
-    <Reference Include="$(NuGetPack)\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll" />
+    <!--<Reference Include="..\..\..\..\..\packages\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll" />-->
     <Reference Include="$(NuGetPack)\Newtonsoft.Json.6.0.5\lib\net40\Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
