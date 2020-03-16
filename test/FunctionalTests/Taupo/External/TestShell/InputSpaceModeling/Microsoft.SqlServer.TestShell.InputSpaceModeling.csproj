@@ -3,9 +3,8 @@
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
     <AssemblyName>Microsoft.SqlServer.TestShell.InputSpaceModeling</AssemblyName>
  
-    <DocumentationFile>obj\Microsoft.SqlServer.TestShell.InputSpaceModeling.xml</DocumentationFile>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
-    <RootNamespace>Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling</RootNamespace>
+     <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
+ 
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
