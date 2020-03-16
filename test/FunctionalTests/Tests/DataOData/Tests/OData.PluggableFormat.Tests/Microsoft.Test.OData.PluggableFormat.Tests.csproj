@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Hadoop.Avro2" Version="1.2.1" />
+    <PackageReference Include="Microsoft.Hadoop.Avro2" Version="1.2.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.1.13" />-->
