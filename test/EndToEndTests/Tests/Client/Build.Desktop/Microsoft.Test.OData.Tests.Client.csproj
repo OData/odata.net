@@ -51,38 +51,36 @@
 
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
     <PackageReference Include="System.Composition" Version="1.1.0" />
-    <!--<PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />-->
-    <!--<PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />-->
+    --><!--<PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />--><!--
+    --><!--<PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />--><!--
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-  </ItemGroup>
+  </ItemGroup>-->
 
-  <!--<ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
     <PackageReference Include="FluentAssertions" Version="4.1.0" />
 
     <PackageReference Include="EntityFramework" Version="5.0.0" />
 
-    --><!--<PackageReference Include="Microsoft.MadMan" Version="3.1.112712" />--><!--
+     <!--<PackageReference Include="Microsoft.MadMan" Version="3.1.112712" />--><!--
     
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    --><!--<PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />--><!--
- 
+    -->
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />--> 
+    <!--<PackageReference Include="VS.QualityTools.UnitTestFramework" Version="15.0.27323.2" />--> 
 
-    --><!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />--><!--
-
-    --><!--<PackageReference Include="VS.QualityTools.UnitTestFramework" Version="15.0.27323.2" />--><!--
-
-  </ItemGroup>-->
+  </ItemGroup> 
 
   <ItemGroup>
     <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
