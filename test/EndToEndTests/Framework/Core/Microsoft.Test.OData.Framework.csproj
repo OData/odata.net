@@ -25,8 +25,8 @@
     <!--<PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />-->
     <!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />-->
-    <!--<PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />-->
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
@@ -40,9 +40,9 @@
     </Reference>-->
  
     
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+    <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
       <HintPath>..\..\..\packages\PublicAssemblies_10\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
-    </Reference>
+    </Reference>-->
  
     
     <Reference Include="System.Core" />
