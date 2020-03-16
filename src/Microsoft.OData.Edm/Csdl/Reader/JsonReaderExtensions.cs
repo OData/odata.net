@@ -7,22 +7,67 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Net.Http.Headers;
 
 namespace Microsoft.OData.Edm.Csdl.Reader
 {
-
-    internal class JsonPath
-    {
-        // see the information: https://goessner.net/articles/JsonPath/
-    }
-
     /// <summary>
     /// Extension methods for the JSON reader.
     /// </summary>
     internal static class JsonReaderExtensions
     {
-        internal static JsonPrimitiveValue ReadAsPrimitive(this IJsonReader jsonReader)
+        public static void ProcessProperty(this JsonObjectValue objValue, string propertyName, Action<IJsonValue> processAction)
+        {
+            IJsonValue propertyValue;
+            if (objValue.TryGetValue(propertyName, out propertyValue))
+            {
+                processAction(propertyValue);
+            }
+        }
+
+        public static string ParseAsStringPrimitive(this IJsonValue jsonValue)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                throw new Exception();
+            }
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            return primitiveValue.Value as string;
+        }
+
+        public static bool? ParseAsBooleanPrimitive(this IJsonValue jsonValue)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                throw new Exception();
+            }
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            return (bool)primitiveValue.Value;
+        }
+
+        //private static int? ParseAsIntegerPrimitive(this IJsonValue jsonValue)
+        //{
+        //    if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+        //    {
+        //        throw new Exception();
+        //    }
+
+        //    JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+        //    if (primitiveValue.Value == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    if (primitiveValue.Value.GetType() == typeof(int))
+        //    {
+        //        return (int)primitiveValue.Value;
+        //    }
+
+        //    throw new Exception();
+        //}
+
+        internal static JsonPrimitiveValue ReadAsPrimitive(this IJsonReader jsonReader, IJsonValue parent = null, int index = -1)
         {
             if (jsonReader == null)
             {
@@ -40,10 +85,10 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             // Move to next token.
             jsonReader.Read();
 
-            return new JsonPrimitiveValue(value);
+            return new JsonPrimitiveValue(value, parent, index);
         }
 
-        internal static JsonObjectValue ReadAsObject(this IJsonReader jsonReader)
+        internal static JsonObjectValue ReadAsObject(this IJsonReader jsonReader, IJsonValue parent = null, int index = -1)
         {
             if (jsonReader == null)
             {
@@ -62,7 +107,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 throw new Exception("");
             }
 
-            JsonObjectValue objectValue = new JsonObjectValue();
+            JsonObjectValue objectValue = new JsonObjectValue(parent, index);
 
             // Pass the "{" tag.
             jsonReader.Read();
@@ -77,15 +122,15 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 switch (jsonReader.NodeType)
                 {
                     case JsonNodeType.StartObject:
-                        jsonValue = ReadAsObject(jsonReader);
+                        jsonValue = ReadAsObject(jsonReader, objectValue);
                         break;
 
                     case JsonNodeType.StartArray:
-                        jsonValue = ReadAsArray(jsonReader);
+                        jsonValue = ReadAsArray(jsonReader, objectValue);
                         break;
 
                     case JsonNodeType.PrimitiveValue:
-                        jsonValue = ReadAsPrimitive(jsonReader);
+                        jsonValue = ReadAsPrimitive(jsonReader, objectValue);
                         break;
 
                     case JsonNodeType.EndArray:
@@ -106,7 +151,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             return objectValue;
         }
 
-        internal static JsonArrayValue ReadAsArray(this IJsonReader jsonReader)
+        internal static JsonArrayValue ReadAsArray(this IJsonReader jsonReader, IJsonValue parent = null, int index = -1)
         {
             if (jsonReader == null)
             {
@@ -125,8 +170,9 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 throw new Exception("");
             }
 
-            JsonArrayValue arrayValue = new JsonArrayValue();
+            JsonArrayValue arrayValue = new JsonArrayValue(parent, index);
 
+            int newIndex = 0;
             // Pass the "[" tag.
             jsonReader.Read();
 
@@ -136,15 +182,15 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 switch (jsonReader.NodeType)
                 {
                     case JsonNodeType.StartObject:
-                        jsonValue = ReadAsObject(jsonReader);
+                        jsonValue = ReadAsObject(jsonReader, arrayValue, newIndex++);
                         break;
 
                     case JsonNodeType.StartArray:
-                        jsonValue = ReadAsArray(jsonReader);
+                        jsonValue = ReadAsArray(jsonReader, arrayValue, newIndex++);
                         break;
 
                     case JsonNodeType.PrimitiveValue:
-                        jsonValue = ReadAsPrimitive(jsonReader);
+                        jsonValue = ReadAsPrimitive(jsonReader, arrayValue, newIndex++);
                         break;
 
                     case JsonNodeType.EndArray:

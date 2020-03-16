@@ -1,28 +1,20 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlReader.cs" company="Microsoft">
+// <copyright file="CsdlSerializerOptions.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Csdl.CsdlSemantics;
-using Microsoft.OData.Edm.Csdl.Parsing;
-using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Reader;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies.Community.V1;
-using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Csdl
 {
     /// <summary>
-    /// 
+    /// The options/setting for CSDL serializer
     /// </summary>
     public class CsdlSerializerOptions
     {
@@ -35,7 +27,14 @@ namespace Microsoft.OData.Edm.Csdl
             ReadAsImmutableModel = true;
         }
 
-        public IEnumerable<EdmError> Errors { get; set; }
+        public IEnumerable<IEdmModel> ReferencedModels { get; set; }
+
+        public Func<Uri, TextReader> ReferencedModelJsonFactory { get; set; }
+
+        public Func<Uri, XmlReader> ReferencedModelXmlFactory { get; set; }
+
+        // Save the parsing errors
+        internal IEnumerable<EdmError> Errors { get; set; }
 
         /// <summary>
         /// Ignore the unexpected attributes and elements.

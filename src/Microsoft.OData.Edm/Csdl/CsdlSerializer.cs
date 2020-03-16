@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Csdl.Reader;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
+using Microsoft.OData.Edm.Csdl.Reader;
 
 namespace Microsoft.OData.Edm.Csdl
 {
@@ -19,11 +19,11 @@ namespace Microsoft.OData.Edm.Csdl
 
     /// <summary>
     /// Provides functionality to serialize <see cref="IEdmModel"/> to CSDL (JSON/XML)
-    /// and to deserialize CSDL (JSON/XML) into <see cref="IEdmModel"/>.
+    /// or to deserialize CSDL (JSON/XML) into <see cref="IEdmModel"/>.
     /// </summary>
     public static class CsdlSerializer
     {
-        #region EdmModel to CSDL
+        #region Serialize EdmModel to CSDL
         /// <summary>
         /// Parse the text representing a single CSDL value into a <see cref="IEdmModel"/>
         /// </summary>
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
         #endregion
 
-        #region CSDL to Edm Model
+        #region Deserialize CSDL to Edm Model
         /// <summary>
         /// Parse the text (JSON/XML...) representing a single CSDL into a <see cref="IEdmModel"/>
         /// </summary>
@@ -141,10 +141,10 @@ namespace Microsoft.OData.Edm.Csdl
                 options = CsdlSerializerOptions.DefaultOptions;
             }
 
-            IEdmModel model;
-            CsdlJsonReader csdlReader = new CsdlJsonReader(reader, options.GetJsonReaderOptions());
-            csdlReader.TryParse(out model);
-            return model;
+            // Maybe it's a CSDL, or it maybe multiple Schemas (Check with Michael),
+            // So, we should change the follow code to support it.
+            CsdlJsonReader csdlReader = new CsdlJsonReader(reader, options);
+            return csdlReader.BuildEdmModel();
         }
 
         /// <summary>
@@ -166,7 +166,13 @@ namespace Microsoft.OData.Edm.Csdl
                 options = CsdlSerializerOptions.DefaultOptions;
             }
 
-            //IEdmModel model = CsdlJsonReader.ReadAsEdmModel(jsonReader, options.GetJsonReaderOptions());
+
+            // stream => IJsonValue, will throw exception.
+            // Only check the JSON syntax
+            //JsonObjectValue csdlObject = jsonReader.ReadAsObject();
+
+            //CsdlJsonParser parser = new CsdlJsonParser(options);
+            //parser.
 
             //return model;
 

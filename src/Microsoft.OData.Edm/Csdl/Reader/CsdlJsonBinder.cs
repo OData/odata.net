@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlJsonReader.cs" company="Microsoft">
+// <copyright file="CsdlReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,14 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Parsing;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies.Community.V1;
-using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Csdl.Reader
 {
@@ -24,9 +20,12 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     /// </summary>
     internal class CsdlJsonReader : CsdlReader
     {
-  
+        //private static readonly Dictionary<string, Action> EmptyParserLookup = new Dictionary<string, Action>();
+        private readonly IDictionary<string, Action> csdlPropertyParserLookup;
+
       //  private readonly List<EdmError> errors;
-      //  private string entityContainer;
+        private readonly List<IEdmReference> edmReferences;
+        private string entityContainer;
 
         private Stack<string> paths;
 
@@ -36,68 +35,46 @@ namespace Microsoft.OData.Edm.Csdl.Reader
         //private string source;
 
         private IJsonReader _jsonReader;
-        private CsdlSerializerOptions _options;
-
-        private readonly IEdmModel _edmModel;
-
-        public CsdlJsonReader(TextReader reader)
-            : this (reader, CsdlSerializerOptions.DefaultOptions)
-        {
-        }
+      //  private JsonReaderOptions _options;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="reader">The XmlReader for current CSDL doc</param>
         /// <param name="referencedModelFunc">The function to load referenced model xml. If null, will stop loading the referenced model.</param>
-        public CsdlJsonReader(TextReader reader, CsdlSerializerOptions options)
+        public CsdlJsonReader(TextReader reader, JsonReaderOptions options)
         {
-            if (reader == null)
-            {
-                throw new ArgumentNullException("reader");
-            }
+            _jsonReader = new JsonReader(reader, options);
+     //       this.errors = new List<EdmError>();
+            this.edmReferences = new List<IEdmReference>();
 
-            if (options == null)
+            // Setup the edmx parser.
+            this.csdlPropertyParserLookup = new Dictionary<string, Action>
             {
-                throw new ArgumentNullException("options");
-            }
-
-            _jsonReader = new JsonReader(reader, options.GetJsonReaderOptions());
-            _options = options;
-            _edmModel = null;
+              //  { CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Version, this.ParseVersion },
+                { CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Reference, this.ParseReference },
+                { CsdlConstants.Prefix_Dollar + CsdlConstants.Element_EntityContainer, this.ParseEntityContainer}
+            };
 
             // for the iteration path
             paths = new Stack<string>();
             paths.Push(".");
         }
 
-        public IEdmModel BuildEdmModel()
+        public bool TryParse(out IEdmModel model)
         {
-            // If parsed, just return the model.
-            if (_edmModel != null)
-            {
-                return _edmModel;
-            }
+            model = null;
 
-            // Read the whole CSDL into "JsonObjectValue".
-            // stream ==> IJsonValue, following up the JSON rules
-            JsonObjectValue csdlObject = _jsonReader.ReadAsObject();
-            Debug.Assert(csdlObject != null);
+            //Version csdlVersion;
+            //CsdlModel csdlModel;
+            //TryParseCsdlFileToCsdlModel(out csdlVersion, out csdlModel);
 
-            // CSDL Syntax parser, parse JSON object into CSDL model
-            CsdlModel csdlModel = ParseCsdlModel(csdlObject);
+            Debug.Assert(this._jsonReader.NodeType == JsonNodeType.None);
+            this._jsonReader.Read();
 
-            List<CsdlModel> referencedCsdlModels = this.BuildReferencedModel(csdlModel.CurrentModelReferences);
+            ParseCsdlDocument();
 
-            if (referencedCsdlModels == null)
-            {
-
-            }
-            // CSDL Semantic binder, bind CSDL model to IEdmModel.
-
-            //ParseCsdlDocument();
-
-            return _edmModel;
+            return true;
         }
 
         /// <summary>
@@ -105,19 +82,20 @@ namespace Microsoft.OData.Edm.Csdl.Reader
         /// </summary>
         /// <param name="mainCsdlVersion">The main CSDL version.</param>
         /// <returns>A list of CsdlModel (no semantics) of the referenced models.</returns>
-        public List<CsdlModel> BuildReferencedModel(IEnumerable<IEdmReference> references)
+        public static List<CsdlModel> LoadAndParseReferencedModel(Version mainCsdlVersion)
         {
-            if (_options.ReferencedModelJsonFactory == null)
+            List<CsdlModel> referencedAstModels = new List<CsdlModel>();
+            if (this.getReferencedModelReaderFunc == null)
             {
-                return null;
+                // don't try to load Edm xml doc, but this.edmReferences's namespace-alias need to be used later.
+                return referencedAstModels;
             }
 
-            List<CsdlModel> referencedAstModels = new List<CsdlModel>();
-            foreach (var edmReference in references)
+            foreach (var edmReference in this.edmReferences)
             {
                 if (!edmReference.Includes.Any() && !edmReference.IncludeAnnotations.Any())
                 {
-                  //  this.RaiseError(EdmErrorCode.ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement, Strings.EdmxParser_InvalidReferenceIncorrectNumberOfIncludes);
+                    this.RaiseError(EdmErrorCode.ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement, Strings.EdmxParser_InvalidReferenceIncorrectNumberOfIncludes);
                     continue;
                 }
 
@@ -131,127 +109,105 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                     continue;
                 }
 
-                TextReader referencedJsonReader = _options.ReferencedModelJsonFactory(edmReference.Uri);
-                if (referencedJsonReader == null)
+                XmlReader referencedXmlReader = this.getReferencedModelReaderFunc(edmReference.Uri);
+                if (referencedXmlReader == null)
                 {
-                  //  this.RaiseError(EdmErrorCode.UnresolvedReferenceUriInEdmxReference, Strings.EdmxParser_UnresolvedReferenceUriInEdmxReference);
+                    this.RaiseError(EdmErrorCode.UnresolvedReferenceUriInEdmxReference, Strings.EdmxParser_UnresolvedReferenceUriInEdmxReference);
                     continue;
                 }
 
                 // recursively use CsdlReader to parse sub edm:
-                IJsonReader jsonReader = new JsonReader(referencedJsonReader, _options.GetJsonReaderOptions());
+                CsdlReader referencedEdmxReader = new CsdlReader(referencedXmlReader, /*getReferencedModelReaderFunc*/ null);
+                referencedEdmxReader.source = edmReference.Uri != null ? edmReference.Uri.OriginalString : null;
+                referencedEdmxReader.ignoreUnexpectedAttributesAndElements = this.ignoreUnexpectedAttributesAndElements;
+                Version referencedEdmxVersion;
+                CsdlModel referencedAstModel;
+                if (referencedEdmxReader.TryParseCsdlFileToCsdlModel(out referencedEdmxVersion, out referencedAstModel))
+                {
+                    if (!mainCsdlVersion.Equals(referencedEdmxVersion))
+                    {
+                        // TODO: REF add exception message
+                        this.errors.Add(null);
+                    }
 
-                JsonObjectValue objValue = jsonReader.ReadAsObject();
+                    referencedAstModel.AddParentModelReferences(edmReference);
+                    referencedAstModels.Add(referencedAstModel);
+                }
 
-                CsdlModel referencedAstModel = ParseCsdlModel(objValue);
-
-                //if (!mainCsdlVersion.Equals(referencedEdmxVersion))
-                //{
-                //    // TODO: REF add exception message
-                //    this.errors.Add(null);
-                //}
-
-                referencedAstModel.AddParentModelReferences(edmReference);
-                referencedAstModels.Add(referencedAstModel);
-
-                //this.errors.AddRange(referencedEdmxReader.errors);
+                this.errors.AddRange(referencedEdmxReader.errors);
             }
 
             return referencedAstModels;
         }
 
-        private static Version GetCsdlVersion(JsonObjectValue csdlObject)
-        {
-            Debug.Assert(csdlObject != null);
-
-            IJsonValue versionValue;
-            if (csdlObject.TryGetValue("$Version", out versionValue))
-            {
-                string strVersion = versionValue.ParseAsStringPrimitive();
-                if (strVersion == "4.0")
-                {
-                    return EdmConstants.EdmVersion4;
-                }
-                else if (strVersion == "4.01")
-                {
-                    return EdmConstants.EdmVersion401;
-                }
-            }
-
-            // The value of $Version is a string containing either 4.0 or 4.01.
-            // So far, it only supports 4.0 and 4.01, so for other, throw
-            throw new Exception();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="csdlObject"></param>
-        /// <returns></returns>
-        internal CsdlModel ParseCsdlModel(JsonObjectValue csdlObject)
+        public static CsdlModel BuildCsdlModel(IJsonValue jsonValue)
         {
             // A CSDL JSON document consists of a single JSON object.
-            // This document object MUST contain the member $Version.
-            Version version = GetCsdlVersion(csdlObject);
-
-            CsdlModel csdlModel = new CsdlModel
+            if (jsonValue.ValueKind != JsonValueKind.JObject)
             {
-                Version = version
-            };
+                return null;
+            }
 
-            JsonPath jsonPath = new JsonPath();
+            JsonObjectValue csdlObject = (JsonObjectValue)jsonValue;
+
+            // $Version
+            string strVersion = null;
+            Version version;
+            csdlObject.ProcessProperty("$Version", v => strVersion = v.ParseAsStringPrimitive());
+            if (strVersion == "4.0")
+            {
+                version = EdmConstants.EdmVersion4;
+            }
+            else if (strVersion == "4.01")
+            {
+                version = EdmConstants.EdmVersion401;
+            }
+            else
+            {
+                // The value of $Version is a string containing either 4.0 or 4.01.
+                // So far, it only supports 4.0 and 4.01, so for other, throw
+                throw new Exception();
+            }
+
+            CsdlModel csdlModel = new CsdlModel();
+
             IList<IEdmReference> references = null;
+            string entityContainer = null;
             foreach (var property in csdlObject)
             {
                 string propertyName = property.Key;
                 IJsonValue propertyValue = property.Value;
 
-                jsonPath.Push(propertyName);
                 switch (propertyName)
                 {
                     case "$Version":
-                        // Processed above, so skip it.
+                        // Processed, skip it
                         break;
 
                     case "$EntityContainer":
                         // The value of $EntityContainer is value is the namespace-qualified name of the entity container of that service.
-                        // So far, i don't know how to use it. So skip it.
-                        // string entityContainer = propertyValue.ParseAsStringPrimitive();
+                        // So far, i don't know how to use it.
+                        entityContainer = propertyValue.ParseAsStringPrimitive();
                         break;
 
                     case "$Reference":
                         // The document object MAY contain the member $Reference to reference other CSDL documents.
-                        
-                        references = ParseCsdlReferences(propertyValue, jsonPath);
-                        
+                        references = BuildCsdlReferences(propertyValue);
                         break;
 
                     default:
-                        if (propertyValue.ValueKind == JsonValueKind.JObject)
+                        CsdlSchema schema = SchemaJsonReader.BuildCsdlSchema(propertyName, version, propertyValue);
+                        if (schema != null)
                         {
-                            
-
-                            // for all others, it maybe the CsdlSchema
-                            CsdlSchema schema = SchemaJsonReader.BuildCsdlSchema(propertyName, version, propertyValue);
-                            if (schema != null)
-                            {
-                                csdlModel.AddSchema(schema);
-                                break;
-                            }
-                        }
-
-                        if (_options.IgnoreUnexpectedAttributesAndElements)
-                        {
+                            csdlModel.AddSchema(schema);
                             break;
                         }
 
                         break;
                 }
-
-                jsonPath.Pop();
             }
 
-            //CsdlLocation location = new CsdlLocation(-1, -1);
+            CsdlLocation location = new CsdlLocation(-1, -1);
 
             if (references != null)
             {
@@ -261,7 +217,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             return csdlModel;
         }
 
-        public static IList<IEdmReference> ParseCsdlReferences(IJsonValue jsonValue, JsonPath jsonPath)
+        public static IList<IEdmReference> BuildCsdlReferences(IJsonValue jsonValue)
         {
             // The value of $Reference is an object that contains one member per referenced CSDL document.
             if (jsonValue.ValueKind != JsonValueKind.JObject)
@@ -280,18 +236,14 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 // The value of each member is a reference object.
                 IJsonValue propertyValue = property.Value;
 
-                jsonPath.Push(url);
-
-                IEdmReference result = ParseReferenceObject(url, propertyValue, jsonPath);
+                IEdmReference result = BuildReferenceObject(url, propertyValue);
                 references.Add(result);
-
-                jsonPath.Pop();
             }
 
             return references;
         }
 
-        public static IEdmReference ParseReferenceObject(string url, IJsonValue jsonValue, JsonPath jsonPath)
+        public static IEdmReference BuildReferenceObject(string url, IJsonValue jsonValue)
         {
             // The reference object MAY contain the members $Include and $IncludeAnnotations as well as annotations.
             if (jsonValue.ValueKind != JsonValueKind.JObject)
@@ -305,20 +257,18 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             {
                 string propertyName = property.Key;
                 IJsonValue propertyValue = property.Value;
-                JsonArrayValue arrayValue = propertyValue as JsonArrayValue;
-
-                jsonPath.Push(propertyName);
 
                 // The reference object MAY contain the members $Include and $IncludeAnnotations as well as annotations.
                 switch (propertyName)
                 {
                     case "$Include":
                         // The value of $Include is an array. Array items are objects that MUST contain the member $Namespace and MAY contain the member $Alias.
-                        if (arrayValue == null)
+                        if (propertyValue.ValueKind != JsonValueKind.JArray)
                         {
                             throw new Exception();
                         }
 
+                        JsonArrayValue arrayValue = (JsonArrayValue)propertyValue;
                         foreach (IJsonValue item in arrayValue)
                         {
                             IEdmInclude include = BuildInclude(item);
@@ -329,12 +279,13 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                     case "$IncludeAnnotations":
                         // The value of $IncludeAnnotations is an array.
                         // Array items are objects that MUST contain the member $TermNamespace and MAY contain the members $Qualifier and $TargetNamespace.
-                        if (arrayValue == null)
+                        if (propertyValue.ValueKind != JsonValueKind.JArray)
                         {
                             throw new Exception();
                         }
 
-                        foreach (IJsonValue item in arrayValue)
+                        JsonArrayValue includeAnnotationsArray = (JsonArrayValue)propertyValue;
+                        foreach (IJsonValue item in includeAnnotationsArray)
                         {
                             IEdmIncludeAnnotations includeAnnotations = BuildIncludeAnnotations(item);
                             edmReference.AddIncludeAnnotations(includeAnnotations);
@@ -347,8 +298,6 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                         break;
 
                 }
-
-                jsonPath.Pop();
             }
 
             return edmReference;
@@ -517,5 +466,67 @@ namespace Microsoft.OData.Edm.Csdl.Reader
 
 #endif
 
+        private void ParseEntityContainer()
+        {
+            if (this._jsonReader.NodeType != JsonNodeType.PrimitiveValue)
+            {
+                throw new Exception();
+            }
+
+            this.entityContainer = this._jsonReader.ReadStringValue();
+            Debug.Assert(this.entityContainer != null);
+        }
+
+        private Version ParseCsdlDocument()
+        {
+            Debug.Assert(this._jsonReader.NodeType == JsonNodeType.StartObject);
+
+            // Pass the "{" tag.
+            this._jsonReader.Read();
+
+            while (this._jsonReader.NodeType != JsonNodeType.EndOfInput)
+            {
+                if (this._jsonReader.NodeType == JsonNodeType.Property)
+                {
+                    // Get the property name and move json reader to next token
+                    string propertyName = this._jsonReader.ReadPropertyName();
+                    if (this.csdlPropertyParserLookup.ContainsKey(propertyName))
+                    {
+                        this.csdlPropertyParserLookup[propertyName]();
+                    }
+                    else
+                    {
+                        this.ParseCsdlSchema(propertyName);
+                    }
+                }
+                else
+                {
+                    if (!this._jsonReader.Read())
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Consume the "}" tag.
+            this._jsonReader.Read();
+
+            return null;
+        }
+
+        private void ParseReference()
+        {
+            if (this._jsonReader.NodeType != JsonNodeType.StartObject)
+            {
+                throw new Exception();
+            }
+        }
+
+        private void ParseCsdlSchema(string namesp)
+        {
+            Debug.Assert(this._jsonReader.NodeType == JsonNodeType.StartObject);
+
+            this._jsonReader.ReadStartObject();
+        }
     }
 }

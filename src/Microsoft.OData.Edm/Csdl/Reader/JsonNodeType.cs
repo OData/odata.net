@@ -63,39 +63,71 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     public interface IJsonValue
     {
         JsonValueKind ValueKind { get; }
+
+        IJsonValue Parent { get; }
+
+        // If the parent is an Array, we use this Index to figure the Number of the item in the Array
+        int Index { get; }
     }
+
+    // We can't use this Base class
+    //internal abstract class JsonValueVase : IJsonValue
+    //{
+    //    protected JsonValueVase(IJsonValue parent, int index)
+    //    {
+    //        Parent = parent;
+    //        Index = index;
+    //    }
+
+    //    public IJsonValue Parent { get; }
+
+    //    public int Index { get; }
+
+    //    public abstract JsonValueKind ValueKind { get;}
+    //}
 
     internal class JsonPrimitiveValue : IJsonValue
     {
-        public JsonPrimitiveValue(object value)
+        public JsonPrimitiveValue(object value, IJsonValue parent, int index = -1)
         {
             Value = value;
+            Parent = parent;
+            Index = index;
         }
 
         public object Value { get; }
+
         public JsonValueKind ValueKind => JsonValueKind.JPrimitive;
+
+        public IJsonValue Parent { get; }
+        public int Index { get; }
     }
 
     internal class JsonObjectValue : Dictionary<string, IJsonValue>, IJsonValue
     {
-        public JsonObjectValue()
-        { }
+        public JsonObjectValue(IJsonValue parent, int index = -1)
+        {
+            Parent = parent;
+            Index = index;
+        }
 
         public JsonValueKind ValueKind => JsonValueKind.JObject;
 
-        public bool TryGetPropertyValue(string name, out IJsonValue value)
-        {
-            if (TryGetValue(name, out value))
-            {
-                return true;
-            }
-
-            return false;
-        }
+        public IJsonValue Parent { get; }
+        public int Index { get; }
     }
 
     internal class JsonArrayValue : List<IJsonValue>, IJsonValue
     {
+        public JsonArrayValue(IJsonValue parent, int index = -1)
+        {
+            Parent = parent;
+            Index = index;
+        }
+
         public JsonValueKind ValueKind => JsonValueKind.JArray;
+
+        public IJsonValue Parent { get; }
+        public int Index { get; }
     }
 }

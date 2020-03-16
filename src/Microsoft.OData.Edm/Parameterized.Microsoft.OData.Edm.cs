@@ -1680,6 +1680,13 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "An member '{0}' in a JSON path '{1}' is missing."
+        /// </summary>
+        internal static string CsdlJsonParser_MissingMemberInJsonObject(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlJsonParser_MissingMemberInJsonObject, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element."
         /// </summary>
         internal static string EdmxParser_EdmxVersionMismatch {

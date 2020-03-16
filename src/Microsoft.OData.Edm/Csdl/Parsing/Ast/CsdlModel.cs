@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
@@ -32,6 +33,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
             get { return parentModelReferences; }
         }
+
+        public Version Version { get; set; }
 
         public IEnumerable<CsdlSchema> Schemata
         {

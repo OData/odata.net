@@ -62,6 +62,8 @@
     <Compile Include="Csdl\Reader\JsonReaderExtensions.cs" />
     <Compile Include="Csdl\Reader\JsonReaderOptions.cs" />
     <Compile Include="Csdl\Reader\JsonNodeType.cs" />
+    <Compile Include="Csdl\Reader\JsonPath.cs" />
+    <Compile Include="Csdl\Reader\CsdlJsonParser.cs" />
     <Compile Include="Csdl\Reader\SchemaJsonReader.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs" />
