@@ -9,10 +9,8 @@ using System.Globalization;
 
 namespace Microsoft.OData.Edm.Csdl
 {
-
-
     /// <summary>
-    /// Defines a location in a XML file.
+    /// Defines a location in a XML/JSON file.
     /// </summary>
     public class CsdlLocation : EdmLocation
     {

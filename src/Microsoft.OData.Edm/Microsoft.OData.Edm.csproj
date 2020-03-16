@@ -53,6 +53,18 @@
     <Compile Include="Csdl\CsdlTarget.cs" />
     <Compile Include="Csdl\EdmValueParser.cs" />
     <Compile Include="Csdl\EdmValueWriter.cs" />
+    <Compile Include="Csdl\Json\IJsonValue.cs" />
+    <Compile Include="Csdl\Json\JsonObjectValue.cs" />
+    <Compile Include="Csdl\Json\JsonArrayValue.cs" />
+    <Compile Include="Csdl\Json\JsonPrimitiveValue.cs" />
+    <Compile Include="Csdl\Json\IJsonReaderExtensions.cs" />
+	
+    <Compile Include="Csdl\Json\IJsonReader.cs" />
+    <Compile Include="Csdl\Json\JsonReader.cs" />
+    <Compile Include="Csdl\Json\JsonReaderOptions.cs" />
+    <Compile Include="Csdl\Json\JsonConstants.cs" />
+    <Compile Include="Csdl\Json\JsonNodeType.cs" />
+	
     <Compile Include="Csdl\Reader\CsdlJsonReader.cs" />
     <Compile Include="Csdl\Reader\CsdlReader.cs" />
     <Compile Include="Csdl\Reader\CsdlXmlReader.cs" />

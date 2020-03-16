@@ -237,7 +237,8 @@ CsdlSemantics_EnumMemberMustHaveValue=The enumeration member must have a value.
 CsdlSemantics_ImpossibleAnnotationsTarget=The annotation target '{0}' could not be resolved because it cannot refer to an annotatable element.
 CsdlSemantics_DuplicateAlias=The schema '{0}' contains the alias '{1}' more than once.
 
-CsdlJsonParser_MissingMemberInJsonObject=An member '{0}' in a JSON path '{1}' is missing.
+; JsonReader
+CsdlJsonReader_UnexpectedJsonNodeType=An unexpected '{0}' node was found when reading CSDL-JSON. A '{1}' node was expected.
 
 ;EdmxParser
 EdmxParser_EdmxVersionMismatch=The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element.

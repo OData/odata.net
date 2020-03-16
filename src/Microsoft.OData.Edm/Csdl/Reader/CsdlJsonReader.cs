@@ -9,18 +9,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Xml;
-using Microsoft.OData.Edm.Csdl.Parsing;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Csdl.Reader
 {
     /// <summary>
-    /// Provides CSDL parsing services for EDM models.
+    /// Provides CSDL-JSON parsing services for EDM models.
     /// </summary>
     internal class CsdlJsonReader : CsdlReader
     {
@@ -28,7 +24,6 @@ namespace Microsoft.OData.Edm.Csdl.Reader
       //  private readonly List<EdmError> errors;
       //  private string entityContainer;
 
-        private Stack<string> paths;
 
         ///// <summary>
         ///// Indicates where the document comes from.
@@ -65,10 +60,6 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             _jsonReader = new JsonReader(reader, options.GetJsonReaderOptions());
             _options = options;
             _edmModel = null;
-
-            // for the iteration path
-            paths = new Stack<string>();
-            paths.Push(".");
         }
 
         public IEdmModel BuildEdmModel()
@@ -199,7 +190,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 Version = version
             };
 
-            JsonPath jsonPath = new JsonPath();
+            JsonPath jsonPath = new JsonPath(_options.GetJsonPathOptions());
             IList<IEdmReference> references = null;
             foreach (var property in csdlObject)
             {
@@ -229,10 +220,8 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                     default:
                         if (propertyValue.ValueKind == JsonValueKind.JObject)
                         {
-                            
-
                             // for all others, it maybe the CsdlSchema
-                            CsdlSchema schema = SchemaJsonReader.BuildCsdlSchema(propertyName, version, propertyValue);
+                            CsdlSchema schema = SchemaJsonReader.BuildCsdlSchema(propertyName, version, propertyValue, jsonPath);
                             if (schema != null)
                             {
                                 csdlModel.AddSchema(schema);

@@ -25,6 +25,7 @@ namespace Microsoft.OData.Edm.Csdl
             IgnoreUnexpectedAttributesAndElements = true;
             IsIeee754Compatible = false;
             ReadAsImmutableModel = true;
+            IsJsonPathBracketNotation = true;
         }
 
         public IEnumerable<IEdmModel> ReferencedModels { get; set; }
@@ -55,6 +56,8 @@ namespace Microsoft.OData.Edm.Csdl
         /// False to read the CSDL and return "CsdlSemanticsModel"
         /// </summary>
         public bool ReadAsImmutableModel { get; set; }
+
+        public bool IsJsonPathBracketNotation { get; set; }
 
         /// <summary>
         /// Defines whether JSON should pretty print which includes:
@@ -91,6 +94,14 @@ namespace Microsoft.OData.Edm.Csdl
                 IsIeee754Compatible = IsIeee754Compatible,
                 ReadAsImmutableModel = ReadAsImmutableModel,
                 IgnoreUnexpectedAttributesAndElements = IgnoreUnexpectedAttributesAndElements
+            };
+        }
+
+        internal JsonPathOptions GetJsonPathOptions()
+        {
+            return new JsonPathOptions
+            {
+                IsBracketNotation = IsJsonPathBracketNotation
             };
         }
     }

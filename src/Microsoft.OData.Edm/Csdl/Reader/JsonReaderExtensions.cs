@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -15,6 +16,14 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     /// </summary>
     internal static class JsonReaderExtensions
     {
+        public static void ProcessProperty(this JsonObjectValue objValue, Action<string, IJsonValue> propertyParser)
+        {
+            foreach (var item in objValue)
+            {
+                propertyParser(item.Key, item.Value);
+            }
+        }
+
         public static void ProcessProperty(this JsonObjectValue objValue, string propertyName, Action<IJsonValue> processAction)
         {
             IJsonValue propertyValue;

@@ -18,12 +18,10 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     }
 
     /// <summary>
-    /// Provides functionalities for parsing Schema JSON for Csld elements.
+    /// Provides functionalities for parsing Schema JSON for Csdl elements.
     /// </summary>
     internal class SchemaJsonReader
     {
-        //   private IJsonReader jsonReader;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -34,6 +32,64 @@ namespace Microsoft.OData.Edm.Csdl.Reader
 
         }
 
+        public static CsdlSchema BuildCsdlSchema(string schemaNamespace, Version version, IJsonValue jsonValue, JsonPath jsonPath)
+        {
+            // A schema is represented as a member of the document object whose name is the schema namespace.
+            // Its value is an object.
+            if (jsonValue.ValueKind != JsonValueKind.JObject)
+            {
+                return null;
+            }
+            JsonObjectValue schemaObject = (JsonObjectValue)jsonValue;
+
+            IList<CsdlAnnotations> outOfLineAnnotations = new List<CsdlAnnotations>();
+            IList<CsdlElement> csdlElements = new List<CsdlElement>();
+            string alias = null;
+
+            schemaObject.ProcessProperty((propertyName, propertyValue) =>
+            {
+                jsonPath.Push(propertyName);
+
+                switch (propertyName)
+                {
+                    case "$Alias":
+                        // The value of $Alias is a string containing the alias for the schema.
+                        alias = propertyValue.ParseAsStringPrimitive();
+                        break;
+
+                    case "$Annotations":
+                        // The value of $Annotations is an object with one member per annotation target.
+                        outOfLineAnnotations = BuildOutOfLineAnnotations(propertyValue);
+                        break;
+
+                    default:
+                        CsdlElement element = BuildSchemaElement(propertyName, propertyValue);
+                        if (element != null)
+                        {
+                            csdlElements.Add(element);
+                        }
+
+                        break;
+                }
+
+                jsonPath.Pop();
+            });
+
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            CsdlSchema schema = new CsdlSchema(schemaNamespace, alias, version,
+                csdlElements.OfType<CsdlStructuredType>(),
+                csdlElements.OfType<CsdlEnumType>(),
+                csdlElements.OfType<CsdlOperation>(),
+                csdlElements.OfType<CsdlTerm>(),
+                csdlElements.OfType<CsdlEntityContainer>(),
+                outOfLineAnnotations,
+                csdlElements.OfType<CsdlTypeDefinition>(),
+                location);
+
+            return schema;
+        }
+
+#if false
         public static CsdlSchema BuildCsdlSchema(string schemaNamespace, Version version, IJsonValue jsonValue)
         {
             // A schema is represented as a member of the document object whose name is the schema namespace.
@@ -88,12 +144,20 @@ namespace Microsoft.OData.Edm.Csdl.Reader
 
             return schema;
         }
+#endif
 
         public static IList<CsdlAnnotations> BuildOutOfLineAnnotations(IJsonValue jsonValue)
         {
             return null;
         }
 
+        /// <summary>
+        /// The schema object MAY contain members representing:
+        /// entity types, complex types, enumeration types, type definitions, actions, functions, terms, and an entity container.
+        /// </summary>
+        /// <param name="name">The name of the schema member.</param>
+        /// <param name="jsonValue">The schema member json value.</param>
+        /// <returns></returns>
         public static CsdlElement BuildSchemaElement(string name, IJsonValue jsonValue)
         {
             if (jsonValue.ValueKind != JsonValueKind.JObject)
@@ -102,6 +166,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             }
 
             JsonObjectValue schemaElementObject = (JsonObjectValue)jsonValue;
+
             IJsonValue kindValue;
             string kind = null;
             if (schemaElementObject.TryGetValue("$Kind", out kindValue))
@@ -139,9 +204,17 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             }
         }
 
+        /// <summary>
+        /// Build the schema member : EntityContainer
+        /// An entity container is represented as a member of the schema object:
+        /// whose name is the unqualified name of the entity container
+        /// whose value is an object.
+        /// </summary>
+        /// <param name="name">The entity container unqualified name.</param>
+        /// <param name="entityContainerObject">The entity contain value is an object.</param>
+        /// <returns></returns>
         public static CsdlEntityContainer BuildCsdlEntityContainer(string name, JsonObjectValue entityContainerObject)
         {
-            // An entity container is represented as a member of the schema object whose name is the unqualified name of the entity container and whose value is an object.
             IList<CsdlElement> entityContainerMembers = new List<CsdlElement>();
             string kind = null;
             string extends = null;

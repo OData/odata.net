@@ -1680,10 +1680,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "An member '{0}' in a JSON path '{1}' is missing."
+        /// A string like "An unexpected '{0}' node was found when reading CSDL-JSON. A '{1}' node was expected."
         /// </summary>
-        internal static string CsdlJsonParser_MissingMemberInJsonObject(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlJsonParser_MissingMemberInJsonObject, p0, p1);
+        internal static string CsdlJsonReader_UnexpectedJsonNodeType(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlJsonReader_UnexpectedJsonNodeType, p0, p1);
         }
 
         /// <summary>

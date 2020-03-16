@@ -6,9 +6,27 @@
 
 
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 
 namespace Microsoft.OData.Edm.Csdl.Reader
 {
+    internal class JsonPathOptions
+    {
+        internal static JsonPathOptions Default = new JsonPathOptions();
+
+        public JsonPathOptions()
+        {
+            IsBracketNotation = false;
+        }
+
+        /// <summary>
+        /// If false: $.store.book[0].title
+        /// If true: $['store']['book'][0]['title']
+        /// </summary>
+        public bool IsBracketNotation { get; set; }
+    }
+
     /// <summary>
     /// Represents a JSON Path: see the information: https://goessner.net/articles/JsonPath/
     /// JSONPath Syntax
@@ -23,15 +41,21 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     /// ( ) – operator lets you pass a script expression in the underlying implementation’s script language.It’s not supported by every implementation of JSONPath, however.
     /// ? ( ) – to query all items that meet a certain criteria
     /// </summary>
-    public class JsonPath
+    internal class JsonPath
     {
-        
-
         private Stack<JsonPathSegment> _path;
+        private JsonPathOptions _options;
 
         public JsonPath()
+            : this(JsonPathOptions.Default)
         {
             _path = new Stack<JsonPathSegment>();
+        }
+
+        public JsonPath(JsonPathOptions options)
+        {
+            _path = new Stack<JsonPathSegment>();
+            _options = options;
         }
 
         // We use this class to report a JSON error location.
@@ -55,18 +79,53 @@ namespace Microsoft.OData.Edm.Csdl.Reader
         {
             return _path.Pop();
         }
+
+        public override string ToString()
+        {
+            // $ The root object or array.
+            string root = "$";
+
+            string[] segments = new string[_path.Count + 1];
+            segments[0] = root;
+            int index = _path.Count;
+            foreach (var segment in _path)
+            {
+                segments[index--] = segment.GetName(_options.IsBracketNotation);
+            }
+
+            if (_options.IsBracketNotation)
+            {
+                return string.Join("", segments);
+            }
+            else
+            {
+                return string.Join(".", segments);
+            }
+        }
     }
 
     public abstract class JsonPathSegment
     {
-
+        public abstract string GetName(bool isBracketNotation);
     }
 
     public class JsonNodeSegment : JsonPathSegment
     {
         public JsonNodeSegment(string node)
         {
+            Node = node;
+        }
 
+        public string Node { get; }
+
+        public override string GetName(bool isBracketNotation)
+        {
+            if (isBracketNotation)
+            {
+                return "['" + Node + "']";
+            }
+
+            return Node;
         }
     }
 
@@ -74,7 +133,14 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     {
         public JsonIndexSegment(int index)
         {
+            Index = index;
+        }
 
+        public int Index { get; }
+
+        public override string GetName(bool isBracketNotation)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "[{0}]", Index);
         }
     }
 
