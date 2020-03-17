@@ -88,6 +88,37 @@ steps:
 #   inputs:
 #     version: '1.0.4'
 
+# $(TestBinPath)\Microsoft.Test.Data.Services.DDBasics.dll;
+# $(TestBinPath)\Microsoft.OData.Client.Design.T4.UnitTests.dll;
+# $(TestBinPath)\EdmLibTests.dll;
+# $(TestBinPath)\Microsoft.OData.Client.TDDUnitTests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Common.Tests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Query.Tests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Reader.Tests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Writer.Tests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Scenario.Tests.dll;
+# $(TestBinPath)\Microsoft.Data.NamedStream.UnitTests.dll; 
+# $(TestBinPath)\Microsoft.Test.OData.PluggableFormat.Tests.dll;
+# $(TestBinPath)\Microsoft.Data.ServerUnitTests1.UnitTests.dll;
+# $(TestBinPath)\Microsoft.Data.ServerUnitTests2.UnitTests.dll;
+# $(TestBinPath)\RegressionUnitTests.dll;
+# $(TestBinPath)\Microsoft.Data.MetadataObjectModel.UnitTests.dll;
+# $(TestBinPath)\AstoriaUnitTests.TDDUnitTests.dll;
+# $(TestBinPath)\AstoriaUnitTests.ClientCSharp.dll;
+# $(TestBinPath)\AstoriaUnitTests.dll;
+# $(TestBinPath)\AstoriaClientUnitTests.dll
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Test Test 1'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
+     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
+
+
 - task: DotNetCoreCLI@2
   displayName: 'Test Test'
   inputs:
