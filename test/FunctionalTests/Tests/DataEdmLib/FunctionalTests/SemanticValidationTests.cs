@@ -118,16 +118,16 @@ namespace EdmLibTests.FunctionalTests
                 }
             }
 
-          //  Assert.IsTrue(missingVisitors.Length == 0, "The following interfaces might need a visitor in InterfaceValidator class \r\n" + missingVisitors.ToString());
+            Assert.IsTrue(missingVisitors.Length == 0, "The following interfaces might need a visitor in InterfaceValidator class \r\n" + missingVisitors.ToString());
 
             var isCriticalMethod = edmLib.GetType("Microsoft.OData.Edm.Validation.ValidationHelper").GetMethod("IsInterfaceCritical", BindingFlags.NonPublic | BindingFlags.Static);
-            //foreach (var errorCodeName in Enum.GetNames(typeof(EdmErrorCode)))
-            //{
-            //    if (errorCodeName.StartsWith("InterfaceCritical", StringComparison.Ordinal))
-            //    {
-            //        Assert.IsTrue((bool)isCriticalMethod.Invoke(null, new object[] { new EdmError(null, (EdmErrorCode)Enum.Parse(typeof(EdmErrorCode), errorCodeName), errorCodeName) }), "InterfaceValidator.IsCritial must return true for " + errorCodeName);
-            //    }
-            //}
+            foreach (var errorCodeName in Enum.GetNames(typeof(EdmErrorCode)))
+            {
+                if (errorCodeName.StartsWith("InterfaceCritical", StringComparison.Ordinal))
+                {
+                    Assert.IsTrue((bool)isCriticalMethod.Invoke(null, new object[] { new EdmError(null, (EdmErrorCode)Enum.Parse(typeof(EdmErrorCode), errorCodeName), errorCodeName) }), "InterfaceValidator.IsCritial must return true for " + errorCodeName);
+                }
+            }
         }
 #endif
 
