@@ -115,8 +115,9 @@ steps:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration)'
     projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
+     
+     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
 
 
 - task: DotNetCoreCLI@2
