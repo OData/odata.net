@@ -8,6 +8,7 @@
 namespace Microsoft.Test.OData.Utils.Common
 {
     using System;
+    using System.Security;
     using ApprovalTests.Core;
 
     /// <summary>
@@ -15,6 +16,7 @@ namespace Microsoft.Test.OData.Utils.Common
     /// </summary>
     public class LoggingReporter : IApprovalFailureReporter
     {
+        [SecurityCriticalAttribute]
         public void Report(string approved, string received)
         {
             Console.WriteLine("BaseLine:\n \"{0}\"\nReceived:\n \"{1}\"\n", approved, received);
