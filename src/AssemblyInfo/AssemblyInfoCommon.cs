@@ -73,7 +73,7 @@ using System.Security;
 #if !SUPPRESS_SECURITY_RULES
 #if SECURITY_MIGRATION && !ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2
 #if ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST
-[assembly: SecurityRules(SecurityRuleSet.Level1, SkipVerificationInFullTrust = true)]
+//[assembly: SecurityRules(SecurityRuleSet.Level1, SkipVerificationInFullTrust = true)]
 #else
 [assembly: SecurityRules(SecurityRuleSet.Level1)]
 #endif
