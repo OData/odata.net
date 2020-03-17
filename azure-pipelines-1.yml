@@ -117,7 +117,8 @@ steps:
     projects: |      
      
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
 
 
 - task: DotNetCoreCLI@2
