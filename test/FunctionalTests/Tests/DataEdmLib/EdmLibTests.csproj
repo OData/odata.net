@@ -38,6 +38,15 @@
 
 
   <ItemGroup>
+
+    <Reference Include="ApprovalTests">
+      <HintPath>..\..\..\packages\ApprovalTests.1.6\lib\ApprovalTests.dll</HintPath>
+    </Reference>
+
+    <Reference Include="ApprovalUtilities">
+      <HintPath>..\..\..\packages\ApprovalTests.1.6\lib\ApprovalUtilities.dll</HintPath>
+    </Reference>
+    
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
 
     <ProjectReference Include="..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj" />
@@ -48,13 +57,6 @@
       <Name>FluentAssertions</Name>
     </Reference>
 
-    <Reference Include="ApprovalTests">
-      <HintPath>..\..\..\packages\ApprovalTests.1.6\lib\ApprovalTests.dll</HintPath>
-    </Reference>
-
-    <Reference Include="ApprovalUtilities">
-      <HintPath>..\..\..\packages\ApprovalTests.1.6\lib\ApprovalUtilities.dll</HintPath>
-    </Reference>
      
   </ItemGroup>
   <ItemGroup>
