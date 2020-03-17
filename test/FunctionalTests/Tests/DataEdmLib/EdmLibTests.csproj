@@ -47,8 +47,8 @@
     <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll">
       <Name>FluentAssertions</Name>
     </Reference>
-    <Reference Include="$(NugetPack)\ApprovalTests.1.6\lib\ApprovalTests.dll" />
-    <Reference Include="$(NugetPack)\ApprovalTests.1.6\lib\ApprovalUtilities.dll" />
+    <Reference Include="..\..\..\packages\ApprovalTests.1.6\lib\ApprovalTests.dll" />
+    <Reference Include="..\..\..\packages\ApprovalTests.1.6\lib\ApprovalUtilities.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdmLibTestCaseBase.cs" />
