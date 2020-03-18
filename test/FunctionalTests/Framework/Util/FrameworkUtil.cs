@@ -151,18 +151,12 @@ namespace System.Data.Test.Astoria
                     enlistmentRoot = FindEnlistmentRootHeuristically();
                 }
 
-                if (string.IsNullOrEmpty(enlistmentRoot))
-                {
-                    return "abc testing ";
-                }
-
-                    return enlistmentRoot;
+                return enlistmentRoot;
             }
         }
 
         private static string FindEnlistmentRootHeuristically()
         {
-            
             // First use environment variable if defined by user.
             string result = Environment.GetEnvironmentVariable("ENLISTMENT_ROOT");
             if (!string.IsNullOrEmpty(result))
@@ -172,15 +166,14 @@ namespace System.Data.Test.Astoria
 
             // Second use current assembly location to determine.
             string assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            
-            if (string.IsNullOrEmpty(assemblyPath)) 
+            if (string.IsNullOrEmpty(assemblyPath))
             {
                 return null;
             }
 
             string[] traitsFolders =
             {
-                @"\bin\","testing--  "+
+                @"\bin\",
                 @"\src\",
                 @"\test\",
                 @"\sln\"
@@ -197,13 +190,10 @@ namespace System.Data.Test.Astoria
                 }
             }
 
-            return result;
-
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
                 return null;
-
             }
 
             // We check the result path again to ensure it is an ENLISTMENT_ROOT.
@@ -222,4 +212,3 @@ namespace System.Data.Test.Astoria
         }
     }
 }
-
