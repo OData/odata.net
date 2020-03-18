@@ -52,21 +52,21 @@ using System.Security;
 [assembly: ComVisible(false)]
 #endif
 
-#if ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE
-[assembly:ComCompatibleVersion(1,0,3300,0)]
-#endif
+//#if ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE
+//[assembly:ComCompatibleVersion(1,0,3300,0)]
+//#endif
 
-#if ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS
-[assembly: AllowPartiallyTrustedCallers]
-#else
-#if ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2
-[assembly:AllowPartiallyTrustedCallers(PartialTrustVisibilityLevel=PartialTrustVisibilityLevel.NotVisibleByDefault)]
-#endif
-#endif
+//#if ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS
+//[assembly: AllowPartiallyTrustedCallers]
+//#else
+//#if ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2
+//[assembly:AllowPartiallyTrustedCallers(PartialTrustVisibilityLevel=PartialTrustVisibilityLevel.NotVisibleByDefault)]
+//#endif
+//#endif
 
-#if ASSEMBLY_ATTRIBUTE_TRANSPARENT_ASSEMBLY
-[assembly: SecurityTransparent]
-#endif
+//#if ASSEMBLY_ATTRIBUTE_TRANSPARENT_ASSEMBLY
+//[assembly: SecurityTransparent]
+//#endif
 
 //[assembly: SecurityRules(SecurityRuleSet.Level2, SkipVerificationInFullTrust = true)]
 
