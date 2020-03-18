@@ -151,7 +151,12 @@ namespace System.Data.Test.Astoria
                     enlistmentRoot = FindEnlistmentRootHeuristically();
                 }
 
-                return enlistmentRoot;
+                if (string.IsNullOrEmpty(enlistmentRoot))
+                {
+                    return "abc testing ";
+                }
+
+                    return enlistmentRoot;
             }
         }
 
