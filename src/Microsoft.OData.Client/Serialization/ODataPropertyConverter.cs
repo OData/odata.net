@@ -16,6 +16,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
+    using System.Reflection;
 
     /// <summary>
     /// Component for converting properties on client types into instance of <see cref="ODataProperty"/> in order to serialize insert/update payloads.
@@ -63,6 +64,33 @@ namespace Microsoft.OData.Client
                         });
 
                     this.AddTypeAnnotationNotDeclaredOnServer(serverTypeName, property, odataValue);
+                }
+            }
+
+            // TODO: Should this apply only to open (entity and complex) types?
+            // Dynamic properties may optionally be stored in a dictionary 
+            PropertyInfo propertyInfo = resource.GetType().GetProperties().Where(p => 
+                    !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
+                    typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)
+                ).FirstOrDefault();
+
+            if (propertyInfo != null)
+            {
+                IDictionary<string, object> dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(resource);
+                
+                foreach(KeyValuePair<string, object> kvPair in dynamicPropertiesDictionary)
+                {
+                    // Do not add any property if a declared property with similar name as key exists on the type
+                    if (!odataProperties.Any(odp => odp.Name.Equals(kvPair.Key)))
+                    {
+                        odataProperties.Add(
+                            new ODataProperty
+                            {
+                                Name = kvPair.Key,
+                                Value = kvPair.Value
+                            });
+                        // TODO: Is the call to AddTypeAnnotationNotDeclaredOnServer() applicable here?
+                    }
                 }
             }
 

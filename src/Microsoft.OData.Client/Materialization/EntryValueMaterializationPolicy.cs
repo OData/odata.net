@@ -575,7 +575,7 @@ namespace Microsoft.OData.Client.Materialization
             // entries. This keeps this code compatible with V1 behavior.
             this.MaterializeDataValues(actualType, entry.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
 
-            if (entry.NestedResourceInfos != null)
+            if (entry.NestedResourceInfos.Any())
             {
                 foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
@@ -651,6 +651,10 @@ namespace Microsoft.OData.Client.Materialization
                 var prop = actualType.GetProperty(e.Name, this.MaterializerContext.UndeclaredPropertyBehavior);
                 if (prop == null)
                 {
+                    if (entry.ShouldUpdateFromPayload)
+                    {
+                        this.ApplyDynamicPropertyValue(actualType, e, entry.ResolvedObject);
+                    }
                     continue;
                 }
 

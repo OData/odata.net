@@ -765,5 +765,37 @@ namespace Microsoft.OData.Client.Metadata
 
             return false;
         }
+
+        /// <summary>
+        /// Returns the client types likely to be assignable from the server type
+        /// </summary>
+        /// <param name="serverTypeName">Server type name.</param>
+        /// <returns>An enumerable object with the candidate types</returns>
+        internal static IEnumerable<Type> GetCandidateClientTypes(string serverTypeName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(serverTypeName), $"!string.IsNullOrEmpty({nameof(serverTypeName)})");
+
+            string unqualifiedTypeName = serverTypeName.Substring(serverTypeName.LastIndexOf(".") + 1);
+
+            IEnumerable<Type> candidates = Enumerable.Empty<Type>();
+
+            Func<Type, bool> predicate = new Func<Type, bool>(d => d.Name.EndsWith(unqualifiedTypeName));
+
+            // TODO: What happens when the user defines client POCOs to map to in a class library?
+            try
+            {
+                // Mitigation - If any type can’t be loaded, the entire method call blows up
+                candidates = Assembly.GetEntryAssembly().GetTypes().Where(predicate);
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                candidates = ex.Types.Where(predicate);
+            }
+
+            foreach (Type candidate in candidates)
+            {
+                yield return candidate;
+            }
+        }
     }
 }

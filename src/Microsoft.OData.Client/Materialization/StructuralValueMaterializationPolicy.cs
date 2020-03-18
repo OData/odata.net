@@ -12,10 +12,13 @@ namespace Microsoft.OData.Client.Materialization
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Client;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
+    using System.Collections.ObjectModel;
+    using System.Collections;
 
     /// <summary>
     /// Contains logic on how to materialize properties into an instance
@@ -272,6 +275,96 @@ namespace Microsoft.OData.Client.Materialization
                     // Note: MaterializeDataValue materializes only properties of primitive types. Materialization specific
                     // to complex types and collections is done later.
                     this.MaterializePrimitiveDataValue(property.NullablePropertyType, odataProperty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a data value to the dynamic properties dictionary on the specified <paramref name="instance"/>
+        /// </summary>
+        /// <param name="property">Property containing unmaterialzed value to apply</param>
+        /// <param name="instance">Instance that may optionally contain the dynamic properties dictionary</param>
+        internal void ApplyDynamicPropertyValue(ODataProperty property, object instance)
+        {
+            Debug.Assert(property != null, $"{nameof(property)} != null");
+            Debug.Assert(instance != null, $"{nameof(instance)} != null");
+
+            // TODO: Should this apply only to open (entity and complex) types?
+            // Dynamic properties may optionally be stored in a dictionary 
+            PropertyInfo propertyInfo = instance.GetType().GetProperties().Where(p =>
+                    !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
+                    typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)
+                ).FirstOrDefault();
+
+            if (propertyInfo == null)
+            {
+                return;
+            }
+
+            IDictionary<string, object> dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(instance);
+
+            // Key with same name already exists on the dictionary
+            if (dynamicPropertiesDictionary.ContainsKey(property.Name))
+            {
+                return;
+            }
+
+            object value = property.Value;
+
+            // Handle primitive type
+            ODataUntypedValue untypedVal = value as ODataUntypedValue;
+            if (untypedVal != null)
+            {
+                value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
+                dynamicPropertiesDictionary.Add(property.Name, value);
+                return;
+            }
+
+            // Handle enum value
+            ODataEnumValue enumVal = property.Value as ODataEnumValue;
+            if (enumVal != null)
+            {
+                // Try to infer the assignable client type by iterating over all types with a matching name 
+                foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(enumVal.TypeName))
+                {
+                    if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(candidateType, enumVal, out object materializedEnumValue))
+                    {
+                        dynamicPropertiesDictionary.Add(property.Name, materializedEnumValue);
+                        break;
+                    }
+                }
+                return;
+            }
+
+            // Handle collection
+            ODataCollectionValue collectionVal = value as ODataCollectionValue;
+            // TODO: Revisit multiple exit points and nested blocks
+            if (collectionVal != null)
+            {
+                if (ClientConvert.TryParseCollectionItemType(collectionVal.TypeName, out string collectionItemTypeName))
+                {
+                    // Primitive collection
+                    if (ClientConvert.ToNamedType(collectionItemTypeName, out Type primitiveType))
+                    {
+                        if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(primitiveType, property, out object collectionInstance))
+                        {
+                            dynamicPropertiesDictionary.Add(property.Name, collectionInstance);
+                        }
+                    }
+                    else  // Non-primitive collection
+                    {
+                        // Try to infer the assignable client type by iterating over all types with a matching name 
+                        foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(collectionItemTypeName))
+                        {
+                            if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(candidateType, property, out object collectionInstance))
+                            {
+                                // We found an assignable type
+                                dynamicPropertiesDictionary.Add(property.Name, collectionInstance);
+                                break;
+                            }
+                        }
+                    }
+                    return;
                 }
             }
         }
