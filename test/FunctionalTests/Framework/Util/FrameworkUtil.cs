@@ -157,7 +157,7 @@ namespace System.Data.Test.Astoria
 
         private static string FindEnlistmentRootHeuristically()
         {
-            return "testing--  "+System.Reflection.Assembly.GetExecutingAssembly().Location;"testing--  "+
+            return "testing--  "+System.Reflection.Assembly.GetExecutingAssembly().Location;
             // First use environment variable if defined by user.
             string result = Environment.GetEnvironmentVariable("ENLISTMENT_ROOT");
             if (!string.IsNullOrEmpty(result))
@@ -167,7 +167,7 @@ namespace System.Data.Test.Astoria
 
             // Second use current assembly location to determine.
             string assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            if (string.IsNullOrEmpty(assemblyPath))"testing--  "+
+            if (string.IsNullOrEmpty(assemblyPath)) 
             {
                 return null;
             }
