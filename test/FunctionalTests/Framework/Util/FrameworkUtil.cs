@@ -157,6 +157,7 @@ namespace System.Data.Test.Astoria
 
         private static string FindEnlistmentRootHeuristically()
         {
+            return System.Reflection.Assembly.GetExecutingAssembly().Location;
             // First use environment variable if defined by user.
             string result = Environment.GetEnvironmentVariable("ENLISTMENT_ROOT");
             if (!string.IsNullOrEmpty(result))
