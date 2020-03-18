@@ -68,7 +68,7 @@ using System.Security;
 [assembly: SecurityTransparent]
 #endif
 
-[assembly: SecurityRules(SecurityRuleSet.Level2, SkipVerificationInFullTrust = true)]
+//[assembly: SecurityRules(SecurityRuleSet.Level2, SkipVerificationInFullTrust = true)]
 
 //#if !ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11
 //#if !ASSEMBLY_ATTRIBUTE_ON_NETCORE_10
