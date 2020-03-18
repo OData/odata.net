@@ -12,13 +12,10 @@ namespace Microsoft.OData.Client.Materialization
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Metadata;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
-    using System.Collections.ObjectModel;
-    using System.Collections;
 
     /// <summary>
     /// Contains logic on how to materialize properties into an instance
