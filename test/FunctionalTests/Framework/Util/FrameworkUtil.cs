@@ -199,7 +199,7 @@ namespace System.Data.Test.Astoria
                 return "null 123";
             }
 
-            return "ttt testing "+result;
+        
             // We check the result path again to ensure it is an ENLISTMENT_ROOT.
             foreach (string traitsFolder in traitsFolders)
             {
@@ -207,7 +207,7 @@ namespace System.Data.Test.Astoria
                 if (!Directory.Exists(pathToCheck))
                 {
                     // The result seems not be a valid enlistment root containing some necessary subfolders.
-                    return "null 456";
+                    return "null 456 "+pathToCheck+"   ";
                 }
             }
 
