@@ -29,6 +29,7 @@
 
     <PackageReference Include="EntityFramework" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <!--<PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />-->
     <!--<PackageReference Include="Microsoft.Hadoop.Avro2" Version="1.2.1" />-->
