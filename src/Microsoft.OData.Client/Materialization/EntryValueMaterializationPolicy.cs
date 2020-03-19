@@ -653,7 +653,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (entry.ShouldUpdateFromPayload)
                     {
-                        this.ApplyDynamicPropertyValue(actualType, e, entry.ResolvedObject);
+                        this.ApplyDynamicPropertyValue(e, entry.ResolvedObject);
                     }
                     continue;
                 }
