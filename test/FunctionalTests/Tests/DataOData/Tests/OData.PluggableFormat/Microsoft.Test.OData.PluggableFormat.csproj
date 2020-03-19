@@ -31,7 +31,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <!--<PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />-->
-    <PackageReference Include="Microsoft.Hadoop.Avro2" Version="1.2.1" />
+    <!--<PackageReference Include="Microsoft.Hadoop.Avro2" Version="1.2.1" />-->
     <!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />-->
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
@@ -45,6 +45,10 @@
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
  
     <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+ 
+    <Reference Include="Microsoft.Hadoop.Avro">
+      <HintPath>..\..\..\..\..\packages\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll</HintPath>
+    </Reference>
  
     <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
       <HintPath>..\..\..\..\..\packages\PublicAssemblies_10\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
