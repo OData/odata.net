@@ -173,7 +173,7 @@ namespace System.Data.Test.Astoria
 
             string[] traitsFolders =
             {
-                @"\bin\",
+               // @"\bin\",
                 @"\src\",
                 @"\test\",
                 @"\sln\"
@@ -205,10 +205,7 @@ namespace System.Data.Test.Astoria
                     // The result seems not be a valid enlistment root containing some necessary subfolders.
                     return null;
                 }
-                else
-                {
-                    break;
-                }
+                
             }
 
             // At last we find ENLISTMENT_ROOT.
