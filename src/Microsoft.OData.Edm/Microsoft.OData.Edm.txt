@@ -240,6 +240,13 @@ CsdlSemantics_DuplicateAlias=The schema '{0}' contains the alias '{1}' more than
 ; JsonReader
 CsdlJsonReader_UnexpectedJsonNodeType=An unexpected '{0}' node was found when reading CSDL-JSON. A '{1}' node was expected.
 
+; JsonParser
+CsdlJsonParser_UnexpectedJsonValueKind=An unexpected '{0}' value kind was found when parsing the JSON path '{1}'. A '{2}' value kind was expected.
+CsdlJsonParser_MissingMemberInObject=A member '{0}' is missing when parsing the JSON path '{1}'.
+CsdlJsonParser_UnexpectedJsonMember=A member '{0}' with value type '{1}' is unexpected.
+
+SchemaJsonParser_MissingKindMember=A schema '{0}' object MUST contain the member '$Kind' with a string value of '{1}'.
+
 ;EdmxParser
 EdmxParser_EdmxVersionMismatch=The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element.
 EdmxParser_BodyElement=Unexpected {0} element while parsing Edmx. Edmx is expected to have at most one of 'Runtime' or 'DataServices' elements.

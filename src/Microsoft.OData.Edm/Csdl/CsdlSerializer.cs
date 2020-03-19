@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
+using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Csdl.Reader;
 
 namespace Microsoft.OData.Edm.Csdl

@@ -4,12 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
-namespace Microsoft.OData.Edm.Csdl.Reader
+namespace Microsoft.OData.Edm.Csdl.Json
 {
     internal class JsonPathOptions
     {
@@ -43,54 +41,54 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     /// </summary>
     internal class JsonPath
     {
-        private Stack<JsonPathSegment> _path;
+        // It's only include "string" for property, and Int32 for the index of array
+        private Stack<object> _nodes;
         private JsonPathOptions _options;
+        private string _source;
 
-        public JsonPath()
-            : this(JsonPathOptions.Default)
+        public JsonPath(string source = null)
+            : this(JsonPathOptions.Default, source)
         {
-            _path = new Stack<JsonPathSegment>();
         }
 
-        public JsonPath(JsonPathOptions options)
+        public JsonPath(JsonPathOptions options, string source = null)
         {
-            _path = new Stack<JsonPathSegment>();
+            _nodes = new Stack<object>();
             _options = options;
+            _source = source;
         }
 
-        // We use this class to report a JSON error location.
-        // So, we don't care about "*" etc.
-        public void Push(JsonPathSegment segment)
-        {
-            _path.Push(segment);
-        }
 
         public void Push(string node)
         {
-            _path.Push(new JsonNodeSegment(node));
+            _nodes.Push(node);
         }
 
         public void Push(int index)
         {
-            _path.Push(new JsonIndexSegment(index));
+            _nodes.Push(index);
         }
 
-        public JsonPathSegment Pop()
+        public object Pop()
         {
-            return _path.Pop();
+            return _nodes.Pop();
         }
 
         public override string ToString()
         {
             // $ The root object or array.
             string root = "$";
-
-            string[] segments = new string[_path.Count + 1];
-            segments[0] = root;
-            int index = _path.Count;
-            foreach (var segment in _path)
+            if (_source != null)
             {
-                segments[index--] = segment.GetName(_options.IsBracketNotation);
+                root = "(" + _source + ")$";
+            }
+
+            string[] segments = new string[_nodes.Count + 1];
+            segments[0] = root;
+            int index = _nodes.Count;
+            foreach (var segment in _nodes)
+            {
+                segments[index--] = GetName(segment);
             }
 
             if (_options.IsBracketNotation)
@@ -100,6 +98,24 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             else
             {
                 return string.Join(".", segments);
+            }
+        }
+
+        private string GetName(object node)
+        {
+            string strNode = node as string;
+            if (strNode != null)
+            {
+                if (_options.IsBracketNotation)
+                {
+                    return "['" + strNode + "']";
+                }
+
+                return strNode;
+            }
+            else
+            {
+                return string.Format(CultureInfo.InvariantCulture, "[{0}]", (int)node);
             }
         }
     }

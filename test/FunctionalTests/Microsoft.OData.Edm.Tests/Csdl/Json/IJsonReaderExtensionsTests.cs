@@ -99,7 +99,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Json
   },
 
   []
-]";
+]"; // intentially add line, whitespace into the string to verify Json reader can process them correctly.
 
             JsonArrayValue arrayValue = ReadAsJsonArray(json);
 

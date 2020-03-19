@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Csdl.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,44 +17,6 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     /// </summary>
     internal static class JsonReaderExtensions
     {
-        public static void ProcessProperty(this JsonObjectValue objValue, Action<string, IJsonValue> propertyParser)
-        {
-            foreach (var item in objValue)
-            {
-                propertyParser(item.Key, item.Value);
-            }
-        }
-
-        public static void ProcessProperty(this JsonObjectValue objValue, string propertyName, Action<IJsonValue> processAction)
-        {
-            IJsonValue propertyValue;
-            if (objValue.TryGetValue(propertyName, out propertyValue))
-            {
-                processAction(propertyValue);
-            }
-        }
-
-        public static string ParseAsStringPrimitive(this IJsonValue jsonValue)
-        {
-            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
-            {
-                throw new Exception();
-            }
-
-            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
-            return primitiveValue.Value as string;
-        }
-
-        public static bool? ParseAsBooleanPrimitive(this IJsonValue jsonValue)
-        {
-            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
-            {
-                throw new Exception();
-            }
-
-            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
-            return (bool)primitiveValue.Value;
-        }
 
         //private static int? ParseAsIntegerPrimitive(this IJsonValue jsonValue)
         //{
@@ -76,149 +39,6 @@ namespace Microsoft.OData.Edm.Csdl.Reader
         //    throw new Exception();
         //}
 
-        internal static JsonPrimitiveValue ReadAsPrimitive(this IJsonReader jsonReader, IJsonValue parent = null, int index = -1)
-        {
-            if (jsonReader == null)
-            {
-                throw new ArgumentNullException("jsonReader");
-            }
-
-            // Make sure the input is a primitive value
-            if (jsonReader.NodeType != JsonNodeType.PrimitiveValue)
-            {
-                throw new Exception("");
-            }
-
-            object value = jsonReader.Value;
-
-            // Move to next token.
-            jsonReader.Read();
-
-            return new JsonPrimitiveValue(value, parent, index);
-        }
-
-        internal static JsonObjectValue ReadAsObject(this IJsonReader jsonReader, IJsonValue parent = null, int index = -1)
-        {
-            if (jsonReader == null)
-            {
-                throw new ArgumentNullException("jsonReader");
-            }
-
-            // Supports to read from Begin
-            if (jsonReader.NodeType == JsonNodeType.None)
-            {
-                jsonReader.Read();
-            }
-
-            // Make sure the input is an object
-            if (jsonReader.NodeType != JsonNodeType.StartObject)
-            {
-                throw new Exception("");
-            }
-
-            JsonObjectValue objectValue = new JsonObjectValue(parent, index);
-
-            // Pass the "{" tag.
-            jsonReader.Read();
-
-            while (jsonReader.NodeType != JsonNodeType.EndObject)
-            {
-                // Get the property name and move json reader to next token
-                string propertyName = jsonReader.ReadPropertyName();
-
-                IJsonValue jsonValue;
-                // now, jsonreader points to the value token
-                switch (jsonReader.NodeType)
-                {
-                    case JsonNodeType.StartObject:
-                        jsonValue = ReadAsObject(jsonReader, objectValue);
-                        break;
-
-                    case JsonNodeType.StartArray:
-                        jsonValue = ReadAsArray(jsonReader, objectValue);
-                        break;
-
-                    case JsonNodeType.PrimitiveValue:
-                        jsonValue = ReadAsPrimitive(jsonReader, objectValue);
-                        break;
-
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.Property:
-                    case JsonNodeType.EndOfInput:
-                    case JsonNodeType.None:
-                    case JsonNodeType.EndObject:
-                    default:
-                        throw new Exception();
-                }
-
-                objectValue[propertyName] = jsonValue;
-            }
-
-            // Consume the "}" tag.
-            jsonReader.Read();
-
-            return objectValue;
-        }
-
-        internal static JsonArrayValue ReadAsArray(this IJsonReader jsonReader, IJsonValue parent = null, int index = -1)
-        {
-            if (jsonReader == null)
-            {
-                throw new ArgumentNullException("jsonReader");
-            }
-
-            // Supports to read from Begin
-            if (jsonReader.NodeType == JsonNodeType.None)
-            {
-                jsonReader.Read();
-            }
-
-            // Make sure the input is an Array
-            if (jsonReader.NodeType != JsonNodeType.StartArray)
-            {
-                throw new Exception("");
-            }
-
-            JsonArrayValue arrayValue = new JsonArrayValue(parent, index);
-
-            int newIndex = 0;
-            // Pass the "[" tag.
-            jsonReader.Read();
-
-            while (jsonReader.NodeType != JsonNodeType.EndArray)
-            {
-                IJsonValue jsonValue;
-                switch (jsonReader.NodeType)
-                {
-                    case JsonNodeType.StartObject:
-                        jsonValue = ReadAsObject(jsonReader, arrayValue, newIndex++);
-                        break;
-
-                    case JsonNodeType.StartArray:
-                        jsonValue = ReadAsArray(jsonReader, arrayValue, newIndex++);
-                        break;
-
-                    case JsonNodeType.PrimitiveValue:
-                        jsonValue = ReadAsPrimitive(jsonReader, arrayValue, newIndex++);
-                        break;
-
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.Property:
-                    case JsonNodeType.EndObject:
-                    case JsonNodeType.None:
-                    case JsonNodeType.EndOfInput:
-                    default:
-                        throw new Exception();
-                }
-
-                arrayValue.Add(jsonValue);
-            }
-
-            // Consume the "]" tag.
-            jsonReader.Read();
-
-            return arrayValue;
-        }
 
         /// <summary>
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is a StartObject node.

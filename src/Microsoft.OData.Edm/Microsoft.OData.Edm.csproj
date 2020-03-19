@@ -51,6 +51,7 @@
     <Compile Include="Csdl\EdmParseException.cs" />
     <Compile Include="Csdl\CsdlReaderSettings.cs" />
     <Compile Include="Csdl\CsdlTarget.cs" />
+    <Compile Include="Csdl\CsdlParseException.cs" />
     <Compile Include="Csdl\EdmValueParser.cs" />
     <Compile Include="Csdl\EdmValueWriter.cs" />
     <Compile Include="Csdl\Json\IJsonValue.cs" />
@@ -58,25 +59,17 @@
     <Compile Include="Csdl\Json\JsonArrayValue.cs" />
     <Compile Include="Csdl\Json\JsonPrimitiveValue.cs" />
     <Compile Include="Csdl\Json\IJsonReaderExtensions.cs" />
-	
+    <Compile Include="Csdl\Json\IJsonValueExtensions.cs" />
     <Compile Include="Csdl\Json\IJsonReader.cs" />
     <Compile Include="Csdl\Json\JsonReader.cs" />
     <Compile Include="Csdl\Json\JsonReaderOptions.cs" />
     <Compile Include="Csdl\Json\JsonConstants.cs" />
     <Compile Include="Csdl\Json\JsonNodeType.cs" />
-	
+    <Compile Include="Csdl\Json\JsonPath.cs" />
     <Compile Include="Csdl\Reader\CsdlJsonReader.cs" />
     <Compile Include="Csdl\Reader\CsdlReader.cs" />
     <Compile Include="Csdl\Reader\CsdlXmlReader.cs" />
-    <Compile Include="Csdl\Reader\IJsonReader.cs" />
-    <Compile Include="Csdl\Reader\JsonConstants.cs" />
-    <Compile Include="Csdl\Reader\JsonReader.cs" />
     <Compile Include="Csdl\Reader\JsonReaderExtensions.cs" />
-    <Compile Include="Csdl\Reader\JsonReaderOptions.cs" />
-    <Compile Include="Csdl\Reader\JsonNodeType.cs" />
-    <Compile Include="Csdl\Reader\JsonPath.cs" />
-    <Compile Include="Csdl\Reader\CsdlJsonParser.cs" />
-    <Compile Include="Csdl\Reader\SchemaJsonReader.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlAction.cs" />
@@ -390,6 +383,9 @@
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Csdl\Parsing\CsdlParser.cs" />
+	<Compile Include="Csdl\Parsing\CsdlJsonParser.cs" />
+	<Compile Include="Csdl\Parsing\SchemaJsonParser.cs" />
+	<Compile Include="Csdl\Parsing\JsonValueParseExtensions.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsBinaryTypeReference.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsComplexTypeDefinition.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs" />

@@ -75,6 +75,7 @@
     <Compile Include="..\Csdl\Reader\JsonReaderExtensionsTests.cs" />
     <Compile Include="..\Csdl\Reader\SchemaJsonReaderTests.cs" />
     <Compile Include="..\Csdl\Parsing\Ast\CsdlTypeDefinitionTests.cs" />
+    <Compile Include="..\Csdl\Parsing\CsdlJsonParserTests.cs" />
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsEntityContainerTests.cs" />
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsEntitySetTests.cs" />
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsNavigationPropertyTests.cs" />

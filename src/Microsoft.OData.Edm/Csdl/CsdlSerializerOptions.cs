@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Csdl.Reader;
 using Microsoft.OData.Edm.Validation;
 
@@ -22,7 +23,7 @@ namespace Microsoft.OData.Edm.Csdl
 
         public CsdlSerializerOptions()
         {
-            IgnoreUnexpectedAttributesAndElements = true;
+            IgnoreUnexpectedMembers = true;
             IsIeee754Compatible = false;
             ReadAsImmutableModel = true;
             IsJsonPathBracketNotation = true;
@@ -40,9 +41,9 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Ignore the unexpected attributes and elements.
         /// </summary>
-        public bool IgnoreUnexpectedAttributesAndElements { get; set; }
+        public bool IgnoreUnexpectedMembers { get; set; }
 
-        public bool ThrowOnUnexpectedAttributesAndElements { get; set; }
+       // public bool ThrowOnUnexpectedMembers { get; set; }
 
         /// <summary>
         /// Gets/sets a value indicating whether the writer write large integers as strings.
@@ -93,7 +94,7 @@ namespace Microsoft.OData.Edm.Csdl
             {
                 IsIeee754Compatible = IsIeee754Compatible,
                 ReadAsImmutableModel = ReadAsImmutableModel,
-                IgnoreUnexpectedAttributesAndElements = IgnoreUnexpectedAttributesAndElements
+                IgnoreUnexpectedAttributesAndElements = IgnoreUnexpectedMembers
             };
         }
 

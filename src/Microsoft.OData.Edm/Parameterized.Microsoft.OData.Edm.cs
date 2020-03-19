@@ -1687,6 +1687,34 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "An unexpected '{0}' value kind was found when parsing the JSON path '{1}'. A '{2}' value kind was expected."
+        /// </summary>
+        internal static string CsdlJsonParser_UnexpectedJsonValueKind(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlJsonParser_UnexpectedJsonValueKind, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "A member '{0}' is missing when parsing the JSON path '{1}'."
+        /// </summary>
+        internal static string CsdlJsonParser_MissingMemberInObject(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlJsonParser_MissingMemberInObject, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "A member '{0}' with value type '{1}' is unexpected."
+        /// </summary>
+        internal static string CsdlJsonParser_UnexpectedJsonMember(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlJsonParser_UnexpectedJsonMember, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "A schema '{0}' object MUST contain the member '$Kind' with a string value of '{1}'."
+        /// </summary>
+        internal static string SchemaJsonParser_MissingKindMember(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.SchemaJsonParser_MissingKindMember, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element."
         /// </summary>
         internal static string EdmxParser_EdmxVersionMismatch {

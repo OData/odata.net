@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
@@ -151,14 +152,14 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             return referencedAstModels;
         }
 
-        private static Version GetCsdlVersion(JsonObjectValue csdlObject)
+        private static Version GetCsdlVersion(JsonObjectValue csdlObject, JsonPath jsonPath)
         {
             Debug.Assert(csdlObject != null);
 
             IJsonValue versionValue;
             if (csdlObject.TryGetValue("$Version", out versionValue))
             {
-                string strVersion = versionValue.ParseAsStringPrimitive();
+                string strVersion = versionValue.ParseAsStringPrimitive(jsonPath);
                 if (strVersion == "4.0")
                 {
                     return EdmConstants.EdmVersion4;
@@ -181,16 +182,17 @@ namespace Microsoft.OData.Edm.Csdl.Reader
         /// <returns></returns>
         internal CsdlModel ParseCsdlModel(JsonObjectValue csdlObject)
         {
+            JsonPath jsonPath = new JsonPath(_options.GetJsonPathOptions());
+
             // A CSDL JSON document consists of a single JSON object.
             // This document object MUST contain the member $Version.
-            Version version = GetCsdlVersion(csdlObject);
+            Version version = GetCsdlVersion(csdlObject, jsonPath);
 
             CsdlModel csdlModel = new CsdlModel
             {
                 Version = version
             };
 
-            JsonPath jsonPath = new JsonPath(_options.GetJsonPathOptions());
             IList<IEdmReference> references = null;
             foreach (var property in csdlObject)
             {
@@ -221,15 +223,15 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                         if (propertyValue.ValueKind == JsonValueKind.JObject)
                         {
                             // for all others, it maybe the CsdlSchema
-                            CsdlSchema schema = SchemaJsonReader.BuildCsdlSchema(propertyName, version, propertyValue, jsonPath);
-                            if (schema != null)
-                            {
-                                csdlModel.AddSchema(schema);
-                                break;
-                            }
+                           // CsdlSchema schema = SchemaJsonReader.ParseCsdlSchema(propertyName, propertyValue, jsonPath, version, null);
+                            //if (schema != null)
+                            //{
+                            //    csdlModel.AddSchema(schema);
+                            //    break;
+                            //}
                         }
 
-                        if (_options.IgnoreUnexpectedAttributesAndElements)
+                        if (_options.IgnoreUnexpectedMembers)
                         {
                             break;
                         }
@@ -310,7 +312,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
 
                         foreach (IJsonValue item in arrayValue)
                         {
-                            IEdmInclude include = BuildInclude(item);
+                            IEdmInclude include = BuildInclude(item, jsonPath);
                             edmReference.AddInclude(include);
                         }
                         break;
@@ -325,7 +327,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
 
                         foreach (IJsonValue item in arrayValue)
                         {
-                            IEdmIncludeAnnotations includeAnnotations = BuildIncludeAnnotations(item);
+                            IEdmIncludeAnnotations includeAnnotations = BuildIncludeAnnotations(item, jsonPath);
                             edmReference.AddIncludeAnnotations(includeAnnotations);
                         }
                         break;
@@ -343,7 +345,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             return edmReference;
         }
 
-        public static IEdmInclude BuildInclude(IJsonValue jsonValue)
+        public static IEdmInclude BuildInclude(IJsonValue jsonValue, JsonPath jsonPath)
         {
             if (jsonValue.ValueKind != JsonValueKind.JObject)
             {
@@ -363,12 +365,12 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 {
                     case "$Alias":
                         // The value of $Alias is a string containing the alias for the included schema.
-                        includeAlias = propertyValue.ParseAsStringPrimitive();
+                        includeAlias = propertyValue.ParseAsStringPrimitive(jsonPath);
                         break;
 
                     case "$Namespace":
                         // The value of $Namespace is a string containing the namespace of the included schema
-                        includeNamespace = propertyValue.ParseAsStringPrimitive();
+                        includeNamespace = propertyValue.ParseAsStringPrimitive(jsonPath);
                         break;
 
                     default:
@@ -381,7 +383,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             return new EdmInclude(includeAlias, includeNamespace);
         }
 
-        public static IEdmIncludeAnnotations BuildIncludeAnnotations(IJsonValue jsonValue)
+        public static IEdmIncludeAnnotations BuildIncludeAnnotations(IJsonValue jsonValue, JsonPath jsonPath)
         {
             if (jsonValue.ValueKind != JsonValueKind.JObject)
             {
@@ -402,17 +404,17 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 {
                     case "$TermNamespace":
                         // The value of $TermNamespace is a namespace.
-                        termNamespace = propertyValue.ParseAsStringPrimitive();
+                        termNamespace = propertyValue.ParseAsStringPrimitive(jsonPath);
                         break;
 
                     case "$Qualifier":
                         // The value of $Qualifier is a simple identifier.
-                        qualifier = propertyValue.ParseAsStringPrimitive();
+                        qualifier = propertyValue.ParseAsStringPrimitive(jsonPath);
                         break;
 
                     case "$TargetNamespace":
                         // The value of $TargetNamespace is a namespace.
-                        targetNamespace = propertyValue.ParseAsStringPrimitive();
+                        targetNamespace = propertyValue.ParseAsStringPrimitive(jsonPath);
                         break;
 
                     default:
