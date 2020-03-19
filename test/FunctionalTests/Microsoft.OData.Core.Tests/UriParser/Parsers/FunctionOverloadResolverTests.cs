@@ -57,11 +57,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void OperationOverloadsWithSameNameWithoutBindingType()
         {
             var model = ModelBuildingHelpers.GetModelWithOperationOverloadsWithSameName();
-            var parameters = new string[] {"p1", "p2"};
+            var parameters = new string[] {};
 
             IEdmOperation operation;
-            Action resolve = () => FunctionOverloadResolver.ResolveOperationFromList("Test.Function", parameters, null, model, out operation, DefaultUriResolver);
-            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Test.Function", "p1,p2"));
+            Action resolve = () => FunctionOverloadResolver.ResolveOperationFromList("Test.Action", parameters, null, model, out operation, DefaultUriResolver);
+            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleActionOverloads("Test.Action"));
         }
 
        [Fact]

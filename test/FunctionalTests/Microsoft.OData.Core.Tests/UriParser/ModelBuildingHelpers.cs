@@ -184,21 +184,17 @@ namespace Microsoft.OData.Tests.UriParser
             EdmCollectionTypeReference collectionTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(vegetableType, false)));
 
             EdmEntityContainer container = new EdmEntityContainer("Test", "Container");
-            var set = container.AddEntitySet("Vegetables", vegetableType);
+            var action1 = new EdmAction("Test", "Action", new EdmEntityTypeReference(vegetableType, true), true /*isBound*/, null /*entitySetPath*/);
+            action1.AddParameter("p1", collectionTypeReference);
 
-            var function1 = new EdmFunction("Test", "Function", new EdmEntityTypeReference(vegetableType, true), false /*isBound*/, null /*entitySetPath*/, false);
-            function1.AddParameter("p1", collectionTypeReference);
-            function1.AddParameter("p2", EdmCoreModel.Instance.GetInt32(false));
-
-            var function2 = new EdmFunction("Test", "Function", new EdmEntityTypeReference(vegetableType, true), false /*isBound*/, null /*entitySetPath*/, false);
-            function2.AddParameter("p1", new EdmEntityTypeReference(vegetableType, true));
-            function2.AddParameter("p2", EdmCoreModel.Instance.GetInt32(false));
+            var action2 = new EdmAction("Test", "Action", new EdmEntityTypeReference(vegetableType, true), true /*isBound*/, null /*entitySetPath*/);
+            action2.AddParameter("p2", new EdmEntityTypeReference(vegetableType, true));
 
             EdmModel model = new EdmModel();
             model.AddElement(container);
             model.AddElement(vegetableType);
-            model.AddElement(function1);
-            model.AddElement(function2);
+            model.AddElement(action1);
+            model.AddElement(action2);
 
             return model;
         }
