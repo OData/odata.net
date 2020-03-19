@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Csdl.Json;
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
@@ -37,5 +38,28 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
             get { return this.propertyValues; }
         }
+    }
+
+    /// <summary>
+    /// Represents a CSDL Record expression.
+    /// </summary>
+    internal class CsdlJsonValueExpression : CsdlExpressionBase
+    {
+        public CsdlJsonValueExpression(string termName, IJsonValue jsonValue, CsdlLocation location)
+            : base(location)
+        {
+            TermName = termName;
+            JsonValue = jsonValue;
+        }
+
+        public override EdmExpressionKind ExpressionKind
+        {
+            get { return EdmExpressionKind.None; }
+        }
+
+        // Qualified term name
+        public string TermName { get; }
+
+        public IJsonValue JsonValue { get; }
     }
 }

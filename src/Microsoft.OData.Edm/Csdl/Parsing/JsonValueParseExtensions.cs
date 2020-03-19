@@ -16,6 +16,28 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
     /// </summary>
     internal static class JsonValueParseExtensions
     {
+
+        public static IJsonValue GetRequiredProperty(this JsonObjectValue objValue, string propertyName)
+        {
+            if (objValue != null && objValue.ContainsKey(propertyName))
+            {
+                return objValue[propertyName];
+            }
+
+            // "Miss required property!"
+            throw new CsdlParseException();
+        }
+
+        public static IJsonValue GetOptionalProperty(this JsonObjectValue objValue, string propertyName)
+        {
+            if (objValue != null && objValue.ContainsKey(propertyName))
+            {
+                return objValue[propertyName];
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="jsonValue"></param>

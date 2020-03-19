@@ -343,8 +343,20 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
+        internal static IEdmExpression WrapJsonValueExpression(CsdlJsonValueExpression jsonValueExpression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
+        {
+            string termName = jsonValueExpression.TermName;
+            IEdmTerm edmTerm = schema.Model.FindTerm(termName);
+        }
+
         internal static IEdmExpression WrapExpression(CsdlExpressionBase expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
         {
+            CsdlJsonValueExpression jsonValueExpression = expression as CsdlJsonValueExpression;
+            if (jsonValueExpression != null)
+            {
+                return WrapJsonValueExpression(jsonValueExpression, bindingContext, schema);
+            }
+
             if (expression != null)
             {
                 switch (expression.ExpressionKind)

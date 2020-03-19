@@ -382,6 +382,8 @@
     <Compile Include="Csdl\Parsing\CsdlDocumentParser.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
+	<Compile Include="Csdl\Parsing\AnnotationJsonParser.cs" />
+	<Compile Include="Csdl\Parsing\CsdlParserHelpers.cs" />
     <Compile Include="Csdl\Parsing\CsdlParser.cs" />
 	<Compile Include="Csdl\Parsing\CsdlJsonParser.cs" />
 	<Compile Include="Csdl\Parsing\SchemaJsonParser.cs" />

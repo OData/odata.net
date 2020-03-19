@@ -140,26 +140,47 @@ namespace Microsoft.OData.Edm.Csdl.Json
             return (bool)primitiveValue.Value;
         }
 
-        //private static int? ParseAsIntegerPrimitive(this IJsonValue jsonValue)
-        //{
-        //    if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
-        //    {
-        //        throw new Exception();
-        //    }
+        public static int? ParseAsIntegerPrimitive(this IJsonValue jsonValue, JsonPath jsonPath = null)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                throw new Exception();
+            }
 
-        //    JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
-        //    if (primitiveValue.Value == null)
-        //    {
-        //        return null;
-        //    }
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            if (primitiveValue.Value == null)
+            {
+                return null;
+            }
 
-        //    if (primitiveValue.Value.GetType() == typeof(int))
-        //    {
-        //        return (int)primitiveValue.Value;
-        //    }
+            if (primitiveValue.Value.GetType() == typeof(int))
+            {
+                return (int)primitiveValue.Value;
+            }
 
-        //    throw new Exception();
-        //}
+            throw new Exception();
+        }
+
+        public static double? ParseAsFloatPrimitive(this IJsonValue jsonValue, JsonPath jsonPath = null)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                throw new Exception();
+            }
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            if (primitiveValue.Value == null)
+            {
+                return null;
+            }
+
+            if (primitiveValue.Value.GetType() == typeof(double))
+            {
+                return (int)primitiveValue.Value;
+            }
+
+            throw new Exception();
+        }
 
         /// <summary>
         /// Validates that the reader is positioned on the specified node type.

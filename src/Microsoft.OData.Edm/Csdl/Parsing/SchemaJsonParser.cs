@@ -1708,7 +1708,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
 #endif
 
-        private static CsdlTypeReference ParseTypeReference(string typeString, // if it's collection, it's element type string
+        public static CsdlTypeReference ParseTypeReference(string typeString, // if it's collection, it's element type string
             bool isCollection,
              bool isNullable,
              bool isUnbounded,
