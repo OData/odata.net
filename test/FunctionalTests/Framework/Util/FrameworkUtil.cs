@@ -196,7 +196,7 @@ namespace System.Data.Test.Astoria
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
-                return null;
+                return "null 123";
             }
 
             // We check the result path again to ensure it is an ENLISTMENT_ROOT.
@@ -206,7 +206,7 @@ namespace System.Data.Test.Astoria
                 if (!Directory.Exists(pathToCheck))
                 {
                     // The result seems not be a valid enlistment root containing some necessary subfolders.
-                    return null;
+                    return "null 456";
                 }
             }
 
