@@ -68,8 +68,6 @@ using System.Security;
 [assembly: SecurityTransparent]
 #endif
 
-[assembly: SecurityRules(SecurityRuleSet.Level2, SkipVerificationInFullTrust = true)]
-
 #if !ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11
 #if !ASSEMBLY_ATTRIBUTE_ON_NETCORE_10
 #if !SUPPRESS_SECURITY_RULES
@@ -90,4 +88,4 @@ using System.Security;
 #endif
 #endif
 
-[assembly:NeutralResourcesLanguageAttribute("en-US")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]
