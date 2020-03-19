@@ -324,7 +324,8 @@ namespace Microsoft.OData.Client.Materialization
                 // Try to infer the assignable client type by iterating over all types with a matching name 
                 foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(enumVal.TypeName))
                 {
-                    if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(candidateType, enumVal, out object materializedEnumValue))
+                    object materializedEnumValue;
+                    if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(candidateType, enumVal, out materializedEnumValue))
                     {
                         dynamicPropertiesDictionary.Add(property.Name, materializedEnumValue);
                         break;
@@ -338,12 +339,15 @@ namespace Microsoft.OData.Client.Materialization
             // TODO: Revisit multiple exit points and nested blocks
             if (collectionVal != null)
             {
-                if (ClientConvert.TryParseCollectionItemType(collectionVal.TypeName, out string collectionItemTypeName))
+                string collectionItemTypeName;
+                if (ClientConvert.TryParseCollectionItemType(collectionVal.TypeName, out collectionItemTypeName))
                 {
+                    Type primitiveType;
                     // Primitive collection
-                    if (ClientConvert.ToNamedType(collectionItemTypeName, out Type primitiveType))
+                    if (ClientConvert.ToNamedType(collectionItemTypeName, out primitiveType))
                     {
-                        if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(primitiveType, property, out object collectionInstance))
+                        object collectionInstance;
+                        if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(primitiveType, property, out collectionInstance))
                         {
                             dynamicPropertiesDictionary.Add(property.Name, collectionInstance);
                         }
@@ -353,7 +357,8 @@ namespace Microsoft.OData.Client.Materialization
                         // Try to infer the assignable client type by iterating over all types with a matching name 
                         foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(collectionItemTypeName))
                         {
-                            if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(candidateType, property, out object collectionInstance))
+                            object collectionInstance;
+                            if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(candidateType, property, out collectionInstance))
                             {
                                 // We found an assignable type
                                 dynamicPropertiesDictionary.Add(property.Name, collectionInstance);
