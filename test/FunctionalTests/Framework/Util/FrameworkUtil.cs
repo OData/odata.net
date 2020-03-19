@@ -199,7 +199,7 @@ namespace System.Data.Test.Astoria
                 return "null 123";
             }
 
-            return result;
+            return "ttt testing "+result;
             // We check the result path again to ensure it is an ENLISTMENT_ROOT.
             foreach (string traitsFolder in traitsFolders)
             {
