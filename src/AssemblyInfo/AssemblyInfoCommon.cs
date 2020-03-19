@@ -52,42 +52,42 @@ using System.Security;
 [assembly: ComVisible(false)]
 #endif
 
-//#if ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE
-//[assembly:ComCompatibleVersion(1,0,3300,0)]
-//#endif
+#if ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE
+[assembly:ComCompatibleVersion(1,0,3300,0)]
+#endif
 
-//#if ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS
-//[assembly: AllowPartiallyTrustedCallers]
-//#else
-//#if ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2
-//[assembly:AllowPartiallyTrustedCallers(PartialTrustVisibilityLevel=PartialTrustVisibilityLevel.NotVisibleByDefault)]
-//#endif
-//#endif
+#if ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS
+[assembly: AllowPartiallyTrustedCallers]
+#else
+#if ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2
+[assembly:AllowPartiallyTrustedCallers(PartialTrustVisibilityLevel=PartialTrustVisibilityLevel.NotVisibleByDefault)]
+#endif
+#endif
 
-//#if ASSEMBLY_ATTRIBUTE_TRANSPARENT_ASSEMBLY
-//[assembly: SecurityTransparent]
-//#endif
+#if ASSEMBLY_ATTRIBUTE_TRANSPARENT_ASSEMBLY
+[assembly: SecurityTransparent]
+#endif
 
-//[assembly: SecurityRules(SecurityRuleSet.Level2, SkipVerificationInFullTrust = true)]
+[assembly: SecurityRules(SecurityRuleSet.Level2, SkipVerificationInFullTrust = true)]
 
-//#if !ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11
-//#if !ASSEMBLY_ATTRIBUTE_ON_NETCORE_10
-//#if !SUPPRESS_SECURITY_RULES
-//#if SECURITY_MIGRATION && !ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2
-//#if ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST
-//[assembly: SecurityRules(SecurityRuleSet.Level1, SkipVerificationInFullTrust = true)]
-//#else
-//[assembly: SecurityRules(SecurityRuleSet.Level1)]
-//#endif
-//#else
-//#if ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST
-//[assembly: SecurityRules(SecurityRuleSet.Level2, SkipVerificationInFullTrust = true)]
-//#else
-//[assembly: SecurityRules(SecurityRuleSet.Level2)]
-//#endif
-//#endif
-//#endif
-//#endif
-//#endif
+#if !ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11
+#if !ASSEMBLY_ATTRIBUTE_ON_NETCORE_10
+#if !SUPPRESS_SECURITY_RULES
+#if SECURITY_MIGRATION && !ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2
+#if ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST
+[assembly: SecurityRules(SecurityRuleSet.Level1, SkipVerificationInFullTrust = true)]
+#else
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
+#endif
+#else
+#if ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST
+[assembly: SecurityRules(SecurityRuleSet.Level2, SkipVerificationInFullTrust = true)]
+#else
+[assembly: SecurityRules(SecurityRuleSet.Level2)]
+#endif
+#endif
+#endif
+#endif
+#endif
 
 [assembly:NeutralResourcesLanguageAttribute("en-US")]
