@@ -769,9 +769,10 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>
         /// Returns the client types likely to be assignable from the server type
         /// </summary>
+        /// <param name="assembly">Assembly where client types are expected to be.</param>
         /// <param name="serverTypeName">Server type name.</param>
         /// <returns>An enumerable object with the candidate types</returns>
-        internal static IEnumerable<Type> GetCandidateClientTypes(string serverTypeName)
+        internal static IEnumerable<Type> GetCandidateClientTypes(Assembly assembly, string serverTypeName)
         {
             Debug.Assert(!string.IsNullOrEmpty(serverTypeName), $"!string.IsNullOrEmpty({nameof(serverTypeName)})");
 
@@ -785,7 +786,7 @@ namespace Microsoft.OData.Client.Metadata
             try
             {
                 // Mitigation - If any type can’t be loaded, the entire method call blows up
-                candidates = Assembly.GetEntryAssembly().GetTypes().Where(predicate);
+                candidates = assembly.GetTypes().Where(predicate);
             }
             catch (ReflectionTypeLoadException ex)
             {

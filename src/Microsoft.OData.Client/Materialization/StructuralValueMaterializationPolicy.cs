@@ -317,12 +317,15 @@ namespace Microsoft.OData.Client.Materialization
                 return;
             }
 
+            // Assembly where client types are expected to be
+            Assembly assembly = instance.GetType().GetAssembly();
+
             // Handle enum value
             ODataEnumValue enumVal = property.Value as ODataEnumValue;
             if (enumVal != null)
             {
                 // Try to infer the assignable client type by iterating over all types with a matching name 
-                foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(enumVal.TypeName))
+                foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(assembly, enumVal.TypeName))
                 {
                     object materializedEnumValue;
                     if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(candidateType, enumVal, out materializedEnumValue))
@@ -356,7 +359,7 @@ namespace Microsoft.OData.Client.Materialization
                     else  // Non-primitive collection
                     {
                         // Try to infer the assignable client type by iterating over all types with a matching name 
-                        foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(collectionItemTypeName))
+                        foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(assembly, collectionItemTypeName))
                         {
                             object collectionInstance;
                             if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(candidateType, property, out collectionInstance))
