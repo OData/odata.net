@@ -150,11 +150,8 @@ namespace System.Data.Test.Astoria
                 {
                     enlistmentRoot = FindEnlistmentRootHeuristically();
                 }
-                if (string.IsNullOrEmpty(enlistmentRoot))
-                {
-                    return "oooo testing  ";
-                }
-                    return enlistmentRoot;
+
+                return enlistmentRoot;
             }
         }
 
@@ -196,10 +193,9 @@ namespace System.Data.Test.Astoria
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
-                return "null 123";
+                return null;
             }
 
-        
             // We check the result path again to ensure it is an ENLISTMENT_ROOT.
             foreach (string traitsFolder in traitsFolders)
             {
@@ -207,7 +203,11 @@ namespace System.Data.Test.Astoria
                 if (!Directory.Exists(pathToCheck))
                 {
                     // The result seems not be a valid enlistment root containing some necessary subfolders.
-                    return "null 456 "+pathToCheck+"   ";
+                    return null;
+                }
+                else
+                {
+                    break;
                 }
             }
 
