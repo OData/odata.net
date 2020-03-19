@@ -164,7 +164,7 @@ namespace System.Data.Test.Astoria
         public static readonly string ServerUnitTestSamples = GetServerUnitTestSamples();
         private static string GetServerUnitTestSamples()
         {
-            
+            throw new Exception("aaaa test   " + EnlistmentRoot ?? " is null ");
             string dir = Path.Combine(EnlistmentRoot, @"test\FunctionalTests\Tests\Data\ServerUnitTests");
             if (!Directory.Exists(dir))
             {
