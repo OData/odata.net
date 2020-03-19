@@ -331,6 +331,7 @@ namespace Microsoft.OData.Client.Materialization
                         break;
                     }
                 }
+
                 return;
             }
 
@@ -366,6 +367,7 @@ namespace Microsoft.OData.Client.Materialization
                             }
                         }
                     }
+
                     return;
                 }
             }

@@ -128,7 +128,7 @@ namespace Microsoft.OData.Client.Materialization
                 materializedEnumValue = MaterializeODataEnumValue(type, enumValue);
                 return true;
             }
-            catch (Exception)
+            catch (InvalidOperationException)
             {
                 materializedEnumValue = null;
                 return false;

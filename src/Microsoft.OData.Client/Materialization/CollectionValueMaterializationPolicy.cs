@@ -270,7 +270,7 @@ namespace Microsoft.OData.Client.Materialization
                 // We found an assignable type
                 return true;
             }
-            catch (Exception)
+            catch (InvalidOperationException)
             {
                 collectionInstance = null;
                 return false;
