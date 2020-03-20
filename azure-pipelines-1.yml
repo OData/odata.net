@@ -63,6 +63,7 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'
     projects: |
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
   enabled: true
 
 - task: Powershell@2
