@@ -776,13 +776,10 @@ namespace Microsoft.OData.Client.Metadata
         {
             Debug.Assert(!string.IsNullOrEmpty(serverTypeName), $"!string.IsNullOrEmpty({nameof(serverTypeName)})");
 
-            string unqualifiedTypeName = serverTypeName.Substring(serverTypeName.LastIndexOf(".") + 1);
-
+            string unqualifiedTypeName = serverTypeName.Substring(serverTypeName.LastIndexOf(".", StringComparison.OrdinalIgnoreCase) + 1);
             IEnumerable<Type> candidates = Enumerable.Empty<Type>();
+            Func<Type, bool> predicate = new Func<Type, bool>(d => d.Name.EndsWith(unqualifiedTypeName, StringComparison.Ordinal));
 
-            Func<Type, bool> predicate = new Func<Type, bool>(d => d.Name.EndsWith(unqualifiedTypeName));
-
-            // TODO: What happens when the user defines client POCOs to map to in a class library?
             try
             {
                 // Mitigation - If any type can’t be loaded, the entire method call blows up

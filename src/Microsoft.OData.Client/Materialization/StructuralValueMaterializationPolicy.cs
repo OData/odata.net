@@ -324,7 +324,8 @@ namespace Microsoft.OData.Client.Materialization
             ODataEnumValue enumVal = property.Value as ODataEnumValue;
             if (enumVal != null)
             {
-                // Try to infer the assignable client type by iterating over all types with a matching name 
+                // TODO: ClientEdmModel caches server type to client mapping after first encounter - consider calling Model.FindType(typeName) first
+                // Try to identity the assignable client type by trying out each candidate type at a time
                 foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(assembly, enumVal.TypeName))
                 {
                     object materializedEnumValue;
@@ -358,7 +359,7 @@ namespace Microsoft.OData.Client.Materialization
                     }
                     else  // Non-primitive collection
                     {
-                        // Try to infer the assignable client type by iterating over all types with a matching name 
+                        // Try to identity the assignable client type by trying out each candidate type at a time
                         foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(assembly, collectionItemTypeName))
                         {
                             object collectionInstance;
