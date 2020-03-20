@@ -190,6 +190,8 @@ namespace System.Data.Test.Astoria
                 }
             }
 
+            return result;
+
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
