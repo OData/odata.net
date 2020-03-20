@@ -60,9 +60,11 @@ steps:
   displayName: 'Build Product 1'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration)'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
   enabled: true
 
 - task: Powershell@2
@@ -113,9 +115,8 @@ steps:
   displayName: 'Test Test 1'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |           
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
