@@ -130,8 +130,8 @@ steps:
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj
-      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
-
+     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
       
 - task: DotNetCoreCLI@2
   displayName: 'Test Test'
