@@ -185,7 +185,7 @@ namespace System.Data.Test.Astoria
                 int start = assemblyPath.IndexOf(traitsFolder, StringComparison.InvariantCultureIgnoreCase);
                 if (start > 0)
                 {
-                    return " fffff ";
+               
                     result = assemblyPath.Substring(0, start);
                     break;
                 }
