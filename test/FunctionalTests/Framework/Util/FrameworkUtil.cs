@@ -165,7 +165,7 @@ namespace System.Data.Test.Astoria
             }
 
             // Second use current assembly location to determine.
-            string assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string assemblyPath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
             if (string.IsNullOrEmpty(assemblyPath))
             {
                 return null;
