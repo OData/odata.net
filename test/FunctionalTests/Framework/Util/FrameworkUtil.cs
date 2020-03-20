@@ -191,7 +191,7 @@ namespace System.Data.Test.Astoria
                 }
             }
 
-            return " pppp ";
+            return " pppp "+assemblyPath;
 
             if (string.IsNullOrEmpty(result))
             {
