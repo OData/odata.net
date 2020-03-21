@@ -3682,6 +3682,14 @@ public abstract class Microsoft.OData.Edm.Vocabularies.EdmValue : IEdmElement, I
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public abstract get; }
 }
 
+public class Microsoft.OData.Edm.Vocabularies.EdmAnnotationPathExpression : Microsoft.OData.Edm.EdmPathExpression, IEdmElement, IEdmExpression, IEdmPathExpression {
+	public EdmAnnotationPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] pathSegments)
+	public EdmAnnotationPathExpression (string path)
+	public EdmAnnotationPathExpression (string[] pathSegments)
+
+	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
+}
+
 public class Microsoft.OData.Edm.Vocabularies.EdmApplyExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmApplyExpression {
 	public EdmApplyExpression (Microsoft.OData.Edm.IEdmFunction appliedFunction, Microsoft.OData.Edm.IEdmExpression[] arguments)
 	public EdmApplyExpression (Microsoft.OData.Edm.IEdmFunction appliedFunction, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmExpression]] arguments)
