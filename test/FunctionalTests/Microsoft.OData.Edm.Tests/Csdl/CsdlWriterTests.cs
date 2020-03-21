@@ -1201,6 +1201,46 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(expected, csdlStr);
         }
 
+        [Fact]
+        public void CanWriteAnnotationPathExpression()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<ComplexType Name=\"Complex\">" +
+                    "<Annotation Term=\"NS.MyAnnotationPathTerm\" AnnotationPath=\"abc/efg\" />" +
+                    "<Annotation Term=\"NS.MyNavigationPathTerm\" NavigationPropertyPath=\"123/456.t\" />" +
+                  "</ComplexType>" +
+                  "<Term Name=\"MyAnnotationPathTerm\" Type=\"Edm.AnnotationPath\" Nullable=\"false\" />" +
+                  "<Term Name=\"MyNavigationPathTerm\" Type=\"Edm.NavigationPropertyPath\" Nullable=\"false\" />" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            model.AddElement(complex);
+            EdmTerm term1 = new EdmTerm("NS", "MyAnnotationPathTerm", EdmCoreModel.Instance.GetAnnotationPath(false));
+            EdmTerm term2 = new EdmTerm("NS", "MyNavigationPathTerm", EdmCoreModel.Instance.GetNavigationPropertyPath(false));
+            model.AddElement(term1);
+            model.AddElement(term2);
+
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complex, term1, new EdmAnnotationPathExpression("abc/efg"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            annotation = new EdmVocabularyAnnotation(complex, term2, new EdmNavigationPropertyPathExpression("123/456.t"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
         [Theory]
         [InlineData("4.0")]
         [InlineData("4.01")]

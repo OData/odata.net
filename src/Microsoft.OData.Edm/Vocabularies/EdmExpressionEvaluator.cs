@@ -405,6 +405,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 case EdmExpressionKind.Null:
                     return (IEdmNullExpression)expression;
                 case EdmExpressionKind.Path:
+                case EdmExpressionKind.AnnotationPath:
                     {
                         if (context == null)
                         {

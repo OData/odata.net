@@ -1354,6 +1354,7 @@ namespace Microsoft.OData.Edm.Validation
                         case EdmExpressionKind.Path:
                         case EdmExpressionKind.PropertyPath:
                         case EdmExpressionKind.NavigationPropertyPath:
+                        case EdmExpressionKind.AnnotationPath:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmPathExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 

@@ -169,6 +169,9 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.NavigationPropertyPath:
                     this.ProcessNavigationPropertyPathExpression((IEdmPathExpression)expression);
                     break;
+                case EdmExpressionKind.AnnotationPath:
+                    this.ProcessAnnotationPathExpression((IEdmPathExpression)expression);
+                    break;
                 case EdmExpressionKind.Record:
                     this.ProcessRecordExpression((IEdmRecordExpression)expression);
                     break;
@@ -679,6 +682,11 @@ namespace Microsoft.OData.Edm
         }
 
         protected virtual void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression)
+        {
+            this.ProcessExpression(expression);
+        }
+
+        protected virtual void ProcessAnnotationPathExpression(IEdmPathExpression expression)
         {
             this.ProcessExpression(expression);
         }

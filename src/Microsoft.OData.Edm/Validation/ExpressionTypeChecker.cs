@@ -82,6 +82,7 @@ namespace Microsoft.OData.Edm.Validation
                 case EdmExpressionKind.Path:
                 case EdmExpressionKind.PropertyPath:
                 case EdmExpressionKind.NavigationPropertyPath:
+                case EdmExpressionKind.AnnotationPath:
                     return TryCastPathAsType((IEdmPathExpression)expression, type, context, matchExactly, out discoveredErrors);
                 case EdmExpressionKind.FunctionApplication:
                     IEdmApplyExpression applyExpression = (IEdmApplyExpression)expression;
