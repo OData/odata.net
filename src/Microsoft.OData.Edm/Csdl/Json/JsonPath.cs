@@ -26,6 +26,20 @@ namespace Microsoft.OData.Edm.Csdl.Json
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public interface IJsonPath
+    {
+        string Path { get; }
+
+        void Push(string node);
+
+        void Push(int index);
+
+        void Pop();
+    }
+
+    /// <summary>
     /// Represents a JSON Path: see the information: https://goessner.net/articles/JsonPath/
     /// JSONPath Syntax
     /// As XPath, JSONPath also has syntax to follow:
@@ -39,7 +53,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
     /// ( ) – operator lets you pass a script expression in the underlying implementation’s script language.It’s not supported by every implementation of JSONPath, however.
     /// ? ( ) – to query all items that meet a certain criteria
     /// </summary>
-    internal class JsonPath
+    internal class JsonPath : IJsonPath
     {
         // It's only include "string" for property, and Int32 for the index of array
         private Stack<object> _nodes;
@@ -58,6 +72,13 @@ namespace Microsoft.OData.Edm.Csdl.Json
             _source = source;
         }
 
+        public JsonPath(JsonPath jsonPath)
+        {
+            _source = jsonPath._source;
+            _options = jsonPath._options;
+            _nodes = new Stack<object>(jsonPath._nodes);
+        }
+
 
         public void Push(string node)
         {
@@ -73,6 +94,8 @@ namespace Microsoft.OData.Edm.Csdl.Json
         {
             return _nodes.Pop();
         }
+
+        public string Path { get { return ToString(); } }
 
         public override string ToString()
         {

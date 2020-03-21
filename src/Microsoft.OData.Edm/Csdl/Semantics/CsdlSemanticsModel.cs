@@ -345,8 +345,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         internal static IEdmExpression WrapJsonValueExpression(CsdlJsonValueExpression jsonValueExpression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
         {
-            string termName = jsonValueExpression.TermName;
-            IEdmTerm edmTerm = schema.Model.FindTerm(termName);
+           // string termName = jsonValueExpression.TermName;
+         //   IEdmTerm edmTerm = schema.Model.FindTerm(termName);
+            return null;
         }
 
         internal static IEdmExpression WrapExpression(CsdlExpressionBase expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)

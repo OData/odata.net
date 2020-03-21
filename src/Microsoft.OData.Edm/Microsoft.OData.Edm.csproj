@@ -66,6 +66,10 @@
     <Compile Include="Csdl\Json\JsonConstants.cs" />
     <Compile Include="Csdl\Json\JsonNodeType.cs" />
     <Compile Include="Csdl\Json\JsonPath.cs" />
+    <Compile Include="Csdl\Reader\SchemaJsonItemParser.cs" />
+    <Compile Include="Csdl\Reader\AnnotationJsonBuilder.cs" />
+    <Compile Include="Csdl\Reader\EdmJsonBuilder.cs" />
+    <Compile Include="Csdl\Reader\EdmTypeJsonBuilder.cs" />
     <Compile Include="Csdl\Reader\CsdlJsonReader.cs" />
     <Compile Include="Csdl\Reader\CsdlReader.cs" />
     <Compile Include="Csdl\Reader\CsdlXmlReader.cs" />

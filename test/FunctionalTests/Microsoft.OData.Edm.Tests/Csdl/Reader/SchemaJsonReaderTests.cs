@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Parsing;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Reader;
 using Microsoft.OData.Edm.Validation;
@@ -63,11 +64,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   }
 }";
 
-            CsdlSchema objectValue;
+            CsdlSchema objectValue = null;
             using (TextReader txtReader = new StringReader(csdl))
             {
-                JsonReader jsonReader = new JsonReader(txtReader);
-                objectValue = SchemaJsonReader.ParseSchemObject(jsonReader);
+        //        JsonReader jsonReader = new JsonReader(txtReader);
+     //           objectValue = SchemaJsonParser.ParseCsdlSchema(jsonReader);
             }
 
             Assert.NotNull(objectValue);
@@ -94,7 +95,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             {
                 JsonReader jsonReader = new JsonReader(txtReader);
                 JsonObjectValue objValue = jsonReader.ReadAsObject();
-                enumType = SchemaJsonReader.BuildCsdlEnumType("ShippingMethod", objValue);
+                enumType = SchemaJsonParser.BuildCsdlEnumType("ShippingMethod", objValue);
             }
 
             Assert.NotNull(enumType);

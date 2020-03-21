@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
             return propertyParser(value);
         }
 
-        public static void ProcessProperty(this JsonObjectValue objValue, JsonPath jsonPath,
+        public static void ProcessProperty(this JsonObjectValue objValue, IJsonPath jsonPath,
             Action<string, IJsonValue> propertyParser)
         {
             foreach (var propertyItem in objValue)
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
 
 
 
-        public static void ProcessItem(this JsonArrayValue arrayValue, JsonPath jsonPath, Action<IJsonValue> itemParser)
+        public static void ProcessItem(this JsonArrayValue arrayValue, IJsonPath jsonPath, Action<IJsonValue> itemParser)
         {
             int index = 0;
             foreach (var item in arrayValue)
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <param name="jsonValue">The <see cref="IJsonValue"/> to parse from.</param>
         /// <param name="jsonPath">The JSON path for current JSON value.</param>
         /// <returns>The string.</returns>
-        public static string ParseAsStringPrimitive(this IJsonValue jsonValue, JsonPath jsonPath)
+        public static string ParseAsStringPrimitive(this IJsonValue jsonValue, IJsonPath jsonPath)
         {
             if (jsonValue == null)
             {
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <param name="jsonValue">The <see cref="IJsonValue"/> to parse from.</param>
         /// <param name="jsonPath">The JSON path for current JSON value.</param>
         /// <returns>The boolean value.</returns>
-        public static bool? ParseAsBooleanPrimitive(this IJsonValue jsonValue, JsonPath jsonPath = null)
+        public static bool? ParseAsBooleanPrimitive(this IJsonValue jsonValue, IJsonPath jsonPath = null)
         {
             if (jsonValue == null)
             {
@@ -134,6 +134,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
             {
                 jsonPath = new JsonPath();
             }
+
             jsonValue.ValidateValueKind(JsonValueKind.JPrimitive, jsonPath);
 
             JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
@@ -188,7 +189,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <param name="expectedKind">The expected JSON value kind.</param>
         /// <param name="jsonPath">The JSON path for current JSON value.</param>
-        private static void ValidateValueKind(this IJsonValue jsonValue, JsonValueKind expectedKind, JsonPath jsonPath)
+        private static void ValidateValueKind(this IJsonValue jsonValue, JsonValueKind expectedKind, IJsonPath jsonPath)
         {
             Debug.Assert(jsonValue != null, "jsonValue != null");
             Debug.Assert(jsonPath != null, "jsonPath != null");

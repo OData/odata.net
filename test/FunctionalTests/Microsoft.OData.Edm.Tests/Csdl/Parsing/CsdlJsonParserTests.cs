@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Parsing;
 using Microsoft.OData.Edm.Csdl.Reader;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
@@ -59,9 +60,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   }
 }";
 
-            var model = CsdlSerializer.Deserialize(csdl);
+            // var model = CsdlSerializer.Deserialize(csdl);
 
-            Assert.NotNull(model);
+            JsonPath path = new JsonPath();
+            CsdlSerializerOptions options = new CsdlSerializerOptions();
+            using (TextReader txtReader = new StringReader(csdl))
+            {
+                EdmModelBuilder builder = new EdmModelBuilder(txtReader, options);
+                IEdmModel model = builder.BuildEdmModel(path);
+                Assert.NotNull(model);
+            }
         }
 
         [Fact]

@@ -213,7 +213,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         private static CsdlEnumMemberExpression BuildEnumMemberExpression(IJsonValue jsonValue, JsonPath jsonPath, IEdmEnumTypeReference enumType)
         {
-            JsonPrimitiveValue enumValue = jsonValue.ValidateRequiredJsonValue<JsonPrimitiveValue>(jsonPath);
+           // JsonPrimitiveValue enumValue = jsonValue.ValidateRequiredJsonValue<JsonPrimitiveValue>(jsonPath);
 
             string enumMemberPath = jsonValue.ParseAsStringPrimitive(jsonPath);
 

@@ -38,6 +38,37 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return null;
         }
 
+        public static T ParseRequiredProperty<T>(this JsonObjectValue objValue,
+            string propertyName, JsonPath jsonPath, CsdlSerializerOptions options,
+            Func<IJsonValue, JsonPath, CsdlSerializerOptions, T> parser)
+        {
+            IJsonValue jsonValue;
+            if (objValue.TryGetValue(propertyName, out jsonValue))
+            {
+                jsonPath.Push(propertyName);
+                T ret = parser(jsonValue, jsonPath, options);
+                jsonPath.Pop();
+                return ret;
+            }
+
+            throw new Exception();
+        }
+
+        public static T ParseOptionalProperty<T>(this JsonObjectValue objValue, string propertyName, JsonPath jsonPath, CsdlSerializerOptions options,
+            Func<IJsonValue, JsonPath, CsdlSerializerOptions, T> parser)
+        {
+            IJsonValue jsonValue;
+            if (objValue.TryGetValue(propertyName, out jsonValue))
+            {
+                jsonPath.Push(propertyName);
+                T ret = parser(jsonValue, jsonPath, options);
+                jsonPath.Pop();
+                return ret;
+            }
+
+            return default(T);
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="jsonValue"></param>
@@ -101,7 +132,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             throw new CsdlParseException(Strings.CsdlJsonParser_UnexpectedJsonMember(jsonPath, propertyValue.ValueKind));
         }
 
-        internal static T ValidateRequiredJsonValue<T>(this IJsonValue jsonValue, JsonPath jsonPath)
+        internal static T ValidateRequiredJsonValue<T>(this IJsonValue jsonValue, IJsonPath jsonPath)
             where T : class, IJsonValue
         {
             if (jsonValue == null)

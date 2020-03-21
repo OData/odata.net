@@ -64,5 +64,8 @@ namespace Microsoft.OData.Edm.Vocabularies
         {
             get { return EdmExpressionKind.LabeledExpressionReference; }
         }
+
+        // We use this name to find the referenced Labeled
+        internal string Name { get; set; }
     }
 }

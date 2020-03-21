@@ -33,6 +33,11 @@ namespace Microsoft.OData.Edm.Csdl
 
         public Func<Uri, TextReader> ReferencedModelJsonFactory { get; set; }
 
+        /// <summary>
+        /// Let customer to provider their own property parser
+        /// </summary>
+        public Func<IEdmElement, IJsonValue, IJsonPath> UnexpectedPropertyParserFactory { get; set; }
+
         public Func<Uri, XmlReader> ReferencedModelXmlFactory { get; set; }
 
         // Save the parsing errors
@@ -104,6 +109,21 @@ namespace Microsoft.OData.Edm.Csdl
             {
                 IsBracketNotation = IsJsonPathBracketNotation
             };
+        }
+
+        internal CsdlSerializerOptions Clone()
+        {
+            CsdlSerializerOptions options = new CsdlSerializerOptions();
+
+            options.MaxDepth = this.MaxDepth;
+            options.IsJsonPathBracketNotation = this.IsJsonPathBracketNotation;
+            options.IgnoreUnexpectedMembers = this.IgnoreUnexpectedMembers;
+            options.UnexpectedPropertyParserFactory = this.UnexpectedPropertyParserFactory;
+            options.ReferencedModelJsonFactory = this.ReferencedModelJsonFactory;
+            options.ReferencedModels = this.ReferencedModels;
+            options.IsIeee754Compatible = this.IsIeee754Compatible;
+
+            return options;
         }
     }
 

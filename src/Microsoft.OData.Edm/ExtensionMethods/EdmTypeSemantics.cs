@@ -1210,6 +1210,27 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns the path type kind of the definition of this reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The path kind of the definition of this reference.</returns>
+        public static EdmPathTypeKind PathKind(this IEdmPathTypeReference type)
+        {
+            if (type == null)
+            {
+                return EdmPathTypeKind.None;
+            }
+
+            IEdmType typeDefinition = type.Definition;
+            if (typeDefinition.TypeKind != EdmTypeKind.Path)
+            {
+                return EdmPathTypeKind.None;
+            }
+
+            return ((IEdmPathType)typeDefinition).PathKind;
+        }
+
+        /// <summary>
         /// Determines if the potential base type is in the inheritance hierarchy of the type being tested.
         /// </summary>
         /// <param name="type">Type to be tested for derivation from the other type.</param>

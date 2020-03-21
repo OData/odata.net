@@ -290,6 +290,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return false;
             }
 
+            JsonPath jsonPath = new JsonPath();
             CsdlLocation location = new CsdlLocation(jsonPath.ToString());
 
             if (isCollection != null)
