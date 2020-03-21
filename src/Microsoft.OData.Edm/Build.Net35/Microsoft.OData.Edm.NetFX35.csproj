@@ -1292,6 +1292,9 @@
     <Compile Include="..\Vocabularies\EdmToClrEvaluator.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\EdmToClrEvaluator.cs</Link>
     </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmAnnotationPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmAnnotationPathExpression.cs</Link>
+    </Compile>
     <Compile Include="..\Vocabularies\Expressions\EdmApplyExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmApplyExpression.cs</Link>
     </Compile>

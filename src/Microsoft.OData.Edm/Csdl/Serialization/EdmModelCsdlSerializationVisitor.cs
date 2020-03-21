@@ -405,6 +405,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter.WriteNavigationPropertyPathExpressionElement(expression);
         }
 
+        protected override void ProcessAnnotationPathExpression(IEdmPathExpression expression)
+        {
+            this.schemaWriter.WriteAnnotationPathExpressionElement(expression);
+        }
+
         protected override void ProcessCollectionExpression(IEdmCollectionExpression expression)
         {
             this.BeginElement(expression, this.schemaWriter.WriteCollectionExpressionElementHeader);
@@ -539,6 +544,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.Path:
                 case EdmExpressionKind.PropertyPath:
                 case EdmExpressionKind.NavigationPropertyPath:
+                case EdmExpressionKind.AnnotationPath:
                 case EdmExpressionKind.StringConstant:
                 case EdmExpressionKind.TimeOfDayConstant:
                     return true;
