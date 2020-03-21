@@ -1082,6 +1082,45 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("Org.OData.Core.V1.LocalDateTime", property.Type.FullName());
         }
 
+        [Fact]
+        public void ParsingAnnotationPathExpressionWorks()
+        {
+            string csdl =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<ComplexType Name=\"Complex\">" +
+                    "<Annotation Term=\"NS.MyAnnotationPathTerm\" AnnotationPath=\"abc/efg\" />" +
+                    "<Annotation Term=\"NS.MyNavigationPathTerm\" NavigationPropertyPath=\"123/456.t\" />" +
+                  "</ComplexType>" +
+                  "<Term Name=\"MyAnnotationPathTerm\" Type=\"Edm.AnnotationPath\" Nullable=\"false\" />" +
+                  "<Term Name=\"MyNavigationPathTerm\" Type=\"Edm.NavigationPropertyPath\" Nullable=\"false\" />" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            bool result = CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            var complexType = model.SchemaElements.OfType<IEdmComplexType>().First();
+            Assert.NotNull(complexType);
+
+            IEdmTerm term = model.SchemaElements.OfType<IEdmTerm>().First(t => t.Name == "MyAnnotationPathTerm");
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(complexType, term).FirstOrDefault();
+            Assert.Equal(EdmExpressionKind.AnnotationPath, annotation.Value.ExpressionKind);
+            Assert.Equal("abc/efg", ((IEdmPathExpression)annotation.Value).Path);
+
+            term = model.SchemaElements.OfType<IEdmTerm>().First(t => t.Name == "MyNavigationPathTerm");
+            annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(complexType, term).FirstOrDefault();
+            Assert.Equal(EdmExpressionKind.NavigationPropertyPath, annotation.Value.ExpressionKind);
+            Assert.Equal("123/456.t", ((IEdmPathExpression)annotation.Value).Path);
+        }
+
         [Theory]
         [InlineData("4.0")]
         [InlineData("4.01")]
