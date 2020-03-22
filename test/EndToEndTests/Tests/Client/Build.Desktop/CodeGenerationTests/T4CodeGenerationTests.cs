@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 #if !WIN8 && !WINDOWSPHONE
     [DeploymentItem(@"EntityFramework.dll")]
 #endif
-  //--comment--  [TestClass]
+    [TestClass]
     public class T4CodeGenerationTests
     {
         private const string NameSpacePrefixReference = "Microsoft.Test.OData.Services.TestServices.";
@@ -115,7 +115,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         /// <summary>
         /// Compile generated cs/vb code and do basic verification against the IEdmModel.
         /// </summary>
-        [TestMethod]
+     //--comment--   [TestMethod]
         public void CompileAndVerifyGeneratedCode()
         {
             TestServiceUtil.ServiceUriGenerator = new ServiceUriGenerator();
