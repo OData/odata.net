@@ -139,7 +139,8 @@ steps:
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
-      
+  enabled: false
+  
 - task: DotNetCoreCLI@2
   displayName: 'Test Test'
   inputs:
