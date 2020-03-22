@@ -117,6 +117,15 @@ steps:
 
 
 - task: DotNetCoreCLI@2
+  displayName: 'Test Test 0'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |           
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+
+
+- task: DotNetCoreCLI@2
   displayName: 'Test Test 1'
   inputs:
     command: 'test'
