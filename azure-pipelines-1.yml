@@ -120,7 +120,7 @@ steps:
   displayName: 'Test Test 1'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration)'
     projects: |           
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
