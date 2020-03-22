@@ -174,6 +174,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string csdl = @" {
   ""$Version"": ""4.0"",
   ""My.Namespace"": {
+    ""$Alias"": ""sam"",
     ""ProductBase"": {
       ""$Kind"": ""EntityType"",
       ""$Key"": [

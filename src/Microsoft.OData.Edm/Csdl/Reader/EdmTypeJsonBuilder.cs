@@ -19,21 +19,35 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
     /// </summary>
     internal class EdmTypeJsonBuilder
     {
+        private IDictionary<SchemaJsonItem, CsdlJsonModel> _schemaItemsToModelMapping;
+
         private IDictionary<string, SchemaJsonItem> _schemaItems = new Dictionary<string, SchemaJsonItem>();
 
         private readonly IDictionary<string, IEdmSchemaElement> _schemaElements = new Dictionary<string, IEdmSchemaElement>();
 
         private CsdlSerializerOptions _options;
-        internal EdmTypeJsonBuilder(IList<SchemaJsonItem> schemaItems, CsdlSerializerOptions options)
+        internal EdmTypeJsonBuilder(IDictionary<SchemaJsonItem, CsdlJsonModel> sschemaItemsToModelMapping, CsdlSerializerOptions options)
         {
             _options = options;
-            schemaItems.ForEach(s => AddSchemaItem(s));
+            _schemaItemsToModelMapping = sschemaItemsToModelMapping;
+
+            sschemaItemsToModelMapping.ForEach(k => _schemaItems[k.Key.FullName] = k.Key);
         }
 
-        public void AddSchemaItem(SchemaJsonItem schemaItem)
+        internal string ReplaceAlias(SchemaJsonItem jsonItem, string name)
         {
-            _schemaItems[schemaItem.FullName] = schemaItem;
+            CsdlJsonModel declaredModel = _schemaItemsToModelMapping[jsonItem];
+            return declaredModel.ReplaceAlias(name);
         }
+
+        public IDictionary<string, IEdmSchemaElement> BuiltTypes
+        {
+            get
+            {
+                return _schemaElements;
+            }
+        }
+
 
         public void BuildSchemaItems()
         {
@@ -111,12 +125,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     IEdmComplexType baseComplexType = null;
                     if (complex.BaseType != null)
                     {
-                        SchemaJsonItem baseItem = FindBaseItem(complex.BaseType);
+                        string replacedBaseTypeName = ReplaceAlias(complex, complex.BaseType);
+
+                        SchemaJsonItem baseItem = FindBaseItem(replacedBaseTypeName);
 
                         BuildSchemaElementHeader(baseItem);
 
-                        BuildSchemaElementHeader(baseItem);
-                        baseComplexType = GetSchemaElement(complex.BaseType) as IEdmComplexType;
+                        baseComplexType = GetSchemaElement(replacedBaseTypeName) as IEdmComplexType;
 
                         Contract.Assert(baseComplexType != null);
                     }
@@ -135,10 +150,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     IEdmEntityType baseEntityType = null;
                     if (entity.BaseType != null)
                     {
-                        SchemaJsonItem baseItem = FindBaseItem(entity.BaseType);
+                        string replacedBaseTypeName = ReplaceAlias(entity, entity.BaseType);
+
+                        SchemaJsonItem baseItem = FindBaseItem(replacedBaseTypeName);
 
                         BuildSchemaElementHeader(baseItem);
-                        baseEntityType = GetSchemaElement(entity.BaseType) as IEdmEntityType;
+                        baseEntityType = GetSchemaElement(replacedBaseTypeName) as IEdmEntityType;
 
                         Contract.Assert(baseEntityType != null);
                     }
@@ -202,129 +219,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             _schemaElements.Add(termItem.FullName, edmTerm);
         }
 
-        public IEdmTypeReference BuildTypeReference(string typeString, // if it's collection, it's element type string
-            bool isCollection,
-             bool isNullable,
-             bool isUnbounded,
-             int? maxLength,
-             bool? unicode,
-             int? precision,
-             int? scale,
-             int? srid)
-        {
-            IEdmTypeReference type = ParseNamedTypeReference(typeString, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
-            if (isCollection)
-            {
-                type = new EdmCollectionTypeReference(new EdmCollectionType(type));
-            }
-
-            return type;
-        }
-
-        private IEdmTypeReference ParseNamedTypeReference(string typeName, bool isNullable,
-             bool isUnbounded,
-             int? maxLength,
-             bool? unicode,
-             int? precision,
-             int? scale,
-             int? srid)
-        {
-            IEdmPrimitiveTypeReference primitiveType;
-            EdmPrimitiveTypeKind kind = EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName);
-            switch (kind)
-            {
-                case EdmPrimitiveTypeKind.Boolean:
-                case EdmPrimitiveTypeKind.Byte:
-                case EdmPrimitiveTypeKind.Double:
-                case EdmPrimitiveTypeKind.Guid:
-                case EdmPrimitiveTypeKind.Int16:
-                case EdmPrimitiveTypeKind.Int32:
-                case EdmPrimitiveTypeKind.Int64:
-                case EdmPrimitiveTypeKind.SByte:
-                case EdmPrimitiveTypeKind.Single:
-                case EdmPrimitiveTypeKind.Stream:
-                case EdmPrimitiveTypeKind.Date:
-                case EdmPrimitiveTypeKind.PrimitiveType:
-                    return EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
-
-                case EdmPrimitiveTypeKind.Binary:
-                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
-                    return new EdmBinaryTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, isUnbounded, maxLength);
-
-                case EdmPrimitiveTypeKind.DateTimeOffset:
-                case EdmPrimitiveTypeKind.Duration:
-                case EdmPrimitiveTypeKind.TimeOfDay:
-                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
-                    return new EdmTemporalTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, precision);
-
-                case EdmPrimitiveTypeKind.Decimal:
-                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
-                    return new EdmDecimalTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, precision, scale);
-
-                case EdmPrimitiveTypeKind.String:
-                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
-                    return new EdmStringTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, isUnbounded, maxLength, unicode);
-
-                case EdmPrimitiveTypeKind.Geography:
-                case EdmPrimitiveTypeKind.GeographyPoint:
-                case EdmPrimitiveTypeKind.GeographyLineString:
-                case EdmPrimitiveTypeKind.GeographyPolygon:
-                case EdmPrimitiveTypeKind.GeographyCollection:
-                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
-                case EdmPrimitiveTypeKind.GeographyMultiLineString:
-                case EdmPrimitiveTypeKind.GeographyMultiPoint:
-                case EdmPrimitiveTypeKind.Geometry:
-                case EdmPrimitiveTypeKind.GeometryPoint:
-                case EdmPrimitiveTypeKind.GeometryLineString:
-                case EdmPrimitiveTypeKind.GeometryPolygon:
-                case EdmPrimitiveTypeKind.GeometryCollection:
-                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
-                case EdmPrimitiveTypeKind.GeometryMultiLineString:
-                case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
-                    return new EdmSpatialTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, srid);
-
-                case EdmPrimitiveTypeKind.None:
-                    break;
-            }
-
-            IEdmSchemaElement schemaElement;
-            if (_schemaElements.TryGetValue(typeName, out schemaElement))
-            {
-                return GetEdmTypeReference(schemaElement as IEdmType, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
-            }
-
-            // If we can't find the type, find it from referenced model.
-            // IEdmType edmType = _edmModel.FindType(typeName);
-            return null;
-            //return GetEdmTypeReference(edmType, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
-        }
-
-        private static IEdmTypeReference GetEdmTypeReference(IEdmType edmType, bool isNullable,
-             bool isUnbounded,
-             int? maxLength,
-             bool? unicode,
-             int? precision,
-             int? scale,
-             int? srid)
-        {
-            switch (edmType.TypeKind)
-            {
-                case EdmTypeKind.Complex:
-                    return new EdmComplexTypeReference((IEdmComplexType)edmType, isNullable);
-
-                case EdmTypeKind.Entity:
-                    return new EdmEntityTypeReference((IEdmEntityType)edmType, isNullable);
-
-                case EdmTypeKind.Enum:
-                    return new EdmEnumTypeReference((IEdmEnumType)edmType, isNullable);
-
-                case EdmTypeKind.TypeDefinition:
-                    return new EdmTypeDefinitionReference((IEdmTypeDefinition)edmType, isNullable, isUnbounded, maxLength, isUnbounded, precision, scale, srid);
-            }
-
-            throw new CsdlParseException();
-        }
+        
 
         private static IEdmPrimitiveType GetUnderlyingType(string underlyingType)
         {
@@ -779,13 +674,19 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             IList<IEdmProperty> properties = new List<IEdmProperty>();
 
-            IDictionary<string, IList<AnnotationWrapper>> propertyAnnotations = new Dictionary<string, IList<AnnotationWrapper>>();
-
+            IDictionary<string, IEdmStructuralProperty> declaredStructuralProperties = new Dictionary<string, IEdmStructuralProperty>();
+            IJsonValue keyValue = null;
             IJsonPath jsonPath = structuredJsonItem.JsonPath;
             foreach (var member in structuredJsonItem.Members)
             {
                 string propertyName = member.Key;
                 IJsonValue propertyValue = member.Value;
+
+                if (propertyName == "$Key")
+                {
+                    keyValue = propertyValue;
+                    continue;
+                }
 
                 string annotationName;
                 propertyName = TryParsePropertyName(propertyName, out annotationName);
@@ -810,18 +711,20 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                     // The property object MAY contain the member $Kind with a string value of Property.
                     // This member SHOULD be omitted to reduce document size.
-                    IEdmStructuralProperty structuralProperty = BuildStructuralProperty(propertyName, objValue);
+                    IEdmStructuralProperty structuralProperty = BuildStructuralProperty(structuredType, propertyName, objValue, structuredJsonItem.JsonPath);
                     properties.Add(structuralProperty);
                     structuredType.AddProperty(structuralProperty);
+
+                    declaredStructuralProperties[propertyName] = structuralProperty;
                 }
                 else
                 {
-                    string qualifier;
-                    string termName = TryParseAnnotationName(annotationName, out qualifier);
-                    Debug.Assert(termName != null);
-                    IEdmTerm edmTerm = FindTerm(termName);
+                    //string qualifier;
+                    //string termName = TryParseAnnotationName(annotationName, out qualifier);
+                    //Debug.Assert(termName != null);
+                    //IEdmTerm edmTerm = FindTerm(termName);
 
-                    IEdmExpression expression = BuildExpression(propertyValue, structuredJsonItem.JsonPath, edmTerm.Type);
+                   // IEdmExpression expression = BuildExpression(propertyValue, structuredJsonItem.JsonPath, edmTerm.Type);
 
                     if (propertyName == null)
                     {
@@ -843,48 +746,60 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     }
                     else
                     {
-                        // annotation on annotation
-                        if (propertyName[0] == '@')
-                        {
-                            // So far, ODL doesn't support annotation on annotation
-                        }
-                        else
-                        {
-                            // annotation for enum member
-                            IList<AnnotationWrapper> values;
-                            if (!propertyAnnotations.TryGetValue(propertyName, out values))
-                            {
-                                values = new List<AnnotationWrapper>();
-                                propertyAnnotations[propertyName] = values;
-                            }
+                        //// annotation on annotation
+                        //if (propertyName[0] == '@')
+                        //{
+                        //    // So far, ODL doesn't support annotation on annotation
+                        //}
+                        //else
+                        //{
+                        //    // annotation for enum member
+                        //    IList<AnnotationWrapper> values;
+                        //    if (!propertyAnnotations.TryGetValue(propertyName, out values))
+                        //    {
+                        //        values = new List<AnnotationWrapper>();
+                        //        propertyAnnotations[propertyName] = values;
+                        //    }
 
-                            values.Add(new AnnotationWrapper
-                            {
-                                Term = edmTerm,
-                                Expression = expression
-                            });
-                        }
+                        //    values.Add(new AnnotationWrapper
+                        //    {
+                        //        Term = edmTerm,
+                        //        Expression = expression
+                        //    });
+                        //}
                     }
                 }
             }
 
-            foreach (var item in propertyAnnotations)
+            //foreach (var item in propertyAnnotations)
+            //{
+            //    // TODO: maybe refactor later for performance
+            //    IEdmProperty edmProperty = properties.FirstOrDefault(c => c.Name == item.Key);
+            //    if (edmProperty != null)
+            //    {
+            //        //foreach (var annotation in item.Value)
+            //        //{
+            //        //    //EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(edmProperty, annotation.Term, annotation.Expression);
+            //        //    //edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+            //        //    //_edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
+            //        //}
+
+            //        continue;
+            //    }
+
+            //    throw new Exception();
+            //}
+
+            if (keyValue != null)
             {
-                // TODO: maybe refactor later for performance
-                IEdmProperty edmProperty = properties.FirstOrDefault(c => c.Name == item.Key);
-                if (edmProperty != null)
+                EdmEntityType entityType = structuredType as EdmEntityType;
+                JsonArrayValue keyJsonValue = keyValue.ValidateRequiredJsonValue<JsonArrayValue>(jsonPath);
+                IList<string> keys = keyJsonValue.ParseArray<string>(jsonPath, (v, p) => v.ParseAsStringPrimitive(p));
+                foreach (var keyStr in keys)
                 {
-                    //foreach (var annotation in item.Value)
-                    //{
-                    //    //EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(edmProperty, annotation.Term, annotation.Expression);
-                    //    //edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
-                    //    //_edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
-                    //}
-
-                    continue;
+                    IEdmStructuralProperty keyProperty = declaredStructuralProperties[keyStr];
+                    entityType.AddKeys(keyProperty);
                 }
-
-                throw new Exception();
             }
         }
 
@@ -893,9 +808,243 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return null;
         }
 
-        private static IEdmStructuralProperty BuildStructuralProperty(string name, IJsonValue jsonValue)
+        private IEdmStructuralProperty BuildStructuralProperty(EdmStructuredType declaringType, string name, IJsonValue jsonValue, IJsonPath jsonPath)
         {
+            // Structural properties are represented as members of the object representing a structured type.
+            // The member name is the property name, the member value is an object.
+            // The property object MAY contain the member $Kind with a string value of Property. This member SHOULD be omitted to reduce document size.
+            // It MAY contain the member $Type, $Collection, $Nullable, $MaxLength, $Unicode, $Precision, $Scale, $SRID, and $DefaultValue.
+            string typeName = "Edm.String"; // Absence of the $Type member means the type is Edm.String.
+            bool? isCollection = false;
+            bool? nullable = false; //  Absence of the member means false.
+            int? maxLength = null;
+            int? precision = null;
+            int? scale = null;
+            bool? unicode = null; // Absence of the member means true.
+            int? srid = null;
+            string defaultValue = null;
+            string kind;
+            JsonObjectValue propertyObject = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
+            //IList<CsdlAnnotation> propertyAnnotations = new List<CsdlAnnotation>();
+            foreach (var property in propertyObject)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                switch (propertyName)
+                {
+                    case "$Kind":
+                        // The property object MAY contain the member $Kind with a string value of Property. This member SHOULD be omitted to reduce document size.
+                        kind = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        if (kind != "Property")
+                        {
+                            throw new Exception();
+                        }
+                        break;
+
+                    case "$Type":
+                        // Absence of the $Type member means the type is Edm.String. This member SHOULD be omitted for string properties to reduce document size.
+                        typeName = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        break;
+
+                    case "$Collection":
+                        // For collection-valued properties the value of $Type is the qualified name of the property’s item type,
+                        // and the member $Collection MUST be present with the literal value true.
+                        isCollection = propertyValue.ParseAsBooleanPrimitive(jsonPath);
+                        // TODO: should verify this value must be true?
+                        break;
+
+                    case "$Nullable":
+                        // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
+                        nullable = propertyValue.ParseAsBooleanPrimitive(jsonPath);
+                        break;
+
+                    case "$MaxLength":
+                        // The value of $MaxLength is a positive integer.
+                        // CSDL xml defines a symbolic value max that is only allowed in OData 4.0 responses. This symbolic value is not allowed in CDSL JSON documents at all.
+                        maxLength = propertyValue.ParseAsIntegerPrimitive(jsonPath);
+                        break;
+
+                    case "$Precision":
+                        // The value of $Precision is a number.
+                        precision = propertyValue.ParseAsIntegerPrimitive(jsonPath);
+                        break;
+
+                    case "$Scale":
+                        // The value of $Scale is a number or a string with one of the symbolic values floating or variable.
+                        // Absence of $Scale means variable. However, "floating" and "variable" is not supported.
+                        scale = propertyValue.ParseAsIntegerPrimitive(jsonPath);
+                        break;
+
+                    case "$Unicode":
+                        // The value of $Unicode is one of the Boolean literals true or false. Absence of the member means true.
+                        unicode = propertyValue.ParseAsBooleanPrimitive(jsonPath);
+                        break;
+
+                    case "$SRID":
+                        // The value of $SRID is a string containing a number or the symbolic value variable.
+                        // So far, ODL doesn't support string of SRID.
+                        srid = propertyValue.ParseAsIntegerPrimitive(jsonPath);
+                        break;
+
+                    case "$DefaultValue":
+                        // The value of $DefaultValue is the type-specific JSON representation of the default value of the property.
+                        // For properties of type Edm.Decimal and Edm.Int64 the representation depends on the media type parameter IEEE754Compatible.
+                        // So far, ODL only suppports the string default value.
+                        defaultValue = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        break;
+
+                    default:
+                        //string termName;
+                        //propertyName = SeperateAnnotationName(propertyName, out termName);
+                        //if (termName != null && propertyName == null)
+                        //{
+                        //    // annotation for the property
+                        //    CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue);
+                        //    propertyAnnotations.Add(annotation);
+                        //    break;
+                        //}
+
+                        // Without '@' in the name, it's not allowed in Navigation Property object
+                        //throw new Exception();
+                        break;
+                }
+            }
+
+            IEdmTypeReference typeReference = BuildTypeReference(typeName, isCollection.Value, nullable.Value, false, maxLength, unicode, precision, scale, srid);
+
+            EdmStructuralProperty edmStructuralProperty = declaringType.AddStructuralProperty(name, typeReference, defaultValue);
+
+            //foreach (var item in propertyAnnotations)
+            //{
+            //    csdlProperty.AddAnnotation(item);
+            //}
+
+            return edmStructuralProperty;
+        }
+
+        public IEdmTypeReference BuildTypeReference(string typeString, // if it's collection, it's element type string
+            bool isCollection,
+            bool isNullable,
+            bool isUnbounded,
+            int? maxLength,
+            bool? unicode,
+            int? precision,
+            int? scale,
+            int? srid)
+        {
+            IEdmTypeReference type = ParseNamedTypeReference(typeString, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
+            if (isCollection)
+            {
+                type = new EdmCollectionTypeReference(new EdmCollectionType(type));
+            }
+
+            return type;
+        }
+
+        private IEdmTypeReference ParseNamedTypeReference(string typeName, bool isNullable,
+             bool isUnbounded,
+             int? maxLength,
+             bool? unicode,
+             int? precision,
+             int? scale,
+             int? srid)
+        {
+            IEdmPrimitiveTypeReference primitiveType;
+            EdmPrimitiveTypeKind kind = EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName);
+            switch (kind)
+            {
+                case EdmPrimitiveTypeKind.Boolean:
+                case EdmPrimitiveTypeKind.Byte:
+                case EdmPrimitiveTypeKind.Double:
+                case EdmPrimitiveTypeKind.Guid:
+                case EdmPrimitiveTypeKind.Int16:
+                case EdmPrimitiveTypeKind.Int32:
+                case EdmPrimitiveTypeKind.Int64:
+                case EdmPrimitiveTypeKind.SByte:
+                case EdmPrimitiveTypeKind.Single:
+                case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
+                    return EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
+
+                case EdmPrimitiveTypeKind.Binary:
+                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
+                    return new EdmBinaryTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, isUnbounded, maxLength);
+
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
+                    return new EdmTemporalTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, precision);
+
+                case EdmPrimitiveTypeKind.Decimal:
+                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
+                    return new EdmDecimalTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, precision, scale);
+
+                case EdmPrimitiveTypeKind.String:
+                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
+                    return new EdmStringTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, isUnbounded, maxLength, unicode);
+
+                case EdmPrimitiveTypeKind.Geography:
+                case EdmPrimitiveTypeKind.GeographyPoint:
+                case EdmPrimitiveTypeKind.GeographyLineString:
+                case EdmPrimitiveTypeKind.GeographyPolygon:
+                case EdmPrimitiveTypeKind.GeographyCollection:
+                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                case EdmPrimitiveTypeKind.Geometry:
+                case EdmPrimitiveTypeKind.GeometryPoint:
+                case EdmPrimitiveTypeKind.GeometryLineString:
+                case EdmPrimitiveTypeKind.GeometryPolygon:
+                case EdmPrimitiveTypeKind.GeometryCollection:
+                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+                case EdmPrimitiveTypeKind.GeometryMultiLineString:
+                case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                    primitiveType = EdmCoreModel.Instance.GetPrimitive(kind, isNullable);
+                    return new EdmSpatialTypeReference(primitiveType.PrimitiveDefinition(), primitiveType.IsNullable, srid);
+
+                case EdmPrimitiveTypeKind.None:
+                    break;
+            }
+
+            IEdmSchemaElement schemaElement;
+            if (_schemaElements.TryGetValue(typeName, out schemaElement))
+            {
+                return GetEdmTypeReference(schemaElement as IEdmType, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
+            }
+
+            // If we can't find the type, find it from referenced model.
+            // IEdmType edmType = _edmModel.FindType(typeName);
             return null;
+            //return GetEdmTypeReference(edmType, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
+        }
+
+        private static IEdmTypeReference GetEdmTypeReference(IEdmType edmType, bool isNullable,
+             bool isUnbounded,
+             int? maxLength,
+             bool? unicode,
+             int? precision,
+             int? scale,
+             int? srid)
+        {
+            switch (edmType.TypeKind)
+            {
+                case EdmTypeKind.Complex:
+                    return new EdmComplexTypeReference((IEdmComplexType)edmType, isNullable);
+
+                case EdmTypeKind.Entity:
+                    return new EdmEntityTypeReference((IEdmEntityType)edmType, isNullable);
+
+                case EdmTypeKind.Enum:
+                    return new EdmEnumTypeReference((IEdmEnumType)edmType, isNullable);
+
+                case EdmTypeKind.TypeDefinition:
+                    return new EdmTypeDefinitionReference((IEdmTypeDefinition)edmType, isNullable, isUnbounded, maxLength, isUnbounded, precision, scale, srid);
+            }
+
+            throw new CsdlParseException();
         }
     }
 }

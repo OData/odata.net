@@ -7,9 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using Microsoft.OData.Edm.Csdl.Json;
-using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing
 {
@@ -25,6 +23,77 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         EntityContainer,
         OutOfLineAnnotations
     }
+
+    internal class CsdlJsonSchema
+    {
+        private IList<SchemaJsonItem> _schemaElements;
+
+        public CsdlJsonSchema(string schemaNamespace)
+        {
+            Namespace = schemaNamespace;
+            _schemaElements = new List<SchemaJsonItem>();
+        }
+
+        public string Namespace { get; set; }
+
+        public string Alias { get; set; }
+
+        public IJsonValue OutOfLineAnnotations { get; set; }
+
+        public IEnumerable<OperationJsonItem> Operations
+        {
+            get
+            {
+                return _schemaElements.OfType<OperationJsonItem>();
+            }
+        }
+
+        public IEnumerable<EntityContainerJsonItem> EntityContainers
+        {
+            get
+            {
+                return _schemaElements.OfType<EntityContainerJsonItem>();
+            }
+        }
+
+        public IEnumerable<StructuredTypeJsonItem> StructuredTypes
+        {
+            get
+            {
+                return _schemaElements.OfType<StructuredTypeJsonItem>();
+            }
+        }
+
+        public IEnumerable<EnumTypeJsonItem> EnumTypes
+        {
+            get
+            {
+                return _schemaElements.OfType<EnumTypeJsonItem>();
+            }
+        }
+
+        public IEnumerable<TypeDefinitionJsonItem> TypeDefinitions
+        {
+            get
+            {
+                return _schemaElements.OfType<TypeDefinitionJsonItem>();
+            }
+        }
+
+        public IEnumerable<TermJsonItem> Terms
+        {
+            get
+            {
+                return _schemaElements.OfType<TermJsonItem>();
+            }
+        }
+
+        public void Add(SchemaJsonItem item)
+        {
+            _schemaElements.Add(item);
+        }
+    }
+
     internal abstract class SchemaJsonItem
     {
         public SchemaJsonItem()
@@ -140,6 +209,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         public string BaseType { get; set; }
 
         public bool IsAbstract { get; set; }
+
         public bool IsOpen { get; set; }
     }
 
@@ -179,6 +249,53 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         public IList<SchemaJsonItem> SchemaItems { get { return _schemaJsonItems; } }
 
         private string _alias;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaNamespace"></param>
+        /// <param name="jsonValue"></param>
+        /// <param name="jsonPath"></param>
+        /// <param name="version"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public CsdlJsonSchema TryParseCsdlJsonSchema(IJsonValue jsonValue, IJsonPath jsonPath)
+        {
+            // A schema is represented as a member of the document object whose name is the schema namespace.
+            // Its value is an object.
+            JsonObjectValue schemaObject = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
+
+            CsdlJsonSchema schema = new CsdlJsonSchema(_schemaNamespace);
+            schemaObject.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
+            {
+                switch (propertyName)
+                {
+                    case "$Alias":
+                        // The value of $Alias is a string containing the alias for the schema.
+                        // If a schema specifies an alias, the alias MUST be used instead of the namespace within qualified names
+                        // throughout the document to identify model elements of that schema.
+                        // A mixed use of namespace-qualified names and alias-qualified names is not allowed.
+                        schema.Alias = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        break;
+
+                    case "$Annotations":
+                        // The value of $Annotations is an object with one member per annotation target.
+                        schema.OutOfLineAnnotations = propertyValue;
+                        break;
+
+                    default:
+                        SchemaJsonItem item = ParseSchemaElement(propertyName, propertyValue, jsonPath);
+                        if (item != null)
+                        {
+                            schema.Add(item);
+                        }
+                        break;
+                }
+            });
+
+            return schema;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -194,17 +311,20 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             // Its value is an object.
             JsonObjectValue schemaObject = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
 
-         //   IList<CsdlAnnotations> outOfLineAnnotations = new List<CsdlAnnotations>();
-         //   IList<CsdlElement> csdlElements = new List<CsdlElement>();
-            string alias = null;
+            IJsonValue aliasValue;
+            if (schemaObject.TryGetValue("$Alias", out aliasValue))
+            {
+                _alias = aliasValue.ParseAsStringPrimitive(jsonPath);
+            }
+
             schemaObject.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
             {
                 switch (propertyName)
                 {
                     case "$Alias":
                         // The value of $Alias is a string containing the alias for the schema.
-                        alias = propertyValue.ParseAsStringPrimitive(jsonPath);
-                        _alias = alias;
+                        //alias = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        //_alias = alias;
                         break;
 
                     case "$Annotations":
@@ -232,7 +352,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <param name="jsonPath">The JSON path.</param>
         /// <param name="options">The serializer options.</param>
         /// <returns>Null or built element.</returns>
-        public void ParseSchemaElement(string name, IJsonValue jsonValue, IJsonPath jsonPath)
+        public SchemaJsonItem ParseSchemaElement(string name, IJsonValue jsonValue, IJsonPath jsonPath)
         {
             if (_version != EdmConstants.EdmVersion4 || _schemaNamespace == null)
             {
@@ -249,7 +369,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             if (jsonValue.ValueKind != JsonValueKind.JObject)
             {
                 jsonValue.ReportUnknownMember(jsonPath, _options);
-                return;
+                return null;
             }
 
             JsonObjectValue schemaElementObject = (JsonObjectValue)jsonValue;
@@ -290,12 +410,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 default:
                     // If there's no "$Kind" or unknow kind, it's not a schema element
                     jsonValue.ReportUnknownMember(jsonPath, _options);
-                    return;
+                    return null;
             }
 
             jsonItem.Namespace = _schemaNamespace;
             jsonItem.Name = name;
+            jsonItem.JsonPath = jsonPath;
             _schemaJsonItems.Add(jsonItem);
+            return jsonItem;
         }
 
         /// <summary>
@@ -326,7 +448,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     // $BaseType
                     case "$BaseType":
                         string baseType = propertyValue.ParseAsStringPrimitive(jsonPath);
-                        baseType.Replace(_alias, _schemaNamespace);
+                        if (_alias != null)
+                        {
+                            baseType.Replace(_alias, _schemaNamespace);
+                        }
+
                         entityTypeItem.BaseType = baseType;
                         break;
 

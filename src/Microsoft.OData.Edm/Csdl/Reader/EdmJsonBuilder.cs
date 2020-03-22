@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Json;
@@ -18,14 +19,23 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 {
     internal class CsdlJsonModel
     {
-        private IList<CsdlJsonModel> _referencedModels;
-        private List<SchemaJsonItem> _schemaItems;
+    //    private List<SchemaJsonItem> _schemaItems;
+        private IList<CsdlJsonSchema> _schemas;
+        private readonly List<IEdmReference> _currentModelReferences = new List<IEdmReference>();
+        private readonly List<IEdmReference> _parentModelReferences = new List<IEdmReference>();
+
+        // Aliases are document-global, so all schemas defined within or included into a document MUST have different aliases,
+        // and aliases MUST differ from the namespaces of all schemas defined within or included into a document. 
+        // Key is alias,
+        // Value is the namespace
+        private IDictionary<string, string> _namespaceAlias;
 
         public CsdlJsonModel(string uri, Version version)
         {
             Uri = uri;
             Version = version;
-            _referencedModels = null;
+            ReferencedModels = null;
+            _schemas = new List<CsdlJsonSchema>();
         }
 
         public string Uri { get; }
@@ -33,38 +43,120 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         public Version Version { get; }
         public EdmModel EdmModel { get; }
 
-        public IList<CsdlJsonModel> ReferencedModels { get { return _referencedModels; } }
-
-        public IList<SchemaJsonItem> SchemaItems { get { return _schemaItems; } }
-
-        public void AddSchemaJsonItems(IList<SchemaJsonItem> items)
+        public IEnumerable<IEdmReference> CurrentModelReferences
         {
-            if (_schemaItems == null)
+            get
             {
-                _schemaItems = new List<SchemaJsonItem>();
+                return _currentModelReferences;
             }
-
-            _schemaItems.AddRange(items);
         }
+        /// <summary>
+        /// Adds from current model.
+        /// </summary>
+        /// <param name="referencesToAdd">The items to add.</param>
+        public void AddCurrentModelReferences(IEnumerable<IEdmReference> referencesToAdd)
+        {
+            if (referencesToAdd != null)
+            {
+                _currentModelReferences.AddRange(referencesToAdd);
+            }
+        }
+
+        /// <summary>
+        /// Adds from main model.
+        /// </summary>
+        /// <param name="referenceToAdd">The IEdmReference to add.</param>
+        public void AddParentModelReferences(IEdmReference referenceToAdd)
+        {
+            _parentModelReferences.Add(referenceToAdd);
+        }
+
+        public IList<CsdlJsonSchema> Schemas { get { return _schemas;  } }
+
+        public void AddSchema(CsdlJsonSchema schema)
+        {
+            _schemas.Add(schema);
+        }
+        public IDictionary<string, string> NamespaceAlias { get { return _namespaceAlias; } }
+
+        public IList<CsdlJsonModel> ReferencedModels { get; private set; }
+
+        //public IList<SchemaJsonItem> SchemaItems { get { return _schemaItems; } }
+
+        //public void AddSchemaJsonItems(IList<SchemaJsonItem> items)
+        //{
+        //    if (_schemaItems == null)
+        //    {
+        //        _schemaItems = new List<SchemaJsonItem>();
+        //    }
+
+        //    _schemaItems.AddRange(items);
+        //}
 
         public void AddReferencedModel(CsdlJsonModel referencedModel)
         {
-            if (_referencedModels == null)
+            if (ReferencedModels == null)
             {
-                _referencedModels = new List<CsdlJsonModel>();
+                ReferencedModels = new List<CsdlJsonModel>();
             }
 
-            _referencedModels.Add(referencedModel);
+            ReferencedModels.Add(referencedModel);
         }
 
         public bool IsReferencedModelAdded(string uri)
         {
-            if (_referencedModels == null)
+            if (ReferencedModels == null)
             {
                 return false;
             }
 
-            return _referencedModels.Any(c => c.Uri == uri);
+            return ReferencedModels.Any(c => c.Uri == uri);
+        }
+
+        public void BuildNamespaceAlias()
+        {
+            if (_namespaceAlias != null)
+            {
+                return; // done before
+            }
+
+            _namespaceAlias = new Dictionary<string, string>();
+
+            foreach (var includes in _currentModelReferences.SelectMany(s => s.Includes))
+            {
+                // The value of $Include is an array. Array items are objects that MUST contain the member $Namespace and MAY contain the member $Alias.
+                _namespaceAlias.Add(includes.Alias, includes.Namespace);
+            }
+
+            foreach (var schema in _schemas)
+            {
+                if (schema.Alias != null)
+                {
+                    _namespaceAlias.Add(schema.Alias, schema.Namespace);
+                }
+            }
+        }
+
+        internal string ReplaceAlias(string name)
+        {
+            if (_namespaceAlias == null)
+            {
+                return name;
+            }
+
+            int idx = name.IndexOf('.');
+            if (idx > 0)
+            {
+                var typeAlias = name.Substring(0, idx);
+
+                string namespaceFound;
+                if (_namespaceAlias.TryGetValue(typeAlias, out namespaceFound))
+                {
+                    return string.Format(CultureInfo.InvariantCulture, "{0}{1}", namespaceFound, name.Substring(idx));
+                }
+            }
+
+            return name;
         }
     }
 
@@ -147,14 +239,20 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             Debug.Assert(version != null);
 
             CsdlJsonModel model = new CsdlJsonModel(_source, version);
+            model.AddCurrentModelReferences(references);
 
             foreach (var member in members)
             {
                 SchemaJsonItemParser schemaJsonParser = new SchemaJsonItemParser(version, member.Key, _options);
-                schemaJsonParser.TryParseCsdlSchema(member.Value, jsonPath);
+                //schemaJsonParser.TryParseCsdlSchema(member.Value, jsonPath);
 
-                model.AddSchemaJsonItems(schemaJsonParser.SchemaItems);
+                //model.AddSchemaJsonItems(schemaJsonParser.SchemaItems);
+                CsdlJsonSchema schema = schemaJsonParser.TryParseCsdlJsonSchema(member.Value, jsonPath);
+
+                model.AddSchema(schema);
             }
+
+            model.BuildNamespaceAlias();
 
             // We are building the reference models, add into the main model.
             if (_mainModel != null)
@@ -405,15 +503,38 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         public IEdmModel TryBuildEdmModel(CsdlJsonModel csdlJsonModel)
         {
-            List<SchemaJsonItem> allSchemaJsonItems = new List<SchemaJsonItem>();
+            //List<SchemaJsonItem> allSchemaJsonItems = new List<SchemaJsonItem>();
+            IDictionary<SchemaJsonItem, CsdlJsonModel> allSchemaJsonItems = new Dictionary<SchemaJsonItem, CsdlJsonModel>();
 
-            allSchemaJsonItems.AddRange(csdlJsonModel.SchemaItems);
+            foreach ( var schema in csdlJsonModel.Schemas)
+            {
+                foreach (SchemaJsonItem item in schema.StructuredTypes)
+                {
+                    allSchemaJsonItems.Add(item, csdlJsonModel);
+                }
+
+                foreach (SchemaJsonItem item in schema.EnumTypes)
+                {
+                    allSchemaJsonItems.Add(item, csdlJsonModel);
+                }
+            }
 
             if (csdlJsonModel.ReferencedModels != null)
             {
                 foreach (var referenced in csdlJsonModel.ReferencedModels)
                 {
-                    allSchemaJsonItems.AddRange(referenced.SchemaItems);
+                    foreach (var schema in referenced.Schemas)
+                    {
+                        foreach (SchemaJsonItem item in schema.StructuredTypes)
+                        {
+                            allSchemaJsonItems.Add(item, referenced);
+                        }
+
+                        foreach (SchemaJsonItem item in schema.EnumTypes)
+                        {
+                            allSchemaJsonItems.Add(item, referenced);
+                        }
+                    }
                 }
             }
 
@@ -421,7 +542,63 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
          //   IEnumerable<StructuredTypeJsonItem> structuralTypeJsonItems = allSchemaJsonItems.OfType<StructuredTypeJsonItem>();
 
             EdmTypeJsonBuilder typeBuilder = new EdmTypeJsonBuilder(allSchemaJsonItems, _options);
+
+            EdmModel mainModel = new EdmModel(false);
+
             typeBuilder.BuildSchemaItems();
+
+            var allTypes = typeBuilder.BuiltTypes;
+
+            if (csdlJsonModel.ReferencedModels != null)
+            {
+                foreach (var referenced in csdlJsonModel.ReferencedModels)
+                {
+                    EdmModel subModel = new EdmModel(false);
+                    foreach (var schema in referenced.Schemas)
+                    {
+                        foreach (SchemaJsonItem item in schema.StructuredTypes)
+                        {
+                            IEdmSchemaElement schemaElement = allTypes[item.FullName];
+                            subModel.AddElement(schemaElement);
+                        }
+                    }
+
+                    subModel.SetEdmVersion(referenced.Version);
+
+                    subModel.SetEdmReferences(referenced.CurrentModelReferences);
+
+                    if (referenced.NamespaceAlias != null)
+                    {
+                        foreach (var item in referenced.NamespaceAlias)
+                        {
+                            subModel.SetNamespaceAlias(item.Value, item.Key);
+                        }
+                    }
+
+                    mainModel.AddReferencedModel(subModel);
+                }
+            }
+
+            foreach (var schema in csdlJsonModel.Schemas)
+            {
+                foreach (SchemaJsonItem item in schema.StructuredTypes)
+                {
+                    IEdmSchemaElement schemaElement = allTypes[item.FullName];
+                    mainModel.AddElement(schemaElement);
+                }
+            }
+
+            mainModel.SetEdmVersion(csdlJsonModel.Version);
+            mainModel.SetEdmReferences(csdlJsonModel.CurrentModelReferences);
+
+            if (csdlJsonModel.NamespaceAlias != null)
+            {
+                foreach (var item in csdlJsonModel.NamespaceAlias)
+                {
+                    mainModel.SetNamespaceAlias(item.Value, item.Key);
+                }
+            }
+
             // Build All Enum Types, TypeDefintions
 
             // Build All Terms, Actions, Function
@@ -430,7 +607,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             // Now, build all bodies
 
-            return null;
+            return mainModel;
         }
     }
 
@@ -607,8 +784,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 schemaJsonItems.AddRange(schemaJsonParser.SchemaItems);
             }
 
-            EdmTypeJsonBuilder builder = new EdmTypeJsonBuilder(/*model, _mainMain,*/ schemaJsonItems, _options);
-            builder.BuildSchemaItems();
+       //     EdmTypeJsonBuilder builder = new EdmTypeJsonBuilder(/*model, _mainMain,*/ schemaJsonItems, _options);
+         //   builder.BuildSchemaItems();
 
             return model;
         }
