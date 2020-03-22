@@ -33,7 +33,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryServiceDocument()
         {
             string[] types = new string[]
