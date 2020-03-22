@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 #if !WIN8 && !WINDOWSPHONE
     [DeploymentItem(@"EntityFramework.dll")]
 #endif
-    [TestClass]
+  //--comment--  [TestClass]
     public class T4CodeGenerationTests
     {
         private const string NameSpacePrefixReference = "Microsoft.Test.OData.Services.TestServices.";
