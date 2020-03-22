@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ClientWithKeyAsSegmentSendsRequestsToServerWithoutKeyAsSegment()
         {
             try

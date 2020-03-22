@@ -56,7 +56,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void TestTopOption()
         {
             foreach (var entitySetKeys in entitySetsList.Keys)
@@ -77,7 +77,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void TestSkipOption()
         {
             foreach (var entitySetKeys in entitySetsList.Keys)
@@ -98,7 +98,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void TestOrderByOption()
         {
             foreach (var entitySet in entitySetsList)
@@ -122,7 +122,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void TestOrderByThenByOption()
         {
             foreach (var entitySet in entitySetsList)
@@ -143,7 +143,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void TestOrderByDescendingOption()
         {
             foreach (var entitySet in entitySetsList)
@@ -166,7 +166,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetDiscontinuedProducts()
         {
             var discontinuedProducts = from product in TestClientContext.Products
@@ -183,7 +183,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetInCirculationProducts()
         {
             var discontinuedProducts = from product in TestClientContext.Products
@@ -200,7 +200,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetOrdersOnMyBirthday()
         {
             var dateTimeType = new DateTime?(DateTime.Now).GetType();
@@ -218,7 +218,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetCustomersInLondon()
         {
             var customersInLondon = from customer in TestClientContext.Customers
@@ -236,7 +236,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
         }
 
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetCustomersByKey()
         {
             var first5Customers = TestClientContext.Customers.Take(5).ToList();
@@ -253,7 +253,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetOrderDetailsByKey()
         {
             var first5Details = TestClientContext.OrderDetails.Take(5).ToList();

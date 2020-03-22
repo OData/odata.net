@@ -24,7 +24,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PostAndQuerySingleBinaryProperty()
         {
             var person = new Person

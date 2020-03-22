@@ -44,7 +44,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// IncludeTotalCount Test
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CountLinqTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -59,7 +59,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// Query Entity Set  With Server Driven Paging
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CountLinqTestWithServerDrivenPaging()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -74,7 +74,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// Normal $count request
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CountUriTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -98,7 +98,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// Normal $count request With Server Driven Paging
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CountUriTestWithServerDrivenPaging()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -128,7 +128,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// and 
         /// m:count in atom payload
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CountPayloadVerification()
         {
             foreach (var mimeType in mimeTypes)
@@ -160,7 +160,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// $count=false is the default value 
         /// payload should be same with specifying nothing
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FalseCountIsDefaultValue()
         {
             foreach (var mimeType in mimeTypes)
@@ -202,7 +202,7 @@ namespace Microsoft.Test.OData.Tests.Client
 
         #region negative tests
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CountUriInvalidTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -254,7 +254,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// Invalid getting totalcount when $count=false
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetTotalCountInvalidTest()
         {
             string[] requests = new string[]

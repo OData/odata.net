@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
         // Query set - Create entity - Get created entity - Update entity - Delete entity of set in referenced entity container
         // But type declared in main model
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void EntitySetDeclaredInReferencedModelE2E()
         {
             // Query Entity Set in GPS
@@ -97,7 +97,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
         // Query set - Create entity - Get created entity - Update entity - Delete entity of set in main entity container
         // But type declared in referenced model
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void TypeDeclaredInReferencedModelE2E()
         {
             // Query VehicleGPSSet
@@ -169,7 +169,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
         // Query set - Create entity - Get created entity - Update entity - Delete entity of set in main entity container
         // Type defined in main container, but derived from type referenced model
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void EntitySetDerivedFromTypeDeclaredInReferencedE2E()
         {
             // Query VehicleGPSSet
@@ -240,7 +240,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             Assert.AreEqual(2, derivedVehicleGPSSet.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryProperty()
         {
             // Load property and navigation property from type declared in main model
@@ -260,7 +260,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             Assert.AreEqual("DisplayName4", displayName);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddNavigationProperty()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -352,7 +352,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             Assert.AreEqual(2, truck.VehicleGPSGroupFromGPS.Count);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void TypeCast()
         {
             // Cast type from referenced model to type

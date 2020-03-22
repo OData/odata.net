@@ -23,7 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void SingletonClientTest()
         {
             Random rand = new Random();
@@ -172,7 +172,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void DerivedTypeSingletonClientTest()
         {
             //Query Singleton

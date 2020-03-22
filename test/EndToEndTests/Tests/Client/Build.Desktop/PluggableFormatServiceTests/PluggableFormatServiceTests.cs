@@ -66,7 +66,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         }
 
 #if ENABLE_AVRO
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryVCardEntityProperty()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings()
@@ -97,7 +97,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual("Name1", resource.Properties.Single(p => p.Name == "N").Value);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryAvroEntity()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "People(31)", UriKind.Absolute));
@@ -151,7 +151,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.IsTrue(TestHelper.EntryEqual(expected, entry));
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryAvroFeed()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products", UriKind.Absolute));
@@ -196,7 +196,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.IsTrue(TestHelper.EntryEqual(product2, entries[2]));
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryWithAvroError()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products(-9)", UriKind.Absolute));
@@ -207,7 +207,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual(204, responseMessage.StatusCode);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void InvokeAvroAction()
         {
             ODataResource product1 = new ODataResource

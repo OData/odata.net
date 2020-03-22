@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void BatchTest()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -42,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client
             contextWrapper.SaveChanges(SaveChangesOptions.BatchWithIndependentOperations);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void TrackEntitiesInAllPages()
         {
             var context = this.CreateWrappedContext().Context;

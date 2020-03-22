@@ -20,7 +20,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
         }
 
         // TODO : Reactive this test cases after merging entity and complex for writer
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeComplexsReturnEntities()
         {
             var addresses = this.TestClientContext.Customers.ToList().Select(c => c.Address).ToList();
@@ -37,7 +37,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(1, customersForAddresses.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeComplexReturnEntity()
         {
             // TODO: change to first customer after GitHub issue 21 is fixed.
@@ -51,7 +51,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(1, ordersFromDoubleFunction.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntityTakeCollectionReturnEntities()
         {
             var customer = this.TestClientContext.Customers.ToList()[2];
@@ -60,7 +60,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(1, ordersFromFunction.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntityTakeComplexReturnEntity()
         {
             var customer = this.TestClientContext.Customers.First();
@@ -87,7 +87,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(2, orders.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeEntitiesReturnEntities()
         {
             var orders = this.TestClientContext.Orders.ToList();
@@ -97,7 +97,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.IsTrue(customers.Any());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeEntityReturnEntity()
         {
             var order = this.TestClientContext.Orders.First();
@@ -107,7 +107,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.IsNotNull(customer);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeEntityReferenceReturnEntity()
         {
             var order = this.TestClientContext.Orders.ToList()[1];
@@ -120,7 +120,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(2, customer.ID);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionTakeEntityReferenceUseLocalEntity()
         {
             var order = new Order()
@@ -137,7 +137,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(2, customer.ID);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeEntityReferencesReturnEntities()
         {
             var orders = this.TestClientContext.Orders.ToList();
@@ -148,7 +148,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.IsTrue(customers.Count() > 1);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntityTakeEntityReturnEntity()
         {
             var customer = this.TestClientContext.Customers.Expand("Orders").Skip(1).First();
@@ -158,7 +158,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.IsNotNull(customer);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionImportTakeEntitiesReturnEntities()
         {
             var orders = this.TestClientContext.Orders.ToList();
@@ -175,7 +175,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.IsTrue(customers.Count() == count);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionImportTakeEntityReturnEntity()
         {
             var order = this.TestClientContext.Orders.ToList()[1];

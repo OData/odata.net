@@ -28,19 +28,19 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryWithInvalidUri()
         {
             this.CompareErrors((ctx) => ctx.Execute<Product>(new Uri("http://var1.svc/Products")));
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryForEntryWithInvalidKey()
         {
             this.CompareErrors((ctx) => ctx.Context.MessageAttachment.Where(ma => ma.AttachmentId == Guid.NewGuid()).ToList());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void JsonQueryWithInvalidDataServiceVersion()
         {
             var defaultContext = this.CreateDefaultContext();
@@ -57,13 +57,13 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 });
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitySetWithNoAccess()
         {
             this.CompareErrors((ctx) => ctx.Context.MappedEntityType.ToList());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void WriteToEntitySetWithNoRights()
         {
             this.CompareErrors(

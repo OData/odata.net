@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateByPatchPartialProperties()
         {
             int expectedPropertyCount = 0;
@@ -140,7 +140,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                 this.TestClientContext.Boss.GetValue().FirstName);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateByPatchFullProperties()
         {
             DataServiceCollection<Person> people = new DataServiceCollection<Person>(this.TestClientContext.People);
@@ -159,7 +159,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateByPutFullProperties()
         {
             int expectedPropertyCount = 0;
@@ -181,7 +181,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateByPatchPartialPropertieInBatch()
         {
             int expectedPropertyCount = 1;
@@ -221,7 +221,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateByPartialPropertiesWithCustomizedName()
         {
             this.TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -460,7 +460,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateObjectWithoutChange()
         {
             int expectedPropertyCount = 0;
@@ -504,7 +504,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateByPatchPartialPropertieInBatchWithCustomizedName()
         {
             int expectedPropertyCount = 1;
@@ -535,7 +535,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateByPutWithFullPropertiesInBatchWithCustomizedName()
         {
             int expectedPropertyCount = 0;
@@ -584,7 +584,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(1, orders2[0].OrderDetailsPlus.First().QuantityPlus);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PostTunning()
         {
             this.TestClientContext.MergeOption = MergeOption.OverwriteChanges;
