@@ -100,6 +100,29 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <param name="jsonPath"></param>
         /// <returns></returns>
         public static IList<T> ParseArray<T>(this IJsonValue jsonValue,
+            IJsonPath jsonPath,
+            Func<IJsonValue, IJsonPath, T> buildItemFunc)
+        {
+            // The value of $Reference is an object that contains one member per referenced CSDL document.
+            JsonArrayValue array = jsonValue.ValidateRequiredJsonValue<JsonArrayValue>(jsonPath);
+
+            IList<T> includes = new List<T>();
+
+            array.ProcessItem(jsonPath, (v) =>
+            {
+                T item = buildItemFunc(v, jsonPath);
+                includes.Add(item);
+            });
+
+            return includes;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="jsonValue"></param>
+        /// <param name="jsonPath"></param>
+        /// <returns></returns>
+        public static IList<T> ParseArray<T>(this IJsonValue jsonValue,
             JsonPath jsonPath,
             CsdlSerializerOptions options,
             Func<IJsonValue, JsonPath, CsdlSerializerOptions, T> buildItemFunc)
@@ -118,7 +141,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return includes;
         }
 
-        internal static void ReportUnknownMember(this IJsonValue propertyValue, JsonPath jsonPath, CsdlSerializerOptions options)
+        internal static void ReportUnknownMember(this IJsonValue propertyValue, IJsonPath jsonPath, CsdlSerializerOptions options)
         {
             Debug.Assert(propertyValue != null);
             Debug.Assert(jsonPath != null);

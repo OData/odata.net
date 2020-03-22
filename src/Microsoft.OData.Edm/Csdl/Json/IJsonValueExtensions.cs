@@ -141,7 +141,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
             return (bool)primitiveValue.Value;
         }
 
-        public static int? ParseAsIntegerPrimitive(this IJsonValue jsonValue, JsonPath jsonPath = null)
+        public static int? ParseAsIntegerPrimitive(this IJsonValue jsonValue, IJsonPath jsonPath = null)
         {
             if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
             {

@@ -1214,7 +1214,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
         /// <returns>The path kind of the definition of this reference.</returns>
-        public static EdmPathTypeKind PathKind(this IEdmPathTypeReference type)
+        public static EdmPathTypeKind PathKind(this IEdmTypeReference type)
         {
             if (type == null)
             {

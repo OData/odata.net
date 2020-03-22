@@ -20,8 +20,60 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 {
     public class CsdlJsonParserTests
     {
+//        [Fact]
+//        public void DeserializeCsdlTestWorks()
+//        {
+//            string csdl = @" {
+//  ""$Version"": ""4.0"",
+//  ""$EntityContainer"": ""NS1.Container"",
+//  ""NS1"": {
+//    ""Product"": {
+//      ""$Kind"": ""EntityType"",
+//      ""$Key"": [
+//        ""Id""
+//      ],
+//      ""Id"": {
+//        ""$Type"": ""Edm.Int32"",
+//        ""@Org.OData.Core.V1.Computed"": true
+//      },
+//      ""Name"": { },
+//      ""UpdatedTime"": {
+//        ""$Type"": ""Edm.Date"",
+//        ""@Org.OData.Core.V1.Computed"": true
+//      }
+//    },
+//    ""Container"": {
+//      ""$Kind"": ""EntityContainer"",
+//      ""Products"": {
+//        ""$Collection"": true,
+//        ""$Type"": ""NS1.Product"",
+//        ""@Org.OData.Core.V1.OptimisticConcurrency"": [
+//          {
+//            ""$PropertyPath"": ""Id""
+//          },
+//          {
+//            ""$PropertyPath"": ""UpdatedTime""
+//          }
+//        ]
+//      }
+//    }
+//  }
+//}";
+
+//            // var model = CsdlSerializer.Deserialize(csdl);
+
+//            JsonPath path = new JsonPath();
+//            CsdlSerializerOptions options = new CsdlSerializerOptions();
+//            using (TextReader txtReader = new StringReader(csdl))
+//            {
+//                EdmModelBuilder builder = new EdmModelBuilder(txtReader, options);
+//                IEdmModel model = builder.BuildEdmModel(path);
+//                Assert.NotNull(model);
+//            }
+//        }
+
         [Fact]
-        public void DeserializeCsdlTestWorks()
+        public void DeserializeCsdlTestWork2s()
         {
             string csdl = @" {
   ""$Version"": ""4.0"",
@@ -62,12 +114,94 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             // var model = CsdlSerializer.Deserialize(csdl);
 
-            JsonPath path = new JsonPath();
+        //    JsonPath path = new JsonPath();
             CsdlSerializerOptions options = new CsdlSerializerOptions();
             using (TextReader txtReader = new StringReader(csdl))
             {
-                EdmModelBuilder builder = new EdmModelBuilder(txtReader, options);
-                IEdmModel model = builder.BuildEdmModel(path);
+                CsdlJsonModelBuilder csdlModelBuilder = new CsdlJsonModelBuilder(txtReader, options);
+                CsdlJsonModel csdlModel = csdlModelBuilder.TryParseCsdlJsonModel();
+
+                EdmModelBuilder builder = new EdmModelBuilder(options);
+                IEdmModel model = builder.TryBuildEdmModel(csdlModel);
+                Assert.NotNull(model);
+            }
+        }
+
+        [Fact]
+        public void DeserializeCsdlTestWork3333333()
+        {
+            string mainCsdl = @" {
+  ""$Reference"": {
+    ""http://localhost/samxu/v1"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""My.Namespace"",
+          ""$Alias"": ""sam""
+        }
+      ]
+    }
+  },
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS1.Container"",
+  ""NS1"": {
+    ""Product"": {
+      ""$BaseType"": ""sam.ProductBase"",
+      ""$Kind"": ""EntityType"",
+      ""Name"": { },
+      ""UpdatedTime"": {
+        ""$Type"": ""Edm.Date"",
+        ""@Org.OData.Core.V1.Computed"": true
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Products"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS1.Product"",
+        ""@Org.OData.Core.V1.OptimisticConcurrency"": [
+          {
+            ""$PropertyPath"": ""Id""
+          },
+          {
+            ""$PropertyPath"": ""UpdatedTime""
+          }
+        ]
+      }
+    }
+  }
+}";
+
+            string csdl = @" {
+  ""$Version"": ""4.0"",
+  ""My.Namespace"": {
+    ""ProductBase"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      }
+    }
+  }
+}";
+
+            // var model = CsdlSerializer.Deserialize(csdl);
+
+            //    JsonPath path = new JsonPath();
+            CsdlSerializerOptions options = new CsdlSerializerOptions();
+            options.ReferencedModelJsonFactory = (uri) =>
+            {
+                return new StringReader(csdl);
+            };
+
+            using (TextReader txtReader = new StringReader(mainCsdl))
+            {
+                CsdlJsonModelBuilder csdlModelBuilder = new CsdlJsonModelBuilder(txtReader, options);
+                CsdlJsonModel csdlModel = csdlModelBuilder.TryParseCsdlJsonModel();
+
+                EdmModelBuilder builder = new EdmModelBuilder(options);
+                IEdmModel model = builder.TryBuildEdmModel(csdlModel);
                 Assert.NotNull(model);
             }
         }

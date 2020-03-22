@@ -31,7 +31,9 @@ namespace Microsoft.OData.Edm.Csdl
 
         public IEnumerable<IEdmModel> ReferencedModels { get; set; }
 
+        //
         public Func<Uri, TextReader> ReferencedModelJsonFactory { get; set; }
+
 
         /// <summary>
         /// Let customer to provider their own property parser

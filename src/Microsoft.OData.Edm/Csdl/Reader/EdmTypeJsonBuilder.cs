@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlJsonParser.cs" company="Microsoft">
+// <copyright file="EdmTypeJsonBuilder.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -23,11 +23,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         private readonly IDictionary<string, IEdmSchemaElement> _schemaElements = new Dictionary<string, IEdmSchemaElement>();
 
-        private EdmModel _edmModel;
-
-        internal EdmTypeJsonBuilder(EdmModel model, IList<SchemaJsonItem> schemaItems)
+        private CsdlSerializerOptions _options;
+        internal EdmTypeJsonBuilder(IList<SchemaJsonItem> schemaItems, CsdlSerializerOptions options)
         {
-            _edmModel = model;
+            _options = options;
             schemaItems.ForEach(s => AddSchemaItem(s));
         }
 
@@ -38,13 +37,18 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         public void BuildSchemaItems()
         {
+            if (_options == null)
+            {
+                return;
+            }
+
             // Reset
             _schemaElements.Clear();
 
             // Create headers to allow CreateEdmTypeBody to blindly references other things.
             foreach (var item in _schemaItems)
             {
-                CreateEdmTypeHeader(item.Value);
+                BuildSchemaElementHeader(item.Value);
             }
 
             // Build the term after building the types
@@ -63,7 +67,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             //    CreateNavigationProperty(structrual);
             //}
 
-            _schemaElements.ForEach(e => _edmModel.AddElement(e.Value));
+           // _schemaElements.ForEach(e => _edmModel.AddElement(e.Value));
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// </summary>
         /// <param name="fullQualifiedName"></param>
         /// <returns></returns>
-        private IEdmSchemaElement FindBuiltSchemaElement(string fullQualifiedName) // maybe alias name?
+        private IEdmSchemaElement GetSchemaElement(string fullQualifiedName) // maybe alias name?
         {
             IEdmSchemaElement schemaElement;
             if (_schemaElements.TryGetValue(fullQualifiedName, out schemaElement))
@@ -79,19 +83,21 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return schemaElement;
             }
 
-            return _edmModel.FindType(fullQualifiedName);
+            return null;
         }
 
         private SchemaJsonItem FindBaseItem(string fullQualifiedName)
         {
             SchemaJsonItem baseItem;
             _schemaItems.TryGetValue(fullQualifiedName, out baseItem);
+
+            //
             return baseItem;
         }
 
-        private void CreateEdmTypeHeader(SchemaJsonItem schemaItem)
+        private void BuildSchemaElementHeader(SchemaJsonItem schemaItem)
         {
-            IEdmSchemaElement schemaElement = FindBuiltSchemaElement(schemaItem.FullName);
+            IEdmSchemaElement schemaElement = GetSchemaElement(schemaItem.FullName);
             if (schemaElement != null)
             {
                 // created before
@@ -107,9 +113,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     {
                         SchemaJsonItem baseItem = FindBaseItem(complex.BaseType);
 
-                        CreateEdmTypeHeader(baseItem);
+                        BuildSchemaElementHeader(baseItem);
 
-                        baseComplexType = FindBuiltSchemaElement(complex.BaseType) as IEdmComplexType;
+                        BuildSchemaElementHeader(baseItem);
+                        baseComplexType = GetSchemaElement(complex.BaseType) as IEdmComplexType;
 
                         Contract.Assert(baseComplexType != null);
                     }
@@ -119,6 +126,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         baseComplexType, complex.IsAbstract, complex.IsOpen);
 
                     _schemaElements.Add(schemaItem.FullName, complexType);
+
                     break;
 
                 case SchemaMemberKind.Entity:
@@ -129,8 +137,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     {
                         SchemaJsonItem baseItem = FindBaseItem(entity.BaseType);
 
-                        CreateEdmTypeHeader(baseItem);
-                        baseEntityType = FindBuiltSchemaElement(entity.BaseType) as IEdmEntityType;
+                        BuildSchemaElementHeader(baseItem);
+                        baseEntityType = GetSchemaElement(entity.BaseType) as IEdmEntityType;
 
                         Contract.Assert(baseEntityType != null);
                     }
@@ -138,6 +146,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     EdmEntityType entityType = new EdmEntityType(schemaItem.Namespace, schemaItem.Name, baseEntityType,
                         entity.IsAbstract, entity.IsOpen, entity.HasStream);
                     _schemaElements.Add(schemaItem.FullName, entityType);
+
                     break;
 
                 case SchemaMemberKind.Enum:
@@ -147,6 +156,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                             GetUnderlyingType(enumItem.UnderlyingTypeName), enumItem.IsFlags);
 
                     _schemaElements.Add(enumItem.FullName, enumType);
+
                     break;
 
                 case SchemaMemberKind.TypeDefinition:
@@ -156,6 +166,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         GetUnderlyingType(typeDefinitionItem.UnderlyingTypeName));
 
                     _schemaElements.Add(typeDefinitionItem.FullName, typeDefinition);
+
                     break;
 
                 case SchemaMemberKind.EntityContainer:
@@ -163,15 +174,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                     EdmEntityContainer edmEntityContainer = new EdmEntityContainer(entityContainerItem.Namespace, entityContainerItem.Name);
                     _schemaElements.Add(entityContainerItem.FullName, edmEntityContainer);
+
                     break;
 
                 case SchemaMemberKind.Action:
-                    break;
-
                 case SchemaMemberKind.Function:
-                    break;
-
                 case SchemaMemberKind.Term:
+                    // Don't build action, function, term until all types are built
                     break;
             }
         }
@@ -286,9 +295,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
 
             // If we can't find the type, find it from referenced model.
-            IEdmType edmType = _edmModel.FindType(typeName);
-
-            return GetEdmTypeReference(edmType, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
+            // IEdmType edmType = _edmModel.FindType(typeName);
+            return null;
+            //return GetEdmTypeReference(edmType, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
         }
 
         private static IEdmTypeReference GetEdmTypeReference(IEdmType edmType, bool isNullable,
@@ -335,7 +344,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         private void CreateEdmTypeBody(SchemaJsonItem item)
         {
-            IEdmSchemaElement schemaElement = FindBuiltSchemaElement(item.FullName);
+            IEdmSchemaElement schemaElement = GetSchemaElement(item.FullName);
 
             switch (item.Kind)
             {
@@ -361,7 +370,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 case SchemaMemberKind.Term:
-                    // The body of term is the annotation.
+                    // The body of term may contain the annotation.
                     break;
 
                 case SchemaMemberKind.EntityContainer:
@@ -382,17 +391,17 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 // It maybe entity container's annotation
                 if (name[0] == '@')
                 {
-                    string termName = name.Substring(1);
-                    IEdmTerm edmTerm = FindTerm(termName);
-                    IEdmExpression expression = BuildExpression(member.Value, entityContainerJsonItem.JsonPath, edmTerm.Type);
+              //      string termName = name.Substring(1);
+              //      IEdmTerm edmTerm = FindTerm(termName);
+            //        IEdmExpression expression = BuildExpression(member.Value, entityContainerJsonItem.JsonPath, edmTerm.Type);
 
                     // annotation for the enum type
-                    EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(edmEntityContainer,
-                        edmTerm, expression);
+         //           EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(edmEntityContainer,
+              //          edmTerm, expression);
 
-                    edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+                  //  edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
 
-                    _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
+                 //   _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
 
                     return;
                 }
@@ -477,7 +486,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return false;
             }
 
-            IEdmEntityType entityType = FindBuiltSchemaElement(type) as IEdmEntityType;
+            IEdmEntityType entityType = GetSchemaElement(type) as IEdmEntityType;
          //   IEdmNavigationSource navigationSource = null;
             if (isCollection != null)
             {
@@ -568,12 +577,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     if (propertyName == null)
                     {
                         // annotation for the enum type
-                        EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(enumType,
-                            edmTerm, expression);
+              //          EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(enumType,
+                   //         edmTerm, expression);
 
-                        edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+                   //     edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
 
-                        _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
+                   //     _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
                     }
                     else
                     {
@@ -611,17 +620,17 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     throw new Exception();
                 }
 
-                foreach (var annotation in item.Value)
-                {
-                    EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(member, annotation.Term, annotation.Expression);
-                    edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
-                    _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
-                }
+                //foreach (var annotation in item.Value)
+                //{
+                //    EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(member, annotation.Term, annotation.Expression);
+                //    edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+                //    _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
+                //}
             }
 
         }
 
-        public static IEdmExpression BuildExpression(IJsonValue jsonValue, JsonPath jsonPath, IEdmTypeReference edmType)
+        public static IEdmExpression BuildExpression(IJsonValue jsonValue, IJsonPath jsonPath, IEdmTypeReference edmType)
         {
             EdmTypeKind termTypeKind = edmType.TypeKind();
             switch (termTypeKind)
@@ -660,7 +669,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return null;
         }
 
-        public static IEdmEnumMember BuildEnumMember(string name, IEdmEnumType enumType, IJsonValue enumMemberObject, JsonPath jsonPath)
+        public static IEdmEnumMember BuildEnumMember(string name, IEdmEnumType enumType, IJsonValue enumMemberObject, IJsonPath jsonPath)
         {
             // Enumeration Member Object
             // Enumeration type members are represented as JSON object members, where the object member name is the enumeration member name and the object member value is the enumeration member value.
@@ -772,7 +781,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             IDictionary<string, IList<AnnotationWrapper>> propertyAnnotations = new Dictionary<string, IList<AnnotationWrapper>>();
 
-            JsonPath jsonPath = structuredJsonItem.JsonPath;
+            IJsonPath jsonPath = structuredJsonItem.JsonPath;
             foreach (var member in structuredJsonItem.Members)
             {
                 string propertyName = member.Key;
@@ -817,20 +826,20 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     if (propertyName == null)
                     {
                         // annotation for the structured type
-                        IEdmVocabularyAnnotatable target;
-                        if (structuredType.TypeKind == EdmTypeKind.Complex)
-                        {
-                            target = (IEdmComplexType)structuredType;
-                        }
-                        else
-                        {
-                            target = (IEdmEntityType)structuredType;
-                        }
-                        EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(target, edmTerm, expression);
+                        //IEdmVocabularyAnnotatable target;
+                        //if (structuredType.TypeKind == EdmTypeKind.Complex)
+                        //{
+                        //    target = (IEdmComplexType)structuredType;
+                        //}
+                        //else
+                        //{
+                        //    target = (IEdmEntityType)structuredType;
+                        //}
+                        //EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(target, edmTerm, expression);
 
-                        edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+                        //edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
 
-                        _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
+                        //_edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
                     }
                     else
                     {
@@ -865,12 +874,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 IEdmProperty edmProperty = properties.FirstOrDefault(c => c.Name == item.Key);
                 if (edmProperty != null)
                 {
-                    foreach (var annotation in item.Value)
-                    {
-                        EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(edmProperty, annotation.Term, annotation.Expression);
-                        edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
-                        _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
-                    }
+                    //foreach (var annotation in item.Value)
+                    //{
+                    //    //EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(edmProperty, annotation.Term, annotation.Expression);
+                    //    //edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+                    //    //_edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
+                    //}
 
                     continue;
                 }

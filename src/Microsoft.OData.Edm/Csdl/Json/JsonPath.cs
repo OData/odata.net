@@ -90,9 +90,9 @@ namespace Microsoft.OData.Edm.Csdl.Json
             _nodes.Push(index);
         }
 
-        public object Pop()
+        public void Pop()
         {
-            return _nodes.Pop();
+            _nodes.Pop();
         }
 
         public string Path { get { return ToString(); } }
