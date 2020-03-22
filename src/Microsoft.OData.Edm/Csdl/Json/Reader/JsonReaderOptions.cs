@@ -7,7 +7,7 @@
 using System;
 using System.IO;
 
-namespace Microsoft.OData.Edm.Csdl.Json
+namespace Microsoft.OData.Edm.Csdl.Json.Reader
 {
     /// <summary>
     /// Configuration settings for CSDL JSON reader.

@@ -5,11 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Microsoft.OData.Edm.Csdl.Json
+namespace Microsoft.OData.Edm.Csdl.Json.Value
 {
     /// <summary>
     /// Extensions methods for <see cref="IJsonValue"/>
@@ -186,7 +185,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <summary>
         /// Validates that the reader is positioned on the specified node type.
         /// </summary>
-        /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
+        /// <param name="jsonValue">The <see cref="IJsonValue"/> to read from.</param>
         /// <param name="expectedKind">The expected JSON value kind.</param>
         /// <param name="jsonPath">The JSON path for current JSON value.</param>
         private static void ValidateValueKind(this IJsonValue jsonValue, JsonValueKind expectedKind, IJsonPath jsonPath)

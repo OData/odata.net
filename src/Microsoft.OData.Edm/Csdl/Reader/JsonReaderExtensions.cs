@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Csdl.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using Microsoft.OData.Edm.Csdl.Json.Reader;
 
 namespace Microsoft.OData.Edm.Csdl.Reader
 {

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.Csdl.Json
+namespace Microsoft.OData.Edm.Csdl.Json.Reader
 {
     /// <summary>
     /// Enumeration of all JSON node type.

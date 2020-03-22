@@ -6,7 +6,8 @@
 
 using System;
 using System.IO;
-using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Json.Reader;
+using Microsoft.OData.Edm.Csdl.Json.Value;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Json

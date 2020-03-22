@@ -9,7 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Json;
-using Microsoft.OData.Edm.Csdl.Reader;
+using Microsoft.OData.Edm.Csdl.Json.Reader;
+using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl

@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Json.Ast;
+using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing
@@ -19,14 +21,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
     /// </summary>
     internal class EdmTypeJsonBuilder
     {
-        private IDictionary<SchemaJsonItem, CsdlJsonModel> _schemaItemsToModelMapping;
+        private IDictionary<CsdlJsonSchemaItem, CsdlJsonModel> _schemaItemsToModelMapping;
 
-        private IDictionary<string, SchemaJsonItem> _schemaItems = new Dictionary<string, SchemaJsonItem>();
+        private IDictionary<string, CsdlJsonSchemaItem> _schemaItems = new Dictionary<string, CsdlJsonSchemaItem>();
 
         private readonly IDictionary<string, IEdmSchemaElement> _schemaElements = new Dictionary<string, IEdmSchemaElement>();
 
         private CsdlSerializerOptions _options;
-        internal EdmTypeJsonBuilder(IDictionary<SchemaJsonItem, CsdlJsonModel> sschemaItemsToModelMapping, CsdlSerializerOptions options)
+        internal EdmTypeJsonBuilder(IDictionary<CsdlJsonSchemaItem, CsdlJsonModel> sschemaItemsToModelMapping, CsdlSerializerOptions options)
         {
             _options = options;
             _schemaItemsToModelMapping = sschemaItemsToModelMapping;
@@ -34,7 +36,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             sschemaItemsToModelMapping.ForEach(k => _schemaItems[k.Key.FullName] = k.Key);
         }
 
-        internal string ReplaceAlias(SchemaJsonItem jsonItem, string name)
+        internal string ReplaceAlias(CsdlJsonSchemaItem jsonItem, string name)
         {
             CsdlJsonModel declaredModel = _schemaItemsToModelMapping[jsonItem];
             return declaredModel.ReplaceAlias(name);
@@ -66,14 +68,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
 
             // Build the term after building the types
-            foreach (var termJsonItem in _schemaElements.OfType<TermJsonItem>())
+            foreach (var termJsonItem in _schemaElements.OfType<CsdlJsonSchemaTermItem>())
             {
                 BuildTermType(termJsonItem);
             }
 
             foreach (var item in _schemaItems)
             {
-                CreateEdmTypeBody(item.Value);
+                CreateSchemaElementBody(item.Value);
             }
 
             //foreach (StructuralTypeConfiguration structrual in _configurations.OfType<StructuralTypeConfiguration>())
@@ -100,16 +102,16 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return null;
         }
 
-        private SchemaJsonItem FindBaseItem(string fullQualifiedName)
+        private CsdlJsonSchemaItem FindBaseItem(string fullQualifiedName)
         {
-            SchemaJsonItem baseItem;
+            CsdlJsonSchemaItem baseItem;
             _schemaItems.TryGetValue(fullQualifiedName, out baseItem);
 
             //
             return baseItem;
         }
 
-        private void BuildSchemaElementHeader(SchemaJsonItem schemaItem)
+        private void BuildSchemaElementHeader(CsdlJsonSchemaItem schemaItem)
         {
             IEdmSchemaElement schemaElement = GetSchemaElement(schemaItem.FullName);
             if (schemaElement != null)
@@ -121,13 +123,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             switch (schemaItem.Kind)
             {
                 case SchemaMemberKind.Complex:
-                    ComplexTypeJsonItem complex = (ComplexTypeJsonItem)schemaItem;
+                    CsdlJsonSchemaComplexItem complex = (CsdlJsonSchemaComplexItem)schemaItem;
                     IEdmComplexType baseComplexType = null;
                     if (complex.BaseType != null)
                     {
                         string replacedBaseTypeName = ReplaceAlias(complex, complex.BaseType);
 
-                        SchemaJsonItem baseItem = FindBaseItem(replacedBaseTypeName);
+                        CsdlJsonSchemaItem baseItem = FindBaseItem(replacedBaseTypeName);
 
                         BuildSchemaElementHeader(baseItem);
 
@@ -145,14 +147,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 case SchemaMemberKind.Entity:
-                    EntityTypeJsonItem entity = (EntityTypeJsonItem)schemaItem;
+                    CsdlJsonSchemaEntityItem entity = (CsdlJsonSchemaEntityItem)schemaItem;
 
                     IEdmEntityType baseEntityType = null;
                     if (entity.BaseType != null)
                     {
                         string replacedBaseTypeName = ReplaceAlias(entity, entity.BaseType);
 
-                        SchemaJsonItem baseItem = FindBaseItem(replacedBaseTypeName);
+                        CsdlJsonSchemaItem baseItem = FindBaseItem(replacedBaseTypeName);
 
                         BuildSchemaElementHeader(baseItem);
                         baseEntityType = GetSchemaElement(replacedBaseTypeName) as IEdmEntityType;
@@ -167,7 +169,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 case SchemaMemberKind.Enum:
-                    EnumTypeJsonItem enumItem = (EnumTypeJsonItem)schemaItem;
+                    CsdlJsonSchemaEnumItem enumItem = (CsdlJsonSchemaEnumItem)schemaItem;
 
                     EdmEnumType enumType = new EdmEnumType(enumItem.Namespace, enumItem.Name,
                             GetUnderlyingType(enumItem.UnderlyingTypeName), enumItem.IsFlags);
@@ -177,7 +179,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 case SchemaMemberKind.TypeDefinition:
-                    TypeDefinitionJsonItem typeDefinitionItem = (TypeDefinitionJsonItem)schemaItem;
+                    CsdlJsonSchemaTypeDefinitionItem typeDefinitionItem = (CsdlJsonSchemaTypeDefinitionItem)schemaItem;
 
                     EdmTypeDefinition typeDefinition = new EdmTypeDefinition(typeDefinitionItem.Namespace, typeDefinitionItem.Name,
                         GetUnderlyingType(typeDefinitionItem.UnderlyingTypeName));
@@ -187,7 +189,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 case SchemaMemberKind.EntityContainer:
-                    EntityContainerJsonItem entityContainerItem = (EntityContainerJsonItem)schemaItem;
+                    CsdlJsonSchemaEntityContainerItem entityContainerItem = (CsdlJsonSchemaEntityContainerItem)schemaItem;
 
                     EdmEntityContainer edmEntityContainer = new EdmEntityContainer(entityContainerItem.Namespace, entityContainerItem.Name);
                     _schemaElements.Add(entityContainerItem.FullName, edmEntityContainer);
@@ -202,7 +204,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
         }
 
-        private void BuildTermType(TermJsonItem termItem)
+        private void BuildTermType(CsdlJsonSchemaTermItem termItem)
         {
             IEdmTypeReference termType = BuildTypeReference(termItem.QualifiedTypeName,
                 termItem.IsCollection,
@@ -237,22 +239,22 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32);
         }
 
-        private void CreateEdmTypeBody(SchemaJsonItem item)
+        private void CreateSchemaElementBody(CsdlJsonSchemaItem item)
         {
             IEdmSchemaElement schemaElement = GetSchemaElement(item.FullName);
 
             switch (item.Kind)
             {
                 case SchemaMemberKind.Complex:
-                    CreateComplexTypeBody((EdmComplexType)schemaElement, (ComplexTypeJsonItem)item);
+                    CreateComplexTypeBody((EdmComplexType)schemaElement, (CsdlJsonSchemaComplexItem)item);
                     break;
 
                 case SchemaMemberKind.Entity:
-                    CreateEntityTypeBody((EdmEntityType)schemaElement, (EntityTypeJsonItem)item);
+                    CreateEntityTypeBody((EdmEntityType)schemaElement, (CsdlJsonSchemaEntityItem)item);
                     break;
 
                 case SchemaMemberKind.Enum:
-                    CreateEnumTypeBody((EdmEnumType)schemaElement, (EnumTypeJsonItem)item);
+                    CreateEnumTypeBody((EdmEnumType)schemaElement, (CsdlJsonSchemaEnumItem)item);
                     break;
 
                 case SchemaMemberKind.TypeDefinition:
@@ -269,12 +271,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 case SchemaMemberKind.EntityContainer:
-                    BuildEntityContainerBody((EdmEntityContainer)schemaElement, (EntityContainerJsonItem)item);
+                    BuildEntityContainerBody((EdmEntityContainer)schemaElement, (CsdlJsonSchemaEntityContainerItem)item);
                     break;
             }
         }
 
-        private void BuildEntityContainerBody(EdmEntityContainer edmEntityContainer, EntityContainerJsonItem entityContainerJsonItem)
+        private void BuildEntityContainerBody(EdmEntityContainer edmEntityContainer, CsdlJsonSchemaEntityContainerItem entityContainerJsonItem)
         {
             Contract.Assert(edmEntityContainer != null);
             Contract.Assert(entityContainerJsonItem != null);
@@ -406,7 +408,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return true;
         }
 
-        private void CreateComplexTypeBody(EdmComplexType type, ComplexTypeJsonItem complexJsonItem)
+        private void CreateComplexTypeBody(EdmComplexType type, CsdlJsonSchemaComplexItem complexJsonItem)
         {
             Contract.Assert(type != null);
             Contract.Assert(complexJsonItem != null);
@@ -414,7 +416,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             BuildStructuredTypeBody(type, complexJsonItem);
         }
 
-        private void CreateEntityTypeBody(EdmEntityType type, EntityTypeJsonItem entityJsonItem)
+        private void CreateEntityTypeBody(EdmEntityType type, CsdlJsonSchemaEntityItem entityJsonItem)
         {
             Contract.Assert(type != null);
             Contract.Assert(entityJsonItem != null);
@@ -436,7 +438,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             public IEdmExpression Expression { get; set; }
         }
 
-        private void CreateEnumTypeBody(EdmEnumType enumType, EnumTypeJsonItem enumJsonItem)
+        private void CreateEnumTypeBody(EdmEnumType enumType, CsdlJsonSchemaEnumItem enumJsonItem)
         {
             Contract.Assert(enumType != null);
             Contract.Assert(enumJsonItem != null);
@@ -667,7 +669,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <param name="name"></param>
         /// <param name="complexObject"></param>
         /// <returns></returns>
-        private void BuildStructuredTypeBody(EdmStructuredType structuredType, StructuredTypeJsonItem structuredJsonItem)
+        private void BuildStructuredTypeBody(EdmStructuredType structuredType, CsdlJsonSchemaStructuredItem structuredJsonItem)
         {
             // It MAY contain the members $BaseType, $Abstract, and $OpenType.
             // It also MAY contain members representing structural properties and navigation properties as well as annotations.

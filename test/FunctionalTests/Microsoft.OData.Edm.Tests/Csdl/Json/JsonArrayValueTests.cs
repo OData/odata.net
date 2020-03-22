@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Json.Value;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Json

@@ -6,8 +6,9 @@
 
 using System;
 using System.Diagnostics;
+using Microsoft.OData.Edm.Csdl.Json.Value;
 
-namespace Microsoft.OData.Edm.Csdl.Json
+namespace Microsoft.OData.Edm.Csdl.Json.Reader
 {
     /// <summary>
     /// Extensions methods for <see cref="IJsonReader"/>

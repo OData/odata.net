@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing

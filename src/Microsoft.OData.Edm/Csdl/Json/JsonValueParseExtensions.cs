@@ -7,10 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Csdl.Json.Value;
 
-namespace Microsoft.OData.Edm.Csdl.Parsing
+namespace Microsoft.OData.Edm.Csdl.Json
 {
     /// <summary>
     /// Provides for the loading and conversion of one or more CSDL XML readers into Entity Data Model.

@@ -1,26 +1,26 @@
 //---------------------------------------------------------------------
-// <copyright file="JsonArrayValue.cs" company="Microsoft">
+// <copyright file="JsonObjectValue.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
 
-namespace Microsoft.OData.Edm.Csdl.Json
+namespace Microsoft.OData.Edm.Csdl.Json.Value
 {
     /// <summary>
-    /// Represents a JSON array value.
+    /// Represents a JSON object value.
     /// A json object value likes:
-    /// [
+    /// {
     ///    ...
-    /// ]
-    /// The JSON array includes list of other IJsonValue.
+    /// }
+    /// The JSON object includes properties, who is a key/IJsonValue pairs.
     /// </summary>
-    internal class JsonArrayValue : List<IJsonValue>, IJsonValue
+    internal class JsonObjectValue : Dictionary<string, IJsonValue>, IJsonValue
     {
         /// <summary>
         /// Gets the kind of this JSON value.
         /// </summary>
-        public JsonValueKind ValueKind => JsonValueKind.JArray;
+        public JsonValueKind ValueKind => JsonValueKind.JObject;
     }
 }

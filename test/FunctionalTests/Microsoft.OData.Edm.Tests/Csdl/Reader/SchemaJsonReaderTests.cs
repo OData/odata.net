@@ -13,6 +13,8 @@ using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Json.Reader;
+using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Reader;

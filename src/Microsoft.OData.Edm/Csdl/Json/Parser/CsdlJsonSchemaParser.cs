@@ -1,26 +1,25 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="SchemaJsonParser.cs" company="Microsoft">
+// <copyright file="CsdlJsonSchemaParser.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Csdl.Json.Ast;
 using Microsoft.OData.Edm.Csdl.Json.Value;
 
-namespace Microsoft.OData.Edm.Csdl.Parsing
+namespace Microsoft.OData.Edm.Csdl.Json.Parser
 {
     /// <summary>
     /// Provides functionalities for parsing Schema JSON for Csdl elements.
     /// </summary>
-    internal class SchemaJsonItemParser
+    internal class CsdlJsonSchemaParser
     {
         private Version _version;
         private string _schemaNamespace;
         private CsdlSerializerOptions _options;
 
-        public SchemaJsonItemParser(Version version, string schemaNamespace, CsdlSerializerOptions options)
+        public CsdlJsonSchemaParser(Version version, string schemaNamespace, CsdlSerializerOptions options)
         {
             _version = version;
             _schemaNamespace = schemaNamespace;
@@ -177,8 +176,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                     // $BaseType
                     case "$BaseType":
-                        string baseType = propertyValue.ParseAsStringPrimitive(jsonPath);
-                        entityTypeItem.BaseType = baseType;
+                        entityTypeItem.BaseType = propertyValue.ParseAsStringPrimitive(jsonPath);
                         break;
 
                     // $Abstract

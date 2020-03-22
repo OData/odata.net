@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Json.Reader;
+using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;

@@ -12,7 +12,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace Microsoft.OData.Edm.Csdl.Json
+namespace Microsoft.OData.Edm.Csdl.Json.Reader
 {
     /// <summary>
     /// Edm JSON reader.
