@@ -51,6 +51,11 @@
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
 
+
+  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'net45'">
+    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
+  </PropertyGroup>
+  
   <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v4.5'">
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
   </PropertyGroup>

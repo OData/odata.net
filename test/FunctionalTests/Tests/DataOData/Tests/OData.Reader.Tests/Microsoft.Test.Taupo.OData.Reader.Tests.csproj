@@ -13,7 +13,7 @@
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
   </PropertyGroup>
   <!-- References -->
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <Import Project="..\Build.props" />
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="5.0.0" />
