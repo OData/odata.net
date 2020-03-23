@@ -176,7 +176,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 }
                 catch(Exception ex)
                 {
-                    throw new Exception("--test-- " + ex.Message);
+                    throw new Exception("--test-- "+assemblyFullName+"  "+ ex.Message);
                 }
             }
 #endif
