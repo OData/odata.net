@@ -15,9 +15,9 @@ namespace Microsoft.Test.OData.Utils.Common
     /// Creates a batch file which can be manually run to update all baselines.
     /// </summary>
     
-    public class LoggingReporter : IApprovalFailureReporter
+    public class LoggingReporter //: IApprovalFailureReporter
     {
-        [SecurityCritical]
+        
         public void Report(string approved, string received)
         {
             Console.WriteLine("BaseLine:\n \"{0}\"\nReceived:\n \"{1}\"\n", approved, received);
