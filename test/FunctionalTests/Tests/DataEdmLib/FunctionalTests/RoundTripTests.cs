@@ -20,7 +20,7 @@ namespace EdmLibTests.FunctionalTests
 #endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
+    //--#comment#--[TestClass]
 #if !SILVERLIGHT
     //--#comment#--[UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("FunctionalTests")]
