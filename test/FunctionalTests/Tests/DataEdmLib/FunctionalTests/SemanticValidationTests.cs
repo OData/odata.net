@@ -36,7 +36,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
 #if !SILVERLIGHT
-        [TestMethod]
+       //--#comment#-- [TestMethod]
         public void InterfaceValidatorAutoCheck()
         {
             var edmLib = typeof(IEdmElement).Assembly;
