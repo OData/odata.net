@@ -1212,6 +1212,13 @@ namespace Microsoft.OData
                     {
                         this.outputContext.Dispose();
                     }
+                    else if (!this.writeMethodCalled)
+                    {
+                        if (this.settings.EnableMessageStreamDisposal)
+                        {
+                            this.message.GetStream().Dispose();
+                        }
+                    }
                 }
                 finally
                 {

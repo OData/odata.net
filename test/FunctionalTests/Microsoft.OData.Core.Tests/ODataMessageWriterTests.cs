@@ -184,5 +184,51 @@ namespace Microsoft.OData.Tests
             Action write = () => writer.WriteValue((UInt16)123);
             write.Throws<ODataException>("The value of type 'System.UInt16' could not be converted to a raw string.");
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void CanDisposeStreamWithOrWithoutAnyWriteCalled(bool withWriteCalled)
+        {
+            var settings = new ODataMessageWriterSettings();
+            var model = new EdmModel();
+
+            DisposeMemoryStream stream = new DisposeMemoryStream();
+            Assert.False(stream.DisposeCalled); // Guard;
+
+            IODataRequestMessage request = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            using (var writer = new ODataMessageWriter(request, settings, model))
+            {
+                if (withWriteCalled)
+                {
+                    writer.WriteProperty(new ODataProperty()
+                    {
+                        Name = "Name",
+                        Value = "abc"
+                    });
+                }
+                else
+                {
+                    // nothing here
+                }
+            }
+
+            Assert.True(stream.DisposeCalled);
+        }
+    }
+
+    public class DisposeMemoryStream : MemoryStream
+    {
+        public bool DisposeCalled { get; set; }
+
+        protected override void Dispose(bool disposing)
+        {
+            DisposeCalled = true;
+            base.Dispose(disposing);
+        }
     }
 }
