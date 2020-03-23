@@ -21,7 +21,7 @@ namespace EdmLibTests.FunctionalTests
 
     [TestClass]
 #if !SILVERLIGHT
-      [UseReporter(typeof(LoggingReporter))]
+    //--#comment#--[UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("FunctionalTests")]
 #endif
     public class OperationModelTests : EdmLibTestCaseBase
