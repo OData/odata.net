@@ -159,6 +159,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <returns>The resource verifier for the assembly.</returns>
         private static IStringResourceVerifier GetResourceVerifier(string assemblyFullName)
         {
+            assemblyFullName = "Microsoft.OData.Core";
             ExceptionUtilities.CheckStringArgumentIsNotNullOrEmpty(assemblyFullName, "assemblyFullName");
 
             IStringResourceVerifier verifier = null;
