@@ -77,6 +77,7 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
   enabled: true
 
 - task: Powershell@2
@@ -131,7 +132,7 @@ steps:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |           
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
 
 
 - task: DotNetCoreCLI@2
