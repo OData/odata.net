@@ -150,7 +150,7 @@
 
   <PropertyGroup>
     <!-- Before/After injection Settings -->
-    <CustomBeforeMicrosoftCommonTargets>$(MSBuildThisFileDirectory)Before.Common.targets</CustomBeforeMicrosoftCommonTargets>
+    <CustomBeforeMicrosoftCommonTargets Condition="'$(SigningType)' != 'Test'">$(MSBuildThisFileDirectory)Before.Common.targets</CustomBeforeMicrosoftCommonTargets>
     <CustomAfterMicrosoftCommonTargets>$(MSBuildThisFileDirectory)After.Common.targets</CustomAfterMicrosoftCommonTargets>
 
     <!-- Code Analysis Settings -->
