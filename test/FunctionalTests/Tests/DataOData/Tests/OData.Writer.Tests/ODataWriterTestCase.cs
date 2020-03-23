@@ -33,7 +33,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     /// Base class for ODataLib Tests with extra assembly added for unit test
     /// </summary>
 #if !SILVERLIGHT
-    //--#comment#--[UseReporter(typeof(LoggingReporter))]
+    [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("CollectionWriter")]
     [DeploymentItem("JsonLight")]
     [DeploymentItem("ParameterWriter")]

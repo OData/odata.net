@@ -17,7 +17,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    //--#comment#--[UseReporter(typeof(LoggingReporter))]
+    [UseReporter(typeof(LoggingReporter))]
     [TestClass]
     [DeploymentItem("UriParser\\ExpandTests")]
     [DeploymentItem("UriParser\\Filter")]

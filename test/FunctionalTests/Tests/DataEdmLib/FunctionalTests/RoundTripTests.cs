@@ -22,7 +22,7 @@ namespace EdmLibTests.FunctionalTests
 
     [TestClass]
 #if !SILVERLIGHT
-    //--#comment#--[UseReporter(typeof(LoggingReporter))]
+    [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("FunctionalTests")]
 #endif
     public class RoundTripTests : EdmLibTestCaseBase

@@ -24,7 +24,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion namespaces
 
-    //--#comment#--[UseReporter(typeof(LoggingReporter))]
+    [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("UriParser\\SearchCombination")]
     [TestClass]
     public class SearchCombinationTests : ODataTestCaseBase
