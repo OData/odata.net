@@ -159,7 +159,6 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <returns>The resource verifier for the assembly.</returns>
         private static IStringResourceVerifier GetResourceVerifier(string assemblyFullName)
         {
-            assemblyFullName = "Microsoft.OData.Core";
             ExceptionUtilities.CheckStringArgumentIsNotNullOrEmpty(assemblyFullName, "assemblyFullName");
 
             IStringResourceVerifier verifier = null;
@@ -168,17 +167,10 @@ namespace Microsoft.Test.Taupo.OData.Common
 #if !SILVERLIGHT && !WINDOWS_PHONE
             if (!resourceVerifierCache.TryGetValue(assemblyFullName, out verifier))
             {
-                try
-                {
-                    Assembly assembly = Assembly.Load(new AssemblyName(assemblyFullName));
-                    var lookup = new ODataAssemblyResourceLookup(assembly);
-                    verifier = new StringResourceVerifier(lookup);
-                    resourceVerifierCache.Add(assemblyFullName, verifier);
-                }
-                catch(Exception ex)
-                {
-                    throw new Exception("--test-- "+assemblyFullName+"  "+ ex.Message);
-                }
+               Assembly assembly = Assembly.Load(new AssemblyName(assemblyFullName));
+               var lookup = new ODataAssemblyResourceLookup(assembly);
+               verifier = new StringResourceVerifier(lookup);
+               resourceVerifierCache.Add(assemblyFullName, verifier);               
             }
 #endif
 
