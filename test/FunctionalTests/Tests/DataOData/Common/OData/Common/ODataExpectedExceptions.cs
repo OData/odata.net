@@ -167,10 +167,17 @@ namespace Microsoft.Test.Taupo.OData.Common
 #if !SILVERLIGHT && !WINDOWS_PHONE
             if (!resourceVerifierCache.TryGetValue(assemblyFullName, out verifier))
             {
-                Assembly assembly = Assembly.Load(new AssemblyName(assemblyFullName));
-                var lookup = new ODataAssemblyResourceLookup(assembly);
-                verifier = new StringResourceVerifier(lookup);
-                resourceVerifierCache.Add(assemblyFullName, verifier);
+                try
+                {
+                    Assembly assembly = Assembly.Load(new AssemblyName(assemblyFullName));
+                    var lookup = new ODataAssemblyResourceLookup(assembly);
+                    verifier = new StringResourceVerifier(lookup);
+                    resourceVerifierCache.Add(assemblyFullName, verifier);
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception("--test-- " + ex.Message);
+                }
             }
 #endif
 
