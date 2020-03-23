@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Utils.Common
     /// Creates a batch file which can be manually run to update all baselines.
     /// </summary>
     
-    public class LoggingReporter //: IApprovalFailureReporter
+    public class LoggingReporter : IApprovalFailureReporter
     {
         
         public void Report(string approved, string received)
