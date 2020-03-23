@@ -81,6 +81,7 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
   enabled: true
 
 - task: Powershell@2
@@ -135,7 +136,7 @@ steps:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |           
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
 
 
 - task: DotNetCoreCLI@2
