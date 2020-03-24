@@ -82,5 +82,13 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="D:\GitHub\odata.net\src\CodeGen\ODataT4CodeGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="\src\CodeGen\ODataT4CodeGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
   <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>
