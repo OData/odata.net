@@ -57,6 +57,72 @@ steps:
 # strong name validation so that the tests may run,
 # otherwise our assemblies will fail to load
 
+# test
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Product'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+
+
+
+# CredScan
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Src'
+  inputs:
+    toolMajorVersion: 'V2'
+    scanFolder: '$(Build.SourcesDirectory)\src'
+    debugMode: false
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Test'
+  inputs:
+    toolMajorVersion: 'V2'
+    scanFolder: '$(Build.SourcesDirectory)\test'
+    debugMode: false
+  
+ 
+- task: BinSkim@3
+  displayName: 'Run BinSkim - Product Binaries'
+  inputs:
+    InputType: Basic
+    AnalyzeTarget: |
+     $(ProductBinPath1)\$(mainDll1)
+    AnalyzeSymPath: '$(ProductBinPath1)'
+    AnalyzeVerbose: true
+    AnalyzeHashes: true
+    AnalyzeEnvironment: true
+
+- task: PublishSecurityAnalysisLogs@2
+  displayName: 'Publish Security Analysis Logs'
+  inputs:
+    ArtifactName: SecurityLogs
+
+- task: PostAnalysis@1
+  displayName: 'Post Analysis'
+  inputs:
+    BinSkim: true
+    CredScan: true
+    PoliCheck: true
+
+
+
+#-- end
+
+
+
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Product 1'  
@@ -178,13 +244,7 @@ steps:
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
      #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
 
-- task: VSTest@2
-  displayName: 'Test'
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\Microsoft.Test.OData.Tests.Client.dll' #'$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-  enabled: false
+
   
 
 #$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\
@@ -197,16 +257,6 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
      
-
-
-- task: DotNetCoreCLI@2
-  displayName: 'Test Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
 
 
 - task: DotNetCoreCLI@2
