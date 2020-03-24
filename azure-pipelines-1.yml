@@ -272,6 +272,47 @@ steps:
 
 
 
+# CredScan
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Src'
+  inputs:
+    toolMajorVersion: 'V2'
+    scanFolder: '$(Build.SourcesDirectory)\src'
+    debugMode: false
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Test'
+  inputs:
+    toolMajorVersion: 'V2'
+    scanFolder: '$(Build.SourcesDirectory)\test'
+    debugMode: false
+  
+ 
+- task: BinSkim@3
+  displayName: 'Run BinSkim - Product Binaries'
+  inputs:
+    InputType: Basic
+    AnalyzeTarget: |
+     $(ProductBinPath1)\$(mainDll1)
+    AnalyzeSymPath: '$(ProductBinPath1)'
+    AnalyzeVerbose: true
+    AnalyzeHashes: true
+    AnalyzeEnvironment: true
+
+- task: PublishSecurityAnalysisLogs@2
+  displayName: 'Publish Security Analysis Logs'
+  inputs:
+    ArtifactName: SecurityLogs
+
+- task: PostAnalysis@1
+  displayName: 'Post Analysis'
+  inputs:
+    BinSkim: true
+    CredScan: true
+    PoliCheck: true
+
+
+
 - task: EsrpCodeSigning@1
 
   displayName: 'ESRP CodeSign - OData'
