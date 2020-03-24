@@ -25,6 +25,15 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
 
         public IJsonValue OutOfLineAnnotations { get; set; }
 
+        public IEnumerable<CsdlJsonSchemaItem> SchemaItems
+        {
+            get
+            {
+                return _schemaItems;
+            }
+        }
+
+
         public IEnumerable<CsdlJsonSchemaOperationItem> Operations
         {
             get

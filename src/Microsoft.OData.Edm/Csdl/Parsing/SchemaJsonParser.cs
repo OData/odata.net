@@ -47,7 +47,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                     case "$Annotations":
                         // The value of $Annotations is an object with one member per annotation target.
-                        outOfLineAnnotations = ParseOutOfLineAnnotations(propertyValue);
+                        outOfLineAnnotations = AnnotationJsonParser.ParseOutOfLineAnnotations(propertyValue, jsonPath);
                         break;
 
                     default:
@@ -73,11 +73,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 location);
 
             return schema;
-        }
-
-        public static IList<CsdlAnnotations> ParseOutOfLineAnnotations(IJsonValue jsonValue)
-        {
-            return null;
         }
 
         /// <summary>

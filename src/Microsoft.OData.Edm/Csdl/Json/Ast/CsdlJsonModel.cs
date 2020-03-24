@@ -17,6 +17,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
         private IList<CsdlJsonSchema> _schemas;
         private readonly List<IEdmReference> _currentModelReferences = new List<IEdmReference>();
         private readonly List<IEdmReference> _parentModelReferences = new List<IEdmReference>();
+        private EdmModel _edmModel;
 
         // Aliases are document-global, so all schemas defined within or included into a document MUST have different aliases,
         // and aliases MUST differ from the namespaces of all schemas defined within or included into a document. 
@@ -30,12 +31,14 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
             Version = version;
             ReferencedModels = null;
             _schemas = new List<CsdlJsonSchema>();
+            _edmModel = new EdmModel(false);
+            _edmModel.SetEdmVersion(version);
         }
 
         public string Uri { get; }
 
         public Version Version { get; }
-        public EdmModel EdmModel { get; }
+        public EdmModel EdmModel { get { return _edmModel; } }
 
         public IEnumerable<IEdmReference> CurrentModelReferences
         {
@@ -53,6 +56,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
             if (referencesToAdd != null)
             {
                 _currentModelReferences.AddRange(referencesToAdd);
+                _edmModel.SetEdmReferences(referencesToAdd);
             }
         }
 

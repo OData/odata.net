@@ -9,15 +9,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Json.Ast;
 using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm.Csdl.Parsing
+namespace Microsoft.OData.Edm.Csdl.Json.Builder
 {
     /// <summary>
     /// Provides CSDL-JSON parsing services for EDM models.
+    /// Complex, Entity, Enum, TypeDefinition -> IEdmSchemaType
     /// </summary>
     internal class EdmTypeJsonBuilder
     {
@@ -26,6 +27,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         private IDictionary<string, CsdlJsonSchemaItem> _schemaItems = new Dictionary<string, CsdlJsonSchemaItem>();
 
         private readonly IDictionary<string, IEdmSchemaElement> _schemaElements = new Dictionary<string, IEdmSchemaElement>();
+
+
 
         private CsdlSerializerOptions _options;
         internal EdmTypeJsonBuilder(IDictionary<CsdlJsonSchemaItem, CsdlJsonModel> sschemaItemsToModelMapping, CsdlSerializerOptions options)
@@ -68,7 +71,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
 
             // Build the term after building the types
-            foreach (var termJsonItem in _schemaElements.OfType<CsdlJsonSchemaTermItem>())
+            foreach (var termJsonItem in _schemaItems.Values.OfType<CsdlJsonSchemaTermItem>())
             {
                 BuildTermType(termJsonItem);
             }
@@ -172,7 +175,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     CsdlJsonSchemaEnumItem enumItem = (CsdlJsonSchemaEnumItem)schemaItem;
 
                     EdmEnumType enumType = new EdmEnumType(enumItem.Namespace, enumItem.Name,
-                            GetUnderlyingType(enumItem.UnderlyingTypeName), enumItem.IsFlags);
+                            GetEnumUnderlyingType(enumItem.UnderlyingTypeName), enumItem.IsFlags);
 
                     _schemaElements.Add(enumItem.FullName, enumType);
 
@@ -182,7 +185,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     CsdlJsonSchemaTypeDefinitionItem typeDefinitionItem = (CsdlJsonSchemaTypeDefinitionItem)schemaItem;
 
                     EdmTypeDefinition typeDefinition = new EdmTypeDefinition(typeDefinitionItem.Namespace, typeDefinitionItem.Name,
-                        GetUnderlyingType(typeDefinitionItem.UnderlyingTypeName));
+                        GetUnderlyingType(typeDefinitionItem));
 
                     _schemaElements.Add(typeDefinitionItem.FullName, typeDefinition);
 
@@ -197,6 +200,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 case SchemaMemberKind.Action:
+                   // EdmAction()
                 case SchemaMemberKind.Function:
                 case SchemaMemberKind.Term:
                     // Don't build action, function, term until all types are built
@@ -227,7 +231,29 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             _schemaElements.Add(termItem.FullName, edmTerm);
         }
 
-        private static IEdmPrimitiveType GetUnderlyingType(string underlyingType)
+        private IEdmPrimitiveType GetUnderlyingType(CsdlJsonSchemaTypeDefinitionItem typeDefinitionItem)
+        {
+            IEdmTypeReference underlyingTypeRef = BuildTypeReference(typeDefinitionItem.UnderlyingTypeName,
+                false,
+                true,
+                false,
+                typeDefinitionItem.MaxLength,
+                typeDefinitionItem.Unicode,
+                typeDefinitionItem.Precision,
+                typeDefinitionItem.Scale,
+                typeDefinitionItem.Srid);
+
+            IEdmType underlyingType = underlyingTypeRef.Definition;
+            if (underlyingType.TypeKind != EdmTypeKind.Primitive)
+            {
+                throw new Exception();
+            }
+
+            return (IEdmPrimitiveType)underlyingType;
+        }
+
+
+        private static IEdmPrimitiveType GetEnumUnderlyingType(string underlyingType)
         {
             if (underlyingType != null)
             {
@@ -262,6 +288,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 case SchemaMemberKind.TypeDefinition:
+                    // TypeDefinition may have annotations
                     break;
 
                 case SchemaMemberKind.Action:
@@ -304,27 +331,22 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                  //   _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
 
-                    return;
+                    continue;
                 }
 
-                if (TryBuildOperationImport(edmEntityContainer, name, member.Value))
+                if (TryBuildOperationImport(edmEntityContainer, name, member.Value, entityContainerJsonItem.JsonPath))
                 {
                     return;
                 }
 
-                if (TryBuildNavigationSource(edmEntityContainer, name, member.Value))
+                if (TryBuildNavigationSource(edmEntityContainer, entityContainerJsonItem, name, member.Value, entityContainerJsonItem.JsonPath))
                 {
                     return;
                 }
             }
         }
 
-        public static bool TryBuildOperationImport(EdmEntityContainer edmEntityContainer, string name, IJsonValue jsonValue)
-        {
-            return false;
-        }
-
-        public bool TryBuildNavigationSource(EdmEntityContainer edmEntityContainer, string name, IJsonValue jsonValue)
+        public static bool TryBuildOperationImport(EdmEntityContainer edmEntityContainer, string name, IJsonValue jsonValue, IJsonPath jsonPath)
         {
             if (jsonValue.ValueKind != JsonValueKind.JObject)
             {
@@ -333,12 +355,122 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             JsonObjectValue objValue = (JsonObjectValue)jsonValue;
 
-         //   IList<CsdlNavigationPropertyBinding> navigationPropertyBindings = new List<CsdlNavigationPropertyBinding>();
-         //   IList<CsdlAnnotation> annotations = new List<CsdlAnnotation>();
+            IJsonValue importValue;
+            if (objValue.TryGetValue("$Action", out importValue))
+            {
+                // ActionImport
+                return BuildCsdlActionImport(edmEntityContainer, name, objValue, jsonPath);
+            }
+
+            if (objValue.TryGetValue("$Function", out importValue))
+            {
+                // FunctionImport
+                return BuildCsdlActionImport(edmEntityContainer, name, objValue, jsonPath);
+            }
+
+            return false;
+        }
+
+        public static bool BuildCsdlActionImport(EdmEntityContainer edmEntityContainer, string name, JsonObjectValue importObject, IJsonPath jsonPath)
+        {
+         //   string action = null;
+            string entitySet = null;
+            foreach (var property in importObject)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                switch (propertyName)
+                {
+                    case "$Action":
+                        // The value of $Action is a string containing the qualified name of an unbound action.
+               //         action = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        break;
+
+                    case "$EntitySet":
+                        // The value of $EntitySet is a string containing either the unqualified name of an entity set in the same entity container
+                        // or a path to an entity set in a different entity container.
+                        entitySet = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        break;
+
+                    default:
+                        //if (propertyName[0] == '@')
+                        //{
+                        //    string termName = propertyName.Substring(1);
+                        //    annotations.Add(BuildCsdlAnnotation(termName, propertyValue));
+                        //}
+
+                        break;
+                }
+            }
+
+            IEdmAction edmAction = null;
+
+            EdmActionImport ationImport = new EdmActionImport(edmEntityContainer, name, edmAction, new EdmPathExpression(entitySet));
+            edmEntityContainer.AddElement(ationImport);
+            return true;
+        }
+
+        public static bool BuildCsdlFunctionImport(EdmEntityContainer edmEntityContainer, string name, JsonObjectValue importObject, IJsonPath jsonPath)
+        {
+         //   string function = null;
+            string entitySet = null;
+            bool? includeInServiceDocument = false; // Absence of the member means false.
+            foreach (var property in importObject)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                switch (propertyName)
+                {
+                    case "$Function":
+                        // The value of $Function is a string containing the qualified name of an unbound function.
+                //        function = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        break;
+
+                    case "$EntitySet":
+                        // The value of $EntitySet is a string containing either the unqualified name of an entity set in the same entity container
+                        // or a path to an entity set in a different entity container.
+                        entitySet = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        break;
+
+                    case "$IncludeInServiceDocument":
+                        // The value of $IncludeInServiceDocument is one of the Boolean literals true or false. Absence of the member means false.
+                        includeInServiceDocument = propertyValue.ParseAsBooleanPrimitive(jsonPath);
+                        break;
+
+                    default:
+                        //if (propertyName[0] == '@')
+                        //{
+                        //    string termName = propertyName.Substring(1);
+                        //    annotations.Add(BuildCsdlAnnotation(termName, propertyValue));
+                        //}
+
+                        break;
+                }
+            }
+
+            IEdmFunction edmFunction = null;
+
+            EdmFunctionImport functionImport = new EdmFunctionImport(edmEntityContainer, name, edmFunction, new EdmPathExpression(entitySet), includeInServiceDocument.Value);
+            edmEntityContainer.AddElement(functionImport);
+
+            return true;
+        }
+
+        public bool TryBuildNavigationSource(EdmEntityContainer edmEntityContainer, 
+            CsdlJsonSchemaEntityContainerItem entityContainerJsonItem, string name, IJsonValue jsonValue, IJsonPath jsonPath)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JObject)
+            {
+                return false;
+            }
+
+            JsonObjectValue objValue = (JsonObjectValue)jsonValue;
+      //      bool? nullable;
             string type = null;
             bool? isCollection = null;
             bool? includeInServiceDocument = null;
-            bool? nullable = null;
             foreach (var property in objValue)
             {
                 string propertyName = property.Key;
@@ -364,7 +496,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     case "$Nullable":
                         // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
                         // In OData 4.0 responses this member MUST NOT be specified.
-                        nullable = propertyValue.ParseAsBooleanPrimitive();
+ //                       nullable = propertyValue.ParseAsBooleanPrimitive();
                         break;
 
                     case "$NavigationPropertyBinding":
@@ -373,11 +505,36 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         break;
 
                     default:
-                        //if (propertyName[0] == '@')
-                        //{
-                        //    string termName = propertyName.Substring(1);
-                        //    annotations.Add(BuildCsdlAnnotation(termName, propertyValue));
-                        //}
+                        if (propertyName[0] == '@')
+                        {
+                            string qualifier;
+                            string termName = TryParseAnnotationName(propertyName, out qualifier);
+                            Debug.Assert(termName != null);
+
+                            termName = ReplaceAlias(entityContainerJsonItem, termName);
+                            IEdmTerm edmTerm = FindTerm(termName);
+
+                            IEdmExpression expression = null;
+                            AnnotationJsonBuilder annotationBuilder = new AnnotationJsonBuilder(_options);
+                            if (edmTerm == null)
+                            {
+                                expression = annotationBuilder.BuildExpression(propertyValue, jsonPath);
+                                edmTerm = new UnresolvedVocabularyTerm(termName);
+                            }
+                            else
+                            {
+                                expression = annotationBuilder.BuildExpression(propertyValue, jsonPath, edmTerm.Type);
+                            }
+
+                            EdmVocabularyAnnotation edmVocabularyAnnotation = new EdmVocabularyAnnotation(edmEntityContainer,
+                              edmTerm, expression);
+
+                            entityContainerJsonItem.AddAnnotations(edmVocabularyAnnotation);
+                             //edmVocabularyAnnotation.SetSerializationLocation(_edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+
+                            //   _edmModel.SetVocabularyAnnotation(edmVocabularyAnnotation);
+
+                        }
                         break;
                 }
             }
@@ -387,7 +544,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return false;
             }
 
-            IEdmEntityType entityType = GetSchemaElement(type) as IEdmEntityType;
+            string replacedTypeName = ReplaceAlias(entityContainerJsonItem, type);
+
+            IEdmEntityType entityType = GetSchemaElement(replacedTypeName) as IEdmEntityType;
          //   IEdmNavigationSource navigationSource = null;
             if (isCollection != null)
             {
@@ -398,12 +557,19 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     throw new Exception();
                 }
 
-                EdmEntitySet entitySet = new EdmEntitySet(edmEntityContainer, name, entityType, includeInServiceDocument.Value);
+                EdmEntitySet entitySet = new EdmEntitySet(edmEntityContainer, name, entityType, includeInServiceDocument == null? true : includeInServiceDocument.Value);
             //    entitySet.
                 edmEntityContainer.AddElement(entitySet);
             }
             else
             {
+                //if (Version == EdmConstants.EdmVersion4)
+                //{
+                //    if (nullable != null)
+                //    {
+                //        throw new Exception();
+                //    }
+                //}
                 // singleton
                 EdmSingleton singleton = new EdmSingleton(edmEntityContainer, name, entityType);
                 edmEntityContainer.AddElement(singleton);
@@ -587,9 +753,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         private IEdmTerm FindTerm(string qualifiedName)
         {
             IEdmSchemaElement schemaElement;
-            _schemaElements.TryGetValue(qualifiedName, out schemaElement);
+            if (_schemaElements.TryGetValue(qualifiedName, out schemaElement))
+            {
+                return schemaElement as IEdmTerm;
+            }
 
-            return schemaElement as IEdmTerm;
+            return new UnresolvedVocabularyTerm(qualifiedName);
         }
 
         /// <summary>
@@ -1013,6 +1182,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                 case EdmPrimitiveTypeKind.None:
                     break;
+            }
+
+            EdmPathTypeKind pathTypeKind = EdmCoreModel.Instance.GetPathTypeKind(typeName);
+            if (pathTypeKind != EdmPathTypeKind.None)
+            {
+                return EdmCoreModel.Instance.GetPathType(pathTypeKind, isNullable);
             }
 
             IEdmSchemaElement schemaElement;

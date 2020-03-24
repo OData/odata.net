@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Edm.Csdl.Json.Ast
 {
-    internal class CsdlJsonSchemaFunctionItem : CsdlJsonSchemaItem
+    internal class CsdlJsonSchemaFunctionItem : CsdlJsonSchemaOperationItem
     {
 
         public override SchemaMemberKind Kind => SchemaMemberKind.Function;

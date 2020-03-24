@@ -114,7 +114,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     jsonItem = new CsdlJsonSchemaEntityContainerItem
                     {
                         JsonPath = jsonPath,
-                        JsonValue = jsonValue,
+                     //   JsonValue = jsonValue,
                     };
                     break;
 

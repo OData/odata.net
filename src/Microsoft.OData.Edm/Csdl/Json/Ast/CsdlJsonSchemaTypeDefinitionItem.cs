@@ -6,10 +6,20 @@
 
 namespace Microsoft.OData.Edm.Csdl.Json.Ast
 {
-    internal class CsdlJsonSchemaTypeDefinitionItem : CsdlJsonSchemaItem
+    internal class CsdlJsonSchemaTypeDefinitionItem : CsdlJsonSchemaTypeItem
     {
         public string UnderlyingTypeName { get; set; }
 
         public override SchemaMemberKind Kind => SchemaMemberKind.TypeDefinition;
+
+        public int? MaxLength { get; set; }
+
+        public int? Precision { get; set; }
+
+        public int? Scale { get; set; }
+
+        public int? Srid { get; set; }
+
+        public bool? Unicode { get; set; }
     }
 }

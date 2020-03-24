@@ -23,5 +23,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
             get { return this.underlyingTypeName; }
         }
+
+        public bool? Unicode { get; set; }
+        public int? MaxLength { get; set; }
+        public int? Precision { get; set; }
+        public int? Scale { get; set; }
+        public int? Srid { get; set; }
     }
 }

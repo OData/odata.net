@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Edm.Csdl.Json.Ast
 {
-    internal abstract class CsdlJsonSchemaStructuredItem : CsdlJsonSchemaItem
+    internal abstract class CsdlJsonSchemaStructuredItem : CsdlJsonSchemaTypeItem
     {
         public string BaseType { get; set; }
 

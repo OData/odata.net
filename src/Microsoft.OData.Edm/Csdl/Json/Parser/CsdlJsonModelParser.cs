@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.OData.Edm.Csdl.Json.Ast;
 using Microsoft.OData.Edm.Csdl.Json.Reader;
 using Microsoft.OData.Edm.Csdl.Json.Value;
@@ -23,7 +24,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
     ///               D -> B
     ///      B -> D
     /// So, If we load start from A, A is the main model, B, C, D are the refereneced models of A
-    ///     If we load start from C, C is the mainn model, D, B are the referenced models of C
+    ///     If we load start from C, C is the main model, D, B are the referenced models of C
     /// </summary>
     internal class CsdlJsonModelBuilder
     {
@@ -31,12 +32,13 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         private CsdlJsonModel _mainModel;
         private TextReader _textReader;
         private string _source;
+
         public CsdlJsonModelBuilder(TextReader textReader, CsdlSerializerOptions options)
             : this(textReader, options, null, null)
         {
         }
 
-        public CsdlJsonModelBuilder(TextReader textReader, CsdlSerializerOptions options, string source, CsdlJsonModel mainModel)
+        private CsdlJsonModelBuilder(TextReader textReader, CsdlSerializerOptions options, string source, CsdlJsonModel mainModel)
         {
             _textReader = textReader;
             _options = options;
@@ -99,7 +101,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             foreach (var member in members)
             {
                 CsdlJsonSchemaParser schemaJsonParser = new CsdlJsonSchemaParser(version, member.Key, _options);
-                //schemaJsonParser.TryParseCsdlSchema(member.Value, jsonPath);
 
                 //model.AddSchemaJsonItems(schemaJsonParser.SchemaItems);
                 CsdlJsonSchema schema = schemaJsonParser.TryParseCsdlJsonSchema(member.Value, jsonPath);
@@ -313,10 +314,17 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
 
         private static TextReader LoadBuiltInVocabulary(Uri uri)
         {
+            Assembly assembly = typeof(CsdlJsonModelBuilder).GetAssembly();
+
+            string[] allResources = assembly.GetManifestResourceNames();
+
             string sourceUri = uri.OriginalString;
             if (sourceUri.Contains("Org.OData.Core.V1"))
             {
-                return null;
+                // core
+                string coreVocabularies = allResources.FirstOrDefault(x => x.Contains("Org.OData.Core.V1.json"));
+                Debug.Assert(coreVocabularies != null, "Org.OData.Core.V1.json: not found.");
+                return new StreamReader(assembly.GetManifestResourceStream(coreVocabularies));
             }
 
             return null;

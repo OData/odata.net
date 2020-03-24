@@ -1,0 +1,23 @@
+{
+  "$Version": "4.0",
+  "Org.OData.Core.V1": {
+    "OptimisticConcurrency": {
+      "$Kind": "Term",
+      "$Type": "Edm.PropertyPath",
+      "$Collection": true,
+      "$AppliesTo": [
+        "EntitySet"
+      ]
+    },
+    "QualifiedTermName": {
+      "$Kind": "TypeDefinition",
+      "$UnderlyingType": "Edm.String"
+    },
+    "REvisionKind": {
+      "$Kind": "EnumType",
+      "Added": 0,
+      "Modified": 1,
+      "Deprecated": 2
+    }
+  }
+}

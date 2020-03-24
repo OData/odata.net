@@ -8,5 +8,11 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
 {
     internal abstract class CsdlJsonSchemaOperationItem : CsdlJsonSchemaItem
     {
+        public CsdlJsonSchemaReturnTypeItem ReturnType { get; set; }
+    }
+
+    internal abstract class CsdlJsonSchemaReturnTypeItem : CsdlJsonSchemaItem
+    {
+
     }
 }

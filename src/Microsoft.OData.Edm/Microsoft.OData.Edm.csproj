@@ -67,6 +67,14 @@
     <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaStructuredItem.cs" />
     <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaTermItem.cs" />
     <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaTypeDefinitionItem.cs" />
+    <Compile Include="Csdl\Json\Builder\AnnotationJsonBuilder.cs" />
+    <Compile Include="Csdl\Json\Builder\EdmTypeHelper.cs" />
+    <Compile Include="Csdl\Json\Builder\SchemaOperationBuilder.cs" />
+    <Compile Include="Csdl\Json\Builder\SchemaTermBuilder.cs" />
+    <Compile Include="Csdl\Json\Builder\SchemaTypeBuilder.cs" />
+    <Compile Include="Csdl\Json\Builder\SchemaTypeJsonBuilder.cs" />
+    <Compile Include="Csdl\Json\Builder\EdmJsonBuilder.cs" />
+    <Compile Include="Csdl\Json\Builder\EdmTypeJsonBuilder.cs" />
     <Compile Include="Csdl\Json\Parser\CsdlJsonModelParser.cs" />
     <Compile Include="Csdl\Json\Parser\CsdlJsonSchemaParser.cs" />
     <Compile Include="Csdl\Json\Value\IJsonValue.cs" />
@@ -83,7 +91,6 @@
     <Compile Include="Csdl\Json\JsonPath.cs" />
     <Compile Include="Csdl\Json\JsonValueParseExtensions.cs" />
     <Compile Include="Csdl\Reader\SchemaJsonItemParser.cs" />
-    <Compile Include="Csdl\Reader\AnnotationJsonBuilder.cs" />
     <Compile Include="Csdl\Reader\EdmJsonBuilder.cs" />
     <Compile Include="Csdl\Reader\EdmTypeJsonBuilder.cs" />
     <Compile Include="Csdl\Reader\CsdlJsonReader.cs" />
@@ -605,6 +612,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Vocabularies\ValidationVocabularies.xml">
       <LogicalName>ValidationVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Csdl\Json\Vocabularies\Org.OData.Core.V1.json">
+      <LogicalName>Org.OData.Core.V1.json</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

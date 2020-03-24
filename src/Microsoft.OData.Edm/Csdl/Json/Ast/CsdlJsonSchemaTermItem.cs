@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Microsoft.OData.Edm.Csdl.Json.Ast
 {
     internal class CsdlJsonSchemaTermItem : CsdlJsonSchemaItem
@@ -14,7 +16,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
 
         public string DefaultValue { get; set; }
 
-        public string AppliesTo { get; set; }
+        public IList<string> AppliesTo { get; set; }
 
         public bool Nulable { get; set; }
 

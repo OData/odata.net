@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OData.Edm.Csdl.Json.Value;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Json.Ast
 {
@@ -27,6 +28,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
         public CsdlJsonSchemaItem()
         {
             Members = new Dictionary<string, IJsonValue>();
+            Annotations = new List<EdmVocabularyAnnotation>();
         }
 
         private string _fullName;
@@ -47,8 +49,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
 
         public abstract SchemaMemberKind Kind { get; }
 
-        public IJsonValue JsonValue { get; set; }
-
         public IDictionary<string, IJsonValue> Members { get; }
 
         public IJsonPath JsonPath { get; set; }
@@ -57,5 +57,16 @@ namespace Microsoft.OData.Edm.Csdl.Json.Ast
         {
             Members[name] = value;
         }
+
+        public IList<EdmVocabularyAnnotation> Annotations { get; }
+        public void AddAnnotations(EdmVocabularyAnnotation annotation)
+        {
+            Annotations.Add(annotation);
+        }
+    }
+
+    internal abstract class CsdlJsonSchemaTypeItem : CsdlJsonSchemaItem
+    {
+        // IEdmSchemaType
     }
 }

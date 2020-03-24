@@ -13,7 +13,7 @@ using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm.Csdl.Parsing
+namespace Microsoft.OData.Edm.Csdl.Json.Builder
 {
     /// <summary>
     /// Provides functionalities for parsing CSDL-JSON annotations.
@@ -21,12 +21,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
     internal class AnnotationJsonBuilder
     {
         private CsdlSerializerOptions _options;
-        private IEdmModel _mainModel;
 
-        public AnnotationJsonBuilder(IEdmModel mainModel, CsdlSerializerOptions options)
+        public AnnotationJsonBuilder(CsdlSerializerOptions options)
         {
             _options = options;
-            _mainModel = mainModel;
         }
 
         // out of line annotations
@@ -59,7 +57,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 throw new ArgumentNullException("jsonPath");
             }
 
-            if (_options.Indented || _mainModel == null)
+            if (_options.Indented)
             {
                 return null;
             }
@@ -133,8 +131,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 // So far, we don't support an Untyped term.
                 default:
                     // A valid term should not be here.
-                    Debug.Assert(false, "We should be here never for a valid term.");
-                    break;
+                    return BuildExpression(jsonValue, jsonPath);
             }
 
             return null;
@@ -228,14 +225,28 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         private IEdmExpression BuildCollectionExpression(JsonArrayValue arrayValue, IJsonPath jsonPath, IEdmCollectionTypeReference collectionTypeReference = null)
         {
+            IEdmTypeReference elementType = null;
+            if (collectionTypeReference != null)
+            {
+                elementType = collectionTypeReference.ElementType();
+            }
             IList<IEdmExpression> elements = new List<IEdmExpression>();
             arrayValue.ProcessItem(jsonPath, (v) =>
             {
-                IEdmExpression element = BuildExpression(v, jsonPath);
+                IEdmExpression element;
+                if (elementType == null)
+                {
+                    element = BuildExpression(v, jsonPath);
+                }
+                else
+                {
+                    element = BuildExpression(v, jsonPath, elementType);
+                }
+
                 elements.Add(element);
             });
 
-            return new EdmCollectionExpression(elements);
+            return new EdmCollectionExpression(collectionTypeReference, elements);
         }
 
         private static IEdmExpression BuildConstantExpression(JsonPrimitiveValue primitiveValue, IJsonPath jsonPath)
@@ -498,128 +509,127 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         //    return new CsdlCollectionExpression(csdlTypeReference, itemExpressions, new CsdlLocation(jsonPath.ToString()));
         //}
 
-        public static CsdlTypeReference ParseTypeReference(IEdmTypeReference typeReference,
-            JsonPath jsonPath)
-        {
-            bool isCollection = false;
-            IEdmTypeReference elementType = typeReference;
-            if (typeReference.IsCollection())
-            {
-                isCollection = true;
-                elementType = typeReference.AsCollection().ElementType();
-            }
+        //public static CsdlTypeReference ParseTypeReference(IEdmTypeReference typeReference,
+        //    JsonPath jsonPath)
+        //{
+        //    bool isCollection = false;
+        //    IEdmTypeReference elementType = typeReference;
+        //    if (typeReference.IsCollection())
+        //    {
+        //        isCollection = true;
+        //        elementType = typeReference.AsCollection().ElementType();
+        //    }
 
-            bool isNullable = typeReference.IsNullable;
+        //    bool isNullable = typeReference.IsNullable;
 
-            bool isBounded = false;
-            int? maxLength;
-            bool? unicode;
-            int? precision;
-            int? scale;
-            int? srid;
-            GetFacts(elementType, out isBounded, out maxLength, out unicode, out precision, out scale, out srid);
+        //    bool isBounded = false;
+        //    int? maxLength;
+        //    bool? unicode;
+        //    int? precision;
+        //    int? scale;
+        //    int? srid;
+        //    GetFacts(elementType, out isBounded, out maxLength, out unicode, out precision, out scale, out srid);
 
-            return SchemaJsonParser.ParseTypeReference(elementType.FullName(), isCollection,
-                isNullable, isBounded, maxLength, unicode, precision, scale, srid, new CsdlLocation(jsonPath.ToString()));
-        }
+        //    return null;
+        //}
 
-        private static void GetFacts(IEdmTypeReference edmTypeReference, out bool isBounded,
-            out int? maxLength, out bool? unicode, out int? precision, out int? scale, out int? srid)
-        {
-            isBounded = false;
-            maxLength = null;
-            unicode = null;
-            precision = null;
-            scale = null;
-            srid = null;
+        //private static void GetFacts(IEdmTypeReference edmTypeReference, out bool isBounded,
+        //    out int? maxLength, out bool? unicode, out int? precision, out int? scale, out int? srid)
+        //{
+        //    isBounded = false;
+        //    maxLength = null;
+        //    unicode = null;
+        //    precision = null;
+        //    scale = null;
+        //    srid = null;
 
-            IEdmType typeDefinition = edmTypeReference.Definition;
-            if (typeDefinition.TypeKind == EdmTypeKind.Primitive)
-            {
-                var primitiveDefinition = typeDefinition as IEdmPrimitiveType;
-                if (primitiveDefinition != null)
-                {
-                    switch (primitiveDefinition.PrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.Boolean:
-                        case EdmPrimitiveTypeKind.Byte:
-                        case EdmPrimitiveTypeKind.Date:
-                        case EdmPrimitiveTypeKind.Double:
-                        case EdmPrimitiveTypeKind.Guid:
-                        case EdmPrimitiveTypeKind.Int16:
-                        case EdmPrimitiveTypeKind.Int32:
-                        case EdmPrimitiveTypeKind.Int64:
-                        case EdmPrimitiveTypeKind.SByte:
-                        case EdmPrimitiveTypeKind.Single:
-                        case EdmPrimitiveTypeKind.Stream:
-                        case EdmPrimitiveTypeKind.PrimitiveType:
-                            return;
+        //    IEdmType typeDefinition = edmTypeReference.Definition;
+        //    if (typeDefinition.TypeKind == EdmTypeKind.Primitive)
+        //    {
+        //        var primitiveDefinition = typeDefinition as IEdmPrimitiveType;
+        //        if (primitiveDefinition != null)
+        //        {
+        //            switch (primitiveDefinition.PrimitiveKind)
+        //            {
+        //                case EdmPrimitiveTypeKind.Boolean:
+        //                case EdmPrimitiveTypeKind.Byte:
+        //                case EdmPrimitiveTypeKind.Date:
+        //                case EdmPrimitiveTypeKind.Double:
+        //                case EdmPrimitiveTypeKind.Guid:
+        //                case EdmPrimitiveTypeKind.Int16:
+        //                case EdmPrimitiveTypeKind.Int32:
+        //                case EdmPrimitiveTypeKind.Int64:
+        //                case EdmPrimitiveTypeKind.SByte:
+        //                case EdmPrimitiveTypeKind.Single:
+        //                case EdmPrimitiveTypeKind.Stream:
+        //                case EdmPrimitiveTypeKind.PrimitiveType:
+        //                    return;
 
-                        case EdmPrimitiveTypeKind.Binary:
-                            IEdmBinaryTypeReference binaryType = edmTypeReference.AsBinary();
-                            isBounded = binaryType.IsUnbounded;
-                            maxLength = binaryType.MaxLength;
-                            return;
-                        case EdmPrimitiveTypeKind.Decimal:
-                            IEdmDecimalTypeReference decimalTypeReference = edmTypeReference.AsDecimal();
-                            precision = decimalTypeReference.Precision;
-                            scale = decimalTypeReference.Scale;
-                            return;
-                        case EdmPrimitiveTypeKind.String:
-                            IEdmStringTypeReference stringType = edmTypeReference.AsString();
-                            isBounded = stringType.IsUnbounded;
-                            maxLength = stringType.MaxLength;
-                            unicode = stringType.IsUnicode;
-                            return;
-                        case EdmPrimitiveTypeKind.Duration:
-                        case EdmPrimitiveTypeKind.DateTimeOffset:
-                        case EdmPrimitiveTypeKind.TimeOfDay:
-                            IEdmTemporalTypeReference temporal = edmTypeReference.AsTemporal();
-                            precision = temporal.Precision;
-                            return;
-                        case EdmPrimitiveTypeKind.Geography:
-                        case EdmPrimitiveTypeKind.GeographyPoint:
-                        case EdmPrimitiveTypeKind.GeographyLineString:
-                        case EdmPrimitiveTypeKind.GeographyPolygon:
-                        case EdmPrimitiveTypeKind.GeographyCollection:
-                        case EdmPrimitiveTypeKind.GeographyMultiPolygon:
-                        case EdmPrimitiveTypeKind.GeographyMultiLineString:
-                        case EdmPrimitiveTypeKind.GeographyMultiPoint:
-                        case EdmPrimitiveTypeKind.Geometry:
-                        case EdmPrimitiveTypeKind.GeometryPoint:
-                        case EdmPrimitiveTypeKind.GeometryLineString:
-                        case EdmPrimitiveTypeKind.GeometryPolygon:
-                        case EdmPrimitiveTypeKind.GeometryCollection:
-                        case EdmPrimitiveTypeKind.GeometryMultiPolygon:
-                        case EdmPrimitiveTypeKind.GeometryMultiLineString:
-                        case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                            IEdmSpatialTypeReference spatialType = edmTypeReference.AsSpatial();
-                            srid = spatialType.SpatialReferenceIdentifier;
-                            return;
-                        case EdmPrimitiveTypeKind.None:
-                            break;
-                    }
-                }
-            }
-            else if (typeDefinition.TypeKind == EdmTypeKind.TypeDefinition)
-            {
-                IEdmTypeDefinitionReference reference = edmTypeReference as IEdmTypeDefinitionReference;
-                if (reference == null)
-                {
-                    // No facet available if not IEdmTypeDefinitionReference.
-                    return;
-                }
+        //                case EdmPrimitiveTypeKind.Binary:
+        //                    IEdmBinaryTypeReference binaryType = edmTypeReference.AsBinary();
+        //                    isBounded = binaryType.IsUnbounded;
+        //                    maxLength = binaryType.MaxLength;
+        //                    return;
+        //                case EdmPrimitiveTypeKind.Decimal:
+        //                    IEdmDecimalTypeReference decimalTypeReference = edmTypeReference.AsDecimal();
+        //                    precision = decimalTypeReference.Precision;
+        //                    scale = decimalTypeReference.Scale;
+        //                    return;
+        //                case EdmPrimitiveTypeKind.String:
+        //                    IEdmStringTypeReference stringType = edmTypeReference.AsString();
+        //                    isBounded = stringType.IsUnbounded;
+        //                    maxLength = stringType.MaxLength;
+        //                    unicode = stringType.IsUnicode;
+        //                    return;
+        //                case EdmPrimitiveTypeKind.Duration:
+        //                case EdmPrimitiveTypeKind.DateTimeOffset:
+        //                case EdmPrimitiveTypeKind.TimeOfDay:
+        //                    IEdmTemporalTypeReference temporal = edmTypeReference.AsTemporal();
+        //                    precision = temporal.Precision;
+        //                    return;
+        //                case EdmPrimitiveTypeKind.Geography:
+        //                case EdmPrimitiveTypeKind.GeographyPoint:
+        //                case EdmPrimitiveTypeKind.GeographyLineString:
+        //                case EdmPrimitiveTypeKind.GeographyPolygon:
+        //                case EdmPrimitiveTypeKind.GeographyCollection:
+        //                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+        //                case EdmPrimitiveTypeKind.GeographyMultiLineString:
+        //                case EdmPrimitiveTypeKind.GeographyMultiPoint:
+        //                case EdmPrimitiveTypeKind.Geometry:
+        //                case EdmPrimitiveTypeKind.GeometryPoint:
+        //                case EdmPrimitiveTypeKind.GeometryLineString:
+        //                case EdmPrimitiveTypeKind.GeometryPolygon:
+        //                case EdmPrimitiveTypeKind.GeometryCollection:
+        //                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+        //                case EdmPrimitiveTypeKind.GeometryMultiLineString:
+        //                case EdmPrimitiveTypeKind.GeometryMultiPoint:
+        //                    IEdmSpatialTypeReference spatialType = edmTypeReference.AsSpatial();
+        //                    srid = spatialType.SpatialReferenceIdentifier;
+        //                    return;
+        //                case EdmPrimitiveTypeKind.None:
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //    else if (typeDefinition.TypeKind == EdmTypeKind.TypeDefinition)
+        //    {
+        //        IEdmTypeDefinitionReference reference = edmTypeReference as IEdmTypeDefinitionReference;
+        //        if (reference == null)
+        //        {
+        //            // No facet available if not IEdmTypeDefinitionReference.
+        //            return;
+        //        }
 
-                isBounded = reference.IsUnbounded;
-                maxLength = reference.MaxLength;
-                unicode = reference.IsUnicode;
-                precision = reference.Precision;
-                scale = reference.Scale;
-                srid = reference.SpatialReferenceIdentifier;
-            }
+        //        isBounded = reference.IsUnbounded;
+        //        maxLength = reference.MaxLength;
+        //        unicode = reference.IsUnicode;
+        //        precision = reference.Precision;
+        //        scale = reference.Scale;
+        //        srid = reference.SpatialReferenceIdentifier;
+        //    }
 
-            return;
-        }
+        //    return;
+        //}
 
         /// <summary>
         /// Build an instance path with a Value path.
