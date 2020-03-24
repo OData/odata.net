@@ -272,7 +272,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void RequestUriProcessUnquotedTest()
         {
             string[] invalidUris = new string[]
@@ -312,7 +312,7 @@ namespace AstoriaUnitTests.Tests
                 new string[0]);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void RequestUriResourcePropertyTest()
         {
             UnitTestsUtil.VerifyInvalidUri("/Customers(1000)/BestFriend", typeof(CustomDataContext));
@@ -361,7 +361,7 @@ namespace AstoriaUnitTests.Tests
                 new string[0]);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void RequestUriProcessorKeySpecialCharsTest()
         {
             ServiceModelData.Northwind.EnsureDependenciesAvailable();
