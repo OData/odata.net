@@ -64,13 +64,13 @@ steps:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
-     #$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
      $(Build.SourcesDirectory)\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj
@@ -83,6 +83,8 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj     
   enabled: true
 
 - task: Powershell@2
@@ -137,7 +139,7 @@ steps:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |           
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
 
 
 - task: DotNetCoreCLI@2
