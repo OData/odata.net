@@ -13,7 +13,7 @@ using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm.Csdl.Parsing
+namespace Microsoft.OData.Edm.Csdl.Json.Parser
 {
     /// <summary>
     /// Provides functionalities for parsing CSDL-JSON annotations.
@@ -605,7 +605,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             int? srid;
             GetFacts(elementType, out isBounded, out maxLength, out unicode, out precision, out scale, out srid);
 
-            return SchemaJsonParser.ParseTypeReference(elementType.FullName(), isCollection,
+            return CsdlJsonSchemaParser.ParseTypeReference(elementType.FullName(), isCollection,
                 isNullable, isBounded, maxLength, unicode, precision, scale, srid, new CsdlLocation(jsonPath.ToString()));
         }
 

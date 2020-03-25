@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlJsonModelBuilder.cs" company="Microsoft">
+// <copyright file="CsdlJsonModelParser.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.OData.Edm.Csdl.Json.Ast;
 using Microsoft.OData.Edm.Csdl.Json.Reader;
 using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing;
@@ -28,28 +27,19 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
     /// So, If we load start from A, A is the main model, B, C, D are the refereneced models of A
     ///     If we load start from C, C is the main model, D, B are the referenced models of C
     /// </summary>
-    internal class CsdlJsonModelBuilder
+    internal class CsdlJsonModelParser
     {
         private CsdlSerializerOptions _options;
-        private CsdlJsonModel _mainModel;
         private TextReader _textReader;
         private string _source;
         private CsdlModel _mainCsdlModel;
 
-        public CsdlJsonModelBuilder(TextReader textReader, CsdlSerializerOptions options)
+        public CsdlJsonModelParser(TextReader textReader, CsdlSerializerOptions options)
             : this(textReader, options, null, mainModel: null)
         {
         }
 
-        private CsdlJsonModelBuilder(TextReader textReader, CsdlSerializerOptions options, string source, CsdlJsonModel mainJsonModel)
-        {
-            _textReader = textReader;
-            _options = options;
-            _source = source;
-            _mainModel = mainJsonModel;
-        }
-
-        private CsdlJsonModelBuilder(TextReader textReader, CsdlSerializerOptions options, string source, CsdlModel mainModel)
+        private CsdlJsonModelParser(TextReader textReader, CsdlSerializerOptions options, string source, CsdlModel mainModel)
         {
             _textReader = textReader;
             _options = options;
@@ -58,13 +48,13 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         }
 
         /// <summary>
-        /// Parse the JSON value <see cref="IJsonValue"/> to <see cref="CsdlJsonModel"/>.
+        /// Parse the JSON value <see cref="IJsonValue"/> to <see cref="CsdlModel"/>.
         /// </summary>
         /// <param name="jsonValue">The JSON value to parse.</param>
         /// <param name="jsonPath">The JSON path to track on the path of the processed JSON value.</param>
         /// <param name="options">The JSON serializer options.</param>
-        /// <returns>Null or the generated <see cref="CsdlJsonModel"/>.</returns>
-        public CsdlModel TryParseCsdlModel()
+        /// <returns>Null or the generated <see cref="CsdlModel"/>.</returns>
+        public CsdlModel ParseCsdlDocument()
         {
             JsonReader jsonReader = new JsonReader(_textReader, _options.GetJsonReaderOptions());
             JsonObjectValue csdlObject = jsonReader.ReadAsObject();
@@ -73,6 +63,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             // JsonObjectValue csdlObject = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
 
             IJsonPath jsonPath = new JsonPath(_source);
+
             IList<IEdmReference> references = null;
             Version version = null;
             IDictionary<string, IJsonValue> members = new Dictionary<string, IJsonValue>();
@@ -114,7 +105,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
 
             foreach (var member in members)
             {
-                CsdlSchema schema = SchemaJsonParser.ParseCsdlSchema(member.Key, member.Value, jsonPath, version, _options);
+                CsdlSchema schema = CsdlJsonSchemaParser.ParseCsdlSchema(member.Key, member.Value, jsonPath, version, _options);
 
                 //model.AddSchemaJsonItems(schemaJsonParser.SchemaItems);
                 model.AddSchema(schema);
@@ -169,126 +160,8 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                     throw new Exception();
                 }
 
-                CsdlJsonModelBuilder builder = new CsdlJsonModelBuilder(referencedJsonReader, _options, sourceUri, mainModel);
-                builder.TryParseCsdlModel();
-            }
-        }
-
-        /// <summary>
-        /// Parse the JSON value <see cref="IJsonValue"/> to <see cref="CsdlJsonModel"/>.
-        /// </summary>
-        /// <param name="jsonValue">The JSON value to parse.</param>
-        /// <param name="jsonPath">The JSON path to track on the path of the processed JSON value.</param>
-        /// <param name="options">The JSON serializer options.</param>
-        /// <returns>Null or the generated <see cref="CsdlJsonModel"/>.</returns>
-        internal CsdlJsonModel TryParseCsdlJsonModel()
-        {
-            JsonReader jsonReader = new JsonReader(_textReader, _options.GetJsonReaderOptions());
-            JsonObjectValue csdlObject = jsonReader.ReadAsObject();
-
-            // A CSDL JSON document consists of a single JSON object.
-            // JsonObjectValue csdlObject = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
-
-            IJsonPath jsonPath = new JsonPath(_source);
-            IList<IEdmReference> references = null;
-            Version version = null;
-            IDictionary<string, IJsonValue> members = new Dictionary<string, IJsonValue>();
-            csdlObject.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
-            {
-                switch (propertyName)
-                {
-                    case "$Version":
-                        // This document object MUST contain the member $Version.
-                        version = ParseVersion(propertyValue, jsonPath);
-                        break;
-
-                    case "$EntityContainer":
-                        // The value of $EntityContainer is value is the namespace-qualified name of the entity container of that service.
-                        // So far, i don't know how to use it. So skip it.
-                        // string entityContainer = propertyValue.ParseAsStringPrimitive();
-                        break;
-
-                    case "$Reference":
-                        // The document object MAY contain the member $Reference to reference other CSDL documents.
-                        references = ParseReferences(propertyValue, jsonPath);
-                        break;
-
-                    default:
-                        // CSDL document also MAY contain members for schemas.
-                        // Each schema's value is an object.
-                        members[propertyName] = propertyValue;
-                        break;
-                }
-            });
-
-            Debug.Assert(version != null);
-
-            CsdlJsonModel model = new CsdlJsonModel(_source, version);
-            model.AddCurrentModelReferences(references);
-
-            foreach (var member in members)
-            {
-                CsdlJsonSchemaParser schemaJsonParser = new CsdlJsonSchemaParser(version, member.Key, _options);
-
-                //model.AddSchemaJsonItems(schemaJsonParser.SchemaItems);
-                CsdlJsonSchema schema = schemaJsonParser.TryParseCsdlJsonSchema(member.Value, jsonPath);
-
-                model.AddSchema(schema);
-            }
-
-            model.BuildNamespaceAlias();
-
-            // We are building the reference models, add into the main model.
-            if (_mainModel != null)
-            {
-                _mainModel.AddReferencedModel(model);
-                BuildReferencedModels(_mainModel, references);
-            }
-            else
-            {
-                BuildReferencedModels(model, references);
-            }
-
-            return model;
-        }
-
-        internal void BuildReferencedModels(CsdlJsonModel mainModel, IList<IEdmReference> edmReferences)
-        {
-            if (edmReferences == null)
-            {
-                return;
-            }
-
-            foreach (var edmReference in edmReferences)
-            {
-                // If added, skip to parse it.
-                string sourceUri = edmReference.Uri.OriginalString;
-                if (mainModel.IsReferencedModelAdded(sourceUri))
-                {
-                    continue;
-                }
-
-                // If nothing included, why does it exist?
-                if (!edmReference.Includes.Any() && !edmReference.IncludeAnnotations.Any())
-                {
-                    continue;
-                }
-
-                // Customer can provide their own built-in vocabulary model
-                TextReader referencedJsonReader = _options.ReferencedModelJsonFactory(edmReference.Uri);
-                if (referencedJsonReader == null)
-                {
-                    // If provided, we doesn't need to load it again.
-                    referencedJsonReader = LoadBuiltInVocabulary(edmReference.Uri);
-                }
-
-                if (referencedJsonReader == null)
-                {
-                    throw new Exception();
-                }
-
-                CsdlJsonModelBuilder builder = new CsdlJsonModelBuilder(referencedJsonReader, _options, sourceUri, mainModel);
-                builder.TryParseCsdlJsonModel();
+                CsdlJsonModelParser builder = new CsdlJsonModelParser(referencedJsonReader, _options, sourceUri, mainModel);
+                builder.ParseCsdlDocument();
             }
         }
 
@@ -442,7 +315,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
 
         private static TextReader LoadBuiltInVocabulary(Uri uri)
         {
-            Assembly assembly = typeof(CsdlJsonModelBuilder).GetAssembly();
+            Assembly assembly = typeof(CsdlJsonParser).GetAssembly();
 
             string[] allResources = assembly.GetManifestResourceNames();
 

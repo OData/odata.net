@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Csdl.Json.Ast;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Json.Builder

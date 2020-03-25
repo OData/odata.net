@@ -28,7 +28,10 @@ namespace Microsoft.OData.Edm.Csdl
             IsIeee754Compatible = false;
             ReadAsImmutableModel = true;
             IsJsonPathBracketNotation = true;
+            DisposeStream = false;
         }
+
+        public bool DisposeStream { get; set; }
 
         public IEnumerable<IEdmModel> ReferencedModels { get; set; }
 

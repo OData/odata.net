@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.OData.Edm.Csdl.Json;
+using Microsoft.OData.Edm.Csdl.Json.Parser;
 using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 
@@ -62,7 +63,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     default:
                         // CSDL document also MAY contain members for schemas.
                         // Each schema's value is an object.
-                        CsdlSchema csdlSchema = SchemaJsonParser.ParseCsdlSchema(propertyName, propertyValue, jsonPath, version, options);
+                        CsdlSchema csdlSchema = CsdlJsonSchemaParser.ParseCsdlSchema(propertyName, propertyValue, jsonPath, version, options);
                         if (csdlSchema != null)
                         {
                             csdlModel.AddSchema(csdlSchema);

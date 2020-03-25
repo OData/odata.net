@@ -57,6 +57,24 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
             }
         }
 
+        public static void ProcessProperty(this JsonObjectValue objValue, IJsonPath jsonPath,
+            Action<string, IJsonValue, IJsonPath> propertyParser)
+        {
+            foreach (var propertyItem in objValue)
+            {
+                // The property value is either primitive, array or another object,
+                // It could not be a null.
+                // for null, it's wrappered in JsonPrimitiveValue.
+                Debug.Assert(propertyItem.Value != null);
+
+                jsonPath.Push(propertyItem.Key);
+
+                propertyParser(propertyItem.Key, propertyItem.Value, jsonPath);
+
+                jsonPath.Pop();
+            }
+        }
+
 
 
         public static void ProcessItem(this JsonArrayValue arrayValue, IJsonPath jsonPath, Action<IJsonValue> itemParser)

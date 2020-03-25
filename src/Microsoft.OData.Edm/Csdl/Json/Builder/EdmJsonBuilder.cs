@@ -4,11 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.OData.Edm.Csdl.Json.Ast;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 
 namespace Microsoft.OData.Edm.Csdl.Json.Builder
@@ -91,6 +89,11 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
         private EdmModel BuildModelHeader(CsdlModel csdlModel, EdmModel mainModel)
         {
+            if (_options == null)
+            {
+                return null;
+            }
+
             EdmModel edmModel = new EdmModel(false);
 
             edmModel.SetEdmVersion(csdlModel.Version);
@@ -131,116 +134,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             SchemaTypeJsonBuilder typeBuilder = new SchemaTypeJsonBuilder(_modelMapping, _aliasNamespaceMapping);
             typeBuilder.BuildSchemaItems();
 
-            //IDictionary<string, EdmStructuredType> structuredTypes = typeBuilder.StructuredTypes;
-            //IDictionary<string, EdmEnumType> enumTypes = typeBuilder.EnumTypes;
-            //IDictionary<string, EdmTypeDefinition> typeDefinitions = typeBuilder.TypeDefinitions;
-
-
-
             return _modelMapping[mainCsdlModel];
-        }
-
-        public IEdmModel TryBuildEdmModel(CsdlJsonModel csdlJsonModel)
-        {
-            //List<SchemaJsonItem> allSchemaJsonItems = new List<SchemaJsonItem>();
-            IDictionary<CsdlJsonSchemaItem, CsdlJsonModel> allSchemaJsonItems = new Dictionary<CsdlJsonSchemaItem, CsdlJsonModel>();
-
-            foreach ( var schema in csdlJsonModel.Schemas)
-            {
-                foreach (CsdlJsonSchemaItem item in schema.SchemaItems)
-                {
-                    allSchemaJsonItems.Add(item, csdlJsonModel);
-                }
-
-                //foreach (CsdlJsonSchemaItem item in schema.EnumTypes)
-                //{
-                //    allSchemaJsonItems.Add(item, csdlJsonModel);
-                //}
-            }
-
-            if (csdlJsonModel.ReferencedModels != null)
-            {
-                foreach (var referenced in csdlJsonModel.ReferencedModels)
-                {
-                    foreach (var schema in referenced.Schemas)
-                    {
-                        foreach (CsdlJsonSchemaItem item in schema.SchemaItems)
-                        {
-                            allSchemaJsonItems.Add(item, referenced);
-                        }
-
-                        //foreach (CsdlJsonSchemaItem item in schema.EnumTypes)
-                        //{
-                        //    allSchemaJsonItems.Add(item, referenced);
-                        //}
-                    }
-                }
-            }
-
-            // Build All Structural types
-         //   IEnumerable<StructuredTypeJsonItem> structuralTypeJsonItems = allSchemaJsonItems.OfType<StructuredTypeJsonItem>();
-
-            EdmTypeJsonBuilder typeBuilder = new EdmTypeJsonBuilder(allSchemaJsonItems, _options);
-
-            EdmModel mainModel = new EdmModel(false);
-
-            typeBuilder.BuildSchemaItems();
-
-            var allTypes = typeBuilder.BuiltTypes;
-
-            if (csdlJsonModel.ReferencedModels != null)
-            {
-                foreach (var referenced in csdlJsonModel.ReferencedModels)
-                {
-                    IEdmModel subModel = BuildEdmModel(referenced, allTypes);
-
-                    mainModel.AddReferencedModel(subModel);
-                }
-            }
-
-            return BuildEdmModel(csdlJsonModel, allTypes);
-
-            // Build All Enum Types, TypeDefintions
-
-            // Build All Terms, Actions, Function
-
-            // Build EntityContainer
-
-            // Now, build all bodies
-
-        }
-
-        private static IEdmModel BuildEdmModel(CsdlJsonModel csdlModel, IDictionary<string, IEdmSchemaElement> allSchemaElements)
-        {
-            EdmModel edmModel = new EdmModel(false);
-            foreach (var schema in csdlModel.Schemas)
-            {
-                foreach (CsdlJsonSchemaItem item in schema.SchemaItems)
-                {
-                    IEdmSchemaElement schemaElement = allSchemaElements[item.FullName];
-                    edmModel.AddElement(schemaElement);
-
-                    foreach (var annotation in item.Annotations)
-                    {
-                        annotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
-                        edmModel.SetVocabularyAnnotation(annotation);
-                    }
-                }
-            }
-
-            edmModel.SetEdmVersion(csdlModel.Version);
-
-            edmModel.SetEdmReferences(csdlModel.CurrentModelReferences);
-
-            if (csdlModel.NamespaceAlias != null)
-            {
-                foreach (var item in csdlModel.NamespaceAlias)
-                {
-                    edmModel.SetNamespaceAlias(item.Value, item.Key);
-                }
-            }
-
-            return edmModel;
         }
     }
 }

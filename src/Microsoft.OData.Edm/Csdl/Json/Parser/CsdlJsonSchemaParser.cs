@@ -1,32 +1,22 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlJsonSchemaParser.cs" company="Microsoft">
+// <copyright file="SchemaJsonParser.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Csdl.Json.Ast;
+using System.Linq;
 using Microsoft.OData.Edm.Csdl.Json.Value;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 
 namespace Microsoft.OData.Edm.Csdl.Json.Parser
 {
     /// <summary>
     /// Provides functionalities for parsing Schema JSON for Csdl elements.
     /// </summary>
-    internal class CsdlJsonSchemaParser
+    internal static class CsdlJsonSchemaParser
     {
-        private Version _version;
-        private string _schemaNamespace;
-        private CsdlSerializerOptions _options;
-
-        public CsdlJsonSchemaParser(Version version, string schemaNamespace, CsdlSerializerOptions options)
-        {
-            _version = version;
-            _schemaNamespace = schemaNamespace;
-            _options = options;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -36,47 +26,50 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         /// <param name="version"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public CsdlJsonSchema TryParseCsdlJsonSchema(IJsonValue jsonValue, IJsonPath jsonPath)
+        public static CsdlSchema ParseCsdlSchema(string schemaNamespace, IJsonValue jsonValue, IJsonPath jsonPath, Version version, CsdlSerializerOptions options)
         {
             // A schema is represented as a member of the document object whose name is the schema namespace.
             // Its value is an object.
             JsonObjectValue schemaObject = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
 
-            CsdlJsonSchema schema = new CsdlJsonSchema(_schemaNamespace);
+            IList<CsdlAnnotations> outOfLineAnnotations = new List<CsdlAnnotations>();
+            IList<CsdlElement> csdlElements = new List<CsdlElement>();
+            string alias = null;
             schemaObject.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
             {
                 switch (propertyName)
                 {
                     case "$Alias":
                         // The value of $Alias is a string containing the alias for the schema.
-                        // If a schema specifies an alias, the alias MUST be used instead of the namespace within qualified names
-                        // throughout the document to identify model elements of that schema.
-                        // A mixed use of namespace-qualified names and alias-qualified names is not allowed.
-                        schema.Alias = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        alias = propertyValue.ParseAsStringPrimitive(jsonPath);
                         break;
 
                     case "$Annotations":
                         // The value of $Annotations is an object with one member per annotation target.
-                        schema.OutOfLineAnnotations = propertyValue;
+                        outOfLineAnnotations = AnnotationJsonParser.ParseOutOfLineAnnotations(propertyValue, jsonPath);
                         break;
 
                     default:
-                        if (propertyValue.ValueKind == JsonValueKind.JArray)
+                        CsdlElement element = ParseSchemaElement(propertyName, propertyValue, jsonPath, options);
+                        if (element != null)
                         {
-                            var operations = BuildCsdlOperationOverload(propertyName, propertyValue, jsonPath);
-                            operations.ForEach(v => { v.Namespace = _schemaNamespace; schema.Add(v); });
+                            csdlElements.Add(element);
                         }
-                        else
-                        {
-                            CsdlJsonSchemaItem item = ParseSchemaElement(propertyName, propertyValue, jsonPath);
-                            if (item != null)
-                            {
-                                schema.Add(item);
-                            }
-                        }
+
                         break;
                 }
             });
+
+            CsdlLocation location = new CsdlLocation(jsonPath.ToString());
+            CsdlSchema schema = new CsdlSchema(schemaNamespace, alias, version,
+                csdlElements.OfType<CsdlStructuredType>(),
+                csdlElements.OfType<CsdlEnumType>(),
+                csdlElements.OfType<CsdlOperation>(),
+                csdlElements.OfType<CsdlTerm>(),
+                csdlElements.OfType<CsdlEntityContainer>(),
+                outOfLineAnnotations,
+                csdlElements.OfType<CsdlTypeDefinition>(),
+                location);
 
             return schema;
         }
@@ -91,13 +84,8 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         /// <param name="jsonPath">The JSON path.</param>
         /// <param name="options">The serializer options.</param>
         /// <returns>Null or built element.</returns>
-        public CsdlJsonSchemaItem ParseSchemaElement(string name, IJsonValue jsonValue, IJsonPath jsonPath)
+        public static CsdlElement ParseSchemaElement(string name, IJsonValue jsonValue, IJsonPath jsonPath, CsdlSerializerOptions options)
         {
-            if (_version != EdmConstants.EdmVersion4 || _schemaNamespace == null)
-            {
-                throw new Exception(name);
-            }
-
             if (jsonValue == null)
             {
                 throw new ArgumentNullException("jsonValue");
@@ -107,59 +95,372 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             // The JSON value of each member is a JSON object, if it's not an object, it's not a schema element.
             if (jsonValue.ValueKind != JsonValueKind.JObject)
             {
-                jsonValue.ReportUnknownMember(jsonPath, _options);
+                jsonValue.ReportUnknownMember(jsonPath, options);
                 return null;
             }
 
             JsonObjectValue schemaElementObject = (JsonObjectValue)jsonValue;
 
-            CsdlJsonSchemaItem schemaItem;
             // Each schema member oject should include "$Kind" member, whose value is a string
             string kind = GetKind(schemaElementObject, jsonPath);
             switch (kind)
             {
                 case "EntityContainer":
-                    schemaItem = ParseCsdlEntityContainer(name, schemaElementObject, jsonPath);
-                    break;
+                    return ParseCsdlEntityContainer(name, schemaElementObject, jsonPath, options);
 
                 case "EntityType":
-                    schemaItem = ParseCsdlEntityType(name, schemaElementObject, jsonPath);
-                    break;
+                    return ParseCsdlEntityType(name, schemaElementObject, jsonPath);
 
                 case "ComplexType":
-                    schemaItem = BuildCsdlComplexType(name, schemaElementObject, jsonPath);
-                    break;
+                    return BuildCsdlComplexType(name, schemaElementObject, jsonPath);
 
                 case "EnumType":
-                    schemaItem = BuildCsdlEnumType(name, schemaElementObject, jsonPath);
-                    break;
+                    return BuildCsdlEnumType(name, schemaElementObject, jsonPath);
 
                 case "TypeDefinition":
-                    schemaItem = BuildCsdlTyeDefinition(name, schemaElementObject, jsonPath);
-                    break;
+                    return BuildCsdlTyeDefinition(name, schemaElementObject, jsonPath);
 
                 case "Term":
-                    schemaItem = BuildCsdlTermType(name, schemaElementObject, jsonPath);
-                    break;
-
-                //case "Action":
-                //    schemaItem = new CsdlJsonSchemaActionItem();
-                //    break;
-
-                //case "Function":
-                //    schemaItem = new CsdlJsonSchemaFunctionItem();
-                //    break;
+                    return BuildCsdlTermType(name, schemaElementObject, jsonPath);
 
                 default:
                     // If there's no "$Kind" or unknow kind, it's not a schema element
-                    jsonValue.ReportUnknownMember(jsonPath, _options);
+                    jsonValue.ReportUnknownMember(jsonPath, options);
                     return null;
             }
+        }
 
-            schemaItem.Namespace = _schemaNamespace;
-            schemaItem.Name = name;
-            schemaItem.JsonPath = jsonPath;
-            return schemaItem;
+        /// <summary>
+        /// Build the schema member : EntityContainer
+        /// An entity container is represented as a member of the schema object:
+        /// whose name is the unqualified name of the entity container
+        /// whose value is an object.
+        /// </summary>
+        /// <param name="name">The entity container unqualified name.</param>
+        /// <param name="jsonValue">The entity contain value is an object.</param>
+        /// <returns></returns>
+        public static CsdlEntityContainer ParseCsdlEntityContainer(string name, IJsonValue jsonValue, IJsonPath jsonPath, CsdlSerializerOptions options)
+        {
+            // An entity container is represented as a member of the schema object whose name is the unqualified name of the entity container and whose value is an object.
+            JsonObjectValue entityContainerObj = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
+
+            // The entity container object MUST contain the member $Kind with a string value of EntityContainer.
+            string kind = GetKind(entityContainerObj, jsonPath);
+            if (kind != "EntityContainer")
+            {
+                throw new CsdlParseException(Strings.SchemaJsonParser_MissingKindMember("entity container", "EntityContainer"));
+            }
+
+            IList<CsdlElement> entityContainerMembers = new List<CsdlElement>();
+            string extends = null;
+            entityContainerObj.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
+            {
+                switch (propertyName)
+                {
+                    case "$Kind":
+                        // Skip it, it's parsed above.
+                        break;
+
+                    case "$Extends":
+                        // The entity container object MAY contain the member $Extends,
+                        // The value of $Extends is the qualified name of the entity container to be extended.
+                        extends = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        break;
+
+                    default:
+                        CsdlElement element = ParseEntityContainerMember(propertyName, propertyValue, jsonPath, options);
+                        if (element != null)
+                        {
+                            entityContainerMembers.Add(element);
+                        }
+                        else
+                        {
+                            propertyValue.ReportUnknownMember(jsonPath, options);
+                        }
+
+                        break;
+                }
+            });
+
+            CsdlLocation location = new CsdlLocation(jsonPath.ToString());
+            CsdlEntityContainer entityContainer = new CsdlEntityContainer(name, extends,
+                entityContainerMembers.OfType<CsdlEntitySet>(),
+                entityContainerMembers.OfType<CsdlSingleton>(),
+                entityContainerMembers.OfType<CsdlOperationImport>(),
+                location);
+
+            foreach (var annotation in entityContainerMembers.OfType<CsdlAnnotation>())
+            {
+                entityContainer.AddAnnotation(annotation);
+            }
+
+            return entityContainer;
+        }
+
+        public static CsdlElement ParseEntityContainerMember(string name, IJsonValue jsonValue, IJsonPath jsonPath, CsdlSerializerOptions options)
+        {
+            // It maybe entity container's annotation
+            if (name[0] == '@')
+            {
+                string termName = name.Substring(1);
+                return BuildCsdlAnnotation(termName, jsonValue, jsonPath);
+            }
+
+            CsdlOperationImport operationImport;
+            if (TryParseOperationImport(name, jsonValue, jsonPath, out operationImport))
+            {
+                return operationImport;
+            }
+
+            CsdlAbstractNavigationSource navigationSource;
+            if (TryParseNavigationSource(name, jsonValue, jsonPath, out navigationSource))
+            {
+                return navigationSource;
+            }
+
+            return null;
+        }
+
+        public static bool TryParseNavigationSource(string name, IJsonValue jsonValue, IJsonPath jsonPath, out CsdlAbstractNavigationSource navigationSource)
+        {
+            navigationSource = null;
+            if (jsonValue.ValueKind != JsonValueKind.JObject)
+            {
+                return false;
+            }
+
+            JsonObjectValue objValue = (JsonObjectValue)jsonValue;
+
+            IList<CsdlNavigationPropertyBinding> navigationPropertyBindings = new List<CsdlNavigationPropertyBinding>();
+            IList<CsdlAnnotation> annotations = new List<CsdlAnnotation>();
+            string type = null;
+            bool? isCollection = null;
+            bool? includeInServiceDocument = null;
+            bool? nullable = null;
+            foreach (var property in objValue)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                switch (propertyName)
+                {
+                    case "$Type":
+                        // The value of $Type is the qualified name of an entity type.
+                        type = propertyValue.ParseAsStringPrimitive();
+                        break;
+
+                    case "$Collection":
+                        // The value of $Collection is the Booelan value true.
+                        isCollection = propertyValue.ParseAsBooleanPrimitive();
+                        break;
+
+                    case "$IncludeInServiceDocument":
+                        // The value of $IncludeInServiceDocument is one of the Boolean literals true or false. Absence of the member means true.
+                        includeInServiceDocument = propertyValue.ParseAsBooleanPrimitive();
+                        break;
+
+                    case "$Nullable":
+                        // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
+                        // In OData 4.0 responses this member MUST NOT be specified.
+                        nullable = propertyValue.ParseAsBooleanPrimitive();
+                        break;
+
+                    case "$NavigationPropertyBinding":
+                        // The value of $NavigationPropertyBinding is an object.
+                        navigationPropertyBindings = BuildCsdlNavigationPropertyBinding(propertyValue);
+                        break;
+
+                    default:
+                        if (propertyName[0] == '@')
+                        {
+                            string termName = propertyName.Substring(1);
+                            annotations.Add(BuildCsdlAnnotation(termName, propertyValue, jsonPath));
+                        }
+                        break;
+                }
+            }
+
+            if (type == null)
+            {
+                return false;
+            }
+
+            CsdlLocation location = new CsdlLocation(jsonPath.ToString());
+
+            if (isCollection != null)
+            {
+                // entitySet
+                if (!isCollection.Value)
+                {
+                    // If presented, $IsCollection should be true
+                    throw new Exception();
+                }
+
+                if (includeInServiceDocument == null || includeInServiceDocument.Value)
+                {
+                    navigationSource = new CsdlEntitySet(name, type, navigationPropertyBindings, location);
+                }
+                else
+                {
+                    navigationSource = new CsdlEntitySet(name, type, navigationPropertyBindings, location, false);
+                }
+            }
+            else
+            {
+                // singleton
+                navigationSource = new CsdlSingleton(name, type, navigationPropertyBindings, location);
+            }
+
+            foreach (var annotation in annotations)
+            {
+                navigationSource.AddAnnotation(annotation);
+            }
+
+            return navigationSource != null;
+        }
+
+        public static IList<CsdlNavigationPropertyBinding> BuildCsdlNavigationPropertyBinding(IJsonValue jsonValue)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JObject)
+            {
+                return null;
+            }
+
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            JsonObjectValue objValue = (JsonObjectValue)jsonValue;
+
+            IList<CsdlNavigationPropertyBinding> bindings = new List<CsdlNavigationPropertyBinding>();
+            foreach (var property in objValue)
+            {
+                string bindingPath = property.Key;
+                string target = property.Value.ParseAsStringPrimitive();
+
+                bindings.Add(new CsdlNavigationPropertyBinding(bindingPath, target, location));
+            }
+
+            return bindings;
+        }
+
+        public static bool TryParseOperationImport(string name, IJsonValue jsonValue, IJsonPath jsonPath, out CsdlOperationImport operationImport)
+        {
+            operationImport = null;
+            if (jsonValue.ValueKind != JsonValueKind.JObject)
+            {
+                return false;
+            }
+
+            JsonObjectValue objValue = (JsonObjectValue)jsonValue;
+
+            IJsonValue importValue;
+            if (objValue.TryGetValue("$Action", out importValue))
+            {
+                // ActionImport
+                operationImport = BuildCsdlActionImport(name, objValue, jsonPath);
+                return true;
+            }
+
+            if (objValue.TryGetValue("$Function", out importValue))
+            {
+                // FunctionImport
+                operationImport = BuildCsdlFunctionImport(name, objValue, jsonPath);
+                return true;
+            }
+
+            return false;
+        }
+
+        public static CsdlActionImport BuildCsdlActionImport(string name, JsonObjectValue importObject, IJsonPath jsonPath)
+        {
+            IList<CsdlAnnotation> annotations = new List<CsdlAnnotation>();
+            string action = null;
+            string entitySet = null;
+            foreach (var property in importObject)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                switch (propertyName)
+                {
+                    case "$Action":
+                        // The value of $Action is a string containing the qualified name of an unbound action.
+                        action = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    case "$EntitySet":
+                        // The value of $EntitySet is a string containing either the unqualified name of an entity set in the same entity container
+                        // or a path to an entity set in a different entity container.
+                        entitySet = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    default:
+                        if (propertyName[0] == '@')
+                        {
+                            string termName = propertyName.Substring(1);
+                            annotations.Add(BuildCsdlAnnotation(termName, propertyValue, jsonPath));
+                        }
+
+                        break;
+                }
+            }
+
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            CsdlActionImport actionImport = new CsdlActionImport(name, action, entitySet, location);
+            foreach (var annotation in annotations)
+            {
+                actionImport.AddAnnotation(annotation);
+            }
+
+            return actionImport;
+        }
+
+        public static CsdlFunctionImport BuildCsdlFunctionImport(string name, JsonObjectValue importObject, IJsonPath jsonPath)
+        {
+            IList<CsdlAnnotation> annotations = new List<CsdlAnnotation>();
+            string function = null;
+            string entitySet = null;
+            bool? includeInServiceDocument = false; // Absence of the member means false.
+            foreach (var property in importObject)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                switch (propertyName)
+                {
+                    case "$Function":
+                        // The value of $Function is a string containing the qualified name of an unbound function.
+                        function = propertyValue.ParseAsStringPrimitive();
+                        break;
+
+                    case "$EntitySet":
+                        // The value of $EntitySet is a string containing either the unqualified name of an entity set in the same entity container
+                        // or a path to an entity set in a different entity container.
+                        entitySet = propertyValue.ParseAsStringPrimitive();
+                        break;
+
+                    case "$IncludeInServiceDocument":
+                        // The value of $IncludeInServiceDocument is one of the Boolean literals true or false. Absence of the member means false.
+                        includeInServiceDocument = propertyValue.ParseAsBooleanPrimitive();
+                        break;
+
+                    default:
+                        if (propertyName[0] == '@')
+                        {
+                            string termName = propertyName.Substring(1);
+                            annotations.Add(BuildCsdlAnnotation(termName, propertyValue, jsonPath));
+                        }
+
+                        break;
+                }
+            }
+
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            CsdlFunctionImport functionImport = new CsdlFunctionImport(name, function, entitySet, includeInServiceDocument.Value, location);
+            foreach (var annotation in annotations)
+            {
+                functionImport.AddAnnotation(annotation);
+            }
+
+            return functionImport;
         }
 
         /// <summary>
@@ -168,14 +469,21 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         /// <param name="name"></param>
         /// <param name="entityObject"></param>
         /// <returns></returns>
-        public static CsdlJsonSchemaEntityContainerItem ParseCsdlEntityContainer(string name, JsonObjectValue entityObject, IJsonPath jsonPath)
+        public static CsdlEntityType ParseCsdlEntityType(string name, JsonObjectValue entityObject, IJsonPath jsonPath)
         {
             // The entity type object MUST contain the member $Kind with a string value of EntityType.
             // It MAY contain the members $BaseType, $Abstract, $OpenType, $HasStream, and $Key.
             // It also MAY contain members representing structural properties and navigation properties as well as annotations.
-            CsdlJsonSchemaEntityContainerItem containerItem = new CsdlJsonSchemaEntityContainerItem();
-            containerItem.Name = name;
-
+            bool isOpen = false;
+            bool isAbstract = false;
+            string baseType = null;
+            IList<CsdlProperty> properties = new List<CsdlProperty>();
+            IList<CsdlNavigationProperty> navProperties = new List<CsdlNavigationProperty>();
+            IList<CsdlAnnotation> complexAnnotations = new List<CsdlAnnotation>();
+            IDictionary<string, IList<CsdlAnnotation>> propertyAnnotations = new Dictionary<string, IList<CsdlAnnotation>>();
+            string kind = null;
+            bool hasStream = false;
+            CsdlKey csdlKey = null;
             foreach (var property in entityObject)
             {
                 string propertyName = property.Key;
@@ -185,35 +493,292 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 {
                     // $Kind
                     case "$Kind":
+                        kind = ParseAsStringPrimitive(propertyValue);
                         // we can skip this verification, because it's verified at upper layer
                         break;
 
-                    // $Extends
-                    case "$Extends":
-                        // The value of $Extends is the qualified name of the entity container to be extended.
-                        containerItem.Extends = propertyValue.ParseAsStringPrimitive(jsonPath);
+                    // $BaseType
+                    case "$BaseType":
+                        baseType = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    // $Abstract
+                    case "$Abstract":
+                        isAbstract = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    // $OpenType
+                    case "$OpenType":
+                        isOpen = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    // $HasStream
+                    case "$HasStream":
+                        isOpen = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    case "$Key":
                         break;
 
                     default:
-                        containerItem.AddMember(propertyName, propertyValue);
+                        string termName;
+                        propertyName = SeperateAnnotationName(propertyName, out termName);
+                        if (termName == null)
+                        {
+                            // so it's complex property
+                            // Property is an object
+                            JsonObjectValue objValue = (JsonObjectValue)propertyValue;
+                            IJsonValue kindValue;
+                            if (objValue.TryGetValue(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Kind, out kindValue))
+                            {
+                                string kindString = ParseAsStringPrimitive(kindValue);
+                                if (kindString == CsdlConstants.Element_NavigationProperty)
+                                {
+                                    CsdlNavigationProperty navProperty = BuildCsdlNavigationProperty(propertyName, objValue, jsonPath);
+                                    navProperties.Add(navProperty);
+                                    break;
+                                }
+                            }
+
+                            // The property object MAY contain the member $Kind with a string value of Property.
+                            // This member SHOULD be omitted to reduce document size.
+                            CsdlProperty structuralProperty = BuildCsdlProperty(propertyName, objValue, jsonPath);
+                            properties.Add(structuralProperty);
+                        }
+                        else
+                        {
+                            CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+
+                            if (propertyName == null)
+                            {
+                                // annotation for the complex type
+                                complexAnnotations.Add(annotation);
+                            }
+                            else
+                            {
+                                // annotation for complex property
+                                IList<CsdlAnnotation> values;
+                                if (!propertyAnnotations.TryGetValue(propertyName, out values))
+                                {
+                                    values = new List<CsdlAnnotation>();
+                                    propertyAnnotations[propertyName] = values;
+                                }
+                                values.Add(annotation);
+                            }
+                        }
+
                         break;
                 }
             }
 
-            return containerItem;
+            if (kind != CsdlConstants.Element_EntityType)
+            {
+                throw new Exception();
+            }
+
+            foreach (var item in propertyAnnotations)
+            {
+                // TODO: maybe refactor later for performance
+                CsdlProperty structuralProperty = properties.FirstOrDefault(c => c.Name == item.Key);
+                if (structuralProperty != null)
+                {
+                    foreach (var annotation in item.Value)
+                    {
+                        structuralProperty.AddAnnotation(annotation);
+                    }
+
+                    continue;
+                }
+
+                CsdlNavigationProperty navProperty = navProperties.FirstOrDefault(c => c.Name == item.Key);
+                if (navProperty != null)
+                {
+                    foreach (var annotation in item.Value)
+                    {
+                        navProperty.AddAnnotation(annotation);
+                    }
+
+                    continue;
+                }
+
+                throw new Exception();
+            }
+
+            CsdlLocation location = new CsdlLocation(-1, -1);
+
+            // CsdlComplexType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> structuralProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlLocation location)
+            CsdlEntityType entityType = new CsdlEntityType(name, baseType, isAbstract, isOpen, hasStream, csdlKey,
+                properties, navProperties, location);
+            foreach (var annotation in complexAnnotations)
+            {
+                entityType.AddAnnotation(annotation);
+            }
+
+            return entityType;
         }
 
-        public static CsdlJsonSchemaEnumItem BuildCsdlEnumType(string name, JsonObjectValue enumObject, IJsonPath jsonPath)
+
+        /// <summary>
+        /// A complex type is represented as a member of the schema object whose name is the unqualified name of the complex type and whose value is an object.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="complexObject"></param>
+        /// <returns></returns>
+        public static CsdlComplexType BuildCsdlComplexType(string name, JsonObjectValue complexObject, IJsonPath jsonPath)
         {
-            // Enumeration Type Object
-            // An enumeration type is represented as a member of the schema object whose name is the unqualified name of the enumeration type and whose value is an object.
-            // The enumeration type object MUST contain the member $Kind with a string value of EnumType.
-            // It MAY contain the members $UnderlyingType and $IsFlags.
-            // The enumeration type object MUST contain members representing the enumeration type members.
-            // The enumeration type object MAY contain annotations.
-            CsdlJsonSchemaEnumItem enumItem = new CsdlJsonSchemaEnumItem();
-            enumItem.Name = name;
-            foreach (var property in enumObject)
+            // The complex type object MUST contain the member $Kind with a string value of ComplexType.
+            // It MAY contain the members $BaseType, $Abstract, and $OpenType.
+            // It also MAY contain members representing structural properties and navigation properties as well as annotations.
+
+            bool isOpen = false;
+            bool isAbstract = false;
+            string baseType = null;
+            IList<CsdlProperty> properties = new List<CsdlProperty>();
+            IList<CsdlNavigationProperty> navProperties = new List<CsdlNavigationProperty>();
+            IList<CsdlAnnotation> complexAnnotations = new List<CsdlAnnotation>();
+            IDictionary<string, IList<CsdlAnnotation>> propertyAnnotations = new Dictionary<string, IList<CsdlAnnotation>>();
+            foreach (var property in complexObject)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                switch (propertyName)
+                {
+                    // $Kind
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Kind:
+                        string kind = ParseAsStringPrimitive(propertyValue);
+                        if (kind != CsdlConstants.Element_ComplexType)
+                        {
+                            throw new Exception();
+                        }
+                        // we can skip this verification, because it's verified at upper layer
+                        break;
+
+                    // $BaseType
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_BaseType:
+                        baseType = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    // $Abstract
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Abstract:
+                        isAbstract = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    // $OpenType
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_OpenType:
+                        isOpen = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    default:
+                        string termName;
+                        propertyName = SeperateAnnotationName(propertyName, out termName);
+                        if (termName == null)
+                        {
+                            // so it's complex property
+                            // Property is an object
+                            JsonObjectValue objValue = (JsonObjectValue)propertyValue;
+                            IJsonValue kindValue;
+                            if (objValue.TryGetValue(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Kind, out kindValue))
+                            {
+                                string kindString = ParseAsStringPrimitive(kindValue);
+                                if (kindString == CsdlConstants.Element_NavigationProperty)
+                                {
+                                    CsdlNavigationProperty navProperty = BuildCsdlNavigationProperty(propertyName, objValue, jsonPath);
+                                    navProperties.Add(navProperty);
+                                    break;
+                                }
+                            }
+
+                            // The property object MAY contain the member $Kind with a string value of Property.
+                            // This member SHOULD be omitted to reduce document size.
+                            CsdlProperty structuralProperty = BuildCsdlProperty(propertyName, objValue, jsonPath);
+                            properties.Add(structuralProperty);
+                        }
+                        else
+                        {
+                            CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+
+                            if (propertyName == null)
+                            {
+                                // annotation for the complex type
+                                complexAnnotations.Add(annotation);
+                            }
+                            else
+                            {
+                                // annotation for complex property
+                                IList<CsdlAnnotation> values;
+                                if (!propertyAnnotations.TryGetValue(propertyName, out values))
+                                {
+                                    values = new List<CsdlAnnotation>();
+                                    propertyAnnotations[propertyName] = values;
+                                }
+                                values.Add(annotation);
+                            }
+                        }
+
+                        break;
+                }
+            }
+
+            foreach (var item in propertyAnnotations)
+            {
+                // TODO: maybe refactor later for performance
+                CsdlProperty structuralProperty = properties.FirstOrDefault(c => c.Name == item.Key);
+                if (structuralProperty != null)
+                {
+                    foreach (var annotation in item.Value)
+                    {
+                        structuralProperty.AddAnnotation(annotation);
+                    }
+
+                    continue;
+                }
+
+                CsdlNavigationProperty navProperty = navProperties.FirstOrDefault(c => c.Name == item.Key);
+                if (navProperty != null)
+                {
+                    foreach (var annotation in item.Value)
+                    {
+                        navProperty.AddAnnotation(annotation);
+                    }
+
+                    continue;
+                }
+
+                throw new Exception();
+            }
+
+            CsdlLocation location = new CsdlLocation(-1, -1);
+
+            // CsdlComplexType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> structuralProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlLocation location)
+            CsdlComplexType complexType = new CsdlComplexType(name, baseType, isAbstract, isOpen,
+                properties, navProperties, location);
+            foreach (var annotation in complexAnnotations)
+            {
+                complexType.AddAnnotation(annotation);
+            }
+
+            return complexType;
+        }
+
+        public static CsdlProperty BuildCsdlProperty(string name, JsonObjectValue propertyObject, IJsonPath jsonPath)
+        {
+            // Structural properties are represented as members of the object representing a structured type.
+            // The member name is the property name, the member value is an object.
+            // The property object MAY contain the member $Kind with a string value of Property. This member SHOULD be omitted to reduce document size.
+            // It MAY contain the member $Type, $Collection, $Nullable, $MaxLength, $Unicode, $Precision, $Scale, $SRID, and $DefaultValue.
+            string typeName = "Edm.String"; // Absence of the $Type member means the type is Edm.String.
+            bool isCollection = false;
+            bool nullable = false; //  Absence of the member means false.
+            int? maxLength = null;
+            int? precision = null;
+            int? scale = null;
+            bool? unicode = null; // Absence of the member means true.
+            int? srid = null;
+            string defaultValue = null;
+            string kind;
+            IList<CsdlAnnotation> propertyAnnotations = new List<CsdlAnnotation>();
+            foreach (var property in propertyObject)
             {
                 string propertyName = property.Key;
                 IJsonValue propertyValue = property.Value;
@@ -221,37 +786,303 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 switch (propertyName)
                 {
                     case "$Kind":
-                        // we can skip this verification, because it's verified at upper layer
+                        // The property object MAY contain the member $Kind with a string value of Property. This member SHOULD be omitted to reduce document size.
+                        kind = ParseAsStringPrimitive(propertyValue);
+                        if (kind != "Property")
+                        {
+                            throw new Exception();
+                        }
                         break;
 
-                    // $UnderlyingType
-                    case "$UnderlyingType":
-                        enumItem.UnderlyingTypeName = propertyValue.ParseAsStringPrimitive(jsonPath);
+                    case "$Type":
+                        // Absence of the $Type member means the type is Edm.String. This member SHOULD be omitted for string properties to reduce document size.
+                        typeName = ParseAsStringPrimitive(propertyValue);
                         break;
 
-                    // $IsFlags
-                    case "$IsFlags":
-                        enumItem.IsFlags = propertyValue.ParseAsBooleanPrimitive(jsonPath).Value;
+                    case "$Collection":
+                        // For collection-valued properties the value of $Type is the qualified name of the property’s item type,
+                        // and the member $Collection MUST be present with the literal value true.
+                        isCollection = ParseAsBooleanPrimitive(propertyValue);
+                        // TODO: should verify this value must be true?
+                        break;
+
+                    case "$Nullable":
+                        // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
+                        nullable = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    case "$MaxLength":
+                        // The value of $MaxLength is a positive integer.
+                        // CSDL xml defines a symbolic value max that is only allowed in OData 4.0 responses. This symbolic value is not allowed in CDSL JSON documents at all.
+                        maxLength = ParseAsIntegerPrimitive(propertyValue);
+                        break;
+
+                    case "$Precision":
+                        // The value of $Precision is a number.
+                        precision = ParseAsIntegerPrimitive(propertyValue);
+                        break;
+
+                    case "$Scale":
+                        // The value of $Scale is a number or a string with one of the symbolic values floating or variable.
+                        // Absence of $Scale means variable. However, "floating" and "variable" is not supported.
+                        scale = ParseAsIntegerPrimitive(propertyValue);
+                        break;
+
+                    case "$Unicode":
+                        // The value of $Unicode is one of the Boolean literals true or false. Absence of the member means true.
+                        unicode = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    case "$SRID":
+                        // The value of $SRID is a string containing a number or the symbolic value variable.
+                        // So far, ODL doesn't support string of SRID.
+                        srid = ParseAsIntegerPrimitive(propertyValue);
+                        break;
+
+                    case "$DefaultValue":
+                        // The value of $DefaultValue is the type-specific JSON representation of the default value of the property.
+                        // For properties of type Edm.Decimal and Edm.Int64 the representation depends on the media type parameter IEEE754Compatible.
+                        // So far, ODL only suppports the string default value.
+                        defaultValue = ParseAsStringPrimitive(propertyValue);
                         break;
 
                     default:
-                        enumItem.AddMember(propertyName, propertyValue);
-                        break;
+                        string termName;
+                        propertyName = SeperateAnnotationName(propertyName, out termName);
+                        if (termName != null && propertyName == null)
+                        {
+                            // annotation for the property
+                            CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+                            propertyAnnotations.Add(annotation);
+                            break;
+                        }
+
+                        // Without '@' in the name, it's not allowed in Navigation Property object
+                        throw new Exception();
                 }
             }
 
-            return enumItem;
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            CsdlTypeReference typeReference = ParseTypeReference(typeName, isCollection, false, nullable, maxLength, unicode, precision, scale, srid, location);
+
+            CsdlProperty csdlProperty = new CsdlProperty(name, typeReference, defaultValue, location);
+            foreach (var item in propertyAnnotations)
+            {
+                csdlProperty.AddAnnotation(item);
+            }
+            return csdlProperty;
         }
 
+        public static CsdlNavigationProperty BuildCsdlNavigationProperty(string name, JsonObjectValue navigtionObject, IJsonPath jsonPath)
+        {
+            // Navigation properties are represented as members of the object representing a structured type.
+            // The member name is the property name, the member value is an object.
+            // The navigation property object MUST contain the member $Kind with a string value of NavigationProperty.
+            // It MUST contain the member $Type, and it MAY contain the members $Collection, $Nullable, $Partner, $ContainsTarget, $ReferentialConstraint, and $OnDelete.
+            string kind = null;
+            string typeName = null;
+            bool isCollection = false;
+            bool nullable = false;
+            string parter = null;
+            bool containsTarget = false; // Absence of the member means false.
+            IList<CsdlAnnotation> onDeleteAnnotations = new List<CsdlAnnotation>();
+            CsdlOnDelete csdlOnDelete = null;
 
-        public static CsdlJsonSchemaTypeDefinitionItem BuildCsdlTyeDefinition(string name, JsonObjectValue typeDefinitionObject, IJsonPath jsonPath)
+            CsdlLocation location = new CsdlLocation(-1, -1);
+
+            IList<CsdlAnnotation> navPropertyAnnotations = new List<CsdlAnnotation>();
+            IList<CsdlReferentialConstraint> referentialConstraints = null;
+            foreach (var property in navigtionObject)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                switch (propertyName)
+                {
+                    case "$Kind":
+                        // The property object MAY contain the member $Kind with a string value of NavigationProperty
+                        kind = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    case "$Type":
+                        // Absence of the $Type member means the type is Edm.String. This member SHOULD be omitted for string properties to reduce document size.
+                        typeName = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    case "$Collection":
+                        // For collection-valued properties the value of $Type is the qualified name of the property’s item type,
+                        // and the member $Collection MUST be present with the literal value true.
+                        isCollection = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    case "$Nullable":
+                        // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
+                        nullable = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    case "$Partner":
+                        // The value of $Partner is a string containing the path to the partner navigation property.
+                        parter = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    case "$ContainsTarget":
+                        // The value of $ContainsTarget is one of the Boolean literals true or false. Absence of the member means false.
+                        containsTarget = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    case "$OnDelete":
+                        // The value of $OnDelete is a string with one of the values Cascade, None, SetNull, or SetDefault.
+                        csdlOnDelete = BuildCsdlOnDelete(propertyValue, location);
+                        break;
+
+                    case "$ReferentialConstraint":
+                        referentialConstraints = BuildCsdlReferentialConstraint(propertyValue, jsonPath);
+                        break;
+
+                    default:
+                        string termName;
+                        propertyName = SeperateAnnotationName(propertyName, out termName);
+                        if (termName != null)
+                        {
+                            CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+                            if (propertyName == null)
+                            {
+                                // annotation for the navigation property
+                                navPropertyAnnotations.Add(annotation);
+                                break;
+                            }
+                            else if (propertyName == "$OnDelete")
+                            {
+                                // annotation for OnDelte
+                                onDeleteAnnotations.Add(annotation);
+                                break;
+                            }
+                        }
+
+                        // Without '@' in the name, it's not allowed in Navigation Property object
+                        throw new Exception();
+                }
+            }
+
+            if (kind == null || kind != "NavigationProperty")
+            {
+                throw new Exception();
+            }
+
+            if (isCollection)
+            {
+                typeName = "Collection(" + typeName + ")";
+            }
+
+
+            if (csdlOnDelete != null && onDeleteAnnotations.Count > 0)
+            {
+                foreach (var item in onDeleteAnnotations)
+                {
+                    csdlOnDelete.AddAnnotation(item);
+                }
+            }
+
+            CsdlNavigationProperty csdlNavProperty = new CsdlNavigationProperty(name, typeName, nullable, parter, containsTarget, csdlOnDelete, referentialConstraints, location);
+            foreach (var item in navPropertyAnnotations)
+            {
+                csdlNavProperty.AddAnnotation(item);
+            }
+            return csdlNavProperty;
+        }
+
+        public static IList<CsdlReferentialConstraint> BuildCsdlReferentialConstraint(IJsonValue value, IJsonPath jsonPath)
+        {
+            if (value.ValueKind != JsonValueKind.JObject)
+            {
+                return null;
+            }
+
+            JsonObjectValue referentialConstraintObject = (JsonObjectValue)value;
+            // The value of $ReferentialConstraint is an object with one member per referential constraint.
+            // The member name is the path to the dependent property, this path is relative to the structured type declaring the navigation property.
+            // The member value is a string containing the path to the principal property, this path is relative to the entity type that is the target of the navigation property.
+            // It also MAY contain annotations.These are prefixed with the path of the dependent property of the annotated referential constraint.
+            IList<CsdlReferentialConstraint> referentialConstraints = new List<CsdlReferentialConstraint>();
+            IDictionary<string, IList<CsdlAnnotation>> itemsAnnotations = new Dictionary<string, IList<CsdlAnnotation>>();
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            foreach (var property in referentialConstraintObject)
+            {
+                string propertyName = property.Key;
+                IJsonValue propertyValue = property.Value;
+
+                string termName;
+                propertyName = SeperateAnnotationName(propertyName, out termName);
+                if (termName != null)
+                {
+                    // "CategoryKind@Core.Description": "Referential Constraint to non-key property"
+                    CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+
+                    IList<CsdlAnnotation> annotations;
+                    if (!itemsAnnotations.TryGetValue(propertyName, out annotations))
+                    {
+                        annotations = new List<CsdlAnnotation>();
+                        itemsAnnotations[propertyName] = annotations;
+                    }
+                    annotations.Add(annotation);
+                }
+                else
+                {
+                    // "CategoryKind": "Kind"
+                    string referedProperty = ParseAsStringPrimitive(propertyValue);
+
+                    // PropertyName is the dependent property
+                    // PropertyValue is the principal property.
+                    referentialConstraints.Add(new CsdlReferentialConstraint(referedProperty, propertyName, location));
+                }
+            }
+
+            foreach (var item in referentialConstraints)
+            {
+                IList<CsdlAnnotation> annotations;
+                if (itemsAnnotations.TryGetValue(item.PropertyName, out annotations))
+                {
+                    foreach (var ann in annotations)
+                    {
+                        item.AddAnnotation(ann);
+                    }
+                }
+            }
+
+            return referentialConstraints;
+        }
+
+        public static CsdlOnDelete BuildCsdlOnDelete(IJsonValue value, CsdlLocation parentLocation)
+        {
+            string onDelete = ParseAsStringPrimitive(value);
+
+            EdmOnDeleteAction edmOnDelete = EdmOnDeleteAction.None;
+            switch (onDelete)
+            {
+                case "Cascade":
+                    edmOnDelete = EdmOnDeleteAction.Cascade;
+                    break;
+                default:
+                    // So far, ODL only supports "Cascade", for others "SetNull, or SetDefault.", we use "None" for them
+                    break;
+            }
+
+            return new CsdlOnDelete(edmOnDelete, parentLocation);
+        }
+
+        public static CsdlTypeDefinition BuildCsdlTyeDefinition(string name, JsonObjectValue typeDefinitionObject, IJsonPath jsonPath)
         {
             // A type definition is represented as a member of the schema object whose name is the unqualified name of the type definition and whose value is an object.
             // The type definition object MUST contain the member $Kind with a string value of TypeDefinition and the member $UnderlyingType.
             // It MAY contain the members $MaxLength, $Unicode, $Precision, $Scale, and $SRID, and it MAY contain annotations.
-
-            CsdlJsonSchemaTypeDefinitionItem typeDefinitionItem = new CsdlJsonSchemaTypeDefinitionItem();
-            typeDefinitionItem.Name = name;
+            string kind = null;
+            int? maxLength = null;
+            int? precision = null;
+            int? scale = null;
+            bool? unicode = null; // Absence of the member means true.
+            string underlygingType = null;
+            IList<CsdlAnnotation> typeDefinitionAnnotations = new List<CsdlAnnotation>();
+            CsdlLocation location = new CsdlLocation(-1, -1);
 
             foreach (var property in typeDefinitionObject)
             {
@@ -262,63 +1093,84 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 {
                     case "$Kind":
                         // The property object MAY contain the member $Kind with a string value of NavigationProperty
+                        kind = ParseAsStringPrimitive(propertyValue);
                         break;
 
                     case "$UnderlyingType":
-                        // Why does it can't be omit for "Edm.String"?
                         // The value of $UnderlyingType is the qualified name of the underlying type.
-                        typeDefinitionItem.UnderlyingTypeName = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        underlygingType = ParseAsStringPrimitive(propertyValue);
                         break;
 
                     case "$MaxLength":
                         // The value of $MaxLength is a positive integer.
                         // CSDL xml defines a symbolic value max that is only allowed in OData 4.0 responses. This symbolic value is not allowed in CDSL JSON documents at all.
-                        typeDefinitionItem.MaxLength = propertyValue.ParseAsIntegerPrimitive(jsonPath);
+                        maxLength = ParseAsIntegerPrimitive(propertyValue);
                         break;
 
                     case "$Precision":
                         // The value of $Precision is a number.
-                        typeDefinitionItem.Precision = propertyValue.ParseAsIntegerPrimitive(jsonPath);
+                        precision = ParseAsIntegerPrimitive(propertyValue);
                         break;
 
                     case "$Scale":
                         // The value of $Scale is a number or a string with one of the symbolic values floating or variable.
                         // Absence of $Scale means variable. However, "floating" and "variable" is not supported.
-                        typeDefinitionItem.Scale = propertyValue.ParseAsIntegerPrimitive(jsonPath);
-                        break;
-
-                    case "$SRID":
-                        // The value of $Scale is a number or a string with one of the symbolic values floating or variable.
-                        // Absence of $Scale means variable. However, "floating" and "variable" is not supported.
-                        typeDefinitionItem.Srid = propertyValue.ParseAsIntegerPrimitive(jsonPath);
+                        scale = ParseAsIntegerPrimitive(propertyValue);
                         break;
 
                     case "$Unicode":
                         // The value of $Unicode is one of the Boolean literals true or false. Absence of the member means true.
-                        typeDefinitionItem.Unicode = propertyValue.ParseAsBooleanPrimitive(jsonPath);
+                        unicode = ParseAsBooleanPrimitive(propertyValue);
                         break;
 
                     default:
-                        typeDefinitionItem.AddMember(propertyName, propertyValue);
-                        break;
+                        string termName;
+                        propertyName = SeperateAnnotationName(propertyName, out termName);
+                        if (termName != null && propertyName == null)
+                        {
+                            CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+                            // annotation for the navigation property
+                            typeDefinitionAnnotations.Add(annotation);
+                            break;
+                        }
+
+                        // Without '@' in the name, it's not allowed in Navigation Property object
+                        throw new Exception();
                 }
             }
 
-            return typeDefinitionItem;
+            if (kind == null || kind != "TypeDefinition")
+            {
+                throw new Exception();
+            }
+
+            CsdlTypeDefinition typeDefinition = new CsdlTypeDefinition(name, underlygingType, location);
+            foreach (var item in typeDefinitionAnnotations)
+            {
+                typeDefinition.AddAnnotation(item);
+            }
+
+            return typeDefinition;
         }
 
-        public static CsdlJsonSchemaTermItem BuildCsdlTermType(string name, JsonObjectValue termObject, IJsonPath jsonPath)
+        public static CsdlOperation BuildCsdlOperation(string name, IJsonValue jsonValue, IJsonPath jsonPath)
         {
-            // Term Object
-            // A term is represented as a member of the schema object whose name is the unqualified name of the term and whose value is an object.
-            // The term object MUST contain the member $Kind with a string value of Term.
-            // It MAY contain the members $Type, $Collection, $AppliesTo, $Nullable, $MaxLength, $Precision, $Scale, $SRID, and $DefaultValue, as well as $Unicode for 4.01 and greater payloads.
-            // It MAY contain annotations.
-            CsdlJsonSchemaTermItem termItem = new CsdlJsonSchemaTermItem();
-            termItem.Name = name;
-            termItem.QualifiedTypeName = "Edm.String"; // Absence of the $Type member means the type is Edm.String.
+            // The action/funtion overload object MUST contain the member $Kind with a string value of Action/Function.
+            if (jsonValue.ValueKind != JsonValueKind.JObject)
+            {
+                return null;
+            }
 
-            foreach (var property in termObject)
+            JsonObjectValue operationObject = (JsonObjectValue)jsonValue;
+
+            bool isBound = false; // absence of the member means false
+            bool isComposable = false; // Absence of the member means false.
+            string kind = null;
+            string entitySetPath = null;
+            IList<CsdlAnnotation> operationAnnotations = new List<CsdlAnnotation>();
+            IList<CsdlOperationParameter> parameters = null;
+            CsdlOperationReturn operationReturn = null;
+            foreach (var property in operationObject)
             {
                 string propertyName = property.Key;
                 IJsonValue propertyValue = property.Value;
@@ -326,188 +1178,93 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 switch (propertyName)
                 {
                     case "$Kind":
-                        // The property object MAY contain the member $Kind with a string value of Property. This member SHOULD be omitted to reduce document size.
+                        // The property object MAY contain the member $Kind with a string value of Action/Function
+                        kind = ParseAsStringPrimitive(propertyValue);
                         break;
 
-                    case "$Type":
-                        // Absence of the $Type member means the type is Edm.String. This member SHOULD be omitted for string properties to reduce document size.
-                        termItem.QualifiedTypeName = propertyValue.ParseAsStringPrimitive(jsonPath);
+                    case "$IsBound":
+                        // The value of $IsBound is one of the Boolean literals true or false. Absence of the member means false.
+                        isBound = ParseAsBooleanPrimitive(propertyValue);
                         break;
 
-                    case "$Collection":
-                        // For collection-valued properties the value of $Type is the qualified name of the property’s item type,
-                        // and the member $Collection MUST be present with the literal value true.
-                        termItem.IsCollection = propertyValue.ParseAsBooleanPrimitive(jsonPath).Value;
-                        // TODO: should verify this value must be true?
+                    case "$EntitySetPath":
+                        // The value of $EntitySetPath is a string containing the entity set path.
+                        entitySetPath = ParseAsStringPrimitive(propertyValue);
                         break;
 
-                    case "$AppliesTo":
-                        // The value of $AppliesTo is an array whose items are strings containing symbolic values from the table above that identify model elements the term is intended to be applied to.
-                        JsonArrayValue appliesToArray = propertyValue.ValidateRequiredJsonValue<JsonArrayValue>(jsonPath);
-                        termItem.AppliesTo = appliesToArray.ParseArray<string>(jsonPath, (v, p) => v.ParseAsStringPrimitive(p));
+                    case "$Parameter":
+                        // The value of $Parameter is an array. The array contains one object per parameter.
+                        parameters = BuildCsdlOperationParameters(propertyValue);
                         break;
 
-                    case "$Nullable":
-                        // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
-                        termItem.Nulable = propertyValue.ParseAsBooleanPrimitive(jsonPath).Value;
+                    case "$ReturnType":
+                        // The value of $ReturnType is an object.
+                        operationReturn = BuildCsdlOperationReturn(propertyValue);
                         break;
 
-                    case "$MaxLength":
-                        // The value of $MaxLength is a positive integer.
-                        // CSDL xml defines a symbolic value max that is only allowed in OData 4.0 responses. This symbolic value is not allowed in CDSL JSON documents at all.
-                        termItem.MaxLength = propertyValue.ParseAsIntegerPrimitive(jsonPath);
-                        break;
-
-                    case "$Precision":
-                        // The value of $Precision is a number.
-                        termItem.Precision = propertyValue.ParseAsIntegerPrimitive(jsonPath);
-                        break;
-
-                    case "$Scale":
-                        // The value of $Scale is a number or a string with one of the symbolic values floating or variable.
-                        // Absence of $Scale means variable. However, "floating" and "variable" is not supported.
-                        termItem.Scale = propertyValue.ParseAsIntegerPrimitive(jsonPath);
-                        break;
-
-                    case "$Unicode":
-                        // The value of $Unicode is one of the Boolean literals true or false. Absence of the member means true.
-                        termItem.Unicode = propertyValue.ParseAsBooleanPrimitive(jsonPath);
-                        break;
-
-                    case "$SRID":
-                        // The value of $SRID is a string containing a number or the symbolic value variable.
-                        // So far, ODL doesn't support string of SRID.
-                        termItem.Srid = propertyValue.ParseAsIntegerPrimitive(jsonPath);
-                        break;
-
-                    case "$DefaultValue":
-                        // The value of $DefaultValue is the type-specific JSON representation of the default value of the property.
-                        // For properties of type Edm.Decimal and Edm.Int64 the representation depends on the media type parameter IEEE754Compatible.
-                        // So far, ODL only suppports the string default value.
-                        termItem.DefaultValue = propertyValue.ParseAsStringPrimitive(jsonPath);
-                        break;
-
-                    case "$BaseTerm":
-                        // The value of $BaseTerm is the qualified name of the base term.
-                        // So far, it's not supported, so skip it.
+                    case "$IsComposable":
+                        // The value of $IsComposable is one of the Boolean literals true or false. Absence of the member means false.
+                        entitySetPath = ParseAsStringPrimitive(propertyValue);
                         break;
 
                     default:
-                        termItem.AddMember(propertyName, propertyValue);
-                        break;
+                        string termName;
+                        propertyName = SeperateAnnotationName(propertyName, out termName);
+                        if (termName != null && propertyName == null)
+                        {
+                            CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+                            // annotation for the operation
+                            operationAnnotations.Add(annotation);
+                            break;
+                        }
+
+                        throw new Exception();
                 }
             }
 
-            return termItem;
-        }
-
-        /// <summary>
-        /// A complex type is represented as a member of the schema object whose name is the unqualified name of the complex type and whose value is an object.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="complexObject"></param>
-        /// <returns></returns>
-        public static CsdlJsonSchemaComplexItem BuildCsdlComplexType(string name, JsonObjectValue complexObject, IJsonPath jsonPath)
-        {
-            // The complex type object MUST contain the member $Kind with a string value of ComplexType.
-            // It MAY contain the members $BaseType, $Abstract, and $OpenType.
-            // It also MAY contain members representing structural properties and navigation properties as well as annotations.
-
-            CsdlJsonSchemaComplexItem complexItem = new CsdlJsonSchemaComplexItem();
-            complexItem.Name = name;
-
-            foreach (var property in complexObject)
+            if (kind == null)
             {
-                string propertyName = property.Key;
-                IJsonValue propertyValue = property.Value;
-
-                switch (propertyName)
-                {
-                    // $Kind
-                    case "$Kind":
-                        // we can skip this verification, because it's verified at upper layer
-                        break;
-
-                    // $BaseType
-                    case "$BaseType":
-                        complexItem.BaseType = propertyValue.ParseAsStringPrimitive(jsonPath);
-                        break;
-
-                    // $Abstract
-                    case "$Abstract":
-                        complexItem.IsAbstract = propertyValue.ParseAsBooleanPrimitive(jsonPath).Value;
-                        break;
-
-                    // $OpenType
-                    case "$OpenType":
-                        complexItem.IsOpen = propertyValue.ParseAsBooleanPrimitive(jsonPath).Value;
-                        break;
-
-                    default:
-                        complexItem.AddMember(propertyName, propertyValue);
-                        break;
-                }
+                throw new Exception();
             }
 
-            return complexItem;
-        }
+            //bool isAction = kind == "Action";
 
-        /// <summary>
-        /// An entity type is represented as a member of the schema object whose name is the unqualified name of the entity type and whose value is an object.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="entityObject"></param>
-        /// <returns></returns>
-        public static CsdlJsonSchemaEntityItem ParseCsdlEntityType(string name, JsonObjectValue entityObject, IJsonPath jsonPath)
-        {
-            // The entity type object MUST contain the member $Kind with a string value of EntityType.
-            // It MAY contain the members $BaseType, $Abstract, $OpenType, $HasStream, and $Key.
-            // It also MAY contain members representing structural properties and navigation properties as well as annotations.
-            CsdlJsonSchemaEntityItem entityTypeItem = new CsdlJsonSchemaEntityItem();
-            entityTypeItem.Name = name;
-            foreach (var property in entityObject)
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            CsdlOperation operation;
+            if (kind == "Action")
             {
-                string propertyName = property.Key;
-                IJsonValue propertyValue = property.Value;
-
-                switch (propertyName)
-                {
-                    // $Kind
-                    case "$Kind":
-                        // we can skip this verification, because it's verified at upper layer
-                        break;
-
-                    // $BaseType
-                    case "$BaseType":
-                        entityTypeItem.BaseType = propertyValue.ParseAsStringPrimitive(jsonPath);
-                        break;
-
-                    // $Abstract
-                    case "$Abstract":
-                        entityTypeItem.IsAbstract = propertyValue.ParseAsBooleanPrimitive(jsonPath).Value;
-                        break;
-
-                    // $OpenType
-                    case "$OpenType":
-                        entityTypeItem.IsOpen = propertyValue.ParseAsBooleanPrimitive(jsonPath).Value;
-                        break;
-
-                    // $HasStream
-                    case "$HasStream":
-                        entityTypeItem.HasStream = propertyValue.ParseAsBooleanPrimitive(jsonPath).Value;
-                        break;
-
-                    default:
-                        entityTypeItem.AddMember(propertyName, propertyValue);
-                        break;
-                }
+                // It's action
+                operation = new CsdlAction(name, parameters, operationReturn, isBound, entitySetPath, location);
+            }
+            else if (kind == "Function")
+            {
+                // It's function
+                operation = new CsdlFunction(name, parameters, operationReturn, isBound, entitySetPath, isComposable, location);
+            }
+            else
+            {
+                throw new Exception();
             }
 
-            return entityTypeItem;
+            foreach (var annotation in operationAnnotations)
+            {
+                operation.AddAnnotation(annotation);
+            }
+
+            return operation;
         }
 
+        public static IList<CsdlOperationParameter> BuildCsdlOperationParameters(IJsonValue jsonValue)
+        {
+            return null;
+        }
 
-        public static IList<CsdlJsonSchemaOperationItem> BuildCsdlOperationOverload(string name, IJsonValue jsonValue, IJsonPath jsonPath)
+        public static CsdlOperationReturn BuildCsdlOperationReturn(IJsonValue jsonValue)
+        {
+            return null;
+        }
+
+        public static IList<CsdlOperation> BuildCsdlOperationOverload(string name, IJsonValue jsonValue, IJsonPath jsonPath)
         {
             // An action/function is represented as a member of the schema object whose name is the unqualified name of the action and whose value is an array.
             // The array contains one object per action/function overload.
@@ -518,58 +1275,523 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
 
             JsonArrayValue operationArray = (JsonArrayValue)jsonValue;
             //   CsdlLocation location = new CsdlLocation(-1, -1);
-            IList<CsdlJsonSchemaOperationItem> operations = new List<CsdlJsonSchemaOperationItem>();
-            operationArray.ProcessItem(jsonPath, v =>
+            IList<CsdlOperation> operations = new List<CsdlOperation>();
+            foreach (var item in operationArray)
             {
-                CsdlJsonSchemaOperationItem operation = BuildCsdlOperation(name, v, jsonPath);
+                CsdlOperation operation = BuildCsdlOperation(name, item, jsonPath);
                 operations.Add(operation);
-            });
+            }
 
             return operations;
         }
 
-        public static CsdlJsonSchemaOperationItem BuildCsdlOperation(string name, IJsonValue jsonValue, IJsonPath jsonPath)
+        public static CsdlTerm BuildCsdlTermType(string name, JsonObjectValue termObject, IJsonPath jsonPath)
         {
-            // The action/funtion overload object MUST contain the member $Kind with a string value of Action/Function.
-            if (jsonValue.ValueKind != JsonValueKind.JObject)
+            // Term Object
+            // A term is represented as a member of the schema object whose name is the unqualified name of the term and whose value is an object.
+            // The term object MUST contain the member $Kind with a string value of Term.
+            // It MAY contain the members $Type, $Collection, $AppliesTo, $Nullable, $MaxLength, $Precision, $Scale, $SRID, and $DefaultValue, as well as $Unicode for 4.01 and greater payloads.
+            // It MAY contain annotations.
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            IList<CsdlAnnotation> termAnnotations = new List<CsdlAnnotation>();
+
+            string typeName = "Edm.String"; // Absence of the $Type member means the type is Edm.String.
+            bool isCollection = false;
+            bool nullable = false; //  Absence of the member means false.
+            int? maxLength = null;
+            int? precision = null;
+            int? scale = null;
+            bool? unicode = null; // Absence of the member means true.
+            int? srid = null;
+            string defaultValue = null;
+            string kind;
+            IList<string> appliesTo = null;
+            termObject.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
             {
-                return null;
+                switch (propertyName)
+                {
+                    case "$Kind":
+                        // The property object MAY contain the member $Kind with a string value of Property. This member SHOULD be omitted to reduce document size.
+                        kind = ParseAsStringPrimitive(propertyValue);
+                        if (kind != "Term")
+                        {
+                            throw new Exception();
+                        }
+                        break;
+
+                    case "$Type":
+                        // Absence of the $Type member means the type is Edm.String. This member SHOULD be omitted for string properties to reduce document size.
+                        typeName = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    case "$Collection":
+                        // For collection-valued properties the value of $Type is the qualified name of the property’s item type,
+                        // and the member $Collection MUST be present with the literal value true.
+                        isCollection = ParseAsBooleanPrimitive(propertyValue);
+                        // TODO: should verify this value must be true?
+                        break;
+
+                    case "$AppliesTo":
+                        // The value of $AppliesTo is an array whose items are strings containing symbolic values from the table above that identify model elements the term is intended to be applied to.
+                        JsonArrayValue appliesToArray = propertyValue.ValidateRequiredJsonValue<JsonArrayValue>(jsonPath);
+                        appliesTo = appliesToArray.ParseArray<string>(jsonPath, (v, p) => v.ParseAsStringPrimitive(p));
+                        break;
+
+                    case "$Nullable":
+                        // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
+                        nullable = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    case "$MaxLength":
+                        // The value of $MaxLength is a positive integer.
+                        // CSDL xml defines a symbolic value max that is only allowed in OData 4.0 responses. This symbolic value is not allowed in CDSL JSON documents at all.
+                        maxLength = ParseAsIntegerPrimitive(propertyValue);
+                        break;
+
+                    case "$Precision":
+                        // The value of $Precision is a number.
+                        precision = ParseAsIntegerPrimitive(propertyValue);
+                        break;
+
+                    case "$Scale":
+                        // The value of $Scale is a number or a string with one of the symbolic values floating or variable.
+                        // Absence of $Scale means variable. However, "floating" and "variable" is not supported.
+                        scale = ParseAsIntegerPrimitive(propertyValue);
+                        break;
+
+                    case "$Unicode":
+                        // The value of $Unicode is one of the Boolean literals true or false. Absence of the member means true.
+                        unicode = ParseAsBooleanPrimitive(propertyValue);
+                        break;
+
+                    case "$SRID":
+                        // The value of $SRID is a string containing a number or the symbolic value variable.
+                        // So far, ODL doesn't support string of SRID.
+                        srid = ParseAsIntegerPrimitive(propertyValue);
+                        break;
+
+                    case "$DefaultValue":
+                        // The value of $DefaultValue is the type-specific JSON representation of the default value of the property.
+                        // For properties of type Edm.Decimal and Edm.Int64 the representation depends on the media type parameter IEEE754Compatible.
+                        // So far, ODL only suppports the string default value.
+                        defaultValue = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    case "$BaseTerm":
+                        // The value of $BaseTerm is the qualified name of the base term.
+                        // So far, it's not supported, so skip it.
+                        break;
+
+                    default:
+                        string termName;
+                        propertyName = SeperateAnnotationName(propertyName, out termName);
+                        if (termName != null && propertyName == null)
+                        {
+                            // annotation for the property
+                            CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+                            termAnnotations.Add(annotation);
+                            break;
+                        }
+
+                        // Without '@' in the name, it's not allowed in Navigation Property object
+                        throw new Exception();
+                }
+            });
+
+            CsdlTypeReference typeReference = ParseTypeReference(typeName, isCollection, false, nullable, maxLength, unicode, precision, scale, srid, location);
+            // CsdlTerm(string name, CsdlTypeReference type, string appliesTo, string defaultValue, CsdlLocation location)
+
+            string appliesToStr = appliesTo != null ? string.Join(" ", appliesTo) : null;
+            CsdlTerm termType = new CsdlTerm(name, typeReference, appliesToStr, defaultValue, location);
+            foreach (var annotation in termAnnotations)
+            {
+                termType.AddAnnotation(annotation);
             }
 
-            JsonObjectValue operationObject = (JsonObjectValue)jsonValue;
+            return termType;
+        }
 
-            CsdlJsonSchemaOperationItem opertationItem = null;
-            string kind = GetKind(operationObject, jsonPath);
-            if (kind == "Action")
-            {
-                // It's action
-                opertationItem = new CsdlJsonSchemaActionItem();
-            }
-            else
-            {
-                // It's function
-                opertationItem = new CsdlJsonSchemaFunctionItem();
-            }
-            opertationItem.Name = name;
+        public static CsdlEnumType BuildCsdlEnumType(string name, JsonObjectValue enumObject, IJsonPath jsonPath)
+        {
+            // Enumeration Type Object
+            // An enumeration type is represented as a member of the schema object whose name is the unqualified name of the enumeration type and whose value is an object.
+            // The enumeration type object MUST contain the member $Kind with a string value of EnumType.
+            // It MAY contain the members $UnderlyingType and $IsFlags.
+            // The enumeration type object MUST contain members representing the enumeration type members.
+            // The enumeration type object MAY contain annotations.
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            IList<CsdlEnumMember> members = new List<CsdlEnumMember>();
+            IList<CsdlAnnotation> enumAnnotations = new List<CsdlAnnotation>();
+            IDictionary<string, IList<CsdlAnnotation>> memberAnnotations = new Dictionary<string, IList<CsdlAnnotation>>();
+            bool isFlags = false;
+            string underlyingTypeName = null;
 
-            foreach (var property in operationObject)
+            foreach (var property in enumObject)
             {
                 string propertyName = property.Key;
                 IJsonValue propertyValue = property.Value;
 
                 switch (propertyName)
                 {
-                    case "$Kind":
-                        // The property object MAY contain the member $Kind with a string value of Action/Function
+                    // $Kind
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Kind:
+                        string kind = ParseAsStringPrimitive(propertyValue);
+                        if (kind != CsdlConstants.Element_EnumType)
+                        {
+                            throw new Exception();
+                        }
+                        // we can skip this verification, because it's verified at upper layer
+                        break;
+
+                    // $UnderlyingType
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_UnderlyingType:
+                        underlyingTypeName = ParseAsStringPrimitive(propertyValue);
+                        break;
+
+                    // $IsFlags
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_IsFlags:
+                        isFlags = ParseAsBooleanPrimitive(propertyValue);
                         break;
 
                     default:
-                        opertationItem.AddMember(propertyName, propertyValue);
+                        string termName;
+                        propertyName = SeperateAnnotationName(propertyName, out termName);
+                        if (termName == null)
+                        {
+                            // Without '@' in the name, so it's normal enum member name
+                            CsdlEnumMember enumMember = BuildCsdlEnumMember(propertyName, propertyValue);
+                            members.Add(enumMember);
+                        }
+                        else
+                        {
+                            CsdlAnnotation annotation = BuildCsdlAnnotation(termName, propertyValue, jsonPath);
+
+                            if (propertyName == null)
+                            {
+                                // annotation for the enum type
+                                enumAnnotations.Add(annotation);
+                            }
+                            else
+                            {
+                                // annotation for enum member
+                                IList<CsdlAnnotation> values;
+                                if (!memberAnnotations.TryGetValue(propertyName, out values))
+                                {
+                                    values = new List<CsdlAnnotation>();
+                                    memberAnnotations[propertyName] = values;
+                                }
+                                values.Add(annotation);
+                            }
+                        }
+
                         break;
                 }
             }
 
-            return opertationItem;
+            foreach (var item in memberAnnotations)
+            {
+                // TODO: maybe refactor later for performance
+                CsdlEnumMember member = members.FirstOrDefault(c => c.Name == item.Key);
+                if (member == null)
+                {
+                    throw new Exception();
+                }
+
+                foreach (var annotation in item.Value)
+                {
+                    member.AddAnnotation(annotation);
+                }
+            }
+
+            CsdlEnumType enumType = new CsdlEnumType(name, underlyingTypeName, isFlags, members, location);
+            foreach (var annotation in enumAnnotations)
+            {
+                enumType.AddAnnotation(annotation);
+            }
+
+            return enumType;
+        }
+
+        public static CsdlAnnotation BuildCsdlAnnotation(string termName, IJsonValue annotationValue, IJsonPath jsonPath)
+        {
+            // Enumeration Member Object
+            // Enumeration type members are represented as JSON object members, where the object member name is the enumeration member name and the object member value is the enumeration member value.
+            // For members of flags enumeration types a combined enumeration member value is equivalent to the bitwise OR of the discrete values.
+            // Annotations for enumeration members are prefixed with the enumeration member name.
+            string qualifier = null;
+            int index = termName.IndexOf('#');
+            if (index != -1)
+            {
+                qualifier = termName.Substring(index + 1);
+                termName = termName.Substring(0, index);
+            }
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            CsdlExpressionBase expression = AnnotationJsonParser.BuildExpression(annotationValue, jsonPath);
+
+            return new CsdlAnnotation(termName, qualifier, expression, location);
+        }
+
+        public static CsdlEnumMember BuildCsdlEnumMember(string name, IJsonValue enumMemberObject)
+        {
+            // Enumeration Member Object
+            // Enumeration type members are represented as JSON object members, where the object member name is the enumeration member name and the object member value is the enumeration member value.
+            // For members of flags enumeration types a combined enumeration member value is equivalent to the bitwise OR of the discrete values.
+            // Annotations for enumeration members are prefixed with the enumeration member name.
+
+            CsdlLocation location = new CsdlLocation(-1, -1);
+            long? value = ParseAsLongPrimitive(enumMemberObject);
+
+
+            return new CsdlEnumMember(name, value, location);
+        }
+
+
+
+
+
+        private static string SeperateAnnotationName(string name, out string termName)
+        {
+            termName = null;
+            int index = name.IndexOf('@');
+
+            if (index == -1)
+            {
+                return name;
+            }
+            else if (index == 0)
+            {
+                termName = name.Substring(1);
+                return null;
+            }
+            else
+            {
+                termName = name.Substring(index + 1);
+                return name.Substring(0, index);
+            }
+        }
+
+        private static long? ParseAsLongPrimitive(IJsonValue jsonValue)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                throw new Exception();
+            }
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            if (primitiveValue.Value == null)
+            {
+                return null;
+            }
+
+            if (primitiveValue.Value.GetType() == typeof(int))
+            {
+                return (int)primitiveValue.Value;
+            }
+
+            return (long)primitiveValue.Value;
+        }
+
+        private static int? ParseAsIntegerPrimitive(IJsonValue jsonValue)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                throw new Exception();
+            }
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            if (primitiveValue.Value == null)
+            {
+                return null;
+            }
+
+            if (primitiveValue.Value.GetType() == typeof(int))
+            {
+                return (int)primitiveValue.Value;
+            }
+
+            throw new Exception();
+        }
+
+        private static string ParseAsStringPrimitive(IJsonValue jsonValue)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                throw new Exception();
+            }
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            return primitiveValue.Value as string;
+        }
+
+        private static bool ParseAsBooleanPrimitive(IJsonValue jsonValue)
+        {
+            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                throw new Exception();
+            }
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            return (bool)primitiveValue.Value;
+        }
+
+
+#if false
+        private static void ParseSchemaElements(string name, IJsonReader jsonReader)
+        {
+            // The schema object MAY contain members representing entity types, complex types, enumeration types, type definitions, actions, functions, terms, and an entity container.
+            // 1) An entity type is represented as a member of the schema object whose name is the unqualified name of the entity type and whose value is an object.
+            // 2) A complex type is represented as a member of the schema object whose name is the unqualified name of the complex type and whose value is an object.
+            // 3) An enumeration type is represented as a member of the schema object whose name is the unqualified name of the enumeration type and whose value is an object.
+            // 4) A type definition is represented as a member of the schema object whose name is the unqualified name of the type definition and whose value is an object.
+            // 5) An action is represented as a member of the schema object whose name is the unqualified name of the action and whose value is an array. The array contains one object per action overload.
+            // 6) A function is represented as a member of the schema object whose name is the unqualified name of the function and whose value is an array.
+            // 7) A term is represented as a member of the schema object whose name is the unqualified name of the term and whose value is an object.
+            // 8) An entity container is represented as a member of the schema object whose name is the unqualified name of the entity container and whose value is an object.
+
+            // Make sure the input is an object
+            if (jsonReader.NodeType != JsonNodeType.StartObject)
+            {
+                throw new Exception("");
+            }
+
+            // Pass the "{" tag.
+            jsonReader.Read();
+
+            while (jsonReader.NodeType != JsonNodeType.EndObject)
+            {
+                // Get the property name and move json reader to next token
+                string propertyName = jsonReader.ReadPropertyName();
+
+                // Now the Json reader point to the value.
+                if (string.IsNullOrWhiteSpace(propertyName))
+                {
+                    throw new Exception();
+                }
+
+                switch (propertyName)
+                {
+                    // "$Alias"
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Attribute_Alias:
+                        ParseAlias(jsonReader);
+                        break;
+
+                    // "$Annotations"
+                    case CsdlConstants.Prefix_Dollar + CsdlConstants.Element_Annotations:
+                        ParseAnnotations(jsonReader);
+                        break;
+
+                    default:
+                        if (propertyName[0] == '@')
+                        {
+                            // Annotation for the schema
+                            ParseSchemaAnnotations(jsonReader);
+                        }
+                        else
+                        {
+                            // Schema members (entity type, complex type...)
+                            ParseSchemaElements(propertyName, jsonReader);
+                        }
+                        break;
+                }
+            }
+            // Consume the "}" tag.
+            jsonReader.Read();
+
+           // return null;
+        }
+
+#endif
+
+        public static CsdlTypeReference ParseTypeReference(string typeString, // if it's collection, it's element type string
+            bool isCollection,
+             bool isNullable,
+             bool isUnbounded,
+             int? maxLength,
+             bool? unicode,
+             int? precision,
+             int? scale,
+             int? srid,
+            CsdlLocation parentLocation)
+        {
+            CsdlTypeReference elementType = ParseNamedTypeReference(typeString, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid, parentLocation);
+            if (isCollection)
+            {
+                elementType = new CsdlExpressionTypeReference(new CsdlCollectionType(elementType, parentLocation), isNullable, parentLocation);
+            }
+
+            return elementType;
+        }
+
+        private static CsdlNamedTypeReference ParseNamedTypeReference(string typeName, bool isNullable,
+             bool isUnbounded,
+             int? maxLength,
+             bool? unicode,
+             int? precision,
+             int? scale,
+             int? srid,
+             CsdlLocation parentLocation)
+        {
+            EdmPrimitiveTypeKind kind = EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName);
+            switch (kind)
+            {
+                case EdmPrimitiveTypeKind.Boolean:
+                case EdmPrimitiveTypeKind.Byte:
+                case EdmPrimitiveTypeKind.Double:
+                case EdmPrimitiveTypeKind.Guid:
+                case EdmPrimitiveTypeKind.Int16:
+                case EdmPrimitiveTypeKind.Int32:
+                case EdmPrimitiveTypeKind.Int64:
+                case EdmPrimitiveTypeKind.SByte:
+                case EdmPrimitiveTypeKind.Single:
+                case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
+                    return new CsdlPrimitiveTypeReference(kind, typeName, isNullable, parentLocation);
+
+                case EdmPrimitiveTypeKind.Binary:
+                    return new CsdlBinaryTypeReference(isUnbounded, maxLength, typeName, isNullable, parentLocation);
+
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    return new CsdlTemporalTypeReference(kind, precision, typeName, isNullable, parentLocation);
+
+                case EdmPrimitiveTypeKind.Decimal:
+                    return new CsdlDecimalTypeReference(precision, scale, typeName, isNullable, parentLocation);
+
+                case EdmPrimitiveTypeKind.String:
+                    return new CsdlStringTypeReference(isUnbounded, maxLength, unicode, typeName, isNullable, parentLocation);
+
+                case EdmPrimitiveTypeKind.Geography:
+                case EdmPrimitiveTypeKind.GeographyPoint:
+                case EdmPrimitiveTypeKind.GeographyLineString:
+                case EdmPrimitiveTypeKind.GeographyPolygon:
+                case EdmPrimitiveTypeKind.GeographyCollection:
+                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                    return new CsdlSpatialTypeReference(kind, srid, typeName, isNullable, parentLocation);
+
+                case EdmPrimitiveTypeKind.Geometry:
+                case EdmPrimitiveTypeKind.GeometryPoint:
+                case EdmPrimitiveTypeKind.GeometryLineString:
+                case EdmPrimitiveTypeKind.GeometryPolygon:
+                case EdmPrimitiveTypeKind.GeometryCollection:
+                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+                case EdmPrimitiveTypeKind.GeometryMultiLineString:
+                case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                    return new CsdlSpatialTypeReference(kind, srid, typeName, isNullable, parentLocation);
+
+                case EdmPrimitiveTypeKind.None:
+                    if (string.Equals(typeName, CsdlConstants.TypeName_Untyped, StringComparison.Ordinal))
+                    {
+                        return new CsdlUntypedTypeReference(typeName, parentLocation);
+                    }
+
+                    break;
+            }
+
+            return new CsdlNamedTypeReference(isUnbounded, maxLength, unicode, precision, scale, srid, typeName, isNullable, parentLocation);
         }
 
         private static string GetKind(JsonObjectValue objValue, IJsonPath jsonPath)

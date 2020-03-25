@@ -54,19 +54,6 @@
     <Compile Include="Csdl\CsdlParseException.cs" />
     <Compile Include="Csdl\EdmValueParser.cs" />
     <Compile Include="Csdl\EdmValueWriter.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonModel.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchema.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaActionItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaComplexItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaEntityContainerItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaEntityItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaEnumItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaFunctionItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaOperationItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaStructuredItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaTermItem.cs" />
-    <Compile Include="Csdl\Json\Ast\CsdlJsonSchemaTypeDefinitionItem.cs" />
     <Compile Include="Csdl\Json\Builder\AnnotationJsonBuilder.cs" />
     <Compile Include="Csdl\Json\Builder\EdmTypeHelper.cs" />
     <Compile Include="Csdl\Json\Builder\SchemaOperationBuilder.cs" />
@@ -75,6 +62,7 @@
     <Compile Include="Csdl\Json\Builder\SchemaTypeJsonBuilder.cs" />
     <Compile Include="Csdl\Json\Builder\EdmJsonBuilder.cs" />
     <Compile Include="Csdl\Json\Builder\EdmTypeJsonBuilder.cs" />
+    <Compile Include="Csdl\Json\Parser\AnnotationJsonParser.cs" />
     <Compile Include="Csdl\Json\Parser\CsdlJsonModelParser.cs" />
     <Compile Include="Csdl\Json\Parser\CsdlJsonSchemaParser.cs" />
     <Compile Include="Csdl\Json\Value\IJsonValue.cs" />
@@ -90,9 +78,6 @@
     <Compile Include="Csdl\Json\Reader\JsonNodeType.cs" />
     <Compile Include="Csdl\Json\JsonPath.cs" />
     <Compile Include="Csdl\Json\JsonValueParseExtensions.cs" />
-    <Compile Include="Csdl\Reader\SchemaJsonItemParser.cs" />
-    <Compile Include="Csdl\Reader\EdmJsonBuilder.cs" />
-    <Compile Include="Csdl\Reader\EdmTypeJsonBuilder.cs" />
     <Compile Include="Csdl\Reader\CsdlJsonReader.cs" />
     <Compile Include="Csdl\Reader\CsdlReader.cs" />
     <Compile Include="Csdl\Reader\CsdlXmlReader.cs" />
@@ -409,11 +394,8 @@
     <Compile Include="Csdl\Parsing\CsdlDocumentParser.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="Csdl\Parsing\AnnotationJsonParser.cs" />
-    <Compile Include="Csdl\Parsing\CsdlParserHelpers.cs" />
     <Compile Include="Csdl\Parsing\CsdlParser.cs" />
     <Compile Include="Csdl\Parsing\CsdlJsonParser.cs" />
-    <Compile Include="Csdl\Parsing\SchemaJsonParser.cs" />
     <Compile Include="Csdl\Parsing\JsonValueParseExtensions.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsBinaryTypeReference.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsComplexTypeDefinition.cs" />

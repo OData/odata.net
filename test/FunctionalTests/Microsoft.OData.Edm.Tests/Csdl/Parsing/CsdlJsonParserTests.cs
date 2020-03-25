@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.Json;
-using Microsoft.OData.Edm.Csdl.Json.Ast;
 using Microsoft.OData.Edm.Csdl.Json.Builder;
 using Microsoft.OData.Edm.Csdl.Json.Parser;
 using Microsoft.OData.Edm.Csdl.Json.Reader;
@@ -74,61 +73,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 //                Assert.NotNull(model);
 //            }
 //        }
-
-        [Fact]
-        public void DeserializeCsdlTestWork2s()
-        {
-            string csdl = @" {
-  ""$Version"": ""4.0"",
-  ""$EntityContainer"": ""NS1.Container"",
-  ""NS1"": {
-    ""Product"": {
-      ""$Kind"": ""EntityType"",
-      ""$Key"": [
-        ""Id""
-      ],
-      ""Id"": {
-        ""$Type"": ""Edm.Int32"",
-        ""@Org.OData.Core.V1.Computed"": true
-      },
-      ""Name"": { },
-      ""UpdatedTime"": {
-        ""$Type"": ""Edm.Date"",
-        ""@Org.OData.Core.V1.Computed"": true
-      }
-    },
-    ""Container"": {
-      ""$Kind"": ""EntityContainer"",
-      ""Products"": {
-        ""$Collection"": true,
-        ""$Type"": ""NS1.Product"",
-        ""@Org.OData.Core.V1.OptimisticConcurrency"": [
-          {
-            ""$PropertyPath"": ""Id""
-          },
-          {
-            ""$PropertyPath"": ""UpdatedTime""
-          }
-        ]
-      }
-    }
-  }
-}";
-
-            // var model = CsdlSerializer.Deserialize(csdl);
-
-        //    JsonPath path = new JsonPath();
-            CsdlSerializerOptions options = new CsdlSerializerOptions();
-            using (TextReader txtReader = new StringReader(csdl))
-            {
-                CsdlJsonModelBuilder csdlModelBuilder = new CsdlJsonModelBuilder(txtReader, options);
-                CsdlJsonModel csdlModel = csdlModelBuilder.TryParseCsdlJsonModel();
-
-                EdmModelBuilder builder = new EdmModelBuilder(options);
-                IEdmModel model = builder.TryBuildEdmModel(csdlModel);
-                Assert.NotNull(model);
-            }
-        }
 
         [Fact]
         public void DeserializeCsdlTestWork3333333()
@@ -211,12 +155,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             using (TextReader txtReader = new StringReader(mainCsdl))
             {
-                CsdlJsonModelBuilder csdlModelBuilder = new CsdlJsonModelBuilder(txtReader, options);
-                CsdlJsonModel csdlModel = csdlModelBuilder.TryParseCsdlJsonModel();
+                //CsdlJsonModelBuilder csdlModelBuilder = new CsdlJsonModelBuilder(txtReader, options);
+                //CsdlJsonModel csdlModel = csdlModelBuilder.TryParseCsdlJsonModel();
 
-                EdmModelBuilder builder = new EdmModelBuilder(options);
-                IEdmModel model = builder.TryBuildEdmModel(csdlModel);
-                Assert.NotNull(model);
+                //EdmModelBuilder builder = new EdmModelBuilder(options);
+                //IEdmModel model = builder.TryBuildEdmModel(csdlModel);
+                //Assert.NotNull(model);
             }
         }
 
@@ -301,8 +245,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             using (TextReader txtReader = new StringReader(mainCsdl))
             {
-                CsdlJsonModelBuilder csdlModelBuilder = new CsdlJsonModelBuilder(txtReader, options);
-                CsdlModel csdlModel = csdlModelBuilder.TryParseCsdlModel();
+                CsdlJsonModelParser csdlModelBuilder = new CsdlJsonModelParser(txtReader, options);
+                CsdlModel csdlModel = csdlModelBuilder.ParseCsdlDocument();
 
                 EdmModelBuilder builder = new EdmModelBuilder(options);
                 IEdmModel model = builder.TryBuildEdmModel(csdlModel, csdlModel.ReferencedModels);
