@@ -17,28 +17,6 @@ namespace Microsoft.OData.Edm.Csdl.Reader
     internal static class JsonReaderExtensions
     {
 
-        //private static int? ParseAsIntegerPrimitive(this IJsonValue jsonValue)
-        //{
-        //    if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
-        //    {
-        //        throw new Exception();
-        //    }
-
-        //    JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
-        //    if (primitiveValue.Value == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    if (primitiveValue.Value.GetType() == typeof(int))
-        //    {
-        //        return (int)primitiveValue.Value;
-        //    }
-
-        //    throw new Exception();
-        //}
-
-
         /// <summary>
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is a StartObject node.
         /// </summary>

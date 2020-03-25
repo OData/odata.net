@@ -15,14 +15,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonPrimitiveValue"/> class.
         /// </summary>
-        public JsonPrimitiveValue()
-            : this (null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="JsonPrimitiveValue"/> class.
-        /// </summary>
         /// <param name="value">The wrapper value.</param>
         public JsonPrimitiveValue(object value)
         {

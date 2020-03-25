@@ -7,6 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 
 namespace Microsoft.OData.Edm.Csdl.Json.Value
 {
@@ -74,8 +76,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
                 jsonPath.Pop();
             }
         }
-
-
+        
 
         public static void ProcessItem(this JsonArrayValue arrayValue, IJsonPath jsonPath, Action<IJsonValue> itemParser)
         {
@@ -95,52 +96,114 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
             }
         }
 
-        public static T OfType<T>(this IJsonValue jsonValue, JsonPath jsonPath)
-            where T: class, IJsonValue
-        {
-            T expectedValue = jsonValue as T;
-            if (expectedValue != null)
-            {
-                return expectedValue;
-            }
-
-            // create a default instance to get the expected value type.
-            T instance = (T)Activator.CreateInstance(typeof(T));
-            throw new CsdlParseException(
-                    Strings.CsdlJsonParser_UnexpectedJsonValueKind(jsonValue.ValueKind, jsonPath, instance.ValueKind));
-        }
-
-        public static string ParseAsStringPrimitive(this IJsonValue jsonValue)
-        {
-            return ParseAsStringPrimitive(jsonValue, new JsonPath());
-        }
-
         /// <summary>
         /// Parse <see cref="IJsonValue"/> to a string.
         /// </summary>
         /// <param name="jsonValue">The <see cref="IJsonValue"/> to parse from.</param>
-        /// <param name="jsonPath">The JSON path for current JSON value.</param>
         /// <returns>The string.</returns>
-        public static string ParseAsStringPrimitive(this IJsonValue jsonValue, IJsonPath jsonPath)
+        public static string ReadAsJsonString(this IJsonValue jsonValue)
         {
             if (jsonValue == null)
             {
                 throw new ArgumentNullException("jsonValue");
             }
 
-            jsonValue.ValidateValueKind(JsonValueKind.JPrimitive, jsonPath);
+            if (jsonValue.ValueKind == JsonValueKind.JArray)
+            {
+                bool first = true;
+                JsonArrayValue arrayValue = (JsonArrayValue)jsonValue;
+                StringBuilder sb = new StringBuilder("[");
+                foreach (var item in arrayValue)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        sb.Append(",");
+                    }
 
-            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
-            return primitiveValue.Value as string;
+                    sb.Append(item.ReadAsJsonString());
+                }
+
+                sb.Append("]");
+
+                return sb.ToString();
+            }
+            else if (jsonValue.ValueKind == JsonValueKind.JObject)
+            {
+                JsonObjectValue objectValue = (JsonObjectValue)jsonValue;
+                StringBuilder sb = new StringBuilder("{");
+                bool first = true;
+                foreach (var property in objectValue)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        sb.Append(",");
+                    }
+
+                    sb.Append("\"" + property.Key + "\":");
+                    sb.Append(property.Value.ReadAsJsonString());
+                }
+
+                sb.Append("}");
+
+                return sb.ToString();
+            }
+            else
+            {
+                JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+                if (primitiveValue.Value == null)
+                {
+                    return "null";
+                }
+
+                Type type = primitiveValue.Value.GetType();
+                if (type == typeof(bool))
+                {
+                    bool boolValue = (bool)primitiveValue.Value;
+                    if (boolValue)
+                    {
+                        return "true";
+                    }
+
+                    return "false";
+                }
+
+                if (type == typeof(int))
+                {
+                    int intValue = (int)primitiveValue.Value;
+                    return intValue.ToString(CultureInfo.InvariantCulture);
+                }
+
+                if (type == typeof(decimal))
+                {
+                    decimal decimalValue = (decimal)primitiveValue.Value;
+                    return decimalValue.ToString(CultureInfo.InvariantCulture);
+                }
+
+                if (type == typeof(double))
+                {
+                    double doubleValue = (double)primitiveValue.Value;
+                    return doubleValue.ToString(CultureInfo.InvariantCulture);
+                }
+
+                return "\"" + primitiveValue.Value.ToString() + "\"";
+            }
         }
 
         /// <summary>
-        /// Parse <see cref="IJsonValue"/> to a boolean.
+        /// Parse <see cref="IJsonValue"/> to a string.
         /// </summary>
         /// <param name="jsonValue">The <see cref="IJsonValue"/> to parse from.</param>
-        /// <param name="jsonPath">The JSON path for current JSON value.</param>
-        /// <returns>The boolean value.</returns>
-        public static bool? ParseAsBooleanPrimitive(this IJsonValue jsonValue, IJsonPath jsonPath = null)
+        /// <param name="jsonPath">The JSON path for current JSON node which owns this value.</param>
+        /// <returns>The string.</returns>
+        public static string ParseAsString(this IJsonValue jsonValue, IJsonPath jsonPath)
         {
             if (jsonValue == null)
             {
@@ -149,21 +212,82 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
 
             if (jsonPath == null)
             {
-                jsonPath = new JsonPath();
+                throw new ArgumentNullException("jsonPath");
             }
 
             jsonValue.ValidateValueKind(JsonValueKind.JPrimitive, jsonPath);
 
             JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
-            return (bool)primitiveValue.Value;
+            if (primitiveValue.Value == null)
+            {
+                return null;
+            }
+
+            if (primitiveValue.Value.GetType() == typeof(string))
+            {
+                // unboxing
+                return (string)primitiveValue.Value;
+            }
+
+            throw new CsdlParseException(
+                    Strings.CsdlJsonParser_CannotReadValueAsType(primitiveValue.Value, jsonPath.Path, "Boolean"));
         }
 
-        public static int? ParseAsIntegerPrimitive(this IJsonValue jsonValue, IJsonPath jsonPath = null)
+        /// <summary>
+        /// Parse <see cref="IJsonValue"/> to a boolean value.
+        /// </summary>
+        /// <param name="jsonValue">The <see cref="IJsonValue"/> to parse from.</param>
+        /// <param name="jsonPath">The JSON path for current JSON node which owns this value.</param>
+        /// <returns>The boolean value.</returns>
+        public static bool? ParseAsBoolean(this IJsonValue jsonValue, IJsonPath jsonPath)
         {
-            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            if (jsonValue == null)
             {
-                throw new Exception();
+                throw new ArgumentNullException("jsonValue");
             }
+
+            if (jsonPath == null)
+            {
+                throw new ArgumentNullException("jsonPath");
+            }
+
+            jsonValue.ValidateValueKind(JsonValueKind.JPrimitive, jsonPath);
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            if (primitiveValue.Value == null)
+            {
+                return null;
+            }
+
+            if (primitiveValue.Value.GetType() == typeof(bool))
+            {
+                // unboxing
+                return (bool?)primitiveValue.Value;
+            }
+
+            throw new CsdlParseException(
+                    Strings.CsdlJsonParser_CannotReadValueAsType(primitiveValue.Value, jsonPath.Path, "Boolean"));
+        }
+
+        /// <summary>
+        /// Parse <see cref="IJsonValue"/> to an integer value.
+        /// </summary>
+        /// <param name="jsonValue">The <see cref="IJsonValue"/> to parse from.</param>
+        /// <param name="jsonPath">The JSON path for current JSON node which owns this value.</param>
+        /// <returns>The integer value.</returns>
+        public static int? ParseAsInteger(this IJsonValue jsonValue, IJsonPath jsonPath)
+        {
+            if (jsonValue == null)
+            {
+                throw new ArgumentNullException("jsonValue");
+            }
+
+            if (jsonPath == null)
+            {
+                throw new ArgumentNullException("jsonPath");
+            }
+
+            jsonValue.ValidateValueKind(JsonValueKind.JPrimitive, jsonPath);
 
             JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
             if (primitiveValue.Value == null)
@@ -173,31 +297,12 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
 
             if (primitiveValue.Value.GetType() == typeof(int))
             {
-                return (int)primitiveValue.Value;
+                // unboxing
+                return (int?)primitiveValue.Value;
             }
 
-            throw new Exception();
-        }
-
-        public static double? ParseAsFloatPrimitive(this IJsonValue jsonValue, JsonPath jsonPath = null)
-        {
-            if (jsonValue.ValueKind != JsonValueKind.JPrimitive)
-            {
-                throw new Exception();
-            }
-
-            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
-            if (primitiveValue.Value == null)
-            {
-                return null;
-            }
-
-            if (primitiveValue.Value.GetType() == typeof(double))
-            {
-                return (int)primitiveValue.Value;
-            }
-
-            throw new Exception();
+            throw new CsdlParseException(
+                    Strings.CsdlJsonParser_CannotReadValueAsType(primitiveValue.Value, jsonPath.Path, "Integer"));
         }
 
         /// <summary>

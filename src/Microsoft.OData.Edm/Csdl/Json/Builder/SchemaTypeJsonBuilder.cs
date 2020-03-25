@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="SchemaTypeBuilder.cs" company="Microsoft">
+// <copyright file="SchemaTypeJsonBuilder.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Net.Http.Headers;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
@@ -661,7 +660,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
         private void BuildSchemaTerm(CsdlTerm csdlTerm, CsdlSchema csdlSchema, CsdlModel csdlModel, EdmModel edmModel)
         {
             IEdmTypeReference termType = BuildEdmTypeReference(csdlTerm.Type, csdlModel);
-            EdmTerm edmTerm = new EdmTerm(csdlSchema.Namespace, csdlTerm.Name, termType, csdlTerm.AppliesTo);
+            EdmTerm edmTerm = new EdmTerm(csdlSchema.Namespace, csdlTerm.Name, termType, csdlTerm.AppliesTo, csdlTerm.DefaultValue);
             _terms[edmTerm.FullName] = edmTerm;
             edmModel.AddElement(edmTerm);
         }

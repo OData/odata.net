@@ -161,7 +161,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
             IJsonValue versionValue;
             if (csdlObject.TryGetValue("$Version", out versionValue))
             {
-                string strVersion = versionValue.ParseAsStringPrimitive(jsonPath);
+                string strVersion = versionValue.ParseAsString(jsonPath);
                 if (strVersion == "4.0")
                 {
                     return EdmConstants.EdmVersion4;
@@ -211,7 +211,7 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                     case "$EntityContainer":
                         // The value of $EntityContainer is value is the namespace-qualified name of the entity container of that service.
                         // So far, i don't know how to use it. So skip it.
-                        // string entityContainer = propertyValue.ParseAsStringPrimitive();
+                        // string entityContainer = propertyValue.ParseAsString();
                         break;
 
                     case "$Reference":
@@ -367,12 +367,12 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 {
                     case "$Alias":
                         // The value of $Alias is a string containing the alias for the included schema.
-                        includeAlias = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        includeAlias = propertyValue.ParseAsString(jsonPath);
                         break;
 
                     case "$Namespace":
                         // The value of $Namespace is a string containing the namespace of the included schema
-                        includeNamespace = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        includeNamespace = propertyValue.ParseAsString(jsonPath);
                         break;
 
                     default:
@@ -406,17 +406,17 @@ namespace Microsoft.OData.Edm.Csdl.Reader
                 {
                     case "$TermNamespace":
                         // The value of $TermNamespace is a namespace.
-                        termNamespace = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        termNamespace = propertyValue.ParseAsString(jsonPath);
                         break;
 
                     case "$Qualifier":
                         // The value of $Qualifier is a simple identifier.
-                        qualifier = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        qualifier = propertyValue.ParseAsString(jsonPath);
                         break;
 
                     case "$TargetNamespace":
                         // The value of $TargetNamespace is a namespace.
-                        targetNamespace = propertyValue.ParseAsStringPrimitive(jsonPath);
+                        targetNamespace = propertyValue.ParseAsString(jsonPath);
                         break;
 
                     default:

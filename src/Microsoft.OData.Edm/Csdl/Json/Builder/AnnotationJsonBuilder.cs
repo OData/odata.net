@@ -152,7 +152,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
         {
             // A model path is represented as a string containing a path.
 
-            string path = jsonValue.ParseAsStringPrimitive(jsonPath);
+            string path = jsonValue.ParseAsString(jsonPath);
 
             EdmPathTypeKind kind = pathType.PathKind();
             switch (kind)
@@ -377,7 +377,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             switch (primitiveTypeReference.PrimitiveKind())
             {
                 case EdmPrimitiveTypeKind.Binary:
-                    value = jsonValue.ParseAsStringPrimitive(jsonPath);
+                    value = jsonValue.ParseAsString(jsonPath);
                     byte[] binaryValue;
                     if (EdmValueParser.TryParseBinary(value, out binaryValue))
                     {
@@ -386,11 +386,11 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                     break;
 
                 case EdmPrimitiveTypeKind.Boolean:
-                    bool? boolValue = jsonValue.ParseAsBooleanPrimitive(jsonPath);
+                    bool? boolValue = jsonValue.ParseAsBoolean(jsonPath);
                     return new EdmBooleanConstant((bool)boolValue);
 
                 case EdmPrimitiveTypeKind.Date:
-                    value = jsonValue.ParseAsStringPrimitive(jsonPath);
+                    value = jsonValue.ParseAsString(jsonPath);
                     Date? dateValue;
                     if (EdmValueParser.TryParseDate(value, out dateValue))
                     {
@@ -399,7 +399,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                     break;
 
                 case EdmPrimitiveTypeKind.DateTimeOffset:
-                    value = jsonValue.ParseAsStringPrimitive(jsonPath);
+                    value = jsonValue.ParseAsString(jsonPath);
                     DateTimeOffset? dateTimeOffsetResult;
                     if (EdmValueParser.TryParseDateTimeOffset(value, out dateTimeOffsetResult))
                     {
@@ -411,7 +411,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                     return new EdmDecimalConstant((decimal)constantValue.Value);
 
                 case EdmPrimitiveTypeKind.Duration:
-                    value = jsonValue.ParseAsStringPrimitive(jsonPath);
+                    value = jsonValue.ParseAsString(jsonPath);
                     TimeSpan? timeSpan;
                     if (EdmValueParser.TryParseDuration(value, out timeSpan))
                     {
@@ -424,7 +424,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                     return new EdmFloatingConstant((double)constantValue.Value);
 
                 case EdmPrimitiveTypeKind.Guid:
-                    value = jsonValue.ParseAsStringPrimitive(jsonPath);
+                    value = jsonValue.ParseAsString(jsonPath);
                     Guid? guidValue;
                     if (EdmValueParser.TryParseGuid(value, out guidValue))
                     {
@@ -438,7 +438,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                     return new EdmIntegerConstant((long)constantValue.Value);
 
                 case EdmPrimitiveTypeKind.TimeOfDay:
-                    value = jsonValue.ParseAsStringPrimitive(jsonPath);
+                    value = jsonValue.ParseAsString(jsonPath);
                     TimeOfDay? timeOfDateValue;
                     if (EdmValueParser.TryParseTimeOfDay(value, out timeOfDateValue))
                     {
@@ -481,7 +481,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
         {
           //  JsonPrimitiveValue enumValue = jsonValue.ValidateRequiredJsonValue<JsonPrimitiveValue>(jsonPath);
 
-            string enumMemberPath = jsonValue.ParseAsStringPrimitive(jsonPath);
+            string enumMemberPath = jsonValue.ParseAsString(jsonPath);
 
             return new EdmEnumMemberExpression(TryParserEnumMembers(enumMemberPath).ToArray());
            // return new CsdlEnumMemberExpression(enumMemberPath, new CsdlLocation(jsonPath.ToString()));
@@ -641,7 +641,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
         private static IEdmPathExpression BuildValuePathExpression(JsonObjectValue objectValue, IJsonPath jsonPath)
         {
             IJsonValue jsonValue = objectValue["$Path"];
-            string pathStr = jsonValue.ParseAsStringPrimitive(jsonPath);
+            string pathStr = jsonValue.ParseAsString(jsonPath);
             return new EdmPathExpression(pathStr);
         }
 
@@ -663,7 +663,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             string functionName = null;
             if (objectValue.TryGetValue("$Function", out jsonValue))
             {
-                functionName = jsonValue.ParseAsStringPrimitive(jsonPath);
+                functionName = jsonValue.ParseAsString(jsonPath);
             }
 
             IEdmFunction edmFunction = FindAppliedFunction(functionName);
@@ -703,19 +703,19 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
         //        switch (propertyName)
         //        {
         //            case "$Type":
-        //                typeName = propertyValue.ParseAsStringPrimitive(jsonPath);
+        //                typeName = propertyValue.ParseAsString(jsonPath);
         //                break;
         //            case "$Collection":
-        //                collection = propertyValue.ParseAsBooleanPrimitive(jsonPath);
+        //                collection = propertyValue.ParseAsBoolean(jsonPath);
         //                break;
         //            case "$Nullable":
-        //                nullable = propertyValue.ParseAsBooleanPrimitive(jsonPath);
+        //                nullable = propertyValue.ParseAsBoolean(jsonPath);
         //                break;
         //            case "$MaxLength":
         //                maxLength = propertyValue.ParseAsIntegerPrimitive(jsonPath);
         //                break;
         //            case "$Unicode":
-        //                unicode = propertyValue.ParseAsBooleanPrimitive(jsonPath);
+        //                unicode = propertyValue.ParseAsBoolean(jsonPath);
         //                break;
         //            case "$Precision":
         //                precision = propertyValue.ParseAsIntegerPrimitive(jsonPath);
@@ -797,7 +797,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             string name = null;
             if (objectValue.TryGetValue("$Name", out jsonValue))
             {
-                name = jsonValue.ParseAsStringPrimitive(jsonPath);
+                name = jsonValue.ParseAsString(jsonPath);
             }
 
             // Verify Name if not null?
@@ -813,7 +813,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
             IJsonValue value = objectValue["$LabeledElementReference"];
 
-            string strValue = value.ParseAsStringPrimitive(jsonPath);
+            string strValue = value.ParseAsString(jsonPath);
 
             return new EdmLabeledExpressionReferenceExpression
             {

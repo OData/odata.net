@@ -244,6 +244,7 @@ CsdlJsonReader_UnexpectedJsonNodeType=An unexpected '{0}' node was found when re
 CsdlJsonParser_UnexpectedJsonValueKind=An unexpected '{0}' value kind was found when parsing the JSON path '{1}'. A '{2}' value kind was expected.
 CsdlJsonParser_MissingMemberInObject=A member '{0}' is missing when parsing the JSON path '{1}'.
 CsdlJsonParser_UnexpectedJsonMember=A member '{0}' with value type '{1}' is unexpected.
+CsdlJsonParser_CannotReadValueAsType=Cannot read the value '{0}' at JSON path '{1}' as '{2}' numeric value.
 
 SchemaJsonParser_MissingKindMember=A schema '{0}' object MUST contain the member '$Kind' with a string value of '{1}'.
 
