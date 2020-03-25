@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Net.Http.Headers;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
@@ -70,7 +71,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                         _schemaTypesMapping[stype] = csdlSchema;
 
                         CsdlNamedStructuredType namedType = (CsdlNamedStructuredType)stype;
-                        _namespaceNameToStructuralTypeMapping[csdlSchema + "." + namedType.Name] = stype;
+                        _namespaceNameToStructuralTypeMapping[csdlSchema.Namespace + "." + namedType.Name] = stype;
                     }
                 }
             }
@@ -93,7 +94,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 {
                     foreach (var csdlTerm in csdlSchema.Terms)
                     {
-                        BuildSchemaTerm(csdlTerm, csdlSchema, modelItem.Value);
+                        BuildSchemaTerm(csdlTerm, csdlSchema, modelItem.Key, modelItem.Value);
                     }
                 }
             }
@@ -246,13 +247,15 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
         public void BuildSchemaTypeBodies()
         {
+            // We should build the structural properties first, then build the navigation properties,
+            // Because navigation property's reference contrains relies on the structural properties
             foreach (var modelItem in _modelMapping)
             {
                 foreach (var csdlSchema in modelItem.Key.Schemata)
                 {
                     foreach (var csdlStructuredType in csdlSchema.StructuredTypes)
                     {
-                        BuildSchemaStructuralBody(csdlStructuredType, modelItem.Key, csdlSchema, modelItem.Value);
+                        BuildSchemaStructuralBody(csdlStructuredType, modelItem.Key, csdlSchema, modelItem.Value, true);
                     }
 
                     foreach (var csdlEnum in csdlSchema.EnumTypes)
@@ -266,54 +269,83 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                     }
                 }
             }
+
+            // Let's finish the navigation properties building
+            foreach (var modelItem in _modelMapping)
+            {
+                foreach (var csdlSchema in modelItem.Key.Schemata)
+                {
+                    foreach (var csdlStructuredType in csdlSchema.StructuredTypes)
+                    {
+                        BuildSchemaStructuralBody(csdlStructuredType, modelItem.Key, csdlSchema, modelItem.Value, false);
+                    }
+                }
+            }
         }
 
-        private void BuildSchemaStructuralBody(CsdlStructuredType csdlStructured, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
+        private void BuildSchemaStructuralBody(CsdlStructuredType csdlStructured, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel, bool structuralProperty)
         {
             CsdlComplexType csdlComplexType = csdlStructured as CsdlComplexType;
             if (csdlComplexType != null)
             {
-                BuildSchemaComplexBody(csdlComplexType, csdlModel, csdlSchema, edmModel);
+                BuildSchemaComplexBody(csdlComplexType, csdlModel, csdlSchema, edmModel, structuralProperty);
             }
             else
             {
-                BuildSchemaEntityBody(csdlStructured as CsdlEntityType, csdlModel, csdlSchema, edmModel);
+                BuildSchemaEntityBody(csdlStructured as CsdlEntityType, csdlModel, csdlSchema, edmModel, structuralProperty);
             }
         }
 
-        private void BuildSchemaComplexBody(CsdlComplexType csdlComplex, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
+        private void BuildSchemaComplexBody(CsdlComplexType csdlComplex, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel, bool structuralProperty)
         {
             EdmComplexType edmComplexType = _structuredTypes[csdlSchema.Namespace + "." + csdlComplex.Name] as EdmComplexType;
 
-            BuildStructuralProperties(edmComplexType, csdlComplex.StructuralProperties, csdlModel, csdlSchema, edmModel);
+            if (structuralProperty)
+            {
+                BuildStructuralProperties(edmComplexType, csdlComplex.StructuralProperties, csdlModel, csdlSchema, edmModel);
+            }
+            else
+            {
+                BuildNavigationProperties(edmComplexType, csdlComplex.NavigationProperties, csdlModel, csdlSchema, edmModel);
 
-            BuildNavigationProperties(edmComplexType, csdlComplex.NavigationProperties, csdlModel, csdlSchema, edmModel);
-
-            BuildAnnotations(edmComplexType, csdlComplex.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(edmComplexType, csdlComplex.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
+            }
         }
 
-        private void BuildSchemaEntityBody(CsdlEntityType csdlEntity, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
+        private void BuildSchemaEntityBody(CsdlEntityType csdlEntity, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel, bool structuralProperty)
         {
             EdmEntityType edmEntityType = _structuredTypes[csdlSchema.Namespace + "." + csdlEntity.Name] as EdmEntityType;
 
-            BuildStructuralProperties(edmEntityType, csdlEntity.StructuralProperties, csdlModel, csdlSchema, edmModel);
+            if (structuralProperty)
+            {
+                BuildStructuralProperties(edmEntityType, csdlEntity.StructuralProperties, csdlModel, csdlSchema, edmModel);
+            }
+            else
+            {
+                if (csdlEntity.Key != null && csdlEntity.Key.Properties.Any())
+                {
+                    // Add the keys
+                    foreach (var keyProperty in csdlEntity.Key.Properties)
+                    {
+                        var  keyStructuralProperty = edmEntityType.DeclaredStructuralProperties().First(c => c.Name == keyProperty.PropertyName);
+                        edmEntityType.AddKeys(keyStructuralProperty);
+                    }
+                }
 
-            BuildNavigationProperties(edmEntityType, csdlEntity.NavigationProperties, csdlModel, csdlSchema, edmModel);
-
-            // Add the key??
-
-            BuildAnnotations(edmEntityType, csdlEntity.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
-        }
+                BuildNavigationProperties(edmEntityType, csdlEntity.NavigationProperties, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(edmEntityType, csdlEntity.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
+            }
+        } 
 
         private void BuildStructuralProperties(EdmStructuredType structuredType, IEnumerable<CsdlProperty> structualProperties, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
         {
             foreach (var csdlProperty in structualProperties)
             {
-                IEdmTypeReference propertyType = BuildEdmTypeReference(csdlProperty.Type);
+                IEdmTypeReference propertyType = BuildEdmTypeReference(csdlProperty.Type, csdlModel);
 
                 var edmProperty = structuredType.AddStructuralProperty(csdlProperty.Name, propertyType, csdlProperty.DefaultValue);
 
-                BuildAnnotations(edmProperty, csdlProperty.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(edmProperty, csdlProperty.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
             }
         }
 
@@ -377,7 +409,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
                 // ODL doesn't support annotation on : edmNavProperty.ReferentialConstraint, so skip it.
 
-                BuildAnnotations(edmNavProperty, csdlNavProperty.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(edmNavProperty, csdlNavProperty.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
             }
         }
 
@@ -400,11 +432,11 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 EdmEnumMember edmEnumMember = new EdmEnumMember(enumType, enumMember.Name, edmEnumMemberValue);
                 enumType.AddMember(edmEnumMember);
 
-                BuildAnnotations(edmEnumMember, enumMember.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(edmEnumMember, enumMember.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
             }
 
 
-            BuildAnnotations(enumType, csdlEnum.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+            BuildAnnotations(enumType, csdlEnum.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
         }
 
         private void BuildSchemaTypeDefinitionBody(CsdlTypeDefinition csdlTypeDefinition, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
@@ -412,7 +444,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             string fullName = csdlSchema.Namespace + "." + csdlTypeDefinition.Name;
             IEdmTypeDefinition edmTypeDefinition = _typeDefinitions[fullName];
 
-            BuildAnnotations(edmTypeDefinition, csdlTypeDefinition.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+            BuildAnnotations(edmTypeDefinition, csdlTypeDefinition.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
         }
 
         public void BuildSchemaEntityContainerHeader()
@@ -460,7 +492,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 _navigationSources[edmEntityContainer.FullName + "." + edmEntitySet.Name] = edmEntitySet;
                 edmEntityContainer.AddElement(edmEntitySet);
 
-                BuildAnnotations(edmEntitySet, csdlEntitySet.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(edmEntitySet, csdlEntitySet.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
             }
 
             foreach (var csdlSingleton in csdlEntityContainer.Singletons)
@@ -474,7 +506,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 _navigationSources[edmEntityContainer.FullName + "." + edmSingleton.Name] = edmSingleton;
                 edmEntityContainer.AddElement(edmSingleton);
 
-                BuildAnnotations(edmSingleton, csdlSingleton.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(edmSingleton, csdlSingleton.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
             }
 
             foreach (var csdlActionImport in csdlEntityContainer.OperationImports.OfType<CsdlActionImport>())
@@ -486,7 +518,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 EdmActionImport actionImport = new EdmActionImport(edmEntityContainer, csdlActionImport.Name, action, entitySetExpression);
                 edmEntityContainer.AddElement(actionImport);
 
-                BuildAnnotations(actionImport, csdlActionImport.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(actionImport, csdlActionImport.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
             }
 
             foreach (var csdlFunctionImport in csdlEntityContainer.OperationImports.OfType<CsdlFunctionImport>())
@@ -498,7 +530,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 EdmFunctionImport functionImport = new EdmFunctionImport(edmEntityContainer, csdlFunctionImport.Name, function, entitySetExpression, csdlFunctionImport.IncludeInServiceDocument);
                 edmEntityContainer.AddElement(functionImport);
 
-                BuildAnnotations(functionImport, csdlFunctionImport.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+                BuildAnnotations(functionImport, csdlFunctionImport.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
             }
         }
         private static IEdmExpression BuildEntitySetPathExpression(string entitySet)
@@ -535,7 +567,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             }
 
             // annotations for container
-            BuildAnnotations(edmEntityContainer, csdlEntityContainer.VocabularyAnnotations, csdlModel, csdlSchema, edmModel);
+            BuildAnnotations(edmEntityContainer, csdlEntityContainer.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
         }
 
         private static void BuildNavigationPropertyBinding(EdmNavigationSource edmNavigationSource, IEnumerable<CsdlNavigationPropertyBinding> bindings, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
@@ -626,15 +658,15 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             return null;
         }
 
-        private void BuildSchemaTerm(CsdlTerm csdlTerm, CsdlSchema csdlSchema, EdmModel edmModel)
+        private void BuildSchemaTerm(CsdlTerm csdlTerm, CsdlSchema csdlSchema, CsdlModel csdlModel, EdmModel edmModel)
         {
-            IEdmTypeReference termType = BuildEdmTypeReference(csdlTerm.Type);
+            IEdmTypeReference termType = BuildEdmTypeReference(csdlTerm.Type, csdlModel);
             EdmTerm edmTerm = new EdmTerm(csdlSchema.Namespace, csdlTerm.Name, termType, csdlTerm.AppliesTo);
             _terms[edmTerm.FullName] = edmTerm;
             edmModel.AddElement(edmTerm);
         }
 
-        private void BuildAnnotations(IEdmVocabularyAnnotatable target, IEnumerable<CsdlAnnotation> csdlAnnotations, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
+        private void BuildAnnotations(IEdmVocabularyAnnotatable target, IEnumerable<CsdlAnnotation> csdlAnnotations, CsdlSchema csdlSchema, CsdlModel csdlModel,  EdmModel edmModel)
         {
             foreach (var csdlAnnotation in csdlAnnotations)
             {
@@ -645,7 +677,8 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                     term = new UnresolvedVocabularyTerm(namespaceQualifiedTermName);
                 }
 
-                IEdmExpression expression = BuildEdmExpression(csdlAnnotation.Expression, term);
+                IEdmTypeReference typeRef = GetTermTypeReference(term);
+                IEdmExpression expression = BuildEdmExpression(csdlAnnotation.Expression, csdlModel, typeRef);
 
                 EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, term, csdlAnnotation.Qualifier, expression);
                 annotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
@@ -668,18 +701,405 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                     term = new UnresolvedVocabularyTerm(namespaceQualifiedTermName);
                 }
 
-                IEdmExpression expression = BuildEdmExpression(csdlAnnotation.Expression, term);
+                IEdmTypeReference typeRef = GetTermTypeReference(term);
+                IEdmExpression expression = BuildEdmExpression(csdlAnnotation.Expression, csdlModel, typeRef);
 
                 EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, term, csdlAnnotation.Qualifier, expression);
                 annotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
                 edmModel.AddVocabularyAnnotation(annotation);
             }
         }
-
-        private static IEdmExpression BuildEdmExpression(CsdlExpressionBase csdlExpression, IEdmTerm relatedTerm)
+        /*
+        private IEdmExpression BuildEdmExpression(CsdlExpressionBase csdlExpression, CsdlModel csdlModel, IEdmTerm relatedTerm)
         {
+            if (csdlExpression == null)
+            {
+                return null;
+            }
+
+            CsdlConstantExpression constantExpression = csdlExpression as CsdlConstantExpression;
+            CsdlPathExpression pathExpression = csdlExpression as CsdlPathExpression;
+            switch (csdlExpression.ExpressionKind)
+            {
+                case EdmExpressionKind.Cast:
+                    CsdlCastExpression csdlCast = (CsdlCastExpression)csdlExpression;
+                    IEdmExpression castExpression = BuildEdmExpression(csdlCast.Operand, csdlModel, relatedTerm);
+                    IEdmTypeReference edmTypeReference = BuildEdmTypeReference(csdlCast.Type, csdlModel);
+                    return new EdmCastExpression(castExpression, edmTypeReference);
+
+                case EdmExpressionKind.BinaryConstant:
+                    byte[] binary;
+                    EdmValueParser.TryParseBinary(constantExpression.Value, out binary);
+                    return new EdmBinaryConstant(binary);
+
+                case EdmExpressionKind.BooleanConstant:
+                    bool? local;
+                    bool boolValue = EdmValueParser.TryParseBool(constantExpression.Value, out local) ? local.Value : false;
+                    return new EdmBooleanConstant(boolValue);
+
+                case EdmExpressionKind.StringConstant:
+                    //  return new CsdlSemanticsStringConstantExpression((CsdlConstantExpression)expression, schema);
+                    break;
+
+                case EdmExpressionKind.DurationConstant:
+                    TimeSpan? result;
+                    EdmValueParser.TryParseDuration(constantExpression.Value, out result);
+                    return new EdmDurationConstant(result.Value);
+
+                case EdmExpressionKind.DateConstant:
+                    Date? dateResult;
+                    EdmValueParser.TryParseDate(constantExpression.Value, out dateResult);
+                    return new EdmDateConstant(dateResult.Value);
+
+                case EdmExpressionKind.TimeOfDayConstant:
+                    TimeOfDay? timeOfResult;
+                    EdmValueParser.TryParseTimeOfDay(constantExpression.Value, out timeOfResult);
+                    return new EdmTimeOfDayConstant(timeOfResult.Value);
+
+                case EdmExpressionKind.Collection:
+                    CsdlCollectionExpression collectionExpression = (CsdlCollectionExpression)csdlExpression;
+
+                    IList<IEdmExpression> expressions = new List<IEdmExpression>();
+                    foreach (var item in collectionExpression.ElementValues)
+                    {
+                        expressions
+                    }
+
+                    return new EdmCollectionExpression(expressions);
+                    break;
+             //      return new CsdlSemanticsCollectionExpression((CsdlCollectionExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.DateTimeOffsetConstant:
+               //     return new CsdlSemanticsDateTimeOffsetConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.DecimalConstant:
+               //     return new CsdlSemanticsDecimalConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.EnumMember:
+               //     return new CsdlSemanticsEnumMemberExpression((CsdlEnumMemberExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.FloatingConstant:
+                //    return new CsdlSemanticsFloatingConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.Null:
+                 //   return new CsdlSemanticsNullExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.FunctionApplication:
+                 //   return new CsdlSemanticsApplyExpression((CsdlApplyExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.GuidConstant:
+                 //   return new CsdlSemanticsGuidConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.If:
+                 //   return new CsdlSemanticsIfExpression((CsdlIfExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.IntegerConstant:
+                 //   return new CsdlSemanticsIntConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.IsType:
+                 //   return new CsdlSemanticsIsTypeExpression((CsdlIsTypeExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.LabeledExpressionReference:
+                  //  return new CsdlSemanticsLabeledExpressionReferenceExpression((CsdlLabeledExpressionReferenceExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.Labeled:
+                   // return schema.WrapLabeledElement((CsdlLabeledExpression)expression, bindingContext);
+
+                case EdmExpressionKind.Record:
+                    // return new CsdlSemanticsRecordExpression((CsdlRecordExpression)expression, bindingContext, schema);
+                    break;
+
+                case EdmExpressionKind.Path:
+                    return new EdmPathExpression(pathExpression.Path);
+
+                case EdmExpressionKind.PropertyPath:
+                    return new EdmPropertyPathExpression(pathExpression.Path);
+
+                case EdmExpressionKind.NavigationPropertyPath:
+                    return new EdmNavigationPropertyPathExpression(pathExpression.Path);
+
+                case EdmExpressionKind.AnnotationPath:
+                    return new EdmAnnotationPathExpression(pathExpression.Path);
+            }
+
+            return null;
+        }*/
+
+        //  a string containing the numeric : "@self.HasPattern": "1"
+        // symbolic enumeration value: "@self.HasPattern": "Red,Striped"
+        private static IEnumerable<IEdmEnumMember> ParseEnumMember(string enumMember, IEdmEnumType enumType)
+        {
+            bool isFlag = enumType.IsFlags;
+            long result;
+            if (long.TryParse(enumMember, out result))
+            {
+                if (!isFlag)
+                {
+                    yield return enumType.Members.First(m => m.Value.Value == result);
+                }
+                else
+                {
+                    ulong mask = 0x1;
+                    long item = 1;
+                    IList<long> finded = new List<long>();
+                    ulong remaining = (ulong)result;
+                    while(remaining != 0)
+                    {
+                        ulong test = remaining & mask;
+                        if (test == mask)
+                        {
+                            finded.Add(item);
+                        }
+
+                        remaining >>= 1;
+                        item *= 2;
+                    }
+
+                    foreach (var v in finded)
+                    {
+                        yield return enumType.Members.First(m => m.Value.Value == v);
+                    }
+                }
+            }
+            else
+            {
+                string[] members = enumMember.Split(',');
+                foreach (var member in members)
+                {
+                    yield return enumType.Members.First(m => m.Name == member);
+                }
+            }
+        }
+
+        private static IEdmExpression RebuildStringExpression(CsdlConstantExpression constantExpression, IEdmTypeReference termType)
+        {
+            // it could be "enum" or "path"
+            IEdmEnumTypeReference enumTypeReference = termType as IEdmEnumTypeReference;
+            if (enumTypeReference != null)
+            {
+                IEnumerable<IEdmEnumMember> enumMembers = ParseEnumMember(constantExpression.Value, enumTypeReference.EnumDefinition());
+                return new EdmEnumMemberExpression(enumMembers.ToArray());
+            }
+
+            IEdmPathTypeReference pathTypeReference = termType as IEdmPathTypeReference;
+            if (pathTypeReference != null)
+            {
+                switch (pathTypeReference.PathKind())
+                {
+                    case EdmPathTypeKind.PropertyPath:
+                        return new EdmPropertyPathExpression(constantExpression.Value);
+
+                    case EdmPathTypeKind.NavigationPropertyPath:
+                        return new EdmNavigationPropertyPathExpression(constantExpression.Value);
+
+                    case EdmPathTypeKind.AnnotationPath:
+                        return new EdmAnnotationPathExpression(constantExpression.Value);
+
+                    default: // for any others
+                        return new EdmPathExpression(constantExpression.Value);
+                }
+            }
+
+            IEdmPrimitiveTypeReference primitiveTypeReference = termType as IEdmPrimitiveTypeReference;
+            if (primitiveTypeReference != null)
+            {
+                switch (primitiveTypeReference.PrimitiveKind())
+                {
+                    case EdmPrimitiveTypeKind.Binary:
+                        byte[] binary;
+                        EdmValueParser.TryParseBinary(constantExpression.Value, out binary);
+                        return new EdmBinaryConstant(binary);
+
+                    case EdmPrimitiveTypeKind.Boolean:
+                        bool? local;
+                        bool boolValue = EdmValueParser.TryParseBool(constantExpression.Value, out local) ? local.Value : false;
+                        return new EdmBooleanConstant(boolValue);
+
+                    case EdmPrimitiveTypeKind.Date:
+                        Date? dateResult;
+                        EdmValueParser.TryParseDate(constantExpression.Value, out dateResult);
+                        return new EdmDateConstant(dateResult.Value);
+
+                    case EdmPrimitiveTypeKind.DateTimeOffset:
+                        DateTimeOffset? dateTimeOffsetResult;
+                        EdmValueParser.TryParseDateTimeOffset(constantExpression.Value, out dateTimeOffsetResult);
+                        return new EdmDateTimeOffsetConstant(dateTimeOffsetResult.Value);
+
+                    case EdmPrimitiveTypeKind.Decimal:
+                        decimal? decimalResult;
+                        EdmValueParser.TryParseDecimal(constantExpression.Value, out decimalResult);
+                        return new EdmDecimalConstant(decimalResult.Value);
+
+                    case EdmPrimitiveTypeKind.Duration:
+                        TimeSpan? result;
+                        EdmValueParser.TryParseDuration(constantExpression.Value, out result);
+                        return new EdmDurationConstant(result.Value);
+
+                    case EdmPrimitiveTypeKind.Single:
+                    case EdmPrimitiveTypeKind.Double:
+                        // NaN, INF, -INF are special values both for decimal and floating.
+                        // System.Decimal doesn't have special value defined
+                        // So try to use "double"
+                        if (constantExpression.Value == "NaN")
+                        {
+                            return new EdmFloatingConstant(double.NaN);
+                        }
+
+                        if (constantExpression.Value == "INF")
+                        {
+                            return new EdmFloatingConstant(double.PositiveInfinity);
+                        }
+
+                        if (constantExpression.Value == "-INF")
+                        {
+                            return new EdmFloatingConstant(double.NegativeInfinity);
+                        }
+
+                        double? doubelResult;
+                        EdmValueParser.TryParseFloat(constantExpression.Value, out doubelResult);
+                        return new EdmFloatingConstant(doubelResult.Value);
+
+                    case EdmPrimitiveTypeKind.Guid:
+                        Guid? guidResult;
+                        EdmValueParser.TryParseGuid(constantExpression.Value, out guidResult);
+                        return new EdmGuidConstant(guidResult.Value);
+
+                    case EdmPrimitiveTypeKind.Int16:
+                    case EdmPrimitiveTypeKind.Int32:
+                    case EdmPrimitiveTypeKind.Int64:
+                        int? longResult;
+                        EdmValueParser.TryParseInt(constantExpression.Value, out longResult);
+                        return new EdmIntegerConstant(longResult.Value);
+
+                    case EdmPrimitiveTypeKind.TimeOfDay:
+                        TimeOfDay? timeOfResult;
+                        EdmValueParser.TryParseTimeOfDay(constantExpression.Value, out timeOfResult);
+                        return new EdmTimeOfDayConstant(timeOfResult.Value);
+
+                    case EdmPrimitiveTypeKind.String:
+                        return new EdmStringConstant(constantExpression.Value);
+
+                    default: // others we don't support for the expression type.
+                        break;
+                }
+            }
+
+            throw new Exception();
+        }
+
+        private IEdmExpression BuildEdmExpression(CsdlExpressionBase csdlExpression, CsdlModel csdlModel, IEdmTypeReference termType)
+        {
+            if (csdlExpression == null)
+            {
+                return null;
+            }
+
+            CsdlConstantExpression constantExpression = csdlExpression as CsdlConstantExpression;
+            CsdlPathExpression pathExpression = csdlExpression as CsdlPathExpression;
+            switch (csdlExpression.ExpressionKind)
+            {
+                case EdmExpressionKind.Cast:
+                    CsdlCastExpression csdlCast = (CsdlCastExpression)csdlExpression;
+                    IEdmExpression castExpression = BuildEdmExpression(csdlCast.Operand, csdlModel, termType);
+                    IEdmTypeReference edmTypeReference = BuildEdmTypeReference(csdlCast.Type, csdlModel);
+                    return new EdmCastExpression(castExpression, edmTypeReference);
+
+                case EdmExpressionKind.BinaryConstant:
+                    byte[] binary;
+                    EdmValueParser.TryParseBinary(constantExpression.Value, out binary);
+                    return new EdmBinaryConstant(binary);
+
+                case EdmExpressionKind.BooleanConstant:
+                    bool? local;
+                    bool boolValue = EdmValueParser.TryParseBool(constantExpression.Value, out local) ? local.Value : false;
+                    return new EdmBooleanConstant(boolValue);
+
+                case EdmExpressionKind.StringConstant:
+                    if (termType == null)
+                    {
+                        return new EdmStringConstant(constantExpression.Value);
+                    }
+
+                    return RebuildStringExpression(constantExpression, termType);
+
+                case EdmExpressionKind.DurationConstant:
+                    TimeSpan? result;
+                    EdmValueParser.TryParseDuration(constantExpression.Value, out result);
+                    return new EdmDurationConstant(result.Value);
+
+                case EdmExpressionKind.DateConstant:
+                    Date? dateResult;
+                    EdmValueParser.TryParseDate(constantExpression.Value, out dateResult);
+                    return new EdmDateConstant(dateResult.Value);
+
+                case EdmExpressionKind.TimeOfDayConstant:
+                    TimeOfDay? timeOfResult;
+                    EdmValueParser.TryParseTimeOfDay(constantExpression.Value, out timeOfResult);
+                    return new EdmTimeOfDayConstant(timeOfResult.Value);
+
+                case EdmExpressionKind.Collection:
+                    CsdlCollectionExpression collectionExpression = (CsdlCollectionExpression)csdlExpression;
+
+                    IEdmTypeReference elementType = termType == null ? null : termType.AsCollection().ElementType();
+                    IList<IEdmExpression> expressions = new List<IEdmExpression>();
+                    foreach (var item in collectionExpression.ElementValues)
+                    {
+                        expressions.Add(BuildEdmExpression(item, csdlModel, elementType));
+                    }
+
+                    if (termType != null)
+                    {
+                        return new EdmCollectionExpression(termType, expressions);
+                    }
+                    else
+                    {
+                        return new EdmCollectionExpression(expressions);
+                    }
+
+                //      return new CsdlSemanticsCollectionExpression((CsdlCollectionExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.DateTimeOffsetConstant:
+                //     return new CsdlSemanticsDateTimeOffsetConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.DecimalConstant:
+                //     return new CsdlSemanticsDecimalConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.EnumMember:
+                //     return new CsdlSemanticsEnumMemberExpression((CsdlEnumMemberExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.FloatingConstant:
+                //    return new CsdlSemanticsFloatingConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.Null:
+                //   return new CsdlSemanticsNullExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.FunctionApplication:
+                //   return new CsdlSemanticsApplyExpression((CsdlApplyExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.GuidConstant:
+                //   return new CsdlSemanticsGuidConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.If:
+                //   return new CsdlSemanticsIfExpression((CsdlIfExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.IntegerConstant:
+                //   return new CsdlSemanticsIntConstantExpression((CsdlConstantExpression)expression, schema);
+                case EdmExpressionKind.IsType:
+                //   return new CsdlSemanticsIsTypeExpression((CsdlIsTypeExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.LabeledExpressionReference:
+                //  return new CsdlSemanticsLabeledExpressionReferenceExpression((CsdlLabeledExpressionReferenceExpression)expression, bindingContext, schema);
+                case EdmExpressionKind.Labeled:
+                // return schema.WrapLabeledElement((CsdlLabeledExpression)expression, bindingContext);
+
+                case EdmExpressionKind.Record:
+                    // return new CsdlSemanticsRecordExpression((CsdlRecordExpression)expression, bindingContext, schema);
+                    break;
+
+                case EdmExpressionKind.Path:
+                    return new EdmPathExpression(pathExpression.Path);
+
+                case EdmExpressionKind.PropertyPath:
+                    return new EdmPropertyPathExpression(pathExpression.Path);
+
+                case EdmExpressionKind.NavigationPropertyPath:
+                    return new EdmNavigationPropertyPathExpression(pathExpression.Path);
+
+                case EdmExpressionKind.AnnotationPath:
+                    return new EdmAnnotationPathExpression(pathExpression.Path);
+            }
+
             return null;
         }
+
+        private static IEdmTypeReference GetTermTypeReference(IEdmTerm edmTerm)
+        {
+            if (edmTerm is UnresolvedVocabularyTerm)
+            {
+                return null;
+            }
+
+            return edmTerm.Type;
+        }
+
 
         private EdmTerm FindTerm(string namespaceQualifiedTermName)
         {
@@ -743,8 +1163,9 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
         private void BuildTypeDefinitionHeader(CsdlTypeDefinition csdlTypeDefinition, CsdlSchema csdlSchema, CsdlModel csdlModel, EdmModel edmModel)
         {
+            // EdmTypeDefinition doesn't support the type facts now.
             EdmTypeDefinition typeDefinition = new EdmTypeDefinition(csdlSchema.Namespace, csdlTypeDefinition.Name,
-                        GetUnderlyingType(csdlTypeDefinition));
+                        GetUnderlyingType(csdlTypeDefinition.UnderlyingTypeName, EdmPrimitiveTypeKind.String));
 
             _typeDefinitions[typeDefinition.FullTypeName()] = typeDefinition;
             edmModel.AddElement(typeDefinition);
@@ -754,37 +1175,14 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
         {
             EdmEnumType enumType = new EdmEnumType(csdlSchema.Namespace,
                 csdlEnum.Name,
-                GetEnumUnderlyingType(csdlEnum.UnderlyingTypeName),
+                GetUnderlyingType(csdlEnum.UnderlyingTypeName, EdmPrimitiveTypeKind.Int32),
                 csdlEnum.IsFlags);
 
             _enumTypes[enumType.FullTypeName()] = enumType;
             edmModel.AddElement(enumType);
         }
 
-       
-
-        private static IEdmPrimitiveType GetUnderlyingType(CsdlTypeDefinition typeDefinitionItem)
-        {
-            IEdmTypeReference underlyingTypeRef = BuildTypeReference(typeDefinitionItem.UnderlyingTypeName,
-                false,
-                true,
-                false,
-                typeDefinitionItem.MaxLength,
-                typeDefinitionItem.Unicode,
-                typeDefinitionItem.Precision,
-                typeDefinitionItem.Scale,
-                typeDefinitionItem.Srid);
-
-            IEdmType underlyingType = underlyingTypeRef.Definition;
-            if (underlyingType.TypeKind != EdmTypeKind.Primitive)
-            {
-                throw new Exception();
-            }
-
-            return (IEdmPrimitiveType)underlyingType;
-        }
-
-        private static IEdmPrimitiveType GetEnumUnderlyingType(string underlyingType)
+        private static IEdmPrimitiveType GetUnderlyingType(string underlyingType, EdmPrimitiveTypeKind defaultKind)
         {
             if (underlyingType != null)
             {
@@ -797,15 +1195,144 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 throw new Exception();
             }
 
-            return EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32);
+            return EdmCoreModel.Instance.GetPrimitiveType(defaultKind);
         }
 
-        public static IEdmTypeReference BuildEdmTypeReference(CsdlTypeReference csdlTypeReference)
+        public IEdmTypeReference BuildEdmTypeReference(CsdlTypeReference csdlTypeReference, CsdlModel csdlModel)
         {
-            return null;
+            var namedTypeReference = csdlTypeReference as CsdlNamedTypeReference;
+            if (namedTypeReference != null)
+            {
+                var primitiveReference = namedTypeReference as CsdlPrimitiveTypeReference;
+                if (primitiveReference != null)
+                {
+                    IEdmPrimitiveTypeReference primitiveType = EdmCoreModel.Instance.GetPrimitive(primitiveReference.Kind, primitiveReference.IsNullable);
+                    switch (primitiveReference.Kind)
+                    {
+                        case EdmPrimitiveTypeKind.Boolean:
+                        case EdmPrimitiveTypeKind.Byte:
+                        case EdmPrimitiveTypeKind.Date:
+                        case EdmPrimitiveTypeKind.Double:
+                        case EdmPrimitiveTypeKind.Guid:
+                        case EdmPrimitiveTypeKind.Int16:
+                        case EdmPrimitiveTypeKind.Int32:
+                        case EdmPrimitiveTypeKind.Int64:
+                        case EdmPrimitiveTypeKind.SByte:
+                        case EdmPrimitiveTypeKind.Single:
+                        case EdmPrimitiveTypeKind.Stream:
+                            return primitiveType;
+
+                        case EdmPrimitiveTypeKind.Binary:
+                            return new EdmBinaryTypeReference(primitiveType.PrimitiveDefinition(), primitiveReference.IsNullable, primitiveReference.IsUnbounded, primitiveReference.MaxLength);
+
+                        case EdmPrimitiveTypeKind.DateTimeOffset:
+                        case EdmPrimitiveTypeKind.Duration:
+                        case EdmPrimitiveTypeKind.TimeOfDay:
+                            return new EdmTemporalTypeReference(primitiveType.PrimitiveDefinition(), primitiveReference.IsNullable);
+
+                        case EdmPrimitiveTypeKind.Decimal:
+                            return new EdmDecimalTypeReference(primitiveType.PrimitiveDefinition(), primitiveReference.IsNullable, primitiveReference.Precision, primitiveReference.Scale);
+
+                        case EdmPrimitiveTypeKind.String:
+                            return new EdmStringTypeReference(primitiveType.PrimitiveDefinition(), primitiveReference.IsNullable, primitiveReference.IsUnbounded, primitiveReference.MaxLength, primitiveReference.IsUnicode);
+
+                        case EdmPrimitiveTypeKind.Geography:
+                        case EdmPrimitiveTypeKind.GeographyPoint:
+                        case EdmPrimitiveTypeKind.GeographyLineString:
+                        case EdmPrimitiveTypeKind.GeographyPolygon:
+                        case EdmPrimitiveTypeKind.GeographyCollection:
+                        case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                        case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                        case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                        case EdmPrimitiveTypeKind.Geometry:
+                        case EdmPrimitiveTypeKind.GeometryPoint:
+                        case EdmPrimitiveTypeKind.GeometryLineString:
+                        case EdmPrimitiveTypeKind.GeometryPolygon:
+                        case EdmPrimitiveTypeKind.GeometryCollection:
+                        case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+                        case EdmPrimitiveTypeKind.GeometryMultiLineString:
+                        case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                            return new EdmSpatialTypeReference(primitiveType.PrimitiveDefinition(), primitiveReference.IsNullable, primitiveReference.SpatialReferenceIdentifier);
+                    }
+                }
+                else
+                {
+                    // Untyped
+                    CsdlUntypedTypeReference csdlUntypedTypeReference = namedTypeReference as CsdlUntypedTypeReference;
+                    if (csdlUntypedTypeReference != null)
+                    {
+                        return EdmCoreModel.Instance.GetUntyped();
+                    }
+
+                    // Path
+                    EdmPathTypeKind pathTypeKind = EdmCoreModel.Instance.GetPathTypeKind(namedTypeReference.FullName);
+                    if (pathTypeKind != EdmPathTypeKind.None)
+                    {
+                        return EdmCoreModel.Instance.GetPathType(pathTypeKind, namedTypeReference.IsNullable);
+                    }
+
+                    string fullNamespaceQualifiedName = _aliasNameMapping.ReplaceAlias(csdlModel, namedTypeReference.FullName);
+
+                    // Type-Definition
+                    EdmTypeDefinition typeDefinition;
+                    if (_typeDefinitions.TryGetValue(fullNamespaceQualifiedName, out typeDefinition))
+                    {
+                        return new EdmTypeDefinitionReference(typeDefinition,
+                            namedTypeReference.IsNullable,
+                            namedTypeReference.IsUnbounded,
+                            namedTypeReference.MaxLength,
+                            namedTypeReference.IsUnicode,
+                            namedTypeReference.Precision,
+                            namedTypeReference.Scale,
+                            namedTypeReference.SpatialReferenceIdentifier);
+                    }
+
+                    // Enum
+                    EdmEnumType enumType;
+                    if (_enumTypes.TryGetValue(fullNamespaceQualifiedName, out enumType))
+                    {
+                        return new EdmEnumTypeReference(enumType, namedTypeReference.IsNullable);
+                    }
+
+                    // Complex or entity
+                    EdmStructuredType structuredType;
+                    if (_structuredTypes.TryGetValue(fullNamespaceQualifiedName, out structuredType))
+                    {
+                        IEdmComplexType complexType = structuredType as IEdmComplexType;
+                        if (complexType != null)
+                        {
+                            return new EdmComplexTypeReference(complexType, namedTypeReference.IsNullable);
+                        }
+                        else
+                        {
+                            return new EdmEntityTypeReference(structuredType as IEdmEntityType, namedTypeReference.IsNullable);
+                        }
+                    }
+                }
+            }
+
+            var typeExpression = csdlTypeReference as CsdlExpressionTypeReference;
+            if (typeExpression != null)
+            {
+                var collectionType = typeExpression.TypeExpression as CsdlCollectionType;
+                if (collectionType != null)
+                {
+                    IEdmTypeReference elementType = BuildEdmTypeReference(collectionType.ElementType, csdlModel);
+                    return new EdmCollectionTypeReference(new EdmCollectionType(elementType));
+                }
+
+                var entityReferenceType = typeExpression.TypeExpression as CsdlEntityReferenceType;
+                if (entityReferenceType != null)
+                {
+                    // Json doesn't support this.
+                    // return new CsdlSemanticsEntityReferenceTypeExpression(typeExpression, new CsdlSemanticsEntityReferenceTypeDefinition(schema, entityReferenceType));
+                }
+            }
+
+            throw new Exception();
         }
 
-        public static IEdmTypeReference BuildTypeReference(string typeString, // if it's collection, it's element type string
+        public static IEdmTypeReference BuildEdmPrimitiveTypeReference(string typeString, // if it's collection, it's element type string
             bool isCollection,
             bool isNullable,
             bool isUnbounded,
@@ -815,7 +1342,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             int? scale,
             int? srid)
         {
-            IEdmTypeReference type = ParseNamedTypeReference(typeString, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
+            IEdmTypeReference type = BuildEdmElementPrimitiveTypeReference(typeString, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
             if (isCollection)
             {
                 type = new EdmCollectionTypeReference(new EdmCollectionType(type));
@@ -824,7 +1351,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             return type;
         }
 
-        private static IEdmTypeReference ParseNamedTypeReference(string typeName, bool isNullable,
+        private static IEdmTypeReference BuildEdmElementPrimitiveTypeReference(string typeName, bool isNullable,
              bool isUnbounded,
              int? maxLength,
              bool? unicode,
@@ -897,36 +1424,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 return EdmCoreModel.Instance.GetPathType(pathTypeKind, isNullable);
             }
 
-            // If we can't find the type, find it from referenced model.
-            // IEdmType edmType = _edmModel.FindType(typeName);
             return null;
-            //return GetEdmTypeReference(edmType, isNullable, isUnbounded, maxLength, unicode, precision, scale, srid);
         }
-
-        //private static IEdmTypeReference GetEdmTypeReference(IEdmType edmType, bool isNullable,
-        //     bool isUnbounded,
-        //     int? maxLength,
-        //     bool? unicode,
-        //     int? precision,
-        //     int? scale,
-        //     int? srid)
-        //{
-        //    switch (edmType.TypeKind)
-        //    {
-        //        case EdmTypeKind.Complex:
-        //            return new EdmComplexTypeReference((IEdmComplexType)edmType, isNullable);
-
-        //        case EdmTypeKind.Entity:
-        //            return new EdmEntityTypeReference((IEdmEntityType)edmType, isNullable);
-
-        //        case EdmTypeKind.Enum:
-        //            return new EdmEnumTypeReference((IEdmEnumType)edmType, isNullable);
-
-        //        case EdmTypeKind.TypeDefinition:
-        //            return new EdmTypeDefinitionReference((IEdmTypeDefinition)edmType, isNullable, isUnbounded, maxLength, isUnbounded, precision, scale, srid);
-        //    }
-
-        //    throw new CsdlParseException();
-        //}
     }
 }

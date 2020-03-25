@@ -230,5 +230,16 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             this.referencedEdmModels.Add(model);
         }
+
+        /// <summary>
+        /// Adds a model reference to this model.
+        /// </summary>
+        /// <param name="model">The model to reference.</param>
+        protected void RemoveReferencedModelImplement(IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            this.referencedEdmModels.Remove(model);
+        }
+
     }
 }

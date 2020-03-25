@@ -15,6 +15,7 @@ using Microsoft.OData.Edm.Csdl.Json.Builder;
 using Microsoft.OData.Edm.Csdl.Json.Parser;
 using Microsoft.OData.Edm.Csdl.Json.Reader;
 using Microsoft.OData.Edm.Csdl.Json.Value;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
 
@@ -215,6 +216,96 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
                 EdmModelBuilder builder = new EdmModelBuilder(options);
                 IEdmModel model = builder.TryBuildEdmModel(csdlModel);
+                Assert.NotNull(model);
+            }
+        }
+
+        [Fact]
+        public void DeserializeCsdlTestWorkUsingCsdlModel()
+        {
+            string mainCsdl = @" {
+  ""$Reference"": {
+    ""http://localhost/samxu/v1"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""My.Namespace"",
+          ""$Alias"": ""sam""
+        }
+      ]
+    },
+   ""https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.json"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""Org.OData.Core.V1"",
+          ""$Alias"": ""Core"",
+          ""@Core.DefaultNamespace"": true
+        }
+      ]
+    }
+  },
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS1.Container"",
+  ""NS1"": {
+    ""Product"": {
+      ""$BaseType"": ""sam.ProductBase"",
+      ""$Kind"": ""EntityType"",
+      ""Name"": { },
+      ""UpdatedTime"": {
+        ""$Type"": ""Edm.Date"",
+        ""@Core.Computed"": true
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Products"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS1.Product"",
+        ""@Core.OptimisticConcurrency"": [
+           ""Id"",
+           ""UpdatedTime""
+        ]
+      }
+    }
+  }
+}";
+
+            string csdl = @" {
+  ""$Version"": ""4.0"",
+  ""My.Namespace"": {
+    ""$Alias"": ""sam"",
+    ""ProductBase"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      }
+    }
+  }
+}";
+
+            // var model = CsdlSerializer.Deserialize(csdl);
+
+            //    JsonPath path = new JsonPath();
+            CsdlSerializerOptions options = new CsdlSerializerOptions();
+            options.ReferencedModelJsonFactory = (uri) =>
+            {
+                if (uri.OriginalString.Contains("samxu/v1"))
+                {
+                    return new StringReader(csdl);
+                }
+
+                return null;
+            };
+
+            using (TextReader txtReader = new StringReader(mainCsdl))
+            {
+                CsdlJsonModelBuilder csdlModelBuilder = new CsdlJsonModelBuilder(txtReader, options);
+                CsdlModel csdlModel = csdlModelBuilder.TryParseCsdlModel();
+
+                EdmModelBuilder builder = new EdmModelBuilder(options);
+                IEdmModel model = builder.TryBuildEdmModel(csdlModel, csdlModel.ReferencedModels);
                 Assert.NotNull(model);
             }
         }

@@ -73,6 +73,11 @@ namespace Microsoft.OData.Edm
             base.AddReferencedModel(model);
         }
 
+        internal void RemoveReferencedMode(IEdmModel model)
+        {
+            RemoveReferencedModelImplement(model);
+        }
+
         /// <summary>
         /// Adds a schema element to this model.
         /// </summary>

@@ -1,6 +1,7 @@
 {
   "$Version": "4.0",
   "Org.OData.Core.V1": {
+    "$Alias": "Core",
     "OptimisticConcurrency": {
       "$Kind": "Term",
       "$Type": "Edm.PropertyPath",
@@ -9,11 +10,23 @@
         "EntitySet"
       ]
     },
+    "Computed": {
+      "$Kind": "Term",
+      "$Type": "Core.Tag",
+      "$DefaultValue": true,
+      "$AppliesTo": [
+        "Property"
+      ]
+    },
+    "Tag": {
+      "$Kind": "TypeDefinition",
+      "$UnderlyingType": "Edm.Boolean"
+    },
     "QualifiedTermName": {
       "$Kind": "TypeDefinition",
       "$UnderlyingType": "Edm.String"
     },
-    "REvisionKind": {
+    "RevisionKind": {
       "$Kind": "EnumType",
       "Added": 0,
       "Modified": 1,

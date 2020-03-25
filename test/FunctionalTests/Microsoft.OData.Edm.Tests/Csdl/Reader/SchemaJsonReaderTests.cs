@@ -97,7 +97,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             {
                 JsonReader jsonReader = new JsonReader(txtReader);
                 JsonObjectValue objValue = jsonReader.ReadAsObject();
-                enumType = SchemaJsonParser.BuildCsdlEnumType("ShippingMethod", objValue);
+                IJsonPath jsonPath = new JsonPath();
+                enumType = SchemaJsonParser.BuildCsdlEnumType("ShippingMethod", objValue, jsonPath);
             }
 
             Assert.NotNull(enumType);

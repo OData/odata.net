@@ -104,6 +104,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
             if (mainModel != null)
             {
+                edmModel.RemoveReferencedMode(EdmCoreModel.Instance);
                 mainModel.AddReferencedModel(edmModel);
             }
 
@@ -118,7 +119,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             allModels.Add(mainCsdlModel);
             allModels.AddRange(referencedModels);
 
-            _aliasNamespaceMapping = new AliasNamespaceHelper(referencedModels);
+            _aliasNamespaceMapping = new AliasNamespaceHelper(allModels);
 
             EdmModel mainModel = BuildModelHeader(mainCsdlModel, null);
 
