@@ -86,8 +86,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>String list generated from selected items</returns>
         internal static List<string> GetCurrentLevelSelectList(this SelectExpandClause selectExpandClause)
         {
-            List<string> levelSelectList = new List<string>();
-          
+            HashSet<string> levelSelectList = new HashSet<string>();
+            List<string> masterSelectList = new List<string>();
+
             foreach (var selectItem in selectExpandClause.SelectedItems)
             {
                 if (selectItem is WildcardSelectItem)
@@ -110,12 +111,32 @@ namespace Microsoft.OData.UriParser
 
                     for (int i = 0; i< pathSelectItems.Count; i++)
                     {
-                        levelSelectList.Add(pathSelectItems[i]);
+                        levelSelectList.Add(pathSelectItems[i]);                       
                     }
                 }
             }
 
-            return levelSelectList;
+            foreach(var item in levelSelectList)
+            {
+                if (!levelSelectList.Contains(GetPreviousSegments(item)))
+                {
+                    masterSelectList.Add(item);
+                }
+            }
+
+            return masterSelectList;
+        }
+
+        private static string GetPreviousSegments(string item)
+        {
+            int index = item.LastIndexOf('/');
+
+            if(index > 0)
+            {
+                return item.Substring(0, index);
+            }
+
+            return string.Empty;
         }
 
         /// <summary>
