@@ -186,8 +186,8 @@ namespace Microsoft.OData.Client
 
             collectionItemType = string.Empty;
 
-            int firstIndexOfParen = collectionTypeName.IndexOf("(", StringComparison.OrdinalIgnoreCase);
-            int lastIndexOfParen = collectionTypeName.IndexOf(")", StringComparison.OrdinalIgnoreCase);
+            int firstIndexOfParen = collectionTypeName.IndexOf('(');
+            int lastIndexOfParen = collectionTypeName.IndexOf(')');
 
             if (firstIndexOfParen < 0 || lastIndexOfParen < 0 || firstIndexOfParen > lastIndexOfParen)
             {

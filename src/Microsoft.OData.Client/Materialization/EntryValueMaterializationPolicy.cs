@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
@@ -599,6 +600,7 @@ namespace Microsoft.OData.Client.Materialization
 
                     if (prop == null)
                     {
+                        this.MaterializeNestedResourceAsDynamicProperty(entry, link);
                         continue;
                     }
 
@@ -678,6 +680,95 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             this.MaterializerContext.ResponsePipeline.FireEndEntryEvents(entry);
+        }
+
+        private void MaterializeNestedResourceAsDynamicProperty(MaterializerEntry entry, ODataNestedResourceInfo link)
+        {
+            DataServiceContext context = this.EntityTrackingAdapter.Context;
+            Debug.Assert(context != null, "context != null");
+
+            // NOTE: Dynamic properties that have navigational properties may present a challenge
+            // For instance, complex types are allowed to have navigational properties...
+            // The straightfoward option is not to materialize the navigational property on the dynamic property
+            // Such advanced scenarios may be handled adding a declared property on the client type 
+            // that will be mapping to the corresponding dynamic property 
+            Debug.Assert(entry != null, $"{nameof(entry)} != null");
+            Debug.Assert(entry.ResolvedObject != null, $"{nameof(entry.ResolvedObject)} != null -- otherwise not resolved/created!");
+            Debug.Assert(link != null, $"{nameof(link)} != null");
+
+
+            MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
+            if (linkState == null || (linkState.Entry == null && linkState.Feed == null))
+            {
+                return;
+            }
+
+            // An entity or entity collection as a dynamic property currently doesn't work as expected 
+            // due to the absence of a navigational property definition in the metadata 
+            // to express the relationship between that entity and the parent entity - unless they're the same type!
+            // TODO: Not proceed with materialization if nested type is an entity or entity collection?
+
+            // Dynamic properties may optionally be stored in a dictionary 
+            PropertyInfo propertyInfo = entry.ResolvedObject.GetType().GetProperties().Where(p =>
+                    !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
+                    typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)
+                ).FirstOrDefault();
+
+            if (propertyInfo == null)
+            {
+                return;
+            }
+
+            IDictionary<string, object> dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(entry.ResolvedObject);
+
+            // Key with same name already exists on the dictionary
+            if (dynamicPropertiesDictionary.ContainsKey(link.Name))
+            {
+                return;
+            }
+
+            // Assembly where client types are expected to be
+            Assembly assembly = entry.ResolvedObject.GetType().GetAssembly();
+            string containingTypeNamespace = entry.ResolvedObject.GetType().Namespace;
+
+            if (linkState.Feed != null)
+            {
+                string collectionTypeName = linkState.Feed.TypeName; // TypeName represents a collection e.g. Collection(NS.Type)
+                string collectionItemTypeName;
+                ClientConvert.TryParseCollectionItemType(collectionTypeName, out collectionItemTypeName);
+
+                IEnumerable<Type> clientTypeCandidates = ClientTypeUtil.GetClientTypeCandidates(assembly, collectionItemTypeName, containingTypeNamespace);
+                IEnumerator<Type> candidatesEnumerator = clientTypeCandidates.GetEnumerator();
+
+                if (candidatesEnumerator.MoveNext())
+                {
+                    Type collectionItemType = candidatesEnumerator.Current;
+                    Type collectionType = typeof(System.Collections.ObjectModel.Collection<>).MakeGenericType(new Type[] { collectionItemType });
+                    IList collection = (IList)Util.ActivatorCreateInstance(collectionType);
+
+                    IEnumerable<ODataResource> feedEntries = MaterializerFeed.GetFeed(linkState.Feed).Entries;
+                    foreach (ODataResource feedEntry in feedEntries)
+                    {
+                        MaterializerEntry linkEntry = MaterializerEntry.GetEntry(feedEntry);
+                        this.Materialize(linkEntry, collectionItemType, false /*includeLinks*/);
+                        collection.Add(linkEntry.ResolvedObject);
+                    }
+                    dynamicPropertiesDictionary.Add(link.Name, collection);
+                }
+            }
+            else 
+            {
+                MaterializerEntry linkEntry = linkState.Entry;
+                IEnumerable<Type> clientTypeCandidates = ClientTypeUtil.GetClientTypeCandidates(assembly, linkEntry.Entry.TypeName, containingTypeNamespace);
+                IEnumerator<Type> candidatesEnumerator = clientTypeCandidates.GetEnumerator();
+
+                if (candidatesEnumerator.MoveNext())
+                {
+                    Type itemType = candidatesEnumerator.Current;
+                    this.Materialize(linkEntry, itemType, false /*includeLinks*/);
+                    dynamicPropertiesDictionary.Add(link.Name, linkEntry.ResolvedObject);
+                }
+            }
         }
     }
 }

@@ -319,14 +319,16 @@ namespace Microsoft.OData.Client.Materialization
 
             // Assembly where client types are expected to be
             Assembly assembly = instance.GetType().GetAssembly();
+            string containingTypeNamespace = instance.GetType().Namespace;
 
             // Handle enum value
             ODataEnumValue enumVal = property.Value as ODataEnumValue;
             if (enumVal != null)
             {
                 // TODO: ClientEdmModel caches server type to client mapping after first encounter - consider calling Model.FindType(typeName) first
+                IEnumerable<Type> candidateTypes = ClientTypeUtil.GetClientTypeCandidates(assembly, enumVal.TypeName, containingTypeNamespace);
                 // Try to identity the assignable client type by trying out each candidate type at a time
-                foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(assembly, enumVal.TypeName))
+                foreach (Type candidateType in candidateTypes)
                 {
                     object materializedEnumValue;
                     if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(candidateType, enumVal, out materializedEnumValue))
@@ -359,8 +361,9 @@ namespace Microsoft.OData.Client.Materialization
                     }
                     else  // Non-primitive collection
                     {
+                        IEnumerable<Type> candidateTypes = ClientTypeUtil.GetClientTypeCandidates(assembly, collectionItemTypeName, containingTypeNamespace);
                         // Try to identity the assignable client type by trying out each candidate type at a time
-                        foreach (Type candidateType in ClientTypeUtil.GetCandidateClientTypes(assembly, collectionItemTypeName))
+                        foreach (Type candidateType in candidateTypes)
                         {
                             object collectionInstance;
                             if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(candidateType, property, out collectionInstance))

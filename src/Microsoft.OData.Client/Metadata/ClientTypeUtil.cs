@@ -771,23 +771,35 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="assembly">Assembly where client types are expected to be.</param>
         /// <param name="serverTypeName">Server type name.</param>
-        /// <returns>An enumerable object with the candidate types</returns>
-        internal static IEnumerable<Type> GetCandidateClientTypes(Assembly assembly, string serverTypeName)
+        /// <param name="targetNamespace">Namespace for the containing type</param>
+        /// <returns>An enumerable object with client type candidates</returns>
+        internal static IEnumerable<Type> GetClientTypeCandidates(Assembly assembly, string serverTypeName, string targetNamespace = null)
         {
+            Debug.Assert(assembly != null, $"{nameof(assembly)} != null");
             Debug.Assert(!string.IsNullOrEmpty(serverTypeName), $"!string.IsNullOrEmpty({nameof(serverTypeName)})");
 
-            string unqualifiedTypeName = serverTypeName.Substring(serverTypeName.LastIndexOf(".", StringComparison.OrdinalIgnoreCase) + 1);
+            string unqualifiedTypeName = serverTypeName.Substring(serverTypeName.LastIndexOf('.') + 1);
             IEnumerable<Type> candidates = Enumerable.Empty<Type>();
-            Func<Type, bool> predicate = new Func<Type, bool>(d => d.Name.EndsWith(unqualifiedTypeName, StringComparison.Ordinal));
+            
+            // Type with name matching the server type name - only one item possible
+            // OData Connected Service extension emits client types with the same qualified name as the server type
+            Func<Type, bool> namePredicate = new Func<Type, bool>(d => d.FullName.Equals(serverTypeName, StringComparison.Ordinal));
+            // Type with unqualified name matching the server type equivalent and in the same namespace as containing type (excluding any matched by 1st predicate) - only one item possible
+            Func<Type, bool> namespacePredicate = new Func<Type, bool>(
+                d => !d.FullName.Equals(serverTypeName, StringComparison.Ordinal) && d.Namespace.Equals(targetNamespace) && d.Name.Equals(unqualifiedTypeName, StringComparison.Ordinal));
+            // Type with unqualified name matching the server type equivalent and in the specified assembly (excluding any matched by 1st and 2nd predicate) 
+            Func<Type, bool> assemblyPredicate = new Func<Type, bool>(
+                d => !d.FullName.Equals(serverTypeName, StringComparison.Ordinal) && !d.Namespace.Equals(targetNamespace) && d.Name.Equals(unqualifiedTypeName, StringComparison.Ordinal));
 
             try
             {
-                // Mitigation - If any type can’t be loaded, the entire method call blows up
-                candidates = assembly.GetTypes().Where(predicate);
+                // Approach guarantees order of preference is guaranteed
+                candidates = new[] { assembly.GetTypes().Where(namePredicate), assembly.GetTypes().Where(namespacePredicate), assembly.GetTypes().Where(assemblyPredicate) }.SelectMany(d => d);
             }
             catch (ReflectionTypeLoadException ex)
             {
-                candidates = ex.Types.Where(predicate);
+                // Mitigation - If any type can’t be loaded, the entire method call blows up
+                candidates = new[] { ex.Types.Where(namePredicate), ex.Types.Where(namespacePredicate), ex.Types.Where(assemblyPredicate) }.SelectMany(d => d);
             }
 
             foreach (Type candidate in candidates)
