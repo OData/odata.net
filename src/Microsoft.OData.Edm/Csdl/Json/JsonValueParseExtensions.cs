@@ -38,36 +38,36 @@ namespace Microsoft.OData.Edm.Csdl.Json
             return null;
         }
 
-        public static T ParseRequiredProperty<T>(this JsonObjectValue objValue,
-            string propertyName, JsonPath jsonPath, CsdlSerializerOptions options,
-            Func<IJsonValue, JsonPath, CsdlSerializerOptions, T> parser)
-        {
-            IJsonValue jsonValue;
-            if (objValue.TryGetValue(propertyName, out jsonValue))
-            {
-                jsonPath.Push(propertyName);
-                T ret = parser(jsonValue, jsonPath, options);
-                jsonPath.Pop();
-                return ret;
-            }
+        //public static T ParseRequiredProperty<T>(this JsonObjectValue objValue,
+        //    string propertyName, JsonPath jsonPath, CsdlSerializerOptions options,
+        //    Func<IJsonValue, JsonPath, CsdlSerializerOptions, T> parser)
+        //{
+        //    IJsonValue jsonValue;
+        //    if (objValue.TryGetValue(propertyName, out jsonValue))
+        //    {
+        //        jsonPath.Push(propertyName);
+        //        T ret = parser(jsonValue, jsonPath, options);
+        //        jsonPath.Pop();
+        //        return ret;
+        //    }
 
-            throw new Exception();
-        }
+        //    throw new Exception();
+        //}
 
-        public static T ParseOptionalProperty<T>(this JsonObjectValue objValue, string propertyName, JsonPath jsonPath, CsdlSerializerOptions options,
-            Func<IJsonValue, JsonPath, CsdlSerializerOptions, T> parser)
-        {
-            IJsonValue jsonValue;
-            if (objValue.TryGetValue(propertyName, out jsonValue))
-            {
-                jsonPath.Push(propertyName);
-                T ret = parser(jsonValue, jsonPath, options);
-                jsonPath.Pop();
-                return ret;
-            }
+        //public static T ParseOptionalProperty<T>(this JsonObjectValue objValue, string propertyName, JsonPath jsonPath, CsdlSerializerOptions options,
+        //    Func<IJsonValue, JsonPath, CsdlSerializerOptions, T> parser)
+        //{
+        //    IJsonValue jsonValue;
+        //    if (objValue.TryGetValue(propertyName, out jsonValue))
+        //    {
+        //        jsonPath.Push(propertyName);
+        //        T ret = parser(jsonValue, jsonPath, options);
+        //        jsonPath.Pop();
+        //        return ret;
+        //    }
 
-            return default(T);
-        }
+        //    return default(T);
+        //}
 
         ///// <summary>
         ///// </summary>
@@ -99,20 +99,43 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <param name="jsonValue"></param>
         /// <param name="jsonPath"></param>
         /// <returns></returns>
-        public static IList<T> ParseArray<T>(this IJsonValue jsonValue,
-            IJsonPath jsonPath,
+        public static IList<T> ParseArray<T>(this IJsonValue jsonValue, IJsonPath jsonPath,
             Func<IJsonValue, IJsonPath, T> buildItemFunc)
         {
-            // The value of $Reference is an object that contains one member per referenced CSDL document.
-            JsonArrayValue array = jsonValue.ValidateRequiredJsonValue<JsonArrayValue>(jsonPath);
+            if (jsonValue == null)
+            {
+                throw new ArgumentNullException("jsonValue");
+            }
 
+            if (jsonPath == null)
+            {
+                throw new ArgumentNullException("jsonPath");
+            }
+
+            if (jsonValue.ValueKind != JsonValueKind.JArray)
+            {
+                return null;
+            }
+
+            JsonArrayValue array = (JsonArrayValue)jsonValue;
             IList<T> includes = new List<T>();
 
-            array.ProcessItem(jsonPath, (v) =>
+            int index = 0;
+            foreach (var item in array)
             {
-                T item = buildItemFunc(v, jsonPath);
-                includes.Add(item);
-            });
+                // The property value is either primitive, array or another object,
+                // It could not be a null.
+                // for null, it's wrappered in JsonPrimitiveValue.
+                Debug.Assert(item != null);
+
+                jsonPath.Push(index++);
+
+                T builtItem = buildItemFunc(item, jsonPath);
+
+                includes.Add(builtItem);
+
+                jsonPath.Pop();
+            }
 
             return includes;
         }

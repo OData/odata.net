@@ -15,6 +15,21 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Json
     public class IJsonReaderExtensionsTests
     {
         [Theory]
+        [InlineData("{}", JsonValueKind.JObject)]
+        [InlineData("[]", JsonValueKind.JArray)]
+        [InlineData("42", JsonValueKind.JPrimitive)]
+        [InlineData("\"abc42\"", JsonValueKind.JPrimitive)]
+        [InlineData("6.9", JsonValueKind.JPrimitive)]
+        [InlineData("true", JsonValueKind.JPrimitive)]
+        public void ReadAsJsonValueWorksForJson(string json, JsonValueKind expected)
+        {
+            IJsonValue jsonValue = ReadAsJsonValue(json);
+
+            Assert.NotNull(jsonValue);
+            Assert.Equal(expected, jsonValue.ValueKind);
+        }
+
+        [Theory]
         [InlineData("\"abc\"", typeof(string))]
         [InlineData(42, typeof(int))]
         [InlineData(6.9, typeof(decimal))]
@@ -138,6 +153,15 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Json
         }
 
         #region Helper methods
+
+        private static IJsonValue ReadAsJsonValue(string json)
+        {
+            using (TextReader txtReader = new StringReader(json))
+            {
+                IJsonReader jsonReader = new JsonReader(txtReader);
+                return jsonReader.ReadAsJsonValue();
+            }
+        }
 
         private static JsonPrimitiveValue ReadAsJsonPrimitive(string value)
         {

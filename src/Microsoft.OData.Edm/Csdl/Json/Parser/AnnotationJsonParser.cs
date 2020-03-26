@@ -18,8 +18,26 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
     /// <summary>
     /// Provides functionalities for parsing CSDL-JSON annotations.
     /// </summary>
-    internal static class AnnotationJsonParser
+    internal class AnnotationJsonParser
     {
+        private CsdlSerializerOptions _options;
+        private Version _version;
+
+        public AnnotationJsonParser(Version version, CsdlSerializerOptions options)
+        {
+            if (version == null)
+            {
+                throw new ArgumentNullException("version");
+            }
+
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
+
+            _version = version;
+            _options = options;
+        }
         // out of line annotations
         /*
          * "org.example": {
@@ -32,7 +50,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
   }
 }
          * */
-        public static IList<CsdlAnnotations> ParseOutOfLineAnnotations(IJsonValue jsonValue, IJsonPath jsonPath)
+        public IList<CsdlAnnotations> ParseOutOfLineAnnotations(IJsonValue jsonValue, IJsonPath jsonPath)
         {
             JsonObjectValue annotationsObj = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
 
@@ -51,8 +69,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                     JsonObjectValue subOject = (JsonObjectValue)v;
                     subOject.ProcessProperty(jsonPath, (subName, subValue) =>
                     {
-                        string outPropertyName;
-                        CsdlAnnotation subAnnotation = TryParseCsdlAnnotation(subName, subValue, jsonPath, null, out outPropertyName);
+                        CsdlAnnotation subAnnotation = ParseCsdlAnnotation(subName, subValue, jsonPath);
                         subAnnotations.Add(subAnnotation);
                     });
 
@@ -74,20 +91,17 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         /// <param name="annotionName">The input annotation name, annotation name should start with '@'.</param>
         /// <param name="jsonValue"></param>
         /// <param name="jsonPath"></param>
-        /// <param name="options"></param>
-        /// <param name="elementName">output the element name if this annotation for an element.
-        /// for example the enum member annotation. 
-        /// "TwoDay@Core.Description": "Shipped within two days",
-        /// Here, elementName has the "TwoDay"
+        /// <param name="elementName">output the element name if this annotation for another annotation.
+        /// for example: "@Measures.ISOCurrency@Core.Description": "The parent company’s currency"
         /// </param>
         /// <returns></returns>
-        public static CsdlAnnotation TryParseCsdlAnnotation(string annotionName, IJsonValue jsonValue, IJsonPath jsonPath, CsdlSerializerOptions options, out string elementName)
+        public CsdlAnnotation ParseCsdlAnnotation(string annotionName, IJsonValue jsonValue, IJsonPath jsonPath)
         {
             // An annotation is represented as a member whose name consists of an at (@) character,
             // followed by the qualified name of a term, optionally followed by a hash (#) and a qualifier.
             string qualifier;
             string termName;
-            if (!ParseAnnotationName(annotionName, out elementName, out termName, out qualifier))
+            if (!ParseAnnotationName(annotionName, out termName, out qualifier))
             {
                 return null;
             }
@@ -472,6 +486,58 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 term = annotationName;
             }
 
+            return true;
+        }
+
+        /// <summary>
+        /// Parse the input string to see whether it's a valid annotation name.
+        /// If it's valid, seperate string into term name or optional qualifier name.
+        /// It it's not valid, return false
+        /// </summary>
+        /// <param name="annotationName">The input annotation name.</param>
+        /// <param name="term"></param>
+        /// <param name="qualifier"></param>
+        /// <returns></returns>
+        internal static bool ParseAnnotationName(string annotationName, out string term, out string qualifier)
+        {
+            term = null;
+            qualifier = null;
+            if (string.IsNullOrWhiteSpace(annotationName))
+            {
+                return false;
+            }
+
+            if (annotationName[0] != '@')
+            {
+                return false;
+            }
+
+            // BE caution:
+            // An annotation can itself be annotated. Annotations on annotations are represented as a member
+            // whose name consists of the annotation name (including the optional qualifier),
+            // followed by an at (@) character, followed by the qualified name of a term, optionally followed by a hash (#) and a qualifier.
+            // for example: 
+            // "@Measures.ISOCurrency": "USD",
+            // "@Measures.ISOCurrency@Core.Description": "The parent company’s currency"
+            //
+            // So, Core.Description is annotation for "Measures.ISOCurrency annotation.
+
+            // followed by an at (@) character, followed by the qualified name of a term, optionally followed by a hash (#) and a qualifier.
+            int index = annotationName.IndexOf('#');
+            if (index != -1)
+            {
+                term = annotationName.Substring(1, index); // remove '@'
+                qualifier = annotationName.Substring(index + 1);
+            }
+            else
+            {
+                term = annotationName.Substring(1); // remove '@'
+            }
+
+            // So, in annotation on annotation, the return "term" will contains the two term names.
+            // for example:  "@Measures.ISOCurrency@Core.Description#Qualifier"
+            // term includes "Measures.ISOCurrency@Core.Description"
+            // Once ODL supports annotation on annotation, we can process this term to support it.
             return true;
         }
     }

@@ -296,7 +296,7 @@ namespace Microsoft.OData.Edm {
         internal const string CsdlJsonParser_MissingMemberInObject = "CsdlJsonParser_MissingMemberInObject";
         internal const string CsdlJsonParser_UnexpectedJsonMember = "CsdlJsonParser_UnexpectedJsonMember";
         internal const string CsdlJsonParser_CannotReadValueAsType = "CsdlJsonParser_CannotReadValueAsType";
-        internal const string SchemaJsonParser_MissingKindMember = "SchemaJsonParser_MissingKindMember";
+        internal const string CsdlJsonParser_MissingKindMember = "CsdlJsonParser_MissingKindMember";
         internal const string EdmxParser_EdmxVersionMismatch = "EdmxParser_EdmxVersionMismatch";
         internal const string EdmxParser_BodyElement = "EdmxParser_BodyElement";
         internal const string EdmxParser_InvalidReferenceIncorrectNumberOfIncludes = "EdmxParser_InvalidReferenceIncorrectNumberOfIncludes";

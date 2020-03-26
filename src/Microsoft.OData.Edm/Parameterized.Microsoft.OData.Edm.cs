@@ -1717,8 +1717,8 @@ namespace Microsoft.OData.Edm {
         /// <summary>
         /// A string like "A schema '{0}' object MUST contain the member '$Kind' with a string value of '{1}'."
         /// </summary>
-        internal static string SchemaJsonParser_MissingKindMember(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.SchemaJsonParser_MissingKindMember, p0, p1);
+        internal static string CsdlJsonParser_MissingKindMember(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlJsonParser_MissingKindMember, p0, p1);
         }
 
         /// <summary>

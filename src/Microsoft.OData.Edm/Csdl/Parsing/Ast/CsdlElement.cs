@@ -16,7 +16,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     {
         protected List<object> annotations;
 
-        public CsdlElement() { }
         public CsdlElement(CsdlLocation location)
         {
             Location = location;

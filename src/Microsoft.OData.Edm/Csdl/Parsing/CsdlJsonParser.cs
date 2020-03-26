@@ -63,15 +63,15 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     default:
                         // CSDL document also MAY contain members for schemas.
                         // Each schema's value is an object.
-                        CsdlSchema csdlSchema = CsdlJsonSchemaParser.ParseCsdlSchema(propertyName, propertyValue, jsonPath, version, options);
-                        if (csdlSchema != null)
-                        {
-                            csdlModel.AddSchema(csdlSchema);
-                        }
-                        else
-                        {
-                            propertyValue.ReportUnknownMember(jsonPath, options);
-                        }
+                        //CsdlSchema csdlSchema = CsdlJsonSchemaParser.ParseCsdlSchema(propertyName, propertyValue, jsonPath, version, options);
+                        //if (csdlSchema != null)
+                        //{
+                        //    csdlModel.AddSchema(csdlSchema);
+                        //}
+                        //else
+                        //{
+                        //    propertyValue.ReportUnknownMember(jsonPath, options);
+                        //}
                         break;
                 }
             });

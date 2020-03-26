@@ -27,10 +27,23 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
                 }
             }
         }
+        public static T ParseOptionalProperty<T>(this JsonObjectValue objValue, string propertyName, IJsonPath jsonPath,
+            Func<IJsonValue, IJsonPath, T> propertyParser)
+        {
+            IJsonValue value;
+            if (!objValue.TryGetValue(propertyName, out value))
+            {
+                return default;
+            }
 
-        public static T ParseRequiredProperty<T>(this JsonObjectValue objValue, JsonPath jsonPath,
-            string propertyName,
-            Func<IJsonValue, T> propertyParser)
+            jsonPath.Push(propertyName);
+            T obj = propertyParser(value, jsonPath);
+            jsonPath.Pop();
+            return obj;
+        }
+
+        public static T ParseRequiredProperty<T>(this JsonObjectValue objValue, string propertyName,JsonPath jsonPath,
+            Func<IJsonValue, IJsonPath, T> propertyParser)
         {
             IJsonValue value;
            if (!objValue.TryGetValue(propertyName, out value))
@@ -38,7 +51,10 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
                 throw new Exception();
             }
 
-            return propertyParser(value);
+            jsonPath.Push(propertyName);
+            T obj = propertyParser(value, jsonPath);
+            jsonPath.Pop();
+            return obj;
         }
 
         public static void ProcessProperty(this JsonObjectValue objValue, IJsonPath jsonPath,
@@ -50,6 +66,31 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
                 // It could not be a null.
                 // for null, it's wrappered in JsonPrimitiveValue.
                 Debug.Assert(propertyItem.Value != null);
+
+                jsonPath.Push(propertyItem.Key);
+
+                propertyParser(propertyItem.Key, propertyItem.Value);
+
+                jsonPath.Pop();
+            }
+        }
+
+        public static void ProcessProperty(this JsonObjectValue objValue, IJsonPath jsonPath,
+            ISet<string> skipSets,
+            Action<string, IJsonValue> propertyParser)
+        {
+            foreach (var propertyItem in objValue)
+            {
+                // The property value is either primitive, array or another object,
+                // It could not be a null.
+                // for null, it's wrappered in JsonPrimitiveValue.
+                Debug.Assert(propertyItem.Value != null);
+
+                // skip
+                if (skipSets.Contains(propertyItem.Key))
+                {
+                    continue;
+                }
 
                 jsonPath.Push(propertyItem.Key);
 
@@ -76,7 +117,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
                 jsonPath.Pop();
             }
         }
-        
 
         public static void ProcessItem(this JsonArrayValue arrayValue, IJsonPath jsonPath, Action<IJsonValue> itemParser)
         {
@@ -197,6 +237,30 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
             }
         }
 
+        public static bool TryParseAsString(this IJsonValue jsonValue, out string stringValue)
+        {
+            stringValue = null;
+            if (jsonValue == null || jsonValue.ValueKind != JsonValueKind.JPrimitive)
+            {
+                return false;
+            }
+
+            JsonPrimitiveValue primitiveValue = (JsonPrimitiveValue)jsonValue;
+            if (primitiveValue.Value == null)
+            {
+                return false;
+            }
+
+            if (primitiveValue.Value.GetType() != typeof(string))
+            {
+                return false;
+            }
+
+
+            stringValue = (string)primitiveValue.Value;
+            return true;
+        }
+
         /// <summary>
         /// Parse <see cref="IJsonValue"/> to a string.
         /// </summary>
@@ -231,6 +295,67 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
 
             throw new CsdlParseException(
                     Strings.CsdlJsonParser_CannotReadValueAsType(primitiveValue.Value, jsonPath.Path, "Boolean"));
+        }
+
+        public static void ParseProperty<T>(
+            T parentInstance,
+            IDictionary<string, Action<IJsonValue, ParseNode>> fixedFields,
+            IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields)
+        {
+            Action<T, ParseNode> fixedFieldMap;
+            var found = fixedFields.TryGetValue(Name, out fixedFieldMap);
+
+            if (fixedFieldMap != null)
+            {
+                try
+                {
+                    Context.StartObject(Name);
+                    fixedFieldMap(parentInstance, Value);
+                }
+                catch (OpenApiReaderException ex)
+                {
+                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                }
+                catch (OpenApiException ex)
+                {
+                    ex.Pointer = Context.GetLocation();
+                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                }
+                finally
+                {
+                    Context.EndObject();
+                }
+            }
+            else
+            {
+                var map = patternFields.Where(p => p.Key(Name)).Select(p => p.Value).FirstOrDefault();
+                if (map != null)
+                {
+                    try
+                    {
+                        Context.StartObject(Name);
+                        map(parentInstance, Name, Value);
+                    }
+                    catch (OpenApiReaderException ex)
+                    {
+                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                    }
+                    catch (OpenApiException ex)
+                    {
+                        ex.Pointer = Context.GetLocation();
+                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                    }
+                    finally
+                    {
+                        Context.EndObject();
+                    }
+                }
+                else
+                {
+                    Context.Diagnostic.Errors.Add(
+                        new OpenApiError("", $"{Name} is not a valid property at {Context.GetLocation()}"));
+                }
+            }
         }
 
         /// <summary>

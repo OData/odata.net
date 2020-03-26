@@ -245,8 +245,7 @@ CsdlJsonParser_UnexpectedJsonValueKind=An unexpected '{0}' value kind was found 
 CsdlJsonParser_MissingMemberInObject=A member '{0}' is missing when parsing the JSON path '{1}'.
 CsdlJsonParser_UnexpectedJsonMember=A member '{0}' with value type '{1}' is unexpected.
 CsdlJsonParser_CannotReadValueAsType=Cannot read the value '{0}' at JSON path '{1}' as '{2}' numeric value.
-
-SchemaJsonParser_MissingKindMember=A schema '{0}' object MUST contain the member '$Kind' with a string value of '{1}'.
+CsdlJsonParser_MissingKindMember=A schema '{0}' object MUST contain the member '$Kind' with a string value of '{1}'.
 
 ;EdmxParser
 EdmxParser_EdmxVersionMismatch=The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element.

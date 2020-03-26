@@ -5,11 +5,14 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Json.Reader;
 using Microsoft.OData.Edm.Csdl.Reader;
+using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl
 {
@@ -121,6 +124,47 @@ namespace Microsoft.OData.Edm.Csdl
 
                 }
             }
+        }
+
+        public static bool TryDeserialize(string csdl, CsdlSerializerOptions options, out IEdmModel edmModel, out IEnumerable<EdmError> errors)
+        {
+            if (csdl == null)
+            {
+                throw new ArgumentNullException("csdl");
+            }
+
+            if (options == null)
+            {
+                options = CsdlSerializerOptions.DefaultOptions;
+            }
+
+            edmModel = null;
+            errors = null;
+
+            //// Valid JSON starts always with '{' or '['
+            //// However, A CSDL JSON document consists of a single JSON object.
+            //// So, let's only test the single JSON object
+            //csdl = csdl.Trim();
+            //bool isJson = csdl.StartsWith("{", StringComparison.Ordinal) && csdl.EndsWith("}", StringComparison.Ordinal);
+
+            //using (TextReader txtReader = new StringReader(csdl))
+            //{
+            //    if (isJson)
+            //    {
+            //        return Deserialize(txtReader, options);
+            //    }
+            //    else
+            //    {
+            //        // So far, we only supports JSON and XML
+            //        using (XmlReader xmlReader = XmlReader.Create(txtReader))
+            //        {
+            //            return Deserialize(xmlReader, options);
+            //        }
+
+            //    }
+            //}
+
+            return true;
         }
 
         /// <summary>

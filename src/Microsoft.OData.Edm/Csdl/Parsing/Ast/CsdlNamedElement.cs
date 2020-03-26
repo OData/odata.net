@@ -12,9 +12,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal abstract class CsdlNamedElement : CsdlElement
     {
        // private readonly string name;
-
-        protected CsdlNamedElement() { }
-
         protected CsdlNamedElement(string name, CsdlLocation location)
             : base(location)
         {

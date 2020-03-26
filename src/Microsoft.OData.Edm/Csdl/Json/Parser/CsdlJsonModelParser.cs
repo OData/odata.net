@@ -105,10 +105,16 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
 
             foreach (var member in members)
             {
-                CsdlSchema schema = CsdlJsonSchemaParser.ParseCsdlSchema(member.Key, member.Value, jsonPath, version, _options);
-
-                //model.AddSchemaJsonItems(schemaJsonParser.SchemaItems);
-                model.AddSchema(schema);
+                CsdlJsonSchemaParser schemaParser = new CsdlJsonSchemaParser(version, _options);
+                CsdlSchema schema = schemaParser.ParseCsdlSchema(member.Key, member.Value, jsonPath);
+                if (schema != null)
+                {
+                    model.AddSchema(schema);
+                }
+                else
+                {
+                    // Report errors?
+                }
             }
 
             // We are building the reference models, add into the main model.

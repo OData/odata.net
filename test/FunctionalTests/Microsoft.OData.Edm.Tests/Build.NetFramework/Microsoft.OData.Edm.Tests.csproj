@@ -67,6 +67,7 @@
     <Compile Include="..\Csdl\CsdlReaderTests.cs" />
     <Compile Include="..\Csdl\CsdlSerializerTests.cs" />
     <Compile Include="..\Csdl\CsdlWriterTests.cs" />
+    <Compile Include="..\Csdl\Json\Parser\CsdlJsonSchemaParserTests.cs" />
     <Compile Include="..\Csdl\Json\IJsonReaderExtensionsTests.cs" />
     <Compile Include="..\Csdl\Json\JsonArrayValueTests.cs" />
     <Compile Include="..\Csdl\Json\JsonObjectValueTests.cs" />

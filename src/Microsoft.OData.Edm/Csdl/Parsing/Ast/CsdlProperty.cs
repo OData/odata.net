@@ -11,9 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal class CsdlProperty : CsdlNamedElement
     {
-        public CsdlProperty() { }
-
-        public CsdlProperty(string name, CsdlTypeReference type, string defaultValue, CsdlLocation location)
+      public CsdlProperty(string name, CsdlTypeReference type, string defaultValue, CsdlLocation location)
             : base(name, location)
         {
             Type = type;

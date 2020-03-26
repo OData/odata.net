@@ -16,11 +16,48 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
     internal static class IJsonReaderExtensions
     {
         /// <summary>
+        /// Reads the value from the <paramref name="jsonReader"/>
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
+        /// <returns>The <see cref="IJsonValue"/> read.</returns>
+        public static IJsonValue ReadAsJsonValue(this IJsonReader jsonReader)
+        {
+            if (jsonReader == null)
+            {
+                throw new ArgumentNullException("jsonReader");
+            }
+
+            // Supports to read from Begin
+            if (jsonReader.NodeType == JsonNodeType.None)
+            {
+                jsonReader.Read();
+            }
+
+            // Be noted: Json reader already verifies that value should be 'start array, start object or primitive value'
+            // For any others, Json reader throws. So we don't care about other Node types.
+            Debug.Assert(jsonReader.NodeType == JsonNodeType.StartArray ||
+                jsonReader.NodeType == JsonNodeType.StartObject ||
+                jsonReader.NodeType == JsonNodeType.PrimitiveValue,
+                "json reader node type should be either start array, start object, or primitive value");
+
+            if (jsonReader.NodeType == JsonNodeType.StartArray)
+            {
+                return jsonReader.ReadAsArray();
+            }
+            else if (jsonReader.NodeType == JsonNodeType.StartObject)
+            {
+                return jsonReader.ReadAsObject();
+            }
+
+            return jsonReader.ReadAsPrimitive();
+        }
+
+        /// <summary>
         /// Read JSON Primitive value.
         /// </summary>
         /// <param name="jsonReader">The <see cref="IJsonReader"/> to read from.</param>
         /// <returns>The <see cref="JsonPrimitiveValue"/> generated.</returns>
-        internal static JsonPrimitiveValue ReadAsPrimitive(this IJsonReader jsonReader)
+        public static JsonPrimitiveValue ReadAsPrimitive(this IJsonReader jsonReader)
         {
             if (jsonReader == null)
             {
@@ -43,7 +80,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         /// </summary>
         /// <param name="jsonReader">The <see cref="IJsonReader"/> to read from.</param>
         /// <returns>The <see cref="JsonObjectValue"/> generated.</returns>
-        internal static JsonObjectValue ReadAsObject(this IJsonReader jsonReader)
+        public static JsonObjectValue ReadAsObject(this IJsonReader jsonReader)
         {
             if (jsonReader == null)
             {
@@ -70,7 +107,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 string propertyName = jsonReader.ReadPropertyName();
 
                 // save as propertyName/PropertyValue pair
-                objectValue[propertyName] = jsonReader.ReadJsonValue();
+                objectValue[propertyName] = jsonReader.ReadAsJsonValue();
             }
 
             // Consume the "}" tag.
@@ -84,7 +121,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         /// </summary>
         /// <param name="jsonReader">The <see cref="IJsonReader"/> to read from.</param>
         /// <returns>The <see cref="JsonArrayValue"/> generated.</returns>
-        internal static JsonArrayValue ReadAsArray(this IJsonReader jsonReader)
+        public static JsonArrayValue ReadAsArray(this IJsonReader jsonReader)
         {
             if (jsonReader == null)
             {
@@ -107,7 +144,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
 
             while (jsonReader.NodeType != JsonNodeType.EndArray)
             {
-                arrayValue.Add(jsonReader.ReadJsonValue());
+                arrayValue.Add(jsonReader.ReadAsJsonValue());
             }
 
             // Consume the "]" tag.
@@ -116,33 +153,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
             return arrayValue;
         }
 
-        /// <summary>
-        /// Reads the value from the <paramref name="jsonReader"/>
-        /// </summary>
-        /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
-        /// <returns>The <see cref="IJsonValue"/> read.</returns>
-        private static IJsonValue ReadJsonValue(this IJsonReader jsonReader)
-        {
-            Debug.Assert(jsonReader != null, "jsonReader != null");
 
-            // Be noted: Json reader already verifies that value should be 'start array, start object or primitive value'
-            // For any others, Json reader throws. So we don't care about other Node types.
-            Debug.Assert(jsonReader.NodeType == JsonNodeType.StartArray ||
-                jsonReader.NodeType == JsonNodeType.StartObject ||
-                jsonReader.NodeType == JsonNodeType.PrimitiveValue,
-                "json reader node type should be either start array, start object, or primitive value");
-
-            if (jsonReader.NodeType == JsonNodeType.StartArray)
-            {
-                return jsonReader.ReadAsArray();
-            }
-            else if (jsonReader.NodeType == JsonNodeType.StartObject)
-            {
-                return jsonReader.ReadAsObject();
-            }
-
-            return jsonReader.ReadAsPrimitive();
-        }
 
         /// <summary>
         /// Reads the next node from the <paramref name="jsonReader"/>,
