@@ -6,9 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using Microsoft.OData.Edm.Csdl.Json;
 using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
@@ -20,71 +18,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
     /// </summary>
     internal class AnnotationJsonParser
     {
-        private CsdlSerializerOptions _options;
-        private Version _version;
-
-        public AnnotationJsonParser(Version version, CsdlSerializerOptions options)
-        {
-            if (version == null)
-            {
-                throw new ArgumentNullException("version");
-            }
-
-            if (options == null)
-            {
-                throw new ArgumentNullException("options");
-            }
-
-            _version = version;
-            _options = options;
-        }
-        // out of line annotations
-        /*
-         * "org.example": {
-  "$Alias": "self",
-  "$Annotations": {
-    "self.Person": {
-      "@Core.Description#Tablet": "Dummy",
-      …
-    }
-  }
-}
-         * */
-        public IList<CsdlAnnotations> ParseOutOfLineAnnotations(IJsonValue jsonValue, IJsonPath jsonPath)
-        {
-            JsonObjectValue annotationsObj = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
-
-            IList<CsdlAnnotations> annotationsCollection = new List<CsdlAnnotations>();
-            annotationsObj.ProcessProperty(jsonPath, (n, v) =>
-            {
-                // The member name is a path identifying the annotation target
-                string target = n;
-
-                string qualifier = null; // It's form the "target" name, or it's not set again in JSON?
-
-                // the member value is an object containing annotations for that target.
-                if (v.ValueKind == JsonValueKind.JObject)
-                {
-                    IList<CsdlAnnotation> subAnnotations = new List<CsdlAnnotation>();
-                    JsonObjectValue subOject = (JsonObjectValue)v;
-                    subOject.ProcessProperty(jsonPath, (subName, subValue) =>
-                    {
-                        CsdlAnnotation subAnnotation = ParseCsdlAnnotation(subName, subValue, jsonPath);
-                        subAnnotations.Add(subAnnotation);
-                    });
-
-                    CsdlAnnotations annotations = new CsdlAnnotations(subAnnotations, target, qualifier);
-                    annotationsCollection.Add(annotations);
-                }
-                else
-                {
-                    // Reporting for unknown?
-                }
-            });
-
-            return annotationsCollection;
-        }
-
         /// <summary>
         /// Try to parse the input json value <see cref="IJsonValue"/> to <see cref="CsdlAnnotation"/>.
         /// </summary>
@@ -95,7 +28,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         /// for example: "@Measures.ISOCurrency@Core.Description": "The parent company’s currency"
         /// </param>
         /// <returns></returns>
-        public CsdlAnnotation ParseCsdlAnnotation(string annotionName, IJsonValue jsonValue, IJsonPath jsonPath)
+        public static CsdlAnnotation ParseCsdlAnnotation(string annotionName, IJsonValue jsonValue, IJsonPath jsonPath)
         {
             // An annotation is represented as a member whose name consists of an at (@) character,
             // followed by the qualified name of a term, optionally followed by a hash (#) and a qualifier.
@@ -430,63 +363,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             });
 
             return new CsdlRecordExpression(typeReference, propertyValues, new CsdlLocation(jsonPath.Path));
-        }
-
-        /// <summary>
-        /// Parse the input string to see whether it's a valid annotation name.
-        /// If it's valid, seperate string into term name or optional qualifier name.
-        /// It it's not valid, return false
-        /// </summary>
-        /// <param name="annotationName">The input annotation name.</param>
-        /// <param name="term"></param>
-        /// <param name="qualifier"></param>
-        /// <returns></returns>
-        internal static bool ParseAnnotationName(string annotationName, out string elementName, out string term, out string qualifier)
-        {
-            term = null;
-            qualifier = null;
-            elementName = null;
-            if (string.IsNullOrWhiteSpace(annotationName))
-            {
-                return false;
-            }
-
-            // Annotation name consists of an at (@) character,
-            // BE caution:
-            // An annotation can itself be annotated. Annotations on annotations are represented as a member
-            // whose name consists of the annotation name (including the optional qualifier),
-            // followed by an at (@) character, followed by the qualified name of a term, optionally followed by a hash (#) and a qualifier.
-            // for example: 
-            // "@Measures.ISOCurrency": "USD",
-            // "@Measures.ISOCurrency@Core.Description": "The parent company’s currency"
-            //
-            // So, Core.Description is annotation for "Measures.ISOCurrency annotation.
-            // Therefore, we use "LastIndexOf".
-            int index = annotationName.LastIndexOf('@');
-            if (index == -1)
-            {
-                return false;
-            }
-
-            if (index != 0)
-            {
-                elementName = annotationName.Substring(0, index);
-                annotationName = annotationName.Substring(index + 1);
-            }
-
-            // followed by the qualified name of a term, optionally followed by a hash (#) and a qualifier
-            index = annotationName.IndexOf('#');
-            if (index != -1)
-            {
-                term = annotationName.Substring(0, index);
-                qualifier = annotationName.Substring(index + 1);
-            }
-            else
-            {
-                term = annotationName;
-            }
-
-            return true;
         }
 
         /// <summary>

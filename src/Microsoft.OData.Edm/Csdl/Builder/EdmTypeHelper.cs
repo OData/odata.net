@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.OData.Edm.Csdl.Json.Builder
+namespace Microsoft.OData.Edm.Csdl.Builder
 {
     /// <summary>
     /// Provides CSDL-JSON parsing services for EDM models.

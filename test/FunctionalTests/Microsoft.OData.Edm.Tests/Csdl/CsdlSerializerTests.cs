@@ -67,23 +67,230 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
 
-        [Theory]
-        [InlineData("4.0")]
-        [InlineData("4.01")]
-        public void ValidateEdmxVersions(string odataVersion)
+        [Fact]
+        public void CanDeserializeCategoryAndCategoriesExample()
         {
-            string xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>";
+            string json = @"
+{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""ODataDemo.DemoService"",
+  ""$Reference"": {
+    ""https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.json"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""Org.OData.Core.V1"",
+          ""$Alias"": ""Core"",
+          ""@Core.DefaultNamespace"": true
+        }
+      ]
+    },
+    ""https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.json"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""Org.OData.Measures.V1"",
+          ""$Alias"": ""Measures""
+        }
+      ]
+    }
+  },
+  ""ODataDemo"": {
+    ""$Alias"": ""self"",
+    ""@Core.DefaultNamespace"": true,
+    ""Product"": {
+      ""$Kind"": ""EntityType"",
+      ""$HasStream"": true,
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {},
+      ""Description"": {
+        ""$Nullable"": true,
+        ""@Core.IsLanguageDependent"": true
+      },
+      ""ReleaseDate"": {
+        ""$Nullable"": true,
+        ""$Type"": ""Edm.Date""
+      },
+      ""DiscontinuedDate"": {
+        ""$Nullable"": true,
+        ""$Type"": ""Edm.Date""
+      },
+      ""Rating"": {
+        ""$Nullable"": true,
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Price"": {
+        ""$Nullable"": true,
+        ""$Type"": ""Edm.Decimal"",
+        ""@Measures.ISOCurrency"": {
+          ""$Path"": ""Currency""
+        }
+      },
+      ""Currency"": {
+        ""$Nullable"": true,
+        ""$MaxLength"": 3
+      },
+      ""Category"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""self.Category"",
+        ""$Partner"": ""Products""
+      },
+      ""Supplier"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Nullable"": true,
+        ""$Type"": ""self.Supplier"",
+        ""$Partner"": ""Products""
+      }
+    },
+    ""Category"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Name"": {
+        ""@Core.IsLanguageDependent"": true
+      },
+      ""Products"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Partner"": ""Category"",
+        ""$Collection"": true,
+        ""$Type"": ""self.Product"",
+        ""$OnDelete"": ""Cascade""
+      }
+    },
+    ""Supplier"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {},
+      ""Name"": {
+        ""$Nullable"": true
+      },
+      ""Address"": {
+        ""$Type"": ""self.Address""
+      },
+      ""Concurrency"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Products"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Partner"": ""Supplier"",
+        ""$Collection"": true,
+        ""$Type"": ""self.Product""
+      }
+    },
+    ""Country"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Code""
+      ],
+      ""Code"": {
+        ""$MaxLength"": 2
+      },
+      ""Name"": {
+        ""$Nullable"": true
+      }
+    },
+    ""Address"": {
+      ""$Kind"": ""ComplexType"",
+      ""Street"": {
+        ""$Nullable"": true
+      },
+      ""City"": {
+        ""$Nullable"": true
+      },
+      ""State"": {
+        ""$Nullable"": true
+      },
+      ""ZipCode"": {
+        ""$Nullable"": true
+      },
+      ""CountryName"": {
+        ""$Nullable"": true
+      },
+      ""Country"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Nullable"": true,
+        ""$Type"": ""self.Country"",
+        ""$ReferentialConstraint"": {
+          ""CountryName"": ""Name""
+        }
+      }
+    },
+    ""ProductsByRating"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""Rating"",
+            ""$Nullable"": true,
+            ""$Type"": ""Edm.Int32""
+          }
+        ],
+        ""$ReturnType"": {
+          ""$Collection"": true,
+          ""$Type"": ""self.Product""
+        }
+      }
+    ],
+    ""DemoService"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Products"": {
+        ""$Collection"": true,
+        ""$Type"": ""self.Product"",
+        ""$NavigationPropertyBinding"": {
+          ""Category"": ""Categories""
+        }
+      },
+      ""Categories"": {
+        ""$Collection"": true,
+        ""$Type"": ""self.Category"",
+        ""$NavigationPropertyBinding"": {
+          ""Products"": ""Products""
+        },
+        ""@Core.Description"": ""Product Categories""
+      },
+      ""Suppliers"": {
+        ""$Collection"": true,
+        ""$Type"": ""self.Supplier"",
+        ""$NavigationPropertyBinding"": {
+          ""Products"": ""Products"",
+          ""Address/Country"": ""Countries""
+        },
+        ""@Core.OptimisticConcurrency"": [
+          ""Concurrency""
+        ]
+      },
+      ""Countries"": {
+        ""$Collection"": true,
+        ""$Type"": ""self.Country""
+      },
+      ""MainSupplier"": {
+        ""$Type"": ""self.Supplier"",
+        ""$NavigationPropertyBinding"": {
+          ""Products"": ""Products""
+        },
+        ""@Core.Description"": ""Primary Supplier""
+      },
+      ""ProductsByRating"": {
+        ""$EntitySet"": ""Products"",
+        ""$Function"": ""self.ProductsByRating""
+      }
+    }
+  }
+}";
 
-            var stringReader = new System.IO.StringReader(xml);
-            var xmlReader = System.Xml.XmlReader.Create(stringReader);
+            IEdmModel model = CsdlSerializer.Deserialize(json);
 
-            IEdmModel edmModel = null;
-            IEnumerable<EdmError> edmErrors;
+            Assert.NotNull(model);
 
-            // Read in the CSDL and verify the version
-            CsdlReader.TryParse(xmlReader, out edmModel, out edmErrors);
-            Assert.Equal(edmErrors.Count(), 0);
-            Assert.Equal(edmModel.GetEdmVersion(), odataVersion == "4.0" ? EdmConstants.EdmVersion4 : EdmConstants.EdmVersion401);
+            string csdlXml = CsdlWriterTests.GetCsdl(model, CsdlTarget.OData);
+
+            Assert.Equal("", csdlXml);
         }
     }
 }

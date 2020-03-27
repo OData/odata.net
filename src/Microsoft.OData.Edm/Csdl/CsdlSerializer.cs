@@ -10,7 +10,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
+using Microsoft.OData.Edm.Csdl.Builder;
+using Microsoft.OData.Edm.Csdl.Json.Parser;
 using Microsoft.OData.Edm.Csdl.Json.Reader;
+using Microsoft.OData.Edm.Csdl.Json.Value;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Reader;
 using Microsoft.OData.Edm.Validation;
 
@@ -188,8 +192,8 @@ namespace Microsoft.OData.Edm.Csdl
 
             // Maybe it's a CSDL, or it maybe multiple Schemas (Check with Michael),
             // So, we should change the follow code to support it.
-            CsdlJsonReader csdlReader = new CsdlJsonReader(reader, options);
-            return csdlReader.BuildEdmModel();
+            IJsonReader jsonReader = new JsonReader(reader, options.GetJsonReaderOptions());
+            return Deserialize(jsonReader, options);
         }
 
         /// <summary>
@@ -211,17 +215,18 @@ namespace Microsoft.OData.Edm.Csdl
                 options = CsdlSerializerOptions.DefaultOptions;
             }
 
+            // Reader
+            JsonObjectValue jsonValue = jsonReader.ReadAsObject();
 
-            // stream => IJsonValue, will throw exception.
-            // Only check the JSON syntax
-            //JsonObjectValue csdlObject = jsonReader.ReadAsObject();
+            // Parser
+            CsdlJsonModelParser csdlModelBuilder = new CsdlJsonModelParser(jsonValue, options);
+            CsdlModel csdlModel = csdlModelBuilder.ParseCsdlDocument();
 
-            //CsdlJsonParser parser = new CsdlJsonParser(options);
-            //parser.
+            // Builder
+            EdmModelBuilder builder = new EdmModelBuilder(options);
+            IEdmModel model = builder.TryBuildEdmModel(csdlModel, csdlModel.ReferencedModels);
 
-            //return model;
-
-            return null;
+            return model;
         }
 
         /// <summary>
@@ -243,7 +248,7 @@ namespace Microsoft.OData.Edm.Csdl
                 options = CsdlSerializerOptions.DefaultOptions;
             }
 
-            return null;
+            return CsdlReader.Parse(reader);
         }
 
         #endregion

@@ -54,14 +54,11 @@
     <Compile Include="Csdl\CsdlParseException.cs" />
     <Compile Include="Csdl\EdmValueParser.cs" />
     <Compile Include="Csdl\EdmValueWriter.cs" />
-    <Compile Include="Csdl\Json\Builder\AnnotationJsonBuilder.cs" />
-    <Compile Include="Csdl\Json\Builder\EdmTypeHelper.cs" />
-    <Compile Include="Csdl\Json\Builder\SchemaOperationBuilder.cs" />
-    <Compile Include="Csdl\Json\Builder\SchemaTermBuilder.cs" />
-    <Compile Include="Csdl\Json\Builder\SchemaTypeBuilder.cs" />
-    <Compile Include="Csdl\Json\Builder\SchemaTypeJsonBuilder.cs" />
-    <Compile Include="Csdl\Json\Builder\EdmJsonBuilder.cs" />
-    <Compile Include="Csdl\Json\Builder\EdmTypeJsonBuilder.cs" />
+    <Compile Include="Csdl\Builder\AnnotationJsonBuilder.cs" />
+    <Compile Include="Csdl\Builder\EdmTypeHelper.cs" />
+    <Compile Include="Csdl\Builder\EdmSchemaBuilder.cs" />
+    <Compile Include="Csdl\Builder\EdmModelBuilder.cs" />
+    <Compile Include="Csdl\Builder\EdmTypeJsonBuilder.cs" />
     <Compile Include="Csdl\Json\Parser\AnnotationJsonParser.cs" />
     <Compile Include="Csdl\Json\Parser\CsdlJsonModelParser.cs" />
     <Compile Include="Csdl\Json\Parser\CsdlJsonSchemaParser.cs" />
@@ -598,6 +595,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Csdl\Json\Vocabularies\Org.OData.Core.V1.json">
       <LogicalName>Org.OData.Core.V1.json</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Csdl\Json\Vocabularies\Org.OData.Measures.V1.json">
+      <LogicalName>Org.OData.Measures.V1.json</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

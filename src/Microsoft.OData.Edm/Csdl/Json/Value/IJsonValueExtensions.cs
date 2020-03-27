@@ -297,67 +297,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
                     Strings.CsdlJsonParser_CannotReadValueAsType(primitiveValue.Value, jsonPath.Path, "Boolean"));
         }
 
-        public static void ParseProperty<T>(
-            T parentInstance,
-            IDictionary<string, Action<IJsonValue, ParseNode>> fixedFields,
-            IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields)
-        {
-            Action<T, ParseNode> fixedFieldMap;
-            var found = fixedFields.TryGetValue(Name, out fixedFieldMap);
-
-            if (fixedFieldMap != null)
-            {
-                try
-                {
-                    Context.StartObject(Name);
-                    fixedFieldMap(parentInstance, Value);
-                }
-                catch (OpenApiReaderException ex)
-                {
-                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
-                }
-                catch (OpenApiException ex)
-                {
-                    ex.Pointer = Context.GetLocation();
-                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
-                }
-                finally
-                {
-                    Context.EndObject();
-                }
-            }
-            else
-            {
-                var map = patternFields.Where(p => p.Key(Name)).Select(p => p.Value).FirstOrDefault();
-                if (map != null)
-                {
-                    try
-                    {
-                        Context.StartObject(Name);
-                        map(parentInstance, Name, Value);
-                    }
-                    catch (OpenApiReaderException ex)
-                    {
-                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
-                    }
-                    catch (OpenApiException ex)
-                    {
-                        ex.Pointer = Context.GetLocation();
-                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
-                    }
-                    finally
-                    {
-                        Context.EndObject();
-                    }
-                }
-                else
-                {
-                    Context.Diagnostic.Errors.Add(
-                        new OpenApiError("", $"{Name} is not a valid property at {Context.GetLocation()}"));
-                }
-            }
-        }
-
         /// <summary>
         /// Parse <see cref="IJsonValue"/> to a boolean value.
         /// </summary>

@@ -10,11 +10,32 @@
         "EntitySet"
       ]
     },
+    "Description": {
+      "$Kind": "Term"
+    },
     "Computed": {
       "$Kind": "Term",
       "$Type": "Core.Tag",
       "$DefaultValue": true,
       "$AppliesTo": [
+        "Property"
+      ]
+    },
+    "DefaultNamespace": {
+      "$Kind": "Term",
+      "$Type": "Core.Tag",
+      "$DefaultValue": true,
+      "$AppliesTo": [
+        "Schema",
+        "Include"
+      ]
+    },
+    "IsLanguageDependent": {
+      "$Kind": "Term",
+      "$Type": "Core.Tag",
+      "$DefaultValue": true,
+      "$AppliesTo": [
+        "Term",
         "Property"
       ]
     },

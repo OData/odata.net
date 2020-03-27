@@ -1256,7 +1256,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(GetCsdl(edmModel, CsdlTarget.OData), xml);
         }
 
-        private string GetCsdl(IEdmModel model, CsdlTarget target)
+        public static string GetCsdl(IEdmModel model, CsdlTarget target)
         {
             string edmx = string.Empty;
 

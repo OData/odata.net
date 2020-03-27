@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="SchemaTypeJsonBuilder.cs" company="Microsoft">
+// <copyright file="EdmSchemaBuilder.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,21 +8,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm.Csdl.Json.Builder
+namespace Microsoft.OData.Edm.Csdl.Builder
 {
     /// <summary>
     /// Provides CSDL-JSON parsing services for EDM models.
     /// Complex, Entity, Enum, TypeDefinition -> IEdmSchemaType
     /// </summary>
-    internal class SchemaTypeJsonBuilder
+    internal class EdmSchemaBuilder
     {
         private IDictionary<CsdlModel, EdmModel> _modelMapping;
-        private AliasNamespaceHelper _aliasNameMapping;
 
         private IDictionary<CsdlSchema, CsdlModel> _schemaMapping = new Dictionary<CsdlSchema, CsdlModel>();
 
@@ -39,25 +39,11 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
         private readonly IList<EdmFunction> _functions = new List<EdmFunction>();
         private readonly IDictionary<string, EdmNavigationSource> _navigationSources = new Dictionary<string, EdmNavigationSource>(); // key is the "entityContainerFullName.EntitySetname"
 
-        public IDictionary<string, EdmStructuredType> StructuredTypes
+        internal EdmSchemaBuilder(IDictionary<CsdlModel, EdmModel> modelMapping)
         {
-            get { return _structuredTypes; }
-        }
+            Debug.Assert(modelMapping != null);
 
-        public IDictionary<string, EdmEnumType> EnumTypes
-        {
-            get { return _enumTypes; }
-        }
-
-        public IDictionary<string, EdmTypeDefinition> TypeDefinitions
-        {
-            get { return _typeDefinitions; }
-        }
-
-        internal SchemaTypeJsonBuilder(IDictionary<CsdlModel, EdmModel> modelMapping, AliasNamespaceHelper aliasNsMapping)
-        {
             _modelMapping = modelMapping;
-            _aliasNameMapping = aliasNsMapping;
 
             foreach (var csdlModel in modelMapping.Keys)
             {
@@ -76,39 +62,29 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             }
         }
 
+        /// <summary>
+        /// Build the schema items all together
+        /// 1) Structured type start ==> Build the entity type, complex type, enum type, type definition
+        /// 2) Term type start ( Term type relys on the types, and it's the based on other annotations.
+        /// 3) Term type end ( Term can also have annotations, so finish the term after all terms build)
+        /// 4) Structured type end ==> build properties, annotations for properties
+        /// 5) Build the operations ( Operations is used in entity container's operation import)
+        /// 6) Build the entity set container start ( should only build entity set, singleton, operation import)
+        /// 7) Build the navigation property bindings
+        /// 8) Outofline annotations.
+        /// </summary>
         public void BuildSchemaItems()
         {
-            _structuredTypes.Clear();
-            _enumTypes.Clear();
-            _typeDefinitions.Clear();
-
             // Create structured type, Type Definition, enum type header
-            BuildSchemaTypeHeader();
+            // Because all schema types are used everywhere.
+            BuildSchemaTypeStart();
 
-            // Now it's ready to build the term,
-            // term should build after the types' built
-            foreach (var modelItem in _modelMapping)
-            {
-                foreach (var csdlSchema in modelItem.Key.Schemata)
-                {
-                    foreach (var csdlTerm in csdlSchema.Terms)
-                    {
-                        BuildSchemaTerm(csdlTerm, csdlSchema, modelItem.Key, modelItem.Value);
-                    }
-                }
-            }
+            // Now it's ready to build the term, term should build after the types' built
+            // But, term should build before all other elements.
+            BuildTermStart();
 
             // Now, it's time to finish the Term build
-            foreach (var modelItem in _modelMapping)
-            {
-                foreach (var csdlSchema in modelItem.Key.Schemata)
-                {
-                    foreach (var csdlTerm in csdlSchema.Terms)
-                    {
-                        BuildSchemaTermBody(csdlTerm, modelItem.Key, csdlSchema, modelItem.Value);
-                    }
-                }
-            }
+            BuildTermEnd();
 
             // Now, it's time to finish "Entity, complex, enum, typedefintion" body
             BuildSchemaTypeBodies();
@@ -131,7 +107,8 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
         }
 
-        private void BuildSchemaTypeHeader()
+
+        private void BuildSchemaTypeStart()
         {
             foreach (var modelItem in _modelMapping)
             {
@@ -169,7 +146,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             IEdmComplexType baseComplexType = null;
             if (csdlComplex.BaseTypeName != null)
             {
-                string baseTypeFullNamespaceQualifiedName = _aliasNameMapping.ReplaceAlias(csdlModel, csdlComplex.BaseTypeName);
+                string baseTypeFullNamespaceQualifiedName = csdlModel.ReplaceAlias(csdlComplex.BaseTypeName);
 
                 CsdlStructuredType baseItem = GetStructuredTypeItem(baseTypeFullNamespaceQualifiedName);
 
@@ -205,7 +182,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             IEdmEntityType baseEntityType = null;
             if (csdlEntity.BaseTypeName != null)
             {
-                string baseTypeFullNamespaceQualifiedName = _aliasNameMapping.ReplaceAlias(csdlModel, csdlEntity.BaseTypeName);
+                string baseTypeFullNamespaceQualifiedName = csdlModel.ReplaceAlias(csdlEntity.BaseTypeName);
 
                 CsdlStructuredType baseItem = GetStructuredTypeItem(baseTypeFullNamespaceQualifiedName);
                 CsdlSchema baseSchema = GetRelatedSchema(baseItem);
@@ -368,7 +345,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             {
                 string elementTypeName;
                 bool isCollection = ElementType(csdlNavProperty.Type, out elementTypeName);
-                string fullName = _aliasNameMapping.ReplaceAlias(csdlModel, elementTypeName);
+                string fullName = csdlModel.ReplaceAlias(elementTypeName);
 
                 EdmMultiplicity multiplicity;
                 if (isCollection)
@@ -377,13 +354,13 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                 }
                 else
                 {
-                    if (csdlNavProperty.Nullable.Value)
+                    if (csdlNavProperty.Nullable == null || !csdlNavProperty.Nullable.Value)
                     {
-                        multiplicity = EdmMultiplicity.ZeroOrOne;
+                        multiplicity = EdmMultiplicity.One;
                     }
                     else
                     {
-                        multiplicity = EdmMultiplicity.One;
+                        multiplicity = EdmMultiplicity.ZeroOrOne;
                     }
                 }
 
@@ -412,12 +389,16 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             }
         }
 
-        private static IEnumerable<IEdmStructuralProperty> GetDeclaringPropertyInfo(IEdmStructuredType type, IEnumerable<string> propertyNames)
+        private static IList<IEdmStructuralProperty> GetDeclaringPropertyInfo(IEdmStructuredType type, IEnumerable<string> propertyNames)
         {
+            IList<IEdmStructuralProperty> properties = new List<IEdmStructuralProperty>();
+
             foreach (var propertyName in propertyNames)
             {
-                yield return type.FindProperty(propertyName) as IEdmStructuralProperty;
+                properties.Add(type.FindProperty(propertyName) as IEdmStructuralProperty);
             }
+
+            return properties;
         }
 
         private void BuildSchemaEnumBody(CsdlEnumType csdlEnum, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
@@ -444,6 +425,34 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             IEdmTypeDefinition edmTypeDefinition = _typeDefinitions[fullName];
 
             BuildAnnotations(edmTypeDefinition, csdlTypeDefinition.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
+        }
+
+        private void BuildTermStart()
+        {
+            foreach (var modelItem in _modelMapping)
+            {
+                foreach (var csdlSchema in modelItem.Key.Schemata)
+                {
+                    foreach (var csdlTerm in csdlSchema.Terms)
+                    {
+                        BuildSchemaTerm(csdlTerm, csdlSchema, modelItem.Key, modelItem.Value);
+                    }
+                }
+            }
+        }
+
+        private void BuildTermEnd()
+        {
+            foreach (var modelItem in _modelMapping)
+            {
+                foreach (var csdlSchema in modelItem.Key.Schemata)
+                {
+                    foreach (var csdlTerm in csdlSchema.Terms)
+                    {
+                        BuildSchemaTermBody(csdlTerm, modelItem.Key, csdlSchema, modelItem.Value);
+                    }
+                }
+            }
         }
 
         public void BuildSchemaEntityContainerHeader()
@@ -482,7 +491,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             // first build all navigation sources, because the navigation binding will use it.
             foreach (var csdlEntitySet in csdlEntityContainer.EntitySets)
             {
-                string namespaceQualifiedTypeName = _aliasNameMapping.ReplaceAlias(csdlModel, csdlEntitySet.ElementType);
+                string namespaceQualifiedTypeName = csdlModel.ReplaceAlias(csdlEntitySet.ElementType);
 
                 IEdmEntityType elementType = GetStructuredType(namespaceQualifiedTypeName) as IEdmEntityType;
 
@@ -496,7 +505,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
             foreach (var csdlSingleton in csdlEntityContainer.Singletons)
             {
-                string namespaceQualifiedTypeName = _aliasNameMapping.ReplaceAlias(csdlModel, csdlSingleton.Type);
+                string namespaceQualifiedTypeName = csdlModel.ReplaceAlias(csdlSingleton.Type);
 
                 IEdmEntityType elementType = GetStructuredType(namespaceQualifiedTypeName) as IEdmEntityType;
 
@@ -510,7 +519,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
             foreach (var csdlActionImport in csdlEntityContainer.OperationImports.OfType<CsdlActionImport>())
             {
-                string namespaceQualifiedTypeName = _aliasNameMapping.ReplaceAlias(csdlModel, csdlActionImport.SchemaOperationQualifiedTypeName);
+                string namespaceQualifiedTypeName = csdlModel.ReplaceAlias(csdlActionImport.SchemaOperationQualifiedTypeName);
                 IEdmAction action = FindAction(namespaceQualifiedTypeName, isBound: false);
                 IEdmExpression entitySetExpression = BuildEntitySetPathExpression(csdlActionImport.EntitySet);
 
@@ -522,7 +531,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
             foreach (var csdlFunctionImport in csdlEntityContainer.OperationImports.OfType<CsdlFunctionImport>())
             {
-                string namespaceQualifiedTypeName = _aliasNameMapping.ReplaceAlias(csdlModel, csdlFunctionImport.SchemaOperationQualifiedTypeName);
+                string namespaceQualifiedTypeName = csdlModel.ReplaceAlias(csdlFunctionImport.SchemaOperationQualifiedTypeName);
                 IEdmFunction function = FindFunction(namespaceQualifiedTypeName, isBound: false);
                 IEdmExpression entitySetExpression = BuildEntitySetPathExpression(csdlFunctionImport.EntitySet);
 
@@ -531,10 +540,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
                 BuildAnnotations(functionImport, csdlFunctionImport.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
             }
-        }
-        private static IEdmExpression BuildEntitySetPathExpression(string entitySet)
-        {
-            return null;
         }
 
         private IEdmAction FindAction(string namespaceQualifiedName, bool isBound)
@@ -556,27 +561,28 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             {
                 EdmEntitySet entitySet = _navigationSources[edmEntityContainer.FullName + "." + csdlEntitySet.Name] as EdmEntitySet;
 
-                BuildNavigationPropertyBinding(entitySet, csdlEntitySet.NavigationPropertyBindings, csdlModel, csdlSchema, edmModel);
+                BuildNavigationPropertyBinding(edmEntityContainer, entitySet, csdlEntitySet.NavigationPropertyBindings, csdlModel, csdlSchema, edmModel);
             }
 
             foreach (var csdlSingleton in csdlEntityContainer.Singletons)
             {
                 EdmSingleton singleton = _navigationSources[edmEntityContainer.FullName + "." + csdlSingleton.Name] as EdmSingleton;
-                BuildNavigationPropertyBinding(singleton, csdlSingleton.NavigationPropertyBindings, csdlModel, csdlSchema, edmModel);
+                BuildNavigationPropertyBinding(edmEntityContainer, singleton, csdlSingleton.NavigationPropertyBindings, csdlModel, csdlSchema, edmModel);
             }
 
             // annotations for container
             BuildAnnotations(edmEntityContainer, csdlEntityContainer.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
         }
 
-        private static void BuildNavigationPropertyBinding(EdmNavigationSource edmNavigationSource, IEnumerable<CsdlNavigationPropertyBinding> bindings, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
+        private void BuildNavigationPropertyBinding(EdmEntityContainer edmEntityContainer,
+            EdmNavigationSource edmNavigationSource, IEnumerable<CsdlNavigationPropertyBinding> bindings, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
         {
             IEdmEntityType entityType = edmNavigationSource.EntityType();
 
             foreach (var binding in bindings)
             {
-                IEdmNavigationProperty edmNavigationProperty = FindNavigationProperty(entityType, binding.Path);
-                IEdmNavigationSource target = FindNavigationSource(binding.Target);
+                IEdmNavigationProperty edmNavigationProperty = FindNavigationProperty(entityType, binding.Path, csdlModel);
+                IEdmNavigationSource target = FindNavigationSource(edmEntityContainer, binding.Target);
                 IEdmPathExpression bindingPath = BuildBindingPath(binding.Path);
                 edmNavigationSource.AddNavigationTarget(edmNavigationProperty, target, bindingPath);
 
@@ -586,18 +592,70 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
         private static IEdmPathExpression BuildBindingPath(string path)
         {
-            return null;
+            return new EdmNavigationPropertyPathExpression(path);
         }
 
-        private static IEdmNavigationProperty FindNavigationProperty(IEdmEntityType entityType, string path)
+        private IEdmNavigationProperty FindNavigationProperty(IEdmEntityType entityType, string path, CsdlModel csdlModel)
         {
-            return null;
+            // Let's focus the simple path only with the navigation property name in the path
+            string[] segments = path.Split('/');
+            Stack<string> paths = new Stack<string>();
+            foreach (var seg in segments.Reverse())
+            {
+                paths.Push(seg);
+            }
+
+            return FindNavigationProperty(entityType, csdlModel, paths);
         }
 
-        private static IEdmNavigationSource FindNavigationSource(string targetPath)
+        private IEdmNavigationProperty FindNavigationProperty(IEdmStructuredType structuredType, CsdlModel csdlModel, Stack<string> paths)
+        {
+            if (paths.Count == 1)
+            {
+                return structuredType.FindProperty(paths.Peek()) as IEdmNavigationProperty;
+            }
+            else
+            {
+                string middelSegment = paths.Pop();
+
+                if (middelSegment.IndexOf('.') != -1)
+                {
+                    middelSegment = csdlModel.ReplaceAlias(middelSegment);
+                    IEdmStructuredType typeCastType = _structuredTypes[middelSegment];
+                    return FindNavigationProperty(typeCastType, csdlModel, paths);
+                }
+                else
+                {
+                    IEdmProperty property = structuredType.FindProperty(middelSegment);
+                    if (property.Type.IsCollection())
+                    {
+                        IEdmStructuredType propertyType = property.Type.AsCollection().ElementType().Definition as IEdmStructuredType;
+                        return FindNavigationProperty(propertyType, csdlModel, paths);
+                    }
+                    else
+                    {
+                        IEdmStructuredType propertyType = property.Type.Definition as IEdmStructuredType;
+                        return FindNavigationProperty(propertyType, csdlModel, paths);
+                    }
+                }
+            }
+        }
+
+        private IEdmNavigationSource FindNavigationSource(EdmEntityContainer edmEntityContainer, string targetPath)
         {
             //  SomeModel.SomeContainer/SomeSet"
-            return null;
+            string fullTargetName;
+            int index = targetPath.IndexOf('/');
+            if (index == -1)
+            {
+                fullTargetName = edmEntityContainer.FullName() + "." + targetPath;
+            }
+            else
+            {
+                fullTargetName = targetPath.Replace("/", ".");
+            }
+
+            return _navigationSources[fullTargetName];
         }
 
         public void BuildSchemaOperation()
@@ -625,11 +683,23 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
         private void BuildSchemaAction(CsdlAction csdlAction, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
         {
-            IEdmTypeReference returnType = BuildReturnType(csdlAction.Return);
+            IEdmTypeReference returnType = null;
+            if (csdlAction.Return != null)
+            {
+                returnType = BuildEdmTypeReference(csdlAction.Return.ReturnType, csdlModel);
+            }
 
-            IEdmPathExpression entitySetPathExpression = BuildEntitySetPathExpression();
+            IEdmPathExpression entitySetPathExpression = BuildEntitySetPathExpression(csdlAction.EntitySetPath);
 
             EdmAction edmAction = new EdmAction(csdlSchema.Namespace, csdlAction.Name, returnType, csdlAction.IsBound, entitySetPathExpression);
+
+            IEdmOperationReturn operationReturn = edmAction.Return;
+            if (operationReturn != null)
+            {
+                BuildAnnotations(operationReturn, csdlAction.Return.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
+            }
+
+            BuildOperationParameters(edmAction, csdlAction.Parameters, csdlSchema, csdlModel, edmModel);
 
             _actions.Add(edmAction);
             edmModel.AddElement(edmAction);
@@ -637,25 +707,49 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
         private void BuildSchemaFunction(CsdlFunction csdlFunction, CsdlModel csdlModel, CsdlSchema csdlSchema, EdmModel edmModel)
         {
-            IEdmTypeReference returnType = BuildReturnType(csdlFunction.Return);
+            IEdmTypeReference returnType = BuildEdmTypeReference(csdlFunction.Return.ReturnType,  csdlModel);
 
-            IEdmPathExpression entitySetPathExpression = BuildEntitySetPathExpression();
+            IEdmPathExpression entitySetPathExpression = BuildEntitySetPathExpression(csdlFunction.EntitySetPath);
 
             EdmFunction edmFunction = new EdmFunction(csdlSchema.Namespace, csdlFunction.Name, returnType, csdlFunction.IsBound, entitySetPathExpression, csdlFunction.IsComposable);
+
+            IEdmOperationReturn operationReturn = edmFunction.Return;
+            BuildAnnotations(operationReturn, csdlFunction.Return.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
+
+            BuildOperationParameters(edmFunction, csdlFunction.Parameters, csdlSchema, csdlModel, edmModel);
 
             _functions.Add(edmFunction);
             edmModel.AddElement(edmFunction);
         }
 
-        private static IEdmPathExpression BuildEntitySetPathExpression()
+        private void BuildOperationParameters(EdmOperation operation, IEnumerable<CsdlOperationParameter> parameters, CsdlSchema csdlSchema, CsdlModel csdlModel,  EdmModel edmModel)
         {
+            if (parameters == null)
+            {
+                return;
+            }
+
+            foreach (var parameter in parameters)
+            {
+                // for optional parameter, will todo later?
+                IEdmTypeReference parameterType = BuildEdmTypeReference(parameter.Type, csdlModel);
+                EdmOperationParameter edmParameter = new EdmOperationParameter(operation, parameter.Name, parameterType);
+                operation.AddParameter(edmParameter);
+
+                BuildAnnotations(edmParameter, parameter.VocabularyAnnotations, csdlSchema, csdlModel, edmModel);
+            }
+        }
+
+        private static IEdmPathExpression BuildEntitySetPathExpression(string entitySetPath)
+        {
+            if (entitySetPath != null)
+            {
+                return new EdmPathExpression(entitySetPath);
+            }
+
             return null;
         }
 
-        private static IEdmTypeReference BuildReturnType(CsdlOperationReturn returnType)
-        {
-            return null;
-        }
 
         private void BuildSchemaTerm(CsdlTerm csdlTerm, CsdlSchema csdlSchema, CsdlModel csdlModel, EdmModel edmModel)
         {
@@ -669,7 +763,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
         {
             foreach (var csdlAnnotation in csdlAnnotations)
             {
-                string namespaceQualifiedTermName = _aliasNameMapping.ReplaceAlias(csdlModel, csdlAnnotation.Term);
+                string namespaceQualifiedTermName = csdlModel.ReplaceAlias(csdlAnnotation.Term);
                 IEdmTerm term = FindTerm(namespaceQualifiedTermName);
                 if (term == null)
                 {
@@ -693,7 +787,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
             // Term MAY contain annotations.
             foreach (var csdlAnnotation in csdlTerm.VocabularyAnnotations)
             {
-                string namespaceQualifiedTermName = _aliasNameMapping.ReplaceAlias(csdlModel, csdlAnnotation.Term);
+                string namespaceQualifiedTermName = csdlModel.ReplaceAlias(csdlAnnotation.Term);
                 IEdmTerm term = FindTerm(namespaceQualifiedTermName);
                 if (term == null)
                 {
@@ -1199,6 +1293,11 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
 
         public IEdmTypeReference BuildEdmTypeReference(CsdlTypeReference csdlTypeReference, CsdlModel csdlModel)
         {
+            if (csdlTypeReference == null)
+            {
+                return null;
+            }
+
             var namedTypeReference = csdlTypeReference as CsdlNamedTypeReference;
             if (namedTypeReference != null)
             {
@@ -1270,7 +1369,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Builder
                         return EdmCoreModel.Instance.GetPathType(pathTypeKind, namedTypeReference.IsNullable);
                     }
 
-                    string fullNamespaceQualifiedName = _aliasNameMapping.ReplaceAlias(csdlModel, namedTypeReference.FullName);
+                    string fullNamespaceQualifiedName = csdlModel.ReplaceAlias(namedTypeReference.FullName);
 
                     // Type-Definition
                     EdmTypeDefinition typeDefinition;

@@ -1,0 +1,12 @@
+{
+  "$Version": "4.0",
+  "Org.OData.Measures.V1": {
+    "$Alias": "Core",
+    "ISOCurrency": {
+      "$Kind": "Term",
+      "$AppliesTo": [
+        "Property"
+      ]
+    }
+  }
+}

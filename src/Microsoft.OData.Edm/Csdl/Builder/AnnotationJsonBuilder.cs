@@ -13,7 +13,7 @@ using Microsoft.OData.Edm.Csdl.Json.Value;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm.Csdl.Json.Builder
+namespace Microsoft.OData.Edm.Csdl.Builder
 {
     /// <summary>
     /// Provides functionalities for parsing CSDL-JSON annotations.

@@ -6,8 +6,8 @@
 
 using System.IO;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.Builder;
 using Microsoft.OData.Edm.Csdl.Json;
-using Microsoft.OData.Edm.Csdl.Json.Builder;
 using Microsoft.OData.Edm.Csdl.Json.Parser;
 using Microsoft.OData.Edm.Csdl.Json.Reader;
 using Microsoft.OData.Edm.Csdl.Json.Value;
@@ -305,15 +305,20 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Json.Parser
                 return null;
             };
 
+
+            JsonObjectValue jsonValue = null;
             using (TextReader txtReader = new StringReader(mainCsdl))
             {
-                CsdlJsonModelParser csdlModelBuilder = new CsdlJsonModelParser(txtReader, options);
-                CsdlModel csdlModel = csdlModelBuilder.ParseCsdlDocument();
-
-                EdmModelBuilder builder = new EdmModelBuilder(options);
-                IEdmModel model = builder.TryBuildEdmModel(csdlModel, csdlModel.ReferencedModels);
-                Assert.NotNull(model);
+                IJsonReader jsonReader = new JsonReader(txtReader, options.GetJsonReaderOptions());
+                jsonValue = jsonReader.ReadAsObject();
             }
+
+            CsdlJsonModelParser csdlModelBuilder = new CsdlJsonModelParser(jsonValue, options);
+            CsdlModel csdlModel = csdlModelBuilder.ParseCsdlDocument();
+
+            EdmModelBuilder builder = new EdmModelBuilder(options);
+            IEdmModel model = builder.TryBuildEdmModel(csdlModel, csdlModel.ReferencedModels);
+            Assert.NotNull(model);
         }
 
 #if false

@@ -30,18 +30,18 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
     internal class CsdlJsonModelParser
     {
         private CsdlSerializerOptions _options;
-        private TextReader _textReader;
+        private JsonObjectValue _csdlJsonObject;
         private string _source;
         private CsdlModel _mainCsdlModel;
 
-        public CsdlJsonModelParser(TextReader textReader, CsdlSerializerOptions options)
-            : this(textReader, options, null, mainModel: null)
+        public CsdlJsonModelParser(JsonObjectValue csdlJsonObject, CsdlSerializerOptions options)
+            : this(csdlJsonObject, options, null, mainModel: null)
         {
         }
 
-        private CsdlJsonModelParser(TextReader textReader, CsdlSerializerOptions options, string source, CsdlModel mainModel)
+        private CsdlJsonModelParser(JsonObjectValue csdlJsonObject, CsdlSerializerOptions options, string source, CsdlModel mainModel)
         {
-            _textReader = textReader;
+            _csdlJsonObject = csdlJsonObject;
             _options = options;
             _source = source;
             _mainCsdlModel = mainModel;
@@ -56,8 +56,8 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         /// <returns>Null or the generated <see cref="CsdlModel"/>.</returns>
         public CsdlModel ParseCsdlDocument()
         {
-            JsonReader jsonReader = new JsonReader(_textReader, _options.GetJsonReaderOptions());
-            JsonObjectValue csdlObject = jsonReader.ReadAsObject();
+           // JsonReader jsonReader = new JsonReader(_textReader, _options.GetJsonReaderOptions());
+           // JsonObjectValue csdlObject = jsonReader.ReadAsObject();
 
             // A CSDL JSON document consists of a single JSON object.
             // JsonObjectValue csdlObject = jsonValue.ValidateRequiredJsonValue<JsonObjectValue>(jsonPath);
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             IList<IEdmReference> references = null;
             Version version = null;
             IDictionary<string, IJsonValue> members = new Dictionary<string, IJsonValue>();
-            csdlObject.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
+            _csdlJsonObject.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
             {
                 switch (propertyName)
                 {
@@ -154,7 +154,9 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 }
 
                 // Customer can provide their own built-in vocabulary model
-                TextReader referencedJsonReader = _options.ReferencedModelJsonFactory(edmReference.Uri);
+                TextReader referencedJsonReader = _options.ReferencedModelJsonFactory == null ?
+                    null :
+                    _options.ReferencedModelJsonFactory(edmReference.Uri);
                 if (referencedJsonReader == null)
                 {
                     // If provided, we doesn't need to load it again.
@@ -166,7 +168,20 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                     throw new Exception();
                 }
 
-                CsdlJsonModelParser builder = new CsdlJsonModelParser(referencedJsonReader, _options, sourceUri, mainModel);
+                IJsonValue referencedJsonValue = null;
+                using(referencedJsonReader)
+                {
+                    JsonReader jsonReader = new JsonReader(referencedJsonReader, _options.GetJsonReaderOptions());
+                    referencedJsonValue = jsonReader.ReadAsJsonValue();
+                }
+
+                if (referencedJsonValue == null || referencedJsonValue.ValueKind != JsonValueKind.JObject)
+                {
+                    throw new CsdlParseException();
+                }
+
+                JsonObjectValue csdlJsonObject = (JsonObjectValue)referencedJsonValue;
+                CsdlJsonModelParser builder = new CsdlJsonModelParser(csdlJsonObject, _options, sourceUri, mainModel);
                 builder.ParseCsdlDocument();
             }
         }
@@ -332,6 +347,14 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 string coreVocabularies = allResources.FirstOrDefault(x => x.Contains("Org.OData.Core.V1.json"));
                 Debug.Assert(coreVocabularies != null, "Org.OData.Core.V1.json: not found.");
                 return new StreamReader(assembly.GetManifestResourceStream(coreVocabularies));
+            }
+
+            if (sourceUri.Contains("Org.OData.Measures.V1"))
+            {
+                // core
+                string measuresVocabularies = allResources.FirstOrDefault(x => x.Contains("Org.OData.Measures.V1.json"));
+                Debug.Assert(measuresVocabularies != null, "Org.OData.Core.V1.json: not found.");
+                return new StreamReader(assembly.GetManifestResourceStream(measuresVocabularies));
             }
 
             return null;

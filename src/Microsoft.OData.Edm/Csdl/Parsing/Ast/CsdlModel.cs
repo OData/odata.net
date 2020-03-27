@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
@@ -15,6 +16,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal class CsdlModel
     {
+        private IDictionary<string, string> aliasNsmapping;
         private readonly List<CsdlSchema> schemata = new List<CsdlSchema>();
         private readonly List<IEdmReference> currentModelReferences = new List<IEdmReference>();
         private readonly List<IEdmReference> parentModelReferences = new List<IEdmReference>();
@@ -94,6 +96,64 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             }
 
             return ReferencedModels.Any(c => c.Uri == uri);
+        }
+
+        public IDictionary<string, string> AliasNsMapping
+        {
+            get
+            {
+                BuildAliasNamespaceMapping();
+                return this.aliasNsmapping;
+            }
+        }
+        public string ReplaceAlias(string input)
+        {
+            if (this.aliasNsmapping == null)
+            {
+                BuildAliasNamespaceMapping();
+            }
+
+            if (this.aliasNsmapping.Count == 0)
+            {
+                return input;
+            }
+
+            int idx = input.IndexOf('.');
+            if (idx > 0)
+            {
+                var typeAlias = input.Substring(0, idx);
+
+                string namespaceFound;
+                if (this.aliasNsmapping.TryGetValue(typeAlias, out namespaceFound))
+                {
+                    return string.Format(CultureInfo.InvariantCulture, "{0}{1}", namespaceFound, input.Substring(idx));
+                }
+            }
+
+            return input;
+        }
+
+        private void BuildAliasNamespaceMapping()
+        {
+            if (this.aliasNsmapping != null)
+            {
+                return;
+            }
+
+            this.aliasNsmapping = new Dictionary<string, string>();
+            foreach (var includes in currentModelReferences.SelectMany(s => s.Includes))
+            {
+                // The value of $Include is an array. Array items are objects that MUST contain the member $Namespace and MAY contain the member $Alias.
+                this.aliasNsmapping.Add(includes.Alias, includes.Namespace);
+            }
+
+            foreach (var schema in this.schemata)
+            {
+                if (schema.Alias != null)
+                {
+                    this.aliasNsmapping.Add(schema.Alias, schema.Namespace);
+                }
+            }
         }
     }
 }
