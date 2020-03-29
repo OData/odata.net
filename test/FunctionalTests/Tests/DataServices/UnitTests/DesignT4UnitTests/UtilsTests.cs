@@ -115,7 +115,7 @@ namespace Microsoft.OData.Service.Design.UnitTests
         }
     }
 
-    [TestClass]
+   //--#comment#-- [TestClass]
     public class UtilsTests
     {
         private readonly ODataT4CodeGenerator.ODataClientTemplate template;
