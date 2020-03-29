@@ -411,13 +411,13 @@ namespace Microsoft.OData.Client.Materialization
         /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
         /// </summary>
         /// <param name="instance">Object with expected dictionary property</param>
-        /// <param name="dynamicPropertiesProperty">Reference to the dictionary</param>
+        /// <param name="dynamicPropertiesDictionary">Reference to the dictionary</param>
         /// <returns>true if expected dictionary is found</returns>
-        internal static bool TryGetDynamicPropertiesDictionary(object instance, out IDictionary<string, object> dynamicPropertiesProperty)
+        internal static bool TryGetDynamicPropertiesDictionary(object instance, out IDictionary<string, object> dynamicPropertiesDictionary)
         {
             Debug.Assert(instance != null, $"{nameof(instance)} != null");
 
-            dynamicPropertiesProperty = default(IDictionary<string, object>);
+            dynamicPropertiesDictionary = default(IDictionary<string, object>);
 
             PropertyInfo propertyInfo = instance.GetType().GetProperties().Where(p =>
                                 !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
@@ -429,10 +429,10 @@ namespace Microsoft.OData.Client.Materialization
                 return false;
             }
 
-            dynamicPropertiesProperty = (IDictionary<string, object>)propertyInfo.GetValue(instance);
+            dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(instance);
 
             // Is property initialized?
-            if (dynamicPropertiesProperty == null)
+            if (dynamicPropertiesDictionary == null)
             {
                 return false;
             }

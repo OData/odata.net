@@ -690,15 +690,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="link">Nested resource link as parsed.</param>
         private void MaterializeDynamicProperty(MaterializerEntry entry, ODataNestedResourceInfo link)
         {
-            // NOTE: Dynamic properties that have navigational properties may present a challenge
-            // For instance, complex types are allowed to have navigational properties...
-            // The straightfoward option is not to materialize the navigational property on the dynamic property
-            // Such advanced scenarios may be handled adding a declared property on the client type 
-            // that will be mapping to the corresponding dynamic property 
             Debug.Assert(entry != null, $"{nameof(entry)} != null");
             Debug.Assert(entry.ResolvedObject != null, $"{nameof(entry.ResolvedObject)} != null -- otherwise not resolved/created!");
             Debug.Assert(link != null, $"{nameof(link)} != null");
-
 
             MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
             if (linkState == null || (linkState.Entry == null && linkState.Feed == null))
@@ -706,7 +700,10 @@ namespace Microsoft.OData.Client.Materialization
                 return;
             }
 
-            // TODO: Not proceed with materialization if nested type is an entity or entity collection?
+            // NOTE: ODL (and OData WebApi) support navigational property on complex types
+            // That support has not yet been implemented in OData client
+
+            // TODO: Not proceed with materialization if nested resource is an entity or entity collection?
             // An entity or entity collection as a dynamic property currently doesn't work as expected 
             // due to the absence of a navigational property definition in the metadata 
             // to express the relationship between that entity and the parent entity - unless they're the same type!
