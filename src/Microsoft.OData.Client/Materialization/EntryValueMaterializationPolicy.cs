@@ -600,7 +600,10 @@ namespace Microsoft.OData.Client.Materialization
 
                     if (prop == null)
                     {
-                        this.MaterializeNestedResourceAsDynamicProperty(entry, link);
+                        if (entry.ShouldUpdateFromPayload)
+                        {
+                            this.MaterializeDynamicProperty(entry, link);
+                        }
                         continue;
                     }
 
@@ -655,7 +658,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (entry.ShouldUpdateFromPayload)
                     {
-                        this.ApplyDynamicPropertyValue(e, entry.ResolvedObject);
+                        this.MaterializeDynamicProperty(e, entry.ResolvedObject);
                     }
                     continue;
                 }
@@ -682,11 +685,11 @@ namespace Microsoft.OData.Client.Materialization
             this.MaterializerContext.ResponsePipeline.FireEndEntryEvents(entry);
         }
 
-        private void MaterializeNestedResourceAsDynamicProperty(MaterializerEntry entry, ODataNestedResourceInfo link)
+        /// <summary>Materializes the specified <paramref name="entry"/> as dynamic property.</summary>
+        /// <param name="entry">Entry with object to materialize.</param>
+        /// <param name="link">Nested resource link as parsed.</param>
+        private void MaterializeDynamicProperty(MaterializerEntry entry, ODataNestedResourceInfo link)
         {
-            DataServiceContext context = this.EntityTrackingAdapter.Context;
-            Debug.Assert(context != null, "context != null");
-
             // NOTE: Dynamic properties that have navigational properties may present a challenge
             // For instance, complex types are allowed to have navigational properties...
             // The straightfoward option is not to materialize the navigational property on the dynamic property
@@ -703,46 +706,36 @@ namespace Microsoft.OData.Client.Materialization
                 return;
             }
 
+            // TODO: Not proceed with materialization if nested type is an entity or entity collection?
             // An entity or entity collection as a dynamic property currently doesn't work as expected 
             // due to the absence of a navigational property definition in the metadata 
             // to express the relationship between that entity and the parent entity - unless they're the same type!
-            // TODO: Not proceed with materialization if nested type is an entity or entity collection?
 
-            // Dynamic properties may optionally be stored in a dictionary 
-            PropertyInfo propertyInfo = entry.ResolvedObject.GetType().GetProperties().Where(p =>
-                    !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
-                    typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)
-                ).FirstOrDefault();
+            // DataServiceContext context = this.EntityTrackingAdapter.Context;
+            // TypeResolver typeResolver = new TypeResolver(context.Model, context.ResolveTypeFromName, context.ResolveNameFromTypeInterfnal, context.Format.ServiceModel);
 
-            if (propertyInfo == null)
+            IDictionary<string, object> dynamicPropertiesDictionary;
+            // Dictionary not found or key with matching name already exists
+            if (!TryGetDynamicPropertiesDictionary(entry.ResolvedObject, out dynamicPropertiesDictionary) 
+                || dynamicPropertiesDictionary.ContainsKey(link.Name))
             {
                 return;
             }
-
-            IDictionary<string, object> dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(entry.ResolvedObject);
-
-            // Key with same name already exists on the dictionary
-            if (dynamicPropertiesDictionary.ContainsKey(link.Name))
-            {
-                return;
-            }
-
-            // Assembly where client types are expected to be
-            Assembly assembly = entry.ResolvedObject.GetType().GetAssembly();
-            string containingTypeNamespace = entry.ResolvedObject.GetType().Namespace;
 
             if (linkState.Feed != null)
             {
                 string collectionTypeName = linkState.Feed.TypeName; // TypeName represents a collection e.g. Collection(NS.Type)
-                string collectionItemTypeName;
-                ClientConvert.TryParseCollectionItemType(collectionTypeName, out collectionItemTypeName);
-
-                IEnumerable<Type> clientTypeCandidates = ClientTypeUtil.GetClientTypeCandidates(assembly, collectionItemTypeName, containingTypeNamespace);
-                IEnumerator<Type> candidatesEnumerator = clientTypeCandidates.GetEnumerator();
-
-                if (candidatesEnumerator.MoveNext())
+                string collectionItemTypeName = CommonUtil.GetCollectionItemTypeName(collectionTypeName, false);
+                // Highly unlikely, but the method return null if the typeName argument does not meet certain expectations
+                if (collectionItemTypeName == null)
                 {
-                    Type collectionItemType = candidatesEnumerator.Current;
+                    return;
+                }
+
+                Type collectionItemType = ResolveClientTypeForDynamicProperty(collectionItemTypeName, entry.ResolvedObject);
+
+                if (collectionItemType != null)
+                {
                     Type collectionType = typeof(System.Collections.ObjectModel.Collection<>).MakeGenericType(new Type[] { collectionItemType });
                     IList collection = (IList)Util.ActivatorCreateInstance(collectionType);
 
@@ -759,12 +752,10 @@ namespace Microsoft.OData.Client.Materialization
             else 
             {
                 MaterializerEntry linkEntry = linkState.Entry;
-                IEnumerable<Type> clientTypeCandidates = ClientTypeUtil.GetClientTypeCandidates(assembly, linkEntry.Entry.TypeName, containingTypeNamespace);
-                IEnumerator<Type> candidatesEnumerator = clientTypeCandidates.GetEnumerator();
+                Type itemType = ResolveClientTypeForDynamicProperty(linkEntry.Entry.TypeName, entry.ResolvedObject);
 
-                if (candidatesEnumerator.MoveNext())
+                if (itemType != null)
                 {
-                    Type itemType = candidatesEnumerator.Current;
                     this.Materialize(linkEntry, itemType, false /*includeLinks*/);
                     dynamicPropertiesDictionary.Add(link.Name, linkEntry.ResolvedObject);
                 }

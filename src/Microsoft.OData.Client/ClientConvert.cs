@@ -173,30 +173,5 @@ namespace Microsoft.OData.Client
                 return null;
             }
         }
-
-        /// <summary>
-        /// Tries to deduce the collection item type from the collection type name
-        /// </summary>
-        /// <param name="collectionTypeName"></param>
-        /// <param name="collectionItemType"></param>
-        /// <returns>true if successful</returns>
-        internal static bool TryParseCollectionItemType(string collectionTypeName, out string collectionItemType)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(collectionTypeName), $"!string.IsNullOrEmpty({nameof(collectionTypeName)})");
-
-            collectionItemType = string.Empty;
-
-            int firstIndexOfParen = collectionTypeName.IndexOf('(');
-            int lastIndexOfParen = collectionTypeName.IndexOf(')');
-
-            if (firstIndexOfParen < 0 || lastIndexOfParen < 0 || firstIndexOfParen > lastIndexOfParen)
-            {
-                return false;
-            }
-
-            collectionItemType = collectionTypeName.Substring(firstIndexOfParen + 1, lastIndexOfParen - firstIndexOfParen - 1);
-            
-            return true;
-        }
     }
 }

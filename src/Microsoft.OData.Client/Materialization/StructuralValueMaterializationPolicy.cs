@@ -276,32 +276,67 @@ namespace Microsoft.OData.Client.Materialization
             }
         }
 
+        internal Type ResolveClientTypeForDynamicProperty(string serverTypeName, object instance)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(serverTypeName), $"!string.IsNullOrEmpty({nameof(serverTypeName)})");
+            Debug.Assert(instance != null, $"{nameof(instance)} != null");
+
+            // TODO: Consider a cached mapping (server type => client type)
+
+            Type clientType;
+
+            // 1. Try to ride on user hook for resolving name into type
+            clientType = this.MaterializerContext.Context.ResolveTypeFromName(serverTypeName);
+            if (clientType != null)
+            {
+                return clientType;
+            }
+
+            // Assembly where client types are expected to be
+            Assembly assembly = instance.GetType().GetAssembly();
+
+            // 2. Try to find type with qualified name matching that of the server type
+            // Code generators (e.g. OData Connected Service extension) emit client types with the same qualified name as the server type
+            clientType = assembly.GetType(serverTypeName);
+            if (clientType != null)
+            {
+                return clientType;
+            }
+            
+            // 3. Try to find type with a matching name from the same namespace as the containing type
+            string containingTypeNamespace = instance.GetType().Namespace;
+            int lastIndexOf = serverTypeName.LastIndexOf('.');
+            if (lastIndexOf > 0)
+            {
+                string unqualifiedTypeName = serverTypeName.Substring(serverTypeName.LastIndexOf('.') + 1);
+                clientType = assembly.GetType(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}", containingTypeNamespace, unqualifiedTypeName));
+                if (clientType != null)
+                {
+                    return clientType;
+                }
+            }
+
+            return clientType;
+        }
+
+
+
         /// <summary>
-        /// Adds a data value to the dynamic properties dictionary on the specified <paramref name="instance"/>
+        /// Adds a data value to the dynamic properties dictionary (where it exists) on the specified <paramref name="instance"/>
         /// </summary>
         /// <param name="property">Property containing unmaterialzed value to apply</param>
         /// <param name="instance">Instance that may optionally contain the dynamic properties dictionary</param>
-        internal void ApplyDynamicPropertyValue(ODataProperty property, object instance)
+        internal void MaterializeDynamicProperty(ODataProperty property, object instance)
         {
             Debug.Assert(property != null, $"{nameof(property)} != null");
             Debug.Assert(instance != null, $"{nameof(instance)} != null");
 
             // TODO: Should this apply only to open (entity and complex) types?
-            // Dynamic properties may optionally be stored in a dictionary 
-            PropertyInfo propertyInfo = instance.GetType().GetProperties().Where(p =>
-                    !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
-                    typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)
-                ).FirstOrDefault();
-
-            if (propertyInfo == null)
-            {
-                return;
-            }
-
-            IDictionary<string, object> dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(instance);
-
-            // Key with same name already exists on the dictionary
-            if (dynamicPropertiesDictionary.ContainsKey(property.Name))
+            
+            IDictionary<string, object> dynamicPropertiesDictionary;
+            // Dictionary not found or key with matching name already exists
+            if (!TryGetDynamicPropertiesDictionary(instance, out dynamicPropertiesDictionary) 
+                || dynamicPropertiesDictionary.ContainsKey(property.Name))
             {
                 return;
             }
@@ -317,25 +352,21 @@ namespace Microsoft.OData.Client.Materialization
                 return;
             }
 
-            // Assembly where client types are expected to be
-            Assembly assembly = instance.GetType().GetAssembly();
-            string containingTypeNamespace = instance.GetType().Namespace;
-
             // Handle enum value
             ODataEnumValue enumVal = property.Value as ODataEnumValue;
             if (enumVal != null)
             {
-                // TODO: ClientEdmModel caches server type to client mapping after first encounter - consider calling Model.FindType(typeName) first
-                IEnumerable<Type> candidateTypes = ClientTypeUtil.GetClientTypeCandidates(assembly, enumVal.TypeName, containingTypeNamespace);
-                // Try to identity the assignable client type by trying out each candidate type at a time
-                foreach (Type candidateType in candidateTypes)
+                Type clientType = ResolveClientTypeForDynamicProperty(enumVal.TypeName, instance);
+                // Unable to resolve type for dynamic property
+                if (clientType == null)
                 {
-                    object materializedEnumValue;
-                    if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(candidateType, enumVal, out materializedEnumValue))
-                    {
-                        dynamicPropertiesDictionary.Add(property.Name, materializedEnumValue);
-                        break;
-                    }
+                    return;
+                }
+
+                object materializedEnumValue;
+                if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(clientType, enumVal, out materializedEnumValue))
+                {
+                    dynamicPropertiesDictionary.Add(property.Name, materializedEnumValue);
                 }
 
                 return;
@@ -343,41 +374,70 @@ namespace Microsoft.OData.Client.Materialization
 
             // Handle collection
             ODataCollectionValue collectionVal = value as ODataCollectionValue;
-            // TODO: Revisit multiple exit points and nested blocks
             if (collectionVal != null)
             {
-                string collectionItemTypeName;
-                if (ClientConvert.TryParseCollectionItemType(collectionVal.TypeName, out collectionItemTypeName))
+                string collectionItemTypeName = CommonUtil.GetCollectionItemTypeName(collectionVal.TypeName, false);
+                // Highly unlikely, but the method return null if the typeName argument does not meet certain expectations
+                if (collectionItemTypeName == null)
                 {
-                    Type primitiveType;
-                    // Primitive collection
-                    if (ClientConvert.ToNamedType(collectionItemTypeName, out primitiveType))
-                    {
-                        object collectionInstance;
-                        if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(primitiveType, property, out collectionInstance))
-                        {
-                            dynamicPropertiesDictionary.Add(property.Name, collectionInstance);
-                        }
-                    }
-                    else  // Non-primitive collection
-                    {
-                        IEnumerable<Type> candidateTypes = ClientTypeUtil.GetClientTypeCandidates(assembly, collectionItemTypeName, containingTypeNamespace);
-                        // Try to identity the assignable client type by trying out each candidate type at a time
-                        foreach (Type candidateType in candidateTypes)
-                        {
-                            object collectionInstance;
-                            if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(candidateType, property, out collectionInstance))
-                            {
-                                // We found an assignable type
-                                dynamicPropertiesDictionary.Add(property.Name, collectionInstance);
-                                break;
-                            }
-                        }
-                    }
-
                     return;
                 }
+
+                Type collectionItemType;
+                // ToNamedType will return true for primitive types
+                if (!ClientConvert.ToNamedType(collectionItemTypeName, out collectionItemType))
+                {
+                    // Non-primitive collection
+                    collectionItemType = ResolveClientTypeForDynamicProperty(collectionItemTypeName, instance);
+                }
+
+                if (collectionItemType == null)
+                {
+                    return;
+                }
+
+                object collectionInstance;
+                if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(collectionItemType, property, out collectionInstance))
+                {
+                    dynamicPropertiesDictionary.Add(property.Name, collectionInstance);
+                }
+
+                return;
             }
+        }
+
+        /// <summary>
+        /// Returns true if the <paramref name="instance"/> contains an non-null dictionary property of string and object
+        /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
+        /// </summary>
+        /// <param name="instance">Object with expected dictionary property</param>
+        /// <param name="dynamicPropertiesProperty">Reference to the dictionary</param>
+        /// <returns>true if expected dictionary is found</returns>
+        internal static bool TryGetDynamicPropertiesDictionary(object instance, out IDictionary<string, object> dynamicPropertiesProperty)
+        {
+            Debug.Assert(instance != null, $"{nameof(instance)} != null");
+
+            dynamicPropertiesProperty = default(IDictionary<string, object>);
+
+            PropertyInfo propertyInfo = instance.GetType().GetProperties().Where(p =>
+                                !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
+                                typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)
+                            ).FirstOrDefault();
+
+            if (propertyInfo == null)
+            {
+                return false;
+            }
+
+            dynamicPropertiesProperty = (IDictionary<string, object>)propertyInfo.GetValue(instance);
+
+            // Is property initialized?
+            if (dynamicPropertiesProperty == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
