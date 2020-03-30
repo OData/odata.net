@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
     using System;
     using System.Linq;
 
-    [TestClass]
+   //--#comment#-- [TestClass]
     public class CodeGenerationContextTest
     {
         private const string EdmxSimple = @"<?xml version=""1.0"" standalone=""yes"" ?>
