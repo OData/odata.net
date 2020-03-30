@@ -3782,7 +3782,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
 
-        [TestCategory("Partition1"), TestMethod, Variation("Invoke and validate EF service actions")]
+        //--#comment#--[TestCategory("Partition1"), TestMethod, Variation("Invoke and validate EF service actions")]
         public void EFActionTest()
         {
             var testCases = new[]
@@ -3855,7 +3855,7 @@ namespace AstoriaUnitTests.Tests.Server
             });
         }
 
-        [TestCategory("Partition1"), TestMethod, Variation("Invoke and validate EF service actions with paging")]
+        //--#comment#--[TestCategory("Partition1"), TestMethod, Variation("Invoke and validate EF service actions with paging")]
         public void EFActionTestWithPaging()
         {
             var testCases = new[]
