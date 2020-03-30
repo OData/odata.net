@@ -15,7 +15,7 @@ using System.Text;
 namespace Microsoft.OData.Edm.Csdl.Json.Reader
 {
     /// <summary>
-    /// Edm JSON reader.
+    /// Basic JSON reader.
     /// </summary>
     internal class JsonReader : IJsonReader
     {
@@ -101,9 +101,9 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         private StringBuilder stringValueBuilder;
 
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader">The text reader to read input characters from.</param>
         public JsonReader(TextReader reader)
             : this(reader, JsonReaderOptions.Default)
         {
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         }
 
         /// <summary>
-        /// Various scope types for Json writer.
+        /// Various scope types for Json reader.
         /// </summary>
         private enum ScopeType
         {
@@ -168,19 +168,13 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         }
 
         /// <summary>
-        /// Get/sets the character buffer pool.
-        /// </summary>
-        public ICharArrayPool ArrayPool { get; set; }
-
-        /// <summary>
-        /// The value of the last reported node.
+        /// The value of the last reported node. It boxes the value into object, it maybe a perf.
         /// </summary>
         /// <remarks>This is non-null only if the last node was a PrimitiveValue or Property.
         /// If the last node is a PrimitiveValue this property returns the value:
         /// - null if the null token was found.
         /// - boolean if the true or false token was found.
         /// - string if a string token was found.
-        /// - DateTime if a string token formatted as DateTime was found.
         /// - Int32 if a number which fits into the Int32 was found.
         /// - Double if a number which doesn't fit into Int32 was found.
         /// If the last node is a Property this property returns a string which is the name of the property.
@@ -264,13 +258,13 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 case ScopeType.Root:
                     if (commaFound)
                     {
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Root));
                     }
 
                     if (currentScope.ValueCount > 0)
                     {
                         // We already found the top-level value, so fail
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_MultipleTopLevelValues);
                     }
 
                     // We expect a "value" - start array, start object or primitive value
@@ -280,7 +274,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 case ScopeType.Array:
                     if (commaFound && currentScope.ValueCount == 0)
                     {
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
                     }
 
                     // We might see end of array here
@@ -291,7 +285,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                         // End of array is only valid when there was no comma before it.
                         if (commaFound)
                         {
-                            throw new Exception();
+                            throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
                         }
 
                         this.PopScope();
@@ -301,7 +295,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
 
                     if (!commaFound && currentScope.ValueCount > 0)
                     {
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_MissingComma(ScopeType.Array));
                     }
 
                     // We expect element which is a "value" - start array, start object or primitive value
@@ -311,7 +305,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 case ScopeType.Object:
                     if (commaFound && currentScope.ValueCount == 0)
                     {
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
                     }
 
                     // We might see end of object here
@@ -322,7 +316,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                         // End of object is only valid when there was no comma before it.
                         if (commaFound)
                         {
-                            throw new Exception();
+                            throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
                         }
 
                         this.PopScope();
@@ -333,7 +327,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                     {
                         if (!commaFound && currentScope.ValueCount > 0)
                         {
-                            throw new Exception();
+                            throw new Exception(Strings.JsonReader_MissingComma(ScopeType.Object));
                         }
 
                         // We expect a property here
@@ -344,7 +338,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 case ScopeType.Property:
                     if (commaFound)
                     {
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Property));
                     }
 
                     // We expect the property value, which is a "value" - start array, start object or primitive value
@@ -352,12 +346,13 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                     break;
 
                 default:
-                    throw new Exception();
+                    Debug.Assert(false, "Should never be here");
+                    break;
             }
 
             Debug.Assert(
-    this.nodeType != JsonNodeType.None && this.nodeType != JsonNodeType.EndOfInput,
-    "Read should never go back to None and EndOfInput should be reported by directly returning.");
+                this.nodeType != JsonNodeType.None && this.nodeType != JsonNodeType.EndOfInput,
+                "Read should never go back to None and EndOfInput should be reported by directly returning.");
 
             return true;
         }
@@ -414,11 +409,9 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                     this.SkipWhitespaces();
                     return JsonNodeType.StartArray;
 
-                case '"':
-                case '\'':
-                    // String primitive value
-                    bool hasLeadingBackslash;
-                    this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                case '"': 
+                    // String primitive value, JSON spec only allows "double quote" as the string starting and ending wrapper.
+                    this.nodeValue = this.ParseStringPrimitiveValue();
                     break;
 
                 case 'n':
@@ -432,9 +425,8 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                     break;
 
                 default:
-                    // COMPAT 47: JSON number can start with dot.
-                    // The JSON spec doesn't allow numbers to start with ., but WCF DS does. We will follow the WCF DS behavior for compatibility.
-                    if (Char.IsDigit(currentCharacter) || (currentCharacter == '-') || (currentCharacter == '.'))
+                    // The JSON spec doesn't allow numbers to start with '.'.
+                    if (Char.IsDigit(currentCharacter) || (currentCharacter == '-'))
                     {
                         this.nodeValue = this.ParseNumberPrimitiveValue();
                         break;
@@ -442,7 +434,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                     else
                     {
                         // Unknown token - fail.
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_UnrecognizedToken(currentCharacter));
                     }
             }
 
@@ -468,13 +460,13 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
             if (string.IsNullOrEmpty((string)this.nodeValue))
             {
                 // The name can't be empty.
-                throw new Exception();
+                throw new Exception(Strings.JsonReader_InvalidPropertyName((string)this.nodeValue));
             }
 
             if (!this.SkipWhitespaces() || this.characterBuffer[this.tokenStartIndex] != ':')
             {
                 // We need the colon character after the property name
-                throw new Exception();
+                throw new Exception(Strings.JsonReader_MissingColon((string)this.nodeValue));
             }
 
             // Consume the colon.
@@ -496,31 +488,11 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         /// So it can either return a string successfully or fail.</remarks>
         private string ParseStringPrimitiveValue()
         {
-            bool hasLeadingBackslash;
-            return this.ParseStringPrimitiveValue(out hasLeadingBackslash);
-        }
-
-        /// <summary>
-        /// Parses a primitive string value.
-        /// </summary>
-        /// <param name="hasLeadingBackslash">Set to true if the first character in the string was a backslash. This is used when parsing DateTime values
-        /// since they must start with an escaped slash character (\/).</param>
-        /// <returns>The value of the string primitive value.</returns>
-        /// <remarks>
-        /// Assumes that the current token position points to the opening quote.
-        /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
-        /// So it can either return a string successfully or fail.</remarks>
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
-        private string ParseStringPrimitiveValue(out bool hasLeadingBackslash)
-        {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "At least the quote must be present.");
 
-            hasLeadingBackslash = false;
-
-            // COMPAT 45: We allow both double and single quotes around a primitive string
-            // Even though JSON spec only allows double quotes.
+            // JSON spec only allows double quotes. So, we only allow the "double quotes".
             char openingQuoteCharacter = this.characterBuffer[this.tokenStartIndex];
-            Debug.Assert(openingQuoteCharacter == '"' || openingQuoteCharacter == '\'', "The quote character must be the current character when this method is called.");
+            Debug.Assert(openingQuoteCharacter == '"', "The quote character must be the current character when this method is called.");
 
             // Consume the quote character
             this.tokenStartIndex++;
@@ -536,13 +508,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
                 if (character == '\\')
                 {
-                    // If we're at the beginning of the string
-                    // (means that relative token index must be 0 and we must not have consumed anything into our value builder yet)
-                    if (currentCharacterTokenRelativeIndex == 0 && valueBuilder == null)
-                    {
-                        hasLeadingBackslash = true;
-                    }
-
                     // We will need the stringbuilder to resolve the escape sequences.
                     if (valueBuilder == null)
                     {
@@ -566,7 +531,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                     // Escape sequence - we need at least two characters, the backslash and the one character after it.
                     if (!this.EnsureAvailableCharacters(2))
                     {
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_UnrecognizedEscapeSequence("\\"));
                     }
 
                     // To simplify the code, consume the character after the \ as well, since that is the start of the escape sequence.
@@ -602,20 +567,20 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                             // We need 4 hex characters
                             if (!this.EnsureAvailableCharacters(4))
                             {
-                                throw new Exception();
+                                throw new Exception(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
                             }
 
                             string unicodeHexValue = this.ConsumeTokenToString(4);
                             int characterValue;
                             if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
                             {
-                                throw new Exception();
+                                throw new Exception(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
                             }
 
                             valueBuilder.Append((char)characterValue);
                             break;
                         default:
-                            throw new Exception();
+                            throw new Exception(Strings.JsonReader_UnrecognizedEscapeSequence("\\" + character));
                     }
                 }
                 else if (character == openingQuoteCharacter)
@@ -642,7 +607,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 }
             }
 
-            throw new Exception();
+            throw new Exception(Strings.JsonReader_UnexpectedEndOfString);
         }
 
         /// <summary>
@@ -661,7 +626,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
 
             if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
             {
-                throw new Exception();
+                throw new Exception(Strings.JsonReader_UnexpectedToken(token));
             }
 
             return null;
@@ -691,18 +656,18 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 return true;
             }
 
-            throw new Exception();
+            throw new Exception(Strings.JsonReader_UnexpectedToken(token));
         }
 
         /// <summary>
         /// Parses the number primitive values.
         /// </summary>
         /// <returns>Parse value to Int32, Decimal or Double. Otherwise throws.</returns>
-        /// <remarks>Assumes that the current token position points to the first character of the number, so either digit, dot or dash.</remarks>
+        /// <remarks>Assumes that the current token position points to the first character of the number, so either digit, dash.</remarks>
         private object ParseNumberPrimitiveValue()
         {
             Debug.Assert(
-                this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == '.' || this.characterBuffer[this.tokenStartIndex] == '-' || Char.IsDigit(this.characterBuffer[this.tokenStartIndex])),
+                this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == '-' || Char.IsDigit(this.characterBuffer[this.tokenStartIndex])),
                 "The method should only be called when a digit, dash or dot character is the start of the token.");
 
             // Walk over all characters which might belong to the number
@@ -751,7 +716,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                 return doubleValue;
             }
 
-            throw new Exception();
+            throw new Exception(Strings.JsonReader_InvalidNumberFormat(numberString));
         }
 
         /// <summary>
@@ -767,7 +732,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
             char firstCharacter = this.characterBuffer[this.tokenStartIndex];
-            if ((firstCharacter == '"') || (firstCharacter == '\''))
+            if (firstCharacter == '"')
             {
                 return this.ParseStringPrimitiveValue();
             }
@@ -807,8 +772,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
             if (this.scopes.Count > 1)
             {
                 // Not all open scopes were closed.
-                // throw JsonReaderExtensions.CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
-                throw new Exception();
+                throw new Exception(Strings.JsonReader_EndOfInputWithOpenScope);
             }
 
             Debug.Assert(
@@ -817,12 +781,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
             Debug.Assert(this.nodeValue == null, "The node value should have been reset to null.");
 
             this.nodeType = JsonNodeType.EndOfInput;
-
-            //if (this.ArrayPool != null)
-            //{
-            //    BufferUtils.ReturnToBuffer(this.ArrayPool, this.characterBuffer);
-            //    this.characterBuffer = null;
-            //}
 
             return false;
         }
@@ -942,7 +900,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
             // initialize the buffer
             if (this.characterBuffer == null)
             {
-                this.characterBuffer = BufferUtils.RentFromBuffer(ArrayPool, InitialCharacterBufferSize);
+                this.characterBuffer = new char[InitialCharacterBufferSize];
             }
 
             Debug.Assert(this.storedCharacterCount <= this.characterBuffer.Length, "We can only store as many characters as fit into our buffer.");
@@ -962,14 +920,13 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                     // We need to grow the buffer. Double the size of the buffer.
                     if (this.characterBuffer.Length == int.MaxValue)
                     {
-                        // throw JsonReaderExtensions.CreateException(Strings.JsonReader_MaxBufferReached);
-                        throw new Exception();
+                        throw new Exception(Strings.JsonReader_MaxBufferReached);
                     }
 
                     int newBufferSize = this.characterBuffer.Length * 2;
                     newBufferSize = newBufferSize < 0 ? int.MaxValue : newBufferSize; // maybe overflow
 
-                    char[] newCharacterBuffer = BufferUtils.RentFromBuffer(ArrayPool, newBufferSize);
+                    char[] newCharacterBuffer = new char[newBufferSize];
 
                     // Copy the existing characters to the new buffer.
                     Array.Copy(this.characterBuffer, this.tokenStartIndex, newCharacterBuffer, 0,
@@ -978,7 +935,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
                     this.tokenStartIndex = 0;
 
                     // And switch the buffers
-                    BufferUtils.ReturnToBuffer(ArrayPool, this.characterBuffer);
                     this.characterBuffer = newCharacterBuffer;
                 }
                 else

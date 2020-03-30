@@ -1680,6 +1680,98 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "Cannot increase the JSON reader buffer to hold the input JSON which has very long token."
+        /// </summary>
+        internal static string JsonReader_MaxBufferReached {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_MaxBufferReached);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
+        /// </summary>
+        internal static string JsonReader_EndOfInputWithOpenScope {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_EndOfInputWithOpenScope);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. The value '{0}' is not a valid number."
+        /// </summary>
+        internal static string JsonReader_InvalidNumberFormat(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_InvalidNumberFormat, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. Unexpected token '{0}'."
+        /// </summary>
+        internal static string JsonReader_UnexpectedToken(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_UnexpectedToken, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. Unexpected end of input reached while processing a JSON string value."
+        /// </summary>
+        internal static string JsonReader_UnexpectedEndOfString {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_UnexpectedEndOfString);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. An unrecognized escape sequence '{0}' was found in a JSON string value."
+        /// </summary>
+        internal static string JsonReader_UnrecognizedEscapeSequence(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_UnrecognizedEscapeSequence, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. A colon character ':' is expected after the property name '{0}'."
+        /// </summary>
+        internal static string JsonReader_MissingColon(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_MissingColon, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. The property name '{0}' is not valid. The name of a property cannot be empty."
+        /// </summary>
+        internal static string JsonReader_InvalidPropertyName(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_InvalidPropertyName, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. A token '{0}' was not recognized in the JSON content."
+        /// </summary>
+        internal static string JsonReader_UnrecognizedToken(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_UnrecognizedToken, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. A comma character ',' was expected in scope '{0}'. Every two elements in an array and properties of an object must be separated by commas."
+        /// </summary>
+        internal static string JsonReader_MissingComma(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_MissingComma, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. An unexpected comma was found in scope '{0}'. A comma is only valid between properties of an object or between elements of an array."
+        /// </summary>
+        internal static string JsonReader_UnexpectedComma(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_UnexpectedComma, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. More than one value was found at the root of the JSON content. JSON content can only have one value at the root level, which is an array, an object or a primitive value."
+        /// </summary>
+        internal static string JsonReader_MultipleTopLevelValues {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.JsonReader_MultipleTopLevelValues);
+            }
+        }
+
+        /// <summary>
         /// A string like "An unexpected '{0}' node was found when reading CSDL-JSON. A '{1}' node was expected."
         /// </summary>
         internal static string CsdlJsonReader_UnexpectedJsonNodeType(object p0, object p1) {
