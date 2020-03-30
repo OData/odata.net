@@ -10,11 +10,11 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
 {
     /// <summary>
     /// Represents a JSON array value.
-    /// A json object value likes:
+    /// A json array value likes:
     /// [
     ///    ...
     /// ]
-    /// The JSON array includes list of other IJsonValue.
+    /// The JSON array includes list of other <see cref="IJsonValue"/>.
     /// </summary>
     internal class JsonArrayValue : List<IJsonValue>, IJsonValue
     {

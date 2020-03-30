@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
     /// {
     ///    ...
     /// }
-    /// The JSON object includes properties, who is a key/IJsonValue pairs.
+    /// The JSON object includes properties, who are a key/IJsonValue pairs.
     /// </summary>
     internal class JsonObjectValue : Dictionary<string, IJsonValue>, IJsonValue
     {

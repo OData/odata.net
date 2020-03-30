@@ -19,7 +19,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         /// - null if the null token was found.
         /// - boolean if the true or false token was found.
         /// - string if a string token was found.
-        /// - DateTime if a string token formatted as DateTime was found.
         /// - Int32 if a number which fits into the Int32 was found.
         /// - Double if a number which doesn't fit into Int32 was found.
         /// If the last node is a Property this property returns a string which is the name of the property.

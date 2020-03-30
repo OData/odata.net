@@ -27,6 +27,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
                 }
             }
         }
+
         public static T ParseOptionalProperty<T>(this JsonObjectValue objValue, string propertyName, IJsonPath jsonPath,
             Func<IJsonValue, IJsonPath, T> propertyParser)
         {

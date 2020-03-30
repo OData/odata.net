@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
     {
         /// <summary>
         /// Represents a Primitive JSON value kind. Primitive value could be:
-        /// null, boolean, string, DateTimeOffset, Int32, Double, etc.
+        /// null, boolean, string, Int32, Decimal, Double.
         /// </summary>
         JPrimitive,
 
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
 
         /// <summary>
         /// Represents an Array JSON value kind.
-        /// An array JSON is a collection of other JSON value.
+        /// An array JSON is a collection of other JSON values.
         /// </summary>
         JArray
     }
