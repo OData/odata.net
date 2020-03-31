@@ -116,7 +116,9 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            foreach(string item in levelSelectList)
+            // If a select item is a child of a complex property, and that complex property already has all properties selected,
+            // then the child is redundant and should not be included in the contextUrl. i.e.; $select=address,address/city => address
+            foreach (string item in levelSelectList)
             {
                 if (!levelSelectList.Contains(GetPreviousSegments(item)))
                 {
@@ -220,6 +222,8 @@ namespace Microsoft.OData.UriParser
         private static IList<string> GetSelectStringFromPathSelectItem(PathSelectItem pathSelectItem)
         {
             IList<string> nextLevelSelectList = null;
+
+            //Recursively call next level to get all the nested select items
             if (pathSelectItem.SelectAndExpand != null)
             {
                 nextLevelSelectList = GetCurrentLevelSelectList(pathSelectItem.SelectAndExpand);
