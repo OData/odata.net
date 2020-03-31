@@ -1253,6 +1253,13 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The query option '{0}' is not supported."
+        /// </summary>
+        internal static string ALinq_QueryOptionNotSupported(object p0) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_QueryOptionNotSupported, p0);
+        }
+
+        /// <summary>
         /// A string like "Referencing public field '{0}' not supported in query option expression.  Use public property instead."
         /// </summary>
         internal static string ALinq_CantReferToPublicField(object p0) {

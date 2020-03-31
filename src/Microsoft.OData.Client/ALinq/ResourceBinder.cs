@@ -2694,7 +2694,7 @@ namespace Microsoft.OData.Client
                                 ThrowNotSupportedExceptionForTheFormatOption();
                                 break;
                             default:
-                                throw new NotSupportedException(Strings.ALinq_CantAddQueryOptionStartingWithDollarSign(name));
+                                throw new NotSupportedException(Strings.ALinq_QueryOptionNotSupported(name));
                         }
                     }
                 }

@@ -7899,7 +7899,7 @@ namespace AstoriaUnitTests.Tests
             return value;
         }
 
-        // [TestMethod]
+        [TestMethod]
         public void LinqAddQueryOption()
         {
             {
@@ -8035,24 +8035,73 @@ namespace AstoriaUnitTests.Tests
             }
             catch (Exception e)
             {
-                if (e.Message != "Can't add query option '$custom' because it begins with reserved character '$'.")
+                if (e.Message != "The query option '$custom' is not supported.")
                 {
                     throw new Exception("Test Failed");
                 }
             }
 
+            var queryableApplyOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
+                                                        select l)
+                                                        .AddQueryOption("$apply", 1);
+
+            Trace.WriteLine("known, but unsupported query  options");
+
+            try
+            {
+                queryableApplyOption.GetEnumerator();
+            }
+            catch (Exception e)
+            {
+                if (e.Message != "The query option '$apply' is not supported.")
+                {
+                    throw new Exception("Test Failed");
+                }
+            }
+
+            var queryableSkipTokenOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
+                                                                  select l)
+                                                        .AddQueryOption("$skiptoken", 1);
+
+            try
+            {
+                queryableSkipTokenOption.GetEnumerator();
+            }
+            catch (Exception e)
+            {
+                if (e.Message != "The query option '$skiptoken' is not supported.")
+                {
+                    throw new Exception("Test Failed");
+                }
+            }
+
+            var queryablaDeltaOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
+                                                                      select l)
+                                                       .AddQueryOption("$delta", 1);
+
+            try
+            {
+                queryablaDeltaOption.GetEnumerator();
+            }
+            catch (Exception e)
+            {
+                if (e.Message != "The query option '$delta' is not supported.")
+                {
+                    throw new Exception("Test Failed");
+                }
+            }
 
             Trace.WriteLine("user specified Astoria option which is dup");
 
             ReadOnlyTestContext.ClearBaselineIncludes();
 
-            var queryable8 = ((DataServiceQuery<League>)(from l in context.CreateQuery<League>("Leagues")
+            var queryableTopOptionDuplicate = ((DataServiceQuery<League>)(from l in context.CreateQuery<League>("Leagues")
                                                          select l).Take(1)).AddQueryOption("$skip", 2).AddQueryOption("$filter", 2)
                                                         .AddQueryOption("$top", 2);
 
             try
             {
-                queryable8.GetEnumerator();
+                queryableTopOptionDuplicate.GetEnumerator();
             }
             catch (Exception e)
             {
@@ -8065,14 +8114,14 @@ namespace AstoriaUnitTests.Tests
             Trace.WriteLine("user specified just $");
             ReadOnlyTestContext.ClearBaselineIncludes();
 
-            var queryable9 = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
+            var queryableJustDollarSignOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
                                                         select l)
                                                         .AddQueryOption("$", 1)
                                                         .AddQueryOption("$$", 1);
 
             try
             {
-                queryable9.GetEnumerator();
+                queryableJustDollarSignOption.GetEnumerator();
             }
             catch (Exception e)
             {
