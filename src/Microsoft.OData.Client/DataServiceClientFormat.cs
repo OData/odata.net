@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
     using Microsoft.OData;
@@ -97,6 +98,16 @@ namespace Microsoft.OData.Client
                 else
                 {
                     serviceModel = LoadServiceModelFromNetwork();
+                }
+
+                // Safe to assume we'll get here only once for each initialized data service context?
+                // Each data service context owns a service model and client edm model
+                if (serviceModel != null && this.context.Model != null)
+                {
+                    foreach (var element in serviceModel.SchemaElements.Where(el => el is IEdmStructuredType))
+                    {
+                        this.context.Model.EdmStructuredSchemaElements.TryAdd(element.Name, element);
+                    }
                 }
                 return serviceModel;
             }
