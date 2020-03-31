@@ -17,7 +17,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestMultiSelect()
         {
-            //Arrange
+            //Arrange - $select=Shoe,Name
             var expected = new List<string>();
             expected.Add("Shoe");
             expected.Add("Name");
@@ -33,7 +33,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestNestedSelect()
         {
-            //Arrange
+            //Arrange - $select=FavoriteDate,Name,MyAddress/City
             var expected = new List<string>();
             expected.Add("FavoriteDate");
             expected.Add("Name");
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestNestedSelectComplexType()
         {
-            //Arrange
+            //Arrange - $select=FavoriteDate,Name,MyAddress
             var expected = new List<string>();
             expected.Add("FavoriteDate");
             expected.Add("Name");
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestNestedSelectNestedType()
         {
-            //Arrange
+            //Arrange - $select=FavoriteDate,Name,MyAddress,MyAddress/MyNeighbors/City
             var expected = new List<string>();
             expected.Add("FavoriteDate");
             expected.Add("Name");
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestNestedSelectNestedTypeWithComplex()
         {
-            //Arrange
+            //Arrange - $select=FavoriteDate,Name,MyAddress
             var expected = new List<string>();
             expected.Add("FavoriteDate");
             expected.Add("Name");

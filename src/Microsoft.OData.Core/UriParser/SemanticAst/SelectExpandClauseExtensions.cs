@@ -116,7 +116,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            foreach(var item in levelSelectList)
+            foreach(string item in levelSelectList)
             {
                 if (!levelSelectList.Contains(GetPreviousSegments(item)))
                 {
