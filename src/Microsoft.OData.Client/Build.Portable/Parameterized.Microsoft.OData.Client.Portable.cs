@@ -1988,24 +1988,6 @@ namespace Microsoft.OData.Client {
             }
         }
 
-        /// <summary>
-        /// A string like "Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported."
-        /// </summary>
-        internal static string Silverlight_BrowserHttp_NotSupported {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Silverlight_BrowserHttp_NotSupported);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Parameters of type DataServiceQuery&lt;T&gt; can not be used as the input enumerators for DataServiceCollection. Try using result of DataServiceQuery&lt;T&gt;.EndExecute instead."
-        /// </summary>
-        internal static string DataServiceCollection_DataServiceQueryCanNotBeEnumerated {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_DataServiceQueryCanNotBeEnumerated);
-            }
-        }
-
     }
 
     /// <summary>
