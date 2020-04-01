@@ -3922,7 +3922,7 @@ namespace AstoriaUnitTests.Tests.Server
             });
         }
 
-        [TestCategory("Partition1"), TestMethod, Variation("Invoke and validate EF service actions")]
+       //--#comment#-- [TestCategory("Partition1"), TestMethod, Variation("Invoke and validate EF service actions")]
         public void EFProviderNegativeTests()
         {
             using (t.TestUtil.RestoreStaticMembersOnDispose(typeof(MyDSPActionProvider)))
@@ -4261,7 +4261,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
 
-        [TestCategory("Partition1"), TestMethod, Variation("Invoke and validate EF service actions")]
+        //--#comment#--[TestCategory("Partition1"), TestMethod, Variation("Invoke and validate EF service actions")]
         public void EFProviderNegativeTests2()
         {
             var testCases = new[]
