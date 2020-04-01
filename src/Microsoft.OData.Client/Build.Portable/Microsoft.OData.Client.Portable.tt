@@ -17,6 +17,7 @@ public static class Configuration
     // The list of text files containing all the string resources.
     public static readonly string[] TextFiles = {
         "..\\Microsoft.OData.Client.Common.txt",
+		"Microsoft.OData.Client.txt",
         "Microsoft.OData.Client.Portable.txt"
     };
 }

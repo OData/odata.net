@@ -1253,6 +1253,13 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The query option '{0}' is not supported."
+        /// </summary>
+        internal static string ALinq_QueryOptionNotSupported(object p0) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_QueryOptionNotSupported, p0);
+        }
+
+        /// <summary>
         /// A string like "Referencing public field '{0}' not supported in query option expression.  Use public property instead."
         /// </summary>
         internal static string ALinq_CantReferToPublicField(object p0) {
@@ -1961,6 +1968,24 @@ namespace Microsoft.OData.Client {
         /// </summary>
         internal static string PlatformHelper_DateTimeOffsetMustContainTimeZone(object p0) {
             return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.PlatformHelper_DateTimeOffsetMustContainTimeZone, p0);
+        }
+
+        /// <summary>
+        /// A string like "Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported."
+        /// </summary>
+        internal static string Silverlight_BrowserHttp_NotSupported {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Silverlight_BrowserHttp_NotSupported);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Parameters of type DataServiceQuery&lt;T&gt; can not be used as the input enumerators for DataServiceCollection. Try using result of DataServiceQuery&lt;T&gt;.EndExecute instead."
+        /// </summary>
+        internal static string DataServiceCollection_DataServiceQueryCanNotBeEnumerated {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_DataServiceQueryCanNotBeEnumerated);
+            }
         }
 
         /// <summary>
