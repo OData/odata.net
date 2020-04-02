@@ -750,6 +750,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.NavigationPropertyPath:
                     WriteNavigationPropertyPathExpressionElement(pathExpression);
                     break;
+                case EdmExpressionKind.AnnotationPath:
+                    WriteAnnotationPathExpressionElement(pathExpression);
+                    break;
                 case EdmExpressionKind.StringConstant:
                     WriteStringConstantExpressionElement((IEdmStringConstantExpression)expression);
                     break;
@@ -937,6 +940,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WritePropertyPathExpressionElement(IEdmPathExpression expression)
         {
+            // SAMXU: Wrong implementation:
+
             // Property property path expressions are represented as an object
             this.jsonWriter.StartObjectScope();
 
@@ -948,11 +953,26 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteNavigationPropertyPathExpressionElement(IEdmPathExpression expression)
         {
+            // SAMXU: Wrong implementation:
+
             // Navigation property path expressions are represented as an object
             this.jsonWriter.StartObjectScope();
 
             // with a single member $NavigationPropertyPath whose value is a string containing a path.
             this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_NavigationPropertyPath, PathAsXml(expression.PathSegments));
+
+            this.jsonWriter.EndObjectScope();
+        }
+
+        internal override void WriteAnnotationPathExpressionElement(IEdmPathExpression expression)
+        {
+            // SAMXU: Wrong implementation:
+
+            // Navigation property path expressions are represented as an object
+            this.jsonWriter.StartObjectScope();
+
+            // with a single member $AnnotationPath whose value is a string containing a path.
+            this.jsonWriter.WriteRequiredProperty(CsdlConstants.Prefix_Dollar + CsdlConstants.Element_AnnotationPath, PathAsXml(expression.PathSegments));
 
             this.jsonWriter.EndObjectScope();
         }

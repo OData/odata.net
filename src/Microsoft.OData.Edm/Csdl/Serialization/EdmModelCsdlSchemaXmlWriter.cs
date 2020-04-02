@@ -457,6 +457,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.NavigationPropertyPath:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_NavigationPropertyPath, pathExpression.PathSegments, PathAsXml);
                     break;
+                case EdmExpressionKind.AnnotationPath:
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_AnnotationPath, pathExpression.PathSegments, PathAsXml);
+                    break;
                 case EdmExpressionKind.StringConstant:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_String, ((IEdmStringConstantExpression)expression).Value, EdmValueWriter.StringAsXml);
                     break;
@@ -627,6 +630,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override void WriteNavigationPropertyPathExpressionElement(IEdmPathExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationPropertyPath);
+            this.xmlWriter.WriteString(PathAsXml(expression.PathSegments));
+            this.WriteEndElement();
+        }
+
+        internal override void WriteAnnotationPathExpressionElement(IEdmPathExpression expression)
+        {
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_AnnotationPath);
             this.xmlWriter.WriteString(PathAsXml(expression.PathSegments));
             this.WriteEndElement();
         }

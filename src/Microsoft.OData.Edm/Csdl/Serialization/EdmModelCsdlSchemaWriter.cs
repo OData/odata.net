@@ -190,18 +190,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // nothing here
         }
 
-<<<<<<< HEAD
-        internal void WriteAnnotationPathExpressionElement(IEdmPathExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_AnnotationPath);
-            this.xmlWriter.WriteString(PathAsXml(expression.PathSegments));
-            this.WriteEndElement();
-        }
-
-        internal void WriteIfExpressionElementHeader(IEdmIfExpression expression)
-=======
         internal virtual void WriteOperationParametersEnd(IEnumerable<IEdmOperationParameter> parameters)
->>>>>>> Support JSON Metadata writer
         {
             // nothing here
         }
@@ -223,6 +212,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteIntegerConstantExpressionElement(IEdmIntegerConstantExpression expression);
 
         internal abstract void WritePathExpressionElement(IEdmPathExpression expression);
+
+        internal abstract void WriteAnnotationPathExpressionElement(IEdmPathExpression expression);
 
         internal abstract void WritePropertyPathExpressionElement(IEdmPathExpression expression);
 
