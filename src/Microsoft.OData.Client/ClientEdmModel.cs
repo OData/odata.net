@@ -323,12 +323,12 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                // type is a complex type. Return all types on the hierarchy where there are properties defined.
+                // type is a complex type. Return all types on the hierarchy with or without properties defined.
                 do
                 {
                     hierarchy.Insert(0, type);
                 }
-                while ((type = c.PlatformHelper.GetBaseType(type)) != null && ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).Any());
+                while ((type = c.PlatformHelper.GetBaseType(type)) != null);
             }
 
             return hierarchy.ToArray();
