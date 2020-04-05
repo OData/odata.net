@@ -345,8 +345,7 @@ namespace Microsoft.OData.Client
                     result = this.materializer.Read();
                     if (result)
                     {
-                        BaseEntityType entity = this.materializer.CurrentValue as BaseEntityType;
-                        if (entity != null)
+                        if (this.materializer.CurrentValue is IBaseEntityType entity)
                         {
                             entity.Context = this.responseInfo.Context;
                         }
