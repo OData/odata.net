@@ -291,6 +291,21 @@ namespace Microsoft.OData.Client
         /// <returns>True if the client property type should be written because the property definitely not defined on the server type.</returns>
         internal bool ShouldWriteClientTypeForOpenServerProperty(IEdmProperty clientProperty, string serverTypeName)
         {
+            return ShouldWriteClientTypeForOpenServerProperty(clientProperty.Name, serverTypeName);
+        }
+
+        /// <summary>
+        /// Determines whether or not the client type should be written for a property that is not defined on the server.
+        /// DEVNOTE: If there is no server model, the declaring type is complex, or the server type cannot be
+        /// found then the server type will be assumed to match the client type.
+        /// This is done this way to prevent getting this wrong if the server property is defined, but we cannot find it for some reason.
+        /// So if the types do not match, or we aren't able to align them, we will not write the type name, allowing the server to interpret it as the correct type.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <param name="serverTypeName">The server type name of the current entity.</param>
+        /// <returns>True if the client property type should be written because the property definitely not defined on the server type.</returns>
+        internal bool ShouldWriteClientTypeForOpenServerProperty(string propertyName, string serverTypeName)
+        {
             if (serverTypeName == null)
             {
                 // if the server side type cannot be found, then assume that its types match the client types.
@@ -311,7 +326,7 @@ namespace Microsoft.OData.Client
             }
 
             // if the property is not defined, then write the type name
-            return serverType.FindProperty(clientProperty.Name) == null;
+            return serverType.FindProperty(propertyName) == null;
         }
 
         /// <summary>

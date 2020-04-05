@@ -713,7 +713,7 @@ namespace Microsoft.OData.Client.Materialization
 
             IDictionary<string, object> dynamicPropertiesDictionary;
             // Dictionary not found or key with matching name already exists
-            if (!TryGetDynamicPropertiesDictionary(entry.ResolvedObject, out dynamicPropertiesDictionary) 
+            if (!ClientTypeUtil.TryGetDynamicPropertiesDictionary(entry.ResolvedObject, out dynamicPropertiesDictionary)
                 || dynamicPropertiesDictionary.ContainsKey(link.Name))
             {
                 return;

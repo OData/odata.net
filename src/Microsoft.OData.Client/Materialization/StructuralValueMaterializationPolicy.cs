@@ -335,7 +335,7 @@ namespace Microsoft.OData.Client.Materialization
             
             IDictionary<string, object> dynamicPropertiesDictionary;
             // Dictionary not found or key with matching name already exists
-            if (!TryGetDynamicPropertiesDictionary(instance, out dynamicPropertiesDictionary) 
+            if (!ClientTypeUtil.TryGetDynamicPropertiesDictionary(instance, out dynamicPropertiesDictionary) 
                 || dynamicPropertiesDictionary.ContainsKey(property.Name))
             {
                 return;
@@ -404,40 +404,6 @@ namespace Microsoft.OData.Client.Materialization
 
                 return;
             }
-        }
-
-        /// <summary>
-        /// Returns true if the <paramref name="instance"/> contains an non-null dictionary property of string and object
-        /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
-        /// </summary>
-        /// <param name="instance">Object with expected dictionary property</param>
-        /// <param name="dynamicPropertiesDictionary">Reference to the dictionary</param>
-        /// <returns>true if expected dictionary is found</returns>
-        internal static bool TryGetDynamicPropertiesDictionary(object instance, out IDictionary<string, object> dynamicPropertiesDictionary)
-        {
-            Debug.Assert(instance != null, $"{nameof(instance)} != null");
-
-            dynamicPropertiesDictionary = default(IDictionary<string, object>);
-
-            PropertyInfo propertyInfo = instance.GetType().GetProperties().Where(p =>
-                                !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
-                                typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)
-                            ).FirstOrDefault();
-
-            if (propertyInfo == null)
-            {
-                return false;
-            }
-
-            dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(instance);
-
-            // Is property initialized?
-            if (dynamicPropertiesDictionary == null)
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }
