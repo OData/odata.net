@@ -86,7 +86,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(resource != null, $"{nameof(resource)} !=null");
             Debug.Assert(odataProperties != null, $"{nameof(odataProperties)} != null");
 
-            // TODO: Populate dynamic properties only if this is an open (entity or complex) type
+            // Populate dynamic properties only if this is an open (entity or complex) type
             if (!ClientTypeUtil.IsInstanceOfOpenType(resource, this.requestInfo.Model))
             {
                 return;
@@ -523,9 +523,12 @@ namespace Microsoft.OData.Client
                     });
             }
 
-            // TypeName for complex types need to be the client type name since it will be looked up in the client model
-            // Set the type name to use for client type lookups and validation
-            resourceSet.TypeName = GetCollectionName(collectionItemType.FullName);  // Mandatory for a dynamic property
+            if (isDynamicProperty)
+            {
+                // TypeName for complex types need to be the client type name since it will be looked up in the client model
+                // Set the type name to use for client type lookups and validation
+                resourceSet.TypeName = GetCollectionName(collectionItemType.FullName);  // Mandatory for a dynamic property
+            }
 
             // Ideally, we should not set type annotation on collection value.
             // To keep backward compatibility, we'll keep it in request body, but do not include it in url.
