@@ -29,7 +29,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // TODO : Reactive this test cases after merging entity and complex for writer
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeComplexsReturnEntities()
         {
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
@@ -54,7 +54,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(2, customers.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeComplexReturnEntity()
         {
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
@@ -69,7 +69,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.IsNotNull(customer);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntityTakeCollectionReturnEntities()
         {
             var customerQuery = new DataServiceQuerySingle<Customer>(this.TestClientContext, "Customers(3)");
@@ -88,7 +88,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(2, orders.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeEntitiesReturnEntities()
         {
             var orders = new[]
@@ -115,7 +115,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(1, customers.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeEntityReferenceReturnEntity()
         {
             var order = new Order()
@@ -130,7 +130,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(1, customers.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeEntityReturnEntities()
         {
             var order = new Order()
@@ -146,7 +146,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.AreEqual(1, customers.Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesTakeEntityReferencesReturnEntities()
         {
             var orders = new[]
@@ -194,7 +194,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.IsNotNull(orders[1].Customer);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FunctionOfEntitiesReturnEntitiesFilter()
         {
             var orders = this.TestClientContext.Orders.GetOrdersByNote("1111").Where(o => o.ID < 1).ToList();

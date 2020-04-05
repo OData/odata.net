@@ -52,7 +52,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
         /// <summary>
         /// Tests for the ODataVersion utility methods.
         /// </summary>
-        [TestMethod, Variation]
+        //--#comment#--[TestMethod, Variation]
         public void GetVersionUtilTest()
         {
 

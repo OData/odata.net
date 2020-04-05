@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void EntityReferenceLinkWithAnnotationShouldWork()
         {
             foreach (var mimeType in mimeTypes)
@@ -52,7 +52,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void EntityReferenceLinksWithAnnotationShouldWork()
         {
             foreach (var mimeType in mimeTypes)
@@ -68,7 +68,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ODataEntryWithAnnotationInReferenceLinkShouldWork()
         {
             foreach (var mimeType in mimeTypes)
@@ -86,7 +86,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         }
 
         // TODO GitHub#346 - Support writting instance annotations for expanded feed
-        // [TestMethod] // github issuse: #896
+        // //--#comment#--[TestMethod] // github issuse: #896
         public void ODataEntryWithAnnotationInReferenceLinksShouldWork()
         {
             foreach (var mimeType in mimeTypes)

@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.VisualStudio.SharePoint.Explorer.Extensions</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes">
+      <summary>Defines IDs for built-in Server Explorer nodes that represent individual components on a SharePoint site, such as nodes that represent lists, fields, or content types.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes.ContentTypeNode">
+      <summary>Specifies the ID for nodes that represent a Microsoft.SharePoint.SPContentType.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes.FeatureNode">
+      <summary>Specifies the ID for nodes that represent a Microsoft.SharePoint.SPFeature.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes.FieldNode">
+      <summary>Specifies the ID for nodes that represent a Microsoft.SharePoint.SPField that is attached to a content type or list.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes.ListNode">
+      <summary>Specifies the ID for nodes that represent a Microsoft.SharePoint.SPList.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes.ListTemplateNode">
+      <summary>Specifies the ID for nodes that represent a Microsoft.SharePoint.SPListTemplate.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes.ListViewNode">
+      <summary>Specifies the ID for nodes that represent a Microsoft.SharePoint.SPView.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes.WorkflowAssociationNode">
+      <summary>Specifies the ID for nodes that represent a Microsoft.SharePoint.Workflow.SPWorkflowAssociation.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ExtensionNodeTypes.WorkflowTemplateNode">
+      <summary>Specifies the ID for nodes that represent a Microsoft.SharePoint.Workflow.SPWorkflowTemplate.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.FeatureScope">
+      <summary>Specifies the scope of a Microsoft.SharePoint.SPFeature that a Server Explorer node represents.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.FeatureScope.Web">
+      <summary>The node represents a feature that has Web-level scope.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.FeatureScope.Site">
+      <summary>The node represents a feature that has site-level scope.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.FeatureScope.WebApplication">
+      <summary>The node represents a feature that has Web application-level scope.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.FeatureScope.Farm">
+      <summary>The node represents a feature that has farm-level scope.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IContentTypeNodeInfo">
+      <summary>Provides information about the content type (that is, the Microsoft.SharePoint.SPContentType) that is represented by a node in Server Explorer. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IContentTypeNodeInfo.Name">
+      <summary>Gets the name of the content type.</summary>
+      <returns>The name of the content type.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFeatureNodeInfo">
+      <summary>Provides information about the Feature (that is, the Microsoft.SharePoint.SPFeature) that is represented by a node in Server Explorer. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFeatureNodeInfo.Id">
+      <summary>Gets the ID of the feature.</summary>
+      <returns>The ID of the feature.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFeatureNodeInfo.Name">
+      <summary>Gets the name of the feature.</summary>
+      <returns>The name of the feature.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFeatureNodeInfo.Scope">
+      <summary>Gets a <see cref="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.FeatureScope" /> value that represents the scope of the feature.</summary>
+      <returns>The scope of the feature.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFieldNodeInfo">
+      <summary>Provides information about the field (that is, the Microsoft.SharePoint.SPField) that is represented by a node in Server Explorer. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFieldNodeInfo.ContentTypeName">
+      <summary>Gets the name of the content type that this field is associated with, if any.</summary>
+      <returns>The name of the content type that this field is associated with</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFieldNodeInfo.Id">
+      <summary>Gets the ID of the field.</summary>
+      <returns>The ID of the field.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFieldNodeInfo.IsHidden">
+      <summary>Gets a value that indicates whether the field is hidden. </summary>
+      <returns>true if the field is hidden; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFieldNodeInfo.ListId">
+      <summary>Gets the ID of the list that this field is associated with, if any.</summary>
+      <returns>The ID of the list that this field is associated with.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IFieldNodeInfo.Title">
+      <summary>Gets the name of the field.</summary>
+      <returns>The name of the field.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListNodeInfo">
+      <summary>Provides information about the list (that is, the Microsoft.SharePoint.SPList) that is represented by a node in Server Explorer. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListNodeInfo.Category">
+      <summary>Gets a <see cref="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListCategory" /> value that specifies the category that the list belongs to.</summary>
+      <returns>The category that the list belongs to.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListNodeInfo.DefaultViewUrl">
+      <summary>Gets the URL of the default view for the list.</summary>
+      <returns>The URL of the default view for the list.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListNodeInfo.Id">
+      <summary>Gets the ID of the list.</summary>
+      <returns>The ID of the list.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListNodeInfo.IsHidden">
+      <summary>Gets a value that indicates whether the list is hidden. </summary>
+      <returns>true if the list is hidden; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListNodeInfo.Title">
+      <summary>Gets the title of the list.</summary>
+      <returns>The title of the list.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListTemplateNodeInfo">
+      <summary>Provides information about the list template (that is, the Microsoft.SharePoint.SPListTemplate) that is represented by a node in Server Explorer. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListTemplateNodeInfo.Category">
+      <summary>Gets a <see cref="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListTemplateCategory" /> value that specifies the category that the list template belongs to.</summary>
+      <returns>The category that the list template belongs to.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListTemplateNodeInfo.IsHidden">
+      <summary>Gets a value that indicates whether the list template is hidden. </summary>
+      <returns>true if the list template is hidden; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListTemplateNodeInfo.Name">
+      <summary>Gets the name of the list template.</summary>
+      <returns>The name of the list template.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListViewNodeInfo">
+      <summary>Provides information about the list view (that is, the Microsoft.SharePoint.SPView) that is represented by a node in Server Explorer. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListViewNodeInfo.Id">
+      <summary>Gets the ID of the view.</summary>
+      <returns>The ID of the view.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListViewNodeInfo.ListId">
+      <summary>Gets the ID of the Microsoft.SharePoint.SPList that this view is associated with.</summary>
+      <returns>The ID of the Microsoft.SharePoint.SPList that this view is associated with.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListViewNodeInfo.Text">
+      <summary>Gets the text of the view.</summary>
+      <returns>The text of the view.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IListViewNodeInfo.Url">
+      <summary>Gets the URL of the view.</summary>
+      <returns>The URL of the view.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IWorkflowAssociationNodeInfo">
+      <summary>Provides information about the workflow association (that is, the Microsoft.SharePoint.Workflow.SPWorkflowAssociation) that is represented by a node in Server Explorer. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IWorkflowAssociationNodeInfo.Id">
+      <summary>Gets the ID of the workflow association.</summary>
+      <returns>The ID of the workflow association.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IWorkflowAssociationNodeInfo.ListId">
+      <summary>Gets the ID of the Microsoft.SharePoint.SPList that the Microsoft.SharePoint.Workflow.SPWorkflowAssociation is attached to.</summary>
+      <returns>The ID of the Microsoft.SharePoint.SPList that the Microsoft.SharePoint.Workflow.SPWorkflowAssociation is attached to.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IWorkflowAssociationNodeInfo.Name">
+      <summary>Gets the name of the workflow association.</summary>
+      <returns>The name of the workflow association.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IWorkflowTemplateNodeInfo">
+      <summary>Provides information about the workflow template (that is, the Microsoft.SharePoint.Workflow.SPWorkflowTemplate) that is represented by a node in Server Explorer. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.IWorkflowTemplateNodeInfo.Id">
+      <summary>Gets the ID of the workflow template.</summary>
+      <returns>The ID of the workflow template.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListCategory">
+      <summary>Specifies the category of a Microsoft.SharePoint.SPList that a Server Explorer node represents.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListCategory.DocumentLibrary">
+      <summary>The node represents a document library.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListCategory.List">
+      <summary>The node represents a list.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListTemplateCategory">
+      <summary>Specifies the category of a Microsoft.SharePoint.SPListTemplate that a Server Explorer node represents.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListTemplateCategory.Other">
+      <summary>The node represents a list template of the Web Pages category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListTemplateCategory.Libraries">
+      <summary>The node represents a list template of the Libraries category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListTemplateCategory.Communications">
+      <summary>The node represents a list template of the Communications category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListTemplateCategory.Tracking">
+      <summary>The node represents a list template of the Tracking category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.SharePoint.Explorer.Extensions.ListTemplateCategory.CustomLists">
+      <summary>The node represents a list template of the Custom Lists category.</summary>
+    </member>
+  </members>
+</doc>

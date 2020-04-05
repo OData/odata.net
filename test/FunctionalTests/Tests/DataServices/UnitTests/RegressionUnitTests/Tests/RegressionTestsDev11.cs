@@ -687,7 +687,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region For EF, when FK is part of the PK, setting just the reference property does not work
-            [TestMethod, Variation("For EF, when FK is part of the PK, setting just the reference property does not work")]
+            //--#comment#--[TestMethod, Variation("For EF, when FK is part of the PK, setting just the reference property does not work")]
             public void SettingJustReferencePropertyWhenFKIsPartOfPKShouldFail()
             {
                 string jsonOfficePayload = "{ ID: 1234, OfficeNumber: 1240, FloorNumber: 1, BuildingName: 'Building 18' }";
@@ -723,7 +723,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region In PUT requests to EF provider, we fire change interceptors with entities which do not have the new value
-            [TestMethod, Variation("In PUT requests to EF provider, we fire change interceptors with entities which do not have the new value")]
+            //--#comment#--[TestMethod, Variation("In PUT requests to EF provider, we fire change interceptors with entities which do not have the new value")]
             public void FireChangeInterceptorsInPutToEFShouldWork()
             {
                 TestUtil.RunCombinations(new Type[] { typeof(EFFK.CustomObjectContextPOCO), typeof(EFFK.CustomObjectContextPOCOProxy) },
@@ -2025,7 +2025,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
             }
 
-            [TestMethod, Variation("Tests that a 404 is returned from a request when an ActionProvider's CreateInvokable returns null.")]
+            //--#comment#--[TestMethod, Variation("Tests that a 404 is returned from a request when an ActionProvider's CreateInvokable returns null.")]
             public void ShouldReturn404WhenActionProviderCreateInvokableReturnsNull()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -2530,7 +2530,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region Errors when sending null values for non-nullable value-type server-generated columns on EF
-            [TestMethod, Variation("Errors when sending null values for non-nullable value-type server-generated columns on EF")]
+            //--#comment#--[TestMethod, Variation("Errors when sending null values for non-nullable value-type server-generated columns on EF")]
             public void SendNullValueForNonNullableValueTypeOnEF()
             {
                 foreach (var contextType in new[] { typeof(AstoriaUnitTests.ObjectContextStubs.CustomObjectContext), typeof(EFFK.CustomObjectContextPOCO) })
@@ -2586,7 +2586,7 @@ Accept: application/atom+xml
             #endregion
 
             #region Edm Version
-            [TestMethod, Variation("Fix for: EDM version does not get a bump when the first Function Import is a service operation and there are actions later in the list")]
+            //--#comment#--[TestMethod, Variation("Fix for: EDM version does not get a bump when the first Function Import is a service operation and there are actions later in the list")]
             public void EdmVersionShouldBe40IfThereIsAnAction()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())

@@ -19,14 +19,16 @@
   
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
     <ProjectReference Include="..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-    
+
     <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
- 
+
     <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-    
- 
-    
+
+    <ProjectReference Include="..\Framework\Core\Microsoft.Test.OData.Framework.csproj" />
+
+
     <ProjectReference Include="..\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj" />
   </ItemGroup>
   <ItemGroup>

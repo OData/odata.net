@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Service</AssemblyName>
-    
-  
+
+
     <DefineConstants>$(DefineConstants);ODATA_SERVICE</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    
+
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 
- 
+
   </PropertyGroup>
   <Import Project="..\Build.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

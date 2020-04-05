@@ -51,10 +51,20 @@
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
 
+
+  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'net45'">
+    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
+  </PropertyGroup>
+  
   <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v4.5'">
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition ="'$(TargetFramework)' == 'net45'">
+    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
+  </PropertyGroup>
+  
+  
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
     <NoWarn>$(NoWarn);1699;1570;1572;1573;1591;1607</NoWarn>
     <WarningsNotAsErrors>$(WarningsNotAsErrors);1058</WarningsNotAsErrors>

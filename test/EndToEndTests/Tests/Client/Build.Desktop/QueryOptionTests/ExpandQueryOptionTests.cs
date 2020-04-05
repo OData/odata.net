@@ -32,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
         #region Test Method
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ExpandBasicQueryOptionTest()
         {
             foreach (var mimeType in mimeTypes)
@@ -104,7 +104,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ExpandMiscQueryOptionsTest()
         {
             foreach (var mimeType in mimeTypes)

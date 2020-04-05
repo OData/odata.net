@@ -20,7 +20,7 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class DistinctAssociationSetScenarioTest
     {
-        [TestCategory("Partition2"), TestMethod]
+        //--#comment#--[TestCategory("Partition2"), TestMethod]
         public void MultipleAssociationsToTheSameEntitySetResultInDistinctAssociationSetNames()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcess())

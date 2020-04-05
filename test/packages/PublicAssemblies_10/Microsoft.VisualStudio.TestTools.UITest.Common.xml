@@ -1,0 +1,1858 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.VisualStudio.TestTools.UITest.Common</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.#ctor"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.Actions"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.AddRange(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction})"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.Count"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.Delete(System.Int64)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.DeleteRange(System.Int64,System.Int64)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.Equals(Microsoft.VisualStudio.TestTools.UITest.Common.ActionList)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.Equals(System.Object)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.Find(System.Int64)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.FindIndex(System.Int64)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.GetActionsOfType``1">
+      <typeparam name="T"></typeparam>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.GetHashCode"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ActionList.GetRange(System.Int64,System.Int64)"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.AggregatedAction">
+      <summary>Provides a base class for all actions that can do any of several tasks.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.AggregatedAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.AggregatedAction" /> class. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.AggregatedAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.AggregatedAction" /> class for the provided UI element. </summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object representing an element in the UI.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction">
+      <summary>Represents an assertion to be included in the test between other actions.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction" /> class for serialization and deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,System.String,System.String,Microsoft.VisualStudio.TestTools.UITest.Common.AssertCondition,System.Type)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction" /> class.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" />.</param>
+      <param name="propertyName">The name of the property.</param>
+      <param name="expectedValue"></param>
+      <param name="propertyCondition">A member of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.AssertCondition" /> enumeration.</param>
+      <param name="type">A <see cref="T:System.Type" /> indicating the type of the property value.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction.ExpectedValue">
+      <summary>Gets the expected value as a string.</summary>
+      <returns>The value as a string.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction.PropertyCondition">
+      <summary>Gets the comparison to apply to the property and the expected value.</summary>
+      <returns>The comparison to apply.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction.TypeName">
+      <summary>The name of the property value type provided when this action was created.</summary>
+      <returns>The name of the property type.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction.ValueType">
+      <summary>The type of the property value.</summary>
+      <returns>The type of the property value.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.AssertCondition">
+      <summary>Indicates how an assertion in a user interface test compares values.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.AssertCondition.AreEqual">
+      <summary>Asserts whether the value is equal to the expected value.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.AssertCondition.AreNotEqual">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.AssertCondition.IsNull">
+      <summary>Asserts whether the object is null.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.AssertCondition.IsNotNull">
+      <summary>Asserts whether the object is not null.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.AssertCondition.IsInstanceOfType">
+      <summary>Asserts whether the instance is of the specified type.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction">
+      <summary>Represents a test action that can do any of several browser tasks.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,Microsoft.VisualStudio.TestTools.UITest.Common.BrowserActionType)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction" /> class for XML serialization or deserialization.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+      <param name="actionType">A member of the  <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserActionType" /> enumeration.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction.ActionName">
+      <summary>Gets the name of the action.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction.ActionType">
+      <summary>Gets or sets the type of action.</summary>
+      <returns>The action type.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserActionType">
+      <summary>Specifies the kind of action for a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction" />.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserActionType.Back">
+      <summary>The browser moves back one page.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserActionType.Forward">
+      <summary>The browser moves forward one page.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserActionType.Refresh">
+      <summary>The browser refreshes the page.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserActionType.Stop">
+      <summary>The browser stops the current operation.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.CustomInvoker">
+      <summary>Provides the ability for invoking custom actions.  </summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction">
+      <summary>Specifies a time delay after executing subsequent actions in a UI test.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction" /> class for serialization or deserialization. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction.#ctor(System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction" /> class using the provided delay duration. </summary>
+      <param name="duration">The number of seconds to delay after executing each action.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction.Duration">
+      <summary>Gets or sets the number of seconds to delay after executing each action in a UI test.</summary>
+      <returns>The number of seconds to delay.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction">
+      <summary>Represents a mouse drag action.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,System.Windows.Forms.MouseButtons)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction" /> class using the provided element and buttons.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+      <param name="mouseButton">A member of the <see cref="T:System.Windows.Forms.MouseButtons" /> enumeration to indicate which button is pressed.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction.MouseButton">
+      <summary>Gets or sets a value indicating which mouse button is pressed.</summary>
+      <returns>The mouse button that is pressed.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction.MoveBy">
+      <summary>Gets or sets where to drag the object.</summary>
+      <returns>The location to which the object is dragged.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction.StartLocation">
+      <summary>Gets or sets the starting point for the drag operation.</summary>
+      <returns>The starting point.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction">
+      <summary>Represents a mouse drag and drop operation.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,System.Windows.Forms.MouseButtons)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction" /> class using the provided elements and mouse button setting.</summary>
+      <param name="sourceUIElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object representing the element on which the drag operation begins.</param>
+      <param name="targetUIElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object representing the element on which the drag operation ends.</param>
+      <param name="mouseButton">A member of the <see cref="T:System.Windows.Forms.MouseButtons" /> enumeration indicating which mouse button is pressed.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.MouseButton">
+      <summary>Gets or sets which button on the mouse causes the drag and drop operation.</summary>
+      <returns>The mouse button indicator.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.SourceElement">
+      <summary>Gets or sets the element where the drag drop operation begins.</summary>
+      <returns>The source UI element.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.SourceElementName">
+      <summary>Gets or sets the name of the element where the drag drop operation begins.</summary>
+      <returns>The name of the source UI element.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.StartLocation">
+      <summary>Gets or sets the starting point for the drag and drop operation.</summary>
+      <returns>The starting point.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.StopLocation">
+      <summary>Gets or sets the ending point for the drag and drop operation.</summary>
+      <returns>The ending point.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.TargetElement">
+      <summary>Gets or sets the element where the drag drop operation begins.</summary>
+      <returns>The source UI element.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction.TargetElementName">
+      <summary>Gets or sets the name of the element where the drag drop operation begins.</summary>
+      <returns>The name of the source UI element.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.EncryptionInformation">
+      <summary>Represents information about the encryption of values for <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction" /> and <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction" />.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.EncryptionInformation.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.EncryptionInformation" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.EncryptionInformation.#ctor(System.String,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.EncryptionInformation" /> class.</summary>
+      <param name="value">The value of the associated action.</param>
+      <param name="encode">true to encode the value.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.EncryptionInformation.Encoded">
+      <summary>Gets or sets whether the value is encrypted.</summary>
+      <returns>Whether the value is encrypted.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.EncryptionInformation.Value">
+      <summary>Gets or sets the value.</summary>
+      <returns>The string value.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.EncryptionInformation.ValueWrapper">
+      <summary>Gets or sets the value for serialization.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction">
+      <summary>Represents an action used by the test recorder to report that it was unable to record an action.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction" /> class for XML serialization or deserialization. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction" /> class using the provided descriptive message.</summary>
+      <param name="message">The description of the error.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction.#ctor(System.String,Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction" /> class using the descriptive message and element.</summary>
+      <param name="message">The description of the error.</param>
+      <param name="uiElement">The element where the error occurred.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction.#ctor(System.String,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction" /> class using the descriptive message and identifier.</summary>
+      <param name="message">The description of the error.</param>
+      <param name="idTag">The error identifier.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction.IdTag">
+      <summary>Gets or sets the identifier for the error.</summary>
+      <returns>The identifier.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction.Message">
+      <summary>Gets or sets a descriptive error message.</summary>
+      <returns>The error description.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings">
+      <summary>Represents configuration settings for Internet Explorer.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.AutoCompleteForm">
+      <summary>Gets the auto complete setting for forms.</summary>
+      <returns>The user's auto complete form setting.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.AutoCompletePassword">
+      <summary>Gets the auto complete value for passwords.</summary>
+      <returns>The auto complete password setting for.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.DefaultBrowser">
+      <summary>Gets the default browser setting.</summary>
+      <returns>The default browser setting.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.EnhancedSecurityConfiguration">
+      <summary>Gets the enhanced security configuration settings.</summary>
+      <returns>The enhanced security configuration settings.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.InformationBar">
+      <summary>Gets the information bar setting.</summary>
+      <returns>The information bar setting.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.InternetZoneSecurity">
+      <summary>Gets the Internet zone security settings.</summary>
+      <returns>The Internet zone security settings.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.IntranetZoneSecurity">
+      <summary>Gets the intranet zone security settings.</summary>
+      <returns>The intranet zone security settings.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.PhishingFilter">
+      <summary>Gets the phishing filter settings.</summary>
+      <returns>The phishing filter settings.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.PopupBlocker">
+      <summary>Gets the popup blocker settings.</summary>
+      <returns>The popup blocker settings.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.RestrictedZoneSecurity">
+      <summary>Gets the restricted zone security settings.</summary>
+      <returns>The restricted zone security settings.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.TabbedBrowsing">
+      <summary>Gets the tabbed browsing settings.</summary>
+      <returns>The tabbed browsing settings.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.ThrowIfBrowserVersionNotSupported">
+      <summary>Verifies that the currently installed version of IE is supported, and if not throws an exception.</summary>
+      <exception cref="T:System.TechnologyNotSupportedException">Either the current version of IE is not supported by the UI testing framework, or IE is not installed.</exception>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.TrustedZoneSecurity">
+      <summary>Gets the trusted zone security settings.</summary>
+      <returns>The trusted zone security settings.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IESettings.Version">
+      <summary>Gets the version of the installed Internet Explorer.</summary>
+      <returns>The version of the installed Internet Explorer.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.InputAction">
+      <summary>Represents the base class for all text-based actions.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.InputAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.InputAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.InputAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.InputAction" /> class using the provided element.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.InputAction.IsGlobalHotkey">
+      <summary>Gets or sets whether the input is a global hot key.</summary>
+      <returns>true if the input represents a global hot key; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.InputAction.ModifierKeys">
+      <summary>Gets or sets which modifier keys were pressed.</summary>
+      <returns>The modifier keys.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack">
+      <summary>This interface provides access for aggregator plug-ins to the action list of the UI test recorder.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack.Count">
+      <summary>Gets the number of actions in this stack.</summary>
+      <returns>The number of actions.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack.Peek">
+      <summary>Returns the topmost element from the stack without removing it.</summary>
+      <returns>The topmost element.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack.Peek(System.Int32)">
+      <summary>Returns the element at the provided index from the stack without removing it.</summary>
+      <returns>The element at the specified index.</returns>
+      <param name="nth">An int indicating the index of the element to retrieve.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack.Pop">
+      <summary>Removes and returns the topmost element from the stack</summary>
+      <returns>The topmost element.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack.Pop(System.Int32)">
+      <summary>Removes and returns the element at the specified index in the stack.</summary>
+      <returns>The element at the specified index.</returns>
+      <param name="nth">An int indicating the index of the element to remove and retrieve.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack.Push(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction)">
+      <summary>Inserts the provided test action at the top of the stack.</summary>
+      <param name="element">The <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> to push onto the stack.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack.SyncRoot">
+      <summary>Gets the object used to lock and synchronize operations on the stack.</summary>
+      <returns>The SyncRoot object.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestBuilder"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestBuilder.IsDirty"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestBuilder.UITest"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyActionType">
+      <summary>Represents the kind of action to perform on a text input.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.KeyActionType.KeyDown">
+      <summary>The action represents pressing a key on the keyboard.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.KeyActionType.KeyUp">
+      <summary>The action represents releasing a key on the keyboard.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.KeyActionType.KeyPress">
+      <summary>The action represents pressing and releasing a key on the keyboard.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction">
+      <summary>Represents individual keyboard user actions.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Common.KeyActionType,System.Windows.Forms.Keys,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction" /> class using the provided type of key event, the key that was pressed, and the value input by that key.</summary>
+      <param name="actionType">A member o fht e <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyActionType" /> enumeration.</param>
+      <param name="key">A member of the <see cref="T:System.Windows.Forms.Keys" /> enumeration.</param>
+      <param name="keyValue">The value generated by the key press.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,Microsoft.VisualStudio.TestTools.UITest.Common.KeyActionType,System.Windows.Forms.Keys,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction" /> class using the provided element, type of key event, the key that was pressed, and the value input by that key.</summary>
+      <param name="uiElement">The <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> that receives the input.</param>
+      <param name="actionType">A member of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyActionType" /> enumeration.</param>
+      <param name="key">A member of the <see cref="T:System.Windows.Forms.Keys" /> enumeration.</param>
+      <param name="keyValue">The value generated by the key press.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.ActionName">
+      <summary>Gets or sets the name of this action.</summary>
+      <returns>The name of this action.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.ActionType">
+      <summary>Gets or sets the type of keyboard operation.</summary>
+      <returns>The type of keyboard action.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.AdditionalInfo">
+      <summary>Gets additional information about this action, usually used by an aggregator of test actions. The set procedure is not supported in this class.</summary>
+      <returns>Addition text information.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.Key">
+      <summary>Gets or sets the key pressed.</summary>
+      <returns>The key that was pressed.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.KeyValue">
+      <summary>Gets or sets the input value generated by the key press.</summary>
+      <returns>The input value.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction.ValueAsString">
+      <summary>Gets or the input value as a string. The set procedure is not supported in this class.</summary>
+      <returns>The input value as a string.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction">
+      <summary>Represents a UI test action that launches an application.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction" /> class for XML serializaton or deserialization. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction" /> class using the provided executable file name. </summary>
+      <param name="fileName">The full path for the executable file.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.#ctor(System.String,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction" /> class using the provided executable file name and command line arguments.</summary>
+      <param name="fileName">The full path for the executable file.</param>
+      <param name="arguments">A string containing the command line arguments.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.AlternateFileName">
+      <summary>Gets or sets the alternate transformed full path of the executable file.</summary>
+      <returns>The full path.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.Arguments">
+      <summary>Gets or sets the command line arguments for launching the executable.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.Domain">
+      <summary>Gets or sets the domain of the username used to launch the executable.</summary>
+      <returns>The domain of the username.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.FileName">
+      <summary>Gets or sets the full path name of the executable file.</summary>
+      <returns>The full path name.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.Password">
+      <summary>Gets or sets the password for the username used to launch the executable.</summary>
+      <returns>The password for the username.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.RunAsAdmin">
+      <summary>Gets or sets whether to launch the application as an admin.</summary>
+      <returns>true to launch as an admin; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.RunAsAdminWrapper">
+      <summary>Gets or sets the value of <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.RunAsAdmin" /> as a string for serialization.</summary>
+      <returns>If <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.RunAsAdmin" /> is true, returns the value as a string; otherwise, null.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction.UserName">
+      <summary>Gets or sets the user name used to launch the executable.</summary>
+      <returns>The user name.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction">
+      <summary>Provides a way to insert markers in an action sequence while causing no operation during playback.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction" /> class using the provided information. </summary>
+      <param name="markerInfo">Text information about the marker.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction.MarkerInformation">
+      <summary>Gets or sets information about this action.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerDirections">
+      <summary>Indicates the reason for a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction" />.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerDirections.None">
+      <summary>Indicates a marker, but for neither start nor end.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerDirections.Start">
+      <summary>Indicates a marker for the start of a process.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerDirections.End">
+      <summary>Indicates a marker for the end of a process.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerDirections.Both">
+      <summary>Indicates a marker for the end of one process and the start of another process.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerRegionType">
+      <summary>Indicates the scope of a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction" />.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerRegionType.Default">
+      <summary>Indicates the default.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerRegionType.Action">
+      <summary>Indicates a marker in a test action.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerRegionType.Assertion">
+      <summary>Indicates a marker as an assertion.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.MismatchType">
+      <summary>Indicates the type of mismatch for a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch" /> object.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MismatchType.SourceOnly">
+      <summary>The setting exists only in the source settings.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MismatchType.TargetOnly">
+      <summary>The setting exists only in the target settings.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MismatchType.DifferentFromSource">
+      <summary>The target setting is different from the source.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction">
+      <summary>Represents information about a mouse operation.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,System.Windows.Forms.MouseButtons,Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction" /> class using the provided element, button designation and type of action.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object where the mouse operation occurred.</param>
+      <param name="button">A member of the <see cref="T:System.Windows.Forms.MouseButtons" /> enumeration indicating which mouse button is pressed.</param>
+      <param name="actionType">A member of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType" /> enumeration indicating the kind of mouse operation.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.#ctor(System.Windows.Forms.MouseButtons,Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction" /> class using the provided button designation and type of action.</summary>
+      <param name="button">A member of the <see cref="T:System.Windows.Forms.MouseButtons" /> enumeration indicating which mouse button is pressed.</param>
+      <param name="actionType">A member of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType" /> enumeration indicating the kind of mouse operation.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.#ctor(System.Windows.Forms.MouseButtons,Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType,System.Drawing.Point)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction" /> class using the provided button designation, type of action, and location of the operation.</summary>
+      <param name="button">A member of the <see cref="T:System.Windows.Forms.MouseButtons" /> enumeration indicating which mouse button is pressed.</param>
+      <param name="actionType">A member of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType" /> enumeration indicating the kind of mouse operation.</param>
+      <param name="location">A <see cref="T:System.Drawing.Point" /> object indicating the location of the operation.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.AbsoluteLocation">
+      <summary>Gets or sets the screen location where the pointer operation took place.</summary>
+      <returns>The screen location for the operation.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.ActionName">
+      <summary>Gets or sets the name of this action.</summary>
+      <returns>The name of the action.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.ActionType">
+      <summary>Gets or sets the type of mouse action.</summary>
+      <returns>The type of the mouse action.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.Location">
+      <summary>Gets or sets the relative location within the current element where the pointer operation took place.</summary>
+      <returns>The relative element location of the mouse operation.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.MouseButton">
+      <summary>Gets or sets the mouse button that was pressed.</summary>
+      <returns>The mouse button.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction.WheelDirection">
+      <summary>Gets or sets the direction and amount in pixels of the mouse wheel motion.</summary>
+      <returns>A positive number indicates a forward direction (down); a negative number indicates a reverse direction (up).</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType">
+      <summary>Enumerates the types of possible mouse actions for the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction" />.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType.ButtonDown">
+      <summary>A button has been pressed.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType.ButtonUp">
+      <summary>A pressed button has been released.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType.Click">
+      <summary>A button has been clicked.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType.DoubleClick">
+      <summary>A button has been double-clicked.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType.Drag">
+      <summary>The mouse has been moved while a button is held down.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType.WheelRotate">
+      <summary>The mouse wheel has been rotated.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.MouseActionType.Hover">
+      <summary>The mouse pointer is hovering over an element.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction">
+      <summary>Represents an operation to navigate to a URL.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.#ctor(System.Uri)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction" /> class using the provided URL.</summary>
+      <param name="url">A <see cref="T:System.Uri" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.GetUri(System.String)">
+      <summary>Returns a <see cref="T:System.Uri" /> object for a URL address.</summary>
+      <returns>The URI object.</returns>
+      <param name="probableUri">A string URL address.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.IsParameterizable">
+      <summary>Gets whether this test action can be parameterized.</summary>
+      <returns>true if this test action can be parameterized; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.NewInstance">
+      <summary>Gets or sets whether the URL should be launched in a new window.</summary>
+      <returns>true to launch the URL in a new window; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.Url">
+      <summary>Gets or sets the URL to launch.</summary>
+      <returns>The URL to launch.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.UrlString">
+      <summary>Gets or sets the URL as a string.</summary>
+      <returns>Setting this property also changes the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction.Url" /> property value.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.NoOperationAction">
+      <summary>Represents a UI test action that doesn't do anything.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.NoOperationAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.NoOperationAction" /> class for XML serialization or deserialization. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.NoOperationAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.RemoveKeysAction">
+      <summary>Provides notice to aggregating test actions to remove this action and all preceding matching key actions from the test results.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.RemoveKeysAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.RemoveKeysAction" /> class.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.RemoveKeysAction.#ctor(System.Windows.Input.ModifierKeys,System.Windows.Forms.Keys)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.RemoveKeysAction" /> class using the provided keys and modifiers.</summary>
+      <param name="modifierKeys">A member of the <see cref="T:System.Windows.Input.ModifierKeys" /> enumeration.</param>
+      <param name="key">A member of the <see cref="T:System.Windows.Forms.Keys" /> enumeration.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.RemoveKeysAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.RemoveKeysAction.Key">
+      <summary>Gets or sets the matching key in the actions to be removed.</summary>
+      <returns>The key to match.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction">
+      <summary>Represents a test action that sends text or an array of keys.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction" /> class using the provided UI element.</summary>
+      <param name="element">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object representing the element on which the keys are sent.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.AdditionalInfo">
+      <summary>Gets or sets additional information about this action.</summary>
+      <returns>Additional information.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.IsActionOnProtectedElement">
+      <summary>Returns whether the associated element is protected.</summary>
+      <returns>true if the value is encrypted or the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.IsEncoded" /> property is true, or if the element is a password field; false if the text is equivalent to a <see cref="F:System.Windows.Forms.Keys.Tab" />, <see cref="F:System.Windows.Forms.Keys.Enter" />, or <see cref="F:System.Windows.Forms.Keys.Escape" /> key.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.IsEncoded">
+      <summary>Gets or sets whether the text value is encoded.</summary>
+      <returns>true if the text value is encoded; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.IsParameterizable">
+      <summary>Gets whether this action can be parameterized.</summary>
+      <returns>true if this action can be parameterized; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.Text">
+      <summary>Gets or sets the text to be sent to the element.</summary>
+      <returns>The text.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.TextValue">
+      <summary> Gets or sets the text of this action which may be encrypted based on the value of the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.IsEncoded" /> property. </summary>
+      <returns>The text of the action.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction.ValueAsString">
+      <summary>Gets or sets the value of this action as a string.</summary>
+      <returns>The text value of this action.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetBaseAction">
+      <summary>Provides a base class for those test actions that set value or set state.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetBaseAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetBaseAction" /> class for XML serialization or deserialization. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetBaseAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetBaseAction" /> class using the provided element.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetBaseAction.SourceElement">
+      <summary>Gets or sets the source element for this action.</summary>
+      <returns>The source element.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction">
+      <summary>Represents a test action that sets the state of the associated element.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,System.Object)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction" /> class using the provided element and value.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+      <param name="value">An <see cref="T:System.Object" /> representing the value this action will apply.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction.State">
+      <summary>Gets or sets the state value of this action.</summary>
+      <returns>The state value.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction.StateAsString">
+      <summary>Gets or sets the state value of this action as a string.</summary>
+      <returns>The state value of this action as a string.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction.States">
+      <summary>Gets or sets the state settings.</summary>
+      <returns>The state settings.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting">
+      <summary>Represents a unit of configuration setting information.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.#ctor(System.String,System.Object)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> class using the provided name and value.</summary>
+      <param name="name">The name for this setting.</param>
+      <param name="value">The value for this setting.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.#ctor(System.String,System.Object,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> class using the provided name, value, and warning level.</summary>
+      <param name="name">The name for this setting.</param>
+      <param name="value">The value for this setting.</param>
+      <param name="warningLevel">The warning level for this setting.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.Equals(Microsoft.VisualStudio.TestTools.UITest.Common.Setting)">
+      <summary>Determines whether the provided object is equal to this <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> object.</summary>
+      <returns>true if the two objects are equal; otherwise, false.</returns>
+      <param name="target">A <see cref=":Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.Equals(System.Object)">
+      <summary>Determines whether the provided object is equal to this <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> object.</summary>
+      <returns>true if the two objects are equal; otherwise, false.</returns>
+      <param name="obj">An object that can be cast as a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.GetHashCode"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.Name">
+      <summary>Gets or sets the name of the setting.</summary>
+      <returns>The name of the setting.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.ToString"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.Value">
+      <summary>Gets or sets the value of the setting as a string.</summary>
+      <returns>The value of the setting.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.Setting.WarningLevel">
+      <summary>Gets or sets the warning level of the setting.</summary>
+      <returns>The warning level</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.SettingGroup"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SettingGroup.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SettingGroup" /> class for XML serialization or deserialization. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SettingGroup.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SettingGroup" /> class using the provided group name. </summary>
+      <param name="name">The name of this setting group.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingGroup.GroupName">
+      <summary>Gets or sets the name of this setting group.</summary>
+      <returns>The name of the setting group.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingGroup.Setting">
+      <summary>Gets a collection of <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> objects.</summary>
+      <returns>The collection of settings.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SettingGroup.ToString"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch">
+      <summary>Represents the differences in the comparison of two <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" /> objects with the same name.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch" /> class using the provided name.</summary>
+      <param name="name">The name of this mismatch.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.#ctor(System.String,System.String,Microsoft.VisualStudio.TestTools.UITest.Common.MismatchType,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch" /> class using the provided name, value, type of mismatch, and warning level.</summary>
+      <param name="name">The name of the source setting.</param>
+      <param name="value">The value of the source setting</param>
+      <param name="mismatchType">The type of mismatch (either <see cref="F:Microsoft.VisualStudio.TestTools.UITest.Common.MismatchType.SourceOnly" /> or <see cref="F:Microsoft.VisualStudio.TestTools.UITest.Common.MismatchType.TargetOnly" />).</param>
+      <param name="warningLevel">The warning level of the setting.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.#ctor(System.String,System.String,System.String,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch" /> class using the provided setting name, source value, target value, and warning level.</summary>
+      <param name="name">The name of the setting.</param>
+      <param name="sourceValue">The value of the source setting.</param>
+      <param name="targetValue">The value of the target setting.</param>
+      <param name="warningLevel">The warning level of the setting.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.HelperText">
+      <summary>Gets or sets help text for this mismatch.</summary>
+      <returns>Help text.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.Message">
+      <summary>Gets or sets a description of the mismatch.</summary>
+      <returns>The descriptive message.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.MismatchType">
+      <summary>Gets or sets the type of mismatch.</summary>
+      <returns>The mismatch type.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.SettingGroup">
+      <summary>Gets or sets the setting group for this mismatch.</summary>
+      <returns>A setting group.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.SettingName">
+      <summary>Gets or sets the name of the setting.</summary>
+      <returns>The setting name.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.SourceValue">
+      <summary>Gets or sets the value of the source setting.</summary>
+      <returns>The source value.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.TargetValue">
+      <summary>Gets or sets the value of the target setting.</summary>
+      <returns>The target value.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.ToString">
+      <summary>Returns a string representation of this mismatch.</summary>
+      <returns>A string representation of this mismatch.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SettingMismatch.WarningLevel">
+      <summary>Gets or sets the warning level of the setting.</summary>
+      <returns>The warning level.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction">
+      <summary>Represents a test action that sets a value.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,System.Object)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction" /> class using the provided element and value.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+      <param name="value">A <see cref="T:System.Object" /> representing the value to set.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.IsActionOnProtectedElement">
+      <summary>Returns a value indicating whether the associated element is protected.</summary>
+      <returns>true if this action's <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.IsEncoded" /> property is true or the associated element is a password control; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.IsEncoded">
+      <summary>Gets or sets whether the value is encoded.</summary>
+      <returns>true if the value is encoded; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.IsParameterizable">
+      <summary>Gets whether this action can be parameterized.</summary>
+      <returns>true if this action can be parameterized; otherwise, false. The default is true.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.PreferEdit">
+      <summary>Gets or sets whether to use an edit operation for combo boxes rather than a select operation to set the value.</summary>
+      <returns>true to prefer edit; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.PreferEditWrapper">
+      <summary>Gets or sets the value of the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.PreferEdit" /> property as a string for serialization.</summary>
+      <returns>The value of the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.PreferEdit" /> property as a string if it is true; otherwise, null.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.TextValue">
+      <summary>Gets or sets the value of this action as a string.</summary>
+      <returns>The value of this action as a string.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.Type">
+      <summary>Gets or sets the type name of the value of this action.</summary>
+      <returns>The name of the type of the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.Value" /> property value.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.Value">
+      <summary>Gets or sets the value of this action.</summary>
+      <returns>The value of this action.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction.ValueAsString">
+      <summary>Gets or sets the value of this action as a string.</summary>
+      <returns>The value of this action as a string.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction">
+      <summary>Provides a reference to a set of shared steps for the current test.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction.#ctor(System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction" /> class using the provided numeric identifier for the set of shared steps. </summary>
+      <param name="id">A numerical identifier for shared steps.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction.SharedSetSetId">
+      <summary>Gets or sets the identifier for the set of shared steps.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction">
+      <summary>Represents a string assertion.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,System.String,System.String,Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertCondition,System.StringComparison)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction" /> class.</summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+      <param name="propertyName">The name of the string property.</param>
+      <param name="expectedValue"></param>
+      <param name="propertyCondition">A member of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertCondition" /> enumeration that specifies the results of the assertion comparison.</param>
+      <param name="comparison">A member of the <see cref="T:System.StringComparison" /> enumeration that specifies how strings are compared.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction.Comparison">
+      <summary>Specifies whether a string comparison should use the current culture or the invariant culture, word or ordinal sort rules, and be case-sensitive or case-insensitive.</summary>
+      <returns>The comparison elements.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction.PropertyCondition">
+      <summary>Gets or sets the results of the assertion comparison.</summary>
+      <returns>The results of the assertion comparison.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertCondition">
+      <summary>Indicates the relationship between the expected value and the actual string value.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertCondition.Matches">
+      <summary>The values match.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertCondition.DoesNotMatch">
+      <summary>The values do not match.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertCondition.StartsWith">
+      <summary>The actual value starts with the expected value.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertCondition.EndsWith">
+      <summary>The actual value ends with the expected value.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertCondition.Contains">
+      <summary>The actual value contains the expected value.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction">
+      <summary>Represents a marker in a test action sequence that is logged, but is not used by the playback framework.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction" /> class.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.#ctor(System.Int32,System.String,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction" /> class using the provided ID, marker information, and outcome.</summary>
+      <param name="stepId">An int representing the step identifier.</param>
+      <param name="markerInfo">Information about the marker.</param>
+      <param name="outcome">Description of the outcome of the marker.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.Direction">
+      <summary>Gets or sets the direction of the marker.</summary>
+      <returns>The direction of the marker.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.Disabled">
+      <summary>Gets or sets whether the marker is disabled.</summary>
+      <returns>true if the marker is disabled; otherwise, false.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.Equals(System.Object)">
+      <summary>Returns a value indicating whether the provided object is equal to this action object.</summary>
+      <returns>true if the objects are equal; otherwise, false.</returns>
+      <param name="other">An object that can be cast as a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction" />.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.GetHashCode"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.MarkerRegionType">
+      <summary>Gets or sets the marker region type.</summary>
+      <returns>The region type.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.Outcome">
+      <summary>Gets or sets the marker step outcome.</summary>
+      <returns>The outcome.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.StepId">
+      <summary>Gets or sets the marker step identifier.</summary>
+      <returns>The identifier.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.ToString">
+      <summary>Returns the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.StepId" />, <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.Direction" />, and whether it this step is <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.Disabled" /> as a string for debugging and tracing.</summary>
+      <returns>Returns </returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction.WorkItemId">
+      <summary>Gets or sets the identifier for an associated work item.</summary>
+      <returns>The associated work item identifier.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITest"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.#ctor"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.#ctor(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction})"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.#ctor(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction},Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Append(Microsoft.VisualStudio.TestTools.UITest.Common.UITest,System.Int64,System.Int64)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Append(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction})"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Append(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction},Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.AssemblyVersion"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.BindWithCurrentValues"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.CleanupActions"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.CompareEnvironments(Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironment,Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironment)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.CompareStoredEnvironmentWithCurrentEnvironment"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Configuration"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Create(System.IO.Stream)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Create(System.String)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.CreateAndAddParameter(Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject,System.String,System.String)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.CreateAndAddParameter(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction,System.String)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.CurrentActionList"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Equals(Microsoft.VisualStudio.TestTools.UITest.Common.UITest)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Equals(System.Object)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.ExecuteActions"></member>
+    <member name="E:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Executing"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.GetActionList(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListSection)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.GetHashCode"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Id"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.InitializeActions"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Maps"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Name"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.OnErrorActions"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Save(System.IO.Stream)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Save(System.String)"></member>
+    <member name="E:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Saving"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.SetAndBindParameterValues(System.Data.DataRow)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.ValueMap"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITest.Version"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction">
+      <summary>Provides a base class for test actions used with UI tests.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> class. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> class using the provided UI element. </summary>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object representing an element in the UI.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ActionName">
+      <summary>Gets the name of the action. The set procedure is not supported in this base class.</summary>
+      <returns>The name of the action.</returns>
+      <exception cref="T:System.NotSupportedException">An attempt was made to set the property value.</exception>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ActualThinkTime">
+      <summary>Gets or sets the think time after processing other playback parameters provided by the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.CodeGeneration.UIActionInterpreter" />, such as the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.CodeGeneration.UIActionInterpreter.ThinkTimeMultiplier" />.</summary>
+      <returns>The actual number of seconds.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.AdditionalInfo">
+      <summary>When implemented in a derived class, gets a string containing custom information.</summary>
+      <returns>Custom information.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.Comment">
+      <summary>Gets or sets a comment for this action.</summary>
+      <returns>This property can be set using the recorder UI. When recording, details of the user's actions are displayed in the recorder UI. The user can select it and add a comment, which updates this property.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ContinueOnError">
+      <summary>Gets or sets whether to continue even if this action fails.</summary>
+      <returns>true to continue even if the action fails; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ContinueOnErrorWrapper">
+      <summary>Gets or sets the value of the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ContinueOnError" /> property as a string for serialization.</summary>
+      <returns>If <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ContinueOnError" /> is true, returns the string representation of the value; otherwise, returns null.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ElapsedTime">
+      <summary>Gets or sets the time span of the action.</summary>
+      <returns>Used for generating video for the test case. </returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.EndTimestamp">
+      <summary>The timestamp for the end of the action.</summary>
+      <returns>The ending timestamp.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.Equals(System.Object)">
+      <summary>Returns whether the given object is equal to this UI test action.</summary>
+      <returns>true if the object is equal to this action; otherwise, false.</returns>
+      <param name="other">An object to compare to this action.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.GetHashCode"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.Id">
+      <summary>Gets or sets a unique numerical identifier for this action.</summary>
+      <returns>Raises the <see cref="E:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.PropertyChanged" /> event when the value is set.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.IsParameterBound">
+      <summary>If this action can be parameterized, gets or sets whether the action is bound to a test parameter.</summary>
+      <returns>true if the action is bound to a test parameter; otherwise, false.</returns>
+      <exception cref="T:System.NotSupportedException">The <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.IsParameterizable" /> property is false, meaning this action cannot be parameterized.</exception>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.IsParameterizable">
+      <summary>Gets whether this action can be parameterized.</summary>
+      <returns>true if this action can be parameterized; otherwise, false. The default is false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.NeedFiltering">
+      <summary>Gets or sets whether this action can be processed by a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter" />.</summary>
+      <returns>true if this action can be processed by a test action filter; otherwise, false.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.NotifyPropertyChanged(System.String)">
+      <summary>Raises the <see cref="E:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.PropertyChanged" /> event.</summary>
+      <param name="propertyName">The name of the property being changed.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.op_Equality(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction,Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction)">
+      <summary>Overrides the "==" operator for comparing two UI test action objects.</summary>
+      <returns>true if the two objects are equal; otherwise, false.</returns>
+      <param name="left">The <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> object on the left of the equality expression.</param>
+      <param name="right">The <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> object on the right of the equality expression.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.op_Inequality(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction,Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction)">
+      <summary>Overrides the "!=" operator for comparing two UI test action objects.</summary>
+      <returns>true if the two objects are not equal; otherwise, false.</returns>
+      <param name="left">The <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> object on the left of the equality expression.</param>
+      <param name="right">The <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> object on the right of the equality expression.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ParameterName">
+      <summary>Gets or sets the name of the corresponding parameter for the action value.</summary>
+      <returns>The name of the corresponding parameter.</returns>
+    </member>
+    <member name="E:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.PropertyChanged">
+      <summary>Occurs when a property value changes.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.StartTimestamp">
+      <summary>Gets or sets the starting timestamp when executing this action.</summary>
+      <returns>The starting timestamp.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.Tags">
+      <summary>Gets a dictionary of additional information about this action that is needed during recording, aggregation, or post-processing. The set procedure is private.</summary>
+      <returns>A dictionary of named values.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ThinkTime">
+      <summary>Gets or sets the number of seconds to be required for executing this action.</summary>
+      <returns>The number of think time seconds.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ThinkTimeString">
+      <summary>Gets or sets the think time for this action using a string value.</summary>
+      <returns>The string representation of <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ThinkTime" /> if it is greater than zero; otherwise, null.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.Timestamp">
+      <summary>Gets or sets the timestamp for this action.</summary>
+      <returns>The timestamp date and time.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ToString">
+      <summary>Returns the description of this action.</summary>
+      <returns>The description of this action.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.UIElement">
+      <summary>Gets or sets the UI element on which this action operates.</summary>
+      <returns>The associated UI element, or null during low-level recording where there is no object recognition.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.UIObjectName">
+      <summary>Gets or sets the name of the UI element on which this action operates.</summary>
+      <returns>The name of the UI object, or null during low-level recording where there is no object recognition.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction.ValueAsString">
+      <summary>Gets or sets the value of this action as a string. The set procedure is not supported in this base class.</summary>
+      <returns>The value of this action as a string.</returns>
+      <exception cref="T:System.NotSupportedException">An attempt was made to change the value of this property.</exception>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionEventArgs"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionEventArgs.#ctor(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionEventArgs.Action"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter">
+      <summary>Contains methods and properties to aggregate similar action results into a single result.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter" /> class. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter.ApplyTimeout">
+      <summary>Gets whether to apply aggregator timeout limits.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter.Category">
+      <summary>Gets the category to use in grouping the filtered list of actions.</summary>
+      <returns>The filter category.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter.Enabled">
+      <summary>Gets whether this filter is enabled.</summary>
+      <returns>true if this filter is enabled; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter.FilterType">
+      <summary>Gets the type of this filter.</summary>
+      <returns>The type of filter.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter.Group">
+      <summary>Gets the name of the group to which this filter belongs.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter.Name">
+      <summary>Gets the name of this filter which included in log messages.</summary>
+      <returns>The name of this filter.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter.ProcessRule(Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack)">
+      <summary>When implemented in a derived class, processes your custom rule for aggregating several action results into one, and returns whether to end aggregation or continue aggregating actions.</summary>
+      <returns>true if no more aggregation should occur in this cycle; false if aggregation should continue with actions that follow.</returns>
+      <param name="actionStack">An <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.IUITestActionStack" /> object.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory">
+      <summary>Represents the categories for <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter" /> objects.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.Critical">
+      <summary>Filters in this category are executed first, and cannot be bypassed.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.PostCritical">
+      <summary>Filters in this category are executed after those in the Critical category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.PreGeneral">
+      <summary>Filters in this category are executed before those in the General category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.General">
+      <summary>Filters in this category are executed after those in the Critical, PostCritical, and PreGeneral categories.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.PostGeneral">
+      <summary>Filters in this category are executed after those in the General category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.PreSimpleToCompoundActionConversion">
+      <summary>Filters in this category are executed after those in the General and PostGeneral categories.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.SimpleToCompoundActionConversion">
+      <summary>Filters in this category are executed after those in the PreSimpleTocompoundActionConversion category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.PostSimpleToCompoundActionConversion">
+      <summary>Filters in this category are executed after those in the SimpleToCompoundActionConversion category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.PreRedundantActionDeletion">
+      <summary>Filters in this category are executed after those in the PostSimpleToCompoundActionConversion category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.RedundantActionDeletion">
+      <summary>Filters in this category are executed after those in the PreRedundantActionDeletion category.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterCategory.PostRedundantActionDeletion">
+      <summary>Filters in this category are executed after those in the RedundantActionDeletion category.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterType">
+      <summary>Indicates the type of filter for a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilter" /> object.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterType.Unary">
+      <summary>A unary filter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionFilterType.Binary">
+      <summary>A binary filter</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker">
+      <summary>Provides constructors and methods for invoking a specific UI test action.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> class. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Cancel">
+      <summary>Cancels the current invocation task.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Dispose">
+      <summary>Releases resources.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.InRetryMode">
+      <summary>Gets or sets whether the invoker is in retry mode.</summary>
+      <returns>true if this invoker is in retry mode; otherwise, false. The default is false.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.AssertAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.BrowserAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DelayAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.DragAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.DragDropAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.ErrorAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.KeyboardAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.LaunchApplicationAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MarkerAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.MouseAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.NavigateToUrlAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.NoOperationAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.NoOperationAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.NoOperationAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SendKeysAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetStateAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SetValueAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.SharedStepsReferenceAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.StringAssertAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.TestStepMarkerAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.VerifyConfigurationAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.VerifyConfigurationAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.VerifyConfigurationAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.SearchAndInvoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap,Microsoft.VisualStudio.TestTools.UITest.Common.CustomInvoker)">
+      <summary>Invokes the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> using the provided <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+      <param name="invoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.CustomInvoker" /> delegate.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker.WaitForThinkTime(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction)">
+      <summary>Waits for an appropriate amount of think time before invoking the provided action.</summary>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> object.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListEventArgs"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListEventArgs.#ctor(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListSection)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListEventArgs.ActionListSection"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListSection"></member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListSection.InitializeActions">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListSection.ExecuteActions">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListSection.CleanupActions">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionListSection.OnErrorActions">
+      <summary />
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderButton"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderButton.#ctor(System.String,System.String,System.Windows.Input.Key,System.Windows.Media.Imaging.BitmapImage)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderButton.AcceleratorKey"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderButton.Image"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderButton.Name"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderButton.Tooltip"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderExtension"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderExtension.#ctor"></member>
+    <member name="E:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderExtension.Closed"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderExtension.CloseExtensionView"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderExtension.GetButton"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderExtension.Initialize(Microsoft.VisualStudio.TestTools.UITest.Common.IUITestBuilder)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderExtension.IsViewOpen"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestBuilderExtension.ShowExtensionView"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironment">
+      <summary>Represents the stored configuration.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironment.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironment" /> class.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironment.Group">
+      <summary>Gets a collection of setting groups.</summary>
+      <returns>The collection of setting groups.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironmentContainerBase`1">
+      <summary>Provides a base class for a UI test environment container class.</summary>
+      <typeparam name="TChild">A <see cref="T:System.Type" /> derived from <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.Setting" />.</typeparam>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironmentContainerBase`1.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironmentContainerBase`1" /> class. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironmentContainerBase`1.Equals(System.Object)">
+      <summary>Determines whether the provided object is equal to this object.</summary>
+      <returns>true if the objects are equal; otherwise, false.</returns>
+      <param name="obj">An object that can be cast as a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironmentContainerBase`1" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironmentContainerBase`1.GetHashCode"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEnvironmentContainerBase`1.Name">
+      <summary>Gets the name of the UI test environment for serialization.</summary>
+      <returns>The name of the environment.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorActionResult"></member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorActionResult.Default">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorActionResult.StopPlaybackAndContinueManually">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorActionResult.StopPlaybackAndRerecord">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorActionResult.RetryAction">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorActionResult.SkipAction">
+      <summary />
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorEventArgs"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorEventArgs.#ctor(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction,System.Exception)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorEventArgs.Error"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestErrorEventArgs.Result"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEventArgs"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEventArgs.#ctor(Microsoft.VisualStudio.TestTools.UITest.Common.UITest)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestEventArgs.UITest"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestProgressEventArgs"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestProgressEventArgs.#ctor(System.Int32,Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction)"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestProgressEventArgs.#ctor(System.Int32,System.Int32,Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestProgressEventArgs.Action"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestProgressEventArgs.CurrentStep"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestProgressEventArgs.ThinkTime"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestProgressEventArgs.TotalSteps"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestWarningEventArgs"></member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UITestWarningEventArgs.#ctor(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction,System.Exception,System.String)"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestWarningEventArgs.Error"></member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UITestWarningEventArgs.WarningMessage"></member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.ValidationAction">
+      <summary>Represents an action that validates a property value.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ValidationAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.ValidationAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.ValidationAction.#ctor(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement,System.String,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.ValidationAction" /> class using the provided element, property name, and property value.</summary>
+      <param name="uiElement">A UI element represented by a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+      <param name="propertyName">The name of the property to validate.</param>
+      <param name="expectedValue"></param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.ValidationAction.ExpectedValue">
+      <summary>When implemented in a derived class, gets the expected property value.</summary>
+      <returns>The value as a string.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.ValidationAction.IsParameterizable">
+      <summary>Gets whether this action can be parameterized.</summary>
+      <returns>true if this action can be parameterized; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.ValidationAction.PropertyName">
+      <summary>Gets or sets the name of the property being validated.</summary>
+      <returns>The name of the property.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.VerifyConfigurationAction">
+      <summary>Represents an action that verifies configuration.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.VerifyConfigurationAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.VerifyConfigurationAction" /> class. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.VerifyConfigurationAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.VerifyConfigurationAction.MinimumWarningLevel">
+      <summary>Gets or sets the minimum warning level to use when comparing configuration settings.</summary>
+      <returns>The minimum warning level.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction">
+      <summary>Represents an action used by the UI recorder to report that it was unable to record an action correctly.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction" /> class for XML serialization or deserialization.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction" /> class using the provided warning message.</summary>
+      <param name="message">A string containing a warning message.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction.#ctor(System.String,Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction" /> class.</summary>
+      <param name="message">A string containing a warning message.</param>
+      <param name="uiElement">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction.#ctor(System.String,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction" /> class.</summary>
+      <param name="message">A string containing a warning message.</param>
+      <param name="idTag">A string containing an ID.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction.IdTag">
+      <summary>Gets or sets the ID tag.</summary>
+      <returns>The ID string.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.WarningAction.Message">
+      <summary>Gets or sets the warning message.</summary>
+      <returns>The warning message.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction">
+      <summary>Represents an action that reports on a Web dialog.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction" /> class. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction.ActionType">
+      <summary>Gets or sets the type of browser action.</summary>
+      <returns>The type of browser action.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction.Invoke(Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker,Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap)">
+      <summary>Invokes this action.</summary>
+      <param name="actionInvoker">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestActionInvoker" /> object.</param>
+      <param name="map">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.WebDialogAction.PromptText">
+      <summary>Gets or sets the prompting text in the dialog.</summary>
+      <returns>The prompt text.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.SpecialControlType">
+      <summary>Identifies the types for <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject" /> objects to indicate whether a UI object is a window.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.SpecialControlType.None">
+      <summary>Default.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.SpecialControlType.BrowserWindow">
+      <summary>The control is a browser window.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.SpecialControlType.DocumentWindow">
+      <summary>The control is a document window.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.TopLevelElement">
+      <summary>Represents a top level element in the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" />, typically a window.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.TopLevelElement.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.TopLevelElement" /> class. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.TopLevelElement.Clone">
+      <summary>Returns a cloned copy of this top level element.</summary>
+      <returns>A copy of this top level element.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.TopLevelElement.GetQueryString">
+      <summary>Returns the query ID for this top level element.</summary>
+      <returns>The <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.QueryId" /> for the underlying user interface object.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap">
+      <summary>Represents a map of user interface (UI) elements for serialization and deserialization of a <see cref="T:Microsoft.VisualStudio.TestTools.UITest.CodeGeneration.UITest" /> object.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> class. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.AddUIObject(Microsoft.VisualStudio.TestTools.UITest.Extension.IUITechnologyElement)">
+      <summary>Adds the provided UI element to this map.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject" />.</returns>
+      <param name="element">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.AddUIObjects(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.TestTools.UITest.Extension.IUITechnologyElement})">
+      <summary>Adds one or more UI elements to the map.</summary>
+      <param name="uiElements">A list of <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> objects.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.BindParameters(Microsoft.VisualStudio.TestTools.UITest.Extension.ValueMap)">
+      <summary>Binds the parameters that are used in the objects of the map with the values that are specified in the provided value map.</summary>
+      <param name="valueMap">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.ValueMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.Clear">
+      <summary>Removes all objects from the map.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.Contains(Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject)">
+      <summary>Indicates whether the provided UI object is in the map.</summary>
+      <returns>true if the object is in the map; otherwise, false.</returns>
+      <param name="uiObject">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.FileName">
+      <summary>Gets or sets the name of the XML file for this map.</summary>
+      <returns>The file name for this map.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.GetCount">
+      <summary>Returns the number of UI objects in this map.</summary>
+      <returns>The number of objects.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.GetEnumerator">
+      <summary>Returns an enumerator that can enumerate through all the objects in this map. These objects include top-level windows.</summary>
+      <returns>The enumerator for this map.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.GetQueryIdFromId(System.String)">
+      <summary>Returns the query ID for the object that is specified by the provided ID.</summary>
+      <returns>The query ID.</returns>
+      <param name="uiObjectId">The object ID.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.GetTopLevelElement(Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject)">
+      <summary>Returns the top element that contains the provided UI object.</summary>
+      <returns>The top-level element.</returns>
+      <param name="uiObject">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject" />.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.GetUIObjectFromUIObjectId(System.String)">
+      <summary>Returns the UI object that is specified by the provided ID.</summary>
+      <returns>The specified UI object.</returns>
+      <param name="uiObjectId">A UI object ID.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.GetUIObjectNameForAction(Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction)">
+      <summary>Returns the UI object that is the subject of the provided UI test action.</summary>
+      <returns>The required UI object.</returns>
+      <param name="action">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UITestAction" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.GetUIObjectNameForElement(Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement)">
+      <summary>Returns the name of the UI object that corresponds to the provided UI element.</summary>
+      <returns>The name of the corresponding UI object.</returns>
+      <param name="element">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.UITechnologyElement" /> object.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.Id">
+      <summary>Gets or sets the identifier for this map.</summary>
+      <returns>The map identifier.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.MergeUIObject(Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap,System.String)">
+      <summary>Merges a UI object from the provided UI map into this map by using the provided name for the object.</summary>
+      <returns>The UI object in this map.</returns>
+      <param name="uiMap">A different <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap" /> object.</param>
+      <param name="objectName">The name of the object to add.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.Remove(Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject)">
+      <summary>Removes the given UI object from this map.</summary>
+      <returns>true if the UI object was successfully removed; otherwise, false.</returns>
+      <param name="uiObject">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject" />.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIMap.TopLevelWindows">
+      <summary>Gets a collection of the top-level windows in this map.</summary>
+      <returns>The collection of top-level windows.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject">
+      <summary>Represents an object in the user interface (UI) for the test framework.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject" /> class.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Add(Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject)">
+      <summary>Adds the given UI object to the descendents of this UI object, if the given UI object does not already exist.</summary>
+      <returns>The added or existing object.</returns>
+      <param name="uiObject">The UI object to add.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.BindParameters(Microsoft.VisualStudio.TestTools.UITest.Extension.ValueMap)">
+      <summary>Binds properties of this UI object to those in the given value map.</summary>
+      <param name="valueMap">A <see cref="T:Microsoft.VisualStudio.TestTools.UITest.Extension.ValueMap" /> object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Clone">
+      <summary>Returns a copy of this UI object.</summary>
+      <returns>A copy of this UI object.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Condition">
+      <summary>Gets or sets the condition of this object.</summary>
+      <returns>The condition of this object.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Contains(System.String)">
+      <summary>Indicates whether the UI object that is identified by the provided ID is contained among the descendents of this UI object.</summary>
+      <returns>true if the identified UI object is contained among the descendents; otherwise, false.</returns>
+      <param name="objectId">A UI object ID.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.ControlType">
+      <summary>Gets or sets the control type of this object.</summary>
+      <returns>The control type.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Descendants">
+      <summary>Gets a collection of all UI objects that are contained within this UI object.</summary>
+      <returns>The collection of UI objects.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.FriendlyName">
+      <summary>Gets or sets a friendly name for this object.</summary>
+      <returns>A friendly name.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.GetQueryString">
+      <summary>Returns the query ID for this UI object.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.GetQueryString(System.String)">
+      <summary>Returns the query ID of the contained UI object that is specified by the given partial ID.</summary>
+      <returns>A query ID for a contained UI object.</returns>
+      <param name="partialId">A partial UI object ID.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.GetUIObjectFromId(System.String)">
+      <summary>Returns a contained UI object that is based on the provided ID.</summary>
+      <returns>A contained UI object, or null if not found.</returns>
+      <param name="uiObjectId">A UI object ID.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.GetUIObjectFromPartialUIObjectId(System.String)">
+      <summary>Returns a UI object that is contained in this UI object by using the provided partial ID.</summary>
+      <returns>A UI object, or null if not found.</returns>
+      <param name="partialUIObjectId">A partial UI object ID that has parts that are separated by dots.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Id">
+      <summary>Gets the ID for this object.</summary>
+      <returns>The ID.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Item(System.String)">
+      <summary>Gets the specified UI child object in this object that has the given UI object ID.</summary>
+      <returns>A UI object.</returns>
+      <param name="uiObjectId">The UI object ID.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Name">
+      <summary>Gets or sets the name of the object.</summary>
+      <returns>The name of this object.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.ParameterizeProperty(System.String,System.String)">
+      <summary>Parameterizes the given property by using the given parameter name.</summary>
+      <param name="propertyName">The name of the property to parameterize.</param>
+      <param name="parameterName">The name of the parameter.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.QueryId">
+      <summary>Gets or sets the query ID for this object.</summary>
+      <returns>The query ID.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Remove(Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject)">
+      <summary>Removes the provided UI object from the descendent objects in this UI object.</summary>
+      <returns>true if the specified object was removed; otherwise, false.</returns>
+      <param name="uiObject">A UI object.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.Remove(System.String)">
+      <summary>Removes the specified UI object from the descendent objects in this UI object.</summary>
+      <returns>true if the specified object was removed; otherwise, false.</returns>
+      <param name="objectId">A UI object ID.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.SearchConfigurations">
+      <summary>Gets or sets a string array of search configuration.</summary>
+      <returns>The search conditions.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.SessionId">
+      <summary>Gets or sets the ID for a top-level element for the recording session.</summary>
+      <returns>The top-level element ID.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.SpecialControlType">
+      <summary>Gets or sets the special type for this UI object.</summary>
+      <returns>The special control type.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.SupportLevel">
+      <summary>Gets or sets the level at which the current technology supports this UI object.</summary>
+      <returns>The actual support level.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.SupportLevelWrapper">
+      <summary>Gets or sets a string version of the actual level at which the current technology supports this UI object for serialization and deserialization of the <see cref="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.SupportLevel" /> property.</summary>
+      <returns>The support level as a string.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.TechnologyName">
+      <summary>Gets or sets the name of the technology that supports this UI object.</summary>
+      <returns>The technology name.</returns>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.ToString">
+      <summary>Returns the query ID of this UI object.</summary>
+      <returns>The query ID.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.TestTools.UITest.Common.UIMap.UIObject.WindowTitles">
+      <summary>Gets a collection of the titles of the top-level windows.</summary>
+      <returns>A collection of titles.</returns>
+    </member>
+  </members>
+</doc>

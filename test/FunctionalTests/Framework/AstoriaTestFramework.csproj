@@ -6,11 +6,11 @@
     <NoWarn>;1699;1570;1572;1573;1591;3005;3006;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
     <AssemblyName>AstoriaTestFramework</AssemblyName>
  
-    <CreateMetaAssembly>false</CreateMetaAssembly>
-    <AssemblyKeyType>ECMA</AssemblyKeyType>
+    <!--<CreateMetaAssembly>false</CreateMetaAssembly>
+    <AssemblyKeyType>ECMA</AssemblyKeyType>-->
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
-    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
+    <!--<AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>-->
  
     <DefineConstants>$(DefineConstants);CODE_ANALYSIS_BASELINE;MICROSOFT_ASTORIA;ClientFramework</DefineConstants>
     <RestorePackages>true</RestorePackages>

@@ -32,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ValidReadEFEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
@@ -49,7 +49,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsNotNull(context.EFPersonMetadatas.Expand("EFPerson").FirstOrDefault().EFPerson);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ValidReadReflectionEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
@@ -66,7 +66,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsNotNull(context.PersonMetadata.Expand("Person").FirstOrDefault().Person);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ValidCUDEFEntity()
         {
             string desc = Guid.NewGuid().ToString();
@@ -92,7 +92,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.AreEqual(0, context.EFCars.Where(c => c.Description == newdesc).Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ValidCUDReflectionEntity()
         {
             string desc = Guid.NewGuid().ToString();
@@ -124,7 +124,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.AreEqual(0, context.Car.Where(c => c.Description == newdesc).Count());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ValidServiceOperationEFEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
@@ -142,7 +142,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsTrue(persons.Any(p => p.PersonId == expectedPerson.PersonId));
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ValidServiceOperationReflectionEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
@@ -161,7 +161,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         }
 
         // Flaky test: OData.net GitHub #970
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ValidMetadata()
         {
             var message = new HttpWebRequestMessage(new Uri(ServiceUri + "$metadata"));
@@ -186,7 +186,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         }
 
         // Flaky test: OData.net GitHub #970
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ValidServiceDocument()
         {
             var metadataMessage = new HttpWebRequestMessage(new Uri(ServiceUri + "$metadata"));

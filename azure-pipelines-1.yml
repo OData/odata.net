@@ -29,6 +29,8 @@ variables:
   mainDll3: 'Microsoft.Spatial.dll'
   ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)\net45'
   mainDll4: 'Microsoft.OData.Client.dll'
+  ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)\net45'
+  mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
 
 steps:
 
@@ -57,95 +59,6 @@ steps:
 
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build Product 1'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-
-
-- task: Powershell@2
-  displayName: 'Skip strong name validation'
-  inputs:
-    targetType: 'inline'
-    script: |
-      & "$(snExe)" /Vr $(ProductBinPath4)\$(mainDll4)
-      & "$(snExe64)" /Vr $(ProductBinPath4)\$(mainDll4)
-      & "$(snExe)" /Vr $(ProductBinPath1)\$(mainDll1)
-      & "$(snExe64)" /Vr $(ProductBinPath1)\$(mainDll1)
-      & "$(snExe)" /Vr $(ProductBinPath2)\$(mainDll2)
-      & "$(snExe64)" /Vr $(ProductBinPath2)\$(mainDll2)
-      & "$(snExe)" /Vr $(ProductBinPath3)\$(mainDll3)
-      & "$(snExe64)" /Vr $(ProductBinPath3)\$(mainDll3)
-      
-  enabled: true
-
-# "$(snExe)" /Vr $(testBinPath)\$(testDll)
-      # "$(snExe64)" /Vr $(testBinPath)\$(testDll)
-
-# - task: DotNetCoreInstaller@1
-#   inputs:
-#     version: '1.0.4'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Test Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
-    projects: |      
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
-
-- task: VSTest@2
-  displayName: 'Test'
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\Microsoft.Test.OData.Tests.Client1.dll' #'$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-
-#$(Build.SourcesDirectory)\bin\AnyCPU\$(BuildConfiguration)\Test\Desktop\
-
-- task: DotNetCoreCLI@2
-  displayName: 'EDM Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
-     
-
-
-- task: DotNetCoreCLI@2
-  displayName: 'Test Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-     #$(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj
-
-
-- task: DotNetCoreCLI@2
-  displayName: 'Core Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |      
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-
-
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build test'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration)'
-    projects: |
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-
-
-- task: DotNetCoreCLI@2
   displayName: 'Build Product'  
   inputs:
     command: 'build'
@@ -161,6 +74,105 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
+
+
+
+
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build E2E-Regression Test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
+     $(Build.SourcesDirectory)\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+               
+  enabled: true
+
+- task: Powershell@2
+  displayName: 'Skip strong name validation'
+  inputs:
+    targetType: 'inline'
+    script: |
+      & "$(snExe)" /Vr $(ProductBinPath4)\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\$(mainDll4)
+      & "$(snExe)" /Vr $(ProductBinPath1)\$(mainDll1)
+      & "$(snExe64)" /Vr $(ProductBinPath1)\$(mainDll1)
+      & "$(snExe)" /Vr $(ProductBinPath2)\$(mainDll2)
+      & "$(snExe64)" /Vr $(ProductBinPath2)\$(mainDll2)
+      & "$(snExe)" /Vr $(ProductBinPath3)\$(mainDll3)
+      & "$(snExe64)" /Vr $(ProductBinPath3)\$(mainDll3)
+      & "$(snExe)" /Vr $(ProductBinPath5)\$(mainDll5)
+      & "$(snExe64)" /Vr $(ProductBinPath5)\$(mainDll5)
+      
+  enabled: true
+
+# "$(snExe)" /Vr $(testBinPath)\$(testDll)
+      # "$(snExe64)" /Vr $(testBinPath)\$(testDll)
+
+# - task: DotNetCoreInstaller@1
+#   inputs:
+#     version: '1.0.4'
+
+# $(TestBinPath)\Microsoft.Test.Data.Services.DDBasics.dll;
+# $(TestBinPath)\Microsoft.OData.Client.Design.T4.UnitTests.dll;
+# $(TestBinPath)\EdmLibTests.dll;
+# $(TestBinPath)\Microsoft.OData.Client.TDDUnitTests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Common.Tests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Query.Tests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Reader.Tests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Writer.Tests.dll;
+# $(TestBinPath)\Microsoft.Test.Taupo.OData.Scenario.Tests.dll;
+# $(TestBinPath)\Microsoft.Data.NamedStream.UnitTests.dll; 
+# $(TestBinPath)\Microsoft.Test.OData.PluggableFormat.Tests.dll;
+# $(TestBinPath)\Microsoft.Data.ServerUnitTests1.UnitTests.dll;
+# $(TestBinPath)\Microsoft.Data.ServerUnitTests2.UnitTests.dll;
+# $(TestBinPath)\RegressionUnitTests.dll;
+# $(TestBinPath)\Microsoft.Data.MetadataObjectModel.UnitTests.dll;
+# $(TestBinPath)\AstoriaUnitTests.TDDUnitTests.dll;
+# $(TestBinPath)\AstoriaUnitTests.ClientCSharp.dll;
+# $(TestBinPath)\AstoriaUnitTests.dll;
+# $(TestBinPath)\AstoriaClientUnitTests.dll
+
+ 
+- task: DotNetCoreCLI@2
+  displayName: 'EDM Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+     
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Core Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
 
 
@@ -187,6 +199,85 @@ steps:
     #Your build pipeline references an undefined variable named ‘ProductBinPath’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 
 
+
+- task: DotNetCoreCLI@2
+  displayName: 'Test - E2E Test Suite'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |      
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     
+
+- task: DotNetCoreCLI@2
+  displayName: 'Test - Regression Test Suite'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |           
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+    #  $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+    #  $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+    #  $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+    #  $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
+  enabled: true
+  
+
+
+  
+
+# CredScan
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Src'
+  inputs:
+    toolMajorVersion: 'V2'
+    scanFolder: '$(Build.SourcesDirectory)\src'
+    debugMode: false
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Test'
+  inputs:
+    toolMajorVersion: 'V2'
+    scanFolder: '$(Build.SourcesDirectory)\test'
+    debugMode: false
+  
+ 
+- task: BinSkim@3
+  displayName: 'Run BinSkim - Product Binaries'
+  inputs:
+    InputType: Basic
+    AnalyzeTarget: |
+     $(ProductBinPath1)\$(mainDll1)
+    AnalyzeSymPath: '$(ProductBinPath1)'
+    AnalyzeVerbose: true
+    AnalyzeHashes: true
+    AnalyzeEnvironment: true
+
+- task: PublishSecurityAnalysisLogs@2
+  displayName: 'Publish Security Analysis Logs'
+  inputs:
+    ArtifactName: SecurityLogs
+
+- task: PostAnalysis@1
+  displayName: 'Post Analysis'
+  inputs:
+    BinSkim: true
+    CredScan: true
+    PoliCheck: true
+  enabled: false
 
 
 - task: EsrpCodeSigning@1
@@ -291,37 +382,17 @@ steps:
     VerboseLogin: true
 
 
-# - task: PowerShell@2
-#   inputs:
-#     filePath: 'build.ps1'
-#     arguments: 'EnableSkipStrongName'
-# - task: NuGetToolInstaller@1
 
-# - task: NuGetCommand@2
-#   inputs:
-#     restoreSolution: '$(solution)'
-
-# - task: VSBuild@1
-#   inputs:
-#     solution: '$(solution)'
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
-
-# - task: VSTest@2
-#   inputs:
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
-# - task: DotNetCoreCLI@2
-#   inputs:
-#     command: 'test'
-#     projects: 'test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj'
-#     arguments: '--collect "Code coverage"'
+- task: CopyFiles@2
+  displayName: 'Copy Files - Product'
+  inputs:
+    SourceFolder: '$(ProductBinPath)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\Product'
 
 
-# #  - task: BatchScript@1
-# #    displayName: 'Run script - EnableSkipStrongName'
-# #    inputs:
-#       filename: '$(Build.SourcesDirectory)\build.cmd'
-#       arguments: EnableSkipStrongName
-#       modifyEnvironment: false
-
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact - Product Binaries'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\Product'
+    ArtifactName: Product
+  condition: succeededOrFailed()

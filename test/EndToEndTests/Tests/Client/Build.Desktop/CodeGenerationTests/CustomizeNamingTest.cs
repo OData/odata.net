@@ -32,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void BasicQuery()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -95,7 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual("Andy", productReview10.AuthorPlus);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void BasicModify()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -247,7 +247,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void OpenComplexType()
         {
             //Update entity with open complex type
@@ -359,7 +359,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(!account.AccountInfoPlus.IsActivePlus);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void OpenEntityType()
         {
             //UpdateOpenTypeSingleton
@@ -422,7 +422,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(1000000, company.TotalAssetsPlus);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void InvokeOperations()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -452,7 +452,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(101901, result5.PaymentInstrumentIDPlus);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ContainedEntityQuery()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -476,7 +476,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(23.88, result);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void SingltonQuery()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
