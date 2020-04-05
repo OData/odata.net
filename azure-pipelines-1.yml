@@ -200,7 +200,7 @@ steps:
 
 
 
-- task: DotNetCoreCLI@2
+- task: DotNetCoreCLI@2  
   displayName: 'Test - E2E Test Suite'
   inputs:
     command: 'test'
@@ -210,6 +210,7 @@ steps:
      
 
 - task: DotNetCoreCLI@2
+  timeoutInMinutes: 100
   displayName: 'Test - Regression Test Suite'
   inputs:
     command: 'test'
