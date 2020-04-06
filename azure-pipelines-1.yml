@@ -388,7 +388,9 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Files - Product'
   inputs:
-    SourceFolder: '$(ProductBinPath)'
+    SourceFolder: |
+      $(ProductBinPath1)
+      $(ProductBinPath2)
     TargetFolder: '$(Build.ArtifactStagingDirectory)\Product'
 
 
