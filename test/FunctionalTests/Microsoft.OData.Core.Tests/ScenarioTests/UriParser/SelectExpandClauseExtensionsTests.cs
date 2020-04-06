@@ -65,16 +65,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void GetCurrentLevelSelectListTestNestedSelectComplexTypeWithStar()
+        public void GetCurrentLevelSelectListTestNestedSelectComplexTypeWithStar_FullSet()
         {
             //Arrange - $select=FavoriteDate,Name,MyAddress,MyAddress/City
             var expected = new List<string>();
-            expected.Add("FavoriteDate");
-            expected.Add("Name");
-            expected.Add("MyAddress");
+            expected.Add("*");
+          
 
             //Act
-            var clause = CreateSelectExpandClauseNestedSelectWithComplexTypeWithStar();
+            var clause = CreateSelectExpandClauseNestedSelectWithComplexTypeWithStar(false);
+            var actual = SelectExpandClauseExtensions.GetCurrentLevelSelectList(clause);
+
+            //Assert
+            Assert.True(expected.SequenceEqual(actual));
+        }
+
+        [Fact]
+        public void GetCurrentLevelSelectListTestNestedSelectComplexTypeWithStar_SubSet()
+        {
+            //Arrange - $select=FavoriteDate,Name,MyAddress,MyAddress/City
+            var expected = new List<string>();
+            expected.Add("MyAddress/City");
+            expected.Add("*");
+
+            //Act
+            var clause = CreateSelectExpandClauseNestedSelectWithComplexTypeWithStar(true);
             var actual = SelectExpandClauseExtensions.GetCurrentLevelSelectList(clause);
 
             //Assert
@@ -204,7 +219,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             return clause;
         }
 
-        private static SelectExpandClause CreateSelectExpandClauseNestedSelectWithComplexTypeWithStar()
+        private static SelectExpandClause CreateSelectExpandClauseNestedSelectWithComplexTypeWithStar(bool subset)
         {
             ODataSelectPath personNamePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonNameProp()));
             ODataSelectPath personShoePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonFavoriteDateProp()));
@@ -216,12 +231,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var addritem1 = new PathSelectItem(addrPath);
             addritem1.SelectAndExpand = cityClause;
 
-            var clause = new SelectExpandClause(new List<SelectItem>(), false);
+            var clause = new SelectExpandClause(new List<SelectItem>(), true);
             clause.AddToSelectedItems(new PathSelectItem(personShoePath));
             clause.AddToSelectedItems(new PathSelectItem(personNamePath));
             
             clause.AddToSelectedItems(addritem1);
-            clause.AddToSelectedItems(new WildcardSelectItem());
+            clause.AddToSelectedItems(new WildcardSelectItem(),subset);
 
             return clause;
         }
