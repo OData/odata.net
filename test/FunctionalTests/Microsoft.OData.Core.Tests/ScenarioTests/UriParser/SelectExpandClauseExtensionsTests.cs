@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestNestedSelectComplexType()
         {
-            //Arrange - $select=FavoriteDate,Name,MyAddress
+            //Arrange - $select=FavoriteDate,Name,MyAddress,MyAddress/City
             var expected = new List<string>();
             expected.Add("FavoriteDate");
             expected.Add("Name");
@@ -58,6 +58,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             //Act
             var clause = CreateSelectExpandClauseNestedSelectWithComplexType();
+            var actual = SelectExpandClauseExtensions.GetCurrentLevelSelectList(clause);
+
+            //Assert
+            Assert.True(expected.SequenceEqual(actual));
+        }
+
+        [Fact]
+        public void GetCurrentLevelSelectListTestNestedSelectComplexTypeWithStar()
+        {
+            //Arrange - $select=FavoriteDate,Name,MyAddress,MyAddress/City
+            var expected = new List<string>();
+            expected.Add("FavoriteDate");
+            expected.Add("Name");
+            expected.Add("MyAddress");
+
+            //Act
+            var clause = CreateSelectExpandClauseNestedSelectWithComplexTypeWithStar();
             var actual = SelectExpandClauseExtensions.GetCurrentLevelSelectList(clause);
 
             //Assert
@@ -85,7 +102,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestNestedSelectNestedTypeWithComplex()
         {
-            //Arrange - $select=FavoriteDate,Name,MyAddress
+            //Arrange - $select=FavoriteDate,Name,MyAddress,MyAddress/MyNeighbors,MyAddress/MyNeighbors/City
             var expected = new List<string>();
             expected.Add("FavoriteDate");
             expected.Add("Name");
@@ -187,7 +204,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             return clause;
         }
 
-        
+        private static SelectExpandClause CreateSelectExpandClauseNestedSelectWithComplexTypeWithStar()
+        {
+            ODataSelectPath personNamePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonNameProp()));
+            ODataSelectPath personShoePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonFavoriteDateProp()));
+            ODataSelectPath addrPath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonAddressProp()));
+            ODataSelectPath cityPath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetAddressCityProperty()));
+
+            var cityClause = new SelectExpandClause(new List<SelectItem>(), false);
+            cityClause.AddToSelectedItems(new PathSelectItem(cityPath));
+            var addritem1 = new PathSelectItem(addrPath);
+            addritem1.SelectAndExpand = cityClause;
+
+            var clause = new SelectExpandClause(new List<SelectItem>(), false);
+            clause.AddToSelectedItems(new PathSelectItem(personShoePath));
+            clause.AddToSelectedItems(new PathSelectItem(personNamePath));
+            
+            clause.AddToSelectedItems(addritem1);
+            clause.AddToSelectedItems(new WildcardSelectItem());
+
+            return clause;
+        }
+
+
         private static SelectExpandClause CreateSelectExpandClauseNestedSelectWithNestedType()
         {
             ODataSelectPath personNamePath = new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonNameProp()));
