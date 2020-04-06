@@ -168,11 +168,7 @@ namespace Microsoft.OData.Client
             ODataResource resource = new ODataResource() { TypeName = complexTypeAnnotation.ElementTypeName };
 
             string serverTypeName = this.requestInfo.GetServerTypeName(complexTypeAnnotation);
-            // Serialization error if TypeAnnotation is initialized but TypeName property is null - particularly for dynamic properties
-            if (!string.IsNullOrEmpty(serverTypeName))
-            {
-                resource.TypeAnnotation = new ODataTypeAnnotation(serverTypeName);
-            }
+            resource.TypeAnnotation = new ODataTypeAnnotation(serverTypeName);
 
             resource.Properties = this.PopulateProperties(instance, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects);
 
@@ -470,8 +466,7 @@ namespace Microsoft.OData.Client
 
             // Ideally, we should not set type annotation on collection value.
             // To keep backward compatibility, we'll keep it in request body, but do not include it in url.
-            // Serialization error if TypeAnnotation is initialized but TypeName property is null - particularly for dynamic properties
-            if (setTypeAnnotation && !string.IsNullOrEmpty(collectionItemTypeName))
+            if (setTypeAnnotation)
             {
                 string wireTypeName = GetCollectionName(collectionItemTypeName);
                 collection.TypeAnnotation = new ODataTypeAnnotation(wireTypeName);
@@ -523,17 +518,13 @@ namespace Microsoft.OData.Client
                     });
             }
 
-            if (isDynamicProperty)
-            {
-                // TypeName for complex types need to be the client type name since it will be looked up in the client model
-                // Set the type name to use for client type lookups and validation
-                resourceSet.TypeName = GetCollectionName(collectionItemType.FullName);  // Mandatory for a dynamic property
-            }
+            // TypeName for complex types need to be the client type name since it will be looked up in the client model
+            // Set the type name to use for client type lookups and validation
+            resourceSet.TypeName = GetCollectionName(collectionItemType.FullName);  // Mandatory for a dynamic property
 
             // Ideally, we should not set type annotation on collection value.
             // To keep backward compatibility, we'll keep it in request body, but do not include it in url.
-            // Serialization error if TypeAnnotation is initialized but TypeName property is null - particularly for dynamic properties
-            if (setTypeAnnotation && !string.IsNullOrEmpty(collectionItemTypeName))
+            if (setTypeAnnotation)
             {
                 string wireTypeName = GetCollectionName(collectionItemTypeName);
                 resourceSet.TypeAnnotation = new ODataTypeAnnotation(wireTypeName);
