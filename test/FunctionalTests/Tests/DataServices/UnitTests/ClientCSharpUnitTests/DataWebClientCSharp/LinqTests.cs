@@ -8096,7 +8096,7 @@ namespace AstoriaUnitTests.Tests
             }
             catch (Exception e)
             {
-                if (e.Message != "Can't add query option '$' because it begins with reserved character '$'.")
+                if (e.Message != "The query option '$' is not supported or is controlled by the OData service.")
                 {
                     throw new Exception("Test Failed");
                 }
