@@ -13,7 +13,7 @@
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>D:\GitHub\odata.net\sln\Backup4\</UpgradeBackupLocation>
+    <!--<UpgradeBackupLocation>D:\GitHub\odata.net\sln\Backup4\</UpgradeBackupLocation>-->
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
