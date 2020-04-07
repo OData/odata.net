@@ -8035,59 +8035,30 @@ namespace AstoriaUnitTests.Tests
             }
             catch (Exception e)
             {
-                if (e.Message != "The query option '$custom' is not supported.")
+                if (e.Message != "The query option '$custom' is not supported or is controlled by the OData service.")
                 {
                     throw new Exception("Test Failed");
                 }
             }
-
-            var queryableApplyOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
-                                                        select l)
-                                                        .AddQueryOption("$apply", 1);
 
             Trace.WriteLine("known, but unsupported query  options");
 
-            try
+            foreach (var option in new string[] { "$apply", "$skiptoken", "$delta"})
             {
-                queryableApplyOption.GetEnumerator();
-            }
-            catch (Exception e)
-            {
-                if (e.Message != "The query option '$apply' is not supported.")
+                var queryableUnsupportedOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
+                                                                            select l)
+                                                        .AddQueryOption(option, 1);
+
+                try
                 {
-                    throw new Exception("Test Failed");
+                    queryableUnsupportedOption.GetEnumerator();
                 }
-            }
-
-            var queryableSkipTokenOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
-                                                                  select l)
-                                                        .AddQueryOption("$skiptoken", 1);
-
-            try
-            {
-                queryableSkipTokenOption.GetEnumerator();
-            }
-            catch (Exception e)
-            {
-                if (e.Message != "The query option '$skiptoken' is not supported.")
+                catch (Exception e)
                 {
-                    throw new Exception("Test Failed");
-                }
-            }
-
-            var queryablaDeltaOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
-                                                                      select l)
-                                                       .AddQueryOption("$delta", 1);
-
-            try
-            {
-                queryablaDeltaOption.GetEnumerator();
-            }
-            catch (Exception e)
-            {
-                if (e.Message != "The query option '$delta' is not supported.")
-                {
-                    throw new Exception("Test Failed");
+                    if (e.Message != $"The query option '{option}' is not supported or is controlled by the OData service.")
+                    {
+                        throw new Exception("Test Failed");
+                    }
                 }
             }
 
