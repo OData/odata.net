@@ -4,19 +4,9 @@
     <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
     <AssemblyName>Microsoft.OData.Edm</AssemblyName>
     <RootNamespace>Microsoft.OData.Edm</RootNamespace>
-
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
-
-    <!--<SignAssembly>false</SignAssembly>-->
-    <!--<DelaySign>True</DelaySign>
-    <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>-->
-
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
-    <!--<IsPackable>true</IsPackable>
-    <IsShipping>true</IsShipping>-->
-    <!--<DelaySign>false</DelaySign>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,21 +27,11 @@
     </TextStringResource>
   </ItemGroup>
   
-  <!--<ItemGroup>
-    <None Remove="Microsoft.OData.Edm.txt" />
-    <None Remove="Microsoft.OData.Edm.xml" />
-    <None Remove="Parameterized.Microsoft.OData.Edm.tt" />
-  </ItemGroup>-->
-
   <ItemGroup>
     <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
     <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <EmbeddedResource Include="Microsoft.OData.Edm.txt" />
-  </ItemGroup>-->
-
+ 
   <ItemGroup>
     <Resource Include="Microsoft.OData.Edm.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -103,10 +83,6 @@
       <LogicalName>ValidationVocabularies.xml</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
   <ItemGroup>
