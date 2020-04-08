@@ -86,12 +86,6 @@ namespace Microsoft.OData.Client
             Debug.Assert(resource != null, $"{nameof(resource)} !=null");
             Debug.Assert(odataProperties != null, $"{nameof(odataProperties)} != null");
 
-            // Populate dynamic properties only if this is an open (entity or complex) type
-            if (!ClientTypeUtil.IsInstanceOfOpenType(resource, this.requestInfo.Model))
-            {
-                return;
-            }
-
             IDictionary<string, object> dynamicPropertiesDictionary;
             if (ClientTypeUtil.TryGetDynamicPropertiesDictionary(resource, out dynamicPropertiesDictionary))
             {
@@ -740,7 +734,7 @@ namespace Microsoft.OData.Client
                 PrimitiveType primitiveType;
                 PrimitiveType.TryGetPrimitiveType(value.GetType(), out primitiveType);
                 
-                if (shouldWriteClientType && JsonSharedUtils.ValueTypeMatchesJsonType((ODataPrimitiveValue)odataValue, primitiveType.PrimitiveKind))
+                if (shouldWriteClientType && !JsonSharedUtils.ValueTypeMatchesJsonType((ODataPrimitiveValue)odataValue, primitiveType.PrimitiveKind))
                 {
                     odataValue.TypeAnnotation = new ODataTypeAnnotation(primitiveType.EdmTypeName);
                 }
