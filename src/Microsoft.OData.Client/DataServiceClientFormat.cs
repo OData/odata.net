@@ -100,15 +100,7 @@ namespace Microsoft.OData.Client
                     serviceModel = LoadServiceModelFromNetwork();
                 }
 
-                // Safe to assume we'll get here only once for each initialized data service context?
-                // Each data service context owns a service model and client edm model
-                if (serviceModel != null && this.context.Model != null)
-                {
-                    foreach (var element in serviceModel.SchemaElements.Where(el => el is IEdmStructuredType))
-                    {
-                        this.context.Model.EdmStructuredSchemaElements.TryAdd(element.Name, element);
-                    }
-                }
+                PopulateEdmStructuredSchemaElements();
                 return serviceModel;
             }
         }
@@ -129,6 +121,7 @@ namespace Microsoft.OData.Client
 
             this.ODataFormat = ODataFormat.Json;
             this.serviceModel = serviceModel;
+            PopulateEdmStructuredSchemaElements();
         }
 
         /// <summary>
@@ -375,6 +368,20 @@ namespace Microsoft.OData.Client
             using (XmlReader xmlReader = XmlReader.Create(streamReader))
             {
                 return CsdlReader.Parse(xmlReader);
+            }
+        }
+
+        /// <summary>
+        /// Populates the client edm model EdmStructuredSchemaElements dictionary with the schema elements in the service model
+        /// </summary>
+        private void PopulateEdmStructuredSchemaElements()
+        {
+            if (serviceModel != null && this.context.Model != null)
+            {
+                foreach (var element in serviceModel.SchemaElements.Where(el => el is IEdmStructuredType))
+                {
+                    this.context.Model.EdmStructuredSchemaElements.TryAdd(element.Name, element);
+                }
             }
         }
     }
