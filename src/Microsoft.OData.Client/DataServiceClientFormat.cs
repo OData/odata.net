@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
     using Microsoft.OData;
@@ -98,6 +99,8 @@ namespace Microsoft.OData.Client
                 {
                     serviceModel = LoadServiceModelFromNetwork();
                 }
+
+                PopulateEdmStructuredSchemaElements();
                 return serviceModel;
             }
         }
@@ -118,6 +121,7 @@ namespace Microsoft.OData.Client
 
             this.ODataFormat = ODataFormat.Json;
             this.serviceModel = serviceModel;
+            PopulateEdmStructuredSchemaElements();
         }
 
         /// <summary>
@@ -364,6 +368,20 @@ namespace Microsoft.OData.Client
             using (XmlReader xmlReader = XmlReader.Create(streamReader))
             {
                 return CsdlReader.Parse(xmlReader);
+            }
+        }
+
+        /// <summary>
+        /// Populates the client edm model EdmStructuredSchemaElements dictionary with the schema elements in the service model
+        /// </summary>
+        private void PopulateEdmStructuredSchemaElements()
+        {
+            if (serviceModel != null && this.context.Model != null)
+            {
+                foreach (var element in serviceModel.SchemaElements.Where(el => el is IEdmStructuredType))
+                {
+                    this.context.Model.EdmStructuredSchemaElements.TryAdd(element.Name, element);
+                }
             }
         }
     }

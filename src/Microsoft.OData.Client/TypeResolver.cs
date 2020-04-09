@@ -58,14 +58,6 @@ namespace Microsoft.OData.Client
             this.resolveNameFromType = resolveNameFromType;
             this.serviceModel = serviceModel;
             this.clientEdmModel = model;
-
-            if (serviceModel != null && clientEdmModel != null)
-            {
-                foreach (var element in serviceModel.SchemaElements.Where(se => se is IEdmStructuredType))
-                {
-                    clientEdmModel.EdmStructuredSchemaElements.TryAdd(element.Name, element);
-                }
-            }
         }
 
         /// <summary>

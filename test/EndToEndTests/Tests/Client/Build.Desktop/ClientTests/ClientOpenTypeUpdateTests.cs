@@ -44,6 +44,20 @@ namespace Microsoft.Test.OData.Tests.Client
             // No more check, this case is to make sure that client doesn't throw exception.
         }
 
+        [TestMethod]
+        public void AddOpenTypeWithUndeclaredProperties()
+        {
+            SetContextWrapper();
+            
+            var row = Row.CreateRow(Guid.NewGuid());
+
+            contextWrapper.Configurations.RequestPipeline.OnEntryStarting(ea => EntryStarting(ea));
+
+            contextWrapper.AddObject("Row", row);
+            contextWrapper.SaveChanges();
+            // All clear if no exception is thrown
+        }
+
         private void EntryStarting(WritingEntryArgs ea)
         {
             var odataProps = ea.Entry.Properties as List<ODataProperty>;
