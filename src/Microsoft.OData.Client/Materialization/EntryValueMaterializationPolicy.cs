@@ -703,14 +703,6 @@ namespace Microsoft.OData.Client.Materialization
             // NOTE: ODL (and OData WebApi) support navigational property on complex types
             // That support has not yet been implemented in OData client
 
-            // TODO: Not proceed with materialization if nested resource is an entity or entity collection?
-            // An entity or entity collection as a dynamic property currently doesn't work as expected 
-            // due to the absence of a navigational property definition in the metadata 
-            // to express the relationship between that entity and the parent entity - unless they're the same type!
-
-            // DataServiceContext context = this.EntityTrackingAdapter.Context;
-            // TypeResolver typeResolver = new TypeResolver(context.Model, context.ResolveTypeFromName, context.ResolveNameFromTypeInterfnal, context.Format.ServiceModel);
-
             IDictionary<string, object> dynamicPropertiesDictionary;
             // Dictionary not found or key with matching name already exists
             if (!ClientTypeUtil.TryGetDynamicPropertiesDictionary(entry.ResolvedObject, out dynamicPropertiesDictionary)
@@ -718,6 +710,12 @@ namespace Microsoft.OData.Client.Materialization
             {
                 return;
             }
+
+            // An entity or entity collection as a dynamic property currently doesn't work as expected 
+            // due to the absence of a navigational property definition in the metadata 
+            // to express the relationship between that entity and the parent entity - unless they're the same type!
+            // Only materialize a nested resource if its a complex or complex collection
+            ClientEdmModel model = this.MaterializerContext.Model;
 
             if (linkState.Feed != null)
             {
@@ -731,7 +729,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 Type collectionItemType = ResolveClientTypeForDynamicProperty(collectionItemTypeName, entry.ResolvedObject);
 
-                if (collectionItemType != null)
+                if (collectionItemType != null && ClientTypeUtil.TypeIsComplex(collectionItemType, model))
                 {
                     Type collectionType = typeof(System.Collections.ObjectModel.Collection<>).MakeGenericType(new Type[] { collectionItemType });
                     IList collection = (IList)Util.ActivatorCreateInstance(collectionType);
@@ -751,7 +749,7 @@ namespace Microsoft.OData.Client.Materialization
                 MaterializerEntry linkEntry = linkState.Entry;
                 Type itemType = ResolveClientTypeForDynamicProperty(linkEntry.Entry.TypeName, entry.ResolvedObject);
 
-                if (itemType != null)
+                if (itemType != null && ClientTypeUtil.TypeIsComplex(itemType, model))
                 {
                     this.Materialize(linkEntry, itemType, false /*includeLinks*/);
                     dynamicPropertiesDictionary.Add(link.Name, linkEntry.ResolvedObject);

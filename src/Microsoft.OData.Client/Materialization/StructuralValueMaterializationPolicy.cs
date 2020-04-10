@@ -343,6 +343,13 @@ namespace Microsoft.OData.Client.Materialization
 
             object value = property.Value;
 
+            // Handles properties of known types returned with type annotations
+            if (!(value is ODataValue) && PrimitiveType.IsKnownType(value.GetType()))
+            {
+                dynamicPropertiesDictionary.Add(property.Name, value);
+                return;
+            }
+
             // Handle primitive type
             ODataUntypedValue untypedVal = value as ODataUntypedValue;
             if (untypedVal != null)
@@ -353,7 +360,7 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             // Handle enum value
-            ODataEnumValue enumVal = property.Value as ODataEnumValue;
+            ODataEnumValue enumVal = value as ODataEnumValue;
             if (enumVal != null)
             {
                 Type clientType = ResolveClientTypeForDynamicProperty(enumVal.TypeName, instance);
