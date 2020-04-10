@@ -350,7 +350,7 @@ namespace Microsoft.OData.Client.Materialization
                 return;
             }
 
-            // Handle primitive type
+            // Handle untyped value
             ODataUntypedValue untypedVal = value as ODataUntypedValue;
             if (untypedVal != null)
             {
