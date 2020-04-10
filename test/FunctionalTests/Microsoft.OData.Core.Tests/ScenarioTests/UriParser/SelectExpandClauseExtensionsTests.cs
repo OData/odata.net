@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestNestedSelectComplexTypeWithStar_FullSet()
         {
-            //Arrange - $select=FavoriteDate,Name,MyAddress,MyAddress/City
+            //Arrange - $select=*,MyAddress/City
             var expected = new List<string>();
             expected.Add("*");
           
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GetCurrentLevelSelectListTestNestedSelectComplexTypeWithStar_SubSet()
         {
-            //Arrange - $select=FavoriteDate,Name,MyAddress,MyAddress/City
+            //Arrange - $select=*,MyAddress/City
             var expected = new List<string>();
             expected.Add("MyAddress/City");
             expected.Add("*");
