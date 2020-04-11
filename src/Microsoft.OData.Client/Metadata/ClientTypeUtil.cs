@@ -699,6 +699,59 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
+        /// Returns true if the <paramref name="instance"/> is an instance of an open type in the <paramref name="model"/>.
+        /// </summary>
+        /// <param name="instance">The instance to examine</param>
+        /// <param name="model">The client model.</param>
+        /// <returns>Returns true if the <paramref name="instance"/> is an instance of an open type in the <paramref name="model"/></returns>
+        internal static bool IsInstanceOfOpenType(object instance, ClientEdmModel model)
+        {
+            Debug.Assert(instance != null, $"{nameof(instance)} !=null");
+            Debug.Assert(model != null, $"{nameof(model)} !=null");
+
+            Type clientType = instance.GetType();
+            ClientTypeAnnotation clientTypeAnnotation = model.GetClientTypeAnnotation(clientType);
+
+            Debug.Assert(clientTypeAnnotation != null, $"{nameof(clientTypeAnnotation)} != null");
+
+            // TODO: Populate dynamic properties only if this is an open (entity or complex) type
+            return clientTypeAnnotation.EdmType.IsOpen();
+        }
+
+        /// <summary>
+        /// Returns true if the <paramref name="instance"/> contains an non-null dictionary property of string and object
+        /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
+        /// </summary>
+        /// <param name="instance">Object with expected dictionary property</param>
+        /// <param name="dynamicPropertiesDictionary">Reference to the dictionary</param>
+        /// <returns>true if expected dictionary is found</returns>
+        internal static bool TryGetDynamicPropertiesDictionary(object instance, out IDictionary<string, object> dynamicPropertiesDictionary)
+        {
+            Debug.Assert(instance != null, $"{nameof(instance)} != null");
+
+            dynamicPropertiesDictionary = default(IDictionary<string, object>);
+
+            PropertyInfo propertyInfo = instance.GetType().GetProperties().Where(p =>
+                                !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
+                                typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)).FirstOrDefault();
+
+            if (propertyInfo == null)
+            {
+                return false;
+            }
+
+            dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(instance);
+
+            // Is property initialized?
+            if (dynamicPropertiesDictionary == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.
         /// </summary>
         /// <param name="propertyInfo">Property in question.</param>
@@ -775,60 +828,6 @@ namespace Microsoft.OData.Client.Metadata
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Returns true if the <paramref name="instance"/> is an instance of an open type in the <paramref name="model"/>.
-        /// </summary>
-        /// <param name="instance">The instance to examine</param>
-        /// <param name="model">The client model.</param>
-        /// <returns></returns>
-        internal static bool IsInstanceOfOpenType(object instance, ClientEdmModel model)
-        {
-            Debug.Assert(instance != null, $"{nameof(instance)} !=null");
-            Debug.Assert(model != null, $"{nameof(model)} !=null");
-
-            Type clientType = instance.GetType();
-            ClientTypeAnnotation clientTypeAnnotation = model.GetClientTypeAnnotation(clientType);
-
-            Debug.Assert(clientTypeAnnotation != null, $"{nameof(clientTypeAnnotation)} != null");
-
-            // TODO: Populate dynamic properties only if this is an open (entity or complex) type
-            return clientTypeAnnotation.EdmType.IsOpen();
-        }
-
-        /// <summary>
-        /// Returns true if the <paramref name="instance"/> contains an non-null dictionary property of string and object
-        /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
-        /// </summary>
-        /// <param name="instance">Object with expected dictionary property</param>
-        /// <param name="dynamicPropertiesDictionary">Reference to the dictionary</param>
-        /// <returns>true if expected dictionary is found</returns>
-        internal static bool TryGetDynamicPropertiesDictionary(object instance, out IDictionary<string, object> dynamicPropertiesDictionary)
-        {
-            Debug.Assert(instance != null, $"{nameof(instance)} != null");
-
-            dynamicPropertiesDictionary = default(IDictionary<string, object>);
-
-            PropertyInfo propertyInfo = instance.GetType().GetProperties().Where(p =>
-                                !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
-                                typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)
-                            ).FirstOrDefault();
-
-            if (propertyInfo == null)
-            {
-                return false;
-            }
-
-            dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(instance);
-
-            // Is property initialized?
-            if (dynamicPropertiesDictionary == null)
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }

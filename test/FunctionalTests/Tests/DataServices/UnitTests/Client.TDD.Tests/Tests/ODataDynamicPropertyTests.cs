@@ -127,7 +127,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             };
 
             this.context.ResolveName = type => {
-                // Lazy approach to resolving server type names - alternative with be multiple if/else blocks
+                // Lazy approach to resolving server type names - alternative would be multiple if/else blocks
                 return serverTypeNames.FirstOrDefault(d => d.EndsWith(type.Name, StringComparison.Ordinal));
             };
 
@@ -147,7 +147,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 {
                     return null;
                 }
-                // Lazy approach to resolving client types - alternative with be multiple if/else blocks
+                // Lazy approach to resolving client types - alternative would be multiple if/else blocks
                 return serverTypeNameToClientTypeMapping[name];
             };
 
@@ -200,8 +200,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             };
 
             var query = context.CreateQuery<T>(entitySetName);
-            T materializedObject = query.FirstOrDefault();
 
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            T materializedObject = query.ExecuteAsync().GetAwaiter().GetResult().FirstOrDefault();
+#else
+            T materializedObject = query.FirstOrDefault();
+#endif       
             return materializedObject;
         }
 
