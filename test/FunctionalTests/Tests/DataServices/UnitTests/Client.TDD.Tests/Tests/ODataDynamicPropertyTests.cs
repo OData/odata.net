@@ -191,12 +191,38 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             // Ride on OnMessageCreating to substitute the transport layer by supplying the equivalent response from an odata service
             context.Configurations.RequestPipeline.OnMessageCreating = (args) =>
             {
+                var contentTypeHeader = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
+                var odataVersionHeader = "4.0";
+
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
                 return new Microsoft.OData.Client.TDDUnitTests.Tests.CustomizedHttpWebRequestMessage(args,
                     rawJsonResponse,
                     new Dictionary<string, string>
                     {
-                        {"Content-Type", "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8"},
+                        {"Content-Type", contentTypeHeader},
+                        {"OData-Version", odataVersionHeader},
                     });
+#else
+                var requestMessage = new Microsoft.OData.Tests.InMemoryMessage { Url = args.RequestUri, Method = args.Method, Stream = new MemoryStream() };
+
+                foreach (var header in args.Headers)
+                {
+                    requestMessage.SetHeader(header.Key, header.Value);
+                }
+
+                return new ClientExtensions.TestDataServiceClientRequestMessage(requestMessage, () => {
+                    var responseMessage = new Microsoft.OData.Tests.InMemoryMessage
+                    {
+                        StatusCode = 200,
+                        Stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(rawJsonResponse))
+                    };
+                    
+                    responseMessage.SetHeader("Content-Type", contentTypeHeader);
+                    responseMessage.SetHeader("OData-Version", odataVersionHeader);
+
+                    return responseMessage;
+                });
+#endif
             };
 
             var query = context.CreateQuery<T>(entitySetName);
@@ -204,7 +230,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
             T materializedObject = query.Execute().FirstOrDefault();
 #else
-            T materializedObject = query.ByKey(1).GetValueAsync().Result;
+            var asyncResult = query.BeginExecute(null, null);
+            asyncResult.AsyncWaitHandle.WaitOne();
+            var queryResult = query.EndExecute(asyncResult);
+
+            T materializedObject = queryResult.FirstOrDefault();
 #endif
             return materializedObject;
         }
