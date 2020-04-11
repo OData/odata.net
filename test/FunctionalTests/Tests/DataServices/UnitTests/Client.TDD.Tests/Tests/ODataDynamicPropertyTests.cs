@@ -201,11 +201,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var query = context.CreateQuery<T>(entitySetName);
 
-#if (NETCOREAPP1_0 || NETCOREAPP2_0)
-            T materializedObject = query.ExecuteAsync().GetAwaiter().GetResult().FirstOrDefault();
-#else
-            T materializedObject = query.FirstOrDefault();
-#endif       
+            T materializedObject = query.Execute().FirstOrDefault();
+       
             return materializedObject;
         }
 
