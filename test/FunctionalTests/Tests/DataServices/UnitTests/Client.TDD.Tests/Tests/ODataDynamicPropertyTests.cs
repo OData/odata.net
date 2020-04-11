@@ -204,7 +204,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
             T materializedObject = query.Execute().FirstOrDefault();
 #else
-            T materializedObject = query.ExecuteAsync().Result.FirstOrDefault();
+            T materializedObject = query.ByKey(1).GetValueAsync().Result;
 #endif
             return materializedObject;
         }
