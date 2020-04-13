@@ -290,7 +290,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Value
 
             if (primitiveValue.Value.GetType() == typeof(string))
             {
-                // unboxing
                 return (string)primitiveValue.Value;
             }
 

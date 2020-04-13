@@ -22,14 +22,21 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
         /// Try to parse the input json value <see cref="IJsonValue"/> to <see cref="CsdlAnnotation"/>.
         /// </summary>
         /// <param name="annotionName">The input annotation name, annotation name should start with '@'.</param>
-        /// <param name="jsonValue"></param>
-        /// <param name="jsonPath"></param>
-        /// <param name="elementName">output the element name if this annotation for another annotation.
-        /// for example: "@Measures.ISOCurrency@Core.Description": "The parent company’s currency"
-        /// </param>
-        /// <returns></returns>
+        /// <param name="jsonValue">The <see cref="IJsonValue"/> to read from.</param>
+        /// <param name="jsonPath">The json node path.</param>
+        /// <returns>null or the parsed <see cref="CsdlAnnotation"/>.</returns>
         public static CsdlAnnotation ParseCsdlAnnotation(string annotionName, IJsonValue jsonValue, IJsonPath jsonPath)
         {
+            if (jsonValue == null)
+            {
+                throw new ArgumentNullException("jsonValue");
+            }
+
+            if (jsonPath == null)
+            {
+                throw new ArgumentNullException("jsonPath");
+            }
+
             // An annotation is represented as a member whose name consists of an at (@) character,
             // followed by the qualified name of a term, optionally followed by a hash (#) and a qualifier.
             string qualifier;
@@ -48,6 +55,12 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             return new CsdlAnnotation(termName, qualifier, expression, location);
         }
 
+        /// <summary>
+        /// Build the <see cref="CsdlExpressionBase"/> from the <see cref="IJsonValue"/>.
+        /// </summary>
+        /// <param name="jsonValue">The <see cref="IJsonValue"/> to read from.</param>
+        /// <param name="jsonPath">The json node path.</param>
+        /// <returns>null or the parsed <see cref="CsdlExpressionBase"/>.</returns>
         public static CsdlExpressionBase BuildExpression(IJsonValue jsonValue, IJsonPath jsonPath)
         {
             if (jsonValue == null)
@@ -125,7 +138,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             {
                 string stringValue = (string)value;
 
-                // We can't distiguish the string from other types now..
+                // We can't distiguish the string from other types now.
                 // So for others, let's return as string constant.
                 return new CsdlConstantExpression(EdmValueKind.String, stringValue, location);
             }
@@ -241,7 +254,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
 
             CsdlExpressionBase expression = BuildExpression(jsonValue, jsonPath);
 
-            CsdlTypeReference typeReference = null; // build the type??????????
+            CsdlTypeReference typeReference = CsdlJsonParseHelper.ParseCsdlTypeReference(objectValue, jsonPath);
 
             return new CsdlCastExpression(typeReference, expression, new CsdlLocation(jsonPath.Path));
         }
@@ -283,11 +296,10 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 expression = BuildExpression(jsonValue, jsonPath);
             }
 
-            CsdlTypeReference typeReference = null; // build the type??????????
             // If the specified type is a primitive type or a collection of primitive types,
             // the facet members $MaxLength, $Unicode, $Precision, $Scale, and $SRID MAY be specified if applicable to the specified primitive type.
             // If the facet members are not specified, their values are considered unspecified.
-            // edmTypeReference = BuildTypeReference(); // TODO: 
+            CsdlTypeReference typeReference = CsdlJsonParseHelper.ParseCsdlTypeReference(objectValue, jsonPath);
 
             return new CsdlIsTypeExpression(typeReference, expression, new CsdlLocation(jsonPath.Path));
         }
@@ -344,6 +356,14 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             {
                 // Try to build the type. The type should be "Complex type" or "Entity Type".
                 // structuredTypeReference = GetOrFindTheType();
+                string typeName = objectValue.ParseOptionalProperty("@type", jsonPath, (v, p) => v.ParseAsString(p));
+                int index = typeName.IndexOf('#');
+                if (index >= 0)
+                {
+                    typeName = typeName.Substring(index + 1); // remove the "#"
+                }
+
+                typeReference = new CsdlNamedTypeReference(typeName, isNullable: true, new CsdlLocation(jsonPath.Path));
             }
 
             IList<CsdlPropertyValue> propertyValues = new List<CsdlPropertyValue>();

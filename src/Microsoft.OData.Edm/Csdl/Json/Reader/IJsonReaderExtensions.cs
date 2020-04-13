@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         /// <summary>
         /// Reads the value from the <paramref name="jsonReader"/>
         /// </summary>
-        /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
+        /// <param name="jsonReader">The <see cref="IJsonReader"/> to read from.</param>
         /// <returns>The <see cref="IJsonValue"/> read.</returns>
         public static IJsonValue ReadAsJsonValue(this IJsonReader jsonReader)
         {
@@ -152,8 +152,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
 
             return arrayValue;
         }
-
-
 
         /// <summary>
         /// Reads the next node from the <paramref name="jsonReader"/>,

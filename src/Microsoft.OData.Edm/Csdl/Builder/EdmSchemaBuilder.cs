@@ -35,6 +35,7 @@ namespace Microsoft.OData.Edm.Csdl.Builder
         private readonly IDictionary<string, EdmEnumType> _enumTypes = new Dictionary<string, EdmEnumType>();
         private readonly IDictionary<string, EdmTypeDefinition> _typeDefinitions = new Dictionary<string, EdmTypeDefinition>();
         private readonly IDictionary<string, EdmTerm> _terms = new Dictionary<string, EdmTerm>();
+        private readonly IDictionary<string, EdmEntityContainer> _entityContainers = new Dictionary<string, EdmEntityContainer>();
         private readonly IList<EdmAction> _actions = new List<EdmAction>();
         private readonly IList<EdmFunction> _functions = new List<EdmFunction>();
         private readonly IDictionary<string, EdmNavigationSource> _navigationSources = new Dictionary<string, EdmNavigationSource>(); // key is the "entityContainerFullName.EntitySetname"
@@ -102,11 +103,267 @@ namespace Microsoft.OData.Edm.Csdl.Builder
             BuildSchemaOutOfLineAnnotations();
         }
 
-        public static void BuildSchemaOutOfLineAnnotations()
+        public void BuildSchemaOutOfLineAnnotations()
         {
-
+            foreach (var csdlModel in _modelMapping)
+            {
+                foreach (var csdlSchema in csdlModel.Key.Schemata)
+                {
+                    foreach (CsdlAnnotations annotations in csdlSchema.OutOfLineAnnotations)
+                    {
+                        BuildAnnotations(annotations, csdlSchema, csdlModel.Key, csdlModel.Value);
+                    }
+                }
+            }
         }
 
+        private void BuildAnnotations(CsdlAnnotations annotations, CsdlSchema csdlSchema, CsdlModel csdlModel, EdmModel edmModel)
+        {
+            string targetName = csdlModel.ReplaceAlias(annotations.Target);
+            IEdmVocabularyAnnotatable target = ComputeTarget(targetName, csdlModel);
+
+            if (target != null)
+            {
+                foreach (var csdlAnnotation in annotations.Annotations)
+                {
+                    string namespaceQualifiedTermName = csdlModel.ReplaceAlias(csdlAnnotation.Term);
+                    IEdmTerm term = FindTerm(namespaceQualifiedTermName);
+                    if (term == null)
+                    {
+                        term = new UnresolvedVocabularyTerm(namespaceQualifiedTermName);
+                    }
+
+                    IEdmTypeReference typeRef = GetTermTypeReference(term);
+                    IEdmExpression expression = BuildEdmExpression(csdlAnnotation.Expression, csdlModel, typeRef);
+
+                    string qualifier = annotations.Qualifier ?? csdlAnnotation.Qualifier;
+                    EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, term, qualifier, expression);
+                    annotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
+                    edmModel.AddVocabularyAnnotation(annotation);
+                }
+            }
+        }
+
+        private IEdmVocabularyAnnotatable ComputeTarget(string target, CsdlModel csdlModel)
+        {
+            string[] targetSegments = target.Split('/');
+            int targetSegmentsCount = targetSegments.Count();
+            IEdmEntityContainer container;
+
+            if (targetSegmentsCount == 1)
+            {
+                string elementName = csdlModel.ReplaceAlias(targetSegments[0]);
+                IEdmSchemaType schemaType = FindSchemaType(elementName);
+                if (schemaType != null)
+                {
+                    return schemaType;
+                }
+
+                EdmTerm term;
+                if (_terms.TryGetValue(elementName, out term))
+                {
+                    return term;
+                }
+
+                container = FindContainer(elementName);
+                if (container != null)
+                {
+                    return container;
+                }
+
+                //IEdmOperation operation = this.FindParameterizedOperation(elementName, this.Schema.FindOperations, this.CreateAmbiguousOperation);
+                //if (operation != null)
+                //{
+                //    return operation;
+                //}
+
+                //return new UnresolvedType(this.Schema.UnresolvedName(targetSegments[0]), this.Location);
+            }
+
+            if (targetSegmentsCount == 2)
+            {
+                string elementName = csdlModel.ReplaceAlias(targetSegments[0]);
+
+                container = FindContainer(elementName);
+                if (container != null)
+                {
+                    IEdmEntityContainerElement containerElement = container.FindEntitySetExtended(targetSegments[1]);
+                    if (containerElement != null)
+                    {
+                        return containerElement;
+                    }
+
+                    //IEdmOperationImport operationImport = FindParameterizedOperationImport(targetSegments[1], container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
+                    //if (operationImport != null)
+                    //{
+                    //    return operationImport;
+                    //}
+
+                    //return new UnresolvedEntitySet(targetSegments[1], container, this.Location);
+                }
+
+                IEdmSchemaType schemaType = FindSchemaType(elementName);
+                if (schemaType != null)
+                {
+                    IEdmStructuredType structuredType;
+                    IEdmEnumType enumType;
+                    if ((structuredType = schemaType as IEdmStructuredType) != null)
+                    {
+                        IEdmProperty property = structuredType.FindProperty(targetSegments[1]);
+                        if (property != null)
+                        {
+                            return property;
+                        }
+
+                    //    return new UnresolvedProperty(structuredType, targetSegments[1], this.Location);
+                    }
+                    else if ((enumType = schemaType as IEdmEnumType) != null)
+                    {
+                        foreach (IEdmEnumMember member in enumType.Members)
+                        {
+                            if (String.Equals(member.Name, targetSegments[1], StringComparison.OrdinalIgnoreCase))
+                            {
+                                return member;
+                            }
+                        }
+
+                     //   return new UnresolvedEnumMember(targetSegments[1], enumType, this.Location);
+                    }
+                }
+
+                //IEdmOperation operation = this.FindParameterizedOperation(targetSegments[0], this.Schema.FindOperations, this.CreateAmbiguousOperation);
+                //if (operation != null)
+                //{
+                //    // $ReturnType
+                //    if (targetSegments[1] == CsdlConstants.OperationReturnExternalTarget)
+                //    {
+                //        if (operation.ReturnType != null)
+                //        {
+                //            return operation.GetReturn();
+                //        }
+
+                //        return new UnresolvedReturn(operation, this.Location);
+                //    }
+
+                //    IEdmOperationParameter parameter = operation.FindParameter(targetSegments[1]);
+                //    if (parameter != null)
+                //    {
+                //        return parameter;
+                //    }
+
+                //    return new UnresolvedParameter(operation, targetSegments[1], this.Location);
+                //}
+
+                //return new UnresolvedProperty(new UnresolvedEntityType(this.Schema.UnresolvedName(targetSegments[0]), this.Location), targetSegments[1], this.Location);
+            }
+
+            if (targetSegmentsCount == 3)
+            {
+                // The only valid target with three segments is a function parameter, or an operation return.
+                string containerName = csdlModel.ReplaceAlias(targetSegments[0]);
+                string operationName = targetSegments[1];
+                string parameterName = targetSegments[2];
+
+                //container = container = FindContainer(containerName);
+                //if (container != null)
+                //{
+                //    IEdmOperationImport operationImport = FindParameterizedOperationImport(operationName, container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
+                //    if (operationImport != null)
+                //    {
+                //        // $ReturnType
+                //        if (parameterName == CsdlConstants.OperationReturnExternalTarget)
+                //        {
+                //            if (operationImport.Operation.ReturnType != null)
+                //            {
+                //                return operationImport.Operation.GetReturn();
+                //            }
+
+                //            return new UnresolvedReturn(operationImport.Operation, this.Location);
+                //        }
+
+                //        IEdmOperationParameter parameter = operationImport.Operation.FindParameter(parameterName);
+                //        if (parameter != null)
+                //        {
+                //            return parameter;
+                //        }
+
+                //        return new UnresolvedParameter(operationImport.Operation, parameterName, this.Location);
+                //    }
+                //}
+
+                //string qualifiedOperationName = containerName + "/" + operationName;
+                //UnresolvedOperation unresolvedOperation = new UnresolvedOperation(qualifiedOperationName, Edm.Strings.Bad_UnresolvedOperation(qualifiedOperationName), this.Location);
+                //if (parameterName == CsdlConstants.OperationReturnExternalTarget)
+                //{
+                //    return new UnresolvedReturn(unresolvedOperation, this.Location);
+                //}
+                //else
+                //{
+                //    return new UnresolvedParameter(unresolvedOperation, parameterName, this.Location);
+                //}
+            }
+
+            // return new BadElement(new EdmError[] { new EdmError(this.Location, EdmErrorCode.ImpossibleAnnotationsTarget, Edm.Strings.CsdlSemantics_ImpossibleAnnotationsTarget(target)) });
+            return null;
+        }
+
+        //private IEdmOperation FindParameterizedOperation(string parameterizedName, CsdlModel model)
+        //{
+        //    int openParen = parameterizedName.IndexOf('(');
+        //    int closeParen = parameterizedName.LastIndexOf(')');
+        //    if (openParen < 0)
+        //    {
+        //        return null;
+        //    }
+
+        //    string name = parameterizedName.Substring(0, openParen);
+        //    string[] parameters = parameterizedName.Substring(openParen + 1, closeParen - (openParen + 1)).Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+        //    IEnumerable<IEdmOperation> matchingFunctions = this.FindParameterizedOperationFromList(findFunctions(name).Cast<IEdmOperation>(), parameters);
+        //    if (matchingFunctions.Count() == 0)
+        //    {
+        //        return null;
+        //    }
+
+        //    if (matchingFunctions.Count() == 1)
+        //    {
+        //        return matchingFunctions.First();
+        //    }
+        //    else
+        //    {
+        //        IEdmOperation ambiguous = ambiguityCreator(matchingFunctions);
+        //        return ambiguous;
+        //    }
+        //}
+
+        private EdmEntityContainer FindContainer(string fullNamespaceQualifiedName)
+        {
+            EdmEntityContainer entityContainer;
+            _entityContainers.TryGetValue(fullNamespaceQualifiedName, out entityContainer);
+            return entityContainer;
+        }
+
+        private IEdmSchemaType FindSchemaType(string fullNamespaceQualifiedName)
+        {
+            EdmStructuredType structuredType;
+            if (_structuredTypes.TryGetValue(fullNamespaceQualifiedName, out structuredType))
+            {
+                return structuredType as IEdmSchemaType;
+            }
+
+            EdmEnumType enumType;
+            if (_enumTypes.TryGetValue(fullNamespaceQualifiedName, out enumType))
+            {
+                return enumType;
+            }
+
+            EdmTypeDefinition typeDefinition;
+            if (_typeDefinitions.TryGetValue(fullNamespaceQualifiedName, out typeDefinition))
+            {
+                return typeDefinition;
+            }
+
+            return null;
+        }
 
         private void BuildSchemaTypeStart()
         {
@@ -487,6 +744,8 @@ namespace Microsoft.OData.Edm.Csdl.Builder
         {
             EdmEntityContainer edmEntityContainer = new EdmEntityContainer(csdlSchema.Namespace, csdlEntityContainer.Name);
             edmModel.AddElement(edmEntityContainer);
+
+            _entityContainers[csdlSchema.Namespace + "." + csdlEntityContainer.Name] = edmEntityContainer;
 
             // first build all navigation sources, because the navigation binding will use it.
             foreach (var csdlEntitySet in csdlEntityContainer.EntitySets)

@@ -748,7 +748,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             ValidateKind(propertyObject, jsonPath, "Property", required: false);
 
             // It MAY contain the member $Type, $Collection, $Nullable, $MaxLength, $Unicode, $Precision, $Scale, $SRID, and $DefaultValue.
-            CsdlTypeReference typeReference = ParseCsdlTypeReference(propertyObject, jsonPath);
+            CsdlTypeReference typeReference = CsdlJsonParseHelper.ParseCsdlTypeReference(propertyObject, jsonPath);
 
             string defaultValue = null;
             IList<CsdlAnnotation> propertyAnnotations = new List<CsdlAnnotation>();
@@ -1148,7 +1148,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             ValidateKind(termObject, jsonPath, "Term", required: true);
 
             // Parse the term type.
-            CsdlTypeReference typeReference = ParseCsdlTypeReference(termObject, jsonPath);
+            CsdlTypeReference typeReference = CsdlJsonParseHelper.ParseCsdlTypeReference(termObject, jsonPath);
 
             IList<string> appliesTo = null;
             string defaultValue = null;
@@ -1398,7 +1398,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             CheckArgumentsAndValidateValueKind(" ", jsonValue, jsonPath, JsonValueKind.JObject);
             JsonObjectValue parameterObj = (JsonObjectValue)jsonValue;
 
-            CsdlTypeReference parameterType = ParseCsdlTypeReference(parameterObj, jsonPath);
+            CsdlTypeReference parameterType = CsdlJsonParseHelper.ParseCsdlTypeReference(parameterObj, jsonPath);
 
             IList<CsdlAnnotation> prameterAnnotations = new List<CsdlAnnotation>();
             string name = null;
@@ -1451,7 +1451,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
             JsonObjectValue returnObj = (JsonObjectValue)jsonValue;
 
             // It MAY contain the members $Type, $Collection, $Nullable, $MaxLength, $Unicode, $Precision, $Scale, and $SRID.
-            CsdlTypeReference typeReference = ParseCsdlTypeReference(returnObj, jsonPath);
+            CsdlTypeReference typeReference = CsdlJsonParseHelper.ParseCsdlTypeReference(returnObj, jsonPath);
 
             IList<CsdlAnnotation> annotations = new List<CsdlAnnotation>();
             returnObj.ProcessProperty(jsonPath, (propertyName, propertyValue) =>
@@ -1606,130 +1606,6 @@ namespace Microsoft.OData.Edm.Csdl.Json.Parser
                 termName = name.Substring(index); // with @
                 return name.Substring(0, index);
             }
-        }
-
-        private static CsdlTypeReference ParseCsdlTypeReference(JsonObjectValue objectValue, IJsonPath jsonPath)
-        {
-            Debug.Assert(objectValue != null && jsonPath != null);
-
-            // $Type
-            // For single-valued terms the value of $Type is the qualified name of the property/term’s type.
-            // For collection-valued terms the value of $Type is the qualified name of the term’s item type, and the member $Collection MUST be present with the literal value true.
-            // Absence of the $Type member means the type is Edm.String.
-            string typeName = objectValue.ParseOptionalProperty("$Type", jsonPath, (v, p) => v.ParseAsString(p));
-            typeName = typeName == null ? "Edm.String" : typeName;
-
-            // $Collection
-            // For collection-valued properties the value of $Type is the qualified name of the property’s item type,
-            // and the member $Collection MUST be present with the literal value true.
-            bool? collection = objectValue.ParseOptionalProperty("$Collection", jsonPath, (v, p) => v.ParseAsBoolean(p));
-
-            // $Nullable,
-            // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
-            bool? isNullable = objectValue.ParseOptionalProperty("$Nullable", jsonPath, (v, p) => v.ParseAsBoolean(p));
-            bool nullable = isNullable == null ? false : isNullable.Value;
-
-            // $MaxLength,
-            // The value of $MaxLength is a positive integer.
-            // CSDL xml defines a symbolic value max that is only allowed in OData 4.0 responses. This symbolic value is not allowed in CDSL JSON documents at all.
-            int? maxLength = objectValue.ParseOptionalProperty("$MaxLength", jsonPath, (v, p) => v.ParseAsInteger(p));
-
-            // $Unicode,
-            // The value of $Unicode is one of the Boolean literals true or false. Absence of the member means true.
-            bool? unicode = objectValue.ParseOptionalProperty("$Unicode", jsonPath, (v, p) => v.ParseAsBoolean(p));
-
-            // $Precision,
-            // The value of $Precision is a number.
-            int? precision = objectValue.ParseOptionalProperty("$Precision", jsonPath, (v, p) => v.ParseAsInteger(p));
-
-            // $Scale,
-            int? scale = objectValue.ParseOptionalProperty("$Scale", jsonPath, (v, p) => v.ParseAsInteger(p));
-
-            // $SRID,
-            // The value of $SRID is a string containing a number or the symbolic value variable.
-            // So far, ODL doesn't support string of SRID.
-            int? srid = objectValue.ParseOptionalProperty("$SRID", jsonPath, (v, p) => v.ParseAsInteger(p));
-
-            CsdlLocation location = new CsdlLocation(jsonPath.Path);
-            CsdlTypeReference csdlType = ParseNamedTypeReference(typeName, nullable, false, maxLength, unicode, precision, scale, srid, location);
-            if (collection != null && collection.Value)
-            {
-                csdlType = new CsdlExpressionTypeReference(new CsdlCollectionType(csdlType, location), nullable, location);
-            }
-
-            return csdlType;
-        }
-
-        private static CsdlNamedTypeReference ParseNamedTypeReference(string typeName, bool isNullable,
-             bool isUnbounded,
-             int? maxLength,
-             bool? unicode,
-             int? precision,
-             int? scale,
-             int? srid,
-             CsdlLocation parentLocation)
-        {
-            EdmPrimitiveTypeKind kind = EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName);
-            switch (kind)
-            {
-                case EdmPrimitiveTypeKind.Boolean:
-                case EdmPrimitiveTypeKind.Byte:
-                case EdmPrimitiveTypeKind.Double:
-                case EdmPrimitiveTypeKind.Guid:
-                case EdmPrimitiveTypeKind.Int16:
-                case EdmPrimitiveTypeKind.Int32:
-                case EdmPrimitiveTypeKind.Int64:
-                case EdmPrimitiveTypeKind.SByte:
-                case EdmPrimitiveTypeKind.Single:
-                case EdmPrimitiveTypeKind.Stream:
-                case EdmPrimitiveTypeKind.Date:
-                case EdmPrimitiveTypeKind.PrimitiveType:
-                    return new CsdlPrimitiveTypeReference(kind, typeName, isNullable, parentLocation);
-
-                case EdmPrimitiveTypeKind.Binary:
-                    return new CsdlBinaryTypeReference(isUnbounded, maxLength, typeName, isNullable, parentLocation);
-
-                case EdmPrimitiveTypeKind.DateTimeOffset:
-                case EdmPrimitiveTypeKind.Duration:
-                case EdmPrimitiveTypeKind.TimeOfDay:
-                    return new CsdlTemporalTypeReference(kind, precision, typeName, isNullable, parentLocation);
-
-                case EdmPrimitiveTypeKind.Decimal:
-                    return new CsdlDecimalTypeReference(precision, scale, typeName, isNullable, parentLocation);
-
-                case EdmPrimitiveTypeKind.String:
-                    return new CsdlStringTypeReference(isUnbounded, maxLength, unicode, typeName, isNullable, parentLocation);
-
-                case EdmPrimitiveTypeKind.Geography:
-                case EdmPrimitiveTypeKind.GeographyPoint:
-                case EdmPrimitiveTypeKind.GeographyLineString:
-                case EdmPrimitiveTypeKind.GeographyPolygon:
-                case EdmPrimitiveTypeKind.GeographyCollection:
-                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
-                case EdmPrimitiveTypeKind.GeographyMultiLineString:
-                case EdmPrimitiveTypeKind.GeographyMultiPoint:
-                    return new CsdlSpatialTypeReference(kind, srid, typeName, isNullable, parentLocation);
-
-                case EdmPrimitiveTypeKind.Geometry:
-                case EdmPrimitiveTypeKind.GeometryPoint:
-                case EdmPrimitiveTypeKind.GeometryLineString:
-                case EdmPrimitiveTypeKind.GeometryPolygon:
-                case EdmPrimitiveTypeKind.GeometryCollection:
-                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
-                case EdmPrimitiveTypeKind.GeometryMultiLineString:
-                case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                    return new CsdlSpatialTypeReference(kind, srid, typeName, isNullable, parentLocation);
-
-                case EdmPrimitiveTypeKind.None:
-                    if (string.Equals(typeName, CsdlConstants.TypeName_Untyped, StringComparison.Ordinal))
-                    {
-                        return new CsdlUntypedTypeReference(typeName, parentLocation);
-                    }
-
-                    break;
-            }
-
-            return new CsdlNamedTypeReference(isUnbounded, maxLength, unicode, precision, scale, srid, typeName, isNullable, parentLocation);
         }
 
         /// <summary>

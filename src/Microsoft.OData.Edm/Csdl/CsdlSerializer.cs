@@ -196,6 +196,7 @@ namespace Microsoft.OData.Edm.Csdl
             return Deserialize(jsonReader, options);
         }
 
+
         /// <summary>
         /// 
         /// </summary>

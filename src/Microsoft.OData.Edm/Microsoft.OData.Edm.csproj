@@ -59,6 +59,7 @@
     <Compile Include="Csdl\Builder\EdmSchemaBuilder.cs" />
     <Compile Include="Csdl\Builder\EdmModelBuilder.cs" />
     <Compile Include="Csdl\Builder\EdmTypeJsonBuilder.cs" />
+    <Compile Include="Csdl\Json\Parser\CsdlJsonParseHelper.cs" />
     <Compile Include="Csdl\Json\Parser\AnnotationJsonParser.cs" />
     <Compile Include="Csdl\Json\Parser\CsdlJsonModelParser.cs" />
     <Compile Include="Csdl\Json\Parser\CsdlJsonSchemaParser.cs" />

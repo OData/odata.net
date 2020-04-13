@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -28,7 +27,7 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         /// The goal is for the entire buffer to fit into one page so that we don't cause
         /// too many L1 cache misses.
         /// </remarks>
-        private const int InitialCharacterBufferSize = ((4 * 1024) / 2) - 8;
+        private const int InitialCharacterBufferSize = (4 * 1024 / 2) - 8;
 
         /// <summary>
         /// The text reader to read input characters from.
@@ -978,38 +977,23 @@ namespace Microsoft.OData.Edm.Csdl.Json.Reader
         private sealed class Scope
         {
             /// <summary>
-            /// The type of the scope.
-            /// </summary>
-            private readonly ScopeType type;
-
-            /// <summary>
             /// Constructor.
             /// </summary>
             /// <param name="type">The type of the scope.</param>
             public Scope(ScopeType type)
             {
-                this.type = type;
+                this.Type = type;
             }
 
             /// <summary>
             /// Get/Set the number of values found under the current scope.
             /// </summary>
-            public int ValueCount
-            {
-                get;
-                set;
-            }
+            public int ValueCount { get; set; }
 
             /// <summary>
             /// Gets the scope type for this scope.
             /// </summary>
-            public ScopeType Type
-            {
-                get
-                {
-                    return this.type;
-                }
-            }
+            public ScopeType Type { get; }
         }
     }
 }
