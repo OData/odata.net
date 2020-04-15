@@ -380,8 +380,7 @@ namespace Microsoft.OData.JsonLight
             this.jsonWriter.WriteName(PropertyMethod);
             this.jsonWriter.WriteValue(method);
 
-            this.jsonWriter.WriteName(PropertyUrl);
-            this.jsonWriter.WriteValue(UriUtils.UriToString(uri));
+            this.WriteRequestUri(uri, payloadUriOption);
 
             return this.CurrentOperationRequestMessage;
         }
@@ -646,6 +645,42 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.jsonWriter.EndObjectScope();
+        }
+
+        private void WriteRequestUri(Uri uri, BatchPayloadUriOption payloadUriOption)
+        {
+            this.jsonWriter.WriteName(PropertyUrl);
+
+            if (uri.IsAbsoluteUri)
+            {
+                Uri baseUri = this.OutputContext.MessageWriterSettings.BaseUri;
+                string absoluteUriString = uri.AbsoluteUri;
+
+                switch (payloadUriOption)
+                {
+                    case BatchPayloadUriOption.AbsoluteUri:
+                        this.jsonWriter.WriteValue(UriUtils.UriToString(uri));
+                        break;
+
+                    case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
+                        string absoluteResourcePath = absoluteUriString.Substring(absoluteUriString.IndexOf('/', absoluteUriString.IndexOf("//", StringComparison.Ordinal) + 2));
+                        this.jsonWriter.WriteValue(absoluteResourcePath);
+                        this.CurrentOperationRequestMessage.SetHeader("host", string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}:{1}", uri.Host, uri.Port));
+                        break;
+
+                    case BatchPayloadUriOption.RelativeUri:
+                        Debug.Assert(baseUri != null, "baseUri != null");
+                        string baseUriString = UriUtils.UriToString(baseUri);
+                        Debug.Assert(uri.AbsoluteUri.StartsWith(baseUriString, StringComparison.Ordinal), "absoluteUriString.StartsWith(baseUriString)");
+                        string relativeResourcePath = uri.AbsoluteUri.Substring(baseUriString.Length);
+                        this.jsonWriter.WriteValue(relativeResourcePath);
+                        break;
+                }
+            }
+            else
+            {
+                this.jsonWriter.WriteValue(UriUtils.UriToString(uri));
+            }
         }
     }
 }
