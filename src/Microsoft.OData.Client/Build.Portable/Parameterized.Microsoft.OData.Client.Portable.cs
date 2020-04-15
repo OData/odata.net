@@ -1246,10 +1246,10 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Can't add query option '{0}' because it begins with reserved character '$'."
+        /// A string like "The query option '{0}' is not supported or is controlled by the OData service."
         /// </summary>
-        internal static string ALinq_CantAddQueryOptionStartingWithDollarSign(object p0) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_CantAddQueryOptionStartingWithDollarSign, p0);
+        internal static string ALinq_QueryOptionNotSupported(object p0) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_QueryOptionNotSupported, p0);
         }
 
         /// <summary>

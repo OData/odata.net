@@ -174,7 +174,7 @@ namespace Microsoft.OData.Client {
         internal const string ALinq_CantAddQueryOption = "ALinq_CantAddQueryOption";
         internal const string ALinq_CantAddDuplicateQueryOption = "ALinq_CantAddDuplicateQueryOption";
         internal const string ALinq_CantAddAstoriaQueryOption = "ALinq_CantAddAstoriaQueryOption";
-        internal const string ALinq_CantAddQueryOptionStartingWithDollarSign = "ALinq_CantAddQueryOptionStartingWithDollarSign";
+        internal const string ALinq_QueryOptionNotSupported = "ALinq_QueryOptionNotSupported";
         internal const string ALinq_CantReferToPublicField = "ALinq_CantReferToPublicField";
         internal const string ALinq_QueryOptionsOnlyAllowedOnSingletons = "ALinq_QueryOptionsOnlyAllowedOnSingletons";
         internal const string ALinq_QueryOptionOutOfOrder = "ALinq_QueryOptionOutOfOrder";
