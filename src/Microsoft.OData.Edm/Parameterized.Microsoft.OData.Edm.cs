@@ -50,11 +50,11 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "An entity type or a collection of an entity type is expected."
+        /// A string like "An entity type or a collection of an entity type or a complex type is expected."
         /// </summary>
-        internal static string Constructable_EntityTypeOrCollectionOfEntityTypeExpected {
+        internal static string Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected {
             get {
-                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Constructable_EntityTypeOrCollectionOfEntityTypeExpected);
+                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected);
             }
         }
 

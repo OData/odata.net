@@ -112,7 +112,7 @@ namespace Microsoft.OData.Client
         internal const string ClientType_MultipleTypesWithSameName = "ClientType_MultipleTypesWithSameName";
         internal const string WebUtil_TypeMismatchInCollection = "WebUtil_TypeMismatchInCollection";
         internal const string WebUtil_TypeMismatchInNonPropertyCollection = "WebUtil_TypeMismatchInNonPropertyCollection";
-        internal const string ClientTypeCache_NonEntityTypeCannotContainEntityProperties = "ClientTypeCache_NonEntityTypeCannotContainEntityProperties";
+        internal const string ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties = "ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties";
         internal const string DataServiceException_GeneralError = "DataServiceException_GeneralError";
         internal const string Deserialize_GetEnumerator = "Deserialize_GetEnumerator";
         internal const string Deserialize_Current = "Deserialize_Current";

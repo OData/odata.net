@@ -736,10 +736,10 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "The property '{0}' is of entity type and it cannot be a property of the type '{1}', which is not of entity type.  Only entity types can contain navigation properties."
+        /// A string like "The property '{0}' is of entity type and it cannot be a property of the type '{1}', which is not of entity type or complex type.  Only entity types and complex types can contain navigation properties."
         /// </summary>
-        internal static string ClientTypeCache_NonEntityTypeCannotContainEntityProperties(object p0, object p1) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ClientTypeCache_NonEntityTypeCannotContainEntityProperties, p0, p1);
+        internal static string ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties(object p0, object p1) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties, p0, p1);
         }
 
         /// <summary>
