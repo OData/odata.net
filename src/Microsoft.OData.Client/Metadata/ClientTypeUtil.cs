@@ -731,8 +731,9 @@ namespace Microsoft.OData.Client.Metadata
 
             dynamicPropertiesDictionary = default(IDictionary<string, object>);
 
-            PropertyInfo propertyInfo = instance.GetType().GetProperties().Where(p =>
-                                !p.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute), true).Any() &&
+            BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+            PropertyInfo propertyInfo = instance.GetType().GetProperties(bindingFlags).Where(p =>
+                                p.GetCustomAttributes(typeof(ContainerPropertyAttribute), true).Any() &&
                                 typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)).FirstOrDefault();
 
             if (propertyInfo == null)
@@ -745,7 +746,20 @@ namespace Microsoft.OData.Client.Metadata
             // Is property initialized?
             if (dynamicPropertiesDictionary == null)
             {
-                return false;
+                // Programmatically initialize the dictionary if property type is IDictionary or Dictionary
+                // Nothing stops a developer who opted for POCOs from using SortedDictionary for example
+                // We can't anticipate each user scenario so we don't attempt to initialize that property in such a case
+                if (!(new[] { typeof(IDictionary<string, object>), typeof(Dictionary<string, object>) }).Contains(propertyInfo.PropertyType))
+                {
+                    return false;
+                }
+
+                Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(new Type[] { typeof(string), typeof(object) });
+                dynamicPropertiesDictionary = (IDictionary<string, object>)Util.ActivatorCreateInstance(dictionaryType);
+
+                propertyInfo.SetValue(instance, dynamicPropertiesDictionary);
+
+                return true;
             }
 
             return true;

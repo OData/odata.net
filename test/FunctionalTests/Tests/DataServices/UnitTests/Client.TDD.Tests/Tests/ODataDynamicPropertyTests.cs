@@ -448,7 +448,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void SerializationIgnoresDynamicPropertiesDictionaryWithIgnoreClientPropertyAttribute()
+        public void SerializationIgnoresDynamicPropertiesDictionaryWithNoContainerPropertyAttribute()
         {
             var editor = new Editor { Id = 1, Name = "Editor 1" };
             editor.DynamicProperties.Add("Title", "Dr");
@@ -713,7 +713,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void MaterializationIgnoresDynamicPropertiesDictionaryWithIgnoreClientPropertyAttribute()
+        public void MaterializationIgnoresDynamicPropertiesDictionaryWithNoContainerPropertyAttribute()
         {
             var rawJsonResponse = "{" +
                 "\"@odata.context\":\"http://tempuri.org/$metadata#Editors/$entity\"," +
@@ -736,6 +736,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             public string AddressLine { get; set; }
             public string City { get; set; }
+
+            [ContainerProperty]
             public IDictionary<string, object> DynamicProperties { get; set; } = new Dictionary<string, object>();
         }
 
@@ -750,6 +752,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             public int Id { get; set; }
             public string Name { get; set; }
+
+            [ContainerProperty]
             public IDictionary<string, object> DynamicProperties { get; set; } = new Dictionary<string, object>();
         }
 
@@ -758,7 +762,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             public int Id { get; set; }
             public string Name { get; set; }
-            [IgnoreClientProperty] // Signal for materialization logic not to consider property as dynamic properties container
+            // No ContainerProperty attribute - will not be considered as dynamic properties container
             public IDictionary<string, object> DynamicProperties { get; set; } = new Dictionary<string, object>();
         }
 
@@ -767,6 +771,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             public int Id { get; set; }
             public string Name { get; set; }
+            [ContainerProperty]
             public IDictionary<string, object> DynamicProperties { get; set; } = new Dictionary<string, object>();
         }
 
