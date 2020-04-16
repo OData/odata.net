@@ -731,8 +731,7 @@ namespace Microsoft.OData.Client.Metadata
 
             dynamicPropertiesDictionary = default(IDictionary<string, object>);
 
-            BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
-            PropertyInfo propertyInfo = instance.GetType().GetProperties(bindingFlags).Where(p =>
+            PropertyInfo propertyInfo = instance.GetType().GetPublicProperties(true /* instanceOnly */).Where(p =>
                                 p.GetCustomAttributes(typeof(ContainerPropertyAttribute), true).Any() &&
                                 typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)).FirstOrDefault();
 
