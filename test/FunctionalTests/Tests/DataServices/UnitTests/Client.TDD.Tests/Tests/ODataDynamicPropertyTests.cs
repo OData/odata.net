@@ -25,6 +25,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private EdmEntityType directorEntityType;
         private EdmEntityType editorEntityType;
         private EdmEntityType producerEntityType;
+        private EdmEntityType actorEntityType;
         private EdmEntityType awardEntityType;
         private string genreEnumTypeName;
         private string addressComplexTypeName;
@@ -35,6 +36,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private string editorEntitySetName;
         private string producerEntityTypeName;
         private string producerEntitySetName;
+        private string actorEntityTypeName;
+        private string actorEntitySetName;
         private string awardEntityTypeName;
         private string awardEntitySetName;
 
@@ -93,6 +96,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.producerEntityType.AddKeys(this.producerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false));
             this.serviceEdmModel.AddElement(producerEntityType);
 
+            // Actor entity type
+            this.actorEntitySetName = "Actors";
+            this.actorEntityTypeName = "ServiceNS.Actor";
+            this.actorEntityType = new EdmEntityType("ServiceNS", "Actor", null /* baseType */, false /* isAbstract */, true /* isOpen */); // Open type
+            this.actorEntityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            this.actorEntityType.AddKeys(this.actorEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false));
+            this.serviceEdmModel.AddElement(actorEntityType);
+
             // Award entity type
             this.awardEntitySetName = "Awards";
             this.awardEntityTypeName = "ServiceNS.Award";
@@ -106,6 +117,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             container.AddEntitySet(this.directorEntitySetName, this.directorEntityType, true);
             container.AddEntitySet(this.editorEntitySetName, this.editorEntityType, true);
             container.AddEntitySet(this.producerEntitySetName, this.producerEntityType, true);
+            container.AddEntitySet(this.actorEntitySetName, this.actorEntityType, true);
             container.AddEntitySet(this.awardEntitySetName, this.awardEntityType, true);
             this.serviceEdmModel.AddElement(container);
 
@@ -123,6 +135,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 this.directorEntityTypeName,
                 this.editorEntityTypeName,
                 this.producerEntityTypeName,
+                this.actorEntityTypeName,
                 this.awardEntityTypeName
             };
 
@@ -139,6 +152,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 { this.directorEntityTypeName, typeof(Director) },
                 { this.producerEntityTypeName, typeof(Producer) },
                 { this.editorEntityTypeName, typeof(Editor) },
+                { this.actorEntityTypeName, typeof(Actor) },
                 { this.awardEntityTypeName, typeof(Award) }
             };
 
@@ -155,7 +169,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             {
                 { typeof(Director).Name, this.directorEntitySetName },
                 { typeof(Editor).Name, this.editorEntitySetName },
-                { typeof(Producer).Name, this.producerEntitySetName }
+                { typeof(Producer).Name, this.producerEntitySetName },
+                { typeof(Actor).Name, this.actorEntitySetName }
             };
         }
 
@@ -490,7 +505,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             Assert.AreEqual(materializedObject.DynamicProperties.Count, 0);
         }
 
-        private void AssertShared(Director materializedObject, Type dynamicPropertyType, string dynamicPropertyName)
+        private void AssertCommon(Director materializedObject, Type dynamicPropertyType, string dynamicPropertyName)
         {
             Assert.IsNotNull(materializedObject);
             Assert.AreEqual(materializedObject.Id, 1);
@@ -511,7 +526,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            AssertShared(materializedObject, typeof(string), "Title");
+            AssertCommon(materializedObject, typeof(string), "Title");
             Assert.AreEqual(materializedObject.DynamicProperties["Title"], "Prof");
         }
 
@@ -526,7 +541,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            AssertShared(materializedObject, typeof(Collection<string>), "NickNames");
+            AssertCommon(materializedObject, typeof(Collection<string>), "NickNames");
             var primitiveValueCollection = materializedObject.DynamicProperties["NickNames"] as Collection<string>;
             Assert.IsNotNull(primitiveValueCollection);
             Assert.AreEqual(primitiveValueCollection.Count, 2);
@@ -545,7 +560,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            AssertShared(materializedObject, typeof(Genre), "FavoriteGenre");
+            AssertCommon(materializedObject, typeof(Genre), "FavoriteGenre");
             Assert.AreEqual(materializedObject.DynamicProperties["FavoriteGenre"], Genre.SciFi);
         }
 
@@ -560,7 +575,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            AssertShared(materializedObject, typeof(Collection<Genre>), "Genres");
+            AssertCommon(materializedObject, typeof(Collection<Genre>), "Genres");
             var enumValueCollection = materializedObject.DynamicProperties["Genres"] as Collection<Genre>;
             Assert.IsNotNull(enumValueCollection);
             Assert.AreEqual(enumValueCollection.Count, 2);
@@ -579,7 +594,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            AssertShared(materializedObject, typeof(Address), "WorkAddress");
+            AssertCommon(materializedObject, typeof(Address), "WorkAddress");
             var workAddress = materializedObject.DynamicProperties["WorkAddress"] as Address;
             Assert.IsNotNull(workAddress);
             Assert.AreEqual(workAddress.AddressLine, "AL1");
@@ -600,7 +615,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            AssertShared(materializedObject, typeof(Collection<Address>), "Addresses");
+            AssertCommon(materializedObject, typeof(Collection<Address>), "Addresses");
             var addresses = materializedObject.DynamicProperties["Addresses"] as Collection<Address>;
             Assert.IsNotNull(addresses);
             Assert.AreEqual(addresses.Count, 2);
@@ -627,7 +642,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            AssertShared(materializedObject, typeof(NextOfKin), "NextOfKin");
+            AssertCommon(materializedObject, typeof(NextOfKin), "NextOfKin");
             var nextOfKin = materializedObject.DynamicProperties["NextOfKin"] as NextOfKin;
             Assert.IsNotNull(nextOfKin);
             Assert.AreEqual(nextOfKin.Name, "Nok 1");
@@ -648,7 +663,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            AssertShared(materializedObject, typeof(Address), "WorkAddress");
+            AssertCommon(materializedObject, typeof(Address), "WorkAddress");
             var workAddress = materializedObject.DynamicProperties["WorkAddress"] as Address;
             Assert.IsNotNull(workAddress);
             Assert.AreEqual(workAddress.AddressLine, "AL5");
@@ -725,6 +740,61 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             Assert.AreEqual(materializedObject.DynamicProperties.Count, 0);
         }
 
+        [TestMethod]
+        public void MaterializationWithDynamicPropertiesDictionaryNotPreInitialized()
+        {
+            var rawJsonResponse = "{" +
+                "\"@odata.context\":\"http://tempuri.org/$metadata#Actors/$entity\"," +
+                "\"Id\":1,\"Name\":\"Actor 1\"," +
+                "\"Title\":\"Mr\"," +
+                "\"FavoriteGenre@odata.type\":\"#ServiceNS.Genre\",\"FavoriteGenre\":\"SciFi\"," +
+                "\"Genres@odata.type\":\"#Collection(ServiceNS.Genre)\",\"Genres\":[\"Thriller\",\"Epic\"]," +
+                "\"WorkAddress\":{\"@odata.type\":\"#ServiceNS.Address\",\"AddressLine\":\"AL1\",\"City\":\"C1\"}" +
+                "}";
+
+            var materializedObject = MaterializeEntity<Actor>(rawJsonResponse);
+
+            Assert.IsNotNull(materializedObject);
+            // Dictionary should have been dynamically initialized
+            Assert.IsNotNull(materializedObject.DynamicProperties);
+            // Total of 5 declared properties on the client type. We should only have 1 dynamic property in the dictionary
+            Assert.AreEqual(materializedObject.DynamicProperties.Count, 1);
+            Assert.IsTrue(materializedObject.DynamicProperties.ContainsKey("FavoriteGenre"));
+            Assert.IsTrue(materializedObject.DynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
+            Assert.AreEqual(materializedObject.DynamicProperties["FavoriteGenre"], Genre.SciFi);
+        }
+
+        [TestMethod]
+        public void MaterializationWithPartDynamicPropertiesMappedToDeclaredPropertiesOnClientType()
+        {
+            var rawJsonResponse = "{" +
+               "\"@odata.context\":\"http://tempuri.org/$metadata#Actors/$entity\",\"Id\":1,\"Name\":\"Actor 1\"," +
+               "\"Title\":\"Mr\"," +
+               "\"NickNames@odata.type\":\"#Collection(String)\",\"NickNames\":[\"N1\",\"N2\"]," +
+               "\"FavoriteGenre@odata.type\":\"#ServiceNS.Genre\",\"FavoriteGenre\":\"SciFi\"," +
+               "\"Genres@odata.type\":\"#Collection(ServiceNS.Genre)\",\"Genres\":[\"Thriller\",\"Epic\"]," +
+               "\"WorkAddress\":{\"@odata.type\":\"#ServiceNS.Address\",\"AddressLine\":\"AL1\",\"City\":\"C1\"}," +
+               "\"NextOfKin\":{\"@odata.type\":\"#ServiceNS.NextOfKin\",\"Name\":\"Nok 1\",\"HomeAddress\":{\"@odata.type\":\"#ServiceNS.Address\",\"AddressLine\":\"AL4\",\"City\":\"C4\"}}" +
+               "}";
+
+            var materializedObject = MaterializeEntity<Actor>(rawJsonResponse);
+
+            Assert.IsNotNull(materializedObject);
+            // Declared properties mapped to declared properties on client type
+            Assert.AreEqual(materializedObject.Title, "Mr");
+            Assert.IsTrue(materializedObject.Genres.Contains(Genre.Epic));
+            Assert.IsTrue(materializedObject.Genres.Contains(Genre.Thriller));
+            Assert.AreEqual(materializedObject.WorkAddress.AddressLine, "AL1");
+            Assert.AreEqual(materializedObject.WorkAddress.City, "C1");
+            // Dictionary should only have 3 dynamic properties
+            Assert.AreEqual(materializedObject.DynamicProperties.Count, 3);
+
+            var dynamicProperties = materializedObject.DynamicProperties;
+            Assert.IsTrue(dynamicProperties.ContainsKey("NickNames") && dynamicProperties["NickNames"].GetType() == typeof(Collection<string>));
+            Assert.IsTrue(dynamicProperties.ContainsKey("FavoriteGenre") && dynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
+            Assert.IsTrue(dynamicProperties.ContainsKey("NextOfKin") && dynamicProperties["NextOfKin"].GetType() == typeof(NextOfKin));
+        }
+
         public enum Genre
         {
             Thriller = 1,
@@ -773,6 +843,19 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             public string Name { get; set; }
             [ContainerProperty]
             public IDictionary<string, object> DynamicProperties { get; set; } = new Dictionary<string, object>();
+        }
+
+        [Key("Id")]
+        public class Actor
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            // Three declared properties on client type - corresponding to respective dynamic properties on server side
+            public string Title { get; set; }
+            public List<Genre> Genres { get; set; }
+            public Address WorkAddress { get; set; }
+            [ContainerProperty] // Dynamic property container not initialized - should be dynamically initialized 
+            public IDictionary<string, object> DynamicProperties { get; set; }
         }
 
         [Key("Id")]
