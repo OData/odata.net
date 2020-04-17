@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
@@ -996,6 +997,7 @@ namespace Microsoft.OData.Edm
             return false;
         }
 
+
         /// <summary>
         /// Searches for entity set by the given name that may be container qualified in default container and .Extends containers.
         /// </summary>
@@ -1004,22 +1006,14 @@ namespace Microsoft.OData.Edm
         /// <returns>The entity set found or empty if none found.</returns>
         public static IEdmEntitySet FindDeclaredEntitySet(this IEdmModel model, string qualifiedName)
         {
-            IEdmEntitySet foundEntitySet = null;
+            IEdmEntitySet foundEntitySet;
             if (!model.TryFindContainerQualifiedEntitySet(qualifiedName, out foundEntitySet))
             {
                 // try searching by entity set name in container and extended containers:
-                try
+                IEdmEntityContainer container = model.EntityContainer;
+                if (container != null)
                 {
-                    IEdmEntityContainer container = model.EntityContainer;
-                    if (container != null)
-                    {
-                        return container.FindEntitySetExtended(qualifiedName);
-                    }
-                }
-                catch (NotImplementedException)
-                {
-                    // model.EntityContainer can throw NotImplementedException
-                    return null;
+                    return container.FindEntitySetExtended(qualifiedName);
                 }
             }
 
@@ -1034,22 +1028,14 @@ namespace Microsoft.OData.Edm
         /// <returns>The singleton found or empty if none found.</returns>
         public static IEdmSingleton FindDeclaredSingleton(this IEdmModel model, string qualifiedName)
         {
-            IEdmSingleton foundSingleton = null;
+            IEdmSingleton foundSingleton;
             if (!model.TryFindContainerQualifiedSingleton(qualifiedName, out foundSingleton))
             {
                 // try searching by singleton name in container and extended containers:
-                try
+                IEdmEntityContainer container = model.EntityContainer;
+                if (container != null)
                 {
-                    IEdmEntityContainer container = model.EntityContainer;
-                    if (container != null)
-                    {
-                        return container.FindSingletonExtended(qualifiedName);
-                    }
-                }
-                catch (NotImplementedException)
-                {
-                    // model.EntityContainer can throw NotImplementedException
-                    return null;
+                    return container.FindSingletonExtended(qualifiedName);
                 }
             }
 
@@ -1512,7 +1498,7 @@ namespace Microsoft.OData.Edm
         public static string ShortQualifiedName(this IEdmSchemaElement element)
         {
             EdmUtil.CheckArgumentNull(element, "element");
-            if (element.Namespace != null && element.Namespace.Equals("Edm"))
+            if (element.Namespace != null && element.Namespace.Equals("Edm", StringComparison.Ordinal))
             {
                 return (element.Name ?? String.Empty);
             }
@@ -3181,9 +3167,12 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Returns true if there is any element in the list or collections. 
+        /// Returns true if there is any element in the list or collections.
         /// It tries to cast to list first and then an array, this method will be performant if the callers of this extension method implement IEnumerable through lists.
         /// </summary>
+        /// <typeparam name="T">The testing value type.</typeparam>
+        /// <param name="enumerable">the testing enumerable.</param>
+        /// <returns>ture/false.</returns>
         internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T : class
         {
             IList<T> list = enumerable as IList<T>;
