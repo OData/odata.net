@@ -79,6 +79,60 @@
     <Compile Include="..\Csdl\EdmValueWriter.cs">
       <Link>Csdl\EdmValueWriter.cs</Link>
     </Compile>
+    <Compile Include="..\Csdl\Json\IJsonPath.cs">
+      <Link>Csdl\Json\IJsonPath.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\IJsonReader.cs">
+      <Link>Csdl\Json\IJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\IJsonReaderExtensions.cs">
+      <Link>Csdl\Json\IJsonReaderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\IJsonValue.cs">
+      <Link>Csdl\Json\IJsonValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\IJsonValueExtensions.cs">
+      <Link>Csdl\Json\IJsonValueExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\IJsonWriter.cs">
+      <Link>Csdl\Json\IJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\IJsonWriterExtensions.cs">
+      <Link>Csdl\Json\IJsonWriterExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonArrayValue.cs">
+      <Link>Csdl\Json\JsonArrayValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonConstants.cs">
+      <Link>Csdl\Json\JsonConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonNodeKind.cs">
+      <Link>Csdl\Json\JsonNodeKind.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonObjectValue.cs">
+      <Link>Csdl\Json\JsonObjectValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonPath.cs">
+      <Link>Csdl\Json\JsonPath.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonPrimitiveValue.cs">
+      <Link>Csdl\Json\JsonPrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonReader.cs">
+      <Link>Csdl\Json\JsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonReaderOptions.cs">
+      <Link>Csdl\Json\JsonReaderOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonWriter.cs">
+      <Link>Csdl\Json\JsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\JsonWriterOptions.cs">
+      <Link>Csdl\Json\JsonWriterOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Json\Scope.cs">
+      <Link>Csdl\Json\Scope.cs</Link>
+    </Compile>
     <Compile Include="..\Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs">
       <Link>Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs</Link>
     </Compile>

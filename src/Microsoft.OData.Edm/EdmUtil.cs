@@ -497,6 +497,18 @@ namespace Microsoft.OData.Edm
             return value;
         }
 
+        internal static void CheckNullOrWhiteSpace(string value, string parameterName)
+        {
+#if PORTABLELIB
+            if (string.IsNullOrWhiteSpace(value))
+#else
+            if (IsNullOrWhiteSpaceInternal(value))
+#endif
+            {
+                throw new ArgumentNullException(parameterName);
+            }
+        }
+
         internal static bool EqualsOrdinal(this string string1, string string2)
         {
             return String.Equals(string1, string2, StringComparison.Ordinal);

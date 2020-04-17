@@ -58,6 +58,60 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmValueWriter.cs">
       <Link>Microsoft\OData\Edm\Csdl\EdmValueWriter.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\IJsonPath.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\IJsonPath.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\IJsonReader.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\IJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\IJsonReaderExtensions.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\IJsonReaderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\IJsonValue.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\IJsonValue.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\IJsonValueExtensions.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\IJsonValueExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\IJsonWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\IJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\IJsonWriterExtensions.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\IJsonWriterExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonArrayValue.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonArrayValue.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonConstants.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonNodeKind.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonNodeKind.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonObjectValue.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonObjectValue.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonPath.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonPath.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonPrimitiveValue.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonPrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonReader.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonReader.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonReaderOptions.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonReaderOptions.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\JsonWriterOptions.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\JsonWriterOptions.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Json\Scope.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Json\Scope.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs</Link>
     </Compile>
