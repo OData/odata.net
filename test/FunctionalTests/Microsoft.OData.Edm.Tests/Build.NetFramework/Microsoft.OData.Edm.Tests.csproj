@@ -66,6 +66,15 @@
     <Compile Include="..\Csdl\EdmValueWriterTests.cs" />
     <Compile Include="..\Csdl\CsdlReaderTests.cs" />
     <Compile Include="..\Csdl\CsdlWriterTests.cs" />
+    <Compile Include="..\Csdl\Json\IJsonReaderExtensionsTests.cs" />
+    <Compile Include="..\Csdl\Json\IJsonValueExtensionsTests.cs" />
+    <Compile Include="..\Csdl\Json\IJsonWriterExtensionsTests.cs" />
+    <Compile Include="..\Csdl\Json\JsonArraryValueTests.cs" />
+    <Compile Include="..\Csdl\Json\JsonObjectValueTests.cs" />
+    <Compile Include="..\Csdl\Json\JsonPathTests.cs" />
+    <Compile Include="..\Csdl\Json\JsonPrimitiveValueTests.cs" />
+    <Compile Include="..\Csdl\Json\JsonReaderTests.cs" />
+    <Compile Include="..\Csdl\Json\JsonWriterTests.cs" />
     <Compile Include="..\Csdl\Parsing\Ast\CsdlTypeDefinitionTests.cs" />
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsEntityContainerTests.cs" />
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsEntitySetTests.cs" />

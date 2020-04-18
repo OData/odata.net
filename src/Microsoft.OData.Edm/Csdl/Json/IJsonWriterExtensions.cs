@@ -14,6 +14,20 @@ namespace Microsoft.OData.Edm.Csdl.Json
     internal static class IJsonWriterExtensions
     {
         /// <summary>
+        /// Write the required null property (name/value).
+        /// </summary>
+        /// <param name="writer">The JSON writer.</param>
+        /// <param name="name">The property name.</param>
+        public static void WriteNullProperty(this IJsonWriter writer, string name)
+        {
+            EdmUtil.CheckArgumentNull(writer, "writer");
+            EdmUtil.CheckNullOrWhiteSpace(name, "name");
+
+            writer.WritePropertyName(name);
+            writer.WriteNull();
+        }
+
+        /// <summary>
         /// Write the required property (name/value).
         /// </summary>
         /// <param name="writer">The JSON writer.</param>

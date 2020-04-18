@@ -12,14 +12,35 @@ namespace Microsoft.OData.Edm.Csdl.Json
     internal enum ScopeType
     {
         /// <summary>
-        /// Object scope.
+        /// Root scope - the top-level of the JSON content.
         /// </summary>
+        /// <remarks>This scope is only once on the stack and that is at the bottom, always.
+        /// It's used to track the fact that only one top-level value is allowed.</remarks>
+        Root,
+
+        /// <summary>
+        /// Array scope - inside an array.
+        /// </summary>
+        /// <remarks>This scope is pushed when [ is found and is active before the first and between the elements in the array.
+        /// Between the elements it's active when the parser is in front of the comma, the parser is never after comma as then
+        /// it always immediately processed the next token.</remarks>
+        Array,
+
+        /// <summary>
+        /// Object scope - inside the object (but not in a property value).
+        /// </summary>
+        /// <remarks>This scope is pushed when { is found and is active before the first and between the properties in the object.
+        /// Between the properties it's active when the parser is in front of the comma, the parser is never after comma as then
+        /// it always immediately processed the next token.</remarks>
         Object,
 
         /// <summary>
-        /// Array scope.
+        /// Property scope - after the property name and colon and throughout the value.
         /// </summary>
-        Array,
+        /// <remarks>This scope is pushed when a property name and colon is found.
+        /// The scope remains on the stack while the property value is parsed, but once the property value ends, it's immediately removed
+        /// so that it doesn't appear on the stack after the value (ever).</remarks>
+        Property,
     }
 
     /// <summary>

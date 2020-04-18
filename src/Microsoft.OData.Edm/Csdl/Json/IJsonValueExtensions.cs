@@ -80,7 +80,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// <param name="jsonValue">The <see cref="IJsonValue"/> to parse from.</param>
         /// <param name="jsonPath">The JSON path for current JSON node which owns this value.</param>
         /// <returns>The integer value.</returns>
-        public static int? ConvertToInteger(this IJsonValue jsonValue, IJsonPath jsonPath)
+        public static int? ReadPrimitiveInteger(this IJsonValue jsonValue, IJsonPath jsonPath)
         {
             EdmUtil.CheckArgumentNull(jsonValue, "jsonValue");
             EdmUtil.CheckArgumentNull(jsonPath, "jsonPath");
@@ -114,6 +114,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                 throw new ArgumentNullException("jsonValue");
             }
 
+            // TODO: convert to use IJsonWriter
             if (jsonValue.ValueKind == JsonValueKind.Array)
             {
                 bool first = true;

@@ -130,43 +130,6 @@ namespace Microsoft.OData.Edm.Csdl.Json
         }
 
         /// <summary>
-        /// Various scope types for Json reader.
-        /// </summary>
-        private enum ScopeType
-        {
-            /// <summary>
-            /// Root scope - the top-level of the JSON content.
-            /// </summary>
-            /// <remarks>This scope is only once on the stack and that is at the bottom, always.
-            /// It's used to track the fact that only one top-level value is allowed.</remarks>
-            Root,
-
-            /// <summary>
-            /// Array scope - inside an array.
-            /// </summary>
-            /// <remarks>This scope is pushed when [ is found and is active before the first and between the elements in the array.
-            /// Between the elements it's active when the parser is in front of the comma, the parser is never after comma as then
-            /// it always immediately processed the next token.</remarks>
-            Array,
-
-            /// <summary>
-            /// Object scope - inside the object (but not in a property value).
-            /// </summary>
-            /// <remarks>This scope is pushed when { is found and is active before the first and between the properties in the object.
-            /// Between the properties it's active when the parser is in front of the comma, the parser is never after comma as then
-            /// it always immediately processed the next token.</remarks>
-            Object,
-
-            /// <summary>
-            /// Property scope - after the property name and colon and throughout the value.
-            /// </summary>
-            /// <remarks>This scope is pushed when a property name and colon is found.
-            /// The scope remains on the stack while the property value is parsed, but once the property value ends, it's immediately removed
-            /// so that it doesn't appear on the stack after the value (ever).</remarks>
-            Property,
-        }
-
-        /// <summary>
         /// The value of the last reported node. It boxes the value into object, it maybe a perf.
         /// </summary>
         /// <remarks>This is non-null only if the last node was a PrimitiveValue or Property.
@@ -251,7 +214,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                     "The SkipWhitespaces didn't correctly skip all whitespace characters from the input.");
             }
 
-            switch (currentScope.Type)
+            switch (currentScope.ScopeType)
             {
                 case ScopeType.Root:
                     if (commaFound)
@@ -259,7 +222,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                         throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Root));
                     }
 
-                    if (currentScope.ValueCount > 0)
+                    if (currentScope.ObjectCount > 0)
                     {
                         // We already found the top-level value, so fail
                         throw new Exception(Strings.JsonReader_MultipleTopLevelValues);
@@ -270,7 +233,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                     break;
 
                 case ScopeType.Array:
-                    if (commaFound && currentScope.ValueCount == 0)
+                    if (commaFound && currentScope.ObjectCount == 0)
                     {
                         throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
                     }
@@ -291,7 +254,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                         break;
                     }
 
-                    if (!commaFound && currentScope.ValueCount > 0)
+                    if (!commaFound && currentScope.ObjectCount > 0)
                     {
                         throw new Exception(Strings.JsonReader_MissingComma(ScopeType.Array));
                     }
@@ -301,7 +264,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                     break;
 
                 case ScopeType.Object:
-                    if (commaFound && currentScope.ValueCount == 0)
+                    if (commaFound && currentScope.ObjectCount == 0)
                     {
                         throw new Exception(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
                     }
@@ -323,7 +286,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                     }
                     else
                     {
-                        if (!commaFound && currentScope.ValueCount > 0)
+                        if (!commaFound && currentScope.ObjectCount > 0)
                         {
                             throw new Exception(Strings.JsonReader_MissingComma(ScopeType.Object));
                         }
@@ -386,10 +349,10 @@ namespace Microsoft.OData.Edm.Csdl.Json
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && !IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]),
                 "The SkipWhitespaces wasn't called or it didn't correctly skip all whitespace characters from the input.");
-            Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().Type != ScopeType.Object, "Value can only occur at the root, in array or as a property value.");
+            Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().ScopeType != ScopeType.Object, "Value can only occur at the root, in array or as a property value.");
 
             // Increase the count of values under the current scope.
-            this.scopes.Peek().ValueCount++;
+            this.scopes.Peek().ObjectCount++;
 
             char currentCharacter = this.characterBuffer[this.tokenStartIndex];
             switch (currentCharacter)
@@ -447,8 +410,8 @@ namespace Microsoft.OData.Edm.Csdl.Json
         private JsonNodeKind ParseProperty()
         {
             // Increase the count of values under the object (the number of properties).
-            Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().Type == ScopeType.Object, "Property can only occur in an object.");
-            this.scopes.Peek().ValueCount++;
+            Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().ScopeType == ScopeType.Object, "Property can only occur in an object.");
+            this.scopes.Peek().ObjectCount++;
 
             this.PushScope(ScopeType.Property);
 
@@ -774,7 +737,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
             }
 
             Debug.Assert(
-                this.scopes.Count > 0 && this.scopes.Peek().Type == ScopeType.Root && this.scopes.Peek().ValueCount <= 1,
+                this.scopes.Count > 0 && this.scopes.Peek().ScopeType == ScopeType.Root && this.scopes.Peek().ObjectCount <= 1,
                 "The end of input should only occur with root at the top of the stack with zero or one value.");
             Debug.Assert(this.nodeValue == null, "The node value should have been reset to null.");
 
@@ -791,8 +754,8 @@ namespace Microsoft.OData.Edm.Csdl.Json
         {
             Debug.Assert(this.scopes.Count >= 1, "The root must always be on the stack.");
             Debug.Assert(newScopeType != ScopeType.Root, "We should never try to push root scope.");
-            Debug.Assert(newScopeType != ScopeType.Property || this.scopes.Peek().Type == ScopeType.Object, "We should only try to push property onto an object.");
-            Debug.Assert(newScopeType == ScopeType.Property || this.scopes.Peek().Type != ScopeType.Object, "We should only try to push property onto an object.");
+            Debug.Assert(newScopeType != ScopeType.Property || this.scopes.Peek().ScopeType == ScopeType.Object, "We should only try to push property onto an object.");
+            Debug.Assert(newScopeType == ScopeType.Property || this.scopes.Peek().ScopeType != ScopeType.Object, "We should only try to push property onto an object.");
 
             this.scopes.Push(new Scope(newScopeType));
         }
@@ -803,7 +766,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
         private void PopScope()
         {
             Debug.Assert(this.scopes.Count > 1, "We can never pop the root.");
-            Debug.Assert(this.scopes.Peek().Type != ScopeType.Property, "We should never try to pop property alone.");
+            Debug.Assert(this.scopes.Peek().ScopeType != ScopeType.Property, "We should never try to pop property alone.");
 
             this.scopes.Pop();
             this.TryPopPropertyScope();
@@ -815,11 +778,11 @@ namespace Microsoft.OData.Edm.Csdl.Json
         private void TryPopPropertyScope()
         {
             Debug.Assert(this.scopes.Count > 0, "There should always be at least root on the stack.");
-            if (this.scopes.Peek().Type == ScopeType.Property)
+            if (this.scopes.Peek().ScopeType == ScopeType.Property)
             {
                 Debug.Assert(this.scopes.Count > 2, "If the property is at the top of the stack there must be an object after it and then root.");
                 this.scopes.Pop();
-                Debug.Assert(this.scopes.Peek().Type == ScopeType.Object, "The parent of a property must be an object.");
+                Debug.Assert(this.scopes.Peek().ScopeType == ScopeType.Object, "The parent of a property must be an object.");
             }
         }
 
@@ -966,31 +929,6 @@ namespace Microsoft.OData.Edm.Csdl.Json
 
             this.storedCharacterCount += readCount;
             return true;
-        }
-
-        /// <summary>
-        /// Class representing scope information.
-        /// </summary>
-        private sealed class Scope
-        {
-            /// <summary>
-            /// Constructor.
-            /// </summary>
-            /// <param name="type">The type of the scope.</param>
-            public Scope(ScopeType type)
-            {
-                this.Type = type;
-            }
-
-            /// <summary>
-            /// Get/Set the number of values found under the current scope.
-            /// </summary>
-            public int ValueCount { get; set; }
-
-            /// <summary>
-            /// Gets the scope type for this scope.
-            /// </summary>
-            public ScopeType Type { get; }
         }
     }
 }

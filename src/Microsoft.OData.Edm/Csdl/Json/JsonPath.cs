@@ -11,7 +11,7 @@ using System.Globalization;
 namespace Microsoft.OData.Edm.Csdl.Json
 {
     /// <summary>
-    /// Simply implement a JSON Path: see the information: https://goessner.net/articles/JsonPath/
+    /// Simply implementation a JSON Path: see the information: https://goessner.net/articles/JsonPath/
     /// </summary>
     internal class JsonPath : IJsonPath
     {
@@ -137,15 +137,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                 segments[index--] = GetName(segment);
             }
 
-            if (this.isBracketNotation)
-            {
-                this.path = string.Join("", segments);
-            }
-            else
-            {
-                this.path = string.Join(".", segments);
-            }
-
+            this.path = string.Join("", segments);
             this.dirty = false;
         }
 
@@ -159,7 +151,7 @@ namespace Microsoft.OData.Edm.Csdl.Json
                     return "['" + strNode + "']";
                 }
 
-                return strNode;
+                return "." + strNode;
             }
             else
             {

@@ -58,6 +58,12 @@ namespace Microsoft.OData.Edm.Csdl.Json
         {
             EdmUtil.CheckArgumentNull(jsonReader, "jsonReader");
 
+            // Supports to read from Begin
+            if (jsonReader.NodeKind == JsonNodeKind.None)
+            {
+                jsonReader.Read();
+            }
+
             // Make sure the input is a primitive value
             jsonReader.ValidateNodeKind(JsonNodeKind.PrimitiveValue);
 

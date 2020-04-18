@@ -260,10 +260,11 @@ namespace Microsoft.OData.Edm.Csdl.Json
         /// Write the bool value.
         /// </summary>
         /// <param name="value">The value to write</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for header key")]
         public virtual void WriteValue(bool value)
         {
             WriteValueSeparator();
-            this.writer.Write(value.ToString().ToLower());
+            this.writer.Write(value.ToString().ToLowerInvariant());
         }
 
         /// <summary>
