@@ -43,10 +43,6 @@
       <HintPath>..\..\..\..\..\packages\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll</HintPath>
     </Reference>
  
-    <!--<Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\..\sln\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>-->
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -63,7 +59,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="Microsoft.CSharp" />
-    <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />-->
+    
   </ItemGroup>
   <ItemGroup Condition="'$(BuildInOSS)' == 'true'">
     <!--<Reference Include="..\..\..\..\..\packages\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll" />-->
@@ -91,5 +87,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  
 </Project>
