@@ -110,6 +110,31 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var dataServiceResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseRelativeUri);
             Assert.AreEqual((dataServiceResponse.First() as ChangeOperationResponse).StatusCode, 201, "StatusCode == 201");
 
+            // UseJsonBatch
+            c2.Name = "Customer Two Updated";
+            context.UpdateObject(c2);
+
+            // Use client hooks to check request headers
+            context.SendingRequest2 += (sender, eventArgs) =>
+            {
+                if (!eventArgs.IsBatchPart) // Check top level headers only
+                {
+                    Assert.AreEqual("application/json", eventArgs.RequestMessage.GetHeader("Content-Type"));
+                }
+            };
+
+            // Use client hooks to check response headers
+            context.ReceivingResponse += (sender, eventArgs) =>
+            {
+                if (!eventArgs.IsBatchPart) // Check top level headers only
+                {
+                    Assert.AreEqual("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8", eventArgs.ResponseMessage.GetHeader("Content-Type"));
+                }
+            };
+
+            var dscResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseJsonBatch);
+            Assert.AreEqual((dscResponse.First() as ChangeOperationResponse).StatusCode, 204, "StatusCode == 204");
+
             this.EnqueueTestComplete();
         }
 

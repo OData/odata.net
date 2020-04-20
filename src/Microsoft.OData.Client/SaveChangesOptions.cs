@@ -39,6 +39,12 @@ namespace Microsoft.OData.Client
         /// Allow usage of Relative Uri.
         /// Note it can only be used in a batch request.
         /// </summary>
-        UseRelativeUri = 32
+        UseRelativeUri = 32,
+
+        /// <summary>
+        /// Allow usage of Json in batch requests.
+        /// Note it can only be used in a batch request.
+        /// </summary>
+        UseJsonBatch = 64
     }
 }

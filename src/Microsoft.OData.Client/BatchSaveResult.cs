@@ -54,6 +54,9 @@ namespace Microsoft.OData.Client
         /// <summary>If batch request is allowed to use Relative Uri.</summary>
         private bool useRelativeUri = false;
 
+        /// <summary>If we are making a json batch request.</summary>
+        private bool useJsonBatch = false;
+
         #endregion
 
         /// <summary>
@@ -72,6 +75,7 @@ namespace Microsoft.OData.Client
             this.Queries = queries;
             this.streamCopyBuffer = new byte[StreamCopyBufferSize];
             this.useRelativeUri = Util.UseRelativeUri(options);
+            this.useJsonBatch = Util.UseJsonBatch(options);
         }
 
         /// <summary>returns true since this class handles batch requests.</summary>
@@ -280,6 +284,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates the type of the application/json content.
+        /// </summary>
+        /// <returns>An application/json header</returns>
+        private static string CreateApplicationJsonContentType()
+        {
+            return XmlConstants.MimeApplicationType + "/" + XmlConstants.MimeJsonSubType;
+        }
+
+        /// <summary>
         /// Creates a ODataRequestMessage for batch request.
         /// </summary>
         /// <returns>Returns an instance of ODataRequestMessage for the batch request.</returns>
@@ -288,7 +301,14 @@ namespace Microsoft.OData.Client
             Uri requestUri = UriUtil.CreateUri(this.RequestInfo.BaseUriResolver.GetBaseUriWithSlash(), UriUtil.CreateUri("$batch", UriKind.Relative));
             HeaderCollection headers = new HeaderCollection();
             headers.SetRequestVersion(Util.ODataVersion4, this.RequestInfo.MaxProtocolVersionAsVersion);
-            headers.SetHeader(XmlConstants.HttpContentType, CreateMultiPartMimeContentType());
+            if(useJsonBatch)
+            {
+                headers.SetHeader(XmlConstants.HttpContentType, CreateApplicationJsonContentType());
+            }
+            else
+            {
+                headers.SetHeader(XmlConstants.HttpContentType, CreateMultiPartMimeContentType());
+            }
             this.RequestInfo.Format.SetRequestAcceptHeaderForBatch(headers);
 
             return this.CreateTopLevelRequest(XmlConstants.HttpMethodPost, requestUri, headers, this.RequestInfo.HttpStack, null /*descriptor*/);
@@ -753,7 +773,11 @@ namespace Microsoft.OData.Client
                         #endregion
 
                         default:
-                            Error.ThrowBatchExpectedResponse(InternalError.UnexpectedBatchState);
+                            // In ODataJsonLightBatchReader, readerState remains Initial after calling Read() the first time
+                            if (!this.useJsonBatch)
+                            {
+                                Error.ThrowBatchExpectedResponse(InternalError.UnexpectedBatchState);
+                            }
                             break;
                     }
                 }
