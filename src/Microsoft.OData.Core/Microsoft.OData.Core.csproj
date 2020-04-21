@@ -9,7 +9,9 @@
     <DefineConstants>$(DefineConstants);PORTABLELIB;ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-
+  
+  <Import Project="..\Build.props" />
+  
   <ItemGroup>
     <TextStringResource Include="Microsoft.OData.Core.txt">
       <ResFile>Microsoft.OData.Core</ResFile>
@@ -42,9 +44,7 @@
     <Compile Include="..\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" Link="EdmValueWriter.cs" />
     <Compile Include="..\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" Link="EdmValueParser.cs" />
   </ItemGroup>
-  
-  <Import Project="Build.props" />
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
     <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.csproj" />

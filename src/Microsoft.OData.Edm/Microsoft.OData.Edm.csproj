@@ -9,6 +9,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <Import Project="..\Build.props" />
+
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Edm.Tests" />
     <InternalsVisibleTo Include="Microsoft.Test.OData.Tests.Client" />
@@ -43,8 +45,6 @@
     </Resource>
   </ItemGroup>
 
-  <Import Project="Build.props" />
-  
   <ItemGroup>
     <Compile Update="Microsoft.OData.Edm.cs">
       <DesignTime>True</DesignTime>

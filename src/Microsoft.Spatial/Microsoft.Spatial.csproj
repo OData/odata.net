@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <!-- References -->
-   <Import Project="Build.props" /> 
+   <Import Project="..\Build.props" /> 
   <!-- Generated files -->
 
   <ItemGroup>
@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <None Remove="Microsoft.Spatial.tt" />
+    <None Remove="Microsoft.Spatial.xml" />
     <None Remove="Parameterized.Microsoft.Spatial.tt" />
   </ItemGroup>
 
