@@ -11,14 +11,11 @@ namespace Microsoft.OData.Client
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
-#if !PORTABLELIB
+    using System.Reflection; 
     using System.Reflection.Emit;
-#endif
-    using System.Security;
-#if !PORTABLELIB
+    using System.Security; 
     using System.Security.Permissions;
-#endif
+ 
 
     /// <summary>
     /// Generates proxy methods for external callers to call internal methods
@@ -28,7 +25,8 @@ namespace Microsoft.OData.Client
     /// </summary>
     internal class DynamicProxyMethodGenerator
     {
-#if !PORTABLELIB
+#if !PORTABLELIB  && !ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_20 
+        
         /// <summary>
         /// Dynamically generated proxy methods for external callers (lambda_method are external callers)
         /// </summary>
@@ -47,16 +45,20 @@ namespace Microsoft.OData.Client
 #if PORTABLELIB
             return WrapOriginalMethodWithExpression(method, arguments);
 #else
+#if !ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_20
             if (!this.ThisAssemblyCanCreateHostedDynamicMethodsWithSkipVisibility())
             {
                 return WrapOriginalMethodWithExpression(method, arguments);
             }
 
             return GetDynamicMethodCallWrapper(method, arguments);
+#else
+            return WrapOriginalMethodWithExpression(method, arguments);
+#endif
 #endif
         }
 
-#if !PORTABLELIB
+#if !PORTABLELIB && !ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_20 
         /// <summary>
         /// Determines whether this assembly has enough permissions to create
         /// <see cref="DynamicMethod"/>s that can be hosted within this assembly

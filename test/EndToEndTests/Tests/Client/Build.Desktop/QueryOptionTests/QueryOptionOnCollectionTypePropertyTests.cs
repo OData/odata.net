@@ -35,7 +35,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
         #region Test Method
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void BasicQueryOptionTest()
         {
             //$skip
@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void MiscQueryOptionTest()
         {
             ODataProperty property = this.TestsHelper.QueryProperty("Customers(1)/Numbers?$orderby=$it&$top=1", MimeType);

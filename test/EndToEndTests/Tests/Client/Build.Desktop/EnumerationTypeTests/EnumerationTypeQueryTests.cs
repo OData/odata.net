@@ -76,7 +76,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySpecificEntity()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -117,7 +117,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEnumProperty()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -146,7 +146,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEnumPropertyValue()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -163,7 +163,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void InvokeActionWithEnumParameterAndReturnType()
         {
             var writerSettings = new ODataMessageWriterSettings();
@@ -238,7 +238,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitiesFilterByEnumProperty()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -278,7 +278,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitiesOrderByEnumProperty()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -387,7 +387,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntityFromODataClient()
         {
             for (int i = 1; i < 2; i++)
@@ -411,7 +411,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEnumPropertyFromODataClient()
         {
             for (int i = 1; i < 2; i++)
@@ -432,7 +432,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEnumCollectionPropertyFromODataClient()
         {
             for (int i = 1; i < 2; i++)
@@ -455,7 +455,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitiesWithQueryOptionsFromODataClient()
         {
             // MinimalMetadata: UseJson() + no $select in request uri
@@ -497,7 +497,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             Assert.AreEqual(result.Select(s => s.ProductID).Distinct().Count(), result.Count);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitiesWithFilterFromODataClient()
         {
             var products = TestClientContext.Products.ToList();
@@ -555,7 +555,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             Assert.AreEqual(products.Where(p => p.CoverColors.All(c => c == Color.Blue)).Count(), result.Count);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitiesWithOrderByFromODataClient()
         {
             var products = TestClientContext.Products.ToList();
@@ -579,7 +579,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitiesWithSelectFromODataClient()
         {
             var products = TestClientContext.Products.ToList();

@@ -302,9 +302,11 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         internal IODataResponseMessage GetResponse()
         {
+           
 #if DEBUG
             this.ValidateHeaders();
 #endif
+            
             return this.requestMessage.GetResponse();
         }
 #endif

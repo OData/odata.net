@@ -1,33 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{854AF4E9-B78F-4994-B9C5-82B846604CBE}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Test.Taupo.Astoria</RootNamespace>
+ 
     <AssemblyName>Microsoft.Test.Taupo.Astoria</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+ 
     <FileAlignment>512</FileAlignment>
     <NoWarn>3005,3016</NoWarn>
     <EnableStyleCop>true</EnableStyleCop>
     <DefineConstants>TAUPO_ASTORIA</DefineConstants>
     <AssemblyAttributeClsCompliant>true</AssemblyAttributeClsCompliant>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
-      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
-      <Name>Microsoft.OData.Edm</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
-      <Name>Microsoft.OData.Client</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
+ 
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -725,18 +722,12 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Taupo.Query\Microsoft.Test.Taupo.Query.csproj">
-      <Project>{29236BBA-852B-46B2-A39B-09DB47A7F6EB}</Project>
-      <Name>Microsoft.Test.Taupo.Query</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Taupo.Spatial\Microsoft.Test.Taupo.Spatial.csproj">
-      <Project>{7FF7E0D4-B00C-4C08-80F1-C7EFF617597D}</Project>
-      <Name>Microsoft.Test.Taupo.Spatial</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj">
-      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
-      <Name>Microsoft.Test.Taupo</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Taupo.Query\Microsoft.Test.Taupo.Query.csproj" />
+   
+    <ProjectReference Include="..\Taupo.Spatial\Microsoft.Test.Taupo.Spatial.csproj" />
+      
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj" />
+ 
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -801,5 +792,5 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

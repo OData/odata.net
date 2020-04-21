@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+
+
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Service.Test.Common" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Service.Test.Client.TDDUnitTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AstoriaUnitTests.TDDUnitTests" + AssemblyRef.TestPublicKey)]

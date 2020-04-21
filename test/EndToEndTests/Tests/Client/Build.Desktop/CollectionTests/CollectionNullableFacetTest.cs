@@ -50,7 +50,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
         /// Verify collection in structrual property with nullable facet specified false can have null element
         /// And collection can be empty
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CollectionNullableTrueInStructrualProperty()
         {
             var personToAdd = new ODataResource

@@ -1,0 +1,1410 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.VisualStudio.ArchitectureTools.Extensibility</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.IModelingProject">
+      <summary>A UML modeling project.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.IModelingProject.Store">
+      <summary>The store containing the model elements in this model.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.IModelingProjectReader">
+      <summary>Accesses a modeling project in read only mode.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.IModelingProjectReader.DiagramFileNames">
+      <summary>The names of diagram files available in the modeling project.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.IModelingProjectReader.LoadDiagram(System.String)">
+      <summary>Opens a specified diagram. The diagram must belong to this modeling project.</summary>
+      <param name="fileName">Name of a UML diagram in this modeling project.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.IModelingProjectReader.Store">
+      <summary>The IModelStore containing the model that has been read.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.LoadMessages"></member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.LoadMessages.None">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.LoadMessages.SerializationWarnings">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.LoadMessages.SerializationErrors">
+      <summary />
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProject">
+      <summary>Allows you to read a UML modeling project.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProject.GetReadWriteModelingProject(System.IServiceProvider,System.Guid)">
+      <summary>Access a UML project by its GUID.</summary>
+      <param name="serviceProvider"></param>
+      <param name="projectGuid"></param>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProject.LayerModelExtension">
+      <summary>The name of the file extension used for layer models.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProject.LoadReadOnly(System.String,System.IServiceProvider)">
+      <summary>Open a modeling project in read only mode.</summary>
+      <param name="projectFileName">The path of the .modelproj file.</param>
+      <param name="serviceProvider"></param>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProject.ModelDefinitionFileExtension">
+      <summary>The file extension used for modeling project files.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProject.ModelDefinitionFolderName">
+      <summary>The name of the folder where package files are stored.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProjectExtensions"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProjectExtensions.GetLoadMessages``1(Microsoft.VisualStudio.ArchitectureTools.Extensibility.IModelingProjectReader)">
+      <typeparam name="T"></typeparam>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProjectExtensions.GetLoadMessages(Microsoft.VisualStudio.ArchitectureTools.Extensibility.IModelingProjectReader)"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProjectExtensions.GetSerializationResult(Microsoft.VisualStudio.Modeling.Store)"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.ModelingProjectExtensions.ResetSerializationResult(Microsoft.VisualStudio.Modeling.Store)"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.SerializerLocator"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.SerializerLocator.#ctor(System.IServiceProvider)"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ExtensibilityPresentationMapper"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ExtensibilityPresentationMapper.#ctor"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ExtensibilityPresentationMapper.GetExtensibilityPresentationMapper(Microsoft.VisualStudio.Modeling.ModelElement)"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ExtensibilityPresentationMapper.GetPresentation(Microsoft.VisualStudio.Modeling.ModelElement)"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ExtensibilityPresentationMapper.GetSubjects(Microsoft.VisualStudio.Modeling.Diagrams.PresentationElement)"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ExtensibilityPresentationMapper.RegisterExtensibilityPresentationMapper(Microsoft.VisualStudio.Modeling.Partition,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ExtensibilityPresentationMapper)"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IActivityDiagram">
+      <summary>Represents a UML Activity Diagram. It can display an Activity, which must be attached to it using the Bind method. An Activity contains a set of Actions connected by flows. Each Activity can be displayed on at most one diagram, and its Actions can appear on no more than one diagram. The diagram itself does not form part of the UML model.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IActivityDiagram.Activity">
+      <summary>The Activity that has been bound to this diagram. May be null.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IActivityDiagram.Bind(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Display an Activity on this diagram. The Activity must not already be bound to a diagram. Sets the Activity property. </summary>
+      <param name="activity"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IActivityDiagram.Display``1(``0,System.Double,System.Double)">
+      <param name="element"></param>
+      <param name="xoffset"></param>
+      <param name="yoffset"></param>
+      <typeparam name="T"></typeparam>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IClassDiagram">
+      <summary>Represents a UML class diagram, which can display classes, interfaces, enumerations, packages, and the relationships between them. The diagram itself does not form part of the model. It contains IShape objects that represent views of the model elements. Each model element, such as a UML class, may be represented by several IShapes, which may be on different diagrams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IClassDiagram.Display``1(``0,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape,System.Double,System.Double)">
+      <summary>Display an element on the diagram. The element may be an instance of IClass, IInterface, IEnumeration, IPackage, or IComment. Creates an IShape whose Element is <paramref name="element" />.</summary>
+      <returns>An IShape&lt;T&gt; representing the new shape.</returns>
+      <param name="element">The element to be displayed.</param>
+      <param name="parent">The shape within which the new shape is to be located, or null to place it on the diagram. Use this to place the shape inside a package shape.</param>
+      <param name="xoffset">The location of the new shape relative to the diagram.</param>
+      <param name="yoffset">The location of the new shape relative to the diagram.</param>
+      <typeparam name="T">The argument type of the IShape&lt;T&gt; to be returned. Can usually be implicit.</typeparam>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IColorShape">
+      <summary>Coloring information for IShape objects.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IColorShape.CustomColor"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IColorShape.DefaultBorderColor"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IColorShape.DefaultColor"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IColorShape.DefaultGradientLightColor"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IComponentDiagram">
+      <summary>Represents a UML component diagram, which can display components and their internal parts, and the connections and dependencies between them. The diagram itself does not form part of the model. It contains IShape objects that represent views of the model elements. Each UML component may be represented by several IShapes, which may be on different diagrams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IComponentDiagram.Display``1(``0,System.Double,System.Double)">
+      <summary>Display a UML component on the class diagram. Creates an IShape whose Element is <paramref name="element" />. The parts and ports of the component are automatically displayed.</summary>
+      <returns>An IShape&lt;T&gt; representing the new shape.</returns>
+      <param name="element">The element to be displayed.</param>
+      <param name="xoffset">The location of the new shape relative to the diagram.</param>
+      <param name="yoffset">The location of the new shape relative to the diagram.</param>
+      <typeparam name="T">The type of the element to be displayed. Can usually be implicit.</typeparam>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram">
+      <summary>Represents a UML modeling diagram. It is a supertype of the specific diagram types such as IClassDiagram. Each diagram is represented as a pair of files in the model.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram.EnsureVisible(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape},System.Boolean)"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram.FileName">
+      <summary>The path of the modeling project file on which the diagram is stored. This is the name of the principal of the two files.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram.ModelStore">
+      <summary>The UML model store which contains the diagram and the model that it shows. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram.Name">
+      <summary>The name of the diagram. It is not always the same as the file name.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram.SelectedShapes">
+      <summary>The collection of shapes that are currently selected. If no individual shape is selected, the collection will contain the diagram as its only member. If other shapes are selected, the diagram will not appear in the collection.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram.SelectShapes(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape})">
+      <summary>Sets the current selection to the given collection of shapes, and sets the Selection property. This does not activate the window that displays the diagram. </summary>
+      <param name="shapes">Each shape must be a selectable shape on this diagram. If there are several shapes in the list, they should have the same parent. If the collection is empty, the diagram will be selected.</param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram.TypeName">
+      <summary>A string indicating what kind of diagram this is, such as "ComponentDiagram". </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagramContext">
+      <summary>Provides access to a diagram. You can obtain an instance of this type by declaring an Imported property DiagramContext in a UML extension. You can also cast to and from EnvDTE.ProjectItem, if the item is a UML diagram.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagramContext.CurrentDiagram">
+      <summary>The diagram accessible from this context. If you have obtained the IDiagramContext by casting a EnvDTE.ProjectItem, the diagram might not be the currently activated diagram.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagramElementOperations"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagramElementOperations.RemoveShapesFromDiagram(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.Modeling.ModelElement})">
+      <param name="elements"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IPresentationElementWrapperFactory"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IPresentationElementWrapperFactory.CreateIDiagram(System.String)"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IPresentationElementWrapperFactory.CreateIShape(Microsoft.VisualStudio.Modeling.Diagrams.DiagramItem)"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IPresentationElementWrapperFactory.GetChildShapes(Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape)"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ISequenceDiagram">
+      <summary>Represents a UML sequence diagram. It can display an IInteraction, which must be attached to it using the Bind method. An Interaction depicts the exchange of messages between a set of objects. Each Interaction can be displayed on at most one diagram, and the objects and messages can appear on only one Interaction. The diagram itself does not form part of the UML model.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ISequenceDiagram.Bind(Microsoft.VisualStudio.Uml.Interactions.IInteraction)">
+      <summary>Display an Interaction on this diagram. The Interaction must not already be bound to a diagram. Sets the Interaction property.</summary>
+      <param name="interaction"></param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ISequenceDiagram.Interaction">
+      <summary>The Interaction that has been bound to the diagram. May be null.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ISequenceDiagram.Layout(Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.SequenceDiagramLayoutKinds)">
+      <summary>Rearrange the shapes on the diagram.</summary>
+      <param name="layoutKind"></param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ISequenceDiagram.UmlMode">
+      <summary>If true, the diagram is part of a UML model. If false, the diagram has been generated from program code and is not part of a UML model.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.ISequenceDiagram.UpdateShapePositions"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape">
+      <summary>A shape on a diagram that shows a view of an element in a model. Some types of model element can have more than one shape.  Some shapes are composed of other shapes. For example, a class shape contains shapes for each attribute and operation. Shapes have graphical properties such as color and position.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.ChildShapes">
+      <summary>Shapes that are contained within this shape. For example, the attribute and operation rows of a class shape; class shapes contained inside a package shape;  ports and parts inside a component. For each ChildShape, ParentShape == this.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.Color">
+      <summary>Gets or sets the color of the shape. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.Delete">
+      <summary>Removes the shape from the diagram. This might or might not remove from the model the element that the shape displays. For example, removing a class shape from a class diagram does not remove the UML class from the model.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.Diagram">
+      <summary>The diagram that contains this shape.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.GetObject``1">
+      <summary>Gets the model element represented by this shape. Supply the type of the result that you want.</summary>
+      <typeparam name="T">Result type. IElement or a subtype.</typeparam>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.Height"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.Move(System.Double,System.Double,System.Double,System.Double)">
+      <summary>Changes the position and size of the shape.</summary>
+      <param name="xposition"></param>
+      <param name="yposition"></param>
+      <param name="width"></param>
+      <param name="height"></param>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.ParentShape">
+      <summary>The shape that contains this shape, or null. If ParentShape is not null, this shape is a member of ParentShape.ChildShapes.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.ToIShape``1">
+      <summary>Cast to a type that specifies the type of the element that the shape represents.</summary>
+      <typeparam name="T">The type of model element that the shape represents. IElement or a subtype.</typeparam>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.Width"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.XPosition"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape.YPosition"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape`1">
+      <summary>Represents a shape on a diagram. This is a more strongly-typed subtype of IShape. It is specific to a particular model element type T, such as IClassifier. You can assign to it any IShape&lt;E&gt; where E is a subtype of T, such as IClass.</summary>
+      <typeparam name="T">This type parameter is covariant. That is, you can use either the type you specified or any type that is more derived. For more information about covariance and contravariance, see Covariance and Contravariance in Generics.</typeparam>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape`1.Element"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IUseCaseDiagram">
+      <summary>Represents a UML use case diagram, which can display use cases, actors, and systems. The diagram itself is not part of the UML model. It contains IShape objects that represent views of the model elements. Each model element, such as a use case, may be represent by several shapes, which may be on different diagrams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IUseCaseDiagram.Display``1(``0,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape,System.Double,System.Double)">
+      <summary>Display an element on the diagram. Creates an IShape whose Element is <paramref name="element" />.</summary>
+      <returns>An IShape&lt;T&gt; representing the new shape.</returns>
+      <param name="element">The element to be displayed.</param>
+      <param name="parent">The shape within which the new shape is to be located, or null to place it on the diagram. Use this to locate a use case within a System shape.</param>
+      <param name="xoffset">The location of the new shape relative to the diagram.</param>
+      <param name="yoffset">The location of the new shape relative to the diagram.</param>
+      <typeparam name="T">The argument type of the IShape&lt;T&gt; to be returned. Can usually be implicit.</typeparam>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers">
+      <summary>Static class that provides extension methods for modeling diagrams and shapes.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.CreateIDiagram(Microsoft.VisualStudio.Modeling.Diagrams.Diagram)">
+      <summary>Wrap a diagram from the underlying implementation so that it can be used as a UML modeling diagram. This method does not construct or modify a diagram, but instead provides a convenient reference to an existing diagram.</summary>
+      <returns>For more information, see How to: Open a UML Model by using the Visual Studio API.</returns>
+      <param name="diagram"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.CreateIShape(Microsoft.VisualStudio.Modeling.Diagrams.ShapeElement,Microsoft.VisualStudio.Modeling.Diagrams.ShapeField,Microsoft.VisualStudio.Modeling.Diagrams.ShapeSubField)">
+      <summary>Wrap a ShapeElement from the underlying implementation so that it can be used as a UML modeling IShape. This does not construct or modify a shape. Instead, it provides a convenient reference to an existing shape, or a field within a shape.</summary>
+      <param name="shape">The ShapeElement to wrap.</param>
+      <param name="field">May be omitted.</param>
+      <param name="subfield">May be omitted.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.Diagrams(Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore,System.String)">
+      <summary>All the open diagrams in the model, of a particular type if specified.</summary>
+      <param name="modelStore">The UML model store</param>
+      <param name="typeName">Omit to return all diagrams. If not empty, only diagrams with the specified TypeName are returned.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.GetChildShapes``1(Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape)">
+      <summary>Get child shapes that display the specified type of model element.</summary>
+      <returns>All shapes that display model elements of type T or one of its subtypes.</returns>
+      <param name="shape">The parent shape or diagram.</param>
+      <typeparam name="T">The types of elements to show. A subtype of IElement.</typeparam>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.GetElement(Microsoft.VisualStudio.Modeling.Diagrams.ShapeElement)">
+      <summary>The UML model element displayed by this ShapeElement.</summary>
+      <param name="shapeElement"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.GetSelectedShapes``1(Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram)">
+      <summary>Get all the selected shapes that display UML model elements of the specified type.</summary>
+      <returns>All the selected shapes in the diagram that display a UML model element of the specified type or one of its subtypes.</returns>
+      <param name="diagram"></param>
+      <typeparam name="T">IElement or one of its subtypes.</typeparam>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.IsSameDiagram(Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram)">
+      <summary>Verify whether two UML diagram references refer to the same diagram. Use this instead of ==.</summary>
+      <param name="diagram1"></param>
+      <param name="diagram2"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.SelectShapes(Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape[])">
+      <summary>Select a collection of shapes on the diagram. The shapes must be selectable. The diagram's SelectedShapes property will be updated.</summary>
+      <param name="diagram"></param>
+      <param name="shapes">The shapes to select.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.Shapes(Microsoft.VisualStudio.Uml.Classes.IElement,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram)">
+      <summary>All the shapes that display the model element on any open diagram, or on a specified open diagram.</summary>
+      <param name="element"></param>
+      <param name="diagram">Omit to find shapes on all diagrams.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.PresentationHelpers.Shapes``1(``0,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IDiagram)">
+      <summary>All the shapes that display the model element on any open diagram, or on a specified open diagram. Returns a list of shapes of the specified type.</summary>
+      <param name="element"></param>
+      <param name="diagram">Omit to find shapes on all open diagrams.</param>
+      <typeparam name="T">The type of the returned shapes will be IShape&lt;T&gt;</typeparam>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.SequenceDiagramLayoutKinds"></member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.SequenceDiagramLayoutKinds.None">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.SequenceDiagramLayoutKinds.Messages">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.SequenceDiagramLayoutKinds.Lifelines">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.SequenceDiagramLayoutKinds.LifelinesAndMessages">
+      <summary />
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.AcceptEventActionExtensions">
+      <summary>Extension methods for IAcceptEventAction.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.AcceptEventActionExtensions.CreateResultOutputPin(Microsoft.VisualStudio.Uml.Actions.IAcceptEventAction)">
+      <summary>Create a new IOutputPin object in the AcceptEventAction</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActionExtensions">
+      <summary>Provides extension methods.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActionExtensions.CreateLocalPostconditionConstraint(Microsoft.VisualStudio.Uml.Actions.IAction)">
+      <summary>Create a new postcondition IConstraint owned by this IAction.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActionExtensions.CreateLocalPreconditionConstraint(Microsoft.VisualStudio.Uml.Actions.IAction)">
+      <summary>Create a new precondition IConstraint owned by this IAction.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityDesignerExtensionAttribute">
+      <summary>Apply this attribute to a class that defines an extension on UML activity diagrams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityDesignerExtensionAttribute.#ctor"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityDesignerExtensionAttribute.DSLDesignerName_ActivityDesigner"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions">
+      <summary>Extension methods for IActivity.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateAcceptEventAction(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IAcceptEventAction object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateActivityFinalNode(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IActivityFinalNode object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateActivityParameterNode(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IActivityParameterNode object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateCallBehaviorAction(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new ICallBehaviorAction object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateCallOperationAction(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new ICallOperationAction object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateControlFlow(Microsoft.VisualStudio.Uml.Activities.IActivity,Microsoft.VisualStudio.Uml.Activities.IActivityNode,Microsoft.VisualStudio.Uml.Activities.IActivityNode)">
+      <summary>Create a new IControlFlow link in the ActivityNode</summary>
+      <param name="parent"></param>
+      <param name="sourceActivityNode"></param>
+      <param name="targetActivityNode"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateCreateObjectAction(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new ICreateObjectAction object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateDecisionNode(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IDecisionNode object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateForkNode(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IForkNode object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateInitialNode(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IInitialNode object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateJoinNode(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IJoinNode object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateMergeNode(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IMergeNode object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateObjectFlow(Microsoft.VisualStudio.Uml.Activities.IActivity,Microsoft.VisualStudio.Uml.Activities.IActivityNode,Microsoft.VisualStudio.Uml.Activities.IActivityNode)">
+      <summary>Create a new IObjectFlow link in the Activity</summary>
+      <param name="parent"></param>
+      <param name="sourceActivityNode"></param>
+      <param name="targetActivityNode"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateObjectNode(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IObjectNode object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateOpaqueAction(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new IOpaqueAction object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.CreateSendSignalAction(Microsoft.VisualStudio.Uml.Activities.IActivity)">
+      <summary>Create a new ISendSignalAction object in the Activity</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.GetActivityEdgeSources(Microsoft.VisualStudio.Uml.Activities.IActivityNode)">
+      <summary>The nodes sourcing edges incoming to this one</summary>
+      <param name="node"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ActivityExtensions.GetActivityEdgeTargets(Microsoft.VisualStudio.Uml.Activities.IActivityNode)">
+      <summary>The nodes targeted by edges outgoing from this one</summary>
+      <param name="node"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ArtifactExtensions">
+      <summary>Extension methods for IArtifact.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ArtifactExtensions.CreateNestedArtifact(Microsoft.VisualStudio.Uml.Deployments.IArtifact)">
+      <summary>Create a new IArtifact object owned by this IArtifact</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehavioralFeatureExtensions">
+      <summary>Extension methods for IBehavioralFeature.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehavioralFeatureExtensions.CreateParameter(Microsoft.VisualStudio.Uml.Classes.IBehavioralFeature)">
+      <summary>Create a new IParameter object in the Behavioral Feature</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehavioredClassifierExtensions">
+      <summary>Extension methods for BehavioredClassifier.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehavioredClassifierExtensions.CreateInteraction(Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavioredClassifier)">
+      <summary>Create a new IInteraction object in the BehavioredClassifier</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehavioredClassifierExtensions.CreateNestedActivity(Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavioredClassifier)">
+      <summary>Create an activity that describes the behavior of this element.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehavioredClassifierExtensions.GetRealizedInterfaces(Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavioredClassifier)">
+      <summary>Returns a collection of the IInterfaces implemented by the given classifier.</summary>
+      <param name="classifier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehavioredClassifierExtensions.GetRealizingClassifiers(Microsoft.VisualStudio.Uml.Classes.IInterface)">
+      <summary>Returns a collection of the IBehavioredClassifier implemented by the given realizedInterface.</summary>
+      <param name="realizedInterface"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehaviorExtensions">
+      <summary>Extension methods for IBehavior.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.BehaviorExtensions.CreateParameter(Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavior)">
+      <summary>Create a new IParameter object in the Behavior</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.CallActionExtensions">
+      <summary>Extension methods for CallAction.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.CallActionExtensions.CreateResultOutputPin(Microsoft.VisualStudio.Uml.Actions.ICallAction)">
+      <summary>Create a new IOutputPin object in the CallAction</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.CallOperationActionExtensions">
+      <summary>Extension methods for ICallOperationAction.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.CallOperationActionExtensions.CreateTargetInputPin(Microsoft.VisualStudio.Uml.Actions.ICallOperationAction)">
+      <summary>Create a new IInputPin object in the CallOperationAction</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassDesignerExtensionAttribute">
+      <summary>Apply this attribute to a class that defines an extension on UML class diagrams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassDesignerExtensionAttribute.#ctor"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassDesignerExtensionAttribute.DSLDesignerName_LogicalClassDesigner"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassExtensions">
+      <summary>Extension methods for IClass.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassExtensions.CreateAttribute(Microsoft.VisualStudio.Uml.Classes.IClass)">
+      <summary>Create a new IProperty object in the Class</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassExtensions.CreateOperation(Microsoft.VisualStudio.Uml.Classes.IClass)">
+      <summary>Create a new IOperation object in the Class</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassifierExtensions">
+      <summary>Extension methods for IClassifier.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassifierExtensions.CreateGeneralization(Microsoft.VisualStudio.Uml.Classes.IClassifier,Microsoft.VisualStudio.Uml.Classes.IClassifier)">
+      <summary>Create a new generalization of this classifier. An IGeneralization relationship is created between this and another given classifier.</summary>
+      <param name="specific"></param>
+      <param name="general"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassifierExtensions.GetOutgoingAssociationEnds(Microsoft.VisualStudio.Uml.Classes.IClassifier)">
+      <summary>The opposite ends of the associations that are linked to this classifier. From the association ends, you can get the linked classifier and its type.</summary>
+      <param name="classifier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassifierExtensions.GetSpecifics(Microsoft.VisualStudio.Uml.Classes.IClassifier)">
+      <summary>Returns all the classifiers that specialize this classifier.</summary>
+      <param name="classifier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ClassifierExtensions.SetNavigable(Microsoft.VisualStudio.Uml.Classes.IProperty,System.Boolean)">
+      <summary>Sets the navigability of this end of an association.</summary>
+      <param name="associationEnd"></param>
+      <param name="navigable"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.CombinedFragmentExtensions">
+      <summary>Provides extension methods.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.CombinedFragmentExtensions.CreateInteractionOperand(Microsoft.VisualStudio.Uml.Interactions.ICombinedFragment,Microsoft.VisualStudio.Uml.Interactions.IInteractionOperand,System.Boolean)">
+      <summary>Insert a new Interaction Operand in the Combined Fragment.</summary>
+      <returns>The new interaction operand.</returns>
+      <param name="parent"></param>
+      <param name="interactionOperand">The new operand will be inserted immediately before or after this one.</param>
+      <param name="createNewAfter">If true, the new operand will be inserted after the existing operand. If false, the new operand will be inserted before the existing operand.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ComponentDesignerExtensionAttribute">
+      <summary>Apply this attribute to a class that defines an extension on UML component diagrams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ComponentDesignerExtensionAttribute.#ctor"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ComponentDesignerExtensionAttribute.DSLDesignerName_ComponentDesigner"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ComponentExtensions">
+      <summary>Extension methods for IComponent.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ComponentExtensions.CreatePortWithProvidedInterface(Microsoft.VisualStudio.Uml.Components.IComponent)">
+      <summary>Create a new Provided Interface port object in the component. A new interface is also created within the same package as the component.</summary>
+      <param name="component"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ComponentExtensions.CreatePortWithProvidedInterface(Microsoft.VisualStudio.Uml.Components.IComponent,Microsoft.VisualStudio.Uml.Classes.IInterface)">
+      <summary>Create a new Provided Interface port whose type is an existing Interface.</summary>
+      <param name="component"></param>
+      <param name="portInterface">The interface that the port should provide.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ComponentExtensions.CreatePortWithRequiredInterface(Microsoft.VisualStudio.Uml.Components.IComponent)">
+      <summary>Create a new Required Interface port object in the IComponent. A new interface is also created within the same package as the component.</summary>
+      <param name="component"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ComponentExtensions.CreatePortWithRequiredInterface(Microsoft.VisualStudio.Uml.Components.IComponent,Microsoft.VisualStudio.Uml.Classes.IInterface)">
+      <summary>Create a new Required Interface port whose type is an existing Interface.</summary>
+      <param name="component"></param>
+      <param name="portInterface">The interface that the port should require.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ConnectableElementExtensions">
+      <summary>Extension methods for IConnectableElement.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ConnectableElementExtensions.CreateConnector(Microsoft.VisualStudio.Uml.CompositeStructures.IStructuredClassifier,Microsoft.VisualStudio.Uml.CompositeStructures.IConnectableElement,Microsoft.VisualStudio.Uml.CompositeStructures.IConnectableElement,Microsoft.VisualStudio.Uml.Classes.IProperty,Microsoft.VisualStudio.Uml.Classes.IProperty)">
+      <summary>Connect the source element to a target element, such as a Part or Port. If the source or target is a Port located on a Part, specify both.</summary>
+      <param name="parent"></param>
+      <param name="sourceConnectableElement">Part or port to be connected.</param>
+      <param name="targetConnectableElement">Part or port to be connected.</param>
+      <param name="sourcePart">Parent part of the source port, or null.</param>
+      <param name="targetPart">Parent part of the target port, or null.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ConnectableElementExtensions.GetConnectedElements(Microsoft.VisualStudio.Uml.CompositeStructures.IConnectableElement)">
+      <summary>The elements connected to this element using Connectors. For example, if this element is a Part in a Component, this method returns the Parts and Ports that are connected to it.</summary>
+      <param name="connectableElement"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ConstraintExtensions">
+      <summary>Extension methods for IConstraint.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ConstraintExtensions.CreateSpecificationLiteralBoolean(Microsoft.VisualStudio.Uml.Classes.IConstraint)">
+      <summary>Create a new ILiteralBoolean object in the Constraint</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ConstraintExtensions.CreateSpecificationLiteralInteger(Microsoft.VisualStudio.Uml.Classes.IConstraint)">
+      <summary>Create a new ILiteralInteger object in the Constraint</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ConstraintExtensions.CreateSpecificationLiteralString(Microsoft.VisualStudio.Uml.Classes.IConstraint)">
+      <summary>Create a new ILiteralString object in the Constraint</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.EnumerationExtensions">
+      <summary>Extension methods for IEnumeration.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.EnumerationExtensions.CreateEnumerationLiteral(Microsoft.VisualStudio.Uml.Classes.IEnumeration)">
+      <summary>Create a new IEnumerationLiteral object in the Enumeration</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.EnumerationLiteralExtensions">
+      <summary>Extension methods for IEnumerationLiteral.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.EnumerationLiteralExtensions.CreateSpecificationLiteralInteger(Microsoft.VisualStudio.Uml.Classes.IEnumerationLiteral)">
+      <summary>Create a new ILiteralInteger object in the Enumeration Literal</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ExecutionSpecificationExtensions">
+      <summary>Extension methods for IExecutionSpecification.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ExecutionSpecificationExtensions.GetIncomingMessages(Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification)">
+      <summary>The incoming messages targeted directly to this Execution Specification. Use GetIssuingMessage() for the message that starts the Execution Specification.</summary>
+      <param name="executionSpecification"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ExecutionSpecificationExtensions.GetIssuingMessage(Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification)">
+      <summary>The message that starts the Execution Specification.</summary>
+      <param name="executionSpecification"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ExecutionSpecificationExtensions.GetNestedExecutionSpecifications(Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification)">
+      <summary>The nested Execution Specifications owned directly by this Execution Specification.</summary>
+      <param name="executionSpecification"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ExecutionSpecificationExtensions.GetOutgoingMessages(Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification)">
+      <summary>The outgoing messages sourced directly from this Execution Specification.</summary>
+      <param name="executionSpecification"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IInsertionPoint">
+      <summary>A point on a Lifeline at which messages can begin or end, and where other elements can be attached.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IInsertionPoint.Endpoint">
+      <summary>The message end at this insertion point. Null if there is no message end at this insertion point.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IInsertionPoint.Lifeline">
+      <summary>The ILifeline where the insertion point resides</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ILinkedWorkItemExtension">
+      <summary>Implement and export this interface to define a handler for work item links. This is called when an element in a UML model is linked to a TFS work item.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ILinkedWorkItemExtension.OnWorkItemCreated(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.Uml.Classes.IElement},Microsoft.VisualStudio.TeamFoundation.WorkItemTracking.IWorkItemDocument)">
+      <summary>Called when a user wants to link a model element to a new TFS work item. Called before the work item is displayed to the user, so that you can set the fields in currentDocument.</summary>
+      <param name="elements">The model elements that are to be linked to the work item.</param>
+      <param name="currentDocument">The form whose fields will define the content of the work item.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ILinkedWorkItemExtension.OnWorkItemLinked(System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.Uml.Classes.IElement},System.String,System.Int32)">
+      <summary>Called when a link is made to a new or existing TFS work item.</summary>
+      <param name="elements">Model elements that are to be linked.</param>
+      <param name="serverUri">Identity of the TFS server.</param>
+      <param name="workItemId">Work item number.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ILinkedWorkItemExtension.OnWorkItemRemoved(Microsoft.VisualStudio.Uml.Classes.IElement,System.String,System.Int32)">
+      <summary>Called before the model element is unlinked from a work item, including when the model element is deleted.</summary>
+      <param name="element">Model element that is to be unlinked.</param>
+      <param name="serverUri">Identity of the TFS server.</param>
+      <param name="workItemId">Work item number.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore">
+      <summary>The store associated with an IModelingProject, in which UML model elements are stored.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.AllInstances``1">
+      <summary>All elements in the model store that belong to the specified type T or one of its subtypes.</summary>
+      <typeparam name="T">IElement or one of its subtypes.</typeparam>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.Boolean">
+      <summary>The primitive Boolean type that is defined in this IModelStore.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.FindElement(System.Guid)">
+      <summary>The element in the store that has a specific GUID, or null.</summary>
+      <returns>Null if no element with the specified GUID is found.</returns>
+      <param name="elementId"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.Instances``1">
+      <summary>All elements in the model store that have the specified type T, which should not be abstract.</summary>
+      <typeparam name="T">IElement or one of its subtypes.</typeparam>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.Integer">
+      <summary>The primitive Integer type that is defined in this IModelStore.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.IsReadOnly">
+      <summary>If true, the model cannot be updated.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.ProfileManager">
+      <summary>Provides access to the collection of Profiles available in the Model.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.Root">
+      <summary>The package that contains all the other elements of the model.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.String">
+      <summary>The primitive String type that is defined in this IModelStore.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IModelStore.UnlimitedNatural">
+      <summary>The primitive UnlimitedNatural type that is defined in this IModelStore.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionConstraintExtensions">
+      <summary>Extension methods for InteractionConstraint.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionConstraintExtensions.CreateMaxIntLiteralString(Microsoft.VisualStudio.Uml.Interactions.IInteractionConstraint)">
+      <summary>Set a maximum value in the interaction constraint. Creates an InteractionConstraintHasMaxInt link to a new LiteralString object.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionConstraintExtensions.CreateMinIntLiteralString(Microsoft.VisualStudio.Uml.Interactions.IInteractionConstraint)">
+      <summary>Set a minimum value in the interaction constraint. Creates an InteractionConstraintHasMinInt link to a new LiteralString object.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions">
+      <summary>Provides extension methods.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateCombinedFragment(Microsoft.VisualStudio.Uml.Interactions.IInteraction,Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind,Microsoft.VisualStudio.Uml.Interactions.IInteractionUse)">
+      <summary>Create a Combined Fragment containing one operand. You can add more operands later.</summary>
+      <param name="parent"></param>
+      <param name="operatorKind">The operator defines how the combination of fragments is interpreted - alternatives, parallel, and so on.</param>
+      <param name="interactionUse">An existing interaction use that should be covered by the initial operand of the combined fragment.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateCombinedFragment(Microsoft.VisualStudio.Uml.Interactions.IInteraction,Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind,System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IInsertionPoint})">
+      <summary>Create a Combined Fragment containing one operand. You can add more operands later.</summary>
+      <param name="parent"></param>
+      <param name="operatorKind">The operator defines how the combination of fragments is interpreted - alternatives, parallel, and so on.</param>
+      <param name="insertionPointsOnLifelines">An existing collection of points on lifelines that should be covered by the initial operand of the combined fragment.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateCombinedFragment(Microsoft.VisualStudio.Uml.Interactions.IInteraction,Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind,System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.Uml.Interactions.IMessage})">
+      <summary>Create a Combined Fragment containing one operand. You can add more operands later.</summary>
+      <param name="parent"></param>
+      <param name="operatorKind">The operator defines how the combination of fragments is interpreted - alternatives, parallel, and so on.</param>
+      <param name="messages">The existing messages that should be covered by the initial operand of the combined fragment. They must originate on the same lifeline or execution block, and must be in consecutive order.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateComment(Microsoft.VisualStudio.Uml.Interactions.IInteraction)">
+      <summary>Create a Comment.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateInteractionUse(Microsoft.VisualStudio.Uml.Interactions.IInteraction,System.Collections.Generic.IEnumerable{Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IInsertionPoint})">
+      <param name="parent"></param>
+      <param name="insertionPointsOnLifelines">The points on the lifelines that should be covered by the new interaction use.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateLifeline(Microsoft.VisualStudio.Uml.Interactions.IInteraction)">
+      <summary>Create a new ILifeline object in the Interaction</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateLostFoundMessage(Microsoft.VisualStudio.Uml.Interactions.IInteraction,Microsoft.VisualStudio.Uml.Interactions.MessageKind,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IInsertionPoint)">
+      <summary>Create a message that does not begin on a lifeline, or that does not end on a lifeline.</summary>
+      <param name="parent"></param>
+      <param name="messageKind">Lost = message has an undefined target, Found = undefined source.</param>
+      <param name="lostFoundInsertionPoint">Insertion point for the end that is on a lifeline.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateMessage(Microsoft.VisualStudio.Uml.Interactions.IInteraction,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IInsertionPoint,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IInsertionPoint,Microsoft.VisualStudio.Uml.Interactions.MessageKind,Microsoft.VisualStudio.Uml.Interactions.MessageSort)">
+      <summary>Create a complete message, beginning and ending on specified lifelines.</summary>
+      <param name="parent"></param>
+      <param name="sourceInsertionPoint">An insertion point on the sending lifeline.</param>
+      <param name="targetInsertionPoint">An insertion point on the receiving lifeline.</param>
+      <param name="messageKind">Must be MessageKind.Complete. Use CreateLostOrFoundMessage() for other MessageKinds</param>
+      <param name="messageSort">Synchronous = message has a return part; Asynchronous = message has no return part.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.CreateProperty(Microsoft.VisualStudio.Uml.Interactions.IInteraction)">
+      <summary>Create a new IProperty object in the Interaction</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.Delete(Microsoft.VisualStudio.Uml.Interactions.ICombinedFragment)">
+      <summary>Delete the combined fragment and the messages and other elements that it covers.</summary>
+      <param name="combinedFragment"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.Delete(Microsoft.VisualStudio.Uml.Interactions.IMessage)">
+      <summary>Delete the message.</summary>
+      <param name="message"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionExtensions.GetCombinedFragments(Microsoft.VisualStudio.Uml.Interactions.IInteraction)">
+      <summary>All the combined fragments under the interaction.</summary>
+      <param name="interaction"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionOperandExtensions">
+      <summary>Extension methods for IInteractionOperand.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InteractionOperandExtensions.GetNestedCombinedFragments(Microsoft.VisualStudio.Uml.Interactions.IInteractionOperand)">
+      <summary>Returns combined fragments nested under the interaction operand</summary>
+      <param name="interactionOperand"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InterfaceExtensions">
+      <summary>Extension methods for IInterface.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InterfaceExtensions.CreateAttribute(Microsoft.VisualStudio.Uml.Classes.IInterface)">
+      <summary>Create a new IProperty object in the Interface</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InterfaceExtensions.CreateOperation(Microsoft.VisualStudio.Uml.Classes.IInterface)">
+      <summary>Create a new IOperation object in the Interface</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InvocationActionExtensions">
+      <summary>Extension methods for IInvocation.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.InvocationActionExtensions.CreateArgumentInputPin(Microsoft.VisualStudio.Uml.Actions.IInvocationAction)">
+      <summary>Create a new InputPin object and also a Microsoft.VisualStudio.Uml.Actions.InvocationActionHasArguments link which connects  IMicrosoft.VisualStudio.Uml.Actions.IInvocationAction to the newly created InputPin object.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IReference">
+      <summary>An IReference can link an IElement to a work item, a URL, or an element in another model. Use IElement.AddReference() to create the link.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IReference.Delete">
+      <summary>Remove the reference from the model element.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IReference.Name">
+      <summary>Indicates what kind of reference this is. You can use a custom value, or one of the set defined in ReferenceConstants.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IReference.Value">
+      <summary>Get/set the reference Value. The type depends on the Reference Name.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IShapeExtensions">
+      <summary>Provides extension methods.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.IShapeExtensions.GetElement(Microsoft.VisualStudio.ArchitectureTools.Extensibility.Presentation.IShape)">
+      <summary>The model element that this shape represents.</summary>
+      <param name="shape"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions">
+      <summary>Extension methods for ILifeline.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.FindInsertionPoint(Microsoft.VisualStudio.Uml.Interactions.ILifeline,Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification)">
+      <summary>Returns an insertion point at the beginning (top) of an Execution Specification.  Use this to add the first message to or from the Execution Specification.</summary>
+      <param name="lifeline"></param>
+      <param name="currentBlock"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.FindInsertionPoint(Microsoft.VisualStudio.Uml.Interactions.ILifeline,Microsoft.VisualStudio.Uml.Interactions.IInteractionOperand)">
+      <summary>Returns an insertion point at the beginning (top) of an Interaction Operand. Use this to add the first message inside the Interaction Operand.</summary>
+      <param name="lifeline"></param>
+      <param name="currentInteractionOperand"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.FindInsertionPointAfterCombinedFragment(Microsoft.VisualStudio.Uml.Interactions.ILifeline,Microsoft.VisualStudio.Uml.Interactions.ICombinedFragment)">
+      <summary>Returns an insertion point immediately after the given Combined Fragment</summary>
+      <param name="lifeline"></param>
+      <param name="previousCombinedFragment"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.FindInsertionPointAfterExecutionSpecification(Microsoft.VisualStudio.Uml.Interactions.ILifeline,Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification)">
+      <summary>Returns an insertion point on this lifeline immediately after the given Execution Specification.</summary>
+      <param name="lifeline"></param>
+      <param name="currentBlock"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.FindInsertionPointAfterInteractionUse(Microsoft.VisualStudio.Uml.Interactions.ILifeline,Microsoft.VisualStudio.Uml.Interactions.IInteractionUse)">
+      <summary>Returns an insertion point immediately after the given Interaction Use.</summary>
+      <param name="lifeline"></param>
+      <param name="previousInteractionUse"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.FindInsertionPointAfterMessage(Microsoft.VisualStudio.Uml.Interactions.ILifeline,Microsoft.VisualStudio.Uml.Interactions.IMessage)">
+      <summary>Returns an insertion point on this lifeline immediately after the given message.</summary>
+      <param name="lifeline"></param>
+      <param name="previousMessage"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.FindInsertionPointAtBottom(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>The insertion point at the bottom of the lifeline</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.FindInsertionPointAtTop(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>The insertion point at the top of the lifeline.</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.GetAllIncomingMessages(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>All messages incoming to the lifeline or any Execution Specification on the lifeline</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.GetAllOutgoingMessages(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>All messages outgoing from the lifeline or from any ExecutionSpecification on the lifeline</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.GetCombinedFragments(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>The collection of Combined Fragments that contain messages starting or ending on this lifeline, or that contain Interaction Uses or nested fragments that cover this Lifeline.</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.GetDisplayName(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>Get the lifeline name or name and type, as displayed on the diagram.</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.GetExecutionSpecifications(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>The top level Execution Specification blocks on the lifeline</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.GetInstanceType(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>Get the type name.</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.GetOutgoingMessages(Microsoft.VisualStudio.Uml.Interactions.ILifeline)">
+      <summary>The top level outgoing messages outgoing from the Lifeline, not from any Execution Specification.</summary>
+      <param name="lifeline"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.LifelineExtensions.SetInstanceType(Microsoft.VisualStudio.Uml.Interactions.ILifeline,System.String)">
+      <summary>Set the type name.</summary>
+      <param name="lifeline"></param>
+      <param name="instanceType"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MessageExtensions">
+      <summary>Extension methods for manipulating Interactions.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MessageExtensions.GetOppositeMessage(Microsoft.VisualStudio.Uml.Interactions.IMessage)">
+      <summary>For a synchronous message, returns the reply. For a reply message, returns the outgoing message. Returns null for asynchronous messages.</summary>
+      <param name="message"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MessageExtensions.GetSourceExecutionSpecification(Microsoft.VisualStudio.Uml.Interactions.IMessage)">
+      <summary>The Execution Specification from which this message is outgoing. Null if this is sourced directly on a lifeline or is a found message.</summary>
+      <param name="message"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MessageExtensions.GetSourceLifeline(Microsoft.VisualStudio.Uml.Interactions.IMessage)">
+      <summary>The lifeline from which this message is outgoing. Null if this is a Found message.</summary>
+      <param name="message"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MessageExtensions.GetTargetExecutionSpecification(Microsoft.VisualStudio.Uml.Interactions.IMessage)">
+      <summary>The Execution Specification to which this message is incoming. Null if this is targeted directly on a lifeline or is a lost message.</summary>
+      <param name="message"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MessageExtensions.GetTargetLifeline(Microsoft.VisualStudio.Uml.Interactions.IMessage)">
+      <summary>The lifeline to which this message is incoming. Null if this is a Lost message.</summary>
+      <param name="message"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.AllInstances``1">
+      <typeparam name="T"></typeparam>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.Boolean"></member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.FindElement(System.Guid)">
+      <param name="elementId"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.GetMapping(Microsoft.VisualStudio.Modeling.Store)">
+      <param name="store"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.Instances``1">
+      <typeparam name="T"></typeparam>
+    </member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.Integer"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.IsReadOnly"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.Microsoft#VisualStudio#ArchitectureTools#Extensibility#Uml#IModelStore#ProfileManager"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.Root"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.String"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ModelStore.UnlimitedNatural"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MultiplicityElementExtensions">
+      <summary>Extension methods for IMultiplicityElement.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MultiplicityElementExtensions.GetBounds(Microsoft.VisualStudio.Uml.Classes.IMultiplicityElement)">
+      <summary>The multiplicity as a string in the form [LowerValue]..[UpperValue].</summary>
+      <param name="multiplicityElement"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.MultiplicityElementExtensions.SetBounds(Microsoft.VisualStudio.Uml.Classes.IMultiplicityElement,System.String)">
+      <summary>Set the multiplicity LowerValue/UpperValue based on a string in the form [LowerValue]..[UpperValue]. [UpperValue] may be '*'.</summary>
+      <param name="multiplicityElement"></param>
+      <param name="boundsSpecification">lower..upper. Upper may be '*'.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.NamedElementExtensions">
+      <summary>Extension methods for INamedElement.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.NamedElementExtensions.GetDependencyClients(Microsoft.VisualStudio.Uml.Classes.INamedElement)">
+      <summary>Return a collection of elements that are dependent on this.</summary>
+      <param name="element"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.NamedElementExtensions.GetDependencySuppliers(Microsoft.VisualStudio.Uml.Classes.INamedElement)">
+      <summary>Return a collection of elements on which this is dependent.</summary>
+      <param name="element"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.NamespaceExtensions">
+      <summary>Extension methods for INamespace.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.NamespaceExtensions.CreatePackageImport(Microsoft.VisualStudio.Uml.Classes.INamespace,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Import a package into a namespace. Creates an IPackageImport link to the package.</summary>
+      <param name="importingNamespace"></param>
+      <param name="importedPackage"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ObjectNodeExtensions">
+      <summary>Provides extension methods.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ObjectNodeExtensions.GetUpperBound(Microsoft.VisualStudio.Uml.Activities.IObjectNode)">
+      <summary>The upper bound of the current ObjectNode. int.MaxValue is returned if the upper bound is '*'.</summary>
+      <param name="objectNode"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ObjectNodeExtensions.SetUpperBound(Microsoft.VisualStudio.Uml.Activities.IObjectNode,System.Int32)">
+      <summary>Set the upper bound. Set the newBound to int.MaxValue to indicate that the upper bound is '*'.</summary>
+      <param name="objectNode"></param>
+      <param name="newBound"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.OpaqueActionExtensions">
+      <summary>OpaqueAction extension method for manipulating contained IInputPin model elements</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.OpaqueActionExtensions.CreateInputValueInputPin(Microsoft.VisualStudio.Uml.Actions.IOpaqueAction)">
+      <summary>Create a new IInputPin object in the OpaqueAction</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.OpaqueActionExtensions.CreateOutputValueOutputPin(Microsoft.VisualStudio.Uml.Actions.IOpaqueAction)">
+      <summary>Create a new IOutputPin object in the OpaqueAction</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.OperationExtensions">
+      <summary>Extension methods for IOperation.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.OperationExtensions.CreateBodyConditionConstraint(Microsoft.VisualStudio.Uml.Classes.IOperation)">
+      <summary>Create a new bodyCondition IConstraint owned by Operation.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.OperationExtensions.CreatePostconditionConstraint(Microsoft.VisualStudio.Uml.Classes.IOperation)">
+      <summary>Create a new postcondition IConstraint owned by Operation.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.OperationExtensions.CreatePreconditionConstraint(Microsoft.VisualStudio.Uml.Classes.IOperation)">
+      <summary>Create a new precondition IConstraint owned by Operation.</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions">
+      <summary>Extension method for manipulating package contents.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateAbstraction(Microsoft.VisualStudio.Uml.Classes.IPackage,Microsoft.VisualStudio.Uml.Classes.INamedElement,Microsoft.VisualStudio.Uml.Classes.INamedElement)">
+      <summary>Create a new IAbstraction link in the NamedElement</summary>
+      <param name="parent"></param>
+      <param name="client"></param>
+      <param name="supplier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateActivity(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IActivity object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateActor(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IActor object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateArtifact(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IArtifact object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateAssociation(Microsoft.VisualStudio.Uml.Classes.IPackage,Microsoft.VisualStudio.Uml.Classes.IClassifier,Microsoft.VisualStudio.Uml.Classes.IClassifier)">
+      <summary>Create a new IAssociation</summary>
+      <param name="parent"></param>
+      <param name="sourceClassifier"></param>
+      <param name="targetClassifier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateClass(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IClass object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateComment(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IComment object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateComponent(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IComponent object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateDataType(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IDataType object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateDependency(Microsoft.VisualStudio.Uml.Classes.IPackage,Microsoft.VisualStudio.Uml.Classes.INamedElement,Microsoft.VisualStudio.Uml.Classes.INamedElement)">
+      <summary>Create a new IDependency link in the NamedElement</summary>
+      <param name="parent"></param>
+      <param name="client"></param>
+      <param name="supplier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateEnumeration(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IEnumeration object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateInteraction(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IInteraction object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateInterface(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IInterface object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateInterfaceRealization(Microsoft.VisualStudio.Uml.Classes.IPackage,Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavioredClassifier,Microsoft.VisualStudio.Uml.Classes.IInterface)">
+      <summary>Create a new IInterfaceRealization link in the BehavioredClassifier</summary>
+      <param name="parent"></param>
+      <param name="implementingClassifierInternal"></param>
+      <param name="contract"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreatePackage(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IPackage object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreatePrimitiveType(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IPrimitiveType object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateRealization(Microsoft.VisualStudio.Uml.Classes.IPackage,Microsoft.VisualStudio.Uml.Classes.INamedElement,Microsoft.VisualStudio.Uml.Classes.INamedElement)">
+      <summary>Create a new IRealization link in the NamedElement</summary>
+      <param name="parent"></param>
+      <param name="client"></param>
+      <param name="supplier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateSubsystem(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new ISubsystem object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateUsage(Microsoft.VisualStudio.Uml.Classes.IPackage,Microsoft.VisualStudio.Uml.Classes.INamedElement,Microsoft.VisualStudio.Uml.Classes.INamedElement)">
+      <summary>Create a new IUsage link in the NamedElement</summary>
+      <param name="parent"></param>
+      <param name="client"></param>
+      <param name="supplier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.CreateUseCase(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Create a new IUseCase object in the Package</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.GetImportedPackages(Microsoft.VisualStudio.Uml.Classes.INamespace)">
+      <summary>The imported packages of the namespace</summary>
+      <param name="importingNamespace"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PackageExtensions.GetImportingNamespaces(Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>The importing namespace of the package</summary>
+      <param name="package"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ParameterExtensions">
+      <summary>Extension methods for IParameter.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ParameterExtensions.CreateLiteralBooleanDefaultValue(Microsoft.VisualStudio.Uml.Classes.IParameter)">
+      <summary>Create a new ILiteralBoolean object in the Parameter</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ParameterExtensions.CreateLiteralIntegerDefaultValue(Microsoft.VisualStudio.Uml.Classes.IParameter)">
+      <summary>Create a new ILiteralInteger object in the Parameter</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ParameterExtensions.CreateLiteralStringDefaultValue(Microsoft.VisualStudio.Uml.Classes.IParameter)">
+      <summary>Create a new ILiteralString object in the Parameter</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ProfileStereotypeExtensions">
+      <summary>Extension methods relating to profiles and stereotypes.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ProfileStereotypeExtensions.ApplyProfile(Microsoft.VisualStudio.Uml.Classes.IPackage,Microsoft.VisualStudio.Uml.Profiles.IProfile)">
+      <summary>Applies the profile to package, so that the profile's stereotypes can be applied to the package's contents.  Creates an IProfileInstance that represents the relationship between the profile and the package.</summary>
+      <returns>An IProfileInstance represents the link between a profile  and a package to which it is applied.</returns>
+      <param name="package"></param>
+      <param name="profile">The profile that is to be made available in this package.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ProfileStereotypeExtensions.ApplyStereotype(Microsoft.VisualStudio.Uml.Classes.IElement,Microsoft.VisualStudio.Uml.Profiles.IStereotype)">
+      <summary>Applies the stereotype to element. Creates an IStereotypeInstance that represents the extension of the model element by the stereotype.</summary>
+      <returns>An IStereotypeInstance represents the link between a stereotype and an element.</returns>
+      <param name="element"></param>
+      <param name="stereotype">The stereotype to be applied.</param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PropertyExtensions">
+      <summary>Extension methods for IProperty.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PropertyExtensions.CreateLiteralBooleanDefaultValue(Microsoft.VisualStudio.Uml.Classes.IProperty)">
+      <summary>Create a new ILiteralBoolean object in the Property</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PropertyExtensions.CreateLiteralIntegerDefaultValue(Microsoft.VisualStudio.Uml.Classes.IProperty)">
+      <summary>Create a new ILiteralInteger object in the Property</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.PropertyExtensions.CreateLiteralStringDefaultValue(Microsoft.VisualStudio.Uml.Classes.IProperty)">
+      <summary>Create a new ILiteralString object in the Property</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ReferenceConstants">
+      <summary>Predefined names for use with IReference.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ReferenceConstants.Definition"></member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ReferenceConstants.WorkItem">
+      <summary>Name for an IReference that links to a TFS work item.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SendSignalActionExtensions">
+      <summary>Extension methods for ISendSignalAction.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SendSignalActionExtensions.CreateTargetInputPin(Microsoft.VisualStudio.Uml.Actions.ISendSignalAction)">
+      <summary>Create a new IInputPin object in the SendSignalAction</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SequenceDesignerExtensionAttribute">
+      <summary>Apply this attribute to a class that defines an extension on UML sequence diagrams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SequenceDesignerExtensionAttribute.#ctor"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SequenceDesignerExtensionAttribute.DSLDesignerName_SequenceDesigner"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions">
+      <summary>Extension methods to change owner.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.Classes.IClass,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.Classes.IComment,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.Classes.IEnumeration,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.Classes.IInterface,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.Classes.IPrimitiveType,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavior,Microsoft.VisualStudio.Uml.Classes.IClassifier)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavior,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.Components.IComponent,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.UseCases.IActor,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.UseCases.ISubsystem,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.SetOwnerExtensions.SetOwner(Microsoft.VisualStudio.Uml.UseCases.IUseCase,Microsoft.VisualStudio.Uml.Classes.IPackage)">
+      <summary>Change the owner.</summary>
+      <param name="element"></param>
+      <param name="newOwner"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.StructuredClassifierExtensions">
+      <summary>Extension methods for IStructuredClassifier.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.StructuredClassifierExtensions.CreatePart(Microsoft.VisualStudio.Uml.CompositeStructures.IStructuredClassifier)">
+      <summary>Create a new Part, with an unspecified type.</summary>
+      <param name="structuredClassifier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.StructuredClassifierExtensions.CreatePart(Microsoft.VisualStudio.Uml.CompositeStructures.IStructuredClassifier,Microsoft.VisualStudio.Uml.Components.IComponent)">
+      <summary>Create a new Part, with a given type, or with a new type. Specify a null type to create a new Component as the type of the Part.</summary>
+      <param name="structuredClassifier"></param>
+      <param name="propertyType"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions">
+      <summary>Extension methods for ITemplateBinding.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.CreateSubstitution(Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateBinding,Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter,Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IParameterableElement)">
+      <summary>Bind a type to a parameter.</summary>
+      <param name="binding"></param>
+      <param name="formal"></param>
+      <param name="actual"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.CreateSubstitution(Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateBinding,Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter,System.Boolean)">
+      <summary>Bind a Boolean value to a parameter.</summary>
+      <param name="binding"></param>
+      <param name="formal"></param>
+      <param name="literalActual"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.CreateSubstitution(Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateBinding,Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter,System.Int32)">
+      <summary>Bind an integer to a parameter.</summary>
+      <param name="binding"></param>
+      <param name="formal"></param>
+      <param name="literalActual"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.CreateSubstitution(Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateBinding,Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter,System.String)">
+      <summary>Bind a string to a parameter.</summary>
+      <param name="binding"></param>
+      <param name="formal"></param>
+      <param name="literalActual"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.CreateTemplateBinding(Microsoft.VisualStudio.Uml.Classes.IClassifier,Microsoft.VisualStudio.Uml.Classes.IClassifier)">
+      <summary>Bind the given classifier to given template classifier. If required, add parameter substitutions using CreateSubstitution.</summary>
+      <param name="classifier"></param>
+      <param name="templateClassifier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.CreateTemplateParameter(Microsoft.VisualStudio.Uml.Classes.IClassifier,Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind,System.String)">
+      <summary>Creates a template parameter with the given name.</summary>
+      <param name="classifier"></param>
+      <param name="kind"></param>
+      <param name="name"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.CreateTemplateParameter(Microsoft.VisualStudio.Uml.Classes.IClassifier,Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IParameterableElement)">
+      <summary>Creates a template parameter that references given parameteredElement.</summary>
+      <param name="classifier"></param>
+      <param name="parameteredElement"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.CreateTemplateSignature(Microsoft.VisualStudio.Uml.Classes.IClassifier)">
+      <summary>Creates a template signature on the given classifier.</summary>
+      <param name="classifier"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateBindingExtensions.FindTemplateParameter(Microsoft.VisualStudio.Uml.Classes.IClassifier,System.String)">
+      <summary>Find a template parameter by name.</summary>
+      <param name="classifier"></param>
+      <param name="name"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterExtensions">
+      <summary>Extension methods for ITemplateParameter.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterExtensions.CreateLiteralBooleanDefaultValue(Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter)">
+      <summary>Create a new ILiteralBoolean object in the TemplateParameter</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterExtensions.CreateLiteralIntegerDefaultValue(Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter)">
+      <summary>Create a new ILiteralInteger object in the TemplateParameter</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterExtensions.CreateLiteralStringDefaultValue(Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter)">
+      <summary>Create a new ILiteralString object in the TemplateParameter</summary>
+      <param name="parent"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind">
+      <summary>Used to specify what kind of element can be used as an argument to a template parameter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind.Class">
+      <summary>The argument must be a class.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind.Interface">
+      <summary>The argument must be an interface.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind.Enumeration">
+      <summary>The argument must be an enumeration.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind.Operation">
+      <summary>The argument must be an operation.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind.Property">
+      <summary>The argument must be an attribute or association end.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind.String">
+      <summary>The argument must be a string.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind.Integer">
+      <summary>The argument must be an integer.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.TemplateParameterKind.Boolean">
+      <summary>The argument must be a Boolean value.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions">
+      <summary>Extension methods for IElement, which is the superclass of all UML model element types.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.AddReference(Microsoft.VisualStudio.Uml.Classes.IElement,System.String,System.String,System.Boolean)">
+      <summary>Links a string to an element, usually where the string is a reference such as a URI, modelbus reference, or work item ID. Use the name to indicate the type of reference. Returns an IReference object that represents the link.</summary>
+      <param name="element"></param>
+      <param name="name">Tag that identifies the type of reference, and how the value is to be interpreted.</param>
+      <param name="value">String that identifies the target object.</param>
+      <param name="allowMultiple">If true, more than one value with the same name can be attached to this IElement. If false, an exception will be thrown if a reference of this name is already attached to this IElement.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.Delete(Microsoft.VisualStudio.Uml.Classes.IElement)">
+      <summary>Deletes this element and any relationships, owned elements, and shapes.</summary>
+      <param name="umlElement"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.DeleteAllReference(Microsoft.VisualStudio.Uml.Classes.IElement,System.String)">
+      <summary>Remove all the references of a given tag.</summary>
+      <param name="element"></param>
+      <param name="name"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.GetId(Microsoft.VisualStudio.Uml.Classes.IElement)">
+      <summary>Gets a GUID that identifies this element.</summary>
+      <param name="umlElement"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.GetModelStore(Microsoft.VisualStudio.Modeling.Store)">
+      <summary>Wraps the implementation Store in an IModelStore.</summary>
+      <param name="store"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.GetModelStore(Microsoft.VisualStudio.Uml.Classes.IElement)">
+      <summary>Gets the IModelStore that contains this element.</summary>
+      <param name="element"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.GetReferences(Microsoft.VisualStudio.Uml.Classes.IElement,System.String)">
+      <summary>Get the IReferences of a given tag that are associated with this element.</summary>
+      <param name="element"></param>
+      <param name="name">Tag name of the IReferences to get.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.GetRelatedElements``1(Microsoft.VisualStudio.Uml.Classes.IElement)">
+      <summary>Gets elements related to this element by relationships of the specified type.</summary>
+      <param name="element"></param>
+      <typeparam name="T">IRelationship or one of its subtypes.</typeparam>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UmlExtensions.GetRelatedLinks``1(Microsoft.VisualStudio.Uml.Classes.IElement)">
+      <summary>Gets relationships of a specified type from or to this element.</summary>
+      <param name="element"></param>
+      <typeparam name="T">IRelationship or one of its subtypes.</typeparam>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseDesignerExtensionAttribute">
+      <summary>Apply this attribute to a class that defines an extension on UML use case diagrams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseDesignerExtensionAttribute.#ctor"></member>
+    <member name="P:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseDesignerExtensionAttribute.DSLDesignerName_UseCaseModel"></member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseExtensions">
+      <summary>Extension methods for manipulating Use Cases.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseExtensions.CreateExtend(Microsoft.VisualStudio.Uml.UseCases.IUseCase,Microsoft.VisualStudio.Uml.UseCases.IUseCase)">
+      <summary>Create an IExtend link to show that this use case extends the definition of another.</summary>
+      <param name="sourceUseCase">The extending use case, which defines additional behavior.</param>
+      <param name="targetUseCase">The base use case that is extended by the additional behavior defined in the source.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseExtensions.CreateInclude(Microsoft.VisualStudio.Uml.UseCases.IUseCase,Microsoft.VisualStudio.Uml.UseCases.IUseCase)">
+      <summary>Create an IInclude link to show that this use case includes another.</summary>
+      <param name="sourceUseCase">The base use case that includes another.</param>
+      <param name="targetUseCase">The use case whose behavior is forms part of the behavior of the source.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseExtensions.GetExtendedCases(Microsoft.VisualStudio.Uml.UseCases.IUseCase)">
+      <summary>The use cases extended by this use case.</summary>
+      <param name="useCase"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseExtensions.GetExtendingCases(Microsoft.VisualStudio.Uml.UseCases.IUseCase)">
+      <summary>The use cases that extend this use case.</summary>
+      <param name="useCase"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseExtensions.GetIncludedCases(Microsoft.VisualStudio.Uml.UseCases.IUseCase)">
+      <summary>The use cases that are included by this use case.</summary>
+      <param name="useCase"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.UseCaseExtensions.GetIncludingCases(Microsoft.VisualStudio.Uml.UseCases.IUseCase)">
+      <summary>The use cases that include this use case.</summary>
+      <param name="useCase"></param>
+    </member>
+    <member name="T:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ValidationContextExtensions">
+      <summary>Extensions for ValidationContext.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ValidationContextExtensions.LogError(Microsoft.VisualStudio.Modeling.Validation.ValidationContext,System.String,System.String,Microsoft.VisualStudio.Uml.Classes.IElement[])">
+      <summary>Display an error message in the Visual Studio error list. When the user attempts to save the model, ask whether to continue.</summary>
+      <param name="context"></param>
+      <param name="description">Message displayed in the error window.</param>
+      <param name="code">A unique identifier for this message.</param>
+      <param name="elements"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ValidationContextExtensions.LogFatal(Microsoft.VisualStudio.Modeling.Validation.ValidationContext,System.String,System.String,Microsoft.VisualStudio.Uml.Classes.IElement[])">
+      <summary>Display an error message in the Visual Studio error list. If the user  attempts to save the model, warn that it might not be possible to re-open it.</summary>
+      <param name="context"></param>
+      <param name="description">Message displayed in the error window.</param>
+      <param name="code">A unique identifier for this message.</param>
+      <param name="elements">Elements that should be selected when the user double-clicks the error message.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ValidationContextExtensions.LogMessage(Microsoft.VisualStudio.Modeling.Validation.ValidationContext,System.String,System.String,Microsoft.VisualStudio.Uml.Classes.IElement[])">
+      <summary>Display an information message in the Visual Studio error list.</summary>
+      <param name="context"></param>
+      <param name="description">Message displayed in the error window.</param>
+      <param name="code">A unique identifier for this message.</param>
+      <param name="elements">Elements that should be selected when the user double-clicks the error message.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ValidationContextExtensions.LogViolation(Microsoft.VisualStudio.Modeling.Validation.ValidationContext,Microsoft.VisualStudio.Modeling.Validation.ViolationType,System.String,System.String,Microsoft.VisualStudio.Uml.Classes.IElement[])">
+      <summary>Display a message of a specified kind in the Visual Studio error list. Generic version of the other Log methods.</summary>
+      <param name="context"></param>
+      <param name="violationType">Specify whether this is an error, warning, or information.</param>
+      <param name="description">Message displayed in the error window.</param>
+      <param name="code">A unique identifier for this message.</param>
+      <param name="elements">Elements that should be selected when the user double-clicks the error message.</param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.ArchitectureTools.Extensibility.Uml.ValidationContextExtensions.LogWarning(Microsoft.VisualStudio.Modeling.Validation.ValidationContext,System.String,System.String,Microsoft.VisualStudio.Uml.Classes.IElement[])">
+      <summary>Display a warning message in the Visual Studio error list.</summary>
+      <param name="context"></param>
+      <param name="description">Message displayed in the error window.</param>
+      <param name="code">A unique identifier for this message.</param>
+      <param name="elements">Elements that should be selected when the user double-clicks the error message.</param>
+    </member>
+  </members>
+</doc>

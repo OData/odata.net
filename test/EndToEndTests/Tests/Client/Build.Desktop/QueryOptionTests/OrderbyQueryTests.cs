@@ -33,7 +33,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void OrderbyQueryTest()
         {
             foreach (var mimeType in mimeTypes)

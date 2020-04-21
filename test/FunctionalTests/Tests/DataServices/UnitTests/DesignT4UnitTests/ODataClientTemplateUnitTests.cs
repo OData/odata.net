@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.OData.Client.Design.T4.UnitTests
 {
 
-    [TestClass]
+    //--#comment#--[TestClass]
     public class ODataClientTemplateUnitTest
     {
         internal class ODataClientTemplateImp : ODataT4CodeGenerator.ODataClientTemplate

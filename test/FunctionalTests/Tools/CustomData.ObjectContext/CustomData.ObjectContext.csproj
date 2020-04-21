@@ -1,17 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{6762001D-60F0-4E70-A816-C15897C39B7F}</ProjectGuid>
-    <OutputType>Library</OutputType>
+ 
     <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>System.Data.Test.Astoria.CustomData</RootNamespace>
     <AssemblyName>CustomData.ObjectContext</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+
+    <TargetFrameworks>net45</TargetFrameworks>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <RestorePackages>true</RestorePackages>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+     
     <AssemblyKeyType>ECMA</AssemblyKeyType>
-    <CreateMetaAssembly>false</CreateMetaAssembly>
-    <DebugSymbols>true</DebugSymbols>
+ 
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <NoWarn>;1699;1570;1572;1573;1591;3005;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
     <PublishUrl>publish\</PublishUrl>
@@ -36,14 +40,10 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Core" />
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
-      <Name>Microsoft.OData.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
-      <Name>Microsoft.OData.Client</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
+ 
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomWebObjectContext.cs" />
@@ -84,5 +84,5 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

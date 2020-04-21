@@ -25,7 +25,6 @@ namespace Microsoft.OData.Evaluation
     using System.Linq;
     using System.Xml;
 #if ODATA_CORE
-    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
 #else
@@ -35,7 +34,6 @@ namespace Microsoft.OData.Evaluation
     using Microsoft.Spatial;
     using ExpressionConstants = XmlConstants;
 #endif
-
 
     /// <summary>
     /// Component for formatting literals for use in URIs, ETags, and skip-tokens.

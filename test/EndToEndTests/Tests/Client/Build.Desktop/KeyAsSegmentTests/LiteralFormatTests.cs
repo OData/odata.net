@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     [TestClass]
     public class LiteralFormatTests : KeyAsSegmentTest
     {
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PrimaryKeyValueBeginsWithDollarSign()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PrimaryKeyValueContainsForwardSlash()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -47,7 +47,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PrimaryKeyValueContainsWhitespace()
         {
             var contextWrapper = this.CreateWrappedContext();

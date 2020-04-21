@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     {
         const int IdOfPerson = -10;
         
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void InsertSave()
         {
             var newPerson = new Person { PersonId = 9999, Name = "Some Person" };
@@ -37,7 +37,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsTrue(newPerson == retrievedPerson, "New entity and retrieved entity should reference same object");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AttachUpdateObjectSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -52,7 +52,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.AreEqual(Int32.MaxValue, retrievedBonus.Single());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddObjectSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -65,7 +65,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddObjectAddRelatedObjectSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -78,7 +78,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddDeleteLinkSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -93,7 +93,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddDeleteLinkSaveBatch()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -112,7 +112,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void SetLinkSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -123,7 +123,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddRelatedObjectSave()
         {
             var contextWrapper = this.CreateWrappedContext();

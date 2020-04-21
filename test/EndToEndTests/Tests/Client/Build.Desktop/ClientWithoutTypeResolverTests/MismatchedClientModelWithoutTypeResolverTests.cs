@@ -27,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FeedQuery()
         {
             var contextWrapper = this.CreateContextWrapper();
@@ -37,14 +37,14 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var pageViewResults = contextWrapper.Execute<PageView>(new Uri(this.ServiceUri.OriginalString + "/PageView")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ExpandedFeedQuery()
         {
             var contextWrapper = this.CreateContextWrapper();
             var messageWithAttachmentsResults = contextWrapper.CreateQuery<Message>("Message").Expand(m => m.Attachments).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void EntryQuery()
         {
             var contextWrapper = this.CreateContextWrapper();
@@ -53,7 +53,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var pageViewResults = contextWrapper.CreateQuery<PageView>("PageView").Where(p => p.PageViewId == -2).Single();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LoadProperty()
         {
             var contextWrapper = this.CreateContextWrapper();
@@ -70,7 +70,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             } 
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PropertyQuery()
         {
             var contextWrapper = this.CreateContextWrapper();

@@ -1,17 +1,19 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
     <AssemblyName>Microsoft.Test.ModuleCore</AssemblyName>
     <NoWarn>;1699;1570;1572;1573;1591;</NoWarn>
-    <ErrorReport>prompt</ErrorReport>
-    <OutputType>Library</OutputType>
-    <ProjectGuid>{5E46C9E2-8B2F-4961-8C26-EFA9DF6CD68D}</ProjectGuid>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
-    <RootNamespace>Microsoft.Test.ModuleCore</RootNamespace>
+
+
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <KeyOriginatorFile>modulecore.snk</KeyOriginatorFile>
-    <WarningLevel>4</WarningLevel>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>
@@ -39,5 +41,5 @@
   <ItemGroup>
     <None Include="ModuleCore.snk" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

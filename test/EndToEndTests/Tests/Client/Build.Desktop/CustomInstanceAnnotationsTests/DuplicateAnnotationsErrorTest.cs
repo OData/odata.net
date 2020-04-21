@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void WriteDuplicateAnnotationOnFeedError()
         {
             this.Invoke(
@@ -32,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 new DataDriven.Constraint[0]);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void WriteDuplicateAnnotationOnEntryError()
         {
             this.Invoke(

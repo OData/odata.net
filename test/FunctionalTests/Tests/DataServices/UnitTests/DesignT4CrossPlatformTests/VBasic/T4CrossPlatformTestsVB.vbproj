@@ -1,25 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{BE6827D5-E301-47DD-8CAC-E0DA555AB64F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>T4CrossPlatformTestsVB</RootNamespace>
     <AssemblyName>T4CrossPlatformTestsVB</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+ 
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG,TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+ 
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>Off</OptionStrict>
     <OptionInfer>On</OptionInfer>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <NoWarn>40000,40008</NoWarn>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
   </PropertyGroup>
   <Import Project="..\Build.props" />
@@ -33,22 +31,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
-      <Name>Microsoft.OData.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
-      <Project>{7d921888-fe03-4c3f-80fe-2f624505461c}</Project>
-      <Name>Microsoft.OData.Edm</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
-      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
-      <Name>Microsoft.Spatial</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
+
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\CodeGen\*.vb" />
@@ -56,5 +46,5 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />-->
 </Project>

@@ -139,7 +139,7 @@ namespace AstoriaUnitTests.Tests
                 return false;
             }
 
-            [TestMethod, Variation("Tests IDSP.GetDerivedTypes() and IDSP.HasDerivedType()")]
+            //--#comment#--[TestMethod, Variation("Tests IDSP.GetDerivedTypes() and IDSP.HasDerivedType()")]
             public void BaseProviderGetDerivedTypesTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -2270,7 +2270,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Test the algorithm to resolve interfaces")]
+            //--#comment#--[TestMethod, Variation("Test the algorithm to resolve interfaces")]
             public void GetInterfaceTestForObjectContextProvider()
             {
                 using (TestUtil.MetadataCacheCleaner())

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -21,15 +20,19 @@
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
     <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+ 
     <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
-    <RootNamespace>System.Data.Test.Astoria</RootNamespace>
-    <ProjectGuid>{39F660EC-A5D8-4753-B3F2-28117EB3224B}</ProjectGuid>
+   
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <DocumentationFile>CsdlToWorkspaceGenerator.xml</DocumentationFile>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworks>net45</TargetFrameworks>
     <StartAction>Project</StartAction>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RestorePackages>true</RestorePackages>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
@@ -67,5 +70,5 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

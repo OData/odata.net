@@ -6,6 +6,7 @@
 
 namespace Microsoft.Test.OData.Tests.Client
 {
+
     using System;
     using Microsoft.OData.Client;
     using Microsoft.OData;
@@ -20,9 +21,11 @@ namespace Microsoft.Test.OData.Tests.Client
 #if !WIN8 && !SILVERLIGHT && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
     using Microsoft.Test.DataDriven;
 #endif
+
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Framework.Server;
     using Microsoft.Test.OData.Services.TestServices;
+    
 #if WIN8 || WINDOWSPHONE
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 #else
@@ -37,7 +40,7 @@ namespace Microsoft.Test.OData.Tests.Client
     [DeploymentItem(@"EntityFramework.dll")]
 #endif
 #if !PORTABLELIB
-    [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]
+   // [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]
     [DeploymentItem(@"Microsoft.VisualStudio.TeamSystem.Licensing.dll")]
 #endif
     public class EndToEndTestBase

@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void InsertRoundtripPrimitiveProperties()
         {
             this.RunOnAtomAndJsonFormats(
@@ -47,7 +47,7 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                     });
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void InsertRoundtripPropertiesWithNullValues()
         {
             this.RunOnAtomAndJsonFormats(
@@ -73,7 +73,7 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                     });
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateRoundTrip()
         {
             this.RunOnAtomAndJsonFormats(
