@@ -1,50 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-     
     <AssemblyName>Microsoft.Test.OData.DependencyInjection</AssemblyName>
     <TargetFrameworks>net45;netcoreapp1.0;netcoreapp2.0;</TargetFrameworks>
-  
     <TestType Condition=" '$(TestType)' == '' ">Private</TestType>
     <RestorePackages>true</RestorePackages>
-
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
     <SignAssembly>true</SignAssembly>
-
     <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
-
     <DelaySign>false</DelaySign>
   </PropertyGroup>
-
-  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>3.1.1</Version>
-    </PackageReference>
-  </ItemGroup>-->
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
   </ItemGroup>
   <Import Project="..\Build.props" />
-  <!--<ItemGroup>
-    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\Microsoft.Extensions.DependencyInjection.1.0.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>-->
+  
   <Choose>
     <When Condition=" '$(TestType)'=='Private' ">
       <ItemGroup>
@@ -52,36 +23,11 @@
                   
       </ItemGroup>
     </When>
-    <!--<When Condition=" '$(TestType)'=='Official' ">
-      <ItemGroup>
-        <Reference Include="Microsoft.OData.Core">
-          <HintPath>$(NugetPack)\Microsoft.OData.Core.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-      </ItemGroup>
-    </When>-->
+
   </Choose>
 
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>-->
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />-->
-  <!--<Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>-->
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

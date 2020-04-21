@@ -6,13 +6,7 @@
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>TRACE;SPATIAL;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
-
-    <!--<SignAssembly>true</SignAssembly>
-    <DelaySign>True</DelaySign>
-    <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>-->
-
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
     <IsPackable>true</IsPackable>
     <IsShipping>true</IsShipping>
   </PropertyGroup>
@@ -21,23 +15,6 @@
    <Import Project="Build.props" /> 
   <!-- Generated files -->
 
-
-  <PropertyGroup><!-- DelaySignKeys Constant used in assemblyinfocommon.cs to set key strings -->
-    
-    <!--<SigningType Condition="'$(SigningType)' == ''">None</SigningType>
-    <DefineConstants Condition="'$(SigningType)' != 'None'">$(DefineConstants);DelaySignKeys</DefineConstants>
-    <DelaySign>true</DelaySign>
-    <DelaySign Condition="'$(SigningType)' != 'Product'">false</DelaySign>
-    <SignAssembly>true</SignAssembly>
-    <SignAssembly Condition="'$(SigningType)' == 'None'">false</SignAssembly>
-    
-  
-  
-    <DelaySign>true</DelaySign>
-    <AssemblyOriginatorKeyFile>35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>-->
-  </PropertyGroup>
-
-  
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.Spatial.Tests" />
   </ItemGroup>
@@ -76,7 +53,4 @@
     </Resource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
 </Project>

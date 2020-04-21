@@ -7,15 +7,7 @@
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);ODATA_CLIENT;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
-
-    <!--<SignAssembly>false</SignAssembly>-->
-    <!--<DelaySign>True</DelaySign>
-    <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>-->
-
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
-    <!--<IsPackable>true</IsPackable>
-    <IsShipping>true</IsShipping>-->
+   <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -137,18 +129,6 @@
     </Compile>
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <TextStringResource Include="Microsoft.OData.Client.Common.txt">
-      <ResFile>Microsoft.OData.Client</ResFile>
-      <Sealed>true</Sealed>
-      <Parameterize>true</Parameterize>
-      <Visibility>internal</Visibility>
-      <GenerateResource>true</GenerateResource>
-      <FullClassName>Microsoft.OData.Client.TextRes</FullClassName>
-      <SupportsAssemblyReferences>false</SupportsAssemblyReferences>
-      <SkipSRAttributes>true</SkipSRAttributes>
-    </TextStringResource>
-  </ItemGroup>-->
 
   <ItemGroup>
     <TextStringResource Include="Microsoft.OData.Client.txt">
@@ -167,11 +147,7 @@
     <Content Include="Microsoft.OData.Client.Desktop.txt" />
     <Content Include="Microsoft.OData.Client.txt" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  
+ 
   <ItemGroup>
     <None Update="Microsoft.OData.Client.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

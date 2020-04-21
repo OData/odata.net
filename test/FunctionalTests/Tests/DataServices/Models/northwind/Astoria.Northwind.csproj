@@ -17,8 +17,8 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <!--<UpgradeBackupLocation>
+    </UpgradeBackupLocation>-->
     <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <Import Project="..\Build.props" />

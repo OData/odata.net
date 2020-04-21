@@ -22,37 +22,18 @@
     
     <PackageReference Include="EntityFramework" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <!--<PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
-    <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />-->
-    <!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />-->
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
+    <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" />
   </ItemGroup>
 
 
   <ItemGroup>
-    
-    <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-      <HintPath>..\..\..\packages\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
-    </Reference>-->
- 
-    
-    <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-      <HintPath>..\..\..\packages\PublicAssemblies_10\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
-    </Reference>-->
- 
-    
-    <Reference Include="System.Core" />
-    <Reference Include="System" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />-->
-    <!--<Reference Include="$(NuGetPack)\Newtonsoft.Json.6.0.5\lib\net40\Newtonsoft.Json.dll" />-->
+   
     <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.DataDriven.dll" />
     <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Extensions.dll" />
     <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.MaDLybZ.dll" />
@@ -105,5 +86,5 @@
     <Compile Include="Verification\IStringResourceVerifier.cs" />
     <Compile Include="Verification\StringResourceVerifier.cs" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  
 </Project>
