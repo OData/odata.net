@@ -690,9 +690,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="link">Nested resource link as parsed.</param>
         private void MaterializeDynamicProperty(MaterializerEntry entry, ODataNestedResourceInfo link)
         {
-            Debug.Assert(entry != null, $"{nameof(entry)} != null");
-            Debug.Assert(entry.ResolvedObject != null, $"{nameof(entry.ResolvedObject)} != null -- otherwise not resolved/created!");
-            Debug.Assert(link != null, $"{nameof(link)} != null");
+            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise not resolved/created!");
+            Debug.Assert(link != null, "link != null");
 
             MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
             if (linkState == null || (linkState.Entry == null && linkState.Feed == null))

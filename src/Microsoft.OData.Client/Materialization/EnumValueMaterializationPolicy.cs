@@ -120,8 +120,8 @@ namespace Microsoft.OData.Client.Materialization
 
         internal static bool TryMaterializeODataEnumValue(Type type, ODataEnumValue enumValue, out object materializedEnumValue)
         {
-            Debug.Assert(type != null, $"{nameof(type)} != null");
-            Debug.Assert(enumValue != null, $"{nameof(enumValue)} != null");
+            Debug.Assert(type != null, "type != null");
+            Debug.Assert(enumValue != null, "enumValue != null");
 
             try
             {

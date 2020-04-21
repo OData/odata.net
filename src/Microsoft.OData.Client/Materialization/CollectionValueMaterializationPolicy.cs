@@ -251,8 +251,8 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>true if successful</returns>
         internal bool TryMaterializeODataCollectionValue(Type collectionItemType, ODataProperty collectionProperty, out object collectionInstance)
         {
-            Debug.Assert(collectionItemType != null, $"{nameof(collectionItemType)} != null");
-            Debug.Assert(collectionProperty != null, $"{nameof(collectionProperty)} != null");
+            Debug.Assert(collectionItemType != null, "collectionItemType != null");
+            Debug.Assert(collectionProperty != null, "collectionProperty != null");
             Debug.Assert(collectionProperty.Value != null, "Collection should have already been checked for nullness");
 
             try

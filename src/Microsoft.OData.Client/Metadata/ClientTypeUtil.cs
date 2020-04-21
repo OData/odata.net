@@ -706,13 +706,13 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>Returns true if the <paramref name="instance"/> is an instance of an open type in the <paramref name="model"/></returns>
         internal static bool IsInstanceOfOpenType(object instance, ClientEdmModel model)
         {
-            Debug.Assert(instance != null, $"{nameof(instance)} !=null");
-            Debug.Assert(model != null, $"{nameof(model)} !=null");
+            Debug.Assert(instance != null, "instance !=null");
+            Debug.Assert(model != null, "model !=null");
 
             Type clientType = instance.GetType();
             ClientTypeAnnotation clientTypeAnnotation = model.GetClientTypeAnnotation(clientType);
 
-            Debug.Assert(clientTypeAnnotation != null, $"{nameof(clientTypeAnnotation)} != null");
+            Debug.Assert(clientTypeAnnotation != null, "clientTypeAnnotation != null");
 
             // TODO: Populate dynamic properties only if this is an open (entity or complex) type
             return clientTypeAnnotation.EdmType.IsOpen();
@@ -727,7 +727,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>true if expected dictionary is found</returns>
         internal static bool TryGetDynamicPropertiesDictionary(object instance, out IDictionary<string, object> dynamicPropertiesDictionary)
         {
-            Debug.Assert(instance != null, $"{nameof(instance)} != null");
+            Debug.Assert(instance != null, "instance != null");
 
             dynamicPropertiesDictionary = default(IDictionary<string, object>);
 

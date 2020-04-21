@@ -83,8 +83,8 @@ namespace Microsoft.OData.Client
         /// <param name="odataProperties">List of ODataProperty</param>
         private void PopulateDynamicProperties(object resource, string serverTypeName, List<ODataProperty> odataProperties)
         {
-            Debug.Assert(resource != null, $"{nameof(resource)} !=null");
-            Debug.Assert(odataProperties != null, $"{nameof(odataProperties)} != null");
+            Debug.Assert(resource != null, "resource !=null");
+            Debug.Assert(odataProperties != null, "odataProperties != null");
 
             IDictionary<string, object> dynamicPropertiesDictionary;
             if (ClientTypeUtil.TryGetDynamicPropertiesDictionary(resource, out dynamicPropertiesDictionary))
@@ -225,8 +225,8 @@ namespace Microsoft.OData.Client
         /// <param name="odataNestedResourceInfoWrappers">List of ODataNestedResourceInfoWrapper</param>
         private void PopulateNestedComplexDynamicProperties(object resource, string serverTypeName, HashSet<object> visitedComplexTypeObjects, List<ODataNestedResourceInfoWrapper> odataNestedResourceInfoWrappers)
         {
-            Debug.Assert(resource != null, $"{nameof(resource)} !=null");
-            Debug.Assert(odataNestedResourceInfoWrappers != null, $"{nameof(odataNestedResourceInfoWrappers)} != null");
+            Debug.Assert(resource != null, "resource !=null");
+            Debug.Assert(odataNestedResourceInfoWrappers != null, "odataNestedResourceInfoWrappers != null");
 
             IDictionary<string, object> dynamicPropertiesDictionary;
             if (ClientTypeUtil.TryGetDynamicPropertiesDictionary(resource, out dynamicPropertiesDictionary))
@@ -813,9 +813,9 @@ namespace Microsoft.OData.Client
         /// <returns>Whether or not the value was converted.</returns>
         private bool TryConvertDynamicPropertyToResourceOrResourceSet(string propertyName, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects, out ODataItemWrapper odataItem)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), $"!string.IsNullOrEmpty({nameof(propertyName)}");
-            Debug.Assert(propertyValue != null, $"{nameof(propertyValue)} != null");
-            Debug.Assert(serverTypeName != null, $"{nameof(serverTypeName)} != null");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(propertyValue != null, "propertyValue != null");
+            Debug.Assert(serverTypeName != null, "serverTypeName != null");
 
             if (propertyValue is ICollection)
             {
@@ -857,9 +857,9 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of ODataResourceWrapper containing the resource of the properties of the given complex type.</returns>
         private ODataResourceWrapper CreateODataComplexDynamicPropertyResouce(string propertyName, object propertyValue, HashSet<object> visitedComplexTypeObjects)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), $"!string.IsNullOrEmpty({nameof(propertyName)}");
-            Debug.Assert(propertyValue != null, $"{nameof(propertyValue)} != null");
-            Debug.Assert(!(propertyValue is ICollection), $"!({nameof(propertyValue)} is ICollection)");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(propertyValue != null, "propertyValue != null");
+            Debug.Assert(!(propertyValue is ICollection), "!(propertyValue is ICollection)");
 
             Type propertyType = propertyValue.GetType();
 
@@ -910,9 +910,9 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of ODataResourceSetWrapper representing the value of the property.</returns>
         private ODataResourceSetWrapper CreateODataComplexCollectionDynamicPropertyResourceSet(string propertyName, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), $"!string.IsNullOrEmpty({nameof(propertyName)}");
-            Debug.Assert(propertyValue != null, $"{nameof(propertyValue)} != null");
-            Debug.Assert(propertyValue is ICollection, $"{nameof(propertyValue)} must be a collection");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(propertyValue != null, "propertyValue != null");
+            Debug.Assert(propertyValue is ICollection, "propertyValue must be a collection");
 
             Type collectionItemType = propertyValue.GetType().GetGenericArguments().Single();
             bool isDynamicProperty = this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(propertyName, serverTypeName);

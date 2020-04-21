@@ -278,8 +278,8 @@ namespace Microsoft.OData.Client.Materialization
 
         internal Type ResolveClientTypeForDynamicProperty(string serverTypeName, object instance)
         {
-            Debug.Assert(!string.IsNullOrEmpty(serverTypeName), $"!string.IsNullOrEmpty({nameof(serverTypeName)})");
-            Debug.Assert(instance != null, $"{nameof(instance)} != null");
+            Debug.Assert(!string.IsNullOrEmpty(serverTypeName), "!string.IsNullOrEmpty(serverTypeName)");
+            Debug.Assert(instance != null, "instance != null");
 
             // TODO: Consider a cached mapping (server type => client type)
 
@@ -328,8 +328,8 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="instance">Instance that may optionally contain the dynamic properties dictionary</param>
         internal void MaterializeDynamicProperty(ODataProperty property, object instance)
         {
-            Debug.Assert(property != null, $"{nameof(property)} != null");
-            Debug.Assert(instance != null, $"{nameof(instance)} != null");
+            Debug.Assert(property != null, "property != null");
+            Debug.Assert(instance != null, "instance != null");
 
             // TODO: Should this apply only to open (entity and complex) types?
             
