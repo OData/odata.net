@@ -1869,11 +1869,11 @@ namespace Microsoft.OData
             }
         }
 
-         /// <summary>
-         /// Enters the 'ExceptionThrown' state and then throws an ODataException with the specified error message.
-         /// </summary>
-         /// <param name="errorMessage">The error message for the exception.</param>
-         /// <param name="item">The OData item to associate with the 'ExceptionThrown' state.</param>
+        /// <summary>
+        /// Enters the 'ExceptionThrown' state and then throws an ODataException with the specified error message.
+        /// </summary>
+        /// <param name="errorMessage">The error message for the exception.</param>
+        /// <param name="item">The OData item to associate with the 'ExceptionThrown' state.</param>
         private void ThrowODataException(string errorMessage, ODataItem item)
         {
             this.EnterScope(WriterState.Error, item);

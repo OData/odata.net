@@ -68,6 +68,8 @@ using System.Security;
 [assembly: SecurityTransparent]
 #endif
 
+#if !ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11
+#if !ASSEMBLY_ATTRIBUTE_ON_NETCORE_10
 #if !SUPPRESS_SECURITY_RULES
 #if SECURITY_MIGRATION && !ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2
 #if ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST
@@ -83,5 +85,7 @@ using System.Security;
 #endif
 #endif
 #endif
+#endif
+#endif
 
-[assembly:NeutralResourcesLanguageAttribute("en-US")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]

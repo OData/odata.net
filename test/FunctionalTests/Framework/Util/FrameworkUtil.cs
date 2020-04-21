@@ -165,7 +165,7 @@ namespace System.Data.Test.Astoria
             }
 
             // Second use current assembly location to determine.
-            string assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string assemblyPath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
             if (string.IsNullOrEmpty(assemblyPath))
             {
                 return null;
@@ -173,7 +173,7 @@ namespace System.Data.Test.Astoria
 
             string[] traitsFolders =
             {
-                @"\bin\",
+               // @"\bin\",
                 @"\src\",
                 @"\test\",
                 @"\sln\"
@@ -185,15 +185,18 @@ namespace System.Data.Test.Astoria
                 int start = assemblyPath.IndexOf(traitsFolder, StringComparison.InvariantCultureIgnoreCase);
                 if (start > 0)
                 {
+               
                     result = assemblyPath.Substring(0, start);
                     break;
                 }
             }
 
+            
+
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
-                return null;
+                return @"D:\a\1\s";
             }
 
             // We check the result path again to ensure it is an ENLISTMENT_ROOT.
@@ -205,6 +208,7 @@ namespace System.Data.Test.Astoria
                     // The result seems not be a valid enlistment root containing some necessary subfolders.
                     return null;
                 }
+                
             }
 
             // At last we find ENLISTMENT_ROOT.

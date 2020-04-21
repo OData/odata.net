@@ -4,18 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Microsoft.OData
 {
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-#if PORTABLELIB
-    using System.Threading;
-    using System.Threading.Tasks;
-#endif
-    #endregion Namespaces
-
     /// <summary>
     /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync,
     /// or to write an inline stream value.
@@ -114,39 +110,12 @@ namespace Microsoft.OData
             this.stream.Write(buffer, offset, count);
         }
 
-#if PORTABLELIB
         /// <inheritdoc />
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             this.ValidateNotDisposed();
             return this.stream.WriteAsync(buffer, offset, count, cancellationToken);
         }
-#else
-        /// <summary>
-        /// Writes to the stream.
-        /// </summary>
-        /// <param name="buffer">The buffer to get data from.</param>
-        /// <param name="offset">The offset in the buffer to start from.</param>
-        /// <param name="count">The number of bytes to write.</param>
-        /// <param name="callback">The callback to be called when the asynchronous operation completes.</param>
-        /// <param name="state">A custom state object to be associated with the asynchronous operation.</param>
-        /// <returns>An <see cref="IAsyncResult"/> for the asynchronous writing of the buffer to the stream.</returns>
-        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
-        {
-            this.ValidateNotDisposed();
-            return this.stream.BeginWrite(buffer, offset, count, callback, state);
-        }
-
-        /// <summary>
-        /// Finish the asynchronous write operation.
-        /// </summary>
-        /// <param name="asyncResult">The <see cref="IAsyncResult"/> returned from BaginWrite.</param>
-        public override void EndWrite(IAsyncResult asyncResult)
-        {
-            this.ValidateNotDisposed();
-            this.stream.EndWrite(asyncResult);
-        }
-#endif
 
         /// <summary>
         /// Reads data from the stream. This operation is not supported by this stream.

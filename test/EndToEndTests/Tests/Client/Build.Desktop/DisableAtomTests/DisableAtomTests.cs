@@ -43,37 +43,37 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             VerifyAtomBeDisabledQueryTest("People");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CountUsingAtomShouldBeFailed()
         {
             VerifyAtomBeDisabledQueryTest("People/$count");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntityUsingAtomShouldBeFailed()
         {
             VerifyAtomBeDisabledQueryTest("People(1)");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryComplexPropertyUsingAtomShouldBeFailed()
         {
             VerifyAtomBeDisabledQueryTest("People(1)/HomeAddress");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryPrimitivePropertyUsingAtomShouldBeFailed()
         {
             VerifyAtomBeDisabledQueryTest("People(1)/FirstName");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void FilterUsingAtomShouldBeFailed()
         {
             VerifyAtomBeDisabledQueryTest("People?$filter=FirstName eq 'Bob'");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void OrderByUsingAtomShouldBeFailed()
         {
             VerifyAtomBeDisabledQueryTest("People?$orderby=FirstName");
@@ -253,7 +253,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
         }
 
         // [Ignore] // Remove Atom
-        // [TestMethod] // github issuse: #896
+        // //--#comment#--[TestMethod] // github issuse: #896
         public void QueryUsingAtomShouldBeFailedClientTest()
         {
             // TestClientContext.Format.UseAtom();
@@ -274,7 +274,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // [Ignore] // Remove Atom
-        // [TestMethod] // github issuse: #896
+        // //--#comment#--[TestMethod] // github issuse: #896
         public void UpdateUsingAtomShouldBeFailedClientTest()
         {
             TestClientContext.Format.UseJson(Model);
@@ -304,7 +304,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
         }
 
         // [Ignore] // Remove Atom
-        // [TestMethod] // github issuse: #896
+        // //--#comment#--[TestMethod] // github issuse: #896
         public void InsertUsingAtomShouldBeFailedClientTest()
         {
             // TestClientContext.Format.UseAtom();

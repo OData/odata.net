@@ -23,7 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void DerivedTypeFeedQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -33,28 +33,28 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var derivedQueryResults = contextWrapper.Execute<DiscontinuedProduct>(new Uri(this.ServiceUri.OriginalString + "Product/Microsoft.Test.OData.Services.AstoriaDefaultService.DiscontinuedProduct")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ProjectionEntryQuery()
         {
             var contextWrapper = this.CreateContext();
             var queryResults = contextWrapper.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + "/Customer(-9)?$select=Name,PrimaryContactInfo")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ExpandEntryQuery()
         {
             var contextWrapper = this.CreateContext();
             var queryResults = contextWrapper.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + "/Customer(-9)?$expand=Info")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ExpandEntryQueryWithNestedSelect()
         {
             var contextWrapper = this.CreateContext();
             var queryResults = contextWrapper.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + "/Customer(-9)?$expand=Info($select=Information)")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void DerivedTypeExpandWithProjectionFeedQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -62,21 +62,21 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var queryResults = contextWrapper.Execute<DiscontinuedProduct>(queryUri).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void BasePropertyQueryWithinDerivedType()
         {
             var contextWrapper = this.CreateContext();
             var queryResults = contextWrapper.Execute<int>(new Uri(this.ServiceUri.OriginalString + "/Product(-9)/Microsoft.Test.OData.Services.AstoriaDefaultService.DiscontinuedProduct/ProductId")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ComplexPropertyQuery()
         {
             var contextWrapper = this.CreateContext();
             var queryResults = contextWrapper.Execute<ContactDetails>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/PrimaryContactInfo")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void NestedComplexPropertyQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -86,21 +86,21 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var queryResults4 = contextWrapper.Execute<ICollection<string>>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/Microsoft.Test.OData.Services.AstoriaDefaultService.Customer/PrimaryContactInfo/ContactAlias/AlternativeNames")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CollectionOfComplexPropertyQuery()
         {
             var contextWrapper = this.CreateContext();
             var queryResults = contextWrapper.Execute<Phone>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/PrimaryContactInfo/MobilePhoneBag")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CollectionOfPrimitivePropertyQuery()
         {
             var contextWrapper = this.CreateContext();
             var queryResults = contextWrapper.Execute<ICollection<decimal>>(new Uri(this.ServiceUri.OriginalString + "/MappedEntityType(-10)/BagOfDecimals")).ToArray();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ServiceOperationFeedQuery()
         {
             var contextWrapper = this.CreateContext();

@@ -1,14 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
-    <ProjectGuid>{2A9B8663-D894-48B9-93C1-CD6B397ACAA0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Test.Taupo.OData.WCFService</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.OData.WCFService</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+     
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <UseIISExpress>false</UseIISExpress>
@@ -16,37 +9,30 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
-      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
-      <Name>Microsoft.Spatial</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
-      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
-      <Name>Microsoft.OData.Edm</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj">
-      <Project>{854af4e9-b78f-4994-b9c5-82b846604cbe}</Project>
-      <Name>Microsoft.Test.Taupo.Astoria</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj">
-      <Project>{34010f3a-20cc-479c-83cf-ec99b1c90cd1}</Project>
-      <Name>Microsoft.Test.Taupo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
-      <Project>{efa72cf8-a73a-4eb4-88d4-ae6d4ce1b270}</Project>
-      <Name>Microsoft.Test.OData.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OData\Microsoft.Test.Taupo.OData.csproj">
-      <Project>{1D54775E-E211-4B35-A002-E53416BAE743}</Project>
-      <Name>Microsoft.Test.Taupo.OData</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+ 
+    <ProjectReference Include="..\..\..\..\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj" />
+     
+    <ProjectReference Include="..\..\..\..\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj" />
+ 
+    <ProjectReference Include="..\..\..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj" />
+ 
+    <ProjectReference Include="..\OData\Microsoft.Test.Taupo.OData.csproj" />
+   
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -54,14 +40,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
-      <Name>Microsoft.OData.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
-      <Name>Microsoft.OData.Client</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
+ 
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
@@ -112,9 +94,9 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- Trick VS into not converting project upon load -->
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  --><!-- Trick VS into not converting project upon load --><!--
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />-->
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

@@ -52,7 +52,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryDerivedSingletonWithTypeCast()
         {
             foreach (var mimeType in mimeTypes)
@@ -78,7 +78,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonWithExpand()
         {
             foreach (var mimeType in mimeTypes)
@@ -111,7 +111,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryDerivedSingletonWithTypeCastAndSelect()
         {
             foreach (var mimeType in mimeTypes)
@@ -125,7 +125,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonWithSelectUnderExpand()
         {
             foreach (var mimeType in mimeTypes)
@@ -149,7 +149,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonWithMiscQueryOptions()
         {
             foreach (var mimeType in mimeTypes)
@@ -220,7 +220,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonNavigationProperty()
         {
             foreach (var mimeType in mimeTypes)
@@ -233,7 +233,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonPropertyUnderNavigationProperty()
         {
             foreach (var mimeType in mimeTypes)
@@ -246,7 +246,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryDerivedSingletonPropertyWithTypeCast()
         {
             foreach (var mimeType in mimeTypes)
@@ -259,7 +259,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonNavigationPropertyWithFilter()
         {
             foreach (var mimeType in mimeTypes)
@@ -283,7 +283,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         #region Navigation tests
 
         //Company(singleton)<->Employees(EntitySet)
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryCollectionOfEntitiesFromSingletonNavigation()
         {
             foreach (var mimeType in mimeTypes)
@@ -301,7 +301,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonWithExpandedCollectionOfEntities()
         {
             foreach (var mimeType in mimeTypes)
@@ -317,7 +317,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonFromEntitySetNavigation()
         {
             foreach (var mimeType in mimeTypes)
@@ -330,7 +330,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntityWithExpandedSingleton()
         {
             foreach (var mimeType in mimeTypes)
@@ -347,7 +347,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         }
 
         //Company(singleton)<->VipCustomer(singleton)
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonFromSingletonNavigation()
         {
             foreach (var mimeType in mimeTypes)
@@ -361,7 +361,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QuerySingletonFromSingletonNavigation2()
         {
             foreach (var mimeType in mimeTypes)
@@ -392,7 +392,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         }
 
         //Deep navigation test
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryCollectionOfEntitiesFromDeepLevelNavigation()
         {
             foreach (var mimeType in mimeTypes)
@@ -410,7 +410,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         #region Action/Function
 
-        [TestMethod]
+         [TestMethod]
         public void InvokeFunctionBoundedToSingleton()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };

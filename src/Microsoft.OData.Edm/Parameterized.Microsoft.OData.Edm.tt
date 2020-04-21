@@ -9,7 +9,7 @@ public static class Configuration
     public const string AssemblyName = "Microsoft.OData.Edm";
     
     // The name of the generated resource class.
-    public const string ResourceClassName = "EntityRes";
+    public const string ResourceClassName = "EdmRes";
 
     // The list of text files containing all the string resources.
     public static readonly string[] TextFiles = {

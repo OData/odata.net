@@ -47,35 +47,35 @@ namespace Microsoft.OData.Tests.JsonLight
             test.Throws<ODataException>(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull);
         }
 
-        [Fact]
-        public void ShouldBeAbleToWritePropertyRequestWithoutModelAsync()
-        {
-            ODataProperty property = new ODataProperty { Name = "Prop", Value = Guid.Empty };
-            WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Guid\",\"@odata.type\":\"#Guid\",\"value\":\"00000000-0000-0000-0000-000000000000\"}", writingResponse: false, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToWritePropertyRequestWithoutModelAsync()
+        //{
+        //    ODataProperty property = new ODataProperty { Name = "Prop", Value = Guid.Empty };
+        //    WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Guid\",\"@odata.type\":\"#Guid\",\"value\":\"00000000-0000-0000-0000-000000000000\"}", writingResponse: false, synchronous: false);
+        //}
 
-        [Fact]
-        public void ShouldBeAbleToWritePropertyResponseWithoutModelAsync()
-        {
-            ODataProperty property = new ODataProperty { Name = "Prop", Value = Guid.Empty };
-            WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Guid\",\"@odata.type\":\"#Guid\",\"value\":\"00000000-0000-0000-0000-000000000000\"}", writingResponse: false, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToWritePropertyResponseWithoutModelAsync()
+        //{
+        //    ODataProperty property = new ODataProperty { Name = "Prop", Value = Guid.Empty };
+        //    WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Guid\",\"@odata.type\":\"#Guid\",\"value\":\"00000000-0000-0000-0000-000000000000\"}", writingResponse: false, synchronous: false);
+        //}
 
-        [Fact]
-        public void ShouldBeAbleToWrite6xNullPropertyResponseWithoutModelAsync()
-        {
-            ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
-            WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Null\",\"@odata.null\":true}", writingResponse: false, synchronous: false, use6x: true);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToWrite6xNullPropertyResponseWithoutModelAsync()
+        //{
+        //    ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
+        //    WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Null\",\"@odata.null\":true}", writingResponse: false, synchronous: false, use6x: true);
+        //}
 
-        [Fact]
-        public void ThrowsOnWriteNullPropertyResponseWithoutModelAsync()
-        {
-            ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
-            Action test = () => WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "", writingResponse: false, synchronous: false);
-            AggregateException exception = Assert.Throws<AggregateException>(test);
-            Assert.Equal(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull, exception.InnerException.Message);
-        }
+        //[Fact]
+        //public void ThrowsOnWriteNullPropertyResponseWithoutModelAsync()
+        //{
+        //    ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
+        //    Action test = () => WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "", writingResponse: false, synchronous: false);
+        //    AggregateException exception = Assert.Throws<AggregateException>(test);
+        //    Assert.Equal(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull, exception.InnerException.Message);
+        //}
 
         [Fact]
         public void ShouldBeAbleToWriteInstanceAnnotationsInRequest()
@@ -124,17 +124,17 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet: null, resourceType: null), "", writingResponse: true);
         }
 
-        [Fact]
-        public void ShouldBeAbleToCreateResourceSetWriterAsyncForRequestWithoutModelAndWithoutSet()
-        {
-            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result), "", writingResponse: false, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToCreateResourceSetWriterAsyncForRequestWithoutModelAndWithoutSet()
+        //{
+        //    WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result), "", writingResponse: false, synchronous: false);
+        //}
 
-        [Fact]
-        public void ShouldBeAbleToCreateResourceSetWriterAsyncForResponseWithoutModelAndWithoutSet()
-        {
-            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result), "", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToCreateResourceSetWriterAsyncForResponseWithoutModelAndWithoutSet()
+        //{
+        //    WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result), "", writingResponse: true, synchronous: false);
+        //}
         #endregion CreateResourceSetWriter
 
         #region CreateResourceWriter
@@ -150,17 +150,17 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(outputContext => outputContext.CreateODataResourceWriter(navigationSource: null, resourceType: null), "", writingResponse: true);
         }
 
-        [Fact]
-        public void ShouldBeAbleToCreateResourceWriterAsyncForRequestWithoutModelAndWithoutSet()
-        {
-            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result), "", writingResponse: false, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToCreateResourceWriterAsyncForRequestWithoutModelAndWithoutSet()
+        //{
+        //    WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result), "", writingResponse: false, synchronous: false);
+        //}
 
-        [Fact]
-        public void ShouldBeAbleToCreateResourceWriterAsyncForResponseWithoutModelAndWithoutSet()
-        {
-            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result), "", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToCreateResourceWriterAsyncForResponseWithoutModelAndWithoutSet()
+        //{
+        //    WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result), "", writingResponse: true, synchronous: false);
+        //}
         #endregion CreateResourceWriter
 
         #region CreateCollectionWriter
@@ -176,17 +176,17 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(outputContext => outputContext.CreateODataCollectionWriter(itemTypeReference: null), "", writingResponse: true);
         }
 
-        [Fact]
-        public void ShouldBeAbleToCreateCollectionWriterAsyncForRequestWithoutModelAndWithoutItemType()
-        {
-            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataCollectionWriterAsync(itemTypeReference: null).Result), "", writingResponse: false, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToCreateCollectionWriterAsyncForRequestWithoutModelAndWithoutItemType()
+        //{
+        //    WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataCollectionWriterAsync(itemTypeReference: null).Result), "", writingResponse: false, synchronous: false);
+        //}
 
-        [Fact]
-        public void ShouldBeAbleToCreateCollectionWriterAsyncForResponseWithoutModelAndWithoutItemType()
-        {
-            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataCollectionWriterAsync(itemTypeReference: null).Result), "", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToCreateCollectionWriterAsyncForResponseWithoutModelAndWithoutItemType()
+        //{
+        //    WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataCollectionWriterAsync(itemTypeReference: null).Result), "", writingResponse: true, synchronous: false);
+        //}
         #endregion CreateCollectionWriter
 
         #region CreateParameterWriter
@@ -202,17 +202,17 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(outputContext => outputContext.CreateODataParameterWriter(operation: null), "", writingResponse: true);
         }
 
-        [Fact]
-        public void ShouldBeAbleToCreateParameterWriterAsyncForRequestWithoutModelAndWithoutFunction()
-        {
-            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataParameterWriterAsync(operation: null).Result), "", writingResponse: false, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToCreateParameterWriterAsyncForRequestWithoutModelAndWithoutFunction()
+        //{
+        //    WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataParameterWriterAsync(operation: null).Result), "", writingResponse: false, synchronous: false);
+        //}
 
-        [Fact]
-        public void ShouldBeAbleToCreateParameterWriterAsyncForResponseWithoutModelAndWithoutFunction()
-        {
-            WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataParameterWriterAsync(operation: null).Result), "", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldBeAbleToCreateParameterWriterAsyncForResponseWithoutModelAndWithoutFunction()
+        //{
+        //    WriteAndValidate(outputContext => Assert.NotNull(outputContext.CreateODataParameterWriterAsync(operation: null).Result), "", writingResponse: true, synchronous: false);
+        //}
         #endregion CreateParameterWriter
 
         #region WriteServiceDocument
@@ -224,13 +224,13 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(outputContext => outputContext.WriteServiceDocument(serviceDocument), "{\"@odata.context\":\"http://odata.org/test/$metadata\",\"value\":[{\"name\":\"Customers\",\"kind\":\"EntitySet\",\"url\":\"http://host/Customers\"}]}");
         }
 
-        [Fact]
-        public void ShouldWriteServiceDocumentAsyncWithoutModel()
-        {
-            ODataServiceDocument serviceDocument = new ODataServiceDocument();
-            serviceDocument.EntitySets = new ODataEntitySetInfo[] { new ODataEntitySetInfo { Name = "Customers", Url = new Uri("http://host/Customers") } };
-            WriteAndValidate(outputContext => outputContext.WriteServiceDocumentAsync(serviceDocument).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata\",\"value\":[{\"name\":\"Customers\",\"kind\":\"EntitySet\",\"url\":\"http://host/Customers\"}]}", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void ShouldWriteServiceDocumentAsyncWithoutModel()
+        //{
+        //    ODataServiceDocument serviceDocument = new ODataServiceDocument();
+        //    serviceDocument.EntitySets = new ODataEntitySetInfo[] { new ODataEntitySetInfo { Name = "Customers", Url = new Uri("http://host/Customers") } };
+        //    WriteAndValidate(outputContext => outputContext.WriteServiceDocumentAsync(serviceDocument).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata\",\"value\":[{\"name\":\"Customers\",\"kind\":\"EntitySet\",\"url\":\"http://host/Customers\"}]}", writingResponse: true, synchronous: false);
+        //}
         #endregion WriteServiceDocument
 
         #region WriteEntityReferenceLink
@@ -245,13 +245,13 @@ namespace Microsoft.OData.Tests.JsonLight
         #endregion sync
 
         #region async
-        [Fact]
-        public void AsyncShouldWriteContextUriForEntityReferenceLinkRequest()
-        {
-            ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Customers(1)") };
-            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinkAsync(referenceLink).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\"}", writingResponse: false, synchronous: false);
-            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinkAsync(referenceLink).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\"}", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void AsyncShouldWriteContextUriForEntityReferenceLinkRequest()
+        //{
+        //    ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Customers(1)") };
+        //    WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinkAsync(referenceLink).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\"}", writingResponse: false, synchronous: false);
+        //    WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinkAsync(referenceLink).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\"}", writingResponse: true, synchronous: false);
+        //}
         #endregion async
         #endregion WriteEntityReferenceLink
 
@@ -303,45 +303,45 @@ namespace Microsoft.OData.Tests.JsonLight
         #endregion sync
 
         #region async
-        [Fact]
-        public void AsyncShouldWriteContextUriForEntityReferenceLinksRequest()
-        {
-            ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
-            ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks { Links = new[] { referenceLink } };
-            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
-            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void AsyncShouldWriteContextUriForEntityReferenceLinksRequest()
+        //{
+        //    ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
+        //    ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks { Links = new[] { referenceLink } };
+        //    WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
+        //    WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
+        //}
 
-        [Fact]
-        public void AsyncWriteNextLinkAnnotationForEntityReferenceLinksRequest()
-        {
-            ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
-            ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks
-            {
-                Links = new[] { referenceLink },
-                NextPageLink = new Uri("http://odata.org/nextpage")
-            };
-            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
-                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
-            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
-                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void AsyncWriteNextLinkAnnotationForEntityReferenceLinksRequest()
+        //{
+        //    ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
+        //    ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks
+        //    {
+        //        Links = new[] { referenceLink },
+        //        NextPageLink = new Uri("http://odata.org/nextpage")
+        //    };
+        //    WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
+        //        "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
+        //    WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
+        //        "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
+        //}
 
-        [Fact]
-        public void AsyncShouldWriteCountAnnotationForEntityReferenceLinksRequest()
-        {
-            ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
-            ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks
-            {
-                Links = new[] { referenceLink },
-                Count = 1,
-                NextPageLink = new Uri("http://odata.org/nextpage")
-            };
-            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
-                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.count\":1,\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
-            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
-                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.count\":1,\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
-        }
+        //[Fact]
+        //public void AsyncShouldWriteCountAnnotationForEntityReferenceLinksRequest()
+        //{
+        //    ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
+        //    ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks
+        //    {
+        //        Links = new[] { referenceLink },
+        //        Count = 1,
+        //        NextPageLink = new Uri("http://odata.org/nextpage")
+        //    };
+        //    WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
+        //        "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.count\":1,\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
+        //    WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
+        //        "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.count\":1,\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
+        //}
         #endregion async
         #endregion WriteEntityReferenceLinks
 

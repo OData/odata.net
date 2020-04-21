@@ -25,14 +25,6 @@ namespace Microsoft.OData
         /// <summary>Type of OutOfMemoryException.</summary>
         private static readonly Type OutOfMemoryType = typeof(System.OutOfMemoryException);
 
-#if !PORTABLELIB
-        /// <summary>Type of StackOverflowException.</summary>
-        private static readonly Type StackOverflowType = typeof(System.StackOverflowException);
-
-        /// <summary>Type of ThreadAbortException.</summary>
-        private static readonly Type ThreadAbortType = typeof(System.Threading.ThreadAbortException);
-#endif
-
         /// <summary>
         /// Determines whether the specified exception can be caught and
         /// handled, or whether it should be allowed to continue unwinding.
@@ -49,12 +41,7 @@ namespace Microsoft.OData
             Type type = e.GetType();
 
             // a 'catchable' exception is defined by what it is not.
-            return
-#if !PORTABLELIB
-                    type != ThreadAbortType &&
-                    type != StackOverflowType &&
-#endif
-                    type != OutOfMemoryType;
+            return type != OutOfMemoryType;
         }
 
         /// <summary>

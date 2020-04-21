@@ -118,7 +118,7 @@ namespace Microsoft.Spatial.Tests
             Assert.Null(result);
         }
 
-        [Fact]
+       // [Fact]
         public void DistanceGeometryCallsRegisteredImplementation()
         {
             

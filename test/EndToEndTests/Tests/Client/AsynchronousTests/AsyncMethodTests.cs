@@ -422,7 +422,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             this.EnqueueTestComplete();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public async Task PagingOnNavigationProperty()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;

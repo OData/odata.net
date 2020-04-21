@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>;1699;1570;1572;1573;1591;3005;3006;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
     <AssemblyName>AstoriaTestFramework.FullTrust</AssemblyName>
-    <OutputType>Library</OutputType>
+   
     <CreateMetaAssembly>false</CreateMetaAssembly>
     <AssemblyKeyType>ECMA</AssemblyKeyType>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
@@ -12,10 +11,14 @@
     <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DefineConstants>$(DefineConstants);TRACE;DEBUG;DBG;_DEBUG;CODE_ANALYSIS_BASELINE;</DefineConstants>
-    <RootNamespace>System.Data.Test.Astoria.FullTrust</RootNamespace>
-    <ProjectGuid>{B01915F6-37E4-4E7E-9A45-8722829E49F1}</ProjectGuid>
+   
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
@@ -28,5 +31,5 @@
     <Compile Include="TrustedFileStream.cs" />
     <Compile Include="TrustedMethods.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

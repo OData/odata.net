@@ -21,7 +21,7 @@ namespace EdmLibTests.FunctionalTests
 
     [TestClass]
 #if !SILVERLIGHT
-    [UseReporter(typeof(LoggingReporter))]
+    //--#comment#--[UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("FunctionalTests")]
 #endif
     public class OperationModelTests : EdmLibTestCaseBase
@@ -31,7 +31,7 @@ namespace EdmLibTests.FunctionalTests
             this.EdmVersion = EdmVersion.V40;
         }
 
-        [TestMethod]
+        //--#comment#-- [TestMethod]
         [MethodImpl(MethodImplOptions.NoOptimization)]
         public void OperationStandaloneTestRoundtripVerify()
         {
@@ -48,7 +48,7 @@ namespace EdmLibTests.FunctionalTests
             this.BasicFindMethodsTest(model);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
         public void OperationsWithReturnTypeOfPrimitiveDataTypeTestRoundtripVerify()
         {
@@ -65,7 +65,7 @@ namespace EdmLibTests.FunctionalTests
             this.BasicFindMethodsTest(model);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
         public void OperationsWith2ParametersTestRoundtripVerify()
         {
@@ -82,7 +82,7 @@ namespace EdmLibTests.FunctionalTests
             this.BasicFindMethodsTest(model);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         [MethodImpl(MethodImplOptions.NoOptimization)]
         public void OperationsWithNamedStructuralDataTypeTestRoundtripVerify()
         {

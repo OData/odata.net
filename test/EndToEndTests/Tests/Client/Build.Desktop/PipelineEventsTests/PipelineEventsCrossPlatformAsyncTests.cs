@@ -33,7 +33,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers modifying property values and modifying entry id/links/actions.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitySetLinqAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetLinqAsync);
@@ -69,7 +69,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntitySetExecuteAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetExecuteAsync);
@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers adding/removing property values and modifying primitive/complex/collection property values.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntityInstanceExecuteAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstanceExecuteAsync);
@@ -136,7 +136,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             Assert.AreEqual(1, specialEmployee.BonusLevel, "Unexpected BonusLevel");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntityInstanceBatchAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstanceBatchAsync);
@@ -202,7 +202,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test verifies that user can modify entry in a delegate in the case of LoadProperty.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LoadPropertyTestAsync()
         {
             for (int i = 0; i < 1; i++)
@@ -236,7 +236,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddObjectTestAsync()
         {
             this.Invoke(
@@ -298,7 +298,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateObjectTestAsync()
         {
             this.Invoke(
@@ -373,7 +373,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify entity property and association link through pipeline delegates in AddObject+SetLink scenario.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddObjectSetLinkTestAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddObjectSetLinkTestAsync);
@@ -449,7 +449,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CancelRequestTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, CancelRequestTest);

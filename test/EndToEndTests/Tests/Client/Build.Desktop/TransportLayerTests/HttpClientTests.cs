@@ -27,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         }
 
 #if !WIN8 && !WINDOWSPHONE && !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void SimpleQuery()
         {
             var ctx = this.CreateContext();
@@ -35,7 +35,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             Assert.IsTrue(results.Count > 0, "No results returned");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void InsertNewEntity()
         {
             var ctx = this.CreateContext();
@@ -43,7 +43,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateEntityWithPatch()
         {
             var ctx = this.CreateContext();
@@ -54,7 +54,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateEntityWithReplaceUsingJson()
         {
             var ctx = this.CreateContext();
@@ -67,7 +67,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void DeleteEntity()
         {
             var ctx = this.CreateContext();
@@ -75,7 +75,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void MultipleChangesBatch()
         {
             var ctx = this.CreateContext();
@@ -89,7 +89,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void MultipleChangesNonBatch()
         {
             var ctx = this.CreateContext();
@@ -103,7 +103,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LoadProperty()
         {
             var ctx = this.CreateContext();
@@ -115,7 +115,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         }
 #endif
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void SimpleQueryAsync()
         {
             var ctx = this.CreateContext();
@@ -132,7 +132,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateEntityAsync()
         {
             var ctx = this.CreateContext();
@@ -156,7 +156,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void BatchQueriesWithJsonAsync()
         {
             var ctx = this.CreateContext();
@@ -182,7 +182,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LoadPropertyAsync()
         {
             var ctx = this.CreateContext();
@@ -206,7 +206,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void BatchUpdatesAsync()
         {
             var ctx = this.CreateContext();
@@ -239,7 +239,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void MultipleUpdatesWithPostTunnelingAsync()
         {
             var ctx = this.CreateContext();
@@ -277,7 +277,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         //Client should not append () to navigation property query URI
         public void ClientShouldAppendParenthesisToNavigationPropertyQueryUri()
         {

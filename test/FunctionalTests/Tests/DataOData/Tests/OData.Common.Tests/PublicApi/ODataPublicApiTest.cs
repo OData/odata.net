@@ -19,7 +19,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.PublicApi
     [TestClass, TestCase]
     public class ODataPublicApiTests : ODataTestCase
     {
-        [TestMethod, Variation(Description = "Test the public api change.")]
+        //--#comment#--[TestMethod, Variation(Description = "Test the public api change.")]
         public void PublicApiTest()
         {
             string testDirectory = TestContext.TestRunDirectory;

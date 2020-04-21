@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
         /// <summary>
         /// Create and delete a simple entity.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CreateDeleteEntityWithEnumProperties()
         {
             // construct the request message to create an entity
@@ -112,7 +112,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
         /// <summary>
         /// Update a simple entity.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateEnumProperty()
         {
             // query an entry
@@ -163,7 +163,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
         #region client operations
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CreateUpdateEntityFromODataClient()
         {
             for (int i = 1; i < 2; i++)

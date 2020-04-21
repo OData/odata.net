@@ -70,7 +70,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers modifying ODataEntry to have null complex property
         /// </summary>
-        // [TestMethod] // github issuse: #896
+        // //--#comment#--[TestMethod] // github issuse: #896
         public void QueryEntitySetNull()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetNull);
@@ -91,7 +91,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers adding/removing property values and modifying primitive/complex/collection property values.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntityInstance()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstance);
@@ -159,7 +159,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verifies that user can change entry type name in pipeline events
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntityInstanceChangeTypeName()
         {
             this.RunOnAtomAndJsonFormats(
@@ -227,7 +227,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test verifies that user can modify entry in a delegate in the case of LoadProperty.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LoadPropertyTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, LoadPropertyTest);
@@ -252,7 +252,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify entry property and expanded navigation entry property in a delegate.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ExpandQueryTest()
         {
             this.RunOnAtomAndJsonFormats(
@@ -295,7 +295,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify feed next link in a delegate.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PagingQueryTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, PagingQueryTest);
@@ -317,7 +317,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers adding/removing selected property and adding navigation that are not selected.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ProjectionQueryTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, ProjectionQueryTest);
@@ -342,7 +342,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddObjectTest()
         {
             this.Invoke(
@@ -381,7 +381,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void UpdateObjectTest()
         {
             this.Invoke(
@@ -422,7 +422,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddUpdateObjectStreamTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddUpdateObjectStreamTest);
@@ -458,7 +458,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddUpdateBatchTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddUpdateBatchTest);
@@ -493,7 +493,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify entity property and association link through pipeline delegates in AddObject+SetLink scenario.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AddObjectSetLinkTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddObjectSetLinkTest);
@@ -534,7 +534,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ThrowExceptionInPipelineDelegateTest()
         {
             this.RunOnAtomAndJsonFormats(
@@ -558,7 +558,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify delegate behavior of error response, inner error in batch response, in-stream error in response
         /// </summary>
-        // [TestMethod] // github issuse: #896
+        // //--#comment#--[TestMethod] // github issuse: #896
         // there is not feed id when using json format.
         public void ErrorResponseTest()
         {
@@ -602,7 +602,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers the handle of null entry in pipeline.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ExpandNullEntry()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, ExpandNullEntry);

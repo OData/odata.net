@@ -23,7 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         const int IdOfDiscontinuedProductWithRelatedDiscontinuedProductsWithPhotos = -9;
         private int[] IdOfPhotoFromDiscontinuedProductWithRelatedDiscontinuedProductsWithPhotos = { -4, -4 };
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetSingleEntity()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -32,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsNotNull(folder);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LinqQueryWithKeyUsingMethodSyntax()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -40,7 +40,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsNotNull(person);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LinqQueryWithNullStringInKey()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -55,7 +55,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsNull(person);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LinqQueryWithKey()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -70,7 +70,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsNotNull(person);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LinqQueryWithKeyAndOfType()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -85,7 +85,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsNotNull(employee);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void MultipleNavigationAndOfTypeInQuery()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsNotNull(photoQuery.SingleOrDefault());
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AttachTo()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -116,7 +116,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsTrue(contextWrapper.Context.Entities.Count == 1);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void AttachToLoadProperty()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         }
 
         // [Ignore] // Issue: #623: Support DI in OData Client
-        // [TestMethod] // github issuse: #896
+        // //--#comment#--[TestMethod] // github issuse: #896
         public void ContextReferencesTest()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -158,7 +158,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void LoadPropertyWithNextLink()
         {
             var contextWrapper = this.CreateWrappedContext();

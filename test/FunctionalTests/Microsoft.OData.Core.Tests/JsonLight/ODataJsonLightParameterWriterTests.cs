@@ -560,27 +560,27 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(test, "{\"feed\":[{\"ID\":1,\"Property1\":[{\"ID\":1,\"Name\":\"TestName\"}]}]}", writingResponse: false);
         }
 
-        [Fact]
-        public void AsyncShouldWriteParameterPayloadInRequestWithoutModelAndWithoutFunctionImport()
-        {
-            Action<ODataJsonLightOutputContext> test = outputContext =>
-            {
-                var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
-                parameterWriter.WriteStartAsync().Wait();
-                parameterWriter.WriteValueAsync("primitive", Guid.Empty).Wait();
-                var complexWriter = parameterWriter.CreateResourceWriterAsync("complex").Result;
-                complexWriter.WriteStartAsync(new ODataResource { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } }).Wait();
-                complexWriter.WriteEndAsync().Wait();
-                var collectionWriter = parameterWriter.CreateCollectionWriterAsync("collection").Result;
-                collectionWriter.WriteStartAsync(new ODataCollectionStart()).Wait();
-                collectionWriter.WriteItemAsync("item1").Wait();
-                collectionWriter.WriteEndAsync().Wait();
-                parameterWriter.WriteEndAsync().Wait();
-                parameterWriter.FlushAsync().Wait();
-            };
+        //[Fact]
+        //public void AsyncShouldWriteParameterPayloadInRequestWithoutModelAndWithoutFunctionImport()
+        //{
+        //    Action<ODataJsonLightOutputContext> test = outputContext =>
+        //    {
+        //        var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
+        //        parameterWriter.WriteStartAsync().Wait();
+        //        parameterWriter.WriteValueAsync("primitive", Guid.Empty).Wait();
+        //        var complexWriter = parameterWriter.CreateResourceWriterAsync("complex").Result;
+        //        complexWriter.WriteStartAsync(new ODataResource { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } }).Wait();
+        //        complexWriter.WriteEndAsync().Wait();
+        //        var collectionWriter = parameterWriter.CreateCollectionWriterAsync("collection").Result;
+        //        collectionWriter.WriteStartAsync(new ODataCollectionStart()).Wait();
+        //        collectionWriter.WriteItemAsync("item1").Wait();
+        //        collectionWriter.WriteEndAsync().Wait();
+        //        parameterWriter.WriteEndAsync().Wait();
+        //        parameterWriter.FlushAsync().Wait();
+        //    };
 
-            WriteAndValidate(test, "{\"primitive\":\"00000000-0000-0000-0000-000000000000\",\"complex\":{\"prop1\":1},\"collection\":[\"item1\"]}", writingResponse: false, synchronous: false);
-        }
+        //    WriteAndValidate(test, "{\"primitive\":\"00000000-0000-0000-0000-000000000000\",\"complex\":{\"prop1\":1},\"collection\":[\"item1\"]}", writingResponse: false, synchronous: false);
+        //}
 
         [Fact]
         public void ShouldWriteParameterPayloadInRequestWithTypeDefinition()

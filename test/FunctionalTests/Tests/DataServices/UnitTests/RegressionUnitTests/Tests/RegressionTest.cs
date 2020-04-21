@@ -320,7 +320,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Verifying if we are not trimming white spaces for etags")]
+            //--#comment#--[TestMethod, Variation("Verifying if we are not trimming white spaces for etags")]
             public void ShouldNotTrimWhitespaceFromEtag()
             {
                 ocs.PopulateData.EntityConnection = null;
@@ -433,7 +433,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Allowing base types in the Query Interceptors - Won't Fix")]
+            //--#comment#--[TestMethod, Variation("Allowing base types in the Query Interceptors - Won't Fix")]
             public void AllowBaseTypesInQueryInterceptors()
             {
                 const string modelText =
@@ -537,7 +537,7 @@ namespace AstoriaUnitTests.Tests
                 Assert.IsTrue(model.FindType("TestReflectionProvider.TestEntityDerivedRP") != null, "Metadata for the type in another assembly was loaded in reflection provider");
             }
 
-            [TestMethod, Variation("Unbind in Many-to-Many cases")]
+            //--#comment#--[TestMethod, Variation("Unbind in Many-to-Many cases")]
             public void TestUnbindInManyToManyCases()
             {
                 ocs.PopulateData.EntityConnection = null;
@@ -615,7 +615,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("setting relationship via entity key on reference property doesn't work")]
+            //--#comment#--[TestMethod, Variation("setting relationship via entity key on reference property doesn't work")]
             public void SettingRelationShipOnReferencePropertyViaEntityKeyShouldWork()
             {
                 string jsonPayload = "{ ID: 45, DollarAmount: 4444 }";
@@ -986,7 +986,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Invalid content type tests")]
+            //--#comment#--[TestMethod, Variation("Invalid content type tests")]
             public void InvalidContentTypeTests()
             {
                 var uriTargetingEntities = new string[] {
@@ -1173,7 +1173,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Error Contracts: UseVerBoseErrors Broken , Error Response Returns Full Stack Trace")]
+            //--#comment#--[TestMethod, Variation("Error Contracts: UseVerBoseErrors Broken , Error Response Returns Full Stack Trace")]
             public void UseVerboseErrorsShouldWork()
             {
                 TestUtil.ClearMetadataCache();
@@ -1251,7 +1251,7 @@ namespace AstoriaUnitTests.Tests
                 public string ETagProperty2 { get; set; }
             }
 
-            [TestMethod, Variation("Making sure etag checks on server works when one of the property values is null")]
+            //--#comment#--[TestMethod, Variation("Making sure etag checks on server works when one of the property values is null")]
             public void EtagShouldWorkInServerWhenOneOfPropertyValuesIsNull()
             {
                 Type contextType = typeof(ocs.CustomObjectContext);
@@ -3366,7 +3366,7 @@ Content-Type: application/atom+xml;type=entry
                 public T Concurrency { get; set; }
             }
 
-            [TestMethod, Variation("Null ref in edm service with entity with rights=none and void service op with rights = all")]
+            //--#comment#--[TestMethod, Variation("Null ref in edm service with entity with rights=none and void service op with rights = all")]
             public void NullRefWithEntityRightsNoneAndVoidServiceOpRightsAll()
             {
                 TestUtil.ClearMetadataCache();
@@ -4000,7 +4000,7 @@ Content-Type: application/atom+xml;type=entry
                 Assert.AreEqual("To support streaming, the data service must implement IServiceProvider.GetService() to return an implementation of IDataServiceStreamProvider or the data source must implement IDataServiceStreamProvider.", e.InnerException.Message);
             }
 
-            [TestMethod, Variation("[BLOB][Server]Missing interface should not cause mid-stream error")]
+            //--#comment#--[TestMethod, Variation("[BLOB][Server]Missing interface should not cause mid-stream error")]
             public void StreamWithMissingInterface_EF()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(BaseTestWebRequest), "HostInterfaceType"))

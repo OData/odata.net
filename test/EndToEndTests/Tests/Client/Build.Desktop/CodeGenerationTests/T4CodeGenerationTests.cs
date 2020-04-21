@@ -115,7 +115,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         /// <summary>
         /// Compile generated cs/vb code and do basic verification against the IEdmModel.
         /// </summary>
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void CompileAndVerifyGeneratedCode()
         {
             TestServiceUtil.ServiceUriGenerator = new ServiceUriGenerator();

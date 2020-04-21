@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+
+    <AssemblyName>Microsoft.OData.Core.Tests</AssemblyName>
+    <TargetFrameworks>net452;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <!--<UpgradeBackupLocation>C:\Users\srpazham\Documents\GitHub\odata.net\sln\Backup\</UpgradeBackupLocation>-->
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit.abstractions" Version="2.0.1.0" />
+    <PackageReference Include="xunit.assert" Version="2.1.0.3179" />
+    <PackageReference Include="xunit.core" Version="2.1.0.3179" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="IntegrationTests\**" />
+    <EmbeddedResource Remove="IntegrationTests\**" />
+    <None Remove="IntegrationTests\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs" Link="ExceptionUtilities.cs" />
+    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs" Link="EdmConstants.cs" />
+    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmToStockModelConverter.cs" Link="EdmToStockModelConverter.cs" />
+    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataExtensionMethods.cs" Link="MetadataExtensionMethods.cs" />
+    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs" Link="MetadataUtils.cs" />
+    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs" Link="TestModels.cs" />
+    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs" Link="ModelBuilder.cs" />
+    <Compile Include="IntegrationTests\Writer\JsonLight\ODataJsonLightWriterShortSpanIntegrationTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+    <ProjectReference Include="..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
+    <ProjectReference Include="..\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
+  </ItemGroup>
+
+</Project>

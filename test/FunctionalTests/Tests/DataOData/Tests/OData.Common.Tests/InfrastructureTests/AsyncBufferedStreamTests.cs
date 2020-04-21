@@ -41,7 +41,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
             this.Assert.IsTrue(asyncBufferedStream.CanWrite, "CanWrite should be true.");
         }
 
-        [TestMethod, Variation(Description = "Verifies that Dispose throws if FlushAsync (or Clear) was not called.")]
+        //--#comment#--[TestMethod, Variation(Description = "Verifies that Dispose throws if FlushAsync (or Clear) was not called.")]
         public void DisposeFlushTest()
         {
             AsyncBufferedStreamTestWrapper asyncBufferedStream = new AsyncBufferedStreamTestWrapper(new MemoryStream());

@@ -29,7 +29,7 @@ namespace Microsoft.Test.OData.Tests.Client
         {
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void NavigationPropertyOnEntityWithMultipleKeys()
         {
             this.RunOnAtomAndJsonFormats(
@@ -69,7 +69,7 @@ namespace Microsoft.Test.OData.Tests.Client
         }
 
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ContainsUrlTest()
         {
             var testlists = new List<KeyValuePair<string, int>>()
@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ContainsLinqTest()
         {
             var context = this.CreateContext().Context;
@@ -107,7 +107,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.AreEqual(result.Count(), 10, "Unexpected number of Person returned");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PrimitiveTypeInRequestUrlTest()
         {
             const string stringOfCast = "cast(PersonId,'Edm.Byte')";
@@ -126,7 +126,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.AreEqual(2, result.Count(), "Unexpected number of Person returned");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void ContainsErrorTest()
         {
             string[] errorUrls =
@@ -151,7 +151,7 @@ namespace Microsoft.Test.OData.Tests.Client
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void QueryEntityNavigationWithImplicitKeys()
         {
             // this test is to baseline the WCF Data Service behavior that is not modified to support implicit keys 
@@ -185,7 +185,7 @@ namespace Microsoft.Test.OData.Tests.Client
             }
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void MergeProjectionAndQueryOptionTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, MergeProjectionAndQueryOptionTest);
@@ -203,7 +203,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.IsTrue(query.ToList().Count == 1);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void DataServiceCollectionSubQueryTrackingItems()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, DataServiceCollectionSubQueryTrackingItems);
@@ -243,7 +243,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.IsFalse(someItemNotTracked, "All items should have been tracked.");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void DataServiceCollectionTrackingItems()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, DataServiceCollectionTrackingItems);
@@ -278,7 +278,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.IsFalse(someItemNotTracked, "All items should have been tracked.");
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetAllPagesTest()
         {
             var context = this.CreateContext().Context;
@@ -341,7 +341,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.AreEqual(allCustomersCount - 4, queryCustomersCount);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void PagingOnNavigationProperty()
         {
             var context = this.CreateContext().Context;
@@ -372,7 +372,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.AreEqual(allOrdersCount, queryOrderCount);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void GetParitalPagesTest()
         {
             var context = this.CreateContext().Context;
@@ -398,7 +398,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.AreEqual(2, sentRequestCount);
         }
 
-        [TestMethod]
+        //--#comment#--[TestMethod]
         public void DuplicateQueryTest()
         {
             var contextWrapper = this.CreateContext();
@@ -416,7 +416,7 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.AreEqual(1, entryResults.Count());
         }
 
-        //[TestMethod]
+        ////--#comment#--[TestMethod]
         //public void LoadNavigationPropertyAllPagesTest()
         //{
         //    var context = this.CreateContext().Context;

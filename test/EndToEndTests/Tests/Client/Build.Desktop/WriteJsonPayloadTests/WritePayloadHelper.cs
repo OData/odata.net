@@ -6,6 +6,7 @@
 
 namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 {
+    //extern alias destination;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -14,6 +15,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Tests.Client.Common;
+    using Microsoft.Test.OData;
+    using my = Microsoft.Test.OData.Tests.Client;
 
     /// <summary>
     /// Some helper methods to create various ODataResourceSet/Entry/values.
@@ -580,7 +583,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry1;
         }
 
-        public static ODataResourceWrapper CreateOrderEntry2(bool hasModel)
+        public static my.ODataResourceWrapper CreateOrderEntry2(bool hasModel)
         {
             var orderEntry2Wrapper = CreateOrderEntry2NoMetadata(hasModel);
             orderEntry2Wrapper.Resource.Id = new Uri(ServiceUri + "Order(-9)");
@@ -594,7 +597,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         #region ExpandedCustomerEntryTestHelper
 
-        public static ODataResourceWrapper CreateCustomerEntry(bool hasModel)
+        public static my.ODataResourceWrapper CreateCustomerEntry(bool hasModel)
         {
             var customerEntryWrapper = CreateCustomerResourceWrapperNoMetadata(hasModel);
             var customerEntry = customerEntryWrapper.Resource;
@@ -626,7 +629,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return customerEntryWrapper;
         }
 
-        public static ODataResourceWrapper CreatePrimaryContactODataWrapper()
+        public static my.ODataResourceWrapper CreatePrimaryContactODataWrapper()
         {
             var emailBag = new ODataCollectionValue()
             {
@@ -647,7 +650,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         }
             };
 
-            var contactAlias = new ODataResourceWrapper()
+            var contactAlias = new my.ODataResourceWrapper()
             {
                 Resource = new ODataResource
                 {
@@ -669,7 +672,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 }
             };
-            var homePhone = new ODataResourceWrapper()
+            var homePhone = new my.ODataResourceWrapper()
             {
                 Resource = new ODataResource
                 {
@@ -689,7 +692,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 }
             };
-            var workPhone = new ODataResourceWrapper()
+            var workPhone = new my.ODataResourceWrapper()
             {
                 Resource = new ODataResource
                 {
@@ -709,15 +712,15 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 }
             };
-            var mobilePhoneBag = new ODataResourceSetWrapper()
+            var mobilePhoneBag = new my.ODataResourceSetWrapper()
             {
                 ResourceSet = new ODataResourceSet()
                 {
                     TypeName = "Collection(" + NameSpace + "Phone)",
                 },
-                Resources = new List<ODataResourceWrapper>()
+                Resources = new List<my.ODataResourceWrapper>()
                 {
-                    new ODataResourceWrapper()
+                    new my.ODataResourceWrapper()
                     {
                         Resource = new ODataResource
                         {
@@ -741,7 +744,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             };
 
-            return new ODataResourceWrapper()
+            return new  my.ODataResourceWrapper()
             {
                 Resource = new ODataResource
                 {
@@ -760,9 +763,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                                 },
                         }
                 },
-                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<my.ODataNestedResourceInfoWrapper>()
                 {
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
@@ -771,7 +774,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         },
                         NestedResourceOrResourceSet = contactAlias
                     },
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
@@ -780,7 +783,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         },
                         NestedResourceOrResourceSet = homePhone
                     },
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
@@ -789,7 +792,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         },
                         NestedResourceOrResourceSet = workPhone
                     },
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
@@ -802,7 +805,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             };
         }
 
-        public static ODataResourceSetWrapper CreateBackupContactODataWrapper()
+        public static my.ODataResourceSetWrapper CreateBackupContactODataWrapper()
         {
             var emailBag = new ODataCollectionValue()
             {
@@ -823,7 +826,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         }
             };
 
-            var contactAliasWrapper = new ODataResourceWrapper()
+            var contactAliasWrapper = new my.ODataResourceWrapper()
             {
                 Resource = new ODataResource()
                 {
@@ -847,7 +850,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             };
 
-            var homePhoneWrapper = new ODataResourceWrapper()
+            var homePhoneWrapper = new my.ODataResourceWrapper()
             {
                 Resource = new ODataResource()
                 {
@@ -869,7 +872,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             };
 
-            var workPhoneWrapper = new ODataResourceWrapper()
+            var workPhoneWrapper = new my.ODataResourceWrapper()
             {
                 Resource = new ODataResource()
                 {
@@ -890,12 +893,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             };
 
-            var mobilePhoneBagWrapper = new ODataResourceSetWrapper()
+            var mobilePhoneBagWrapper = new my.ODataResourceSetWrapper()
             {
                 ResourceSet = new ODataResourceSet() { TypeName = "Collection(" + NameSpace + "Phone)" },
-                Resources = new List<ODataResourceWrapper>()
+                Resources = new List<my.ODataResourceWrapper>()
                 {
-                    new ODataResourceWrapper()
+                    new my.ODataResourceWrapper()
                     {
                         Resource = new ODataResource()
                         {
@@ -917,7 +920,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         }
                     },
 
-                    new ODataResourceWrapper()
+                    new my.ODataResourceWrapper()
                     {
                         Resource = new ODataResource()
                         {
@@ -940,7 +943,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             };
 
-            var contactDetailsWrapper = new ODataResourceWrapper()
+            var contactDetailsWrapper = new my.ODataResourceWrapper()
             {
                 Resource = new ODataResource
                 {
@@ -960,9 +963,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 },
 
-                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<my.ODataNestedResourceInfoWrapper>()
                 {
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
@@ -973,7 +976,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         NestedResourceOrResourceSet = contactAliasWrapper
                     },
 
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
@@ -984,7 +987,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         NestedResourceOrResourceSet = homePhoneWrapper
                     },
 
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
@@ -995,7 +998,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         NestedResourceOrResourceSet = workPhoneWrapper
                     },
 
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
@@ -1008,14 +1011,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             };
 
-            return new ODataResourceSetWrapper()
+            return new my.ODataResourceSetWrapper()
             {
                 ResourceSet = new ODataResourceSet()
                 {
                     TypeName = "Collection(" + NameSpace + "ContactDetails)"
                 },
 
-                Resources = new List<ODataResourceWrapper>()
+                Resources = new List<my.ODataResourceWrapper>()
                 {
                     CreatePrimaryContactODataWrapper(),
                     contactDetailsWrapper
@@ -1023,9 +1026,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             };
         }
 
-        public static ODataResourceWrapper CreateAuditInforWrapper()
+        public static my.ODataResourceWrapper CreateAuditInforWrapper()
         {
-            return new ODataResourceWrapper()
+            return new my.ODataResourceWrapper()
             {
                 Resource = new ODataResource
                 {
@@ -1044,16 +1047,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                             }
                     }
                 },
-                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<my.ODataNestedResourceInfoWrapper>()
                 {
-                    new ODataNestedResourceInfoWrapper()
+                    new my.ODataNestedResourceInfoWrapper()
                     {
                         NestedResourceInfo = new ODataNestedResourceInfo()
                         {
                             Name = "Concurrency",
                         },
 
-                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        NestedResourceOrResourceSet = new my.ODataResourceWrapper()
                         {
                             Resource = new ODataResource()
                             {
@@ -1079,11 +1082,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             };
         }
 
-        public static IEnumerable<ODataNestedResourceInfoWrapper> CreateCustomerNavigationLinks()
+        public static IEnumerable<my.ODataNestedResourceInfoWrapper> CreateCustomerNavigationLinks()
         {
-            return new List<ODataNestedResourceInfoWrapper>()
+            return new List<my.ODataNestedResourceInfoWrapper>()
             {
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1092,7 +1095,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         Url = new Uri(ServiceUri + "Customer(-9)/Orders")
                     }
                 },
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1101,7 +1104,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         Url = new Uri(ServiceUri + "Customer(-9)/Husband")
                     }
                 },
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1110,7 +1113,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         Url = new Uri(ServiceUri + "Customer(-9)/Wife")
                     }
                 },
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1131,11 +1134,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return loginEntry;
         }
 
-        public static IEnumerable<ODataNestedResourceInfoWrapper> CreateLoginNavigationLinksWrapper()
+        public static IEnumerable<my.ODataNestedResourceInfoWrapper> CreateLoginNavigationLinksWrapper()
         {
-            return new List<ODataNestedResourceInfoWrapper>()
+            return new List<my.ODataNestedResourceInfoWrapper>()
             {
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1144,7 +1147,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         Url = new Uri(ServiceUri + "Login('2')/Customer")
                     }
                 },
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1153,7 +1156,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         Url = new Uri(ServiceUri + "Login('2')/LastLogin")
                     }
                 },
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1162,7 +1165,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         Url = new Uri(ServiceUri + "Login('2')/SentMessages")
                     }
                 },
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1171,7 +1174,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         Url = new Uri(ServiceUri + "Login('2')/ReceivedMessages")
                     }
                 },
-                new ODataNestedResourceInfoWrapper()
+                new my.ODataNestedResourceInfoWrapper()
                 {
                     NestedResourceInfo = new ODataNestedResourceInfo()
                     {
@@ -1295,7 +1298,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry1;
         }
 
-        public static ODataResourceWrapper CreateOrderEntry2NoMetadata(bool hasModel)
+        public static my.ODataResourceWrapper CreateOrderEntry2NoMetadata(bool hasModel)
         {
             var orderEntry2 = new ODataResource()
             {
@@ -1304,14 +1307,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             var orderEntry2P1 = new ODataProperty { Name = "OrderId", Value = -9 };
             var orderEntry2P2 = new ODataProperty { Name = "CustomerId", Value = 78 };
-            var Concurrency_nestedInfo = new ODataNestedResourceInfoWrapper()
+            var Concurrency_nestedInfo = new my.ODataNestedResourceInfoWrapper()
             {
                 NestedResourceInfo = new ODataNestedResourceInfo()
                 {
                     Name = "Concurrency",
                     IsCollection = false
                 },
-                NestedResourceOrResourceSet = new ODataResourceWrapper()
+                NestedResourceOrResourceSet = new my.ODataResourceWrapper()
                 {
                     Resource = new ODataResource()
                     {
@@ -1344,10 +1347,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 Concurrency_nestedInfo.NestedResourceInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
             }
 
-            return new ODataResourceWrapper()
+            return new my.ODataResourceWrapper()
             {
                 Resource = orderEntry2,
-                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>() { Concurrency_nestedInfo }
+                NestedResourceInfoWrappers = new List<my.ODataNestedResourceInfoWrapper>() { Concurrency_nestedInfo }
             };
         }
 
@@ -1386,7 +1389,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry2Navigation;
         }
 
-        public static ODataResourceWrapper CreateCustomerResourceWrapperNoMetadata(bool hasModel)
+        public static  my.ODataResourceWrapper CreateCustomerResourceWrapperNoMetadata(bool hasModel)
         {
             var customerEntry = new ODataResource()
             {
@@ -1396,7 +1399,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var customerEntryP1 = new ODataProperty { Name = "CustomerId", Value = -9 };
             var customerEntryP2 = new ODataProperty { Name = "Name", Value = "CustomerName" };
 
-            var primaryContactInfo_nestedInfoWrapper = new ODataNestedResourceInfoWrapper()
+            var primaryContactInfo_nestedInfoWrapper = new my.ODataNestedResourceInfoWrapper()
             {
                 NestedResourceInfo = new ODataNestedResourceInfo()
                 {
@@ -1407,7 +1410,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 NestedResourceOrResourceSet = CreatePrimaryContactODataWrapper()
             };
 
-            var BackupContactInfo_nestedInfoWrapper = new ODataNestedResourceInfoWrapper()
+            var BackupContactInfo_nestedInfoWrapper = new my.ODataNestedResourceInfoWrapper()
             {
                 NestedResourceInfo = new ODataNestedResourceInfo()
                 {
@@ -1418,7 +1421,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 NestedResourceOrResourceSet = CreateBackupContactODataWrapper()
             };
 
-            var Auditing_nestedInfoWrapper = new ODataNestedResourceInfoWrapper()
+            var Auditing_nestedInfoWrapper = new my.ODataNestedResourceInfoWrapper()
             {
                 NestedResourceInfo = new ODataNestedResourceInfo()
                 {
@@ -1455,10 +1458,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 });
             }
 
-            return new ODataResourceWrapper()
+            return new my.ODataResourceWrapper()
             {
                 Resource = customerEntry,
-                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<my.ODataNestedResourceInfoWrapper>()
                 {
                     primaryContactInfo_nestedInfoWrapper,
                     BackupContactInfo_nestedInfoWrapper,

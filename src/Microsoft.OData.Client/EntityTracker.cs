@@ -13,7 +13,6 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Runtime.Serialization;
     using Microsoft.OData.Client.Metadata;
     #endregion Namespaces
 

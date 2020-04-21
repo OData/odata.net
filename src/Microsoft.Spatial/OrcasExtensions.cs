@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Text;
+
 namespace Microsoft.Spatial
 {
-    using System.Text;
-
     /// <summary>
     /// This class holds extension methods for objects that have new capabilities
     /// in newer versions of .net, and this lets us make the calls look the same and reduces the #if noise
@@ -19,9 +19,9 @@ namespace Microsoft.Spatial
         /// </summary>
         /// <param name="builder">The StringBuilder instance to clear.</param>
         internal static void Clear(this StringBuilder builder)
-         {
-             builder.Length = 0;
-             builder.Capacity = 0;
-         }
+        {
+            builder.Length = 0;
+            builder.Capacity = 0;
+        }
     }
 }

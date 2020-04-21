@@ -18,7 +18,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs.DataServiceProvider;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
+    //--#comment#--[TestClass]
     public class NonNullablePropertiesTests
     {
         private static DSPUnitTestServiceDefinition service;
