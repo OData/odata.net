@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <title>Microsoft.Spatial</title>
+    <id>Microsoft.Spatial</id>
+    <tags>wcf data services odata odatalib edmlib spatial ado.net ef entity framework open protocol wcfds wcfdataservices dataservices</tags>
+    <version>$VersionNuGetSemantic$</version>
+    <authors>Microsoft</authors>
+    <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
+    <projectUrl>http://odata.github.io/</projectUrl>
+    <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <summary>Contains classes and methods that facilitate geography and geometry spatial operations.</summary>
+    <description>Contains classes and methods that facilitate geography and geometry spatial operations. Targets .NET Platform Standard 1.1.
+OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://odata.github.io/odata.net.</description>
+    <releaseNotes>http://odata.github.io/odata.net/v7/#ODL-$VersionFullSemantic$</releaseNotes>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+  </metadata>
+  <files>
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.Spatial.dll" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.Spatial.pdb" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.Spatial.xml" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.Spatial.dll" target="lib\netstandard1.1" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.Spatial.pdb" target="lib\netstandard1.1" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.Spatial.xml" target="lib\netstandard1.1" />
+    <file src="$SourcesRoot$\src\Microsoft.Spatial\**\*.cs" target="src\Microsoft.Spatial" />
+    <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
+    <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
+  </files>
+</package>

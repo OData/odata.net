@@ -76,7 +76,140 @@ steps:
 
 
 
+# //----------------------------------------
 
+- task: EsrpCodeSigning@1
+
+  displayName: 'ESRP CodeSign - OData'
+  inputs:
+    ConnectedServiceName: 'ESRP CodeSigning - OData'
+    #FolderPath: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\Debug\netstandard2.0'
+    FolderPath: '$(Build.SourcesDirectory)\src'
+
+    Pattern: 'Microsoft.Spatial.dll,Microsoft.OData.Edm.dll,Microsoft.OData.Core.dll,Microsoft.OData.Client.dll'
+
+    signConfigType: inlineSignParams
+
+    inlineOperation: |
+     [
+       {
+         "keyCode": "MSSharedLibSnKey",
+         "operationSetCode": "StrongNameSign",
+         "parameters": null,
+         "toolName": "sn.exe",
+         "toolVersion": "V4.6.1586.0"
+       },
+       {
+         "keyCode": "MSSharedLibSnKey",
+         "operationSetCode": "StrongNameVerify",
+         "parameters": null,
+         "toolName": "sn.exe",
+         "toolVersion": "V4.6.1586.0"
+       },
+       {
+         "keyCode": "CP-230012",
+         "operationSetCode": "SigntoolSign",
+         "parameters": [
+         {
+           "parameterName": "OpusName",
+           "parameterValue": "TestSign"
+         },
+         {
+           "parameterName": "OpusInfo",
+           "parameterValue": "http://test"
+         },
+         {
+           "parameterName": "PageHash",
+           "parameterValue": "/NPH"
+         },
+         {
+           "parameterName": "TimeStamp",
+           "parameterValue": "/t \"http://ts4096.gtm.microsoft.com/TSS/AuthenticodeTS\""
+         }
+         ],
+         "toolName": "signtool.exe",
+         "toolVersion": "6.2.9304.0"
+       },
+       {
+         "keyCode": "CP-230012",
+         "operationSetCode": "SigntoolSign",
+         "parameters": [
+         {
+           "parameterName": "OpusName",
+           "parameterValue": "TestSign"
+         },
+         {
+           "parameterName": "OpusInfo",
+           "parameterValue": "http://test"
+         },
+         {
+           "parameterName": "Append",
+           "parameterValue": "/AS"
+         },
+         {
+           "parameterName": "PageHash",
+           "parameterValue": "/NPH"
+         },
+         {
+           "parameterName": "FileDigest",
+           "parameterValue": "/fd sha256"
+         },
+         {
+           "parameterName": "TimeStamp",
+           "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+         }
+         ],
+         "toolName": "signtool.exe",
+         "toolVersion": "6.2.9304.0"
+       },
+       {
+         "keyCode": "CP-230012",
+         "operationSetCode": "SigntoolVerify",
+         "parameters": [
+         {
+           "parameterName": "VerifyAll",
+           "parameterValue": "/all"
+         }
+         ],
+         "toolName": "signtool.exe",
+         "toolVersion": "6.2.9304.0"
+       }
+     ]
+
+    SessionTimeout: 20
+    VerboseLogin: true
+
+
+
+- task: CopyFiles@2
+  displayName: 'Copy Files - Product'
+  inputs:
+    SourceFolder: |
+      $(ProductBinPath1)
+      $(ProductBinPath2)
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\Product'
+
+
+
+
+    
+- task: NuGetCommand@2
+  displayName: 'NuGet - pack Microsoft.Spatial.Nightly.Release'
+  inputs:
+    command: custom
+    feedsToUse: config
+    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath);SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
+
+
+
+
+# - task: NuGetCommand@2
+#   displayName: 'NuGet - pack Microsoft.OData.Spatial.Nightly.nuspec '
+#   inputs:
+#     command: custom
+#     arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath);SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic);SystemComponentPackageDependency="$(SystemComponentPackageDependency)";ODataLibPackageDependency="$(ODataLibPackageDependency)" -Verbosity Detailed -Symbols'
+    
+# \\fdffdf
 
 
 
@@ -384,6 +517,13 @@ steps:
     VerboseLogin: true
 
 
+
+- task: NuGetCommand@2
+  displayName: 'NuGet - pack Microsoft.OData.Spatial.Nightly.nuspec '
+  inputs:
+    command: custom
+    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath);SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic);SystemComponentPackageDependency="$(SystemComponentPackageDependency)";ODataLibPackageDependency="$(ODataLibPackageDependency)" -Verbosity Detailed -Symbols'
+    
 
 - task: CopyFiles@2
   displayName: 'Copy Files - Product'
