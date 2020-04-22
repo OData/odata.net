@@ -576,7 +576,7 @@ namespace Microsoft.OData.Client.Materialization
             // entries. This keeps this code compatible with V1 behavior.
             this.MaterializeDataValues(actualType, entry.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
 
-            if (entry.NestedResourceInfos != null && entry.NestedResourceInfos.Any())
+            if (entry.NestedResourceInfos?.Any() == true)
             {
                 foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
