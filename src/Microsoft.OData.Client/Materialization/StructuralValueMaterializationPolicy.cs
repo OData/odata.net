@@ -281,8 +281,6 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(!string.IsNullOrEmpty(serverTypeName), "!string.IsNullOrEmpty(serverTypeName)");
             Debug.Assert(instance != null, "instance != null");
 
-            // TODO: Consider a cached mapping (server type => client type)
-
             Type clientType;
 
             // 1. Try to ride on user hook for resolving name into type
@@ -331,7 +329,11 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(property != null, "property != null");
             Debug.Assert(instance != null, "instance != null");
 
-            // TODO: Should this apply only to open (entity and complex) types?
+            // Stop if owning type is not an open type
+            if (!ClientTypeUtil.IsInstanceOfOpenType(instance, this.MaterializerContext.Model))
+            {
+                return;
+            }
             
             IDictionary<string, object> dynamicPropertiesDictionary;
             // Dictionary not found or key with matching name already exists

@@ -9,13 +9,13 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
-    using System.Collections.ObjectModel;
 
     /// <summary>
     /// Use this class to materialize objects provided from an <see cref="ODataMessageReader"/>.

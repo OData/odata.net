@@ -576,7 +576,7 @@ namespace Microsoft.OData.Client.Materialization
             // entries. This keeps this code compatible with V1 behavior.
             this.MaterializeDataValues(actualType, entry.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
 
-            if (entry.NestedResourceInfos.Any())
+            if (entry.NestedResourceInfos != null && entry.NestedResourceInfos.Any())
             {
                 foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
@@ -694,6 +694,14 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise not resolved/created!");
             Debug.Assert(link != null, "link != null");
 
+            ClientEdmModel model = this.MaterializerContext.Model;
+
+            // Stop if owning type is not an open type
+            if (!ClientTypeUtil.IsInstanceOfOpenType(entry.ResolvedObject, model))
+            {
+                return;
+            }
+
             MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
             if (linkState == null || (linkState.Entry == null && linkState.Feed == null))
             {
@@ -715,7 +723,6 @@ namespace Microsoft.OData.Client.Materialization
             // due to the absence of a navigational property definition in the metadata 
             // to express the relationship between that entity and the parent entity - unless they're the same type!
             // Only materialize a nested resource if its a complex or complex collection
-            ClientEdmModel model = this.MaterializerContext.Model;
 
             if (linkState.Feed != null)
             {

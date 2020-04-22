@@ -714,7 +714,6 @@ namespace Microsoft.OData.Client.Metadata
 
             Debug.Assert(clientTypeAnnotation != null, "clientTypeAnnotation != null");
 
-            // TODO: Populate dynamic properties only if this is an open (entity or complex) type
             return clientTypeAnnotation.EdmType.IsOpen();
         }
 

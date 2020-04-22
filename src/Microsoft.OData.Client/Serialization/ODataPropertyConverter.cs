@@ -247,18 +247,17 @@ namespace Microsoft.OData.Client
                         && ClientTypeUtil.TypeIsComplex(dynamicPropertyItemType, model))
                     {
                         ODataItemWrapper odataItem;
-                        if (this.TryConvertDynamicPropertyToResourceOrResourceSet(dynamicPropertyName, dynamicPropertyValue, serverTypeName, visitedComplexTypeObjects, out odataItem))
+                        this.ConvertDynamicPropertyToResourceOrResourceSet(dynamicPropertyName, dynamicPropertyValue, serverTypeName, visitedComplexTypeObjects, out odataItem);
+
+                        odataNestedResourceInfoWrappers.Add(new ODataNestedResourceInfoWrapper
                         {
-                            odataNestedResourceInfoWrappers.Add(new ODataNestedResourceInfoWrapper
+                            NestedResourceInfo = new ODataNestedResourceInfo()
                             {
-                                NestedResourceInfo = new ODataNestedResourceInfo()
-                                {
-                                    Name = dynamicPropertyName,
-                                    IsCollection = isCollection
-                                },
-                                NestedResourceOrResourceSet = odataItem
-                            });
-                        }
+                                Name = dynamicPropertyName,
+                                IsCollection = isCollection
+                            },
+                            NestedResourceOrResourceSet = odataItem
+                        });
                     }
                 }
             }
@@ -811,7 +810,7 @@ namespace Microsoft.OData.Client
         /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
         /// <param name="odataItem">The odata resource or resource set if one was created.</param>
         /// <returns>Whether or not the value was converted.</returns>
-        private bool TryConvertDynamicPropertyToResourceOrResourceSet(string propertyName, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects, out ODataItemWrapper odataItem)
+        private void ConvertDynamicPropertyToResourceOrResourceSet(string propertyName, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects, out ODataItemWrapper odataItem)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(propertyValue != null, "propertyValue != null");
@@ -820,12 +819,10 @@ namespace Microsoft.OData.Client
             if (propertyValue is ICollection)
             {
                 odataItem = this.CreateODataComplexCollectionDynamicPropertyResourceSet(propertyName, propertyValue, serverTypeName, visitedComplexTypeObjects);
-                return true;
             }
             else
             {
                 odataItem = CreateODataComplexDynamicPropertyResouce(propertyName, propertyValue, visitedComplexTypeObjects);
-                return true;
             }
         }
 
@@ -943,6 +940,6 @@ namespace Microsoft.OData.Client
                 // and spatial values always contain their specific type inside the GeoJSON/GML representation.
                 primitiveValue.TypeAnnotation = new ODataTypeAnnotation(property.EdmProperty.Type.FullName());
             }
-        }     
+        }
     }
 }
