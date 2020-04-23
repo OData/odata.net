@@ -1,4 +1,5 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
   <Import Project="Versioning.props" />
   <PropertyGroup>
     <VersionNugetNightlyBuild>$([System.DateTime]::Now.ToString("yyyyMMddHHmm"))</VersionNugetNightlyBuild>
