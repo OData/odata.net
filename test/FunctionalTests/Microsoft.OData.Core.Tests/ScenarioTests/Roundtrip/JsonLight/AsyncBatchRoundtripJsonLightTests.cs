@@ -1030,7 +1030,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader, batchContentTypeMultipartMixed);
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
 #else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
@@ -1049,7 +1049,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri, batchContentTypeMultipartMixed);
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
 #else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
@@ -1071,7 +1071,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader, batchContentTypeApplicationJson,
                 SkipBatchWriterStep.None, baseUri);
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
 #else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
@@ -1093,7 +1093,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri, batchContentTypeApplicationJson,
                 SkipBatchWriterStep.None, baseUri);
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
 #else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);

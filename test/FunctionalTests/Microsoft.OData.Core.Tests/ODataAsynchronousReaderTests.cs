@@ -122,7 +122,7 @@ namespace Microsoft.OData.Tests
 
         private ODataAsynchronousReader CreateAsyncReader(string payload)
         {
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             responseStream = new MemoryStream(Encoding.GetEncoding(0).GetBytes(payload));
 #else
             responseStream = new MemoryStream(Encoding.Default.GetBytes(payload));

@@ -15,10 +15,9 @@ namespace Microsoft.OData.Tests.JsonLight
 
     public class ODataAnnotationNamesTests
     {
-        
         private static readonly string[] ReservedODataAnnotationNames =
             typeof(ODataAnnotationNames)
-#if NETCOREAPP1_0 ||  NETCOREAPP2_0
+#if NETCOREAPP1_1
             .GetFields()
 #else
             .GetFields(BindingFlags.NonPublic | BindingFlags.Static)
@@ -26,8 +25,7 @@ namespace Microsoft.OData.Tests.JsonLight
             .Where(f => f.FieldType == typeof(string))
             .Select(f => (string)f.GetValue(null)).ToArray();
 
-#if !NETCOREAPP1_0
-#if !NETCOREAPP2_0
+#if !NETCOREAPP1_1 && !NETCOREAPP2_2
         // Not applicable to .NET Core due to changes in framework
         [Fact]
         public void ReservedODataAnnotationNamesHashSetShouldContainAllODataAnnotationNamesSpecialToODataLib()
@@ -36,11 +34,11 @@ namespace Microsoft.OData.Tests.JsonLight
             foreach (string annotationName in ReservedODataAnnotationNames)
             {
                 Assert.True(ODataAnnotationNames.IsODataAnnotationName(annotationName));
-                Assert.True(ODataAnnotationNames.KnownODataAnnotationNames.Contains(annotationName));
-                Assert.False(ODataAnnotationNames.KnownODataAnnotationNames.Contains(annotationName.ToUpperInvariant()));
+
+                Assert.Contains(annotationName, ODataAnnotationNames.KnownODataAnnotationNames);
+                Assert.DoesNotContain(annotationName.ToUpperInvariant(), ODataAnnotationNames.KnownODataAnnotationNames);
             }
         }
-#endif
 #endif
 
         [Fact]

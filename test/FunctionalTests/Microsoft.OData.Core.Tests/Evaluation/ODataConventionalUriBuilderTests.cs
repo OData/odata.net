@@ -45,37 +45,37 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void BuildEntitySetUriShouldValidateArguments()
         {
-            base.BuildEntitySetUriShouldValidateArguments(this.builder);
+            base.BuildEntitySetUriShouldValidateArgumentsImpl(this.builder);
         }
 
         [Fact]
         public void BuildStreamEditLinkUriShouldValidateArguments()
         {
-            BuildStreamEditLinkUriShouldValidateArguments(this.builder);
+            BuildStreamEditLinkUriShouldValidateArgumentsImpl(this.builder);
         }
 
         [Fact]
         public void BuildStreamReadLinkUriShouldValidateArguments()
         {
-            BuildStreamReadLinkUriShouldValidateArguments(this.builder);
+            BuildStreamReadLinkUriShouldValidateArgumentsImpl(this.builder);
         }
 
         [Fact]
         public void BuildNavigationLinkUriShouldValidateArguments()
         {
-            BuildNavigationLinkUriShouldValidateArguments(this.builder);
+            BuildNavigationLinkUriShouldValidateArgumentsImpl(this.builder);
         }
 
         [Fact]
         public void BuildAssociationLinkUriShouldValidateArguments()
         {
-            BuildAssociationLinkUriShouldValidateArguments(this.builder);
+            BuildAssociationLinkUriShouldValidateArgumentsImpl(this.builder);
         }
 
         [Fact]
         public void BuildOperationTargetUriShouldValidateArguments()
         {
-            BuildOperationTargetUriShouldValidateArguments(this.builder);
+            BuildOperationTargetUriShouldValidateArgumentsImpl(this.builder);
         }
 
         [Fact]

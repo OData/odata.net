@@ -15,6 +15,7 @@ obj/
 
 # Test results
 sln/TestResults/
+test/packages/
 
 # VS2015 IDE generated files
 sln/*.ide/

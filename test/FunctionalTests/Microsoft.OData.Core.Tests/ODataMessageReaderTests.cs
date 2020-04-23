@@ -55,7 +55,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfTypeDefinitionShouldWork()
         {
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("123"));
 #else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("123"));
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfDateShouldWork()
         {
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("2014-01-03"));
 #else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("2014-01-03"));
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfAbbreviativeDateShouldWork()
         {
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("2014-1-3"));
 #else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("2014-1-3"));
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfTimeOfDayShouldWork()
         {
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("12:30:04.998"));
 #else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("12:30:04.998"));
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfAbbreviativeTimeOfDayShouldWork()
         {
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("12:30:4.998"));
 #else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("12:30:4.998"));
@@ -218,13 +218,13 @@ namespace Microsoft.OData.Tests
             var uint32Converter = model.GetPrimitiveValueConverter(uint32Type.AsTypeDefinition());
             var uint64Converter = model.GetPrimitiveValueConverter(uint64Type.AsTypeDefinition());
 
-            Assert.Equal(Type.GetTypeCode(uint16Converter.ConvertToUnderlyingType((UInt16)123).GetType()), TypeCode.Int32);
-            Assert.Equal(Type.GetTypeCode(uint32Converter.ConvertToUnderlyingType((UInt32)123).GetType()), TypeCode.UInt32);
-            Assert.Equal(Type.GetTypeCode(uint64Converter.ConvertToUnderlyingType((UInt64)123).GetType()), TypeCode.Decimal);
+            Assert.Equal(TypeCode.Int32, Type.GetTypeCode(uint16Converter.ConvertToUnderlyingType((UInt16)123).GetType()));
+            Assert.Equal(TypeCode.UInt32, Type.GetTypeCode(uint32Converter.ConvertToUnderlyingType((UInt32)123).GetType()));
+            Assert.Equal(TypeCode.Decimal, Type.GetTypeCode(uint64Converter.ConvertToUnderlyingType((UInt64)123).GetType()));
 
-            Assert.Equal(Type.GetTypeCode(uint16Converter.ConvertFromUnderlyingType(123).GetType()), TypeCode.UInt16);
-            Assert.Equal(Type.GetTypeCode(uint32Converter.ConvertFromUnderlyingType((Int64)123).GetType()), TypeCode.Int64);
-            Assert.Equal(Type.GetTypeCode(uint64Converter.ConvertFromUnderlyingType((Decimal)123).GetType()), TypeCode.UInt64);
+            Assert.Equal(TypeCode.UInt16, Type.GetTypeCode(uint16Converter.ConvertFromUnderlyingType(123).GetType()));
+            Assert.Equal(TypeCode.Int64, Type.GetTypeCode(uint32Converter.ConvertFromUnderlyingType((Int64)123).GetType()));
+            Assert.Equal(TypeCode.UInt64, Type.GetTypeCode(uint64Converter.ConvertFromUnderlyingType((Decimal)123).GetType()));
         }
 
         [Fact]

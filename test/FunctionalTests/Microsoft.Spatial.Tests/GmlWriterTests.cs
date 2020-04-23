@@ -370,7 +370,7 @@ namespace Microsoft.Spatial.Tests
 
             pipelineCalls(gw.GeographyPipeline);
             w.Flush();
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             w.Dispose();
 #else
             w.Close();
@@ -739,7 +739,7 @@ namespace Microsoft.Spatial.Tests
 
             pipelineCalls(gw.GeometryPipeline);
             w.Flush();
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             w.Dispose();
 #else
             w.Close();
