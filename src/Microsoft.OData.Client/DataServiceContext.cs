@@ -60,6 +60,14 @@ namespace Microsoft.OData.Client
         /// </summary>
         private const string ServiceRootParameterName = "serviceRoot";
 
+        /// <summary>
+        /// string constant for the 'ContentType' header
+        /// </summary>
+        private const string ContentType = "Content-Type";
+
+        /// <summary>string constant for 'IEEE754Compatible' header set to true.</summary>
+        private const string MimeIeee754CompatibleHeaderTrue = "IEEE754Compatible=true";
+
         /// <summary>The client model for the current context instance.</summary>
         private readonly ClientEdmModel model;
 
@@ -693,6 +701,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Gets IsIeee754Compatible header value.
+        /// </summary>
+        internal bool IsIeee754Compatible { get; private set; }
+
+
+        /// <summary>
         /// Indicates whether user is using <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> to track changes.
         /// </summary>
         internal bool UsingDataServiceCollection { get; set; }
@@ -1012,6 +1026,7 @@ namespace Microsoft.OData.Client
         /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
         public DataServiceQuery<T> CreateFunctionQuery<T>(string path, string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
+            this.CreateRequestArgsAndFireBuildingRequest(null, null, new HeaderCollection(), this.HttpStack, null /*descriptor*/);
             Dictionary<string, string> operationParameters = this.SerializeOperationParameters(parameters);
             ResourceSetExpression rse = new ResourceSetExpression(typeof(IOrderedQueryable<T>), null, Expression.Constant(path), typeof(T), null, CountOption.None, null, null, null, null, functionName, operationParameters, false);
             return new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this), isComposable);
@@ -1026,6 +1041,7 @@ namespace Microsoft.OData.Client
         /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
         public DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string path, string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
+            this.CreateRequestArgsAndFireBuildingRequest(null, null, new HeaderCollection(), this.HttpStack, null /*descriptor*/);
             Dictionary<string, string> operationParameters = this.SerializeOperationParameters(parameters);
             SingletonResourceExpression rse = new SingletonResourceExpression(typeof(IOrderedQueryable<T>), null, Expression.Constant(path), typeof(T), null, CountOption.None, null, null, null, null, functionName, operationParameters, false);
             return new DataServiceQuerySingle<T>(new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this)), isComposable);
@@ -2982,6 +2998,15 @@ namespace Microsoft.OData.Client
             if (this.HasBuildingRequestEventHandlers)
             {
                 this.InnerBuildingRequest(this, buildingRequestEventArgs);
+
+                string contentType = buildingRequestEventArgs.HeaderCollection.GetHeader(ContentType);
+
+                
+                if (!string.IsNullOrEmpty(contentType) && contentType.ToUpperInvariant().Contains(MimeIeee754CompatibleHeaderTrue.ToUpperInvariant()))
+
+                {
+                    this.IsIeee754Compatible = true;
+                }
 
                 // The reason to clone it is so that users can change the
                 // value after this event is fired.

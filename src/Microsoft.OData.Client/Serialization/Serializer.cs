@@ -750,7 +750,8 @@ namespace Microsoft.OData.Client
             // to determine which IEdmOperationImport to pass to the ODL writer. So the ODL writer is
             // serializing the parameter payload without metadata. Setting the model to null so ODL doesn't
             // do unnecessary validations when writing without metadata.
-            string literal = ODataUriUtils.ConvertToUriLiteral(valueInODataFormat, CommonUtil.ConvertToODataVersion(this.requestInfo.MaxProtocolVersionAsVersion), null /* edmModel */);
+            bool isIeee754Compatible = this.requestInfo.IsIeee754Compatible;
+            string literal = ODataUriUtils.ConvertToUriLiteral(valueInODataFormat, CommonUtil.ConvertToODataVersion(this.requestInfo.MaxProtocolVersionAsVersion), null /* edmModel */, isIeee754Compatible);
 
             // The value from ConvertToUriValue will not be escaped, but will already contain literal delimiters like single quotes, so we
             // need to use our own escape method that will preserve those characters instead of directly calling Uri.EscapeDataString that may escape them.
