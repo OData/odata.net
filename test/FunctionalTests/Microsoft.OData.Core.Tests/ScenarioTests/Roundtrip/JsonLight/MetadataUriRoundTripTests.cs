@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             this.organizationsSet = this.defaultContainer.FindEntitySet("Organizations");
         }
 
-#if !NETCOREAPP1_0 && !NETCOREAPP2_0
+#if !NETCOREAPP1_1 && !NETCOREAPP2_2
         [Fact]
         public void EntryMetadataUrlRoundTrip()
         {

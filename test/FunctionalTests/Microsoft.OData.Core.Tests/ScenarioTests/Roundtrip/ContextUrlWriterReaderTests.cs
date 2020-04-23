@@ -11,12 +11,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Xunit;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
-using System.Xml;
+using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 {
@@ -1318,7 +1318,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
                     var reader = omReader.CreateODataCollectionReader(typeReference);
-                    IList items = new ArrayList();
+                    IList items = new List<object>();
                     while (reader.Read())
                     {
                         if (ODataCollectionReaderState.Value == reader.State)

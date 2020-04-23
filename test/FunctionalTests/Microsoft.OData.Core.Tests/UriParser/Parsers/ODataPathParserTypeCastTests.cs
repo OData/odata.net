@@ -73,8 +73,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnSingletonWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -105,8 +105,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnSingletonWithDerivedTypeConstraintButEmptyCollectionAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -187,8 +187,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnEntitySetWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -290,8 +290,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnPropertyWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -405,8 +405,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnNavigationPropertyWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -446,8 +446,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnNavigationPropertyWithKeySegmentWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -540,8 +540,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory(Skip = "Should pass if fix issue: see: https://github.com/OData/odata.net/issues/1326")]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnTypeDefinitionPropertyWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -626,8 +626,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseBoundOperationWithDerivedTypeConstraintAnnotationWorks(bool inLineAnnotation)
         {
             string annotation =

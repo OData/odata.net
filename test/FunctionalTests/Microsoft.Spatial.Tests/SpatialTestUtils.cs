@@ -237,7 +237,7 @@ namespace Microsoft.Spatial.Tests
             foreach (string xpath in xpaths)
             {
                 bool isTrue;
-                if (xpath.StartsWith("count") || xpath.StartsWith("boolean"))
+                if (xpath.StartsWith("count", StringComparison.Ordinal) || xpath.StartsWith("boolean", StringComparison.Ordinal))
                 {
                     isTrue = (bool)navigator.Evaluate(xpath, namespaceResolver);
                 }
@@ -272,9 +272,11 @@ namespace Microsoft.Spatial.Tests
             return null;
         }
 
+
         /// <summary>Runs the specified action and catches any thrown exception.</summary>
         /// <param name="action">Action to run.</param>
         /// <returns>Caught exception; null if none was thrown.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         public static Exception RunCatching(Action action)
         {
             Debug.Assert(action != null, "action != null");
@@ -484,7 +486,7 @@ namespace Microsoft.Spatial.Tests
             foreach (string xpath in xpaths)
             {
                 bool isTrue;
-                if (xpath.StartsWith("count") || xpath.StartsWith("boolean"))
+                if (xpath.StartsWith("count", StringComparison.Ordinal) || xpath.StartsWith("boolean", StringComparison.Ordinal))
                 {
                     isTrue = (bool)navigator.Evaluate(xpath);
                 }

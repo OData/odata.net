@@ -9,9 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Test.OData.DependencyInjection
 {
-#if !NETCOREAPP1_0
-    [CLSCompliant(false)]
-#endif
     public class ServiceScopeWrapper
     {
         private readonly IServiceScope scope;

@@ -387,7 +387,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             XmlWriter xw = XmlWriter.Create(sw, settings);
             coreVocModel.TryWriteSchema(xw, out errors);
             xw.Flush();
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             xw.Dispose();
 #else
             xw.Close();

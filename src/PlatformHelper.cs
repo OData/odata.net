@@ -65,12 +65,12 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Replacement for Uri.UriSchemeHttp, which does not exist on.
         /// </summary>
-        internal static readonly string UriSchemeHttp = "http";
+        internal const string UriSchemeHttp = "http";
 
         /// <summary>
         /// Replacement for Uri.UriSchemeHttps, which does not exist on.
         /// </summary>
-        internal static readonly string UriSchemeHttps = "https";
+        internal const string UriSchemeHttps = "https";
 
         #region Helper methods for properties
 
@@ -521,6 +521,7 @@ namespace Microsoft.OData.Edm
             return GetInstanceConstructors(type, isPublic).SingleOrDefault(c => CheckTypeArgs(c, argTypes));
         }
 
+
         /// <summary>
         /// Tries to the get method from the type, returns null if not found.
         /// </summary>
@@ -529,6 +530,7 @@ namespace Microsoft.OData.Edm
         /// <param name="parameterTypes">The parameter types.</param>
         /// <param name="foundMethod">The method output.</param>
         /// <returns>Returns True if found.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         internal static bool TryGetMethod(this Type type, string name, Type[] parameterTypes, out MethodInfo foundMethod)
         {
             foundMethod = null;
