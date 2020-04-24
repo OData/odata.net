@@ -246,8 +246,7 @@ namespace Microsoft.OData.Client
                     if (!odataNestedResourceInfoWrappers.Any(el => el.NestedResourceInfo.Name.Equals(dynamicPropertyName, StringComparison.Ordinal))
                         && ClientTypeUtil.TypeIsComplex(dynamicPropertyItemType, model))
                     {
-                        ODataItemWrapper odataItem;
-                        this.ConvertDynamicPropertyToResourceOrResourceSet(dynamicPropertyName, dynamicPropertyValue, serverTypeName, visitedComplexTypeObjects, out odataItem);
+                        ODataItemWrapper odataItem = this.ConvertDynamicPropertyToResourceOrResourceSet(dynamicPropertyName, dynamicPropertyValue, serverTypeName, visitedComplexTypeObjects);
 
                         odataNestedResourceInfoWrappers.Add(new ODataNestedResourceInfoWrapper
                         {
@@ -810,7 +809,7 @@ namespace Microsoft.OData.Client
         /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
         /// <param name="odataItem">The odata resource or resource set if one was created.</param>
         /// <returns>Whether or not the value was converted.</returns>
-        private void ConvertDynamicPropertyToResourceOrResourceSet(string propertyName, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects, out ODataItemWrapper odataItem)
+        private ODataItemWrapper ConvertDynamicPropertyToResourceOrResourceSet(string propertyName, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(propertyValue != null, "propertyValue != null");
@@ -818,11 +817,11 @@ namespace Microsoft.OData.Client
 
             if (propertyValue is ICollection)
             {
-                odataItem = this.CreateODataComplexCollectionDynamicPropertyResourceSet(propertyName, propertyValue, serverTypeName, visitedComplexTypeObjects);
+                return this.CreateODataComplexCollectionDynamicPropertyResourceSet(propertyName, propertyValue, serverTypeName, visitedComplexTypeObjects);
             }
             else
             {
-                odataItem = CreateODataComplexDynamicPropertyResouce(propertyName, propertyValue, visitedComplexTypeObjects);
+                return this.CreateODataComplexDynamicPropertyResouce(propertyName, propertyValue, visitedComplexTypeObjects);
             }
         }
 

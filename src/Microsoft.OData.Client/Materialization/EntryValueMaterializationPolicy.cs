@@ -702,6 +702,14 @@ namespace Microsoft.OData.Client.Materialization
                 return;
             }
 
+            IDictionary<string, object> dynamicPropertiesDictionary;
+            // Dictionary not found or key with matching name already exists
+            if (!ClientTypeUtil.TryGetDynamicPropertiesDictionary(entry.ResolvedObject, out dynamicPropertiesDictionary)
+                || dynamicPropertiesDictionary.ContainsKey(link.Name))
+            {
+                return;
+            }
+
             MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
             if (linkState == null || (linkState.Entry == null && linkState.Feed == null))
             {
@@ -710,14 +718,6 @@ namespace Microsoft.OData.Client.Materialization
 
             // NOTE: ODL (and OData WebApi) support navigational property on complex types
             // That support has not yet been implemented in OData client
-
-            IDictionary<string, object> dynamicPropertiesDictionary;
-            // Dictionary not found or key with matching name already exists
-            if (!ClientTypeUtil.TryGetDynamicPropertiesDictionary(entry.ResolvedObject, out dynamicPropertiesDictionary)
-                || dynamicPropertiesDictionary.ContainsKey(link.Name))
-            {
-                return;
-            }
 
             // An entity or entity collection as a dynamic property currently doesn't work as expected 
             // due to the absence of a navigational property definition in the metadata 
