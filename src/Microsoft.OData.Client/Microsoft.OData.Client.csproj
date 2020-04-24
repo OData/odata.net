@@ -13,17 +13,9 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_20</DefineConstants>
   </PropertyGroup>
-  
-  <Import Project="..\Build.props" />
-  
-  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
-  </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0' ">
-    <PackageReference Include="System.ComponentModel" Version="4.0.0" />
-  </ItemGroup>-->
-  
+  <Import Project="..\Build.props" />
+
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
     <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />

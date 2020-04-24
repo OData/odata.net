@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
 
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">16.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <!-- when a TFS build definition, building for mixed platforms, specifies no platform. -->
-    <Platform Condition=" '$(Platform)' == '' And '$(MSBuildProjectExtension)' != '.vcxproj' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <!-- SelfContainedBuildOutput indicates whether to isolate the build output on a per-project basis. -->
     <SelfContainedBuildOutput Condition="'$(SelfContainedBuildOutput)' == ''">false</SelfContainedBuildOutput>
   </PropertyGroup>
@@ -25,16 +25,6 @@
 
     <RelativeOutputPath Condition="'$(SelfContainedBuildOutput)' == 'true'">$([System.IO.Path]::Combine($(RelativeOutputPath), $(MSBuildProjectName)))</RelativeOutputPath>
 
-    <!-- These variables are the ones that the standard MSBuild targets recognize.  We override them here.  --> 
-    <!--<OutDir Condition=" '$(OutDir)' =='' ">$([System.IO.Path]::Combine($(OutputRootDir), $(RelativeOutputPath)))</OutDir>-->
-    <!-- OutDir requires a trailing slash to prevent MSB8004 warning --> 
-    <!--<OutDir>$(OutDir.TrimEnd("\\"))\</OutDir>-->
-
-    <!-- This ensures OutputPath always matches OutDir, especially when TFS overrides OutDir. --> 
-    <!--<OutputPath>$(OutDir)</OutputPath>-->
-    
-  <!-- Setting this variable to false preserves the OutputPath set above. Without this variable, our OutputPath would eventually be overwritten with a different one in the Microsoft.Common.CurrentVersion.Target script. --> 
-    
   </PropertyGroup> 
   
   <PropertyGroup Condition="'$(RedirectOutputToLocalBin)'=='' ">
@@ -54,10 +44,6 @@
     <!-- IntermediateOutputPath requires a trailing slash to prevent MSB8004 warning -->
     <IntermediateOutputPath Condition=" '$(IntermediateOutputPath)' =='' ">$(BaseIntermediateOutputPath)\$(Platform)\$(Configuration)\$(MSBuildProjectFile)\</IntermediateOutputPath>
   </PropertyGroup>
-
-  <!--<Import Project="Codesign.props" />-->
-
-
 
   <PropertyGroup>
     <StrongNamePublicKeysPath>$(BuildToolsetRoot)\StrongNamePublicKeys</StrongNamePublicKeysPath>
@@ -143,11 +129,6 @@
     </Otherwise>
   </Choose>
 
-  
-  
-  
-
-
   <PropertyGroup>
     <!-- Before/After injection Settings -->
     <CustomBeforeMicrosoftCommonTargets Condition="'$(SigningType)' != 'Test'">$(MSBuildThisFileDirectory)Before.Common.targets</CustomBeforeMicrosoftCommonTargets>
@@ -162,7 +143,7 @@
     <!-- Stylecop Settings -->
     <EnableStyleCop Condition="'$(EnableStyleCop)'==''">true</EnableStyleCop>
     <RunStyleCop Condition="'$(RunStyleCop)'==''">true</RunStyleCop>
-</PropertyGroup>
+  </PropertyGroup>
 
   <!-- *Only targets are no-ops unless specified otherwise (ex: managed code when stylecop is enabled) -->
   <Target Name="StyleCopOnly" DependsOnTargets="$(StyleCopOnlyDependsOn)" />

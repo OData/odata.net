@@ -11,7 +11,6 @@ public static class Configuration
     // The name of the generated resource class.
     public const string ResourceClassName = "EdmRes";
 
-
     // The list of text files containing all the string resources.
     public static readonly string[] TextFiles = {
         "Microsoft.OData.Edm.txt"
