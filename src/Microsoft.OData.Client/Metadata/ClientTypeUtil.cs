@@ -744,12 +744,14 @@ namespace Microsoft.OData.Client.Metadata
             // Is property initialized?
             if (dynamicPropertiesDictionary == null)
             {
-                if (!propertyInfo.PropertyType.IsInterface() && !propertyInfo.PropertyType.IsAbstract())
+                Type propertyType = propertyInfo.PropertyType;
+                
+                // Handle Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc - must also have parameterless constructor                
+                if (!propertyType.IsInterface() && !propertyType.IsAbstract() && propertyType.GetInstanceConstructor(true, new Type[0]) != null)
                 {
-                    // Hanlde Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc
-                    dynamicPropertiesDictionary = (IDictionary<string, object>)Util.ActivatorCreateInstance(propertyInfo.PropertyType);
+                    dynamicPropertiesDictionary = (IDictionary<string, object>)Util.ActivatorCreateInstance(propertyType);
                 }
-                else if (propertyInfo.PropertyType.Equals(typeof(IDictionary<string, object>)))
+                else if (propertyType.Equals(typeof(IDictionary<string, object>)))
                 {
                     // Default to Dictionary<,> for IDictionary<,> property
                     Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(new Type[] { typeof(string), typeof(object) });
