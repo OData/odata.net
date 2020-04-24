@@ -3007,6 +3007,10 @@ namespace Microsoft.OData.Client
                 {
                     this.IsIeee754Compatible = true;
                 }
+                else
+                {
+                    this.IsIeee754Compatible = false;
+                }
 
                 // The reason to clone it is so that users can change the
                 // value after this event is fired.
