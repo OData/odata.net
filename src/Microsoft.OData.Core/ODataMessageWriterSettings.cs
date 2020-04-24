@@ -426,13 +426,13 @@ namespace Microsoft.OData
             this.Version = other.Version;
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.MetadataSelector = other.MetadataSelector;
+            this.IsIeee754Compatible = other.IsIeee754Compatible;
 
             this.validations = other.validations;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
             this.ArrayPool = other.ArrayPool;
-            this.IsIeee754Compatible = other.IsIeee754Compatible;
         }
     }
 }
