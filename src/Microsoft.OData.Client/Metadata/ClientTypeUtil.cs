@@ -744,16 +744,22 @@ namespace Microsoft.OData.Client.Metadata
             // Is property initialized?
             if (dynamicPropertiesDictionary == null)
             {
-                // Programmatically initialize the dictionary if property type is IDictionary or Dictionary
-                // Nothing stops a developer who opted for POCOs from using SortedDictionary for example
-                // We can't anticipate each user scenario so we don't attempt to initialize that property in such a case
-                if (!(new[] { typeof(IDictionary<string, object>), typeof(Dictionary<string, object>) }).Contains(propertyInfo.PropertyType))
+                if (!propertyInfo.PropertyType.IsInterface() && !propertyInfo.PropertyType.IsAbstract())
                 {
+                    // Hanlde Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc
+                    dynamicPropertiesDictionary = (IDictionary<string, object>)Util.ActivatorCreateInstance(propertyInfo.PropertyType);
+                }
+                else if (propertyInfo.PropertyType.Equals(typeof(IDictionary<string, object>)))
+                {
+                    // Default to Dictionary<,> for IDictionary<,> property
+                    Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(new Type[] { typeof(string), typeof(object) });
+                    dynamicPropertiesDictionary = (IDictionary<string, object>)Util.ActivatorCreateInstance(dictionaryType);
+                }
+                else
+                { 
+                    // Not easy to figure out the implementing type
                     return false;
                 }
-
-                Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(new Type[] { typeof(string), typeof(object) });
-                dynamicPropertiesDictionary = (IDictionary<string, object>)Util.ActivatorCreateInstance(dictionaryType);
 
                 propertyInfo.SetValue(instance, dynamicPropertiesDictionary);
 
