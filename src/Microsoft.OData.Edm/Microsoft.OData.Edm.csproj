@@ -12,6 +12,10 @@
   <Import Project="..\Build.props" />
 
   <ItemGroup>
+    <None Remove="Microsoft.OData.Edm.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Edm.Tests" />
     <InternalsVisibleTo Include="Microsoft.Test.OData.Tests.Client" />
   </ItemGroup>
@@ -28,12 +32,7 @@
       <SkipSRAttributes>true</SkipSRAttributes>
     </TextStringResource>
   </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
-    <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
-  </ItemGroup>
- 
+
   <ItemGroup>
     <Resource Include="Microsoft.OData.Edm.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -46,6 +45,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
+    <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
     <Compile Update="Microsoft.OData.Edm.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -86,14 +87,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Microsoft.OData.Edm.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Microsoft.OData.Edm.cs</LastGenOutput>
-    </None>
-    <None Update="Parameterized.Microsoft.OData.Edm.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Parameterized.Microsoft.OData.Edm.cs</LastGenOutput>
-    </None>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

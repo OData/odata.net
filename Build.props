@@ -8,12 +8,6 @@
     <!-- Global settings that apply unconditionally. -->
     <EnlistmentRoot>$(MSBuildThisFileDirectory.TrimEnd('\'))</EnlistmentRoot>
 
-    <SilverlightClientLibraries>$(MSBuildProgramFiles32)\Microsoft SDKs\Silverlight\$(TargetFrameworkVersion)\Libraries\Client</SilverlightClientLibraries>
-
-    <!-- We only do test signing in OSS -->
-    <!--<SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
-    <SigningScenario Condition="'$(SigningScenario)' == ''">Test</SigningScenario>
-    <SigningType Condition="'$(SigningType)' == ''">Test</SigningType>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -70,11 +64,6 @@
     <WarningsNotAsErrors>$(WarningsNotAsErrors);1058</WarningsNotAsErrors>
   </PropertyGroup>
 
- <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.vbproj'">
- <!-- VB's prejudices against semi-colons extend to the defines passed to the compiler, so convert them to commas.  Unescape string since string methods return escaped strings. --> 
-    <DefineConstants>$([MSBuild]::Unescape($(DefineConstants.Replace(';',','))))</DefineConstants>
-  </PropertyGroup> 
-  
   <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
     <!--Overide the default full debug symbols regardless of configuration-->
     <DebugType>pdbonly</DebugType>
@@ -92,10 +81,9 @@
   </PropertyGroup>
 
   
-<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
     <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11</DefineConstants>
   </PropertyGroup>
-
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
     <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETCORE_10</DefineConstants>
@@ -121,13 +109,5 @@
     <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '14.0'">$(VS140COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
     <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '16.0'">$(VS160COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
   </PropertyGroup>
-
-  <!--These empty property groups are used to ensure x64, x86 and AnyCPU are included in the platform list. 
-      VS will pick AnyCPU as the default purely because of alphabetic order.-->
- <!--
-  <Target Name="RestoreNuGetPackages" BeforeTargets="$(GenerateTextStringResourcesDependsOn)">
-    <Exec Command="&quot;$(NuGetExePath)&quot; restore &quot;$(PackagesConfig)&quot; -PackageSaveMode nuspec -SolutionDirectory &quot;$(SolutionDir)\&quot;" />
-  </Target>
-  -->
   
 </Project>

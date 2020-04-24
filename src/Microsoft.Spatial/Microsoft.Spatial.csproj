@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <!-- References -->
-   <Import Project="..\Build.props" /> 
+   <Import Project="..\Build.props" />
   <!-- Generated files -->
 
   <ItemGroup>
@@ -42,7 +42,7 @@
       <SkipSRAttributes>true</SkipSRAttributes>
     </TextStringResource>
   </ItemGroup>
-  
+
   <ItemGroup>
     <Resource Include="Microsoft.Spatial.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -53,5 +53,17 @@
       <LastGenOutput>Parameterized.Microsoft.Spatial.cs</LastGenOutput>
     </Resource>
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <Compile Update="Microsoft.Spatial.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Microsoft.Spatial.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Parameterized.Microsoft.Spatial.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Parameterized.Microsoft.Spatial.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

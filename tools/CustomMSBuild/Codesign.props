@@ -1,7 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
- 
-
+<Project>
   <PropertyGroup>
     <StrongNamePublicKeysPath>$(BuildToolsetRoot)\StrongNamePublicKeys</StrongNamePublicKeysPath>
     <CustomStrongNamePublicKeysPath>$(EnlistmentRoot)\tools\StrongNamePublicKeys</CustomStrongNamePublicKeysPath>
@@ -85,6 +82,5 @@
       </PropertyGroup>
     </Otherwise>
   </Choose>
-
 
 </Project>

@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 
     <AssemblyName>Microsoft.OData.Core.Tests</AssemblyName>
-    <TargetFrameworks>net45;netcoreapp1.1;netcoreapp2.2;</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.2;</TargetFrameworks>
     <FileUpgradeFlags>40</FileUpgradeFlags>
 
     <OldToolsVersion>2.0</OldToolsVersion>
@@ -15,8 +15,15 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.2'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452' or '$(TargetFramework)' == 'netcoreapp1.1'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     <PackageReference Include="xunit.assert" Version="2.4.1" />
