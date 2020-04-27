@@ -95,11 +95,39 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">Value to be converted.</param>
         /// <param name="version">Version to be compliant with.</param>
+        /// <param name="isIeee754Compatible">true if value should be IEEE 754 compatible.</param>
+        /// <returns>A string representation of <paramref name="value"/> for use in a Url.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings", Justification = "designed to aid the creation on a URI, not create a full one")]
+        public static string ConvertToUriLiteral(object value, ODataVersion version, bool isIeee754Compatible)
+        {
+            return ODataUriUtils.ConvertToUriLiteral(value, version, null, isIeee754Compatible);
+        }
+
+        /// <summary>
+        /// Converts the given object to a string for use in a Uri. Does not perform any of the escaping that <see cref="Uri"/> provides.
+        /// No type verification is used.
+        /// </summary>
+        /// <param name="value">Value to be converted.</param>
+        /// <param name="version">Version to be compliant with.</param>
         /// <returns>A string representation of <paramref name="value"/> for use in a Url.</returns>
         [SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings", Justification = "designed to aid the creation on a URI, not create a full one")]
         public static string ConvertToUriLiteral(object value, ODataVersion version)
         {
-            return ODataUriUtils.ConvertToUriLiteral(value, version, null);
+            return ODataUriUtils.ConvertToUriLiteral(value, version, null, true);
+        }
+
+        /// <summary>
+        /// Converts the given object to a string in the specified format for use in a Uri. Does not perform any of the escaping that <see cref="Uri"/> provides.
+        /// Will perform type verification based on the given model if possible.
+        /// </summary>
+        /// <param name="value">Value to be converted (can be EnumNode).</param>
+        /// <param name="version">Version to be compliant with.</param>
+        /// <param name="model">Optional model to perform verification against.</param>
+        /// <returns>A string representation of <paramref name="value"/> for use in a Url.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings", Justification = "designed to aid the creation on a URI, not create a full one")]
+        public static string ConvertToUriLiteral(object value, ODataVersion version, IEdmModel model)
+        {
+            return ODataUriUtils.ConvertToUriLiteral(value, version, model, true /*isIeee754Compatible*/);
         }
 
         /// <summary>
@@ -109,9 +137,10 @@ namespace Microsoft.OData
         /// <param name="value">Value to be converted (can be EnumNode).</param>
         /// <param name="version">Version to be compliant with.</param>
         /// <param name="model">Optional model to perform verification against.</param>
+        /// <param name="isIeee754Compatible">true if value should be IEEE 754 compatible.</param>
         /// <returns>A string representation of <paramref name="value"/> for use in a Url.</returns>
         [SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings", Justification = "designed to aid the creation on a URI, not create a full one")]
-        public static string ConvertToUriLiteral(object value, ODataVersion version, IEdmModel model)
+        public static string ConvertToUriLiteral(object value, ODataVersion version, IEdmModel model, bool isIeee754Compatible)
         {
             if (value == null)
             {
@@ -138,7 +167,7 @@ namespace Microsoft.OData
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                return ODataUriConversionUtils.ConvertToUriCollectionLiteral(collectionValue, model, version);
+                return ODataUriConversionUtils.ConvertToUriCollectionLiteral(collectionValue, model, version, isIeee754Compatible);
             }
 
             ODataEnumValue enumValue = value as ODataEnumValue;

@@ -280,6 +280,19 @@ namespace Microsoft.OData
         /// <returns>A string representation of <paramref name="collectionValue"/> to be added to a Url.</returns>
         internal static string ConvertToUriCollectionLiteral(ODataCollectionValue collectionValue, IEdmModel model, ODataVersion version)
         {
+            return ConvertToUriCollectionLiteral(collectionValue, model, version, true);
+        }
+
+        /// <summary>
+        /// Converts a <see cref="ODataCollectionValue"/> to a string for use in a Url.
+        /// </summary>
+        /// <param name="collectionValue">Instance to convert.</param>
+        /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
+        /// <param name="version">Version to be compliant with. Collection requires >= V3.</param>
+        /// <param name="isIeee754Compatible">true if value should be IEEE 754 compatible.</param>
+        /// <returns>A string representation of <paramref name="collectionValue"/> to be added to a Url.</returns>
+        internal static string ConvertToUriCollectionLiteral(ODataCollectionValue collectionValue, IEdmModel model, ODataVersion version, bool isIeee754Compatible)
+        {
             ExceptionUtils.CheckArgumentNotNull(collectionValue, "collectionValue");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
@@ -292,7 +305,8 @@ namespace Microsoft.OData
                     Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
 
                     // TBD: Should write instance annotations for the literal???
-                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
+                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*"),
+                    IsIeee754Compatible = isIeee754Compatible
                 };
 
                 WriteJsonLightLiteral(
@@ -536,6 +550,13 @@ namespace Microsoft.OData
         /// <param name="writeValue">Delegate to use to actually write the value.</param>
         private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer> writeValue)
         {
+
+            IEnumerable<KeyValuePair<string,string>> parameters = new Dictionary<string, string>
+            {
+                { MimeConstants.MimeIeee754CompatibleParameterName, messageWriterSettings.IsIeee754Compatible.ToString() }
+            };
+            ODataMediaType mediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, parameters);
+
             // Calling dispose since it's the right thing to do, but when created from a custom-built TextWriter
             // the output context Dispose will not actually dispose anything, it will just cleanup itself.
             // TODO: URI parser will also support DI container in the future but set the container to null at this moment.
@@ -543,7 +564,9 @@ namespace Microsoft.OData
             {
                 Model = model,
                 IsAsync = false,
-                IsResponse = false
+                IsResponse = false,
+                MediaType = mediaType
+
             };
 
             using (ODataJsonLightOutputContext jsonOutputContext =

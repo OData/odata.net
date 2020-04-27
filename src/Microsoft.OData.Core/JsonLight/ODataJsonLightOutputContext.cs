@@ -132,7 +132,8 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             this.textWriter = textWriter;
-            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, true /*isIeee754Compatible*/, messageWriterSettings);
+            bool ieee754CompatibleSetToTrue = (messageInfo.MediaType != null) ? messageInfo.MediaType.HasIeee754CompatibleSetToTrue() : false;
+            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }

@@ -205,6 +205,16 @@ namespace Microsoft.OData.Client
         {
             get { return this.Context.UseDefaultCredentials; }
         }
+
+        /// <summary>
+        /// Gets IsIeee754Compatible header value.
+        /// This value determines if the request should be treated as IEEE 754 Compatible.
+        /// </summary>
+        internal bool IsIeee754Compatible 
+        {
+            get { return this.Context.IsIeee754Compatible; }
+        }
+
         #endregion Properties
 
         #region Methods

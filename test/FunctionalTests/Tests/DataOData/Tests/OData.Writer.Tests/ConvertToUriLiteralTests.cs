@@ -466,6 +466,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     ExpectedValue = "[{\"type\":\"Point\",\"coordinates\":[-10.0,5.0],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}]",
                 });
 
+            //For collection the if ieee754Compatible parameter is not set, the expected result is a collection of primitive types.
             // collection with multiple items
             testCases.Add(
                 new ConvertToUriLiteralTestCase()
@@ -484,6 +485,25 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             this.RunTestCases(testCases);
         }
 
+
+        [TestMethod]
+        public void ConvertToUriLiteralWhenIeee754CompatibleSetTrue()
+        {
+            string expectedWhenieee754ParamSetFalse = "[-9223372036854775808,9223372036854775807]";
+            string expectedWhenieee754ParamSetTrue = "[\"-9223372036854775808\",\"9223372036854775807\"]";
+
+            ODataCollectionValue parameter = new ODataCollectionValue
+            {
+                TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int64"),
+                Items = new object[] { Int64.MinValue, Int64.MaxValue }
+            };
+
+            string actualWhenieee754ParamSetFalse = ODataUriUtils.ConvertToUriLiteral(parameter, ODataVersion.V4, null, false);
+            string actualWhenieee754ParamSetTrue = ODataUriUtils.ConvertToUriLiteral(parameter, ODataVersion.V4, null, true);
+
+            Assert.AreEqual(expectedWhenieee754ParamSetFalse, actualWhenieee754ParamSetFalse, "Ieee754Compatible was not properly set");
+            Assert.AreEqual(expectedWhenieee754ParamSetTrue, actualWhenieee754ParamSetTrue, "Ieee754Compatible was not properly set");
+        }
         /// <summary>
         /// Tests that ODataUtils.ConvertToUriLiteral produces correct null values.
         /// </summary>

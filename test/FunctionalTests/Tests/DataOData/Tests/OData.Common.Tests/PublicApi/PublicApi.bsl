@@ -4870,6 +4870,8 @@ public sealed class Microsoft.OData.ODataUriUtils {
 	public static object ConvertFromUriLiteral (string value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 	public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version)
 	public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model)
+	public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version, bool isIeee754Compatible)
+	public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, bool isIeee754Compatible)
 }
 
 [
