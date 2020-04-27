@@ -110,5 +110,16 @@ namespace Microsoft.OData.Client
                 this.OperationParameters,
                 this.IsAction);
         }
+
+        /// <summary>
+        /// Creates a copy of the current ResourceSetExpression. Object references remain the same.
+        /// </summary>
+        /// <returns>A copy of the ResourceSetExpression</returns>
+
+        internal override QueryableResourceExpression CreateClone()
+        {
+            return CreateCloneWithNewTypes(this.Type, this.ResourceType);
+
+        }
     }
 }

@@ -111,6 +111,25 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// clone the ResourceExpression
+        /// </summary>
+        /// <returns>new NavigationPropertySingletonExpression</returns>
+        internal override ResourceExpression CreateCloneResourceExpression()
+        {
+            return new NavigationPropertySingletonExpression(
+                 this.Type,
+                 this.source,
+                 this.MemberExpression,
+                 this.resourceType,
+                 this.ExpandPaths.ToList(),
+                 this.CountOption,
+                 this.CustomQueryOptions.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                 this.Projection,
+                 this.ResourceTypeAs,
+                 this.UriVersion);
+        }
+
+        /// <summary>
         /// Cast changes the type of the ResourceExpression
         /// </summary>
         /// <param name="type">new type</param>

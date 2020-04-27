@@ -140,6 +140,12 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1500:VariableNamesShouldNotMatchFieldNames", MessageId = "type", Justification = "It is the value being used to set the field")]
         abstract internal ResourceExpression CreateCloneWithNewType(Type type);
 
+        /// <summary>
+        /// Create a clone with new type.
+        /// </summary>
+        /// <returns>The new clone.</returns>
+        abstract internal ResourceExpression CreateCloneResourceExpression();
+
         abstract internal bool HasQueryOptions { get; }
 
         abstract internal bool IsOperationInvocation { get; }

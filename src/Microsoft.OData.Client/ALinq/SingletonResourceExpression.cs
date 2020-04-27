@@ -104,5 +104,17 @@ namespace Microsoft.OData.Client
                 this.OperationParameters,
                 this.IsAction);
         }
+
+        /// <summary>
+        /// Creates a copy of the current SingletResourceExpression
+
+        /// </summary>
+        /// <returns>A copy of the SingletonResourceExpression.</returns>
+
+        internal override QueryableResourceExpression CreateClone()
+        {
+            return CreateCloneWithNewTypes(this.Type, this.ResourceType);
+
+        }
     }
 }
