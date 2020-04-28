@@ -168,7 +168,7 @@ namespace Microsoft.OData.Edm.Validation
             }
             else
             {
-                throw new InvalidOperationException(Edm.Strings.Serializer_UnknownEdmVersion);
+                throw new InvalidOperationException(Edm.Strings.Serializer_UnknownEdmVersion(version.ToString()));
             }
         }
 
