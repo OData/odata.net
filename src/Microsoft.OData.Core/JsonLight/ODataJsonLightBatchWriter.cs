@@ -13,10 +13,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -163,7 +160,6 @@ namespace Microsoft.OData.JsonLight
             this.SetState(BatchWriterState.OperationStreamRequested);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
@@ -181,7 +177,6 @@ namespace Microsoft.OData.JsonLight
             return this.JsonLightOutputContext.FlushBuffersAsync()
                 .FollowOnSuccessWith(task => this.SetState(BatchWriterState.OperationStreamRequested));
         }
-#endif
 
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
@@ -224,7 +219,6 @@ namespace Microsoft.OData.JsonLight
             this.JsonLightOutputContext.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -233,7 +227,6 @@ namespace Microsoft.OData.JsonLight
         {
             return this.JsonLightOutputContext.FlushAsync();
         }
-#endif
 
         /// <summary>
         /// Starts a new batch - implementation of the actual functionality.

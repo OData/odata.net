@@ -12,9 +12,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
@@ -182,7 +180,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ false);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
@@ -197,7 +194,6 @@ namespace Microsoft.OData.JsonLight
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ false));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a delta resource set.
@@ -213,7 +209,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ true);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a delta resource set.
         /// </summary>
@@ -228,7 +223,6 @@ namespace Microsoft.OData.JsonLight
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ true));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource.
@@ -244,7 +238,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceReaderImplementation(navigationSource, expectedResourceType);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
@@ -259,7 +252,6 @@ namespace Microsoft.OData.JsonLight
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceReaderImplementation(navigationSource, expectedResourceType));
         }
-#endif
 
         /// <summary>
         /// Create a <see cref="ODataCollectionReader"/>.
@@ -274,7 +266,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateCollectionReaderImplementation(expectedItemTypeReference);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataCollectionReader"/>.
         /// </summary>
@@ -288,7 +279,6 @@ namespace Microsoft.OData.JsonLight
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateCollectionReaderImplementation(expectedItemTypeReference));
         }
-#endif
 
         /// <summary>
         /// This method creates an reads the property from the input and
@@ -306,7 +296,6 @@ namespace Microsoft.OData.JsonLight
             return jsonLightPropertyAndValueDeserializer.ReadTopLevelProperty(expectedPropertyTypeReference);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
@@ -322,7 +311,7 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightPropertyAndValueDeserializer jsonLightPropertyAndValueDeserializer = new ODataJsonLightPropertyAndValueDeserializer(this);
             return jsonLightPropertyAndValueDeserializer.ReadTopLevelPropertyAsync(expectedPropertyTypeReference);
         }
-#endif
+
 
         /// <summary>
         /// Read a top-level error.
@@ -336,7 +325,6 @@ namespace Microsoft.OData.JsonLight
             return jsonLightErrorDeserializer.ReadTopLevelError();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level error.
         /// </summary>
@@ -348,7 +336,6 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightErrorDeserializer jsonLightErrorDeserializer = new ODataJsonLightErrorDeserializer(this);
             return jsonLightErrorDeserializer.ReadTopLevelErrorAsync();
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource set in a Uri operation parameter.
@@ -364,7 +351,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ true, /*readingDelta*/ false);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set in a Uri operation parameter.
         /// </summary>
@@ -378,7 +364,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ true, /*readingDelta*/ false));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource in a Uri operation parameter.
@@ -391,7 +376,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceReader(navigationSource, expectedResourceType);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource in a Uri operation parameter.
         /// </summary>
@@ -402,7 +386,6 @@ namespace Microsoft.OData.JsonLight
         {
             return this.CreateResourceReaderAsync(navigationSource, expectedResourceType);
         }
-#endif
 
         /// <summary>
         /// Create a <see cref="ODataParameterReader"/>.
@@ -417,7 +400,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateParameterReaderImplementation(operation);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataParameterReader"/>.
         /// </summary>
@@ -431,7 +413,6 @@ namespace Microsoft.OData.JsonLight
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateParameterReaderImplementation(operation));
         }
-#endif
 
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
@@ -447,7 +428,6 @@ namespace Microsoft.OData.JsonLight
             return payloadKindDetectionDeserializer.DetectPayloadKind(detectionInfo);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
         /// </summary>
@@ -461,7 +441,6 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
             return payloadKindDetectionDeserializer.DetectPayloadKindAsync(detectionInfo);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataDeltaReader" /> to read a resource set.
@@ -477,7 +456,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
@@ -492,7 +470,6 @@ namespace Microsoft.OData.JsonLight
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType));
         }
-#endif
 
         /// <summary>
         /// Create a <see cref="ODataBatchReader"/>.
@@ -503,7 +480,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateBatchReaderImplementation(/*synchronous*/ true);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
@@ -513,7 +489,6 @@ namespace Microsoft.OData.JsonLight
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
         }
-#endif
 
         /// <summary>
         /// Read a service document.
@@ -529,7 +504,6 @@ namespace Microsoft.OData.JsonLight
             return jsonLightServiceDocumentDeserializer.ReadServiceDocument();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a service document.
         /// This method reads the service document from the input and returns
@@ -543,7 +517,6 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightServiceDocumentDeserializer jsonLightServiceDocumentDeserializer = new ODataJsonLightServiceDocumentDeserializer(this);
             return jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync();
         }
-#endif
 
         /// <summary>
         /// Read a set of top-level entity reference links.
@@ -557,7 +530,6 @@ namespace Microsoft.OData.JsonLight
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinks();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
@@ -569,7 +541,6 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
         }
-#endif
 
         /// <summary>
         /// Reads a top-level entity reference link.
@@ -584,7 +555,6 @@ namespace Microsoft.OData.JsonLight
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLink();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
@@ -597,7 +567,6 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
         }
-#endif
 
         /// <summary>
         /// Perform the actual cleanup work.

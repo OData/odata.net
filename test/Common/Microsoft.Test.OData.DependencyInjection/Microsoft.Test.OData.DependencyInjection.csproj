@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <AssemblyName>Microsoft.Test.OData.DependencyInjection</AssemblyName>
-    <TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.2;</TargetFrameworks>
+    <AssemblyName>Microsoft.Test.OData.DependencyInjection</AssemblyName> 
+    <TargetFrameworks>net45;netcoreapp1.1;netcoreapp2.2;</TargetFrameworks> 
     <TestType Condition=" '$(TestType)' == '' ">Private</TestType>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -16,22 +15,19 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' or '$(TargetFramework)' == 'net452'">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' or '$(TargetFramework)' == 'net45'">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
   </ItemGroup>
 
   <Choose>
     <When Condition=" '$(TestType)'=='Private' ">
       <ItemGroup>
-        <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-                  
+        <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />                  
       </ItemGroup>
     </When>
-
   </Choose>
 
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-
 </Project>

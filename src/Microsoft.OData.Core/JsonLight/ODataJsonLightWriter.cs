@@ -11,9 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
-#if PORTABLELIB
 using System.Threading.Tasks;
-#endif
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
@@ -182,7 +180,6 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightOutputContext.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -191,7 +188,6 @@ namespace Microsoft.OData.JsonLight
         {
             return this.jsonLightOutputContext.FlushAsync();
         }
-#endif
 
         /// <summary>
         /// Starts writing a payload (called exactly once before anything else)

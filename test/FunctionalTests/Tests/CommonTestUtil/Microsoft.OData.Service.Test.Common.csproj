@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
-  <PropertyGroup>
- 
+  <PropertyGroup> 
     <AssemblyName>Microsoft.OData.Service.Test.Common</AssemblyName>
-
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <TransparentAssembly>true</TransparentAssembly>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
@@ -11,46 +9,32 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
- 
- 
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems> 
   </PropertyGroup>
   <Import Project="..\Build.props" />
 
-
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="2.0.0.0" />
- 
- 
- 
+    <PackageReference Include="FluentAssertions" Version="2.0.0.0" /> 
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="EntityFramework" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
-
-    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    
+    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />    
   </ItemGroup>
   
   <ItemGroup>
-    
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-      <HintPath>..\..\..\packages\PublicAssemblies_10\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <!--<Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />-->
+    <Reference Include="System.Xml.Linq" />    
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-  
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-    
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
- 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />  
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />    
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" /> 
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
@@ -63,6 +47,5 @@
     <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.Spatial.Tests\PositionData.cs">
       <Link>PositionData.cs</Link>
     </Compile>
-  </ItemGroup>
-  
+  </ItemGroup>  
 </Project>

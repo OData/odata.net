@@ -497,7 +497,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             Assert.AreEqual(result.Select(s => s.ProductID).Distinct().Count(), result.Count);
         }
 
-        //--#comment#--[TestMethod]
+       //--#comment#--[TestMethod]
         public void QueryEntitiesWithFilterFromODataClient()
         {
             var products = TestClientContext.Products.ToList();

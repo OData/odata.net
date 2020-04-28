@@ -1,5 +1,4 @@
-﻿<Project>
- 
+﻿<Project ToolsVersion="15.0">
 
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>

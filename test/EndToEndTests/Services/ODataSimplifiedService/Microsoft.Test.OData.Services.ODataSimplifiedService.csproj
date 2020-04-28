@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
- 
-    <AssemblyName>Microsoft.Test.OData.Services.ODataSimplifiedService</AssemblyName>
+     <AssemblyName>Microsoft.Test.OData.Services.ODataSimplifiedService</AssemblyName>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <TargetFrameworks>net45</TargetFrameworks>
@@ -26,14 +25,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-    
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-  
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
- 
-    <ProjectReference Include="..\ODataWCFLibrary\ODataSamples.Services.Core.csproj" />
-   
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />    
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />  
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" /> 
+    <ProjectReference Include="..\ODataWCFLibrary\ODataSamples.Services.Core.csproj" />   
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ODataSimplifiedDataSource.cs" />
@@ -42,7 +37,7 @@
     <Compile Include="ODataSimplifiedService.cs" />
     <Compile Include="ODataSimplifiedServiceDescriptor.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

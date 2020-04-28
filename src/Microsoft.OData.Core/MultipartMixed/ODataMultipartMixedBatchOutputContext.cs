@@ -8,9 +8,8 @@ namespace Microsoft.OData.MultipartMixed
 {
     #region Namespaces
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -51,7 +50,6 @@ namespace Microsoft.OData.MultipartMixed
             return this.CreateODataBatchWriterImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
@@ -64,7 +62,6 @@ namespace Microsoft.OData.MultipartMixed
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
         }
-#endif
 
         /// <summary>
         /// Creates a batch writer.

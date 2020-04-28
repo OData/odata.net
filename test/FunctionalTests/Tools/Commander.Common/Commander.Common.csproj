@@ -19,10 +19,8 @@
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
- 
-    <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
-   
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK> 
+    <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>   
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <DocumentationFile>CsdlToWorkspaceGenerator.xml</DocumentationFile>
     <TargetFrameworks>net45</TargetFrameworks>
@@ -70,5 +68,5 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

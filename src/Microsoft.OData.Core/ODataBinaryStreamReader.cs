@@ -10,9 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.IO;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
 
     #endregion Namespaces
 

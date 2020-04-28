@@ -9,9 +9,7 @@ namespace Microsoft.OData
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -32,7 +30,6 @@ namespace Microsoft.OData
         {
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the parameter reader logic when in state 'Start'.
         /// </summary>
@@ -126,6 +123,5 @@ namespace Microsoft.OData
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCoreAsync_ReadAsynchronously));
             }
         }
-#endif
     }
 }

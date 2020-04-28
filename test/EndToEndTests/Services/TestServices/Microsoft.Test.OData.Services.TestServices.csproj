@@ -1,17 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
- 
+  <PropertyGroup> 
     <AssemblyName>Microsoft.Test.OData.Services.TestServices</AssemblyName>
-    <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
-    
+    <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>    
     <TargetFrameworks>net45</TargetFrameworks>    
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <RestorePackages>true</RestorePackages> 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>    
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>
@@ -26,46 +23,24 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
-
-
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
-  
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />  
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-   
-    <ProjectReference Include="..\Astoria\Microsoft.Test.OData.Services.Astoria.csproj" />
- 
-    <ProjectReference Include="..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj" />
-    
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />   
+    <ProjectReference Include="..\Astoria\Microsoft.Test.OData.Services.Astoria.csproj" /> 
+    <ProjectReference Include="..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj" />    
     <ProjectReference Include="..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj" />
-
-    <ProjectReference Include="..\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj" />
- 
-    <ProjectReference Include="..\ODataCamelCaseService\Microsoft.Test.OData.Services.ODataCamelCaseService.csproj" />
-   
+    <ProjectReference Include="..\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj" /> 
+    <ProjectReference Include="..\ODataCamelCaseService\Microsoft.Test.OData.Services.ODataCamelCaseService.csproj" />   
     <ProjectReference Include="..\ODataDefaultService\Microsoft.Test.OData.Services.ODataDefaultService.csproj" />
-
-    <ProjectReference Include="..\ODataModelRefService\Microsoft.Test.OData.Services.ODataModelRefService.csproj" />
-    
-    <ProjectReference Include="..\ODataPluggableFormatService\Microsoft.Test.OData.Services.ODataPluggableFormatService.csproj" />
-   
-    <ProjectReference Include="..\ODataOperationService\Microsoft.Test.OData.Services.ODataOperationService.csproj" />
-  
+    <ProjectReference Include="..\ODataModelRefService\Microsoft.Test.OData.Services.ODataModelRefService.csproj" />    
+    <ProjectReference Include="..\ODataPluggableFormatService\Microsoft.Test.OData.Services.ODataPluggableFormatService.csproj" />   
+    <ProjectReference Include="..\ODataOperationService\Microsoft.Test.OData.Services.ODataOperationService.csproj" />  
     <ProjectReference Include="..\ODataSimplifiedService\Microsoft.Test.OData.Services.ODataSimplifiedService.csproj" />
-
-    <ProjectReference Include="..\ODataTripPinService\ODataSamples.Services.TripPin.csproj" />
- 
+    <ProjectReference Include="..\ODataTripPinService\ODataSamples.Services.TripPin.csproj" /> 
     <ProjectReference Include="..\ODataTypeDefinitionService\Microsoft.Test.OData.Services.ODataTypeDefinitionService.csproj" />
-
-    <ProjectReference Include="..\ODataWCFLibrary\ODataSamples.Services.Core.csproj" >
-        <!--<Aliases>destination</Aliases>-->
-    </ProjectReference>
-     
+    <ProjectReference Include="..\ODataWCFLibrary\ODataSamples.Services.Core.csproj" />    
     <ProjectReference Include="..\ODataWCFService\Microsoft.Test.OData.Services.ODataWCFService.csproj" />
-
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -198,5 +173,5 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

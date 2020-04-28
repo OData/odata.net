@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Microsoft.Data.ServerUnitTests1.UnitTests</AssemblyName>
-    
+    <AssemblyName>Microsoft.Data.ServerUnitTests1.UnitTests</AssemblyName>    
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
-
     <TargetFrameworks>net45</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -16,25 +14,20 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="5.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
-    <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />    
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="CustomMarshalers" />
-    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" />
+    <Reference Include="CustomMarshalers" />    
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualBasic" />
-    <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />-->
+    <Reference Include="Microsoft.VisualBasic" />    
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-    
+    <Reference Include="System.Data" />    
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.IdentityModel" />
@@ -47,17 +40,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.Linq" />
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-   
-    <ProjectReference Include="..\..\Models\EFFK\Astoria.EFFKModel.csproj" />
-   
-    <ProjectReference Include="..\..\Models\northwind\Astoria.Northwind.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Tools\CustomData.ObjectContext\CustomData.ObjectContext.csproj" />
-  
-    <ProjectReference Include="..\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj" />
- 
+    <Reference Include="System.Data.Linq" />     
     <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
     <Compile Include="Tests\ActionBatchTests.cs" />
     <Compile Include="Tests\AdvertisingServiceActionTests.cs" />
@@ -75,25 +58,24 @@
     <Compile Include="Tests\UpdatePropertyTests.cs" />
     <Compile Include="Tests\UpdateTests.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-   
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-      
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj" />
-      
-    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj" />
-   
+  <ItemGroup>    
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />    
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />   
+    <ProjectReference Include="..\..\Models\EFFK\Astoria.EFFKModel.csproj" />   
+    <ProjectReference Include="..\..\Models\northwind\Astoria.Northwind.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Tools\CustomData.ObjectContext\CustomData.ObjectContext.csproj" />  
+    <ProjectReference Include="..\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj" />
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />   
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />      
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj" />      
+    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj" />   
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

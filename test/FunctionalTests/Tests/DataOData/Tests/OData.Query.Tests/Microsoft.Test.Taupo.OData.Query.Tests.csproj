@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-   
-    <AssemblyName>Microsoft.Test.Taupo.OData.Query.Tests</AssemblyName>
-    
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>   
+    <AssemblyName>Microsoft.Test.Taupo.OData.Query.Tests</AssemblyName>    
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
-
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -22,29 +19,18 @@
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
-
-
   </ItemGroup>
   <ItemGroup>
-    <!--<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />-->
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <!--<Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />-->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query\Microsoft.Test.Taupo.Query.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
- 
-    <ProjectReference Include="..\..\Common\OData\Microsoft.Test.Taupo.OData.csproj" />
- 
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query\Microsoft.Test.Taupo.Query.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" /> 
+    <ProjectReference Include="..\..\Common\OData\Microsoft.Test.Taupo.OData.csproj" /> 
   </ItemGroup>
   <!-- Source files -->
   <ItemGroup>
@@ -90,5 +76,5 @@
     <EmbeddedResource Include="UriParser\ODataUrls.txt" />
   </ItemGroup>
   <ItemGroup />
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

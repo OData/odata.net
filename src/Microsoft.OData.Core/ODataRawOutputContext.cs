@@ -12,9 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Metadata;
     #endregion Namespaces
 
@@ -118,7 +116,6 @@ namespace Microsoft.OData
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously flush the writer.
         /// </summary>
@@ -141,7 +138,6 @@ namespace Microsoft.OData
                 })
                 .FollowOnSuccessWithTask((asyncBufferedStreamFlushTask) => this.messageOutputStream.FlushAsync());
         }
-#endif
 
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
@@ -168,7 +164,6 @@ namespace Microsoft.OData
             throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
@@ -196,7 +191,6 @@ namespace Microsoft.OData
 
             throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
@@ -210,7 +204,6 @@ namespace Microsoft.OData
             return this.CreateODataAsynchronousWriterImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
         /// </summary>
@@ -222,7 +215,6 @@ namespace Microsoft.OData
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataAsynchronousWriterImplementation());
         }
-#endif
 
         /// <summary>
         /// Writes a single value as the message body.
@@ -237,7 +229,6 @@ namespace Microsoft.OData
             this.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a single value as the message body.
         /// </summary>
@@ -255,7 +246,6 @@ namespace Microsoft.OData
                     return this.FlushAsync();
                 });
         }
-#endif
 
         /// <summary>
         /// Initialized a new text writer over the message payload stream.
@@ -302,7 +292,6 @@ namespace Microsoft.OData
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Flushes all buffered data to the underlying stream asynchronously.
         /// </summary>
@@ -318,7 +307,6 @@ namespace Microsoft.OData
                 return TaskUtils.CompletedTask;
             }
         }
-#endif
 
         /// <summary>
         /// Perform the actual cleanup work.

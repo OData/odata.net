@@ -10,9 +10,8 @@ namespace Microsoft.OData
     using System;
     using System.Diagnostics;
     using System.Globalization;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -59,7 +58,6 @@ namespace Microsoft.OData
             return this.CreateResponseMessageImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates a message for writing an async response.
         /// </summary>
@@ -70,7 +68,6 @@ namespace Microsoft.OData
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResponseMessageImplementation());
         }
-#endif
 
         /// <summary>
         /// Flushes the write buffer to the underlying stream.
@@ -82,7 +79,6 @@ namespace Microsoft.OData
             this.rawOutputContext.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -93,7 +89,6 @@ namespace Microsoft.OData
 
             return this.rawOutputContext.FlushAsync();
         }
-#endif
 
         /// <summary>
         /// This method notifies the listener, that an in-stream error is to be written.
@@ -129,14 +124,10 @@ namespace Microsoft.OData
             }
             else
             {
-#if PORTABLELIB
                 if (this.rawOutputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataAsyncWriter_AsyncCallOnSyncWriter);
                 }
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
             }
         }
 

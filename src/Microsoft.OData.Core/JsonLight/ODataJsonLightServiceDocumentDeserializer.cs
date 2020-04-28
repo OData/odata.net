@@ -11,9 +11,7 @@ namespace Microsoft.OData.JsonLight
     using System.Linq;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -67,7 +65,6 @@ namespace Microsoft.OData.JsonLight
             return serviceDocument;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Read a service document.
         /// This method reads the service document from the input and returns
@@ -106,7 +103,6 @@ namespace Microsoft.OData.JsonLight
                         return serviceDocument;
                     });
         }
-#endif
 
         /// <summary>
         /// Read a service document.

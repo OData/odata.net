@@ -1,12 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-
     <AssemblyName>Microsoft.Test.OData.Tests.Client</AssemblyName>
-
-
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -14,22 +10,11 @@
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-
     <NoWarn>$(NoWarn);NU1605</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>
-  </PropertyGroup>
-
-
-  <!--<Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />-->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
 
   <PropertyGroup Condition="'$(BuildInOSS)' == 'true'">
     <DefineConstants>$(DefineConstants);ENABLE_AVRO</DefineConstants>
@@ -45,62 +30,35 @@
     <EmbeddedResource Remove="ServiceWrapper\**" />
     <None Remove="LegacyReferences\**" />
     <None Remove="ServiceWrapper\**" />
-
-  </ItemGroup>
-
-  
+  </ItemGroup>  
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
     <PackageReference Include="FluentAssertions" Version="4.1.0" />
-
     <PackageReference Include="EntityFramework" Version="5.0.0" />
-
-     <!--<PackageReference Include="Microsoft.MadMan" Version="3.1.112712" />--><!--
-    
-    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    -->
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" />
-    <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />--> 
-  </ItemGroup> 
+   </ItemGroup> 
 
   <ItemGroup>
-
-    <Reference Include="..\..\..\..\packages\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.DataDriven.dll" />
-    <Reference Include="..\..\..\..\packages\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Extensions.dll" />
+    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.DataDriven.dll" />
+    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Extensions.dll" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-
     <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-
     <ProjectReference Include="..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-
     <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
-
     <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
-
     <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
-
-    <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj">
-
-      <!--<Aliases>destination</Aliases>-->
-
-    </ProjectReference>
-
+    <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj"/>
     <ProjectReference Include="..\..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj" />
-
     <ProjectReference Include="..\..\..\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj" />
-
     <ProjectReference Include="..\..\..\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj" />
-
     <ProjectReference Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj" />
-
     <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj" />
-
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -126,7 +84,6 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>ODataT4CodeGenerator.cs</LastGenOutput>
     </None>
-
   </ItemGroup>
 
   <ItemGroup>
@@ -252,9 +209,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
 
   <Target Name="AnotherCustomTarget" AfterTargets="CoreCompile">

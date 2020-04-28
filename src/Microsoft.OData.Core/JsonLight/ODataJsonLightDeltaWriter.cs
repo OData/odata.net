@@ -9,9 +9,7 @@ namespace Microsoft.OData.JsonLight
     #region Namespaces
     using System;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -118,7 +116,6 @@ namespace Microsoft.OData.JsonLight
             this.resourceWriter.WriteStart(deltaResourceSet);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a delta resource set.
         /// </summary>
@@ -128,7 +125,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(deltaResourceSet));
         }
-#endif
 
         /// <summary>
         /// Finish writing a delta resource set.
@@ -138,7 +134,6 @@ namespace Microsoft.OData.JsonLight
             this.resourceWriter.WriteEnd();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a delta resource set.
         /// </summary>
@@ -147,7 +142,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteEnd());
         }
-#endif
 
         /// <summary>
         /// Start writing a nested resource info.
@@ -158,7 +152,6 @@ namespace Microsoft.OData.JsonLight
             this.resourceWriter.WriteStart(nestedResourceInfo);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a nested resource info.
         /// </summary>
@@ -168,7 +161,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(nestedResourceInfo));
         }
-#endif
 
         /// <summary>
         /// Start writing an expanded resource set.
@@ -179,7 +171,6 @@ namespace Microsoft.OData.JsonLight
             this.resourceWriter.WriteStart(expandedResourceSet);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing an expanded resource set.
         /// </summary>
@@ -189,7 +180,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(expandedResourceSet));
         }
-#endif
 
         /// <summary>
         /// Start writing a delta resource.
@@ -200,7 +190,6 @@ namespace Microsoft.OData.JsonLight
             this.resourceWriter.WriteStart(deltaResource);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a delta resource.
         /// </summary>
@@ -210,7 +199,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(deltaResource));
         }
-#endif
 
         /// <summary>
         /// Writing a delta deleted resource.
@@ -222,7 +210,6 @@ namespace Microsoft.OData.JsonLight
             this.resourceWriter.WriteEnd();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writing a delta deleted resource.
         /// </summary>
@@ -232,7 +219,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(ODataDeltaDeletedEntry.GetDeletedResource(deltaDeletedEntry)));
         }
-#endif
 
         /// <summary>
         /// Writes a delta link.
@@ -243,7 +229,6 @@ namespace Microsoft.OData.JsonLight
             this.resourceWriter.WriteDeltaLink(deltaLink);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a delta link.
         /// </summary>
@@ -253,7 +238,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteDeltaLink(deltaLink));
         }
-#endif
 
         /// <summary>
         /// Writing a delta deleted link.
@@ -264,7 +248,6 @@ namespace Microsoft.OData.JsonLight
             this.resourceWriter.WriteDeltaDeletedLink(deltaDeletedLink);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writing a delta deleted link.
         /// </summary>
@@ -274,7 +257,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteDeltaDeletedLink(deltaDeletedLink));
         }
-#endif
 
         /// <summary>
         /// Flushes the write buffer to the underlying stream.
@@ -284,7 +266,6 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightOutputContext.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -293,7 +274,6 @@ namespace Microsoft.OData.JsonLight
         {
             return this.jsonLightOutputContext.FlushAsync();
         }
-#endif
 
         /// <summary>
         /// This method notifies the listener, that an in-stream error is to be written.

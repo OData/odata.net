@@ -217,17 +217,8 @@ namespace Microsoft.OData.Client
         /// <summary>Synchronous web request</summary>
         internal void ExecuteQuery()
         {
-            string msg = "ttttt---   ";
-
-            if (null != this.Failure)
-            {
-                //throw new Exception(msg + " " + this.Failure.Message);
-                throw this.Failure;
-            }
-
             try
             {
-                msg += "1";
                 if (this.requestContentStream != null && this.requestContentStream.Stream != null)
                 {
                     this.Request.SetRequestStream(this.requestContentStream);
@@ -247,18 +238,9 @@ namespace Microsoft.OData.Client
                     }
                 }
 #endif
-                msg += "2 ";
-
-
-                
-
                 IODataResponseMessage response = null;
                 response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
-
-                //throw new Exception(msg +"  "+ response.StatusCode);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
-
-        
 
                 if (HttpStatusCode.NoContent != this.StatusCode)
                 {
@@ -268,7 +250,7 @@ namespace Microsoft.OData.Client
                         {
                             Stream copy = this.GetAsyncResponseStreamCopy();
                             this.outputResponseStream = copy;
-                           
+
                             Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
 
                             long copied = WebUtil.CopyStream(stream, copy, ref buffer);
@@ -288,9 +270,6 @@ namespace Microsoft.OData.Client
                         }
                     }
                 }
-
-              
-
             }
             catch (Exception e)
             {
@@ -301,12 +280,10 @@ namespace Microsoft.OData.Client
             {
                 this.SetCompleted();
                 this.CompletedRequest();
-               
             }
 
             if (this.Failure != null)
             {
-                //throw new Exception(msg+" "+this.Failure.Message);
                 throw this.Failure;
             }
         }
@@ -491,7 +468,6 @@ namespace Microsoft.OData.Client
         {
             this.responseMessage = response;
             this.statusCode = (HttpStatusCode)response.StatusCode;
-
             string stringContentLength = response.GetHeader(XmlConstants.HttpContentLength);
             if (stringContentLength != null)
             {

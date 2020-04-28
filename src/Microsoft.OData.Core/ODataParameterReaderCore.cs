@@ -12,9 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -187,7 +185,6 @@ namespace Microsoft.OData
             return this.InterceptException(this.ReadSynchronously);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next item from the message payload.
         /// </summary>
@@ -197,7 +194,6 @@ namespace Microsoft.OData
             this.VerifyCanRead(false);
             return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(ODataParameterReaderState.Exception, null, null));
         }
-#endif
 
         /// <summary>
         /// This method notifies the implementer of this interface that the created reader is in Exception state.
@@ -424,7 +420,6 @@ this.State == ODataParameterReaderState.Collection,
             return this.ReadImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -436,7 +431,6 @@ this.State == ODataParameterReaderState.Collection,
             // NOTE: once we switch to fully async reading this will have to change
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
         }
-#endif
 
         /// <summary>
         /// Gets the corresponding create reader method name for the given state.
@@ -531,11 +525,7 @@ this.State == ODataParameterReaderState.Collection,
             }
             else
             {
-#if PORTABLELIB
                 this.VerifyAsynchronousCallAllowed();
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
             }
         }
 
@@ -550,7 +540,6 @@ this.State == ODataParameterReaderState.Collection,
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Verifies that an asynchronous operation is allowed on this reader.
         /// </summary>
@@ -561,7 +550,6 @@ this.State == ODataParameterReaderState.Collection,
                 throw new ODataException(Strings.ODataParameterReaderCore_AsyncCallOnSyncReader);
             }
         }
-#endif
 
         /// <summary>
         /// A parameter reader scope; keeping track of the current reader state and an item associated with this state.

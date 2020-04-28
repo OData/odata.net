@@ -10,9 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -217,7 +215,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
@@ -229,7 +227,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a delta resource set.
@@ -243,7 +240,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
         /// </summary>
@@ -255,7 +252,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource.
@@ -269,7 +265,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
@@ -281,7 +277,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
@@ -294,7 +289,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
         /// </summary>
@@ -305,7 +300,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource into a Uri operation parameter.
@@ -319,7 +313,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource into a Uri operation parameter.
         /// </summary>
@@ -331,7 +325,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource set into a Uri operation parameter.
@@ -345,7 +338,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously Creates an <see cref="ODataWriter" /> to write a resource set into a Uri operation parameter.
         /// </summary>
@@ -357,7 +350,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
@@ -370,7 +362,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
         /// </summary>
@@ -381,7 +373,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
-#endif
 
         /// <summary>
         /// Writes an <see cref="ODataProperty"/> as message payload.
@@ -393,7 +384,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
@@ -404,7 +395,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
-#endif
 
         /// <summary>
         /// Writes an <see cref="ODataError"/> as the message payload.
@@ -420,7 +410,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously writes an <see cref="ODataError"/> as the message payload.
         /// </summary>
@@ -435,7 +425,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
-#endif
 
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
@@ -457,7 +446,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
@@ -480,7 +469,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
@@ -492,7 +480,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
         /// </summary>
@@ -502,7 +490,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
@@ -516,7 +503,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
@@ -528,7 +515,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
@@ -544,7 +530,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
@@ -558,7 +544,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
-#endif
 
         /// <summary>
         /// Writes a service document with the specified <paramref name="serviceDocument"/>
@@ -571,7 +556,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/>
         /// as message payload.
@@ -583,7 +568,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
-#endif
 
         /// <summary>
         /// Writes the result of a $ref query as the message payload.
@@ -595,7 +579,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously writes the result of a $ref query as the message payload.
         /// </summary>
@@ -606,7 +590,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
-#endif
 
         /// <summary>
         /// Writes a singleton result of a $ref query as the message payload.
@@ -618,7 +601,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously writes a singleton result of a $ref query as the message payload.
         /// </summary>
@@ -629,7 +612,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
-#endif
 
         /// <summary>
         /// Writes a single value as the message body.
@@ -641,7 +623,7 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously writes a single value as the message body.
         /// </summary>
@@ -652,7 +634,6 @@ namespace Microsoft.OData
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
-#endif
 
         /// <summary>
         /// Writes the metadata document as the message body.

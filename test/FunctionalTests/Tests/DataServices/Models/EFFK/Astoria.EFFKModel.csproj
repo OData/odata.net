@@ -1,16 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
- 
-    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
- 
+  <PropertyGroup> 
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls> 
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <KeyOriginatorFile>..\..\Astoria.Test.Key.snk</KeyOriginatorFile>
-    <AssemblyName>Astoria.EFFKModel</AssemblyName>
-   
+    <AssemblyName>Astoria.EFFKModel</AssemblyName>   
     <CreateMetaAssembly>false</CreateMetaAssembly>
     <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
-
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -29,8 +25,7 @@
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
-  
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />  
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomObjectContext.cs" />
@@ -43,5 +38,5 @@
     <EmbeddedResource Include="CustomObjectContext.ssdl" />
     <EmbeddedResource Include="CustomObjectContext1.csdl" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

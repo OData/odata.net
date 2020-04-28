@@ -17,7 +17,7 @@
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
-  <!--<Import Project="..\Build.props" />-->
+
   <ItemGroup>
     <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft\OData\Service\Serializers\PayloadMetadataKind.cs">
       <Link>PayloadMetadataKind.cs</Link>
@@ -58,7 +58,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <!--<Reference Include="$(VisualStudioInstallLocation)PrivateAssemblies\FxCopSdk.dll" />-->
     <Reference Include="$(VS140COMNTOOLS)..\IDE\PrivateAssemblies\Microsoft.Cci.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -66,5 +65,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

@@ -16,7 +16,6 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-
     <NoWarn>$(NoWarn);NU1605</NoWarn>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
@@ -26,35 +25,26 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="4.1.0" />
-
     <PackageReference Include="EntityFramework" Version="5.0.0" />
-
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    
+    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />    
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
- 
-    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
- 
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" /> 
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" /> 
     <Reference Include="Microsoft.Hadoop.Avro">
-      <HintPath>..\..\..\..\..\packages\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll</HintPath>
+      <HintPath>..\..\..\..\..\CommonAssemblies\Microsoft.Hadoop.Avro.1.4.0.0\lib\net40\Microsoft.Hadoop.Avro.dll</HintPath>
     </Reference>
  
-    <Reference Include="System.ServiceModel" />
-   
-    <Reference Include="System.ServiceModel.Web" />
-   
-    <Reference Include="Microsoft.CSharp" />
-    
+    <Reference Include="System.ServiceModel" />   
+    <Reference Include="System.ServiceModel.Web" />   
+    <Reference Include="Microsoft.CSharp" />    
   </ItemGroup>
 
   <ItemGroup>
@@ -89,5 +79,4 @@
     <Compile Include="VCard\VCardReader.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)" />
   </ItemGroup>
-
 </Project>

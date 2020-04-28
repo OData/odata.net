@@ -11,9 +11,8 @@ namespace Microsoft.OData.MultipartMixed
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     internal sealed class ODataMultipartMixedBatchWriter : ODataBatchWriter
@@ -109,7 +108,6 @@ namespace Microsoft.OData.MultipartMixed
             this.DisposeBatchWriterAndSetContentStreamRequestedState();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
@@ -127,7 +125,6 @@ namespace Microsoft.OData.MultipartMixed
             return this.RawOutputContext.FlushBuffersAsync()
                 .FollowOnSuccessWith(task => this.DisposeBatchWriterAndSetContentStreamRequestedState());
         }
-#endif
 
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
@@ -169,7 +166,6 @@ namespace Microsoft.OData.MultipartMixed
             this.RawOutputContext.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -178,7 +174,6 @@ namespace Microsoft.OData.MultipartMixed
         {
             return this.RawOutputContext.FlushAsync();
         }
-#endif
 
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.

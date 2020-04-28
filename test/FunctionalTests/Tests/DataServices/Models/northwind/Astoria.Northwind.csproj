@@ -4,11 +4,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
-    <AssemblyName>Astoria.Northwind</AssemblyName>
-  
+    <AssemblyName>Astoria.Northwind</AssemblyName>  
     <CreateMetaAssembly>false</CreateMetaAssembly>
     <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
-
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -17,8 +15,6 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <!--<UpgradeBackupLocation>
-    </UpgradeBackupLocation>-->
     <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <Import Project="..\Build.props" />
@@ -34,5 +30,5 @@
     <Compile Include="Northwind.ObjectLayer.cs" />
     <Compile Include="Northwind.ObjectLayerPartial.cs" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

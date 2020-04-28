@@ -13,9 +13,7 @@ namespace Microsoft.OData
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -212,7 +210,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataResourceSetWriter(entitySet, resourceType));
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
@@ -253,7 +251,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet,
                 (context) => context.CreateODataResourceSetWriterAsync(entitySet, entityType));
         }
-#endif
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
         /// <returns>The created writer.</returns>
@@ -286,7 +283,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataDeltaResourceSetWriter(entitySet, resourceType));
         }
 
-#if PORTABLELIB
+
 
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
@@ -318,7 +315,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet,
                 (context) => context.CreateODataDeltaResourceSetWriterAsync(entitySet, entityType));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
@@ -335,7 +331,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataDeltaWriter(entitySet, entityType));
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
@@ -350,7 +346,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet,
                 (context) => context.CreateODataDeltaWriterAsync(entitySet, entityType));
         }
-#endif
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>The created writer.</returns>
@@ -383,7 +378,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataResourceWriter(navigationSource, resourceType));
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceWriterAsync()
@@ -414,7 +409,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Resource,
                 (context) => context.CreateODataResourceWriterAsync(navigationSource, resourceType));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a Uri operation parameter.
@@ -430,7 +424,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataUriParameterResourceWriter(navigationSource, resourceType));
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write Uri operation parameter.
         /// </summary>
@@ -444,7 +438,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Resource,
                 (context) => context.CreateODataUriParameterResourceWriterAsync(navigationSource, resourceType));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a Uri operation parameter.
@@ -460,7 +453,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataUriParameterResourceSetWriter(entitySetBase, resourceType));
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write Uri operation parameter.
         /// </summary>
@@ -474,7 +467,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet,
                 (context) => context.CreateODataUriParameterResourceSetWriterAsync(entitySetBase, resourceType));
         }
-#endif
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>The created collection writer.</returns>
@@ -496,7 +488,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataCollectionWriter(itemTypeReference));
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>A running task for the created collection writer.</returns>
         public Task<ODataCollectionWriter> CreateODataCollectionWriterAsync()
@@ -516,7 +508,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Collection,
                 (context) => context.CreateODataCollectionWriterAsync(itemTypeReference));
         }
-#endif
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>The created batch writer.</returns>
@@ -528,7 +519,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataBatchWriter());
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>A running task for the created batch writer.</returns>
         public Task<ODataBatchWriter> CreateODataBatchWriterAsync()
@@ -538,7 +529,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Batch,
                 (context) => context.CreateODataBatchWriterAsync());
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
@@ -553,7 +543,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataParameterWriter(operation));
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
         /// </summary>
@@ -566,7 +556,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Parameter,
                 (context) => context.CreateODataParameterWriterAsync(operation));
         }
-#endif
 
         /// <summary> Writes a service document with the specified <paramref name="serviceDocument" /> as the message payload. </summary>
         /// <param name="serviceDocument">The service document to write.</param>
@@ -578,7 +567,7 @@ namespace Microsoft.OData
                 (context) => context.WriteServiceDocument(serviceDocument));
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously writes a service document with the specified <paramref name="serviceDocument" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <param name="serviceDocument">The service document to write.</param>
@@ -589,7 +578,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.ServiceDocument,
                 (context) => context.WriteServiceDocumentAsync(serviceDocument));
         }
-#endif
 
         /// <summary> Writes an <see cref="T:Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <param name="property">The property to write.</param>
@@ -601,7 +589,7 @@ namespace Microsoft.OData
                 (context) => context.WriteProperty(property));
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the property.</returns>
         /// <param name="property">The property to write</param>
@@ -612,7 +600,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Property,
                 (context) => context.WritePropertyAsync(property));
         }
-#endif
 
         /// <summary> Writes an <see cref="T:Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <param name="error">The error to write.</param>
@@ -638,7 +625,7 @@ namespace Microsoft.OData
             this.outputContext.WriteInStreamError(error, includeDebugInformation);
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <param name="error">The error to write.</param>
@@ -662,7 +649,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteInStreamError(error);
             return this.outputContext.WriteInStreamErrorAsync(error, includeDebugInformation);
         }
-#endif
 
         /// <summary> Writes the result of a $ref query as the message payload. </summary>
         /// <param name="links">The entity reference links to write as message payload.</param>
@@ -674,7 +660,7 @@ namespace Microsoft.OData
                 (context) => context.WriteEntityReferenceLinks(links));
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously writes the result of a $ref query as the message payload. </summary>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <param name="links">The entity reference links to write as message payload.</param>
@@ -685,7 +671,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.EntityReferenceLinks,
                 (context) => context.WriteEntityReferenceLinksAsync(links));
         }
-#endif
 
         /// <summary> Writes a singleton result of a $ref query as the message payload. </summary>
         /// <param name="link">The entity reference link to write as the message payload.</param>
@@ -697,7 +682,7 @@ namespace Microsoft.OData
                 (context) => context.WriteEntityReferenceLink(link));
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously writes a singleton result of a $ref query as the message payload. </summary>
         /// <returns>A running task representing the writing of the link.</returns>
         /// <param name="link">The link result to write as the message payload.</param>
@@ -708,7 +693,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.EntityReferenceLink,
                 (context) => context.WriteEntityReferenceLinkAsync(link));
         }
-#endif
 
         /// <summary> Writes a single value as the message body. </summary>
         /// <param name="value">The value to write.</param>
@@ -720,7 +704,7 @@ namespace Microsoft.OData
                 (context) => context.WriteValue(value));
         }
 
-#if PORTABLELIB
+
         /// <summary> Asynchronously writes a single value as the message body. </summary>
         /// <returns>A running task representing the writing of the value.</returns>
         /// <param name="value">The value to write.</param>
@@ -731,7 +715,6 @@ namespace Microsoft.OData
                 payloadKind,
                 (context) => context.WriteValueAsync(value));
         }
-#endif
 
         /// <summary> Writes the metadata document as the message body. </summary>
         public void WriteMetadataDocument()
@@ -786,11 +769,7 @@ namespace Microsoft.OData
 
         private static IEdmModel GetModel(IServiceProvider container)
         {
-#if PORTABLELIB
             return container == null ? EdmCoreModel.Instance : container.GetRequiredService<IEdmModel>();
-#else
-            return EdmCoreModel.Instance;
-#endif
         }
 
         /// <summary>
@@ -1296,7 +1275,7 @@ namespace Microsoft.OData
             return writeFunc(this.outputContext);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
@@ -1347,6 +1326,5 @@ namespace Microsoft.OData
                         return writeFunc(this.outputContext);
                     });
         }
-#endif
     }
 }

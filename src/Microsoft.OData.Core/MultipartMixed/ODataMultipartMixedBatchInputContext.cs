@@ -9,9 +9,8 @@ namespace Microsoft.OData.MultipartMixed
     #region Namespaces
     using System;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -60,7 +59,6 @@ namespace Microsoft.OData.MultipartMixed
             return this.CreateBatchReaderImplementation(/*synchronous*/ true);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
@@ -70,7 +68,6 @@ namespace Microsoft.OData.MultipartMixed
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
         }
-#endif
 
         /// <summary>
         /// Create a <see cref="ODataBatchReader"/>.

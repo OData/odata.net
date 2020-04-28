@@ -8,9 +8,7 @@ namespace Microsoft.OData
 {
     using System.Diagnostics;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Wrapper for TextReader to listen for dispose.
@@ -83,7 +81,6 @@ namespace Microsoft.OData
 
         #region asyncMethods
 
-#if PORTABLELIB
         /// <inheritdoc/>
         public override Task<int> ReadAsync(char[] buffer, int index, int count)
         {
@@ -108,7 +105,6 @@ namespace Microsoft.OData
             return this.textReader.ReadToEndAsync();
         }
 
-#endif
         #endregion
 
         /// <summary>

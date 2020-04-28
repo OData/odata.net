@@ -8,9 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System.Collections.Generic;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using System.Text;
     using Microsoft.OData.Json;
     using Microsoft.OData.MultipartMixed;
@@ -101,7 +99,6 @@ namespace Microsoft.OData
         /// <returns>The newly created output context.</returns>
         public abstract ODataOutputContext CreateOutputContext(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
@@ -130,7 +127,6 @@ namespace Microsoft.OData
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <returns>Task which represents the pending create operation.</returns>
         public abstract Task<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
-#endif
 
         /// <summary>
         /// Returns the appropriate content-type for this format.

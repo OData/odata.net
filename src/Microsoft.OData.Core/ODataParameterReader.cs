@@ -8,9 +8,8 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary> Base class for OData parameter readers. </summary>
@@ -73,10 +72,8 @@ namespace Microsoft.OData
         /// <returns>true if more items were read; otherwise false.</returns>
         public abstract bool Read();
 
-#if PORTABLELIB
         /// <summary> Asynchronously reads the next item from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         public abstract Task<bool> ReadAsync();
-#endif
     }
 }

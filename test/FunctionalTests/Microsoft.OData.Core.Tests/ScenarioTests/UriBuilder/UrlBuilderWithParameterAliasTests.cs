@@ -35,10 +35,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -58,16 +58,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.True(node.TypeReference.IsEnum());
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", node.TypeReference.Definition.FullTypeName());
 
-            var enumValue = Assert.IsType< ODataEnumValue>(Assert.IsType<ConstantNode>(aliasNodes["@p1"]).Value);
+            var enumValue = Assert.IsType<ODataEnumValue>(Assert.IsType<ConstantNode>(aliasNodes["@p1"]).Value);
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
             Assert.Equal("22", enumValue.Value);
             Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -86,10 +86,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -106,10 +106,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -128,10 +128,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.NotEqual(fullUri, actualUri);
+            Assert.NotEqual(fullUri, actualUri, new UriComparer<Uri>());
         }
         #endregion
 
@@ -154,10 +154,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = odataUriParser.ParseUri();
 
             var rightNode = Assert.IsType<BinaryOperatorNode>(odataUri.Filter.Expression).Right;
-            NamedFunctionParameterNode p = Assert.IsType<NamedFunctionParameterNode>(Assert.IsType< SingleResourceFunctionCallNode>(rightNode).Parameters.First());
+            NamedFunctionParameterNode p = Assert.IsType<NamedFunctionParameterNode>(Assert.IsType<SingleResourceFunctionCallNode>(rightNode).Parameters.First());
             ParameterAliasNode aliasNode = Assert.IsType<ParameterAliasNode>(p.Value);
             Assert.Equal("@p1", aliasNode.Alias);
             Assert.True(aliasNode.TypeReference.IsEnum());
@@ -184,10 +184,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -214,10 +214,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -238,10 +238,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -262,10 +262,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -287,10 +287,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -311,10 +311,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Null(aliasNodes["@p2"]);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -351,10 +351,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri,new UriComparer<Uri>());
         }
 
         [Fact]
@@ -381,10 +381,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUri.ParameterAliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -413,10 +413,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri expectedUri = new Uri("http://gobbledygook/People/$filter(ID%20eq%201)?$filter=%40p1&@p1=true");
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(expectedUri, actualUri);
+            Assert.Equal(expectedUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(expectedUri, actualUri);
+            Assert.Equal(expectedUri, actualUri, new UriComparer<Uri>());
         }
         #endregion
 
@@ -437,10 +437,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -507,10 +507,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUri.ParameterAliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(fullUri, actualUri);
+            Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -532,10 +532,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUri.ParameterAliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"), actualUri);
+            Assert.Equal(new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"), actualUri, new UriComparer<Uri>());
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"), actualUri);
+            Assert.Equal(new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"), actualUri, new UriComparer<Uri>());
         }
         #endregion
 
