@@ -10,9 +10,7 @@ namespace Microsoft.OData.JsonLight
 
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
 
@@ -73,7 +71,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the collection reader logic when in state 'Start'.
         /// </summary>
@@ -100,7 +97,6 @@ namespace Microsoft.OData.JsonLight
                 .FollowOnSuccessWith(t =>
                     this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector));
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionStart'.
@@ -119,7 +115,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtCollectionStartImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionStart'.
         /// </summary>
@@ -136,7 +131,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtCollectionStartImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Value'.
@@ -155,7 +149,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtValueImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Value'.
         /// </summary>
@@ -172,7 +165,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtValueImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionEnd'.
@@ -187,7 +179,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtCollectionEndImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionEnd'.
         /// </summary>
@@ -200,7 +191,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtCollectionEndImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Implementation of the collection reader logic when in state 'Start'.

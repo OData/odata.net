@@ -1,0 +1,1547 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.VisualStudio.Uml.Interfaces</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.IAcceptEventAction">
+      <summary>Waits for the occurrence of an event meeting a specified condition. If there is an incoming flow, the action waits after a thread has arrived, and the token continues after the event occurs. If there is no incoming flow, the action generates a new token for each occurrence of the event. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IAcceptEventAction.IsUnmarshall">
+      <summary>True if there can be multiple output pins and the data is unmarshalled onto them. False if there can only be one output pin and the input data is all sent to it. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IAcceptEventAction.Results">
+      <summary>Gets the received event objects or their attributes. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.IAction">
+      <summary>An operation or task that is performed by an object, person, system, business, or other actor. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IAction.Context">
+      <summary>Gets the classifier whose behavior is partly described by this Action. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IAction.Inputs">
+      <summary>Gets the inputs for the action. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IAction.LocalPostconditions">
+      <summary>Gets the Constraint that should be satisfied when execution is completed. May be null. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IAction.LocalPreconditions">
+      <summary>Gets the Constraint that should be satisfied when execution is started. May be null. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IAction.Outputs">
+      <summary>Gets the outputs of the action. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.ICallAction">
+      <summary>An action that invokes behavior and receives return values. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.ICallAction.IsSynchronous">
+      <summary>True if the call is synchronous and the caller waits for completion of the invoked behavior. False if the call is asynchronous and the caller proceeds immediately and does not expect a return value. Default = true. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.ICallAction.Results">
+      <summary>Gets the Pins on which the results of performing the invocation appear. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.ICallBehaviorAction">
+      <summary>Invokes a behavior directly, without an intervening behavioral feature. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.ICallBehaviorAction.Behavior">
+      <summary>The invoked behavior. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.ICallOperationAction">
+      <summary>Sends an operation call request to a specified object, where it may cause the invocation of associated behavior. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.ICallOperationAction.Operation">
+      <summary>The operation that is invoked when the action executes. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.ICallOperationAction.Target">
+      <summary>Gets the pin that accepts the target object that should execute the operation. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.ICreateObjectAction">
+      <summary>Creates objects. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.IInputPin">
+      <summary>Holds input values to be consumed by its Action. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.IInvocationAction">
+      <summary>Invokes an operation on an object or sends a message to a port of a component. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IInvocationAction.Arguments">
+      <summary>Gets the pins on which the argument values are input. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IInvocationAction.OnPort">
+      <summary>If not null, the operation is invoked on this port of the receiving object. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.IOpaqueAction">
+      <summary>An action with implementation-specific semantics. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IOpaqueAction.Body">
+      <summary>Specifies the action in one or more languages. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IOpaqueAction.InputValues">
+      <summary>Gets the Inputs for the action. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IOpaqueAction.Language">
+      <summary>The language of the expression in Body. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IOpaqueAction.OutputValues">
+      <summary>Gets the Outputs of the action. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.IOutputPin">
+      <summary>Holds output values produced by its Action. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.IPin">
+      <summary>A parameter or connection on which control and data can flow in or out of an action. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IPin.Action">
+      <summary>The action that owns this pin. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.IPin.IsControl">
+      <summary>True if this Pin is connected to a control flow. False if it is connected to an object flow. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Actions.ISendSignalAction">
+      <summary>Creates a signal or message from its inputs, and sends it to a specified target object. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Actions.ISendSignalAction.Target">
+      <summary>Gets the Pin that accepts the target object to which the signal is sent. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.ExpansionKind">
+      <summary>ExpansionKind is an enumeration type used to specify how multiple executions of an expansion region interact.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ExpansionKind.Parallel">
+      <summary>The executions are independent. They may be executed concurrently.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ExpansionKind.Iterative">
+      <summary>The executions are dependent and must be executed one at a time, in order of the collection elements.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ExpansionKind.Stream">
+      <summary>A stream of collection elements flows into a single execution, in order of the collection elements.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IActivity">
+      <summary>A sequence of actions that partly defines the behavior of an object. Usually forms part of a classifier. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivity.Edges">
+      <summary>Gets the Edges connecting Nodes in this Activity. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivity.IsReadOnly">
+      <summary>True if this activity must not make any changes to variables outside the activity or to objects. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivity.IsSingleExecution">
+      <summary>True if repeated invocations generate new tokens (threads) in the same activity instance. False if each invocation instantiates a new activity. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivity.Nodes">
+      <summary>Gets the Nodes (actions, objects, and other nodes) that belong to the Activity. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IActivityEdge">
+      <summary>The base class of edges (that is, arrows) between two nodes in an Activity. Control and object tokens can flow along an edge from source to target. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivityEdge.Guard">
+      <summary>A Boolean expression that determines whether this edge can be traversed. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivityEdge.Source">
+      <summary>Node from which tokens are taken. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivityEdge.Target">
+      <summary>Node to which tokens are presented. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IActivityFinalNode">
+      <summary>Stops all flows in an Activity. Every thread in the activity terminates when one token arrives at an ActivityFinalNode. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IActivityGroup">
+      <summary>A set of nodes and edges in an activity. Nodes and edges can belong to more than one group. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IActivityNode">
+      <summary>A point in the flow of an Activity, such as an Action, Fork, or Object Node. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivityNode.Activity">
+      <summary>Activity that owns the node. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivityNode.Incomings">
+      <summary>Edges that have the node as target. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivityNode.Outgoings">
+      <summary>Edges that have the node as source. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IActivityParameterNode">
+      <summary>An object node for inputs or outputs to an Activity. If the Activity defines the detail of an Action in another Activity, the Pins of the Action should match the ActivityParameterNodes of the Activity. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IActivityParameterNode.Parameter">
+      <summary>The parameter for which the node accepts or provides values. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IControlFlow">
+      <summary>An edge in an activity that can carry control tokens. When the activity at the source end of a control flow finishes, a control token is made available at the target end. Typically this enables the target activity to begin. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IControlFlow.SourceActivityNode">
+      <summary>The node from which tokens flow on this edge. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IControlFlow.TargetActivityNode">
+      <summary>The node to which tokens flow on this edge. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IControlNode">
+      <summary>An activity node that coordinates flows. Tokens (threads of control) do not wait in a control node, but pass instantly through. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IDecisionNode">
+      <summary>A branch in a flow in an Activity. A thread passes from the input to one of the outputs. The choice may be constrained by Guards on the outgoing connectors. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IExecutableNode">
+      <summary>An activity node that performs a task. The task begins after a token (thread of control) has arrived on every incoming flow. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IFinalNode">
+      <summary>The end of a flow in an Activity. When a thread arrives at a FinalNode, it terminates. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IForkNode">
+      <summary>Splits a flow into multiple concurrent flows. When a token arrives at the input, a token emerges from each of the outputs. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IInitialNode">
+      <summary>The start of an Activity. When the activity is invoked, a token is created and emerges on the output flow. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IJoinNode">
+      <summary>Synchronizes concurrent flows. A token emerges from the output of a Join only when the join condition is fulfilled. By default, the condition is that there is a token waiting on each input. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IJoinNode.IsCombineDuplicate">
+      <summary>True if tokens carrying identical objects are merged by the Join. Default = true. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IMergeNode">
+      <summary>Brings together multiple alternate flows. When a token arrives at any input, it emerges from the output. A merge is not used to synchronize concurrent flows but to accept one among several alternate flows. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IObjectFlow">
+      <summary>An edge in an activity that can carry object tokens. These tokens can contain objects. The </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectFlow.IsMulticast">
+      <summary>True if a token sent from the source action executed by one object can be received by multiple objects executing the target action. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectFlow.IsMultireceive">
+      <summary>True if tokens sent from multiple objects executing the source action can be received by a single object executing the target action. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectFlow.Selection">
+      <summary>If defined, this Behavior determines which objects can pass through the flow. Other objects are deleted. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectFlow.SourceActivityNode">
+      <summary>The activity at the source end of the flow. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectFlow.TargetActivityNode">
+      <summary>The activity at the target end of the flow. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectFlow.Transformation">
+      <summary>If defined, this Behavior can change or replace objects passing through the flow. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IObjectNode">
+      <summary>A node in an activity diagram that can specify the type of data sent between actions, and can also define data filters. Data and control tokens can be buffered. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectNode.InStates">
+      <summary>If not empty, this node accepts only objects in the specified states. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectNode.IsControlType">
+      <summary>True if the node should be connected to control flows rather than data flows. The node can be used to specify that one or more control tokens can be buffered. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectNode.Ordering">
+      <summary>Specifies the ordering in which tokens will be processed. For example if FIFO, tokens will be output in the order that they arrive. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectNode.Selection">
+      <summary>If defined, this Behavior chooses which object to output next, from the objects buffered in the node. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Activities.IObjectNode.UpperBound">
+      <summary>The maximum number of tokens allowed in the node. '*' means there is no limit. Objects cannot flow into the node if the upper bound is reached. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.IState">
+      <summary>A State. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.ObjectNodeOrderingKind">
+      <summary>Describes how objects are ordered as they pass through an object node.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ObjectNodeOrderingKind.Unordered">
+      <summary>There is no constraint.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ObjectNodeOrderingKind.Ordered">
+      <summary>The order in which objects pass through is defined by a Selection Behavior.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ObjectNodeOrderingKind.Lifo">
+      <summary>Objects are processed in the reverse order to which they arrive.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ObjectNodeOrderingKind.Fifo">
+      <summary>Objects are processed strictly in the order in which they arrive.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Activities.ParameterEffectKind">
+      <summary>Describes the effect an activity has on its parameters.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ParameterEffectKind.Create">
+      <summary>Creates instances that flow out of this parameter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ParameterEffectKind.Read">
+      <summary>Reads instances that flow into this parameter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ParameterEffectKind.Update">
+      <summary>Updates instances that flow into this parameter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Activities.ParameterEffectKind.Delete">
+      <summary>Deletes instances that flow into this parameter.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IClassifierTemplateParameter">
+      <summary>A value in the definition of a template that can be bound to a class. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IClassifierTemplateParameter.AllowSubstitutable">
+      <summary>False if the bound type must be the ConstrainingClassifier or one of its specializations. True if the bound type can alternatively be a class that realizes the interface specified as the ConstrainingClassifier. Default = True. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IClassifierTemplateParameter.ConstrainingClassifier">
+      <summary>If not empty, the bound type must be one of these classifiers or one of their specializations or, if AllowSubstitutable is true, any type that is a realization of one of these classifiers. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IClassifierTemplateParameter.DefaultClassifier">
+      <summary>If not empty, the classifier that is used by default if no argument is provided during template binding. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IModel">
+      <summary>A partial description of a physical system, process, or software. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IOperationTemplateParameter">
+      <summary>A value in the definition of a template that can be bound to an operation. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IParameterableElement">
+      <summary>An element that can be a parameter in a template, or an argument in a template binding. Classifiers and ValueSpecifications are ParameterableElements. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IParameterableElement.OwningTemplateParameter">
+      <summary>If not null, this element is defined as a parameter in a template. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IParameterableElement.TemplateParameter">
+      <summary>If not null, this element is defined as a parameter in a template. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IRedefinableTemplateSignature">
+      <summary>A TemplateSignature that can be extended with additional parameters. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.IRedefinableTemplateSignature.Classifier">
+      <summary>Gets the classifier that owns this template signature. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateableElement">
+      <summary>An element that can be defined as a template. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateableElement.TemplateBindings">
+      <summary>Gets the Bindings in which this element is used. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateBinding">
+      <summary>Specifies substitutions of arguments for the parameters of a template. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateBinding.BoundElement">
+      <summary>Gets the element that is bound by this binding. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateBinding.ParameterSubstitutions">
+      <summary>Gets the parameter substitutions owned by this template binding. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateBinding.Signature">
+      <summary>The template signature for the template that is the target of the binding. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter">
+      <summary>A value in the definition of a template that can be replaced when the template is bound. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter.Default">
+      <summary>Gets the element that is the default for this formal template parameter. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter.NonOwnedDefault">
+      <summary>A default that is not owned by this template parameter. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter.NonOwnedParameteredElement"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter.OwnedDefault">
+      <summary>The element that is owned by this template parameter in order to provide a default. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter.OwnedParameterableElement"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter.ParameteredElement">
+      <summary>Gets the element that is exposed by this template parameter. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameter.Signature">
+      <summary>The template signature that owns this template parameter. Subsets Element::owner. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameterSubstitution">
+      <summary>Binds an element such as a class or an operation to a template parameter. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameterSubstitution.Actuals">
+      <summary>Gets the element that is the actual argument for this substitution. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameterSubstitution.Formal">
+      <summary>The formal template parameter that is associated with this substitution. Issue 9398 - Change multiplicity to 0..1 </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameterSubstitution.OwnedActuals">
+      <summary>Gets the actual parameter that is owned by this substitution. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateParameterSubstitution.TemplateBinding">
+      <summary>The template binding that owns this substitution. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateSignature">
+      <summary>A list of TemplateParameters for a Template. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateSignature.OwnedParameters">
+      <summary>Gets the Parameters that are owned by this template signature. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.AuxiliaryConstructs.ITemplateSignature.Signature">
+      <summary>Gets the signature of the template as a string. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.AggregationKind">
+      <summary>DomainEnumeration: AggregationKind
+            Describes the sharing characteristics of an Association.
+            The precise interpretation is open to local convention.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.AggregationKind.None">
+      <summary>The Association is a general relationship between types.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.AggregationKind.Shared">
+      <summary>Instances of the source type contain references to instances of the target type.
+            More than one source may refer to each target.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.AggregationKind.Composite">
+      <summary>Instances of the source type are composed of instances of the target type. 
+            A target instance cannot be shared between sources.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IAbstraction">
+      <summary>A relationship between two elements that represent the same concept at different levels of detail. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IAssociation">
+      <summary>An association defines a class of links between instances of two or more types. Each type related by the association has a property that provides access to the link. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IAssociation.EndTypes">
+      <summary>Gets the types related by the Association. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IAssociation.IsDerived">
+      <summary>True if this association's links are defined by reference to other associations or attributes. For example, the association Grandparent is derived from Parent. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IAssociation.MemberEnds">
+      <summary>Gets the properties that are defined on the type at each end of the association. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IAssociation.NavigableOwnedEnds">
+      <summary>Gets the Owned Ends that are navigable. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IAssociation.OwnedEnds">
+      <summary>Gets the Properties that are owned by the association itself. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IBehavioralFeature">
+      <summary>A feature that describes a response to messages or events. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IBehavioralFeature.Concurrency">
+      <summary>Defines how calls from separate threads are processed. Sequential = the feature is not designed to handle concurrent calls; Guarded = calls will be blocked so that only one is processed at a time; concurrent = multiple calls can proceed concurrently. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IBehavioralFeature.IsAbstract">
+      <summary>True if this is a partial description intended to be extended or overridden in specializing classes. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IBehavioralFeature.Methods">
+      <summary>Gets Methods that implement the Behavioral Feature. There may be at most one behavior for each pairing of a classifier (as owner of the behavior) and a behavioral feature (as specification of the behavior). </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IBehavioralFeature.OwnedParameters">
+      <summary>Gets the ordered set of formal parameters owned by this BehavioralFeature. The parameter direction can be in, inout, out, or return. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IClass">
+      <summary>A description or partial description of objects that can respond to messages and events, hold values, and change state. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClass.IsActiveClass">
+      <summary>True if each instance of this class is associated with a thread of control. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClass.NestedClassifiers">
+      <summary>Gets the list of classes that are defined inside this class. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClass.OwnedAttributes">
+      <summary> Gets the list of attributes (properties) that are defined in this class. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClass.OwnedOperations">
+      <summary>Gets the list of operations that are defined in this class. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClass.SuperClasses">
+      <summary>Gets the Classes from which this class inherits features. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IClassifier">
+      <summary>A definition of a set of values that consist of a set of features and a set of constraints over the features. A Classifier can inherit parts of its definition from other Classifiers. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClassifier.Features">
+      <summary>Gets the Attributes, Operations and Receptions that are associated with every member of this class. A subset of Namespace::Member. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClassifier.Generalizations">
+      <summary>Gets the Generalization relationships through which this Classifier inherits Features. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClassifier.Generals">
+      <summary>Gets the Classifiers from which this Classifier inherits Members. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClassifier.InheritedMembers">
+      <summary>Gets the subset of Members that are inherited. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClassifier.IsAbstract">
+      <summary>True if this is a partial description intended to be extended or overridden in specializing classes. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClassifier.IsTemplate">
+      <summary>True if this class is a template that can be bound to parameters. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClassifier.OwnedRedefinableTemplateSignature"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IClassifier.UseCases">
+      <summary>Gets the Use Cases for which this Classifier is the Subject. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IComment">
+      <summary>Text that can be attached to one or more elements. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IComment.AnnotatedElements">
+      <summary>Gets the elements to which the comment is attached. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IComment.Body">
+      <summary>The text of the Comment. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IComment.OwningElement">
+      <summary>Gets the element in which this comment is defined, such as a model. Not the same as the elements to which it is linked. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IConstraint">
+      <summary>A condition or restriction expressed in natural language or machine readable language. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IConstraint.ConstrainedElements">
+      <summary>Gets the ordered set of Elements referenced by this Constraint. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IConstraint.Specification">
+      <summary>Gets the expression that defines the Constraint. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IDataType">
+      <summary>A type that consists of a set of immutable values that have no structure. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IDependency">
+      <summary>A relationship that signifies that an element requires other model elements for its specification or implementation </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IDependency.Client">
+      <summary>The elements dependent on the supplier elements. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IDependency.Supplier">
+      <summary>The elements on which clients depend. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IDirectedRelationship">
+      <summary>A relationship between a source model element and a target model element. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IDirectedRelationship.Source">
+      <summary>The source element of the relationship. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IDirectedRelationship.Target">
+      <summary>The target element of the relationship. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IElement">
+      <summary>The supertype of all UML types.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IElement.ApplicableStereotypes">
+      <summary>The set of stereotypes that could be applied to this element. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IElement.AppliedStereotypes">
+      <summary>Each IStereotypeInstance denotes that a stereotype has been applied to this element.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IElement.Description">
+      <summary>The description of this element. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IElement.OwnedComments">
+      <summary>Gets Comments linked to this element. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IElement.OwnedElements">
+      <summary>Gets Elements owned by this element. Every element has one owner, except the root IModel.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IElement.Owner">
+      <summary>Gets the Element that owns this element. Every element except the root IModel has one owner.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IElement.VisibleAppliedStereotypes"></member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IEnumeration">
+      <summary>A user-defined type that consists of a set of user-defined values. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IEnumeration.OwnedLiterals">
+      <summary>Gets the values that define this Enumeration. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IEnumerationLiteral">
+      <summary>A user-defined data value in an Enumeration type. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IEnumerationLiteral.Enumeration">
+      <summary>Gets the Enumeration which is the type of this literal. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IExpression">
+      <summary>A tree of symbols that specify a possibly empty set of objects or data values. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IExpression.Symbol">
+      <summary>The symbol at the root of this subtree. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IFeature">
+      <summary>A part of a type's description, such as an operation or an attribute. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IFeature.FeaturingClassifiers">
+      <summary>Gets the Classifiers on which this Feature appears. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IFeature.IsStatic">
+      <summary>True if this feature is shared by all the instances of its classifier. False if each instance effectively has a separate copy of the feature. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IGeneralization">
+      <summary>A relationship between two classifiers in which the Specific classifier inherits and augments some features of the General classifier. Depending on how the features are defined, the instances of the specific classifier might also be considered instances of the general classifier. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IGeneralization.General">
+      <summary>The classifier that is specialized by the specific classifier. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IGeneralization.IsSubstitutable">
+      <summary>True if instances of the Specific classifier should be acceptable wherever instances of the General classifier are required. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IGeneralization.Specific">
+      <summary>The classifier defined by adding information to the generalizing classifier. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IInstanceSpecification">
+      <summary>Describes an individual instance of a classifier. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IInstanceSpecification.Classifiers">
+      <summary> Gets the classifiers to which the instance belongs. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IInstanceSpecification.Specification">
+      <summary>Defines how to compute, derive, or construct the instance. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IInstanceValue">
+      <summary>Specifies the value modeled by an instance specification. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IInstanceValue.Instance">
+      <summary>The instance that is the specified value. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IInterface">
+      <summary>A type that defines a set of publicly-visible features, with no implementation or internal structure. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IInterface.NestedClassifiers">
+      <summary>Gets all the Classifiers that are owned by the Interface. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IInterface.OwnedAttributes">
+      <summary>Gets all the Properties that are owned by the Interface. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IInterface.OwnedOperations">
+      <summary>Gets all the Operations that are owned by the Interface. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IInterfaceRealization">
+      <summary>A realization between an interface that represents a specification, and a classifier that implements the specification. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IInterfaceRealization.Contract">
+      <summary>The Interface that specifies the conformance contract. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IInterfaceRealization.ImplementingClassifier">
+      <summary>The BehavioredClassifier that implements the interface. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.ILiteralBoolean">
+      <summary>A constant Boolean value that appears in an expression. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.ILiteralBoolean.Value">
+      <summary>The value of the Boolean. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.ILiteralInteger">
+      <summary>A constant integer that appears in an expression. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.ILiteralInteger.Value">
+      <summary>The value of the integer. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.ILiteralSpecification">
+      <summary>A specification of a value that forms part of an expression. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.ILiteralString">
+      <summary>A constant string within an expression. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.ILiteralString.Value">
+      <summary>The value of the string. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IMultiplicityElement">
+      <summary>Defines how many instances of an element can be appear in a given context such as an attribute, parameter, or association end. If Upper Bound &gt; 1, the context contains a collection of the given type. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IMultiplicityElement.IsOrdered">
+      <summary>For multiplicity &gt; 1. True if the elements in the collection form a sequence with a definite order. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IMultiplicityElement.IsUnique">
+      <summary>For multiplicity &gt; 1. True if each value in the collection is different from the other values. Default = True. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IMultiplicityElement.LowerValue">
+      <summary>Gets the minimum number of elements allowed. Must be at least 0, and must not be *. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IMultiplicityElement.UpperValue">
+      <summary>Gets the maximum number of elements allowed. If *, there is no maximum. Must be at least 1. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.INamedElement">
+      <summary>An element that can have a readable name. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.INamedElement.ClientDependencies">
+      <summary>Gets the Dependency relationships for which this element is the Client. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.INamedElement.Name">
+      <summary>The name of this element within the Namespace that contains it. In this Namespace, there should be no other element that has this Name. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.INamedElement.Namespace">
+      <summary>Gets the Namespace in which this element is defined. May be null. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.INamedElement.QualifiedName">
+      <summary>Gets the name of this element, prefixed with the Qualified Name of the Namespace that contains it. Empty if the Name is empty or if the Qualified Name of the Namespace is empty. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.INamedElement.Visibility">
+      <summary>Defines where the element can be referenced. Public = visible anywhere; private = visible only in the owning Namespace; protected = visible to elements that have a generalization relationship to the owning Namespace; package = visible only in the Package owning the Namespace, if there is one. Default = public. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.INamespace">
+      <summary>An element that can contain elements that can be identified by name. Examples are Package, Class, Activity. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.INamespace.Members">
+      <summary>Gets the elements that are part of this Namespace. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.INamespace.OwnedMembers">
+      <summary>Gets the elements that are defined within this Namespace. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.INamespace.PackageImports">
+      <summary>Gets the packages that are imported by this namespace. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IOpaqueExpression">
+      <summary>An expression that denotes a possibly empty set of objects or data values when evaluated in a context. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOpaqueExpression.Body">
+      <summary>The text that defines the expression. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOpaqueExpression.Language">
+      <summary>The language of the expression in Body. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IOperation">
+      <summary>Specifies the name, type, parameters, and constraints for invoking an associated behavior. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.BodyConditions">
+      <summary>Gets a constraint on the values returned from the Operation. Defined only if IsQuery = True. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.Class">
+      <summary>Gets the Class that owns this operation. May be null. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.Interface">
+      <summary>Gets the Interface that owns this Operation. May be null. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.IsOrdered">
+      <summary>For a return type with multiplicity &gt; 1. True if the returned collection forms a sequence with a definite ordering. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.IsQuery">
+      <summary>True if execution of the Operation leaves the state of the system unchanged. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.IsUnique">
+      <summary>For a return type with multiplicity &gt; 1. True if each value in the returned collection is different from the other values. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.Lower">
+      <summary> Gets the lower multiplicity of the return value, if there is one. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.Postconditions">
+      <summary> Gets the Constraints that should be satisfied when the Operation completes. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.Preconditions">
+      <summary>Gets the constraints that should be satisfied before the Operation is invoked. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.Signature">
+      <summary>Gets a string representing the visibility, name, parameters, and return type of the Operation. For example: +Cook(p1:Heat):Food </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.Type">
+      <summary>The type of the return value, if there is one. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IOperation.Upper">
+      <summary>Gets the upper multiplicity of the return value, if there is one. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IPackage"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackage.AllProfileInstances">
+      <summary>Gets a list of all Profiles linked to this Package and Profiles recursively inherited from its ancestor owning packages. Stereotypes from these Profiles can be applied to elements inside the Package. In addition, Stereotypes from Profiles in containing packages or models can be applied to elements inside the package. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackage.NestedPackages">
+      <summary>Gets the Packages owned by this package. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackage.NestingPackage">
+      <summary>Gets the package that owns this package, or null. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackage.OwnedTypes">
+      <summary>Gets the PackagedElements that are types. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackage.PackagedElements">
+      <summary>Gets the elements owned by this package. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackage.ProfileInstances">
+      <summary>Gets a list of Profiles linked to this Package. Stereotypes from these Profiles can be applied to elements inside the Package. In addition, Stereotypes from Profiles in containing packages or models can be applied to elements inside the package. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IPackageableElement">
+      <summary>An element that can be contained in a package. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackageableElement.OwningPackage">
+      <summary>Gets the package that contains this element. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IPackageImport">
+      <summary>A relationship between Packages that allows the elements of the imported package to be referred to as if they were defined in the importing package. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackageImport.ImportedPackage">
+      <summary>The Package whose members are imported into a Namespace. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackageImport.ImportingNamespace">
+      <summary>The Namespace that imports the members from a Package. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IPackageImport.Visibility">
+      <summary>The visibility of the imported elements within the importing Package. If private, the imported elements can be seen only by the definitions of elements in the importing package. If public, the imported elements can be seen by all other users of the importing package. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IParameter">
+      <summary>Specifies the type of object that can be passed in or out of a behavior. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IParameter.Default">
+      <summary>Gets a string representing the default value of the parameter when no argument is supplied. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IParameter.DefaultValue">
+      <summary>A value to be used when no argument is supplied for the Parameter. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IParameter.Direction">
+      <summary>In = data is passed into the behavior; out = data is passed out; inout = data is passed in and then out; return = data is passed back to the caller as a return value at the end of execution. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IParameter.Operation">
+      <summary>Gets the operation that owns the parameter. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IPrimitiveType">
+      <summary>A predefined data type such as integer or Boolean. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IProfileInstance">
+      <summary>The application of a Profile to a Package. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProfileInstance.Name">
+      <summary>The name of the Profile that this ProfileInstance applies in its Package. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProfileInstance.Package">
+      <summary>The Package in which the stereotypes of the Profile can be used. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IProperty">
+      <summary>A value or collection of values owned by a classifier, representing an attribute, association end, or component part. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.Aggregation">
+      <summary>If Composite, the object in this property forms part of the property's owner. If Aggregate, the object forms part of a collection represented by the owner, but can be shared with other owners. Default = none. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.Association">
+      <summary>If this Property represents one end of an Association, gets the Association. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.Class">
+      <summary>Gets the Class that owns the Property. Null if the Property is owned by another kind of Classifier such as an Interface. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.Classifier">
+      <summary>Gets the Classifier that owns this Property. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.Default">
+      <summary>Gets a String that is evaluated to give a default value for the Property when an object of the owning Classifier is instantiated. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.DefaultValue">
+      <summary>Gets the specification of the initial value of the property when a new instance of the owning classifier is created. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.IsComposite">
+      <summary>True if this property's Aggregation = Composite. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.IsDerived">
+      <summary>True if the value of this property is calculated from others. For example: Diagonal, calculated from Width and Height </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.IsDerivedUnion">
+      <summary>True if this Property is a collection that is the union of two or more other Properties. For example, Parents is a derived union of {Mother, Father}. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.Opposite">
+      <summary>If not empty, this Property is one end of an Association, and this gets the Property at the other end. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.OwningAssociation">
+      <summary>If this Property is owned by an Association, gets the Association. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IProperty.Signature">
+      <summary>Gets a string that describes the visibility, name, type, and multiplicity of the property. For example:   + employees : Person [*] </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IRealization">
+      <summary>A relationship between a model element that represents a specification, and an element that represents an implementation. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IRedefinableElement">
+      <summary>An element that, when defined in the context of a classifier, can be redefined more specifically or differently in the context of another classifier that specializes (directly or indirectly) the context classifier. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IRedefinableElement.IsLeaf">
+      <summary>True if this element should not be specialized. That is, it should not be the target of a Generalization relationship. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IRelationship">
+      <summary>A base class for all kinds of binary relation between Elements, such as Associations, Dependencies, Flows, and so on. Every relationship has a source element and a target element. A relationship can also have properties of its own. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IRelationship.SourceElement">
+      <summary>Source element of the relationship. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IRelationship.TargetElement">
+      <summary>Target element of the relationship. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IStereotypeInstance">
+      <summary>Represents the application of a stereotype to a model element. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IStereotypeInstance.Element">
+      <summary>The Element to which the Stereotype is applied. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IStereotypeInstance.Name">
+      <summary>The name of the stereotype. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IStereotypeInstance.Profile">
+      <summary>The Profile in which the Stereotype is defined. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IStereotypeInstance.PropertyInstances">
+      <summary>Gets the values for the Properties that are defined by the Stereotype. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IStereotypePropertyInstance">
+      <summary>Represents the value of a property in an application of a stereotype to a model element. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IStereotypePropertyInstance.Name">
+      <summary>The name of the property. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IStereotypePropertyInstance.StereotypeInstance">
+      <summary>The StereotypeInstance of which this PropertyInstance is part. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IStereotypePropertyInstance.Value">
+      <summary>The value of the property for this stereotype instance. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IStructuralFeature">
+      <summary>A feature that describes part of the state of an object. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IStructuralFeature.IsReadOnly">
+      <summary>True if the value of the property cannot be changed. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IType">
+      <summary>A description of a set of values. For example, a class, an interface, an enumeration, a component, a number, null. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IType.Package">
+      <summary>Gets the package to which the type belongs. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.IType.TypedElements">
+      <summary>Gets the Typed elements that are constrained to contain values of this type. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.ITypedElement">
+      <summary>An element such as a parameter or pin that can be assigned an instance that conforms to a given type. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Classes.ITypedElement.Type">
+      <summary>The type of instance that can be assigned to the element. If not specified, any instance can be assigned. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IUsage">
+      <summary>A relationship between an element and another element that it requires for its full implementation or operation. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.IValueSpecification">
+      <summary>Each instance of this class is a specification of a possibly empty set of objects or data values. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.ParameterDirectionKind">
+      <summary>DomainEnumeration: ParameterDirectionKind
+            Defines the direction of flow of information in a parameter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.ParameterDirectionKind.In">
+      <summary>Information flows into the behavior on this parameter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.ParameterDirectionKind.InOut">
+      <summary>Information flows in and out of the behavior on this parameter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.ParameterDirectionKind.Out">
+      <summary>Information flows out of the behavior on this parameter.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.ParameterDirectionKind.Return">
+      <summary>Information flows out of the behavior, in the form of a return value from an Operation call.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Classes.VisibilityKind">
+      <summary>DomainEnumeration: VisibilityKind
+            Defines the scope within which the name of an element can be used.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.VisibilityKind.Public">
+      <summary>Visible globally</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.VisibilityKind.Private">
+      <summary>Not visible outside the owning namespace such as a class or package.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.VisibilityKind.Protected">
+      <summary>Visible to specializations of the owning classifier.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Classes.VisibilityKind.Package">
+      <summary>Visible in the same model or package as the owner.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CommonBehaviors.CallConcurrencyKind">
+      <summary>Defines how the owner of an Operation handles concurrent calls.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.CommonBehaviors.CallConcurrencyKind.Sequential">
+      <summary>The Operation or its owner is not designed to handle concurrent calls.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.CommonBehaviors.CallConcurrencyKind.Guarded">
+      <summary>The Operation or its owner will block calls so that only one is processed at a time.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.CommonBehaviors.CallConcurrencyKind.Concurrent">
+      <summary>The Operation or its owner can handle multiple concurrent calls.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavior">
+      <summary>A partial definition of how objects change state over time. Forms part of the definition of a Classifier. For example, activities, interactions, and operations are behaviors. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavior.Context">
+      <summary>Gets the classifier that is the context for the execution of the behavior. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavior.IsReentrant">
+      <summary>True if the behavior can be invoked while it is still executing from a previous invocation. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavior.OwnedParameters">
+      <summary>Gets the Parameters that are owned by the Behavior. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavior.Specification">
+      <summary>The behavioral feature that the Behavior implements. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavioredClassifier">
+      <summary>A description or partial description of objects that behave according to a collection of operations, states, and other features. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavioredClassifier.InterfaceRealizations">
+      <summary>Gets the Interfaces realized by this behavior. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CommonBehaviors.IBehavioredClassifier.OwnedBehaviors">
+      <summary>Gets the Behaviors defined within the scope of this classifier. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CommonBehaviors.ICallEvent">
+      <summary>The receipt by an object of a message that invokes an operation. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CommonBehaviors.IEvent">
+      <summary>The specification of some occurrence that can trigger actions by an object. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CommonBehaviors.IMessageEvent">
+      <summary>Specifies the receipt by an object of either a call or a signal. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Components.ConnectorKind">
+      <summary>Describes a connector inside a Component.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Components.ConnectorKind.Assembly">
+      <summary>The connector connects a provided Port of a Part to a Required Port of a Part in the same Component.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Components.ConnectorKind.Delegation">
+      <summary>The connector connects a Port of the Component to a Port of a Part within the Component.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Components.IComponent">
+      <summary>A modular part of a system with explicitly defined required and provided interfaces. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Components.IComponent.IsIndirectlyInstantiated">
+      <summary>True if the component is a design-time artifact that does not correspond directly to a single run-time class. Default = true. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Components.IComponent.Provided">
+      <summary>Gets the Interfaces that define messages that the component implements and that other components can use. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Components.IComponent.Required">
+      <summary>Gets the Interfaces that define messages that the component sends to other components or systems. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CompositeStructures.IConnectableElement">
+      <summary>Specifies the type of object that can play a role in a connected set of parts of a larger object, which is usually a component. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IConnectableElement.Ends">
+      <summary>Gets the connector ends to which this element is connected. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CompositeStructures.IConnector">
+      <summary>A relationship between the parts and ports of a Component. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IConnector.Ends">
+      <summary>A connector consists of at least two connector ends, each of which represents the participation of instances of the classifiers that type the connectable elements attached to this end. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IConnector.Kind">
+      <summary>Assembly = this connector links the required and provided interfaces of Parts within a single Component. Delegation = this connector links a Port to a Part within the same Component. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CompositeStructures.IConnectorEnd">
+      <summary>Represents the link between a Connector and a connectable element. Each Connector has at least two ConnectorEnds. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IConnectorEnd.PartWithPort">
+      <summary>If this end is attached to a part of a component, this indicates which part. Null if this end is attached to a port of the containing component. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IConnectorEnd.Role">
+      <summary>Gets the type of element connected by this end, usually a port, either on the containing component or one of its parts. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CompositeStructures.IEncapsulatedClassifier">
+      <summary>Objects that can own ports as type-checked interaction points. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IEncapsulatedClassifier.OwnedPorts">
+      <summary>Gets the Ports through which instances of this type interact with other instances. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CompositeStructures.IPort">
+      <summary>A property that specifies a distinct interaction point between an object and its environment or its internal parts. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IPort.IsBehavior">
+      <summary>True if messages sent to this port will be handled by the owning object itself, instead of its internal parts. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IPort.IsService">
+      <summary>True if this port forms part of the published external function of the owning object. False if the port is considered part of the implementation. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IPort.Provided">
+      <summary>Gets Interfaces specifying a set of operations and events that the owning object offers. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IPort.Required">
+      <summary>Gets Interfaces specifying a set of operations and receptions that the owning object requires its environment to handle. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.CompositeStructures.IStructuredClassifier">
+      <summary>Objects whose behavior can be fully or partly described by the collaboration of owned or referenced instances, such as Components. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IStructuredClassifier.OwnedConnectors">
+      <summary>Gets the connectors owned by the classifier, for example the Assembly and Delegate connectors in a Component. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.CompositeStructures.IStructuredClassifier.Parts">
+      <summary>Gets the Properties of which this classifier is composed. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Deployments.IArtifact">
+      <summary>A reference to a diagram or to a specification document related to the model. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Deployments.IArtifact.FileName">
+      <summary>The location where the file is stored. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Deployments.IArtifact.Manifestations">
+      <summary>Gets model Elements that are carried by the artifact, or used in its construction or generation. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Deployments.IArtifact.NestedArtifacts">
+      <summary>Gets Artifacts that are defined within this Artifact. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Deployments.IDeployedArtifact">
+      <summary>An artifact that has been deployed to a DeploymentTarget. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Deployments.IDeployment">
+      <summary>The allocation of an artifact or artifact instance to a DeploymentTarget. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Deployments.IDeploymentTarget">
+      <summary>A location in which a DeployedArtifact can be deployed. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Deployments.IDeploymentTarget.DeployedElements">
+      <summary>Gets elements that have been deployed to this target. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Deployments.IDeploymentTarget.Deployments">
+      <summary>Gets Deployments that have deployed elements to this target. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Deployments.IManifestation">
+      <summary>An abstraction relationship between an artifact and a model element such as a component, that the artifact carries or uses. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IActionExecutionSpecification">
+      <summary>Represents the execution of a specified Action. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IBehaviorExecutionSpecification">
+      <summary>The execution of a specified Behavior. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IBehaviorExecutionSpecification.Behavior">
+      <summary>The behavior whose execution this represents. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.ICombinedFragment">
+      <summary>A collection of fragments such as a set of alternatives in an interaction. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ICombinedFragment.DisplayName">
+      <summary>Gets the label of the combined fragment that appears on the sequence diagram. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ICombinedFragment.InteractionOperator">
+      <summary>The type of the fragment. This type determines how the constituent fragments should be interpreted, and how they are combined. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ICombinedFragment.Operands">
+      <summary>Gets the operands of the combined fragment. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IConsiderIgnoreFragment">
+      <summary>A fragment that has an InteractionOperator of Consider or Ignore. This type of fragment requires a list of messages that are to be excluded or included. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IConsiderIgnoreFragment.ConsiderIgnoreMessages">
+      <summary>A comma-separated list of messages to be considered or ignored. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IConsiderIgnoreFragment.Messages">
+      <summary>Gets the set of messages to be considered or ignored. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IExecutionEvent">
+      <summary>An event at the start or end of an Execution Occurrence. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IExecutionEvent.ExecutionOccurrenceSpecifications">
+      <summary>Gets the position of the Execution Occurrence on a Lifeline. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IExecutionOccurrenceSpecification">
+      <summary>Specifies the position on a lifeline of the start or end of an execution occurrence. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification">
+      <summary>Represents the execution of a behavior on a lifeline. It appears in a sequence diagram as a shaded rectangle on the lifeline. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification.Finish">
+      <summary>Gets the position on a lifeline of the end of the execution. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification.NestedOccurrences">
+      <summary>Gets messages and executions that occur within the execution. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IExecutionSpecification.Start">
+      <summary>Gets the position on a lifeline of the start of the execution. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IInteraction">
+      <summary>A definition of behavior that focuses on the observable exchange of information between objects. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteraction.Fragments">
+      <summary>Gets the elements of the interaction, including top-level Combined Fragments and Interaction Uses. Also all message sends, behavior executions, and so on, including those contained in Combined Fragments. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteraction.InteractionUses">
+      <summary>Gets the Interaction Uses that reference this Interaction from other Interactions. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteraction.Lifelines">
+      <summary>Gets all the lifelines that are described in this Interaction. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteraction.Messages">
+      <summary>Gets all the messages that are described in this interaction, including any that are inside Combined Fragments. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IInteractionConstraint">
+      <summary>Guards an operand in a CombinedFragment. The variables used must be global or owned by the lifelines that are covered by the Combined Fragment. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionConstraint.GuardText">
+      <summary>A Boolean expression that determines whether the interaction can continue. For example, ""True"" or ""Amount &gt; 1000"". </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionConstraint.InteractionOperand">
+      <summary>Gets the Interaction Operand that owns this Guard. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionConstraint.MaxInt">
+      <summary>Gets the maximum number of times the loop should be executed. Applies to the Interaction Operand of a Combined Fragment with Operator == Loop. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionConstraint.MinInt">
+      <summary>Gets the minimum number of times the loop should be executed. Applies to the Interaction Operand of a Combined Fragment with Operator == Loop. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IInteractionFragment">
+      <summary>An element of an interaction, such as a message start or end, an Execution Specification, or a Combined Fragment. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionFragment.CoveredLifelines">
+      <summary>For some types of fragment, gets the lifelines on which the fragment is situated. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionFragment.EnclosingInteraction">
+      <summary>Gets the Interaction that contains this Interaction Fragment. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionFragment.EnclosingOperand">
+      <summary>Gets the Interaction Operand that contains a nested Combined Fragment. Applies to Combined Fragments. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IInteractionOperand">
+      <summary>A part of a CombinedFragment.  A CombinedFragment can have one or more InteractionOperands, depending on its InteractionOperator. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionOperand.CombinedFragment">
+      <summary>Gets the CombinedFragment that contains this InteractionOperand. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionOperand.Fragments">
+      <summary>Gets the elements of the interaction that are contained in this operand, such as nested CombinedFragments, Interaction Uses, and Message Send events. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionOperand.Guard">
+      <summary>Gets the constraint that describes the condition under which the Fragments will be executed. Null if there is no constraint. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IInteractionUse">
+      <summary>Represents a part of a sequence that is defined in another Interaction, or a sequence of interactions that the user does not wish to define in detail. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionUse.HasReference">
+      <summary>True if the Interaction has a reference to another Interaction. False if the user has not yet defined the detail of this part of the sequence. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionUse.ReferredToFile">
+      <summary>The file in which the RefersTo Interaction (sequence diagram) is defined. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IInteractionUse.RefersTo">
+      <summary>The Interaction invoked by this Interaction Use. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.ILifeline">
+      <summary>A participant in an Interaction from which messages can be sent and received. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ILifeline.CoveredBy">
+      <summary>Gets the Combined Fragments, Interaction Operands, Interaction Uses and Execution Specifications in which this lifeline takes part. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ILifeline.Interaction">
+      <summary>Gets the Interaction in which this Lifeline is defined. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ILifeline.OccurrenceSpecifications">
+      <summary>Gets all the Occurrence Specifications attached to this lifeline, including nested items. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ILifeline.Represents">
+      <summary>If defined, the Interaction describes interactions within the structure of a classifier, and this lifeline represents a specific Part or ConnectableElement. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ILifeline.TopLevelOccurrences">
+      <summary>Gets the Occurrence Specifications that are attached to this lifeline, excluding those nested inside other lifelines. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IMessage">
+      <summary>A communication between lifelines in an Interaction. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessage.Arguments">
+      <summary>Gets the arguments of the Message. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessage.Connector">
+      <summary>' ~ [0..1] The Connector on which this Message is sent. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessage.Interaction">
+      <summary>Gets the Interaction in which the Message is defined. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessage.MessageKind">
+      <summary>Lost = the message is sent from a lifeline to an undefined receiver; Found = the message comes from an undefined sender; Complete = the message is sent from one Lifeline to another. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessage.MessageSort">
+      <summary>Synchronous = the sender waits for control to return, and a return arrow is shown on the sequence diagram. Asynchronous = the sender continues after sending the message. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessage.ReceiveEvent">
+      <summary>Gets the Occurrence Specification of the receiving end of the message. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessage.SendEvent">
+      <summary>Gets the Occurrence Specification of the sending end of the message </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessage.Signature">
+      <summary>The Operation or Signal of which this Message represents an occurrence. If it is a Signal, the MessageSort must be Asynchronous. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IMessageEnd">
+      <summary>Represents the point at each end of a message. Can be linked to a Lifeline or a LostFoundTarget. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IMessageOccurrenceSpecification">
+      <summary>A point on a lifeline at which a message or event is sent or received. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IMessageOccurrenceSpecification.Message">
+      <summary>Gets the message to which the occurrence belongs. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind">
+      <summary>Describes how the Operands of a CombinedFragment are to be combined.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Seq">
+      <summary>There are two or more operand. Messages involving the same lifeline 
+            must occur in the order of the operands. Where they do not involve the same lifelines, 
+            messages from different operands may be interleaved in parallel.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Alt">
+      <summary>There are two or more operands, and only one of them will be executed.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Opt">
+      <summary>There is one operand which might or might not be executed. If a Guard
+            is defined, it determines whether the operand is executed.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Break">
+      <summary>If this fragment is executed, the rest of the sequence is abandoned. 
+            If a guard is defiend, it whether the break will occur.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Par">
+      <summary>Parallel. The events in the fragments can be interleaved.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Strict">
+      <summary>There are two or more operands, which must occur in the order given.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Loop">
+      <summary>There is one operand, which can be repeated. If there is a guard, it
+            determines when the repetition terminates.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Critical">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Neg">
+      <summary>The sequence shown in this operand must not happen. Typically used inside
+            a Consider or Ignore operand.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Assert">
+      <summary>The operand specifies the only valid sequences. Typically used within a 
+            Consider or Ignore operand.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Ignore">
+      <summary>Specifies a list of messages that the operand does not describe. They can
+            occur in the specified system, but are not significant for the purposes
+            of this interaction.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.InteractionOperatorKind.Consider">
+      <summary>Specifies a list of messages that the operand describes. Other messages can
+            occur in the specified system, but are not significant for the purposes
+            of this interaction.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IOccurrenceSpecification">
+      <summary>Represents a significant point on an interaction diagram. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IOccurrenceSpecification.Covered">
+      <summary>Gets the Lifeline on which the OccurrenceSpecification appears. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IOccurrenceSpecification.Event">
+      <summary>Gets a specification of the occurring event. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IOccurrenceSpecification.Execution">
+      <summary>If defined, the Occurrence Specification is defined within an Execution. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IOccurrenceSpecification.SourceExecution">
+      <summary>If defined, the Occurrence Specification is defined within an Execution. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IOccurrenceSpecification.SourceLifeline">
+      <summary>Gets the Lifeline on which the OccurrenceSpecification appears. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IOperandOccurrenceSpecification">
+      <summary>An Occurrence Specification representing the start or end of an Interaction Operand </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IOperandOccurrenceSpecification.InteractionOperand">
+      <summary>Gets the Interaction Operand that owns this Operand Occurrence. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IReceiveOperationEvent">
+      <summary>Specifies that the context object waits for a specific operation to be invoked. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.IReceiveOperationEvent.Operation">
+      <summary>The Operation associated with this event. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.IReceiveSignalEvent">
+      <summary>Specifies that the Interaction waits to receive a signal. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.ISendOperationEvent">
+      <summary>Specifies that an operation is invoked. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Interactions.ISendOperationEvent.Operation">
+      <summary>The Operation associated with this event. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.ISendSignalEvent">
+      <summary>Specifies that a signal is sent, for example to another process or system. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.MessageKind">
+      <summary>Describes a message in an interaction.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageKind.Complete">
+      <summary>The message has both a defined sending lifeline and a receiving lifeline.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageKind.Lost">
+      <summary>The receiver is not described within this Interaction.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageKind.Found">
+      <summary>The sender is not described within this Interaction.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageKind.Unknown">
+      <summary>The status of sender and receiver are unknown.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Interactions.MessageSort">
+      <summary>Describes characteristics of a message in an interaction.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageSort.SynchCall">
+      <summary>The message invokes an operation, and the sender of the message waits for a reply.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageSort.AsynchCall">
+      <summary>The message invokes an operation, and the sender does not wait for a reply.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageSort.AsynchSignal">
+      <summary>The message is a signal, and the sender does not wait for a reply.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageSort.CreateMessage">
+      <summary>The message invokes an operation that creates an instance.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageSort.DeleteMessage">
+      <summary>The message causes the deletion of an instance.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.Interactions.MessageSort.Reply">
+      <summary>This message represents the reply to a SynchCall message.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Profiles.IMetaclass">
+      <summary>In a Profile definition, a reference to the type of element to which stereotypes can be applied, such as Component, Attribute, Lifeline or Dependency. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.Uml.Profiles.IMetaclass.CanHaveStereotype(System.String)"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IMetaclass.Name">
+      <summary>The name of the Metaclass, such as "Microsoft.VisualStudio.Uml.Components.IComponent". </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IMetaclass.Profile">
+      <summary>The Profile of which this Metaclass reference forms part. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IMetaclass.Stereotypes">
+      <summary>Stereotypes that are applicable to this Metaclass and its subtypes. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Profiles.IProfile">
+      <summary>A Profile contains definitions of Stereotypes. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProfile.DisplayName">
+      <summary>Name shown in the user interface. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.Uml.Profiles.IProfile.GetMetaclassByName(System.String)"></member>
+    <member name="M:Microsoft.VisualStudio.Uml.Profiles.IProfile.GetPropertyTypeByName(System.String)"></member>
+    <member name="M:Microsoft.VisualStudio.Uml.Profiles.IProfile.GetStereotypeByName(System.String)"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProfile.Metaclasses">
+      <summary>Descriptions of metaclasses referenced in this Profile. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProfile.Name">
+      <summary>Name of the Profile for reference purposes. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProfile.PropertyTypes">
+      <summary>Definitions of types of properties used in the profile. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProfile.Stereotypes">
+      <summary>Definitions of Stereotypes within a Profile. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Profiles.IProfileManager">
+      <summary>Stores the collection of Profiles available in a Model. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProfileManager.AllProfiles"></member>
+    <member name="M:Microsoft.VisualStudio.Uml.Profiles.IProfileManager.GetProfileByName(System.String)"></member>
+    <member name="T:Microsoft.VisualStudio.Uml.Profiles.IProperty">
+      <summary>In a Profile definition, a property that a stereotype adds to any element to which it is applied. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProperty.DefaultValue">
+      <summary>Specifies an initial value for the property. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProperty.DisplayName">
+      <summary>The name visible at the user interface. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProperty.Name">
+      <summary>The name of the property for reference purposes. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProperty.PropertyType">
+      <summary>The type of the Property. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IProperty.Stereotype">
+      <summary>Gets the stereotype in which this Property is defined. Null if the Property is not defined in a Stereotype. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Profiles.IPropertyType">
+      <summary>In a Profile definition, a description of a type of Properties defined in Stereotypes. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IPropertyType.Name">
+      <summary>The name of the Property, such as "System.String". </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IPropertyType.Profile">
+      <summary>The Profile in which the Property Type is defined. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IPropertyType.Properties">
+      <summary>Profile Properties that have this Property Type. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.Profiles.IStereotype">
+      <summary>In a Profile definition, A Stereotype can be applied to a specified set of metaclasses within the UML definition, and can define additional Properties for its metaclasses. </summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.Uml.Profiles.IStereotype.CanApplyTo(System.String)"></member>
+    <member name="M:Microsoft.VisualStudio.Uml.Profiles.IStereotype.CanApplyTo(System.Type)"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IStereotype.DisplayName"></member>
+    <member name="M:Microsoft.VisualStudio.Uml.Profiles.IStereotype.GetPropertyByName(System.String)"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IStereotype.Metaclasses">
+      <summary>Types of element (such as IComponent or IAttribute) to which this Stereotype can be applied. The Stereotype can also be applied to subtypes of the metaclasses in this list. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IStereotype.Name"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IStereotype.Profile">
+      <summary>The Profile in which this Stereotype is defined. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.Profiles.IStereotype.Properties">
+      <summary>Extension Properties that this Stereotype defines on its target metaclasses. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind">
+      <summary>Indicates the meaning of a node of a state chart.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.Initial">
+      <summary>An arrow from this node points to the first state, on entry to the state chart or parent state.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.DeepHistory">
+      <summary>A node indicating that the parent composite state resumes the substate it was in on most recent exit.
+            At most one arrow can emerge to point to the default initial state, used when this composite state
+            has not been entered before.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.ShallowHistory">
+      <summary>A node indicating that the parent composite state resumes the substate it was in on most recent exit, but not
+              any deeper substate.
+              At most one arrow can emerge to point to the default initial state, used when this composite state
+              has not been entered before.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.Join">
+      <summary>Merges several transitions emanating from source vertices in different regions of a composite state.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.Fork">
+      <summary>Splits an incoming transition into two or more transitions terminating on vertices in different regions of a composite state.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.Junction">
+      <summary>Used in conjunction with guards to split and/or merge transitions.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.Choice">
+      <summary>Splits a transition into multiple paths, only one of which is taken on each occasion.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.EntryPoint">
+      <summary>Where control enters a state machine or composite state.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.ExitPoint">
+      <summary>Where control leaves a state machine or composite state.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.PseudostateKind.Terminate">
+      <summary>The state machine (including all threads) terminates if control enters this pseudostate. The object executing the state machine is destroyed.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.StateMachines.TransitionKind">
+      <summary>Indicates to what extent the transition affects the state.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.TransitionKind.Internal">
+      <summary>The transition, if triggered, occurs without exiting or entering the source state. Thus, it does not
+              cause a state change. This means that the entry or exit condition of the source state will not be invoked. An internal
+              transition can be taken even if the state machine is in one or more regions nested within this state.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.TransitionKind.Local">
+      <summary>The transition, if triggered, will not exit the composite (source) state, but it will apply to any state
+              within the composite state, and these will be exited and entered.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Uml.StateMachines.TransitionKind.External">
+      <summary>The transition, if triggered, will exit the composite (source) state.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.UseCases.IActor">
+      <summary>Specifies a role played by a user or any other system that interacts with the system or subject subsystem. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.UseCases.IExtend">
+      <summary>Links a use case that defines a basic series of actions to an extension use case. The extension use case defines additional steps that occur in some circumstances. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.UseCases.IExtend.ExtendedCase"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.UseCases.IExtend.Extension"></member>
+    <member name="T:Microsoft.VisualStudio.Uml.UseCases.IExtensionPoint">
+      <summary>Identifies a point in the behavior of a use case at which additional behavior defined by an extending use case is inserted. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.UseCases.IInclude">
+      <summary>An include relationship defines that a use case contains the behavior defined in another use case. Typically used to separate a common series of steps into a single definition. One use case can be included in several other cases. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.UseCases.IInclude.Addition"></member>
+    <member name="P:Microsoft.VisualStudio.Uml.UseCases.IInclude.IncludingCase"></member>
+    <member name="T:Microsoft.VisualStudio.Uml.UseCases.ISubsystem">
+      <summary>A component that can be the subject of use cases. </summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Uml.UseCases.IUseCase">
+      <summary>The specification of an externally visible set of actions that a system can perform in collaboration with one or more actors. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.UseCases.IUseCase.Extends">
+      <summary>Gets the relationships to the Use Cases extended by this Use Case. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.UseCases.IUseCase.Includes">
+      <summary>Gets the relationships to the Use Cases included by this Use Case. </summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Uml.UseCases.IUseCase.Subjects">
+      <summary>Gets the subsystem or subsystems that support the execution of this use case. </summary>
+    </member>
+  </members>
+</doc>

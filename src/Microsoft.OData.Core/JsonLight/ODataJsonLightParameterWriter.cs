@@ -9,9 +9,7 @@ namespace Microsoft.OData.JsonLight
     #region Namespaces
     using System.Diagnostics;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -62,7 +60,6 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightOutputContext.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -71,7 +68,6 @@ namespace Microsoft.OData.JsonLight
         {
             return this.jsonLightOutputContext.FlushAsync();
         }
-#endif
 
         /// <summary>
         /// Start writing an OData payload.

@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=Name, *, MyAddress", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal(new Uri("http://gobbledygook/People?$select=*"), actualUri);
+            Assert.Equal(new Uri("http://gobbledygook/People?$select=*"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("Pet2Set?$select=PetColorPattern,*", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal(new Uri("http://gobbledygook/Pet2Set?$select=*"), actualUri);
+            Assert.Equal(new Uri("http://gobbledygook/Pet2Set?$select=*"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -224,7 +224,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=Fully.Qualified.Namespace.*", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+#if NETCOREAPP2_2
+            Assert.Equal(new Uri("http://gobbledygook/People?$select=Fully.Qualified.Namespace.%2A"), actualUri);
+#else
             Assert.Equal(new Uri("http://gobbledygook/People?$select=Fully.Qualified.Namespace.*"), actualUri);
+#endif
         }
 
         [Fact]
@@ -234,9 +238,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$select=MyDog"), actualUri);
         }
-        #endregion $select with no $expand
+#endregion $select with no $expand
 
-        #region $expand with no $select
+#region $expand with no $select
 
         [Fact]
         public void ExpandWithoutSelectShouldDefaultToAllSelections()
@@ -343,9 +347,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
                 "http://gobbledygook/People?$expand=" + Uri.EscapeDataString("Fully.Qualified.Namespace.Manager/DirectReports($orderby=ID desc;$levels=max),Fully.Qualified.Namespace.Employee/Manager($levels=3)"),
                 actualUri.OriginalString);
         }
-        #endregion
+#endregion
 
-        #region Interesting $expand with other options scenarios
+#region Interesting $expand with other options scenarios
         [Fact]
         public void NestedSelectPropertyWithJustNavPropAtParentLevelMeansJustOnePropertyAtInnerLevel()
         {
@@ -593,15 +597,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             string result = translater.TranslateSelectExpandClause(topLeveItem, false);
             Assert.Equal("$expand=" + expandClause, result.Replace("%20", " "));
         }
-        #endregion
+#endregion
 
-        #region mixed examples
+#region mixed examples
         [Fact]
         public void SelectAllWithoutExpandShouldWork()
         {
             Uri queryUri = new Uri("People?$select=*", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal(new Uri("http://gobbledygook/People?$select=*"), actualUri);
+            Assert.Equal(new Uri("http://gobbledygook/People?$select=*"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -617,7 +621,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select = *&$expand = ", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+#if NETCOREAPP2_2
+          Assert.Equal(new Uri("http://gobbledygook/People?$select=%2A"), actualUri);
+#else
             Assert.Equal(new Uri("http://gobbledygook/People?$select=*"), actualUri);
+#endif
         }
 
         [Fact]
@@ -689,7 +697,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri actualUri = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=Color eq 'Brown';$orderby=Color;$top=1;$count=true;$search=termX)"), actualUri.OriginalString);
         }
-        #endregion
+#endregion
 
         public static Uri UriBuilder(Uri queryUri, ODataUrlKeyDelimiter urlKeyDelimiter, ODataUriParserSettings settings)
         {

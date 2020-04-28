@@ -1,14 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-  
-    <AssemblyName>Microsoft.Test.Taupo.Query</AssemblyName>
-    
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>  
+    <AssemblyName>Microsoft.Test.Taupo.Query</AssemblyName>    
     <EnableStyleCop>true</EnableStyleCop>
     <TransparentAssembly>true</TransparentAssembly>
     <CopyToTaupoBin>true</CopyToTaupoBin>
-    <DefineConstants>TAUPO_QUERY</DefineConstants>
-   
+    <DefineConstants>TAUPO_QUERY</DefineConstants>   
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -218,8 +215,7 @@
     <Compile Include="$(AssemblyKeysCSharpFilePath)" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj" />
-     
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj" />     
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

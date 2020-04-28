@@ -1,11 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
     <AssemblyName>Microsoft.Test.ModuleCore</AssemblyName>
     <NoWarn>;1699;1570;1572;1573;1591;</NoWarn>
-
-
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <KeyOriginatorFile>modulecore.snk</KeyOriginatorFile>
     <RestorePackages>true</RestorePackages>
@@ -41,5 +39,5 @@
   <ItemGroup>
     <None Include="ModuleCore.snk" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

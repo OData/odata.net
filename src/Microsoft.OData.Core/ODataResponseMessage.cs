@@ -11,9 +11,8 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -24,11 +23,8 @@ namespace Microsoft.OData
     /// detection logic on the format implementations and manages the buffering read stream.
     /// </remarks>
     internal sealed class ODataResponseMessage : ODataMessage,
-#if PORTABLELIB
+
  IODataResponseMessageAsync
-#else
-        IODataResponseMessage
-#endif
     {
         /// <summary>The response message this class is wrapping.</summary>
         private readonly IODataResponseMessage responseMessage;
@@ -106,7 +102,6 @@ namespace Microsoft.OData
             return this.GetStream(this.responseMessage.GetStream, /*isRequest*/ false);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
@@ -121,7 +116,6 @@ namespace Microsoft.OData
 
             return this.GetStreamAsync(asyncResponseMessage.GetStreamAsync, /*isRequest*/ false);
         }
-#endif
 
         /// <summary>
         /// Queries the message for the specified interface type.

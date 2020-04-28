@@ -10,9 +10,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
 using System.Threading.Tasks;
-#endif
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Json;
 using Microsoft.OData.Metadata;
@@ -182,7 +180,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
@@ -220,7 +217,7 @@ namespace Microsoft.OData.JsonLight
                 .FollowOnSuccessWith(t =>
                     this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector));
         }
-#endif
+
         #endregion ReadAtStartImplementation
 
         #region ResourceSet
@@ -239,7 +236,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtResourceSetStartImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetStart'.
         /// </summary>
@@ -254,7 +250,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetStartImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetEnd'.
@@ -274,7 +269,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtResourceSetEndImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetEnd'.
         /// </summary>
@@ -292,7 +286,7 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetEndImplementationSynchronously);
         }
-#endif
+
         #endregion ResourceSet
 
         #region Resource
@@ -317,7 +311,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtResourceStartImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryStart'.
         /// </summary>
@@ -338,7 +331,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceStartImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryEnd'.
@@ -354,7 +346,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtResourceEndImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryEnd'.
         /// </summary>
@@ -368,7 +359,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceEndImplementationSynchronously);
         }
-#endif
 
         #endregion Resource
 
@@ -386,7 +376,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtPrimitiveSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Primitive'.
         /// </summary>
@@ -399,7 +388,7 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtPrimitiveSynchronously);
         }
-#endif
+
         #endregion Primitive
 
         #region Property
@@ -413,7 +402,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtNestedPropertyInfoSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'PropertyInfo'.
         /// </summary>
@@ -422,7 +410,7 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtNestedPropertyInfoSynchronously);
         }
-#endif
+
         #endregion
 
         #region Stream
@@ -436,7 +424,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtStreamSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Stream'.
         /// </summary>
@@ -445,7 +432,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtStreamSynchronously);
         }
-#endif
 
         /// <summary>
         /// Creates a stream for reading an inline stream property.
@@ -515,7 +501,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtNestedResourceInfoStartImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
@@ -538,7 +523,6 @@ namespace Microsoft.OData.JsonLight
                 TaskUtils.GetTaskForSynchronousOperation<bool>(
                     this.ReadAtNestedResourceInfoStartImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoEnd'.
@@ -558,7 +542,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtNestedResourceInfoEndImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoEnd'.
         /// </summary>
@@ -578,7 +561,6 @@ namespace Microsoft.OData.JsonLight
                 TaskUtils.GetTaskForSynchronousOperation<bool>(
                     this.ReadAtNestedResourceInfoEndImplementationSynchronously);
         }
-#endif
 
         #endregion NestedResourceInfo
 
@@ -601,7 +583,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtEntityReferenceLinkSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'EntityReferenceLink'.
         /// </summary>
@@ -619,7 +600,7 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtEntityReferenceLinkSynchronously);
         }
-#endif
+
         #endregion EntityReferenceLink
 
         #region DeltaResourceSet
@@ -639,7 +620,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtResourceSetStartImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaResourceSetStart'.
         /// </summary>
@@ -654,7 +634,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetStartImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
@@ -675,7 +654,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtResourceSetEndImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
         /// </summary>
@@ -694,7 +672,7 @@ namespace Microsoft.OData.JsonLight
             // Logic is same as for ResourceSet
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetEndImplementationSynchronously);
         }
-#endif
+
         #endregion DeltaResourceSet
 
         #region DeltaDeletedEntry
@@ -720,7 +698,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtDeletedResourceStartImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaDeletedResourceStart'.
         /// </summary>
@@ -741,7 +718,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceStartImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
@@ -758,7 +734,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtResourceEndImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
         /// </summary>
@@ -773,7 +748,6 @@ namespace Microsoft.OData.JsonLight
             // Same logic as ReadAtResourceEndImplementationAsync
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceEndImplementationSynchronously);
         }
-#endif
 
         #endregion DeltaDeletedEntry
 
@@ -795,7 +769,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtDeltaLinkImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaLinkImplementation'.
         /// </summary>
@@ -811,7 +784,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaLinkImplementationSynchronously);
         }
-#endif
 
         #endregion DeltaLink
 
@@ -833,7 +805,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtDeltaDeletedLinkImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaDeletedLinkImplementation'.
         /// </summary>
@@ -849,7 +820,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaDeletedLinkImplementationSynchronously);
         }
-#endif
 
         #endregion DeltaDeletedLink
 

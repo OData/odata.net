@@ -138,7 +138,6 @@ namespace Microsoft.OData
             return this.InterceptException((Func<bool>)this.ReadSynchronously);
         }
 
-#if PORTABLELIB
         /// <summary>Asynchronously reads the next part from the batch message payload.</summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         public Task<bool> ReadAsync()
@@ -146,7 +145,6 @@ namespace Microsoft.OData
             this.VerifyCanRead(false);
             return this.ReadAsynchronously().FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
         }
-#endif
 
         /// <summary>Returns an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A request message for reading the content of a batch operation.</returns>
@@ -160,7 +158,6 @@ namespace Microsoft.OData
             return result;
         }
 
-#if PORTABLELIB
         /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a request message for reading the content of a batch operation.</returns>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync()
@@ -177,7 +174,6 @@ namespace Microsoft.OData
                     })
                 .FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
         }
-#endif
 
         /// <summary>Returns an <see cref="T:Microsoft.OData.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A response message for reading the content of a batch operation.</returns>
@@ -190,7 +186,6 @@ namespace Microsoft.OData
             return result;
         }
 
-#if PORTABLELIB
         /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a response message for reading the content of a batch operation.</returns>
         public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync()
@@ -206,7 +201,6 @@ namespace Microsoft.OData
                     })
                 .FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
         }
-#endif
 
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
@@ -216,7 +210,6 @@ namespace Microsoft.OData
             this.operationState = OperationState.StreamRequested;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
@@ -229,7 +222,6 @@ namespace Microsoft.OData
             this.operationState = OperationState.StreamRequested;
             return TaskUtils.CompletedTask;
         }
-#endif
 
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
@@ -414,7 +406,6 @@ namespace Microsoft.OData
             return this.ReadImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next part from the batch message payload.
         /// </summary>
@@ -427,7 +418,6 @@ namespace Microsoft.OData
             // NOTE: once we switch to fully async reading this will have to change
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
         }
-#endif
 
         /// <summary>
         /// Continues reading from the batch message payload.
@@ -630,14 +620,10 @@ namespace Microsoft.OData
             }
             else
             {
-#if PORTABLELIB
                 if (this.synchronous)
                 {
                     throw new ODataException(Strings.ODataBatchReader_AsyncCallOnSyncReader);
                 }
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
             }
         }
 

@@ -4,14 +4,12 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>;1699;1570;1572;1573;1591;3005;3006;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
-    <AssemblyName>AstoriaTestFramework</AssemblyName>
- 
-    <!--<CreateMetaAssembly>false</CreateMetaAssembly>
-    <AssemblyKeyType>ECMA</AssemblyKeyType>-->
+    <AssemblyName>AstoriaTestFramework</AssemblyName> 
+    <CreateMetaAssembly>false</CreateMetaAssembly>
+    <AssemblyKeyType>ECMA</AssemblyKeyType>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
-    <!--<AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>-->
- 
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK> 
     <DefineConstants>$(DefineConstants);CODE_ANALYSIS_BASELINE;MICROSOFT_ASTORIA;ClientFramework</DefineConstants>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
@@ -20,8 +18,7 @@
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
-    <DocumentationFile>AstoriaTestFramework.xml</DocumentationFile>
- 
+    <DocumentationFile>AstoriaTestFramework.xml</DocumentationFile> 
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <Import Project="..\Build.props" />
@@ -60,16 +57,11 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Data.Linq" />
-    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj" />
-   
-    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj" />
-    
-    <ProjectReference Include="..\Tools\CustomData.ObjectContext\CustomData.ObjectContext.csproj" />
-      
-    <ProjectReference Include="..\Tools\Commander.Common\Commander.Common.csproj" />
- 
-    <ProjectReference Include="..\Framework.FullTrust\AstoriaTestFramework.FullTrust.csproj" />
-     
+    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj" />   
+    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj" />    
+    <ProjectReference Include="..\Tools\CustomData.ObjectContext\CustomData.ObjectContext.csproj" />      
+    <ProjectReference Include="..\Tools\Commander.Common\Commander.Common.csproj" /> 
+    <ProjectReference Include="..\Framework.FullTrust\AstoriaTestFramework.FullTrust.csproj" />     
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
@@ -421,7 +413,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
   <ItemGroup>
     <NorthwindMetadata Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.csdl;$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.msl;$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.ssdl" />
   </ItemGroup>

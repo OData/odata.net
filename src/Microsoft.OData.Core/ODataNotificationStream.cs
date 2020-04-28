@@ -9,9 +9,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.IO;
     using System.Threading;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Wrapper to listen for dispose on a stream
@@ -167,7 +165,6 @@ namespace Microsoft.OData
 
         #region async methods
 
-#if PORTABLELIB
 
         /// <inheritdoc/>
         public override Task FlushAsync(CancellationToken cancellationToken)
@@ -192,7 +189,7 @@ namespace Microsoft.OData
         {
             return this.stream.WriteAsync(buffer, offset, count, cancellationToken);
         }
-#endif
+
         #endregion
 
         /// <summary>

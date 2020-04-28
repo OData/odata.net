@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.VisualStudio.VCProject</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.VisualStudio.VCProject.charSet">
+      <summary>Used by the <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.CharacterSet" /> property.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.charSet.charSetNotSet">
+      <summary>Not Set</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.charSet.charSetUnicode">
+      <summary>Unicode Character Set</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.charSet.charSetMBCS">
+      <summary>Multi-Byte Character Set</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.compileAsManagedOptions">
+      <summary>Used by the <see cref="P:Microsoft.VisualStudio.VCProjectEngine.VCCLCompilerTool.CompileAsManaged" /> property.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.compileAsManagedOptions.managedNotSet">
+      <summary>No Common Language Runtime Support</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.compileAsManagedOptions.managedAssembly">
+      <summary>Common Language Runtime Support (/clr)</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.compileAsManagedOptions.managedAssemblyPure">
+      <summary>Pure MSIL Common Language Runtime Support (/clr:pure)</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.compileAsManagedOptions.managedAssemblySafe">
+      <summary>Safe MSIL Common Language Runtime Support (/clr:safe)</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.compileAsManagedOptions.managedAssemblyOldSyntax">
+      <summary>Common Language Runtime Support, Old Syntax (/clr:oldSyntax)</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.ConfigurationTypes">
+      <summary>Used by the <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.ConfigurationType" /> property.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.ConfigurationTypes.typeUnknown">
+      <summary>Utility</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.ConfigurationTypes.typeApplication">
+      <summary>Application (.exe)</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.ConfigurationTypes.typeDynamicLibrary">
+      <summary>Dynamic Library (.dll)</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.ConfigurationTypes.typeStaticLibrary">
+      <summary>Static Library (.dll)</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.ConfigurationTypes.typeGeneric">
+      <summary>Makefile, displays makefile toolset (NMake)</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage">
+      <summary>Automation interface for VC++Project Settings page.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.BuildLogging">
+      <summary>Gets or sets a value indicating whether build activity will be logged.</summary>
+      <returns>true if build activity is logged; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.BuildTiming">
+      <summary>Gets or sets a value indicating whether build-timing metadata is sent to an output window.</summary>
+      <returns>true if build time is output to an output window; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.CPPExtensions">
+      <summary>Gets or sets a value indicating which file extensions are associated with C++ files.</summary>
+      <returns>The file extensions associated with C++ files.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.DefaultSolutionExplorerMode">
+      <summary>Sets or gets the SolutionExplorerMode.</summary>
+      <returns>The solutionExplorerMode.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.ExtensionsToHide">
+      <summary>Gets or sets a value indicating which file extensions are hidden in Solution Explorer.</summary>
+      <returns>The hidden file extensions.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.ExtensionsToInclude">
+      <summary>Gets or sets a value indicating which file types are automatically included in the project.</summary>
+      <returns>File types automatically included in the project.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.ShowEnvironmentInBuildLog">
+      <summary>Gets or sets a value indicating whether to echo environment variables to the build log during builds of Visual C++ projects.</summary>
+      <returns>true if environment information is included in the build log; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.ShowNoMatchingRuleDlg">
+      <summary>Gets or sets a value indicating whether the Matching Custom Build Rule Not Found dialog box is shown when a file is added to the project.</summary>
+      <returns>true if the Matching Custom Build Rule Not Found dialog box is shown when a file is added to the project; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.ToolFileSearchPaths">
+      <summary>Specifies the list of directories that contain .TOOL files, which help you define build settings for your projects.</summary>
+      <returns>The list of directories that contain .TOOL files.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage.ValidateSchemas">
+      <summary>Gets or sets a value indicating whether to perform a schema validation.</summary>
+      <returns>true if schema validation occurs; otherwise, false.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2.BuildLogging"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2.BuildTiming"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2.DefaultSolutionExplorerMode"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2.ExtensionsToHide"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2.ExtensionsToInclude"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2.MaxConcurrentFileCompiles"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2.ShowEnvironmentInBuildLog"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.IVCBuildOptionsPage2.ToolFileSearchPaths"></member>
+    <member name="T:Microsoft.VisualStudio.VCProject.optManagedIncrementalBuild"></member>
+    <member name="F:Microsoft.VisualStudio.VCProject.optManagedIncrementalBuild.optManagedIncrementalBuildNo">
+      <summary />
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.optManagedIncrementalBuild.optManagedIncrementalBuildYes">
+      <summary />
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.RemoteDebuggerType">
+      <summary>Used by the <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Remote" /> property.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.RemoteDebuggerType.DbgRemote">
+      <summary>Remote</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.RemoteDebuggerType.DbgRemoteTCPIP">
+      <summary>Remote with no authentication.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.solutionExplorerMode">
+      <summary>Used to set the default mode for Visual C++ projects in Solution Explorer.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.solutionExplorerMode.modeShowOnlyInProject">
+      <summary>Shows only the files located in projects.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.solutionExplorerMode.modeShowAllFiles">
+      <summary>Shows all files in the solution.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.TypeOfDebugger">
+      <summary>Specifies the debugger type to use.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.TypeOfDebugger.DbgNativeOnly">
+      <summary>Native Only</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.TypeOfDebugger.DbgManagedOnly">
+      <summary>Managed Only</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.TypeOfDebugger.DbgMixed">
+      <summary>Mixed</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.TypeOfDebugger.DbgAuto">
+      <summary>Auto</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.TypeOfDebugger.DbgScript">
+      <summary />
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.useOfATL">
+      <summary>Specifies whether the ATL project will statically or dynamically link to the ATL .dll.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.useOfATL.useATLNotSet">
+      <summary>Not set</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.useOfATL.useATLStatic">
+      <summary>Static link</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.useOfATL.useATLDynamic">
+      <summary>Dynamic link</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.useOfMfc">
+      <summary>Specifies whether the MFC project will statically or dynamically link to the MFC DLL.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.useOfMfc.useMfcStdWin">
+      <summary>Standard Windows Libraries</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.useOfMfc.useMfcStatic">
+      <summary>Static link</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.useOfMfc.useMfcDynamic">
+      <summary>Dynamic link</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.vcContextGuids">
+      <summary>Contains context GUIDs, each of which represents a given IDE state, such as if a  Visual C++ project is open, or the Visual C++ editor is open. This enumeration is passed as an argument to <see cref="M:EnvDTE.Commands.AddNamedCommand(EnvDTE.AddIn,System.String,System.String,System.String,System.Boolean,System.Int32,System.Object[]@,System.Int32)" /> and <see cref="M:EnvDTE80.Commands2.AddNamedCommand2(EnvDTE.AddIn,System.String,System.String,System.String,System.Boolean,System.Object,System.Object[]@,System.Int32,System.Int32,EnvDTE80.vsCommandControlType)" />.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcContextGuids.vcContextGuidVCEditor">
+      <summary>Represents whether Visual C++ code is open in the editor.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcContextGuids.vcContextGuidVCProject">
+      <summary>Represents whether a Visual C++ project is present in the IDE.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.VCDirectories">
+      <summary>Provides a mechanism to set and query project directories.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCDirectories.ExcludeDirectories">
+      <summary>Sets or gets directories to exclude.</summary>
+      <returns>String containing names of directories that should be excluded from the project.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCDirectories.ExecutableDirectories">
+      <summary>Sets or gets directories for executables.</summary>
+      <returns>String containing names of directories that contain executable code.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCDirectories.IncludeDirectories">
+      <summary>Sets or gets directories for header files.</summary>
+      <returns>String containing names of directories that contain header files.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCDirectories.LibraryDirectories">
+      <summary>Sets or gets directories for libraries.</summary>
+      <returns>String containing names of directories that contain libraries.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCDirectories.ReferenceDirectories">
+      <summary>Sets or gets reference directories.</summary>
+      <returns>String containing names of directories that contain reference files.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCDirectories.SourceDirectories">
+      <summary>Sets or gets source directories.</summary>
+      <returns>String containing names of directories that contain source files.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.VCFileConfigurationProperties">
+      <summary>Contains build information about a file.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCFileConfigurationProperties.ExcludedFromBuild">
+      <summary>Gets or sets a value indicating whether this item is excluded from the build.</summary>
+      <returns>true if this item is excluded from the build; otherwise, false.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.vcprojCATIDS">
+      <summary>Used to identify items returned via DTE automation methods.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcprojCATIDS.vcprojCATIDActiveXReferenceNode">
+      <summary>Not currently implemented.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcprojCATIDS.vcprojCATIDAssemblyReferenceNode">
+      <summary>Not currently implemented.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcprojCATIDS.vcprojCATIDFileGroup">
+      <summary>Represents a folder GUID.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcprojCATIDS.vcprojCATIDFileNode">
+      <summary>Represents a file GUID.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcprojCATIDS.vcprojCATIDProjectNode">
+      <summary>Represents a file GUID.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcprojCATIDS.vcprojCATIDProjectReferenceNode">
+      <summary>Not currently implemented.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.vcprojCATIDS.vcprojCATIDReferences">
+      <summary>Not currently implemented.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties">
+      <summary>Contains the properties of the project configuration.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.ATLMinimizesCRunTimeLibraryUsage">
+      <summary>Causes ATL to link to the C runtime libraries statically to minimize dependencies. It requires that the useOfATL property be set.</summary>
+      <returns>true when ATL is statically linked to the C runtime libraries; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Attach">
+      <summary>Specifies whether, when this project is debugged, the debugger should be attached to the process specified in the <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Command" /> property.</summary>
+      <returns>true when the debugger should be attached to a specified process; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.CharacterSet">
+      <summary>Tells the compiler to use the specified character set.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.VCProject.charSet" /> enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Command">
+      <summary>If <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Remote" /> specifies local debugging and <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Attach" /> is false, the <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Command" /> property specifies the executable file to start when you invoke the debugger. If <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Attach" /> is true and <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Remote" /> specifies remote debugging, the <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Command" /> property specifies the process to which the debug process should be attached when you invoke the debugger.</summary>
+      <returns>Either the executable file to start when you invoke the debugger or the process to which the debug process should be attached when you invoke the debugger</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.CommandArguments">
+      <summary>The arguments to pass to the process specified in <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Command" /> when <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Attach" /> is false.</summary>
+      <returns>The command line arguments to pass to the application.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.ConfigurationType">
+      <summary>Gets and sets the type of output this configuration generates.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.VCProject.ConfigurationTypes" /> enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.DebuggerType">
+      <summary>Specifies the debugger settings for managed or unmanaged code. If you specify a debugger type that does not match the code you are debugging, you cannot step into certain sections of code. For example, if you specify Managed debugger, you cannot step into unmanaged code.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.VCProject.TypeOfDebugger" /> enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.DeleteExtensionsOnClean">
+      <summary>Specifies which files in the intermediate directory to delete on clean or rebuild.</summary>
+      <returns>The files in the intermediate directory to delete on clean or rebuild.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.EnableManagedIncrementalBuild"></member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.HttpUrl">
+      <summary>For ATL Server debugging, specifies the URL for the project.</summary>
+      <returns>The URL for the project.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.IntermediateDirectory">
+      <summary>Specifies a relative path to the intermediate file directory. It can include environment variables.</summary>
+      <returns>The relative path to the intermediate file directory.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.ManagedExtensions">
+      <summary>Specifies that this configuration uses Visual C++. Exposes the functionality of the C++ compiler's /clr (Common Language Runtime Compilation) option.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.VCProject.compileAsManagedOptions" /> enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.OutputDirectory">
+      <summary>Specifies the directory in which to place output. By default, it uses the project directory.</summary>
+      <returns>The output directory. Uses the project directory by default.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.OutputPath">
+      <summary>Specifies the location of the output files for this project's configuration.</summary>
+      <returns>The path for the build output.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.PDBPath">
+      <summary>Additional directories to search for symbol files.</summary>
+      <returns>The directories to search for symbol files.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Remote">
+      <summary>Specifies local or remote debugging.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.VCProject.RemoteDebuggerType" /> enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.RemoteCommand">
+      <summary>If <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Attach" /> is false and <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Remote" /> specifies remote debugging, the executable file starts when you invoke the debugger. If <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Attach" /> is true and <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Remote" /> specifies remote debugging, then the <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.RemoteCommand" /> property specifies the process to which the debug process should be attached when you invoke the debugger.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.RemoteMachine">
+      <summary>When <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.Remote" /> specifies remote debugging, the <see cref="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.RemoteMachine" /> property specifies the name of the machine that contains the program to debug.</summary>
+      <returns>The remote machine to be debugged by using the remote debugger.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.SQLDebugging">
+      <summary>Enables SQL debugging for the project.</summary>
+      <returns>true if SQL debugging is enabled; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.useOfATL">
+      <summary>Specifies how ATL is used by the configuration.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.VCProject.useOfATL" /> enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.useOfMfc">
+      <summary>Specifies how MFC is used by the configuration.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.VCProject.useOfMfc" /> enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.WholeProgramOptimization">
+      <summary>Enables cross-module optimizations by delaying code generation to link time. Exposes the functionality of the compiler's /GL (Whole Program Optimization) option.</summary>
+      <returns>A <see cref="T:Microsoft.VisualStudio.VCProject.WholeProgramOptimizationTypes" /> enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualStudio.VCProject.VCProjectConfigurationProperties.WorkingDirectory">
+      <summary>The debugger's working directory. The default location is the directory containing the .vcxproj file.</summary>
+      <returns>The debugger's working directory.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.VCProject.WholeProgramOptimizationTypes">
+      <summary>Specifies that the program will be optimized across object boundaries.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.WholeProgramOptimizationTypes.WholeProgramOptimizationNone">
+      <summary>No Whole Program Optimization</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.WholeProgramOptimizationTypes.WholeProgramOptimizationLinkTimeCodeGen">
+      <summary>Use Link Time Code Generation</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.WholeProgramOptimizationTypes.WholeProgramOptimizationPGOInstrument">
+      <summary>Profile Guided Optimization - Instrument</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.WholeProgramOptimizationTypes.WholeProgramOptimizationPGOOptimize">
+      <summary>Profile Guided Optimization - Optimize</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.VCProject.WholeProgramOptimizationTypes.WholeProgramOptimizationPGOUpdate">
+      <summary>Profile Guided Optimization - Update</summary>
+    </member>
+  </members>
+</doc>

@@ -9,9 +9,8 @@ namespace Microsoft.OData
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -35,7 +34,6 @@ namespace Microsoft.OData
         {
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
@@ -267,6 +265,5 @@ namespace Microsoft.OData
 
             return result.FollowOnSuccessWith(t => t.Result);
         }
-#endif
     }
 }

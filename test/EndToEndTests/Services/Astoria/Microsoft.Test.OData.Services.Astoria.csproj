@@ -3,32 +3,21 @@
 
     <AssemblyName>Microsoft.Test.OData.Services.Astoria</AssemblyName>
     <DefineConstants>$(DefineConstants);TEST_ODATA_SERVICES_ASTORIA</DefineConstants>
-
     <UseIISExpress>true</UseIISExpress>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-
     <TargetFrameworks>net45</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
-
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
-  <!--<PropertyGroup>
-    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' and '$(BuildingInLab)' != 'true'">$(DefineConstants);USELOCALDB</DefineConstants>
-  </PropertyGroup>-->
-  <!--<ItemGroup>
-  
-    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" />
-  </ItemGroup>-->
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="5.0.0" />
@@ -52,23 +41,16 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" />
+    <Reference Include="System.Xml.Linq" />    
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-
     <ProjectReference Include="..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj" />
-
   </ItemGroup>
   <ItemGroup>
     <Content Include="clientaccesspolicy.xml">
@@ -291,7 +273,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
   <!-- Trick VS into not converting project upon load -->
   <!--<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />-->
 </Project>

@@ -10,9 +10,7 @@ namespace Microsoft.OData.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -73,7 +71,6 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-#if PORTABLELIB
 
         /// <summary>
         /// Read a top-level error.
@@ -118,7 +115,6 @@ namespace Microsoft.OData.JsonLight
                     this.JsonReader.DisableInStreamErrorDetection = false;
                 });
         }
-#endif
 
         /// <summary>
         /// Read a top-level error.

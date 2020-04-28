@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
- 
+  <PropertyGroup> 
     <AssemblyName>T4CrossPlatformTests</AssemblyName>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
@@ -13,27 +12,14 @@
     <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <Import Project="..\Build.props" />
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\CodeGen\*.cs" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 </Project>

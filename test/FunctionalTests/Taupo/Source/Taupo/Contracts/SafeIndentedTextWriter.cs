@@ -274,7 +274,6 @@ namespace Microsoft.Test.Taupo.Contracts
         /// Writes the text representation of a 4-byte unsigned integer to the text stream.
         /// </summary>
         /// <param name="value">The 4-byte unsigned integer to write.</param>
-        [CLSCompliant(false)]
         [SecuritySafeCritical]
         public override void Write(uint value)
         {
@@ -285,7 +284,6 @@ namespace Microsoft.Test.Taupo.Contracts
         /// Writes the text representation of an 8-byte unsigned integer to the text stream.
         /// </summary>
         /// <param name="value">The 8-byte unsigned integer to write.</param>
-        [CLSCompliant(false)]
         [SecuritySafeCritical]
         public override void Write(ulong value)
         {
@@ -464,7 +462,6 @@ namespace Microsoft.Test.Taupo.Contracts
         /// Writes the text representation of a 4-byte unsigned integer followed by a line terminator to the text stream.
         /// </summary>
         /// <param name="value">The 4-byte unsigned integer to write.</param>
-        [CLSCompliant(false)]
         [SecuritySafeCritical]
         public override void WriteLine(uint value)
         {
@@ -475,7 +472,6 @@ namespace Microsoft.Test.Taupo.Contracts
         /// Writes the text representation of an 8-byte unsigned integer followed by a line terminator to the text stream.
         /// </summary>
         /// <param name="value">The 8-byte unsigned integer to write.</param>
-        [CLSCompliant(false)]
         [SecuritySafeCritical]
         public override void WriteLine(ulong value)
         {

@@ -1,21 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-    <AssemblyName>Microsoft.SqlServer.TestShell.InputSpaceModeling</AssemblyName>
- 
-     <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
- 
+    <AssemblyName>Microsoft.SqlServer.TestShell.InputSpaceModeling</AssemblyName> 
+     <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK> 
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
- 
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems> 
     <EnableStyleCop>false</EnableStyleCop>
     <TransparentAssembly>true</TransparentAssembly>
-    <DefineConstants>TAUPO_TESTSHELL</DefineConstants>
- 
+    <DefineConstants>TAUPO_TESTSHELL</DefineConstants> 
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
@@ -86,5 +82,5 @@
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
- 
-    <AssemblyName>Microsoft.Test.Taupo.Astoria</AssemblyName>
- 
+  <PropertyGroup> 
+    <AssemblyName>Microsoft.Test.Taupo.Astoria</AssemblyName> 
     <FileAlignment>512</FileAlignment>
     <NoWarn>3005,3016</NoWarn>
     <EnableStyleCop>true</EnableStyleCop>
@@ -15,16 +13,12 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
- 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" /> 
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -722,12 +716,9 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Taupo.Query\Microsoft.Test.Taupo.Query.csproj" />
-   
-    <ProjectReference Include="..\Taupo.Spatial\Microsoft.Test.Taupo.Spatial.csproj" />
-      
-    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj" />
- 
+    <ProjectReference Include="..\Taupo.Query\Microsoft.Test.Taupo.Query.csproj" />   
+    <ProjectReference Include="..\Taupo.Spatial\Microsoft.Test.Taupo.Spatial.csproj" />      
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj" /> 
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -792,5 +783,5 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

@@ -9,9 +9,7 @@ namespace Microsoft.OData.Json
     #region Namespaces
     using System.Collections.Generic;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.JsonLight;
 
     #endregion Namespaces
@@ -76,7 +74,6 @@ namespace Microsoft.OData.Json
             return new ODataJsonLightOutputContext(messageInfo, messageWriterSettings);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
@@ -125,7 +122,6 @@ namespace Microsoft.OData.Json
             return Task.FromResult<ODataOutputContext>(
                 new ODataJsonLightOutputContext(messageInfo, messageWriterSettings));
         }
-#endif
 
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
@@ -145,7 +141,6 @@ namespace Microsoft.OData.Json
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
         /// </summary>
@@ -165,6 +160,5 @@ namespace Microsoft.OData.Json
                         jsonLightInputContext.Dispose();
                     });
         }
-#endif
     }
 }

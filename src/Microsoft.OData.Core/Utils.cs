@@ -10,9 +10,8 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -38,7 +37,6 @@ namespace Microsoft.OData
             return false;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes a stream.
         /// </summary>
@@ -48,7 +46,6 @@ namespace Microsoft.OData
         {
             return Task.Factory.StartNew(stream.Flush);
         }
-#endif
 
         /// <summary>
         /// Perform a stable sort of the <paramref name="array"/> using the specified <paramref name="comparison"/>.

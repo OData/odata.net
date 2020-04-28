@@ -20,7 +20,6 @@ namespace Microsoft.OData.Service
     /// <internal>
     /// Provides a host for services of type DataService.
     /// </internal>
-    [CLSCompliant(false)]
     public class DataServiceHost : WebServiceHost
     {
         /// <summary>Instantiates <see cref="T:Microsoft.OData.Service.DataServiceHost" /> for WCF Data Services.</summary>

@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-
     <AssemblyName>Microsoft.Test.OData.Framework</AssemblyName>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
@@ -8,7 +7,7 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <!--<AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>-->
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
@@ -18,8 +17,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="4.1.0" />
-    
+    <PackageReference Include="FluentAssertions" Version="4.1.0" />    
     <PackageReference Include="EntityFramework" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
@@ -32,23 +30,16 @@
 
   <ItemGroup>
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
-   
-    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.DataDriven.dll" />
-    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Extensions.dll" />
-    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.MaDLybZ.dll" />
-    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Validation.dll" />
-
- 
-
+    <Reference Include="System.ServiceModel.Web" />   
+    <Reference Include="..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.DataDriven.dll" />
+    <Reference Include="..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Extensions.dll" />
+    <Reference Include="..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.MaDLybZ.dll" />
+    <Reference Include="..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Validation.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
-
     <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs">
@@ -85,6 +76,5 @@
     <Compile Include="Verification\StringResourceUtil.cs" />
     <Compile Include="Verification\IStringResourceVerifier.cs" />
     <Compile Include="Verification\StringResourceVerifier.cs" />
-  </ItemGroup>
-  
+  </ItemGroup>  
 </Project>

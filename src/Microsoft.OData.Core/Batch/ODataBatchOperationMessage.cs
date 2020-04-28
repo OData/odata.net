@@ -12,9 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     #endregion Namespaces
 
     /// <summary>
@@ -135,7 +133,6 @@ namespace Microsoft.OData
             return contentStream;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
@@ -152,7 +149,6 @@ namespace Microsoft.OData
             this.PartHeaderProcessingCompleted();
             return listenerTask.FollowOnSuccessWith(task => { return (Stream)contentStream; });
         }
-#endif
 
         /// <summary>
         /// Queries the message for the specified interface type.

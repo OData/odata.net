@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.VisualStudio.TextTemplating.Modeling.10.0</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.VisualStudio.TextTemplating.Modeling.ModelBusEnabledTextTransformation">
+      <summary>To access Visual Studio ModelBus in the code of a text template, specify this class in the inherits attribute of the template directive of the template, and set the hostspecific attribute to true. In the template code, you can get the SModelBus and SComponentModel services.</summary>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.ModelBusEnabledTextTransformation.#ctor"></member>
+    <member name="P:Microsoft.VisualStudio.TextTemplating.Modeling.ModelBusEnabledTextTransformation.ModelBus"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.ModelBusEnabledTextTransformation.OnSessionChanged(Microsoft.VisualStudio.TextTemplating.ITextTemplatingSession,Microsoft.VisualStudio.TextTemplating.ITextTemplatingSession)"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.ModelBusEnabledTextTransformation.ReportError(Microsoft.VisualStudio.Modeling.Integration.ErrorCategory,System.String)"></member>
+    <member name="P:Microsoft.VisualStudio.TextTemplating.Modeling.ModelBusEnabledTextTransformation.ServiceProvider"></member>
+    <member name="T:Microsoft.VisualStudio.TextTemplating.Modeling.SessionStoreCache"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.SessionStoreCache.CacheSessionStore(System.String,Microsoft.VisualStudio.Modeling.Store)"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.SessionStoreCache.DisposeSessionStoreMap"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.SessionStoreCache.GetSessionStore(System.String)"></member>
+    <member name="T:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.#ctor"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.ClearState"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.CreateDocumentHandler(Microsoft.VisualStudio.Modeling.Integration.ModelingAdapterReference,System.IServiceProvider)"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.CreateLoadStore(Microsoft.VisualStudio.Modeling.Store,Microsoft.VisualStudio.Modeling.Integration.ModelingAdapterReference,System.IServiceProvider)"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.CreateSerializerLocator"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.DoCreateAdapter(Microsoft.VisualStudio.Modeling.Integration.ModelBusReference,System.IServiceProvider)"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.FindStoreRoot(Microsoft.VisualStudio.Modeling.Store,Microsoft.VisualStudio.Modeling.Integration.ModelingAdapterReference,System.IServiceProvider)"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.GetAdapterReferenceStoreKey(Microsoft.VisualStudio.Modeling.Integration.ModelingAdapterReference)"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.GetView(Microsoft.VisualStudio.Modeling.Integration.ModelBusAdapter,Microsoft.VisualStudio.Modeling.Integration.ModelBusReference)"></member>
+    <member name="F:Microsoft.VisualStudio.TextTemplating.Modeling.VsTextTemplatingModelingAdapterManager.HostName"></member>
+    <member name="T:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.#ctor"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.AddDomainModel(System.Type)">
+      <param name="modelType"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.ConvertModelRelativePathToTemplateRelativePath(System.String,System.String,System.String)">
+      <param name="modelPath"></param>
+      <param name="templatePath"></param>
+      <param name="path"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.Dispose(System.Boolean)">
+      <param name="disposing"></param>
+    </member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.Initialize"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.OnSessionChanged(Microsoft.VisualStudio.TextTemplating.ITextTemplatingSession,Microsoft.VisualStudio.TextTemplating.ITextTemplatingSession)"></member>
+    <member name="P:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.ServiceProvider"></member>
+    <member name="P:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.Session"></member>
+    <member name="P:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.SessionId"></member>
+    <member name="P:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.SkipValidation"></member>
+    <member name="P:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.Store"></member>
+    <member name="M:Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation.ValidateStore(System.String,System.CodeDom.Compiler.CompilerErrorCollection)">
+      <param name="categories"></param>
+      <param name="errors"></param>
+    </member>
+  </members>
+</doc>

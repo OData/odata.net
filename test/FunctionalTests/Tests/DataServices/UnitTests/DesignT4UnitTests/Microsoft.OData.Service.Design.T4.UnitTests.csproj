@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="4.1.0" />
-
     <PackageReference Include="EntityFramework" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
@@ -29,7 +28,6 @@
    </ItemGroup>
   
   <ItemGroup>
-
     <Compile Include="CodeGenerationContextTest.cs" />
     <EmbeddedResource Include="CodeGen\*.cs" />
     <EmbeddedResource Include="CodeGen\*.vb" />
@@ -42,18 +40,12 @@
     <Compile Include="UtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
- 
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-   
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />   
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenerator.tt">
@@ -74,6 +66,5 @@
     <EmbeddedResource Update="\src\CodeGen\ODataT4CodeGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-  
+  </ItemGroup>  
 </Project>

@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>T4CrossPlatformTestsVB</AssemblyName>
-    <FileAlignment>512</FileAlignment>
- 
+    <FileAlignment>512</FileAlignment> 
     <Optimize>false</Optimize>
-    <DefineConstants>DEBUG,TRACE</DefineConstants>
- 
+    <DefineConstants>DEBUG,TRACE</DefineConstants> 
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>Off</OptionStrict>
@@ -21,30 +19,17 @@
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
   </PropertyGroup>
   <Import Project="..\Build.props" />
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\CodeGen\*.vb" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />-->
+  </ItemGroup>  
 </Project>

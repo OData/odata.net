@@ -12,10 +12,8 @@ namespace Microsoft.OData.MultipartMixed
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     internal sealed class ODataMultipartMixedBatchReader : ODataBatchReader

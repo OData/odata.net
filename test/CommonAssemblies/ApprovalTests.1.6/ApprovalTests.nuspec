@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <version>1.6</version>
+    <authors>Llewellyn Falco &amp; Dan Gilkerson</authors>
+    <owners />
+    <projectUrl>http://approvaltests.sourceforge.net/</projectUrl>
+    <iconUrl>http://approvaltests.sourceforge.net/sites/all/themes/corolla/logo.png</iconUrl>
+    <id>ApprovalTests</id>
+    <title>Approval Tests</title>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A picture's worth a 1000 tests.
+Unit testing asserts can be difficult to use. Approval tests simplify this by taking a snapshot of the results, and confirming that they have not changed.</description>
+    <language>en-US</language>
+    <tags>unit testing</tags>
+  </metadata>
+</package>

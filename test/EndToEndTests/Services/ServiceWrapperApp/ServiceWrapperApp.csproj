@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    
-    <OutputType>Exe</OutputType>
- 
+  <PropertyGroup>    
+    <OutputType>Exe</OutputType> 
     <AssemblyName>ServiceWrapperApp</AssemblyName>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
@@ -18,42 +16,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
-
-
-    <!--<PackageReference Include="Microsoft.MadMan" Version="3.1.112712" />-->
-    <!--
-    
-    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    -->
+    <PackageReference Include="Microsoft.VisualStudio.TestPlatform" Version="14.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
-    <!--<PackageReference Include="MicrosoftVisualStudioQualityToolsUnitTestFramework" Version="1.0.0" />-->
-    <!--<PackageReference Include="VS.QualityTools.UnitTestFramework" Version="15.0.27323.2" />-->
-
-  </ItemGroup>
-  <!--<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>$(EnlistmentRoot)\bin\AnyCPU\Debug\Test\Desktop\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>$(EnlistmentRoot)\bin\AnyCPU\Release\Test\Desktop\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>-->
-  <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\sln\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-    </Reference>
+   </ItemGroup>
+   <ItemGroup>
+   
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -74,17 +42,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
-  
-    <ProjectReference Include="..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj" />
-     
-    <ProjectReference Include="..\..\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj" />
-   
-    <ProjectReference Include="..\TestServices\Microsoft.Test.OData.Services.TestServices.csproj" />
-     
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />  
+    <ProjectReference Include="..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj" />     
+    <ProjectReference Include="..\..\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj" />   
+    <ProjectReference Include="..\TestServices\Microsoft.Test.OData.Services.TestServices.csproj" />     
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

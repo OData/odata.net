@@ -1,0 +1,643 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>CppCodeProvider</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.VisualC.CodeDomTypeInfo">
+      <summary>Encapsulates descriptions of a type.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CodeDomTypeInfo.#ctor(Microsoft.VisualC.CodeDomTypeInfo)">
+      <summary>Creates a container for type information based on the specified <see cref="T:Microsoft.VisualC.CodeDomTypeInfo" />.</summary>
+      <param name="type">An instance of a <see cref="T:Microsoft.VisualC.CodeDomTypeInfo" /> object used to model type information.</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CodeDomTypeInfo.#ctor(Microsoft.VisualC.CodeDomTypeInfo,System.Int32)">
+      <summary>Creates a container for information about a given array based on the specified <see cref="T:Microsoft.VisualC.CodeDomTypeInfo" /> and <see cref="T:System.Int32" />.</summary>
+      <param name="type">An instance of a <see cref="T:Microsoft.VisualC.CodeDomTypeInfo" /> object used to model type information.</param>
+      <param name="rank">An <see cref="T:System.Int32" /> that represents the number of dimensions of the array.</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CodeDomTypeInfo.#ctor(System.CodeDom.CodeTypeDeclaration)">
+      <summary>Creates a container for type information based on the specified <see cref="T:System.CodeDom.CodeTypeDeclaration" />.</summary>
+      <param name="declaredType">A <see cref="T:System.CodeDom.CodeTypeDeclaration" /> used to model type information.</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CodeDomTypeInfo.#ctor(System.Type)">
+      <summary>Creates a container for type information based on the specified <see cref="T:System.Type" />.</summary>
+      <param name="runtimeType">A <see cref="T:System.Type" /> used to model type information.</param>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.DeclaredType">
+      <summary>Gets the type declaration.</summary>
+      <returns>A <see cref="T:System.CodeDom.CodeTypeDeclaration" />, which represents a type declaration for a class, structure, interface or enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.FullName">
+      <summary>Gets the fully qualified name of the type.</summary>
+      <returns>A <see cref="T:System.String" /> that indicates the fully qualified name of the type.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CodeDomTypeInfo.GetTypeRelationship(Microsoft.VisualC.CodeDomTypeInfo)">
+      <summary>Discovers the relationship between two types.</summary>
+      <returns>A <see cref="T:Microsoft.VisualC.TypeRelationship" /> that indicates how the current type relates to the specified type.</returns>
+      <param name="type">
+        <see cref="T:Microsoft.VisualC.CodeDomTypeInfo" />
+      </param>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.IsArray">
+      <summary>Gets a value that indicates whether the type description defines an array.</summary>
+      <returns>true if the type description defines is an array; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.IsBaseTypeValueType">
+      <summary>Is base type value type.</summary>
+      <returns>true if the base type is a value type; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.IsInterface">
+      <summary>Gets a value that indicates whether the type description defines an interface.</summary>
+      <returns>true if the type description defines an interface; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.IsValueType">
+      <summary>Gets a value that indicates whether the type description defines is a value type.</summary>
+      <returns>true if the type description defines a value type; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.Name">
+      <summary>Gets the name of the type.</summary>
+      <returns>A <see cref="T:System.String" /> that indicates the name of the type.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.Rank">
+      <summary>Gets and sets the value that indicates the rank (number of dimensions) of an array type.</summary>
+      <returns>An <see cref="T:System.Int32" /> that indicates the rank (number of dimensions) of an array type.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CodeDomTypeInfo.RuntimeType">
+      <summary>Gets the actual type of the object at runtime.</summary>
+      <returns>The <see cref="T:System.Type" /> of the object at runtime.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CodeDomTypeInfo.ToString">
+      <summary>Generates a string representation of the type information.</summary>
+      <returns>A <see cref="T:System.String" /> that describes the type.</returns>
+    </member>
+    <member name="T:Microsoft.VisualC.CppCodeGenerator">
+      <summary>Provides an example implementation of the <see cref="T:System.CodeDom.Compiler.ICodeGenerator" /> interface and <see cref="T:System.CodeDom.Compiler.ICodeCompiler" /> interface.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGenerator.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualC.CppCodeGenerator" /> class.</summary>
+    </member>
+    <member name="T:Microsoft.VisualC.CppCodeGenerator7">
+      <summary>Provides an example implementation of the <see cref="T:System.CodeDom.Compiler.ICodeGenerator" /> interface.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGenerator7.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualC.CppCodeGenerator7" /> class.</summary>
+    </member>
+    <member name="T:Microsoft.VisualC.CppCodeGeneratorBase">
+      <summary>C++ code generator.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.#ctor">
+      <summary>Constructor.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.CreateEscapedIdentifier(System.String)">
+      <summary>Create an escaped identifier.</summary>
+      <returns>An identifier that contains escaped characters in place of unsupported characters.</returns>
+      <param name="name">identifier</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.CreateEscapedIdentifierInternal(System.String)">
+      <summary>Create escaped identifier internal.</summary>
+      <returns>An identifier that contains escaped characters in place of unsupported characters.</returns>
+      <param name="name">identifier</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.CreateValidIdentifier(System.String)">
+      <summary>Create valid identifier.</summary>
+      <returns>The <paramref name="name" /> parameter preceded by an underscore ('_') if <paramref name="name" /> is a keyword; otherwise, the original <paramref name="name" /> parameter.</returns>
+      <param name="name">identifier</param>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.CurrentTypeString">
+      <summary>Gets or sets the text representation of the current type declaration.</summary>
+      <returns>A string.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.Dispose">
+      <summary>Dispose.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.Dispose(System.Boolean)">
+      <summary>Dispose.</summary>
+      <param name="disposing">true if disposing; otherwise, false.</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateArrayCreateExpression(System.CodeDom.CodeArrayCreateExpression)">
+      <summary>Generate array create expression.</summary>
+      <param name="e">expression</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateAttributes(System.CodeDom.CodeAttributeDeclarationCollection)">
+      <summary>Generate attributes.</summary>
+      <param name="attributes">attributes</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateAttributes(System.CodeDom.CodeAttributeDeclarationCollection,System.String)">
+      <summary>Generate attributes.</summary>
+      <param name="attributes">attributes</param>
+      <param name="prefix">prefix</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCastExpression(System.CodeDom.CodeCastExpression)">
+      <summary>Generate cast expression.</summary>
+      <param name="e">expression</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCodeFromCompileUnit(System.CodeDom.CodeCompileUnit,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions)">
+      <summary>Generate code from compile unit.</summary>
+      <param name="e">Code compile unit</param>
+      <param name="w">Text writer</param>
+      <param name="o">options</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCodeFromExpression(System.CodeDom.CodeExpression,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions)">
+      <summary>Generate code from expression.</summary>
+      <param name="e">expression</param>
+      <param name="w">Text writer</param>
+      <param name="o">options</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCodeFromField(System.CodeDom.CodeMemberField,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions,System.CodeDom.MemberAttributes)">
+      <summary>Generate code from field.</summary>
+      <param name="e">Code member field</param>
+      <param name="w">Text writer</param>
+      <param name="o">options</param>
+      <param name="maAmbient">Member attributes</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCodeFromMember(System.CodeDom.CodeTypeMember,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions)">
+      <summary>Generate code from member.</summary>
+      <param name="e">Code type member</param>
+      <param name="w">Text writer</param>
+      <param name="o">options</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCodeFromMethod(System.CodeDom.CodeMemberMethod,System.CodeDom.CodeTypeDeclaration,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions)">
+      <summary>Generate code from method.</summary>
+      <param name="e">Code member method</param>
+      <param name="c">Code type declaration</param>
+      <param name="w">Text writer</param>
+      <param name="o">options</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCodeFromNamespace(System.CodeDom.CodeNamespace,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions)">
+      <summary>Generate code from namespace.</summary>
+      <param name="e">Code namespace</param>
+      <param name="w">Text writer</param>
+      <param name="o">options</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCodeFromStatement(System.CodeDom.CodeStatement,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions)">
+      <summary>Generate code from statement.</summary>
+      <param name="e">Code statement</param>
+      <param name="w">Text writer</param>
+      <param name="o">options</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCodeFromType(System.CodeDom.CodeTypeDeclaration,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions)">
+      <summary>Generate code from type.</summary>
+      <param name="e">Code type declaration</param>
+      <param name="w">Text writer</param>
+      <param name="o">options</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateCommentStatements(System.CodeDom.CodeCommentStatementCollection)">
+      <summary>Generate comment statements.</summary>
+      <param name="e">collection</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateEntryPointMethod(System.CodeDom.CodeEntryPointMethod)">
+      <summary>Generate entry point method.</summary>
+      <param name="e">method</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateExpression(System.CodeDom.CodeExpression)">
+      <summary>Generate expression.</summary>
+      <param name="e">expression</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateLinePragmaEnd(System.CodeDom.CodeLinePragma)">
+      <summary>Generate line pragma end.</summary>
+      <param name="e">pragma</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateLinePragmaStart(System.CodeDom.CodeLinePragma)">
+      <summary>Generate line pragma start.</summary>
+      <param name="e">pragma</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateMethodInvokeExpression(System.CodeDom.CodeMethodInvokeExpression)">
+      <summary>Generate method invoke expression.</summary>
+      <param name="e">expression</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateMethodReferenceExpression(System.CodeDom.CodeMethodReferenceExpression)">
+      <summary>Generate method reference expression.</summary>
+      <param name="e">expression</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GeneratePossibleBoxExpression(Microsoft.VisualC.CodeDomTypeInfo,System.CodeDom.CodeExpression)">
+      <summary>Generate possible box expression.</summary>
+      <param name="typeLeft">Type</param>
+      <param name="right">epxression</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GeneratePossibleBoxExpression(System.CodeDom.CodeExpression,System.CodeDom.CodeExpression)">
+      <summary>Generate possible box expression.</summary>
+      <param name="left">Expression</param>
+      <param name="right">Expression</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateProperty(System.CodeDom.CodeMemberProperty)">
+      <summary>Generate property.</summary>
+      <param name="e">property</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateStatements(System.CodeDom.CodeStatementCollection)">
+      <summary>Generate statements.</summary>
+      <param name="s">collection</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GenerateTypeOfExpression(System.CodeDom.CodeTypeOfExpression)">
+      <summary>Generate type of expression.</summary>
+      <param name="e">expression</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GetBaseTypeOutput(System.CodeDom.CodeTypeReference)">
+      <summary>Get base type output.</summary>
+      <returns>The type reference in C++ format. For example, namespace::class::member is returned instead of namespace.class.member.</returns>
+      <param name="typeRef">Type reference</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GetBaseTypeReference(System.CodeDom.CodeTypeReference)">
+      <summary>Get base type reference.</summary>
+      <returns>The <paramref name="typeRef" /> parameter if it is not an array. If it is an array, the base type of the array.</returns>
+      <param name="typeRef">Type reference</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GetClassNameOutput(System.String)">
+      <summary>Get class name output.</summary>
+      <returns>The type reference in C++ format. For example, namespace::class::member is returned instead of namespace.class.member.</returns>
+      <param name="s">string</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GetNewTempName">
+      <summary>Generates a new temporary name.</summary>
+      <returns>A name of the form, "__mcTemp__integer_suffix".</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GetTypeOutput(System.CodeDom.CodeTypeReference)">
+      <summary>Get type output.</summary>
+      <returns>The type reference in C++ format. For example, namespace::class::member is returned instead of namespace.class.member.</returns>
+      <param name="typeRef">Type reference</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.GetTypeOutputInternal(System.CodeDom.CodeTypeReference)">
+      <summary>Get type output internal.</summary>
+      <returns>The type reference in C++ format. For example, namespace::class::member is returned instead of namespace.class.member.</returns>
+      <param name="typeRef">Type reference</param>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.Indent">
+      <summary>Indent.</summary>
+      <returns>The number of spaces to indent.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.IsCurrentInterface">
+      <summary>Is current interface.</summary>
+      <returns>true if the current class is an interface; otherwise, false.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.IsInline">
+      <summary>Is inline.</summary>
+      <returns>true if the member method definition is inline within the class definition body; otherwise, false.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.IsValidIdentifier(System.String)">
+      <summary>Is valid identifier.</summary>
+      <returns>true if a valid identifier; otherwise, false.</returns>
+      <param name="value">value</param>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.m_entrypoint">
+      <summary>Entry point.</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.m_keywords">
+      <summary>Keywords.</summary>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.NullToken">
+      <summary>Null token.</summary>
+      <returns>A null token, which is implemented as either "nullptr" or "0".</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputArrayPostfix(System.Int32)">
+      <summary>Output array postfix.</summary>
+      <param name="arrayRank">Array rank</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputAttributeDeclarations(System.CodeDom.CodeAttributeDeclarationCollection)">
+      <summary>Output attribute declarations.</summary>
+      <param name="attributes">attributes</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputAttributeDeclarations(System.CodeDom.CodeAttributeDeclarationCollection,System.Boolean)">
+      <summary>Output attribute declarations.</summary>
+      <param name="attributes">attributes</param>
+      <param name="isProperty">True if property</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputClassHead(System.CodeDom.CodeTypeDeclaration)">
+      <summary>Output class head.</summary>
+      <param name="e">Type declaration</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputClassHeadForwardDeclaration(System.CodeDom.CodeTypeDeclaration)">
+      <summary>Output class head forward declaration.</summary>
+      <param name="e">Type declaration</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputEventScopeModifier(System.CodeDom.MemberAttributes)">
+      <summary>Output event scope modifier.</summary>
+      <param name="attributes">Attributes </param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputFunctionModifiers(System.CodeDom.MemberAttributes)">
+      <summary>Output function modifiers.</summary>
+      <param name="attributes">Attributes </param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputIdentifier(System.String)">
+      <summary>Output identifier.</summary>
+      <param name="s">string</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputIndexerParameterList(System.CodeDom.CodeParameterDeclarationExpressionCollection)">
+      <summary>Output indexer parameter list.</summary>
+      <param name="parameters">parameters</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputKeyword(Microsoft.VisualC.CppCodeGeneratorBase.EKeyword)">
+      <summary>Output keyword.</summary>
+      <param name="e">keyword</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputMemberAccessModifier(System.CodeDom.MemberAttributes)">
+      <summary>Output member access modifier.</summary>
+      <param name="attributes">attributes</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputMemberScopeModifier(System.CodeDom.MemberAttributes)">
+      <summary>Output member scope modifier.</summary>
+      <param name="attributes">attributes</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputParameters(System.CodeDom.CodeParameterDeclarationExpressionCollection)">
+      <summary>Output parameters.</summary>
+      <param name="parameters">parameters</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputStartingBrace">
+      <summary>Output starting brace.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputStatementsBlock(System.CodeDom.CodeStatementCollection)">
+      <summary>Output statements block.</summary>
+      <param name="statements">statements</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputType(System.CodeDom.CodeTypeReference)">
+      <summary>Output type.</summary>
+      <param name="typeRef">Type reference.</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputType(System.CodeDom.CodeTypeReference,Microsoft.VisualC.CodeDomTypeInfo)">
+      <summary>Output type.</summary>
+      <param name="typeRef">Type reference</param>
+      <param name="typeInfo">Type info</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.OutputTypeArguments(System.CodeDom.CodeTypeReferenceCollection)">
+      <summary>Output type arguments.</summary>
+      <param name="types">types</param>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.PassNumber">
+      <summary>Pass number.</summary>
+      <returns>Either pass 1, in which function declarations are generated, or pass 2, in which method bodies are generated.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.PopOutputStreams">
+      <summary>Pop output streams.</summary>
+      <returns>The combination of the streams created by <see cref="M:Microsoft.VisualC.CppCodeGeneratorBase.PushOutputStreams" />.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.PopulateKeywords">
+      <summary>Populate keywords.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.ProcessPossibleGlobalTypeName(System.String)">
+      <summary>Process possible global type name.</summary>
+      <returns>Returns the <paramref name="t" /> parameter.</returns>
+      <param name="t">string</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.PushOutputStreams">
+      <summary>Push output streams.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.QuoteSnippetString(System.String)">
+      <summary>Quote snippet string.</summary>
+      <returns>A string.</returns>
+      <param name="value">value</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.QuoteSnippetStringCStyle(System.String)">
+      <summary>Quote snippet string C-style.</summary>
+      <returns>The <paramref name="value" /> parameter with control characters, such as carriage return (\r) and tab (\t), replaced with a corresponding escape sequence.</returns>
+      <param name="value">value</param>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.ResetSymTabStack">
+      <summary>Reset symbol table stack</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.SmartLineBreak">
+      <summary>Smart line break;</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.Supports(System.CodeDom.Compiler.GeneratorSupport)">
+      <summary>Supports.</summary>
+      <returns>true if there is language support; otherwise, false.</returns>
+      <param name="support">support</param>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.SymTabStack">
+      <summary>Symbol table stack.</summary>
+      <returns>The current symbol table stack.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.TempSuffix">
+      <summary>Gets or sets the integer suffix that is appended to the temporary name generated by <see cref="M:Microsoft.VisualC.CppCodeGeneratorBase.GetNewTempName" />.</summary>
+      <returns>The integer suffix of a temporary name.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeGeneratorBase.TypeResolutionService">
+      <summary>Gets or sets a type resolution service object.</summary>
+      <returns>A <see cref="T:System.ComponentModel.Design.ITypeResolutionService" /> object.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeGeneratorBase.ValidateIdentifier(System.String)">
+      <summary>Valid identifier.</summary>
+      <param name="value">value</param>
+    </member>
+    <member name="T:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword">
+      <summary>Keyword enumeration.</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.GC">
+      <summary>gc keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.NEW">
+      <summary>new keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.POINTER">
+      <summary>pointer keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.VALUE">
+      <summary>value keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.SEALED">
+      <summary>sealed keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.ABSTRACT">
+      <summary>abstract keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.DELEGATE">
+      <summary>delegate keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.EVENT">
+      <summary>event keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.TYPEOF">
+      <summary>typeof keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.INTERFACE">
+      <summary>interface keyword</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.CppCodeGeneratorBase.EKeyword.FINALLY">
+      <summary>finally keyword</summary>
+    </member>
+    <member name="T:Microsoft.VisualC.CppCodeProvider">
+      <summary>Provides a base class for a C/C++ implementation of <see cref="T:System.CodeDom.Compiler.CodeDomProvider" />.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeProvider.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:Microsoft.VisualC.CppCodeProvider" /> class.</summary>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeProvider.CompileUnit">
+      <summary>Gets and sets a C++ program graph.</summary>
+      <returns>A <see cref="T:System.CodeDom.CodeCompileUnit" /> that represents a C++ program graph.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeProvider.CreateCompiler">
+      <summary>Creates an instance of the C++ code compiler.</summary>
+      <returns>An <see cref="T:System.CodeDom.Compiler.ICodeCompiler" /> that can be used for compilation of <see cref="N:System.CodeDom" /> based, C++ source code representations.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeProvider.CreateGenerator">
+      <summary>Creates an instance of a C++ code generator.</summary>
+      <returns>An <see cref="T:System.CodeDom.Compiler.ICodeGenerator" /> that can be used to generate <see cref="N:System.CodeDom" /> based, C++ source code representations.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeProvider.CreateParser">
+      <summary>Not implemented.</summary>
+      <returns> An <see cref="T:System.CodeDom.Compiler.ICodeParser" /> object.</returns>
+      <exception cref="T:System.NotImplementedException"> Not implemented.</exception>
+    </member>
+    <member name="P:Microsoft.VisualC.CppCodeProvider.FileExtension">
+      <summary>Gets the file name extension for C++ source code files.</summary>
+      <returns>A <see cref="T:System.String" /> that represents the file name extension for C++ source code files.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeProvider.GenerateCodeFromMember(System.CodeDom.CodeTypeMember,System.IO.TextWriter,System.CodeDom.Compiler.CodeGeneratorOptions)">
+      <summary>Generate code from member.</summary>
+      <param name="e">Member.</param>
+      <param name="w">Text writer.</param>
+      <param name="o">Options.</param>
+    </member>
+    <member name="T:Microsoft.VisualC.CppCodeProvider7">
+      <summary>C++ code provider.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeProvider7.#ctor">
+      <summary>Constructor.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.CppCodeProvider7.CreateGenerator">
+      <summary>Create generator.</summary>
+      <returns>A <see cref="T:System.CodeDom.Compiler.ICodeGenerator" /> object.</returns>
+    </member>
+    <member name="T:Microsoft.VisualC.SymbolTableStack">
+      <summary>Represents a simple last-in-first-out (LIFO) non-generic collection of C++ code document object model (CodeDOM) objects.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.#ctor(System.CodeDom.CodeObject)">
+      <summary>Constructor.</summary>
+      <param name="tree">
+        <see cref="T:System.CodeDom.CodeObject" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.Add(System.CodeDom.CodeParameterDeclarationExpressionCollection)">
+      <summary>Add.</summary>
+      <param name="arguments">
+        <see cref="T:System.CodeDom.CodeParameterDeclarationExpressionCollection" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.Add(System.CodeDom.CodeStatementCollection)">
+      <summary>Add.</summary>
+      <param name="statements">
+        <see cref="T:System.CodeDom.CodeStatementCollection" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.Add(System.String,Microsoft.VisualC.CodeDomTypeInfo)">
+      <summary>Add.</summary>
+      <param name="id">
+        <see cref="T:System.String" />
+      </param>
+      <param name="type">CodeDomTypeInfo</param>
+    </member>
+    <member name="P:Microsoft.VisualC.SymbolTableStack.CurrentType">
+      <summary>Current type.</summary>
+      <returns>A type declaration for a class, structure, interface, or enumeration.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.SymbolTableStack.CurrentTypeInfo">
+      <summary>Current type info.</summary>
+      <returns>A description of a type.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.SymbolTableStack.Errors">
+      <summary>Errors.</summary>
+      <returns>A collection of errors.</returns>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.EvaluateIndexer(System.CodeDom.CodeIndexerExpression)">
+      <summary>Evaluate indexer.</summary>
+      <returns>An array of <see cref="T:Microsoft.VisualC.CodeDomTypeInfo" />.</returns>
+      <param name="e">
+        <see cref="T:System.CodeDom.CodeIndexerExpression" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.EvaluateMethod(Microsoft.VisualC.CodeDomTypeInfo,System.String)">
+      <summary>Evaluate method.</summary>
+      <returns>An array of evaluations.</returns>
+      <param name="targetInfo">CodeDomTypeInfo</param>
+      <param name="methodName">
+        <see cref="T:System.String" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.EvaluateMethod(Microsoft.VisualC.CodeDomTypeInfo,System.String,System.Int32)">
+      <summary>Evaluate method.</summary>
+      <returns>An array of evaluations.</returns>
+      <param name="targetInfo">CodeDomTypeInfo</param>
+      <param name="methodName">
+        <see cref="T:System.String" />
+      </param>
+      <param name="paramCount">
+        <see cref="T:System.Int32" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.EvaluateMethod(System.CodeDom.CodeMethodInvokeExpression)">
+      <summary>Evaluate method.</summary>
+      <returns>An array of evaluations.</returns>
+      <param name="e">
+        <see cref="T:System.CodeDom.CodeMethodInvokeExpression" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.EvaluateProperty(System.CodeDom.CodePropertyReferenceExpression)">
+      <summary>Evaluate property.</summary>
+      <returns>An array of evaluations.</returns>
+      <param name="e">
+        <see cref="T:System.CodeDom.CodePropertyReferenceExpression" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.EvaluateType(System.CodeDom.CodeExpression)">
+      <summary>Evaluate type.</summary>
+      <returns>Type information.</returns>
+      <param name="e">
+        <see cref="T:System.CodeDom.CodeExpression" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.EvaluateType(System.CodeDom.CodeTypeReference)">
+      <summary>Evaluate type.</summary>
+      <returns>Type information.</returns>
+      <param name="e">
+        <see cref="T:System.CodeDom.CodeTypeReference" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.ExitScope">
+      <summary>Exit scope.</summary>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.GetTypeFromName(System.String)">
+      <summary>Retrieves type information for the specified type name.</summary>
+      <returns>Description of a type if found; otherwise, null.</returns>
+      <param name="name">The name of a type. </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.SetCurrentType(System.CodeDom.CodeNamespace)">
+      <summary>Set current type.</summary>
+      <param name="ns">
+        <see cref="T:System.CodeDom.CodeNamespace" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.SetCurrentType(System.CodeDom.CodeTypeDeclaration)">
+      <summary>Set current type.</summary>
+      <param name="type">
+        <see cref="T:System.CodeDom.CodeTypeDeclaration" />
+      </param>
+    </member>
+    <member name="M:Microsoft.VisualC.SymbolTableStack.SetScope">
+      <summary>Set scope.</summary>
+    </member>
+    <member name="P:Microsoft.VisualC.SymbolTableStack.TypeResolutionService">
+      <summary>Type resolution service.</summary>
+      <returns>A <see cref="T:System.ComponentModel.Design.ITypeResolutionService" /> object.</returns>
+    </member>
+    <member name="P:Microsoft.VisualC.SymbolTableStack.Warnings">
+      <summary>Warnings.</summary>
+      <returns>A collection of warnings.</returns>
+    </member>
+    <member name="T:Microsoft.VisualC.TypeRelationship">
+      <summary>Type relationship.</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.TypeRelationship.Unknown">
+      <summary>Unknown.</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.TypeRelationship.DerivedFrom">
+      <summary>Derived from.</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.TypeRelationship.SameType">
+      <summary>Same Type.</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.TypeRelationship.MaybeBoxNeeded">
+      <summary>Maybe box needed.</summary>
+    </member>
+    <member name="F:Microsoft.VisualC.TypeRelationship.BoxNeeded">
+      <summary>Box needed.</summary>
+    </member>
+  </members>
+</doc>

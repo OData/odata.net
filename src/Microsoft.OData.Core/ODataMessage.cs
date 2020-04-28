@@ -12,9 +12,8 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -109,14 +108,12 @@ namespace Microsoft.OData
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Intentionally a method.")]
         public abstract Stream GetStream();
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
         /// <returns>The stream for this message.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Intentionally a method.")]
         public abstract Task<Stream> GetStreamAsync();
-#endif
 
         /// <summary>
         /// Queries the message for the specified interface type.
@@ -177,7 +174,6 @@ namespace Microsoft.OData
             return messageStream;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
@@ -259,7 +255,6 @@ namespace Microsoft.OData
 
             return task;
         }
-#endif
 
         /// <summary>
         /// Verifies that setting a header is allowed
@@ -294,7 +289,6 @@ namespace Microsoft.OData
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Validates that a given task providing the message stream can be used.
         /// </summary>
@@ -310,7 +304,6 @@ namespace Microsoft.OData
                 throw new ODataException(error);
             }
         }
-#endif
 
         /// <summary>
         /// Gets the buffering read stream if one is available; otherwise returns null.

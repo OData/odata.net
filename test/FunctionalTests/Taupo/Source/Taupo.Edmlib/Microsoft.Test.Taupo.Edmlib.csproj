@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-  
-    <AssemblyName>Microsoft.Test.Taupo.Edmlib</AssemblyName>
-  
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>  
+    <AssemblyName>Microsoft.Test.Taupo.Edmlib</AssemblyName>  
     <TransparentAssembly>true</TransparentAssembly>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <EnableStyleCop>true</EnableStyleCop>
@@ -16,8 +14,7 @@
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
- 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" /> 
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -55,8 +52,7 @@
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj" />
-     
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj" />     
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

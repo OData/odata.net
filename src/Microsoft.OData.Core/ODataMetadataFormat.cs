@@ -11,9 +11,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Linq;
     using System.Xml;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Metadata;
     #endregion Namespaces
 
@@ -81,7 +79,6 @@ namespace Microsoft.OData
             return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
@@ -130,7 +127,6 @@ namespace Microsoft.OData
 
             throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataMetadataFormat_CreateOutputContextAsync));
         }
-#endif
 
         /// <summary>
         /// Detects the payload kind(s) from the message stream.

@@ -13,9 +13,7 @@ namespace Microsoft.OData.JsonLight
     using System.Globalization;
     using System.Linq;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.OData.Evaluation;
@@ -264,7 +262,6 @@ namespace Microsoft.OData.JsonLight
 #endif
         }
 
-#if PORTABLELIB
 
         /// <summary>
         /// Read the start of the top-level data wrapper in JSON responses.
@@ -314,7 +311,6 @@ namespace Microsoft.OData.JsonLight
 #endif
                 });
         }
-#endif
 
         /// <summary>
         /// Reads the end of the top-level data wrapper in JSON responses.

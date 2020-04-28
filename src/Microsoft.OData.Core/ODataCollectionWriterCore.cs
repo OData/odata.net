@@ -10,9 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -153,7 +151,6 @@ namespace Microsoft.OData
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -165,7 +162,6 @@ namespace Microsoft.OData
             // make sure we switch to writer state Error if an exception is thrown during flushing.
             return this.FlushAsynchronously().FollowOnFaultWith(t => this.ReplaceScope(CollectionWriterState.Error, null));
         }
-#endif
 
         /// <summary>
         /// Start writing a collection.
@@ -177,7 +173,6 @@ namespace Microsoft.OData
             this.WriteStartImplementation(collectionStart);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a collection.
         /// </summary>
@@ -188,7 +183,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteStart(false, collection);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartImplementation(collection));
         }
-#endif
 
         /// <summary>
         /// Write a collection item.
@@ -200,7 +194,6 @@ namespace Microsoft.OData
             this.WriteItemImplementation(item);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a collection item.
         /// </summary>
@@ -211,7 +204,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteItem(false);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteItemImplementation(item));
         }
-#endif
 
         /// <summary>
         /// Finish writing a collection.
@@ -228,7 +220,6 @@ namespace Microsoft.OData
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a collection.
         /// </summary>
@@ -251,7 +242,6 @@ namespace Microsoft.OData
                         }
                     });
         }
-#endif
 
         /// <summary>
         /// This method notifies the listener, that an in-stream error is to be written.
@@ -296,13 +286,11 @@ namespace Microsoft.OData
         /// </summary>
         protected abstract void FlushSynchronously();
 
-#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
         /// <returns>Task representing the pending flush operation.</returns>
         protected abstract Task FlushAsynchronously();
-#endif
 
         /// <summary>
         /// Start writing an OData payload.
@@ -458,14 +446,10 @@ namespace Microsoft.OData
             }
             else
             {
-#if PORTABLELIB
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataCollectionWriterCore_AsyncCallOnSyncWriter);
                 }
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
             }
         }
 

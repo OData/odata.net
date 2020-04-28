@@ -1,21 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Microsoft.Test.Taupo</AssemblyName>
-    <DefineConstants>TAUPO_CORE</DefineConstants>
-    
+    <DefineConstants>TAUPO_CORE</DefineConstants>    
     <DocumentationFile>obj\Microsoft.Test.Taupo.xml</DocumentationFile>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
- 
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK> 
     <EnableStyleCop>true</EnableStyleCop>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
-
     <RestorePackages>true</RestorePackages>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>    
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
@@ -30,8 +26,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\External\TestShell\InputSpaceModeling\Microsoft.SqlServer.TestShell.InputSpaceModeling.csproj" />
-  
+    <ProjectReference Include="..\..\External\TestShell\InputSpaceModeling\Microsoft.SqlServer.TestShell.InputSpaceModeling.csproj" />  
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\PlatformHelper.cs">
@@ -715,13 +710,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\Contracts.WebServices.CompilerService.DotNet\" />
   </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  <!---->
 </Project>

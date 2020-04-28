@@ -11,9 +11,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Linq;
     using System.Threading;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Json;
 
@@ -158,14 +156,13 @@ namespace Microsoft.OData
             JsonValueUtils.WriteBinaryString(this.Writer, prefixByteString.Concat(bytes.Skip(offset + numberOfBytesToPrefix).Take(count - numberOfBytesToPrefix - remainingBytes)).ToArray(), ref streamingBuffer, this.bufferPool);
         }
 
-        #if PORTABLELIB
+    
         /// <inheritdoc />
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             return TaskUtils.GetTaskForSynchronousOperation(() =>
                 this.Write(buffer, offset, count));
         }
-#endif
 
         /// <summary>
         /// Reads data from the stream. This operation is not supported by this stream.

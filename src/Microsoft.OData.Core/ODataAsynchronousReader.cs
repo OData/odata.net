@@ -12,9 +12,8 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -62,7 +61,6 @@ namespace Microsoft.OData
             return this.CreateResponseMessageImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously returns a message for reading the content of an async response.
         /// </summary>
@@ -73,7 +71,6 @@ namespace Microsoft.OData
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResponseMessageImplementation());
         }
-#endif
 
         /// <summary>
         /// Validates that the async reader is not disposed.
@@ -98,14 +95,10 @@ namespace Microsoft.OData
             }
             else
             {
-#if PORTABLELIB
                 if (this.rawInputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataAsyncReader_AsyncCallOnSyncReader);
                 }
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
             }
         }
 

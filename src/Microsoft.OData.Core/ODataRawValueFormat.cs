@@ -9,9 +9,7 @@ namespace Microsoft.OData
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
 
     #endregion Namespaces
 
@@ -75,7 +73,6 @@ namespace Microsoft.OData
             return new ODataRawOutputContext(this, messageInfo, messageWriterSettings);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
@@ -124,7 +121,6 @@ namespace Microsoft.OData
             return Task.FromResult<ODataOutputContext>(
                 new ODataRawOutputContext(this, messageInfo, messageWriterSettings));
         }
-#endif
 
         /// <summary>
         /// Detects the payload kind(s) from the message stream.

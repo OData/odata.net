@@ -10,9 +10,7 @@ namespace Microsoft.OData.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Json;
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
@@ -59,7 +57,6 @@ namespace Microsoft.OData.JsonLight
             return entityReferenceLinks;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
@@ -90,7 +87,6 @@ namespace Microsoft.OData.JsonLight
                         return entityReferenceLinks;
                     });
         }
-#endif
 
         /// <summary>
         /// Reads a top-level entity reference link - implementation of the actual functionality.
@@ -120,7 +116,6 @@ namespace Microsoft.OData.JsonLight
             return entityReferenceLink;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Reads a top-level entity reference link - implementation of the actual functionality.
         /// </summary>
@@ -151,7 +146,6 @@ namespace Microsoft.OData.JsonLight
                         return entityReferenceLink;
                     });
         }
-#endif
 
         /// <summary>
         /// Read a set of top-level entity reference links.

@@ -1,13 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-
-
-    <DefineConstants>$(DefineConstants);TESTPROVIDERS</DefineConstants>
- 
+    <DefineConstants>$(DefineConstants);TESTPROVIDERS</DefineConstants> 
     <AssemblyName>Microsoft.Test.OData.Framework.TestProviders</AssemblyName>
     <TargetFrameworks>net45</TargetFrameworks>
-
-
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
@@ -21,14 +16,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-  
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />  
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
-
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
-  
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />  
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DataServiceProviderMethodsReplacementStrategy.cs" />
@@ -63,6 +54,5 @@
     <Compile Include="Reflection\NavigationPropertyInfo.cs" />
     <Compile Include="Reflection\ReflectionDataContext.cs" />
     <Compile Include="Reflection\ReflectionMetadataHelper.cs" />
-  </ItemGroup>
-  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
+  </ItemGroup>  
 </Project>

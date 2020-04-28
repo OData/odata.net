@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if PORTABLELIB || ODATA_CLIENT
 #if ODATA_CORE
 namespace Microsoft.OData
 #else
@@ -850,4 +849,3 @@ namespace Microsoft.OData.Client
         #endregion
     }
 }
-#endif

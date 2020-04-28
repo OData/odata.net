@@ -23,7 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         {
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ExecuteOverloadedOperations()
         {
             string actionName = "RetrieveProduct";
