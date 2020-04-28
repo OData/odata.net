@@ -207,6 +207,9 @@ namespace Microsoft.OData.Edm.Csdl
         internal const int Max_NameLength = 480;
         internal const int Max_NamespaceLength = 512;
 
+        internal const string Prefix_Dollar = "$";
+        internal const string Prefix_At = "@";
+        internal const char Prefix_Hash = '#';
         #endregion
 
         #region EDMX

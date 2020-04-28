@@ -1359,21 +1359,17 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "Unknown Edm version."
+        /// A string like "Unknown Edm version '{0}'."
         /// </summary>
-        internal static string Serializer_UnknownEdmVersion {
-            get {
-                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Serializer_UnknownEdmVersion);
-            }
+        internal static string Serializer_UnknownEdmVersion(object p0) {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Serializer_UnknownEdmVersion, p0);
         }
 
         /// <summary>
-        /// A string like "Unknown Edmx version."
+        /// A string like "Unknown Edmx version '{0}'."
         /// </summary>
-        internal static string Serializer_UnknownEdmxVersion {
-            get {
-                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Serializer_UnknownEdmxVersion);
-            }
+        internal static string Serializer_UnknownEdmxVersion(object p0) {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Serializer_UnknownEdmxVersion, p0);
         }
 
         /// <summary>
