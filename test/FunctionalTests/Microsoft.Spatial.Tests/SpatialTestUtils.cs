@@ -476,7 +476,8 @@ namespace Microsoft.Spatial.Tests
         {
             var exception = RunCatching<T>(action);
             Assert.True(exception != null, "An exception was expected but none was thrown.");
-            Assert.True(expectedMessage == exception.Message, "The exception did not contain the expected message.");
+            Assert.Equal(expectedMessage, exception.Message);
+            Assert.True(expectedMessage.Equals(exception.Message,StringComparison.OrdinalIgnoreCase), "The exception did not contain the expected message.");
         }
 
         public static void VerifyXPaths(XPathNavigator navigator, params string[] xpaths)

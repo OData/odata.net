@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <Optimize>true</Optimize>
     <AssemblyName>Microsoft.OData.Edm.Tests</AssemblyName>
-    <TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute> <!--check this in attributes-->
@@ -36,7 +36,7 @@
     <ProjectReference Include="..\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.2'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1'">
      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
   </ItemGroup>
 

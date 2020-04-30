@@ -19,6 +19,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
 {
     public class KeyGenerationPinningTest
     {
+#if !NETCOREAPP3_1
         [Fact]
         public void DoublePinning()
         {
@@ -45,7 +46,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
 
             RunPinningTest(expected, keyValues);
         }
-
+#endif
         [Fact]
         public void FloatPinning()
         {

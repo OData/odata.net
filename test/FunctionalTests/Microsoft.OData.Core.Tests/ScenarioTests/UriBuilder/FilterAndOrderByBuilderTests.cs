@@ -164,12 +164,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=replace(Name%2C%20%27a%27%2C%20%27e%27)%20eq%20%27endrew%27", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-            string expected = "http://gobbledygook/People?$filter=replace%28Name%2C%27a%27%2C%27e%27%29%20eq%20%27endrew%27";
-#else
             string expected = "http://gobbledygook/People?$filter=replace(Name%2C%27a%27%2C%27e%27)%20eq%20%27endrew%27";
-#endif
-            Assert.Equal(new Uri(expected), actualUri);
+            Assert.Equal(new Uri(expected), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -258,11 +254,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=MyPaintings%2Fany(p%3Ap%2FOpenProperty)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany%28p%3Ap%2FOpenProperty%29"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(p%3Ap%2FOpenProperty)"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(p%3Ap%2FOpenProperty)"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -279,19 +271,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=length(Name) \neq 30", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-             Assert.Equal(new Uri("http://gobbledygook/People?$filter=length%28Name%29 eq 30"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=length(Name) eq 30"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=length(Name) eq 30"), actualUri, new UriComparer<Uri>());
 
             queryUri = new Uri("People?$filter=length(Name) \req 30", UriKind.Relative);
             actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-             Assert.Equal(new Uri("http://gobbledygook/People?$filter=length%28Name%29 eq 30"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=length(Name) eq 30"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=length(Name) eq 30"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -307,11 +291,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=Fully.Qualified.Namespace.AllMyFriendsDogs()%2FFully.Qualified.Namespace.OwnerOfFastestDog()%2FMyDog%2FMyPeople%2FFully.Qualified.Namespace.AllHaveDog(inOffice%3Dtrue)%20eq%20true", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.AllMyFriendsDogs%28%29%2FFully.Qualified.Namespace.OwnerOfFastestDog%28%29%2FMyDog%2FMyPeople%2FFully.Qualified.Namespace.AllHaveDog%28inOffice%3Dtrue%29 eq true"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.AllMyFriendsDogs()%2FFully.Qualified.Namespace.OwnerOfFastestDog()%2FMyDog%2FMyPeople%2FFully.Qualified.Namespace.AllHaveDog(inOffice%3Dtrue)%20eq%20true"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.AllMyFriendsDogs()%2FFully.Qualified.Namespace.OwnerOfFastestDog()%2FMyDog%2FMyPeople%2FFully.Qualified.Namespace.AllHaveDog(inOffice%3Dtrue)%20eq%20true"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -319,11 +299,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=Fully.Qualified.Namespace.FindMyOwner(dogsName%3D%27fido%27)%2FName%20eq%20%27Bob%27", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.FindMyOwner%28dogsName%3D%27fido%27%29%2FName%20eq%20%27Bob%27"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.FindMyOwner(dogsName%3D%27fido%27)%2FName%20eq%20%27Bob%27"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.FindMyOwner(dogsName%3D%27fido%27)%2FName%20eq%20%27Bob%27"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -430,11 +406,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=MyPaintings%2Fany(a%3A%20true)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany%28a%3Atrue%29"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(a%3Atrue)"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(a%3Atrue)"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -442,11 +414,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=MyPaintings/any(a:a/OpenProperty)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany%28a%3Aa%2FOpenProperty%29"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(a%3Aa%2FOpenProperty)"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(a%3Aa%2FOpenProperty)"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -454,11 +422,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=MyPaintings/any(a:a/OpenProperty eq 1)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany%28a%3Aa%2FOpenProperty%20eq%201%29"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(a%3Aa%2FOpenProperty%20eq%201)"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(a%3Aa%2FOpenProperty%20eq%201)"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -474,13 +438,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=ID in (1,2,3)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-
-#if NETCOREAPP2_2
-        string uri = "http://gobbledygook/People?$filter=ID%20in%20%281%2C2%2C3%29";
-#else
             string uri = "http://gobbledygook/People?$filter=ID%20in%20(1%2C2%2C3)";
-#endif
-            Assert.Equal(new Uri(uri), actualUri);
+            Assert.Equal(new Uri(uri), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]

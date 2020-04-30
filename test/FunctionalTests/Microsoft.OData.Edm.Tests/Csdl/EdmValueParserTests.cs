@@ -429,12 +429,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             double? result;
             Assert.True(EdmValueParser.TryParseFloat("1.7976931348623157E+308", out result));
             Assert.Equal(double.MaxValue, result);
+#if NETCOREAPP3_1
+            Assert.True(EdmValueParser.TryParseFloat("1.7976931348623157E+309", out result));
+#else
             Assert.False(EdmValueParser.TryParseFloat("1.7976931348623157E+309", out result));
             Assert.Null(result);
+#endif
         }
-        #endregion Decimal
+#endregion Decimal
 
-        #region TimeOfDay
+#region TimeOfDay
         [Fact]
         public void ParseTimeOfDayNullShouldThrowFormatException()
         {
@@ -481,6 +485,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(EdmValueParser.TryParseTimeOfDay("1:12:5.009000", out result));
             Assert.Equal(new TimeOfDay(1, 12, 5, 9), result);
         }
-        #endregion
+#endregion
     }
 }

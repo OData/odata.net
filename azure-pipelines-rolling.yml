@@ -1,19 +1,18 @@
 name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
 # No trigger for nightly
-trigger: none
+trigger:
+# Set batch to true, it means to let system waits to run until current run is completed,
+# Then starts another run with all changes.
+  batch: true
+  branches:
+    include:
+    - dev
+    - dev-pipeline
 
 # No Pull request (PR) triggers for nightly
 pr: none
 
-# Nightly using schedules
-
-#schedules:
-#- cron: "0 0 * * Mon,Tue,Wed,Thu,Fri"
-#  displayName: midnightly build
-#  branches:
-#    include:
-#    - master
 
 # .NET Desktop
 
@@ -52,19 +51,14 @@ steps:
     versionSpec: '>=5.2.0'
 
 
-
 - task: UseDotNet@2
   inputs:
     version: '1.0.4'
-
+    
 - task: UseDotNet@2
   inputs:
     version: '2.1.3'
 
-- task: UseDotNet@2
-  displayName: 'Install .Net Core sdk 2.x'
-  inputs:
-    version: 2.x
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Product'  
@@ -77,6 +71,13 @@ steps:
      $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
      $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
 
+- task: UseDotNet@2
+  inputs:
+    version: '2.1.x'
+
+- task: UseDotNet@2
+  inputs:
+    version: '3.1.x'
 
 
 
@@ -84,14 +85,14 @@ steps:
   displayName: 'Build Unit Test'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration)'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
+     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
-     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj     
 
 
 
@@ -205,7 +206,7 @@ steps:
   displayName: 'Spatial Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
@@ -214,7 +215,7 @@ steps:
   displayName: 'EDM Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
 
@@ -222,7 +223,7 @@ steps:
   displayName: 'Core Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration)'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
@@ -232,7 +233,7 @@ steps:
   displayName: 'Client Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --framework netcoreapp2.2'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
