@@ -171,13 +171,21 @@ namespace Microsoft.OData.Tests
             this.odataEntry.InstanceAnnotations.Add(new ODataInstanceAnnotation("namespace.name", new ODataPrimitiveValue("value")));
             Assert.Single(this.odataEntry.InstanceAnnotations);
         }
-
+#if NETCOREAPP3_1
+        [Fact]
+        public void SetNullValueToInstanceAnnotationsPropertyShouldThrow()
+        {
+            Action test = () => this.odataEntry.InstanceAnnotations = null;
+            test.Throws<ArgumentNullException>("Value cannot be null. (Parameter 'value')");
+        }
+#else
         [Fact]
         public void SetNullValueToInstanceAnnotationsPropertyShouldThrow()
         {
             Action test = () => this.odataEntry.InstanceAnnotations = null;
             test.Throws<ArgumentNullException>("Value cannot be null.\r\nParameter name: value");
         }
+#endif
 
         [Fact]
         public void SetListValueToInstanceAnnotationsPropertyShouldPass()

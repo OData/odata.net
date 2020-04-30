@@ -138,6 +138,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Double", "Edm.Decimal", "Equal"));
         }
 
+#if !NETCOREAPP3_1
         [Fact]
         public void ParseFilterDecimalValuesWithOptionalSuffix()
         {
@@ -169,6 +170,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse = () => ParseFilter("1.79769313486232E+30700 eq " + decimalPrecisionStr, HardCodedTestModel.TestModel, HardCodedTestModel.GetPet3Type(), HardCodedTestModel.GetPet3Set());
             parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidNumericString("1.79769313486232E+30700"));
         }
+#endif
 
         [Theory]
         [InlineData("ID eq 123L")]
@@ -324,6 +326,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         }
 
+#if !NETCOREAPP3_1
         [Fact]
         public void ParseFilterNodeInComplexExpression()
         {
@@ -333,7 +336,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action parse = () => ParseFilter("(DoubleID mul 1 add 1.000000000000001 sub 1.000000001) mul 2 ge 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet1Type(), HardCodedTestModel.GetPet1Set());
             parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Double", "Edm.Decimal", "Add"));
         }
-
+#endif
         [Fact]
         public void ParseFilterDoublePrecision()
         {
@@ -843,7 +846,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             anyOnPrimitiveType.Throws<ODataException>(ODataErrorStrings.MetadataBinder_LambdaParentMustBeCollection);
         }
 
-        #region Custom Functions
+#region Custom Functions
 
         [Fact]
         public void FunctionWithASingleOverloadWorksInFilter()
@@ -1095,7 +1098,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Bob");
         }
 
-        #endregion
+#endregion
 
         [Fact]
         public void ActionsThrowOnClosedTypeInFilter()
@@ -1515,7 +1518,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("Edm.Int64", Assert.IsType<ConstantNode>(bon.Right).TypeReference.FullName());
         }
 
-        #region operators on temporal type
+#region operators on temporal type
         [Fact]
         public void NegateOnDurationShouldWork()
         {
@@ -1744,9 +1747,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var right = expression.Right.ShouldBeSingleValueFunctionCallQueryNode("hour", EdmCoreModel.Instance.GetInt32(false));
             right.Parameters.Single().ShouldBeConstantQueryNode(new TimeOfDay(19, 20, 5, 0));
         }
-        #endregion
+#endregion
 
-        #region Complex type test cases
+#region Complex type test cases
         private static IEdmProperty homeNo = ((IEdmComplexType)HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.HomeAddress")).FindProperty("HomeNO");
 
         [Fact]
@@ -1762,9 +1765,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FilterClause clause = ParseFilter("MyAddress/Fully.Qualified.Namespace.HomeAddress/HomeNO eq 'dva'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Left.ShouldBeSingleValuePropertyAccessQueryNode(homeNo);
         }
-        #endregion
+#endregion
 
-        #region Primitive type cast
+#region Primitive type cast
         [Fact]
         public void FilterWithCastStringProperty()
         {
@@ -1841,9 +1844,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(QueryNodeKind.SingleValueCast, scn.Kind);
             scn.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Assistant");
         }
-        #endregion
+#endregion
 
-        #region In Operator Tests
+#region In Operator Tests
         [Fact]
         public void FilterWithInOperationWithPrimitiveTypeProperties()
         {
@@ -2366,7 +2369,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action parse = () => ParseOrderBy("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
         }
-        #endregion
+#endregion
 
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
         {

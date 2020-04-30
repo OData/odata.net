@@ -27,6 +27,7 @@ namespace Microsoft.OData.Tests.Query
             Assert.Equal("112", decimalString);
         }
 
+
         [Theory]
         [InlineData("79228162514264337593543950335")]
         [InlineData("-79228162514264337593543950335")]
@@ -34,8 +35,13 @@ namespace Microsoft.OData.Tests.Query
         public void TestDecimalConvertFromUriLiteral(string value)
         {
             object dec = ODataUriUtils.ConvertFromUriLiteral(value, ODataVersion.V4);
+#if NETCOREAPP3_1
+            Assert.True(dec is double || dec is decimal);
+#else
             Assert.True(dec is decimal);
+#endif
         }
+
 
         [Fact]
         public void TestLongConvertToUriLiteral()
@@ -64,11 +70,17 @@ namespace Microsoft.OData.Tests.Query
         public void TestSingleConvertToUriLiteral()
         {
             string singleString = ODataUriUtils.ConvertToUriLiteral(float.MaxValue, ODataVersion.V4);
+#if NETCOREAPP3_1
+            Assert.Equal("3.4028235E+38", singleString);
+#else
             Assert.Equal("3.40282347E+38", singleString);
-
+#endif 
             singleString = ODataUriUtils.ConvertToUriLiteral(float.MinValue, ODataVersion.V4);
+#if NETCOREAPP3_1
+            Assert.Equal("-3.4028235E+38", singleString);
+#else
             Assert.Equal("-3.40282347E+38", singleString);
-
+#endif
             singleString = ODataUriUtils.ConvertToUriLiteral(1000000000000f, ODataVersion.V4);
             Assert.Equal("1E+12", singleString);
         }
@@ -80,7 +92,11 @@ namespace Microsoft.OData.Tests.Query
         public void TestSingleConvertFromUriLiteral(string value)
         {
             object singleNumber = ODataUriUtils.ConvertFromUriLiteral(value, ODataVersion.V4);
+#if NETCOREAPP3_1
+            Assert.True(singleNumber is float || singleNumber is double);
+#else
             Assert.True(singleNumber is float);
+#endif
         }
 
         [Fact]
@@ -140,7 +156,7 @@ namespace Microsoft.OData.Tests.Query
             action.Throws<ODataException>(Strings.UriQueryExpressionParser_UnrecognizedLiteral("Edm.Binary", "binary'AwEEAQUJAgYFAwUJ='", "0", "binary'AwEEAQUJAgYFAwUJ='"));
         }
 
-        #region enum testings
+#region enum testings
         [Fact]
         public void TestEnumConvertFromUriLiteral_EnumName()
         {
@@ -172,9 +188,9 @@ namespace Microsoft.OData.Tests.Query
             string enumValStr = ODataUriUtils.ConvertToUriLiteral(val, ODataVersion.V4);
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern'11'", enumValStr);
         }
-        #endregion
+#endregion
 
-        #region Date/DateTimeOffset
+#region Date/DateTimeOffset
         [Fact]
         public void TestDateConvertFromUriLiteral()
         {
@@ -251,9 +267,9 @@ namespace Microsoft.OData.Tests.Query
             Action parse = () => ODataUriUtils.ConvertFromUriLiteral("[1,2,3)", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
             parse.Throws<ODataException>(Strings.ExpressionLexer_UnbalancedBracketExpression);
         }
-        #endregion
+#endregion
 
-        #region resource testings
+#region resource testings
 
         [Fact]
         public void TestResourceValueConvertToUriLiteral()
@@ -332,9 +348,9 @@ namespace Microsoft.OData.Tests.Query
             string actual = ODataUriUtils.ConvertToUriLiteral(value, ODataVersion.V4, HardCodedTestModel.TestModel);
             Assert.Equal(@"{""@odata.type"":""#Fully.Qualified.Namespace.Person"",""ID"":42,""SSN"":""777-42-9001"",""MyDog"":{""Color"":""Red""}}", actual);
         }
-        #endregion resource testings
+#endregion resource testings
 
-        #region Collection of Resource Value
+#region Collection of Resource Value
 
         [Fact]
         public void TestCollectionResourceValueWithInstanceAnnotationConvertToUriLiteral()
@@ -384,6 +400,6 @@ namespace Microsoft.OData.Tests.Query
                   "{\"@odata.type\":\"#Fully.Qualified.Namespace.Employee\",\"ID\":42,\"WorkEmail\":\"WorkEmail@work.com\"}" +
                 "]", actual);
         }
-        #endregion Collection of Resource Value
+#endregion Collection of Resource Value
     }
 }

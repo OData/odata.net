@@ -864,6 +864,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParsePath("Pet4Set(102m)/").LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 102M));
         }
 
+#if !NETCOREAPP3_1
         [Fact]
         public void EntitySetKeyWithUnmatchType()
         {
@@ -882,6 +883,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParseErrorPath("Pet4Set(102F)/", Strings.RequestUriProcessor_SyntaxError);
             PathFunctionalTestsUtil.RunParseErrorPath("Pet4Set(79228162514264337593543950336)/", Strings.RequestUriProcessor_SyntaxError);
         }
+#endif
 
         [Fact]
         public void FunctionParameterWithOpertianalSuffix()
@@ -925,6 +927,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParsePath("GetPet3(id=1.0099999904632568)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet3()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", 1.0099999904632568D);
         }
 
+#if !NETCOREAPP3_1
         [Fact]
         public void FunctionParameterSinglePrecision()
         {
@@ -937,6 +940,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParsePath("GetPet4(id=79228162514264337593543950335)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", 79228162514264337593543950335M);
             PathFunctionalTestsUtil.RunParsePath("GetPet4(id=-79228162514264337593543950335)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", -79228162514264337593543950335M);
         }
+#endif
 
         [Fact]
         public void FunctionParameterBooleanTrue()
@@ -1403,7 +1407,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_ParameterNotInScope("id=test"));
         }
 
-        #region enum property in path
+#region enum property in path
         [Fact]
         public void EnumPropertyOfEntity()
         {
@@ -1425,9 +1429,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(RequestTargetKind.EnumValue, segments[3].TargetKind);
             Assert.Same(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"), segments[3].EdmType);
         }
-        #endregion
+#endregion
 
-        #region enum parameter in path
+#region enum parameter in path
         [Fact]
         public void ParsePath_NullableEnumInFunction()
         {
@@ -1472,9 +1476,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
             Assert.Equal("99999222", enumValue.Value);
         }
-        #endregion
+#endregion
 
-        #region enum as key
+#region enum as key
         [Fact]
         public void ParsePath_EnumAsKey()
         {
@@ -1487,9 +1491,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
             Assert.Equal("22", enumValue.Value);
         }
-        #endregion
+#endregion
 
-        #region type definition
+#region type definition
 
         [Fact]
         public void KeyOfTypeDefinitionShouldWork()
@@ -1520,6 +1524,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.String", "Fully.Qualified.Namespace.IdType"));
         }
 
-        #endregion
+#endregion
     }
 }

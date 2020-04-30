@@ -924,7 +924,11 @@ namespace Microsoft.OData.Tests.UriParser
             Uri url = new Uri("http://host/Paintings?$compute=nonsense as");
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, url);
             Action action = () => parser.ParseCompute();
-            action.Throws<ArgumentNullException>("Value cannot be null or empty.\r\nParameter name: alias");
+#if NETCOREAPP3_1
+            action.Throws<ArgumentNullException>("Value cannot be null or empty. (Parameter 'alias')");
+#else
+             action.Throws<ArgumentNullException>("Value cannot be null or empty.\r\nParameter name: alias");
+#endif
         }
 
         [Fact]
@@ -1069,7 +1073,7 @@ namespace Microsoft.OData.Tests.UriParser
             subCompute.Expression.ShouldBeSingleValueFunctionCallQueryNode();
             Assert.True(subCompute.Expression.TypeReference.IsEquivalentTo(typeReference));
         }
-        #endregion
+#endregion
 
         private sealed class RefModelUriResolver : ODataUriResolver
         {
@@ -1098,7 +1102,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(fullUriString, Uri.UnescapeDataString(resultUri.OriginalString));
         }
 
-        #region Escape Function Parse
+#region Escape Function Parse
         [Theory]
         [InlineData("/root:/", "/root/NS.NormalFunction(path='')")]
         [InlineData("/root:/abc", "/root/NS.NormalFunction(path='abc')")]
@@ -1554,6 +1558,6 @@ namespace Microsoft.OData.Tests.UriParser
 
             return model;
         }
-        #endregion
+#endregion
     }
 }

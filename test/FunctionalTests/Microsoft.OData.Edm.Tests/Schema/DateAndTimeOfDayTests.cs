@@ -54,7 +54,11 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action test = () => date.AddYears(-5000);
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+#if NETCOREAPP3_1
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+#else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
+#endif
         }
 
         [Fact]
@@ -63,7 +67,11 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(2013, 8, 12);
             Action test = () => date.AddYears(12000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+#if NETCOREAPP3_1
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+#else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
+#endif
         }
 
         [Fact]
@@ -80,7 +88,11 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddMonths(-5000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+#if NETCOREAPP3_1
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+#else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
+#endif
         }
 
         [Fact]
@@ -89,7 +101,11 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddMonths(120001);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+#if NETCOREAPP3_1
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+#else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
+#endif
         }
 
         [Fact]
@@ -106,7 +122,11 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddDays(-2);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+#if NETCOREAPP3_1
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+#else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
+#endif
         }
 
         [Fact]
@@ -115,7 +135,11 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddDays(999999999);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+#if NETCOREAPP3_1
+            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+#else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
+#endif
         }
 
         [Fact]
@@ -150,15 +174,15 @@ namespace Microsoft.OData.Edm.Tests.Library
                 new Tuple<string, Date>("0001-12-13", new Date(1, 12, 13)),
             };
 
-            #region Test Parse
+#region Test Parse
             foreach (var tuple in lists)
             {
                 Date date = Date.Parse(tuple.Item1, CultureInfo.InvariantCulture);
                 Assert.Equal(tuple.Item2, date);
             }
-            #endregion
+#endregion
 
-            #region Test TryParse
+#region Test TryParse
             foreach (var tuple in lists)
             {
                 Date date;
@@ -166,7 +190,7 @@ namespace Microsoft.OData.Edm.Tests.Library
                 Assert.True(result);
                 Assert.Equal(tuple.Item2, date);
             }
-            #endregion
+#endregion
         }
 
         [Fact]
@@ -182,16 +206,16 @@ namespace Microsoft.OData.Edm.Tests.Library
                 new Tuple<string, Date>("2001-00-", Date.MinValue),
             };
 
-            #region Test Parse
+#region Test Parse
             foreach (var tuple in lists)
             {
                 Action test = () => Date.Parse(tuple.Item1, CultureInfo.InvariantCulture);
                 var exception = Assert.Throws<FormatException>(test);
                 Assert.Equal(Strings.Date_InvalidParsingString(tuple.Item1), exception.Message);
             }
-            #endregion
+#endregion
 
-            #region Test TryParse
+#region Test TryParse
             foreach (var tuple in lists)
             {
                 Date date;
@@ -199,7 +223,7 @@ namespace Microsoft.OData.Edm.Tests.Library
                 Assert.False(result);
                 Assert.Equal(tuple.Item2, date);
             }
-            #endregion
+#endregion
         }
 
         [Fact]
@@ -337,9 +361,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.True(d3 >= d2);
             Assert.False(d1 >= d2);
         }
-        #endregion
+#endregion
 
-        #region TimeOfDay
+#region TimeOfDay
         [Fact]
         public void TestTimeOfDayCtorInvalid()
         {
@@ -589,15 +613,15 @@ namespace Microsoft.OData.Edm.Tests.Library
                 new Tuple<string, TimeOfDay>("13:30:25", new TimeOfDay(13, 30, 25, 0)),
             };
 
-            #region Test Parse
+#region Test Parse
             foreach (var tuple in lists)
             {
                 TimeOfDay time = TimeOfDay.Parse(tuple.Item1);
                 Assert.Equal(tuple.Item2, time);
             }
-            #endregion
+#endregion
 
-            #region Test TryParse
+#region Test TryParse
             foreach (var tuple in lists)
             {
                 TimeOfDay time;
@@ -605,7 +629,7 @@ namespace Microsoft.OData.Edm.Tests.Library
                 Assert.True(result);
                 Assert.Equal(tuple.Item2, time);
             }
-            #endregion
+#endregion
         }
 
         [Fact]
@@ -623,16 +647,16 @@ namespace Microsoft.OData.Edm.Tests.Library
                 new Tuple<string, TimeOfDay>("4:59:", TimeOfDay.MinValue),
             };
 
-            #region Test Parse
+#region Test Parse
             foreach (var tuple in lists)
             {
                 Action test = () => TimeOfDay.Parse(tuple.Item1);
                 var exception = Assert.Throws<FormatException>(test);
                 Assert.Equal(Strings.TimeOfDay_InvalidParsingString(tuple.Item1), exception.Message);
             }
-            #endregion
+#endregion
 
-            #region Test TryParse
+#region Test TryParse
             foreach (var tuple in lists)
             {
                 TimeOfDay time;
@@ -640,7 +664,7 @@ namespace Microsoft.OData.Edm.Tests.Library
                 Assert.False(result);
                 Assert.Equal(tuple.Item2, time);
             }
-            #endregion
+#endregion
         }
 
         [Fact]
@@ -680,6 +704,6 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.True(t3 >= t2);
             Assert.False(t1 >= t2);
         }
-        #endregion
+#endregion
     }
 }

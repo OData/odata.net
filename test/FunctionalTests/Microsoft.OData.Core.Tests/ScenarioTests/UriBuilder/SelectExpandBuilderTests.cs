@@ -224,11 +224,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=Fully.Qualified.Namespace.*", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-            Assert.Equal(new Uri("http://gobbledygook/People?$select=Fully.Qualified.Namespace.%2A"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$select=Fully.Qualified.Namespace.*"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$select=Fully.Qualified.Namespace.*"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
@@ -621,11 +617,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select = *&$expand = ", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-#if NETCOREAPP2_2
-          Assert.Equal(new Uri("http://gobbledygook/People?$select=%2A"), actualUri);
-#else
-            Assert.Equal(new Uri("http://gobbledygook/People?$select=*"), actualUri);
-#endif
+            Assert.Equal(new Uri("http://gobbledygook/People?$select=*"), actualUri, new UriComparer<Uri>());
         }
 
         [Fact]
