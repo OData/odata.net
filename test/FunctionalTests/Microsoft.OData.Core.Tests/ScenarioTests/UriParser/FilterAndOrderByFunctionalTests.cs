@@ -2014,6 +2014,36 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithInOperationWithParensStringCollection_DoubleQuoteInSingleQuoteString()
+        {
+            FilterClause filter = ParseFilter("SSN in ('a\"\t\u00A9bc')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal("('a\"\t\u00A9bc')", collectionNode.LiteralText);
+            ConstantNode constantNode = Assert.Single(collectionNode.Collection);
+            constantNode.ShouldBeConstantQueryNode("a\"\t©bc");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithParensStringCollection_EscapedDoubleQuoteInDoubleQuoteString()
+        {
+            FilterClause filter = ParseFilter("SSN in (\"a\\\"\\tbc\", \"x\\u00A9\")", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal("(\"a\\\"\\tbc\", \"x\\u00A9\")", collectionNode.LiteralText);
+
+            Assert.Equal(2, collectionNode.Collection.Count);
+            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\"\tbc");
+            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("x©");
+        }
+
+        [Fact]
         public void FilterWithInOperationWithParensStringCollection_WithCommaInValue()
         {
             FilterClause filter = ParseFilter("SSN in (  'a' , 'x,  y,z ')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -2046,16 +2076,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FilterWithInOperationWithParensStringCollection_SlashesInSingleQuotedStringLiterals()
         {
-            FilterClause filter = ParseFilter(@"SSN in ('a\b\kc', 'd\af''\t','xy/z''')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            FilterClause filter = ParseFilter(@"SSN in ('a\b\\bc', 'd\ff''\t','xy/z''')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("('a\\b\\kc', 'd\\af''\\t','xy/z''')", collectionNode.LiteralText);
+            Assert.Equal("('a\\b\\\\bc', 'd\\ff''\\t','xy/z''')", collectionNode.LiteralText);
             Assert.Equal(3, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\\b\\kc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("d\\af'\\t");
+            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\b\\bc");
+            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("d\ff'\t");
             collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("xy/z'");
         }
 
