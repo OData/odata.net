@@ -152,13 +152,13 @@ namespace Microsoft.OData.Client
 
             var requestMessage = requestInfo.CreateRequestMessage(requestMessageArgs);
 
-            if (null != requestInfo.Credentials)
+            if (requestInfo.Credentials != null)
             {
                 requestMessage.Credentials = requestInfo.Credentials;
             }
 
 #if !PORTABLELIB // Timeout not available
-            if (0 != requestInfo.Timeout)
+            if (requestInfo.Timeout != 0)
             {
                 requestMessage.Timeout = requestInfo.Timeout;
             }

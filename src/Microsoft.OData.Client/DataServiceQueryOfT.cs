@@ -64,7 +64,7 @@ namespace Microsoft.OData.Client
         /// <param name="isComposable">whether this query is composable</param>
         public DataServiceQuery(Expression expression, DataServiceQueryProvider provider, bool isComposable)
         {
-            Debug.Assert(null != provider.Context, "null context");
+            Debug.Assert(provider.Context != null, "null context");
             Debug.Assert(expression != null, "null expression");
             Debug.Assert(provider is DataServiceQueryProvider, "Currently only support Web Query Provider");
 

@@ -128,7 +128,7 @@ namespace Microsoft.OData.Client
                 this.CompletedRequest();
             }
 
-            if (null != this.Failure)
+            if (this.Failure != null)
             {
                 throw this.Failure;
             }
@@ -140,8 +140,8 @@ namespace Microsoft.OData.Client
         /// <summary>invoked for derived classes to cleanup before callback is invoked</summary>
         protected override void CompletedRequest()
         {
-            Debug.Assert(null != this.responseMessage || null != this.Failure, "should have response or exception");
-            if (null != this.responseMessage)
+            Debug.Assert(this.responseMessage != null || this.Failure != null, "should have response or exception");
+            if (this.responseMessage != null)
             {
                 // Can't use DataServiceContext.HandleResponse as this request didn't necessarily go to our server
                 //   the MR could have been served by arbitrary server.

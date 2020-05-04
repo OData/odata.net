@@ -839,6 +839,7 @@ namespace Microsoft.OData.UriParser
             string parenthesisExpression;
             ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
             Debug.Assert(identifier != null, "identifier != null");
+
             // Look for well-known system resource points.
             if (this.IdentifierIs(UriQueryConstants.MetadataSegment, identifier))
             {
@@ -919,6 +920,7 @@ namespace Microsoft.OData.UriParser
         /// filter segment, property segment, typecast segment, operation segment or a key segment.
         /// </summary>
         /// <param name="segmentText">The text of the segment.</param>
+        /// <returns>boolean value.</returns>
         private bool BindSegmentBeforeEscapeFunction(string segmentText)
         {
             string identifier;
@@ -1764,8 +1766,9 @@ namespace Microsoft.OData.UriParser
                 bindingType = previous.TargetEdmType;
             }
 
-            if (bindingType == null || model == null)  // escape function is only for bound functions
+            if (bindingType == null || model == null)
             {
+                // escape function is only for bound functions
                 return false;
             }
 
@@ -1863,8 +1866,8 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            int count = 0; 
-            foreach(IEdmOperationParameter p in parameters)
+            int count = 0;
+            foreach (IEdmOperationParameter p in parameters)
             {
                 if (++count > 2)
                 {

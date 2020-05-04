@@ -160,7 +160,7 @@ namespace Microsoft.OData.Client
             /// <returns>true if equivalent</returns>
             public bool Equals(LinkDescriptor x, LinkDescriptor y)
             {
-                return (null != x) && (null != y) && x.IsEquivalent(y.source, y.sourceProperty, y.target);
+                return (x != null) && (y != null) && x.IsEquivalent(y.source, y.sourceProperty, y.target);
             }
 
             /// <summary>compute hashcode for LinkDescriptor</summary>
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Client
             /// <returns>hashcode</returns>
             public int GetHashCode(LinkDescriptor obj)
             {
-                return (null != obj) ? (obj.Source.GetHashCode() ^ ((null != obj.Target) ? obj.Target.GetHashCode() : 0) ^ obj.SourceProperty.GetHashCode()) : 0;
+                return (obj != null) ? (obj.Source.GetHashCode() ^ ((obj.Target != null) ? obj.Target.GetHashCode() : 0) ^ obj.SourceProperty.GetHashCode()) : 0;
             }
         }
     }

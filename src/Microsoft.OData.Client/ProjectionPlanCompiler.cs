@@ -630,7 +630,7 @@ namespace Microsoft.OData.Client
             {
                 entryToInitValue = this.GetDeepestEntry(expressions);
                 expectedParamValue = projectedTypeExpression;
-                entryParameterForMembers = Expression.Parameter(typeof(object), "subentry" + this.identifierId++.ToString(CultureInfo.InvariantCulture));
+                entryParameterForMembers = Expression.Parameter(typeof(object), "subentry" + (this.identifierId++).ToString(CultureInfo.InvariantCulture));
                 expectedParameterForMembers = (ParameterExpression)this.pathBuilder.ExpectedParamTypeInScope;
 
                 // Annotate the entry expression with 'how we get to it' information.
@@ -670,7 +670,7 @@ namespace Microsoft.OData.Client
                         Expression.Constant(assignment.Member.Name, typeof(string)));
                     ParameterExpression nestedEntryParameter = Expression.Parameter(
                         typeof(object),
-                        "subentry" + this.identifierId++.ToString(CultureInfo.InvariantCulture));
+                        "subentry" + (this.identifierId++).ToString(CultureInfo.InvariantCulture));
 
                     // Register the rewrite from the top to the entry if necessary.
                     ProjectionPath entryPath;

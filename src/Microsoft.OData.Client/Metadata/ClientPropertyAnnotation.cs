@@ -388,8 +388,8 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>property value</returns>
         internal object GetValue(object instance)
         {
-            Debug.Assert(null != instance, "null instance");
-            Debug.Assert(null != this.propertyGetter, "null propertyGetter");
+            Debug.Assert(instance != null, "null instance");
+            Debug.Assert(this.propertyGetter != null, "null propertyGetter");
             return this.propertyGetter.Invoke(instance);
         }
 
@@ -400,11 +400,11 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="value">item to remove</param>
         internal void RemoveValue(object instance, object value)
         {
-            Debug.Assert(null != instance, "null instance");
-            Debug.Assert(null != this.collectionRemove, "missing removeMethod");
+            Debug.Assert(instance != null, "null instance");
+            Debug.Assert(this.collectionRemove != null, "missing removeMethod");
 
             Debug.Assert(this.PropertyType.IsAssignableFrom(instance.GetType()), "unexpected collection instance");
-            Debug.Assert((null == value) || this.ResourceSetItemType.IsAssignableFrom(value.GetType()) || this.PrimitiveOrComplexCollectionItemType.IsAssignableFrom(value.GetType()), "unexpected collection value to remove");
+            Debug.Assert((value == null) || this.ResourceSetItemType.IsAssignableFrom(value.GetType()) || this.PrimitiveOrComplexCollectionItemType.IsAssignableFrom(value.GetType()), "unexpected collection value to remove");
             this.collectionRemove.Invoke(instance, value);
         }
 
@@ -417,22 +417,22 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="allowAdd">allow add to a collection if available, else allow setting collection property</param>
         internal void SetValue(object instance, object value, string propertyName, bool allowAdd)
         {
-            Debug.Assert(null != instance, "null instance");
-            if (null != this.dictionarySetter)
+            Debug.Assert(instance != null, "null instance");
+            if (this.dictionarySetter != null)
             {
                 {
                     Debug.Assert(this.PropertyType.IsAssignableFrom(instance.GetType()), "unexpected dictionary instance");
-                    Debug.Assert((null == value) || this.DictionaryValueType.IsAssignableFrom(value.GetType()), "unexpected dictionary value to set");
+                    Debug.Assert((value == null) || this.DictionaryValueType.IsAssignableFrom(value.GetType()), "unexpected dictionary value to set");
 
                     // ((IDictionary<string, DictionaryValueType>)instance)[propertyName] = (DictionaryValueType)value;
                     this.dictionarySetter.Invoke(instance, propertyName, value);
                 }
             }
-            else if (allowAdd && (null != this.collectionAdd))
+            else if (allowAdd && (this.collectionAdd != null))
             {
                 Debug.Assert(this.PropertyType.IsAssignableFrom(instance.GetType()), "unexpected collection instance");
                 Debug.Assert(
-                    (null == value) ||
+                    (value == null) ||
                     (this.EntityCollectionItemType != null && this.EntityCollectionItemType.IsAssignableFrom(value.GetType())) ||
                     (this.PrimitiveOrComplexCollectionItemType != null && this.PrimitiveOrComplexCollectionItemType.IsAssignableFrom(value.GetType())),
                     "unexpected collection value to add");
@@ -442,7 +442,7 @@ namespace Microsoft.OData.Client.Metadata
                     this.AddValueToBackingICollectionInstance(instance, value);
                 }
             }
-            else if (null != this.propertySetter)
+            else if (this.propertySetter != null)
             {
                 // ((ElementType)instance).PropertyName = (PropertyType)value;
                 this.propertySetter.Invoke(instance, value);

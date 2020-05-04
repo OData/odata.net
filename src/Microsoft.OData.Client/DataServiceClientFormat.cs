@@ -23,12 +23,6 @@ namespace Microsoft.OData.Client
     /// </summary>
     public sealed class DataServiceClientFormat
     {
-        /// <summary>MIME type for ATOM bodies (http://www.iana.org/assignments/media-types/application/).</summary>
-        private const string MimeApplicationAtom = "application/atom+xml";
-
-        /// <summary>MIME type for JSON bodies (implies light in V3, verbose otherwise) (http://www.iana.org/assignments/media-types/application/).</summary>
-        private const string MimeApplicationJson = "application/json";
-
         /// <summary>MIME type for JSON bodies in light mode (http://www.iana.org/assignments/media-types/application/).</summary>
         private const string MimeApplicationJsonODataLight = "application/json;odata.metadata=minimal";
 
@@ -37,12 +31,6 @@ namespace Microsoft.OData.Client
 
         /// <summary>MIME type for changeset multipart/mixed</summary>
         private const string MimeMultiPartMixed = "multipart/mixed";
-
-        /// <summary>MIME type for XML bodies.</summary>
-        private const string MimeApplicationXml = "application/xml";
-
-        /// <summary>Combined accept header value for either 'application/atom+xml' or 'application/xml'.</summary>
-        private const string MimeApplicationAtomOrXml = MimeApplicationAtom + "," + MimeApplicationXml;
 
         /// <summary>text for the utf8 encoding</summary>
         private const string Utf8Encoding = "UTF-8";
@@ -232,6 +220,80 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Loads the metadata and converts it into an EdmModel that is then used by a dataservice context
+        /// This allows the user to use the DataServiceContext directly without having to manually pass an IEdmModel in the Format
+        /// </summary>
+        /// <returns>A service model to be used in format tracking</returns>
+        internal IEdmModel LoadServiceModelFromNetwork()
+        {
+            HttpWebRequestMessage httpRequest;
+            BuildingRequestEventArgs requestEventArgs = null;
+
+            // test hook for injecting a network request to use instead of the default
+            if (InjectMetadataHttpNetworkRequest != null)
+            {
+                httpRequest = InjectMetadataHttpNetworkRequest();
+            }
+            else
+            {
+                requestEventArgs = new BuildingRequestEventArgs(
+                    "GET",
+                    context.GetMetadataUri(),
+                    null,
+                    null,
+                    context.HttpStack);
+
+                // fire the right events if they exist to allow user to modify the request
+                if (context.HasBuildingRequestEventHandlers)
+                {
+                    requestEventArgs = context.CreateRequestArgsAndFireBuildingRequest(
+                        requestEventArgs.Method,
+                        requestEventArgs.RequestUri,
+                        requestEventArgs.HeaderCollection,
+                        requestEventArgs.ClientHttpStack,
+                        requestEventArgs.Descriptor);
+                }
+
+                DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(
+                    requestEventArgs.Method,
+                    requestEventArgs.RequestUri,
+                    context.UseDefaultCredentials,
+                    context.UsePostTunneling,
+                    requestEventArgs.Headers);
+
+                httpRequest = new HttpWebRequestMessage(args);
+            }
+
+            Descriptor descriptor = requestEventArgs != null ? requestEventArgs.Descriptor : null;
+
+            // fire the right events if they exist
+            if (context.HasSendingRequest2EventHandlers)
+            {
+                SendingRequest2EventArgs eventArgs = new SendingRequest2EventArgs(
+                    httpRequest,
+                    descriptor,
+                    false);
+
+                context.FireSendingRequest2(eventArgs);
+            }
+
+            Task<IODataResponseMessage> asyncResponse =
+                Task<IODataResponseMessage>.Factory.FromAsync(httpRequest.BeginGetResponse, httpRequest.EndGetResponse,
+                    httpRequest);
+            IODataResponseMessage response = asyncResponse.GetAwaiter().GetResult();
+
+            ReceivingResponseEventArgs responseEvent = new ReceivingResponseEventArgs(response, descriptor);
+
+            context.FireReceivingResponseEvent(responseEvent);
+
+            using (StreamReader streamReader = new StreamReader(response.GetStream()))
+            using (XmlReader xmlReader = XmlReader.Create(streamReader))
+            {
+                return CsdlReader.Parse(xmlReader);
+            }
+        }
+
+        /// <summary>
         /// Validates that we can read or write a message with the given content-type value.
         /// </summary>
         /// <param name="contentType">The content-type value in question.</param>
@@ -296,79 +358,6 @@ namespace Microsoft.OData.Client
             }
 
             return MimeApplicationJsonODataLight;
-        }
-
-        /// <summary>
-        /// Loads the metadata and converts it into an EdmModel that is then used by a dataservice context
-        /// This allows the user to use the DataServiceContext directly without having to manually pass an IEdmModel in the Format
-        /// </summary>
-        /// <returns>A service model to be used in format tracking</returns>
-        internal IEdmModel LoadServiceModelFromNetwork()
-        {
-            HttpWebRequestMessage httpRequest;
-            BuildingRequestEventArgs requestEventArgs = null;
-            // test hook for injecting a network request to use instead of the default
-            if (InjectMetadataHttpNetworkRequest != null)
-            {
-                httpRequest = InjectMetadataHttpNetworkRequest();
-            }
-            else
-            {
-                requestEventArgs = new BuildingRequestEventArgs(
-                    "GET",
-                    context.GetMetadataUri(),
-                    null,
-                    null,
-                    context.HttpStack);
-
-                // fire the right events if they exist to allow user to modify the request
-                if (context.HasBuildingRequestEventHandlers)
-                {
-                    requestEventArgs = context.CreateRequestArgsAndFireBuildingRequest(
-                        requestEventArgs.Method,
-                        requestEventArgs.RequestUri,
-                        requestEventArgs.HeaderCollection,
-                        requestEventArgs.ClientHttpStack,
-                        requestEventArgs.Descriptor);
-                }
-
-                DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(
-                    requestEventArgs.Method,
-                    requestEventArgs.RequestUri,
-                    context.UseDefaultCredentials,
-                    context.UsePostTunneling,
-                    requestEventArgs.Headers);
-
-                httpRequest = new HttpWebRequestMessage(args);
-            }
-
-            Descriptor descriptor = requestEventArgs != null ? requestEventArgs.Descriptor : null;
-
-            // fire the right events if they exist
-            if (context.HasSendingRequest2EventHandlers)
-            {
-                SendingRequest2EventArgs eventArgs = new SendingRequest2EventArgs(
-                    httpRequest,
-                    descriptor,
-                    false);
-
-                context.FireSendingRequest2(eventArgs);
-            }
-
-            Task<IODataResponseMessage> asyncResponse =
-                Task<IODataResponseMessage>.Factory.FromAsync(httpRequest.BeginGetResponse, httpRequest.EndGetResponse,
-                    httpRequest);
-            IODataResponseMessage response = asyncResponse.GetAwaiter().GetResult();
-
-            ReceivingResponseEventArgs responseEvent = new ReceivingResponseEventArgs(response, descriptor);
-
-            context.FireReceivingResponseEvent(responseEvent);
-
-            using (StreamReader streamReader = new StreamReader(response.GetStream()))
-            using (XmlReader xmlReader = XmlReader.Create(streamReader))
-            {
-                return CsdlReader.Parse(xmlReader);
-            }
         }
 
         /// <summary>

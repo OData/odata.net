@@ -218,13 +218,13 @@ namespace Microsoft.OData.Client
                     {
                         // GetLinks looks up the existing link using just the SourceProperty, the declaring server type name is not significant here.
                         LinkDescriptor end = this.entityTracker.GetLinks(link.Source, link.SourceProperty).SingleOrDefault();
-                        if (null != end && null == end.Target)
+                        if (end != null && end.Target == null)
                         {
                             // leave the SetLink(link.Source, link.SourceProperty, null)
                             continue;
                         }
 
-                        if ((null != target) && (EntityStates.Deleted == this.entityTracker.GetEntityDescriptor(target).State) ||
+                        if ((target != null) && (this.entityTracker.GetEntityDescriptor(target).State == EntityStates.Deleted) ||
                             (EntityStates.Deleted == this.entityTracker.GetEntityDescriptor(link.Source).State))
                         {
                             target = null;

@@ -795,6 +795,7 @@ namespace Microsoft.OData.Client
             return TryGetAnnotation<TResult>(source, term, null, out annotation);
         }
 
+
         /// <summary>
         /// Try to get instance annotations or metadata annotation for property or navigation property.
         /// Or try to get metadata annotation for property, navigation property, entitySet, singleton, operation or operation import.
@@ -818,6 +819,7 @@ namespace Microsoft.OData.Client
         /// otherwise, the default value for the type of the annotation parameter.
         /// </param>
         /// <returns>true if the annotation is found</returns>
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         public bool TryGetAnnotation<TFunc, TResult>(Expression<TFunc> expression, string term, string qualifier, out TResult annotation)
         {
             Util.CheckArgumentNull(expression, "expression");
@@ -932,25 +934,25 @@ namespace Microsoft.OData.Client
             BaseAsyncResult result = asyncResult as BaseAsyncResult;
 
             // verify this asyncResult orginated from this context or via query from this context
-            if ((null == result) || (this != result.Source))
+            if ((result == null) || (this != result.Source))
             {
                 object context = null;
                 DataServiceQuery query = null;
-                if (null != result)
+                if (result != null)
                 {
                     query = result.Source as DataServiceQuery;
 
-                    if (null != query)
+                    if (query != null)
                     {
                         DataServiceQueryProvider provider = query.Provider as DataServiceQueryProvider;
-                        if (null != provider)
+                        if (provider != null)
                         {
                             context = provider.Context;
                         }
                     }
                 }
 
-                if (this != context)
+                if (context != this)
                 {
                     throw Error.Argument(Strings.Context_DidNotOriginateAsync, "asyncResult");
                 }
@@ -962,7 +964,7 @@ namespace Microsoft.OData.Client
                 result.SetAborted();
 
                 ODataRequestMessageWrapper request = result.Abortable;
-                if (null != request)
+                if (request != null)
                 {
                     // with Silverlight we can't wait around to check if the request was aborted
                     // because that would block callbacks for the abort from actually running.
@@ -1584,6 +1586,7 @@ namespace Microsoft.OData.Client
             {
                 throw new InvalidOperationException();
             }
+
             return Task<DataServiceResponse>.Factory.FromAsync((callback, state) => this.BeginExecuteBatch(callback, state, options, queries), this.EndExecuteBatch, null);
         }
 
@@ -1976,7 +1979,7 @@ namespace Microsoft.OData.Client
 
             errors = result.EndRequest();
 
-            Debug.Assert(null != errors, "null errors");
+            Debug.Assert(errors != null, "null errors");
 
             if (this.ChangesSaved != null)
             {
@@ -2077,7 +2080,7 @@ namespace Microsoft.OData.Client
                     throw Error.InvalidOperation(Strings.Context_NoRelationWithInsertEnd);
                 }
 
-                if (null == existing)
+                if (existing == null)
                 {   // detached -> deleted
                     LinkDescriptor relation = new LinkDescriptor(source, sourceProperty, target, this.model);
                     this.entityTracker.AddLink(relation);
@@ -2114,14 +2117,14 @@ namespace Microsoft.OData.Client
             this.EnsureRelatable(source, sourceProperty, target, EntityStates.Modified);
 
             LinkDescriptor relation = this.entityTracker.DetachReferenceLink(source, sourceProperty, target, MergeOption.NoTracking);
-            if (null == relation)
+            if (relation == null)
             {
                 relation = new LinkDescriptor(source, sourceProperty, target, this.model);
                 this.entityTracker.AddLink(relation);
             }
 
             Debug.Assert(
-                0 == relation.State ||
+                relation.State == 0 ||
                 Util.IncludeLinkState(relation.State),
                 "set link entity state");
 
@@ -2433,7 +2436,7 @@ namespace Microsoft.OData.Client
 
             // ReferenceIdentity is a test hook to help verify we don't use identity instead of editLink
             entity = (TEntity)this.EntityTracker.TryGetEntity(identity, out state);
-            return (null != entity);
+            return entity != null;
         }
 
         /// <summary>Retrieves the canonical URI associated with the specified entity, if available.</summary>
@@ -2450,14 +2453,14 @@ namespace Microsoft.OData.Client
             // if the entity's identity does not map back to the entity, don't return it
             EntityDescriptor resource = this.entityTracker.TryGetEntityDescriptor(entity);
             if (resource != null &&
-                (null != resource.Identity) &&
+                (resource.Identity != null) &&
                 Object.ReferenceEquals(resource, this.entityTracker.TryGetEntityDescriptor(resource.Identity)))
             {
                 // DereferenceIdentity is a test hook to help verify we don't use identity instead of editLink
                 identity = resource.Identity;
             }
 
-            return (null != identity);
+            return identity != null;
         }
 
         #endregion
@@ -2621,7 +2624,7 @@ namespace Microsoft.OData.Client
         internal Type ResolveTypeFromName(string wireName)
         {
             Func<string, Type> resolve = this.ResolveType;
-            if (null != resolve)
+            if (resolve != null)
             {
                 // if the ResolveType property is set, call the provided type resultion method
                 return resolve(wireName);
@@ -2637,9 +2640,9 @@ namespace Microsoft.OData.Client
         /// <returns>type for the server</returns>
         internal string ResolveNameFromTypeInternal(Type type)
         {
-            Debug.Assert(null != type, "null type");
+            Debug.Assert(type != null, "null type");
             Func<Type, string> resolve = this.ResolveName;
-            return ((null != resolve) ? resolve(type) : (String)null);
+            return (resolve != null) ? resolve(type) : (String)null;
         }
 
         /// <summary>
@@ -3001,9 +3004,7 @@ namespace Microsoft.OData.Client
 
                 string contentType = buildingRequestEventArgs.HeaderCollection.GetHeader(ContentType);
 
-                
                 if (!string.IsNullOrEmpty(contentType) && contentType.ToUpperInvariant().Contains(MimeIeee754CompatibleHeaderTrue.ToUpperInvariant()))
-
                 {
                     this.IsIeee754Compatible = true;
                 }
@@ -3136,7 +3137,7 @@ namespace Microsoft.OData.Client
             }
 
             ClientPropertyAnnotation property = type.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
-            Debug.Assert(null != property, "should have thrown if propertyName didn't exist");
+            Debug.Assert(property != null, "should have thrown if propertyName didn't exist");
 
             bool isContinuation = requestUri != null || continuation != null;
 
@@ -3215,7 +3216,7 @@ namespace Microsoft.OData.Client
             EntityDescriptor sourceResource = this.entityTracker.GetEntityDescriptor(source);
 
             EntityDescriptor targetResource = null;
-            if ((null != target) || ((EntityStates.Modified != state) && (EntityStates.Unchanged != state)))
+            if ((target != null) || ((EntityStates.Modified != state) && (EntityStates.Unchanged != state)))
             {
                 Util.CheckArgumentNull(target, "target");
                 targetResource = this.entityTracker.GetEntityDescriptor(target);
@@ -3234,7 +3235,7 @@ namespace Microsoft.OData.Client
                 throw Error.InvalidOperation(Strings.Context_RelationNotRefOrCollection);
             }
 
-            if (EntityStates.Unchanged == state && null == target && property.IsEntityCollection)
+            if (EntityStates.Unchanged == state && target == null && property.IsEntityCollection)
             {
                 Util.CheckArgumentNull(target, "target");
                 targetResource = this.entityTracker.GetEntityDescriptor(target);
@@ -3254,7 +3255,7 @@ namespace Microsoft.OData.Client
             type = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.EntityCollectionItemType ?? property.PropertyType));
             Debug.Assert(type.IsEntityType, "should be enforced by just adding an object");
 
-            if ((null != target) && !type.ElementType.IsInstanceOfType(target))
+            if ((target != null) && !type.ElementType.IsInstanceOfType(target))
             {
                 // target is not of the correct type
                 throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");

@@ -82,7 +82,7 @@ namespace Microsoft.OData.Client
         internal QueryResult(object source, string method, DataServiceRequest serviceRequest, ODataRequestMessageWrapper request, RequestInfo requestInfo, AsyncCallback callback, object state)
             : base(source, method, callback, state)
         {
-            Debug.Assert(null != request, "null request");
+            Debug.Assert(request != null, "null request");
             this.ServiceRequest = serviceRequest;
             this.Request = request;
             this.RequestInfo = requestInfo;
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Client
         internal QueryResult(object source, string method, DataServiceRequest serviceRequest, ODataRequestMessageWrapper request, RequestInfo requestInfo, AsyncCallback callback, object state, ContentStream requestContentStream)
             : this(source, method, serviceRequest, request, requestInfo, callback, state)
         {
-            Debug.Assert(null != requestContentStream, "null requestContentStream");
+            Debug.Assert(requestContentStream != null, "null requestContentStream");
             this.requestContentStream = requestContentStream;
         }
 
@@ -246,7 +246,7 @@ namespace Microsoft.OData.Client
                 {
                     using (Stream stream = this.responseMessage.GetStream())
                     {
-                        if (null != stream)
+                        if (stream != null)
                         {
                             Stream copy = this.GetAsyncResponseStreamCopy();
                             this.outputResponseStream = copy;
@@ -256,7 +256,7 @@ namespace Microsoft.OData.Client
                             long copied = WebUtil.CopyStream(stream, copy, ref buffer);
                             if (this.responseStreamOwner)
                             {
-                                if (0 == copied)
+                                if (copied == 0)
                                 {
                                     this.outputResponseStream = null;
                                 }
@@ -282,7 +282,7 @@ namespace Microsoft.OData.Client
                 this.CompletedRequest();
             }
 
-            if (null != this.Failure)
+            if (this.Failure != null)
             {
                 throw this.Failure;
             }
@@ -381,21 +381,21 @@ namespace Microsoft.OData.Client
             byte[] buffer = this.asyncStreamCopyBuffer;
             this.asyncStreamCopyBuffer = null;
 
-            if ((null != buffer) && !this.usingBuffer)
+            if ((buffer != null) && !this.usingBuffer)
             {
                 this.PutAsyncResponseStreamCopyBuffer(buffer);
             }
 
             if (this.responseStreamOwner)
             {
-                if (null != this.outputResponseStream)
+                if (this.outputResponseStream != null)
                 {
                     this.outputResponseStream.Position = 0;
                 }
             }
 
-            Debug.Assert(null != this.responseMessage || null != this.Failure || this.IsAborted, "should have response or exception");
-            if (null != this.responseMessage)
+            Debug.Assert(this.responseMessage != null || this.Failure != null || this.IsAborted, "should have response or exception");
+            if (this.responseMessage != null)
             {
                 // we've cached off what we need, headers still accessible after close
                 WebUtil.DisposeMessage(this.responseMessage);
@@ -408,7 +408,7 @@ namespace Microsoft.OData.Client
                     this.GetResponseStream,
                     false,
                     out responseVersion);
-                if (null != ex)
+                if (ex != null)
                 {
                     this.HandleFailure(ex);
                 }
@@ -435,9 +435,9 @@ namespace Microsoft.OData.Client
             this.responseStreamOwner = true;
 
             long length = this.contentLength;
-            if ((0 < length) && (length <= Int32.MaxValue))
+            if ((length > 0) && (length <= Int32.MaxValue))
             {
-                Debug.Assert(null == this.asyncStreamCopyBuffer, "not expecting buffer");
+                Debug.Assert(this.asyncStreamCopyBuffer == null, "not expecting buffer");
 
                 // If more content is returned than specified we want the memory
                 // stream to be expandable which doesn't happen if you preallocate a buffer
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Client
         /// <returns>writable stream</returns>
         protected virtual byte[] GetAsyncResponseStreamCopyBuffer()
         {   // consider having a cache of these buffers since they will be pinned
-            Debug.Assert(null == this.asyncStreamCopyBuffer, "non-null this.asyncStreamCopyBuffer");
+            Debug.Assert(this.asyncStreamCopyBuffer == null, "non-null this.asyncStreamCopyBuffer");
             return System.Threading.Interlocked.Exchange(ref reusableAsyncCopyBuffer, null) ?? new byte[8000];
         }
 
@@ -487,7 +487,7 @@ namespace Microsoft.OData.Client
         /// <param name="pereq">the request object</param>
         protected override void HandleCompleted(PerRequest pereq)
         {
-            if (null != pereq)
+            if (pereq != null)
             {
                 this.SetCompletedSynchronously(pereq.RequestCompletedSynchronously);
 
@@ -536,7 +536,7 @@ namespace Microsoft.OData.Client
 
                     this.SetHttpWebResponse(pereq.ResponseMessage);
 
-                    Debug.Assert(null == pereq.ResponseStream, "non-null async ResponseStream");
+                    Debug.Assert(pereq.ResponseStream == null, "non-null async ResponseStream");
                     Stream httpResponseStream = null;
 
                     if (HttpStatusCode.NoContent != (HttpStatusCode)response.StatusCode)
@@ -545,15 +545,15 @@ namespace Microsoft.OData.Client
                         pereq.ResponseStream = httpResponseStream;
                     }
 
-                    if ((null != httpResponseStream) && httpResponseStream.CanRead)
+                    if ((httpResponseStream != null) && httpResponseStream.CanRead)
                     {
-                        if (null == this.outputResponseStream)
+                        if (this.outputResponseStream == null)
                         {
                             // this is the stream we copy the response to
                             this.outputResponseStream = Util.NullCheck(this.GetAsyncResponseStreamCopy(), InternalError.InvalidAsyncResponseStreamCopy);
                         }
 
-                        if (null == this.asyncStreamCopyBuffer)
+                        if (this.asyncStreamCopyBuffer == null)
                         {
                             // this is the buffer we read into and copy out of
                             this.asyncStreamCopyBuffer = Util.NullCheck(this.GetAsyncResponseStreamCopyBuffer(), InternalError.InvalidAsyncResponseStreamCopyBuffer);
@@ -587,7 +587,7 @@ namespace Microsoft.OData.Client
         /// <param name="errorcode">error code if null or completed</param>
         protected override void CompleteCheck(PerRequest pereq, InternalError errorcode)
         {
-            if ((null == pereq) || ((pereq.RequestCompleted || this.IsCompletedInternally) && !(this.IsAborted || pereq.RequestAborted)))
+            if ((pereq == null) || ((pereq.RequestCompleted || this.IsCompletedInternally) && !(this.IsAborted || pereq.RequestAborted)))
             {
                 // if aborting, let the request throw its abort code
                 Error.ThrowInternalError(errorcode);
@@ -669,12 +669,12 @@ namespace Microsoft.OData.Client
 #endif
                 this.usingBuffer = false;
 
-                if (0 < count)
+                if (count > 0)
                 {
                     outResponseStream.Write(buffer, 0, count);
                 }
 
-                if (0 < count && 0 < buffer.Length && httpResponseStream.CanRead)
+                if (count > 0 && buffer.Length > 0 && httpResponseStream.CanRead)
                 {
                     if (!asyncResult.CompletedSynchronously)
                     {
