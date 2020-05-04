@@ -338,7 +338,7 @@ namespace Microsoft.OData.Client
                         batchOperationRequestMessage.FireSendingEventHandlers(null /*descriptor*/);
                     }
                 }
-                else if (0 < this.ChangedEntries.Count)
+                else if (this.ChangedEntries.Count > 0)
                 {
                     if (Util.IsBatchWithSingleChangeset(this.Options))
                     {
@@ -764,7 +764,7 @@ namespace Microsoft.OData.Client
                 // either all saved entries must be processed or it was a batch and one of the entries has the error
                 if ((this.Queries == null &&
                     (!changesetFound ||
-                     0 < queryCount ||
+                     queryCount > 0 ||
                      this.ChangedEntries.Any(o => o.ContentGeneratedForSave && o.SaveResultWasProcessed == 0) &&
                      (!this.IsBatchRequest || this.ChangedEntries.FirstOrDefault(o => o.SaveError != null) == null))) ||
                     (this.Queries != null && queryCount != this.Queries.Length))

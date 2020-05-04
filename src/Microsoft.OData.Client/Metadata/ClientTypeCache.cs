@@ -33,6 +33,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="wireName">type name sent by server</param>
         /// <param name="userType">type passed by user or on propertyType from a class</param>
         /// <returns>mapped clr type</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         internal static Type ResolveFromName(string wireName, Type userType)
 #else
         /// <summary>
@@ -66,7 +67,7 @@ namespace Microsoft.OData.Client.Metadata
             {
                 string name = wireName;
                 int index = wireName.LastIndexOf('.');
-                if ((0 <= index) && (index < wireName.Length - 1))
+                if ((index >= 0) && (index < wireName.Length - 1))
                 {
                     name = wireName.Substring(index + 1);
                 }
@@ -87,7 +88,7 @@ namespace Microsoft.OData.Client.Metadata
                         Type found = assembly.GetType(wireName, false);
                         ResolveSubclass(name, userType, found, ref foundType);
 
-                        if (null == found)
+                        if (found == null)
                         {
                             IEnumerable<Type> types = null;
                             try
@@ -98,7 +99,7 @@ namespace Microsoft.OData.Client.Metadata
                             {
                             }
 
-                            if (null != types)
+                            if (types != null)
                             {
                                 foreach (Type t in types)
                                 {
@@ -130,9 +131,9 @@ namespace Microsoft.OData.Client.Metadata
         /// <exception cref="InvalidOperationException">if the mapping is ambiguous</exception>
         private static void ResolveSubclass(string wireClassName, Type userType, Type type, ref Type existing)
         {
-            if ((null != type) && c.PlatformHelper.IsVisible(type) && (wireClassName == type.Name) && userType.IsAssignableFrom(type))
+            if ((type != null) && c.PlatformHelper.IsVisible(type) && (wireClassName == type.Name) && userType.IsAssignableFrom(type))
             {
-                if (null != existing)
+                if (existing != null)
                 {
                     throw c.Error.InvalidOperation(c.Strings.ClientType_Ambiguous(wireClassName, userType));
                 }

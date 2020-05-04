@@ -88,6 +88,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates a copy of the current ResourceSetExpression. Object references remain the same.
+        /// </summary>
+        /// <returns>A copy of the ResourceSetExpression</returns>
+        internal override QueryableResourceExpression CreateClone()
+        {
+            return CreateCloneWithNewTypes(this.Type, this.ResourceType);
+        }
+
+        /// <summary>
         /// Creates a clone of the current ResourceSetExpression with the specified expression and resource types
         /// </summary>
         /// <param name="newType">The new expression type</param>
@@ -109,17 +118,6 @@ namespace Microsoft.OData.Client
                 this.OperationName,
                 this.OperationParameters,
                 this.IsAction);
-        }
-
-        /// <summary>
-        /// Creates a copy of the current ResourceSetExpression. Object references remain the same.
-        /// </summary>
-        /// <returns>A copy of the ResourceSetExpression</returns>
-
-        internal override QueryableResourceExpression CreateClone()
-        {
-            return CreateCloneWithNewTypes(this.Type, this.ResourceType);
-
         }
     }
 }

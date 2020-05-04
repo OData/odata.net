@@ -300,7 +300,7 @@ namespace Microsoft.OData.Metadata
         /// <param name="bindingType">Binding type for the operation.</param>
         /// <param name="parameterNameList">The parameters.</param>
         /// <param name="caseInsensitive">Whether case insensitive.</param>
-        /// <param name="actionItems">outputs the actions found while matching functions</param>
+        /// <param name="actionItemsExists">outputs the actions found while matching functions</param>
         /// <returns>Operations filtered by parameter.</returns>
         internal static IList<IEdmOperation> FilterOperationCandidatesBasedOnParameterList(this IEnumerable<IEdmOperation> operations, IEdmType bindingType, IList<string> parameterNameList, bool caseInsensitive, out bool actionItemsExists)
         {
@@ -1658,7 +1658,8 @@ namespace Microsoft.OData.Metadata
             }
 
             // if the container name of the operationImport doesn't equal the current container, don't search just return empty as there are no matches.
-            if (containerName != null && !(container.Name.Equals(containerName) || container.FullName().Equals(containerName)))
+            if (containerName != null &&
+                !(container.Name.Equals(containerName, StringComparison.Ordinal) || container.FullName().Equals(containerName, StringComparison.Ordinal)))
             {
                 return Enumerable.Empty<IEdmOperationImport>();
             }

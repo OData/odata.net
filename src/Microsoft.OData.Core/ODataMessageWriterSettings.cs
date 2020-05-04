@@ -217,7 +217,6 @@ namespace Microsoft.OData
 
         /// <summary>
         /// isIEEE754Compatible is used to determine if the message follows IEEE 754 standard.
-
         /// If this is set to true then long and decimals will be serialized as strings.
         /// </summary>
         internal bool IsIeee754Compatible { get; set; }

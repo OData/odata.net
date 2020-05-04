@@ -97,7 +97,7 @@ namespace Microsoft.OData.UriParser
 
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
-                    if (expectedTypeFullName.Equals("Edm.String"))
+                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal))
                     {
                         // For collection of strings, need to convert single-quoted string to double-quoted string,
                         // and also, per ABNF, a single quote within a string literal is "encoded" as two consecutive single quotes in either
@@ -105,7 +105,7 @@ namespace Microsoft.OData.UriParser
                         // Sample: ['a''bc','''def','xyz'''] ==> ["a'bc","'def","xyz'"], which is legitimate Json format.
                         bracketLiteralText = NormalizeStringCollectionItems(bracketLiteralText);
                     }
-                    else if (expectedTypeFullName.Equals("Edm.Guid"))
+                    else if (expectedTypeFullName.Equals("Edm.Guid", StringComparison.Ordinal))
                     {
                         // For collection of Guids, need to convert the Guid literals to single-quoted form, so that it is compatible
                         // with the Json reader used for deserialization.
@@ -191,6 +191,7 @@ namespace Microsoft.OData.UriParser
                         {
                             throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(subStr));
                         }
+
                         break;
 
                     default:

@@ -550,8 +550,7 @@ namespace Microsoft.OData
         /// <param name="writeValue">Delegate to use to actually write the value.</param>
         private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer> writeValue)
         {
-
-            IEnumerable<KeyValuePair<string,string>> parameters = new Dictionary<string, string>
+            IEnumerable<KeyValuePair<string, string>> parameters = new Dictionary<string, string>
             {
                 { MimeConstants.MimeIeee754CompatibleParameterName, messageWriterSettings.IsIeee754Compatible.ToString() }
             };
@@ -566,7 +565,6 @@ namespace Microsoft.OData
                 IsAsync = false,
                 IsResponse = false,
                 MediaType = mediaType
-
             };
 
             using (ODataJsonLightOutputContext jsonOutputContext =

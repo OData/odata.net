@@ -114,7 +114,7 @@ namespace Microsoft.OData.Client
         /// <returns>value</returns>
         internal static T CheckArgumentNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
-            if (null == value)
+            if (value == null)
             {
                 throw Error.ArgumentNull(parameterName);
             }
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="System.ArgumentException">if value is empty</exception>
         internal static void CheckArgumentNotEmpty(string value, string parameterName)
         {
-            if (value != null && 0 == value.Length)
+            if (value != null && value.Length == 0)
             {
                 throw Error.Argument(Strings.Util_EmptyString, parameterName);
             }
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Client
         internal static void CheckArgumentNotEmpty<T>(T[] value, string parameterName) where T : class
         {
             CheckArgumentNull(value, parameterName);
-            if (0 == value.Length)
+            if (value.Length == 0)
             {
                 throw Error.Argument(Strings.Util_EmptyArray, parameterName);
             }
@@ -289,7 +289,7 @@ namespace Microsoft.OData.Client
         /// <param name="disposable">object to dispose</param>
         internal static void Dispose<T>(T disposable) where T : class, IDisposable
         {
-            if (null != disposable)
+            if (disposable != null)
             {
                 disposable.Dispose();
             }
@@ -328,7 +328,7 @@ namespace Microsoft.OData.Client
         internal static bool DoesNullAttributeSayTrue(XmlReader reader)
         {
             string attributeValue = reader.GetAttribute(XmlConstants.AtomNullAttributeName, XmlConstants.DataWebMetadataNamespace);
-            return ((null != attributeValue) && XmlConvert.ToBoolean(attributeValue));
+            return (attributeValue != null) && XmlConvert.ToBoolean(attributeValue);
         }
 
         /// <summary>Set the continuation for the following results for a collection.</summary>
@@ -501,9 +501,9 @@ namespace Microsoft.OData.Client
         [Conditional("TRACE")]
         internal static void TraceElement(XmlReader reader, System.IO.TextWriter writer)
         {
-            Debug.Assert(XmlNodeType.Element == reader.NodeType, "not positioned on Element");
+            Debug.Assert(reader.NodeType == XmlNodeType.Element, "not positioned on Element");
 
-            if (null != writer)
+            if (writer != null)
             {
                 writer.Write(Util.GetWhitespaceForTracing(2 + reader.Depth), 0, 2 + reader.Depth);
                 writer.Write("<{0}", reader.Name);
@@ -532,7 +532,7 @@ namespace Microsoft.OData.Client
         [Conditional("TRACE")]
         internal static void TraceEndElement(XmlReader reader, System.IO.TextWriter writer, bool indent)
         {
-            if (null != writer)
+            if (writer != null)
             {
                 if (indent)
                 {
@@ -551,7 +551,7 @@ namespace Microsoft.OData.Client
         [Conditional("TRACE")]
         internal static void TraceText(System.IO.TextWriter writer, string value)
         {
-            if (null != writer)
+            if (writer != null)
             {
                 writer.Write(value);
             }
@@ -608,13 +608,13 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Quick check if the <paramref name="input"> is Json.
+        /// Quick check if the <paramref name="input" /> is Json.
         /// Note that this does not check if the input is a well formed Json.
         /// This can be used to check verify that the string is not xml
         /// </summary>
         /// <param name="input">the input string.</param>
         /// <returns>Return true if the input string can be Json.</returns>
-        public static bool MayBeJson(string input)
+        internal static bool MayBeJson(string input)
         {
             return input.Trim().Substring(0, 1).IndexOfAny(new[] { '[', '{' }) == 0;
         }
@@ -625,6 +625,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <remarks>This has been suggested as a workaround in msdn forums by the VS team. Note that even though this is production code
         /// the attribute has no effect on anything else.</remarks>
+        [AttributeUsage(AttributeTargets.Parameter)]
         private sealed class ValidatedNotNullAttribute : Attribute
         {
         }

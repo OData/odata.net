@@ -452,18 +452,18 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates a copy of the current ResourceSetExpression. Object references remain the same.
+        /// </summary>
+        /// <returns>A copy of this</returns>
+        internal abstract QueryableResourceExpression CreateClone();
+
+        /// <summary>
         /// Creates a clone of the current QueryableResourceExpression with the specified expression and resource types
         /// </summary>
         /// <param name="newType">The new expression type</param>
         /// <param name="newResourceType">The new resource type</param>
         /// <returns>A copy of this with the new types</returns>
         protected abstract QueryableResourceExpression CreateCloneWithNewTypes(Type newType, Type newResourceType);
-
-        /// <summary>
-        /// Creates a copy of the current ResourceSetExpression. Object references remain the same.
-        /// </summary>
-        /// <returns>A copy of this</returns>
-        internal abstract QueryableResourceExpression CreateClone();
 
         /// <summary>
         /// Represents the property accesses required to access both

@@ -138,7 +138,7 @@ namespace Microsoft.OData.UriParser
 
             IEdmProperty resolvedProperty = null;
 
-            foreach(IEdmProperty candidate in result)
+            foreach (IEdmProperty candidate in result)
             {
                 if (resolvedProperty == null)
                 {
@@ -455,7 +455,7 @@ namespace Microsoft.OData.UriParser
 
             IEdmOperationParameter resolvedOperationParameter = null;
 
-            foreach(var parameter in list)
+            foreach (var parameter in list)
             {
                 if (resolvedOperationParameter == null)
                 {

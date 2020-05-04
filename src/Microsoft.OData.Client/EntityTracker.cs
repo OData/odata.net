@@ -190,7 +190,7 @@ namespace Microsoft.OData.Client
         internal void DetachResourceIdentity(EntityDescriptor resource)
         {
             EntityDescriptor existing = null;
-            if ((null != resource.Identity) &&
+            if ((resource.Identity != null) &&
                 this.identityToDescriptor.TryGetValue(resource.Identity, out existing) &&
                 Object.ReferenceEquals(existing, resource))
             {
@@ -244,9 +244,9 @@ namespace Microsoft.OData.Client
                         break;
 
                     case MergeOption.PreserveChanges:
-                        if ((EntityStates.Added == existing.State) ||
-                            (EntityStates.Unchanged == existing.State) ||
-                            (EntityStates.Modified == existing.State && null != existing.Target))
+                        if ((existing.State == EntityStates.Added) ||
+                            (existing.State == EntityStates.Unchanged) ||
+                            (existing.State == EntityStates.Modified && existing.Target != null))
                         {
                             relation = existing;
                         }
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Client
             else
             {
                 if (this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType())).GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection ||
-                    (null == (existing = this.DetachReferenceLink(source, sourceProperty, target, linkMerge))))
+                    ((existing = this.DetachReferenceLink(source, sourceProperty, target, linkMerge)) == null))
                 {
                     this.AddLink(relation);
                     this.IncrementChange(relation);
@@ -291,7 +291,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(sourceProperty.IndexOf('/') == -1, "sourceProperty.IndexOf('/') == -1");
 
             LinkDescriptor existing = this.GetLinks(source, sourceProperty).FirstOrDefault();
-            if (null != existing)
+            if (existing != null)
             {
                 if ((target == existing.Target) ||
                     (MergeOption.AppendOnly == linkMerge) ||
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Client
         /// <param name="editLink">editlink as specified in the response header - location header.</param>
         internal void AttachLocation(object entity, Uri identity, Uri editLink)
         {
-            Debug.Assert(null != entity, "null != entity");
+            Debug.Assert(entity != null, "null != entity");
             Debug.Assert(editLink != null, "editLink != null");
 
             this.EnsureIdentityToResource();
@@ -467,8 +467,8 @@ namespace Microsoft.OData.Client
         /// <exception cref="InvalidOperationException">if identity is pointing to another entity</exception>
         internal override EntityDescriptor InternalAttachEntityDescriptor(EntityDescriptor entityDescriptorFromMaterializer, bool failIfDuplicated)
         {
-            Debug.Assert((null != entityDescriptorFromMaterializer.Identity), "must have identity");
-            Debug.Assert(null != entityDescriptorFromMaterializer.Entity && ClientTypeUtil.TypeIsEntity(entityDescriptorFromMaterializer.Entity.GetType(), this.model), "must be entity type to attach");
+            Debug.Assert(entityDescriptorFromMaterializer.Identity != null, "must have identity");
+            Debug.Assert(entityDescriptorFromMaterializer.Entity != null && ClientTypeUtil.TypeIsEntity(entityDescriptorFromMaterializer.Entity.GetType(), this.model), "must be entity type to attach");
 
             this.EnsureIdentityToResource();
 
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Client
             this.identityToDescriptor.TryGetValue(entityDescriptorFromMaterializer.Identity, out existing);
 
             // identity existing & pointing to something else
-            if (failIfDuplicated && (null != trackedEntityDescriptor))
+            if (failIfDuplicated && (trackedEntityDescriptor != null))
             {
                 throw Error.InvalidOperation(Strings.Context_EntityAlreadyContained);
             }
@@ -487,7 +487,7 @@ namespace Microsoft.OData.Client
             {
                 throw Error.InvalidOperation(Strings.Context_DifferentEntityAlreadyContained);
             }
-            else if (null == trackedEntityDescriptor)
+            else if (trackedEntityDescriptor == null)
             {
                 trackedEntityDescriptor = entityDescriptorFromMaterializer;
 
@@ -511,15 +511,15 @@ namespace Microsoft.OData.Client
         /// <returns>entity if found else null</returns>
         internal override object TryGetEntity(Uri resourceUri, out EntityStates state)
         {
-            Debug.Assert(null != resourceUri, "null uri");
+            Debug.Assert(resourceUri != null, "null uri");
             state = EntityStates.Detached;
 
             EntityDescriptor resource = null;
-            if ((null != this.identityToDescriptor) &&
+            if ((this.identityToDescriptor != null) &&
                  this.identityToDescriptor.TryGetValue(resourceUri, out resource))
             {
                 state = resource.State;
-                Debug.Assert(null != resource.Entity, "null entity");
+                Debug.Assert(resource.Entity != null, "null entity");
                 return resource.Entity;
             }
 
@@ -538,7 +538,7 @@ namespace Microsoft.OData.Client
         /// <summary>create this.identityToResource when necessary</summary>
         private void EnsureIdentityToResource()
         {
-            if (null == this.identityToDescriptor)
+            if (this.identityToDescriptor == null)
             {
             #if PORTABLELIB && WINDOWSPHONE
                 System.Threading.Interlocked.CompareExchange(ref this.identityToDescriptor, new Dictionary<Uri, EntityDescriptor>(EqualityComparer<Uri>.Default), null);
@@ -551,7 +551,7 @@ namespace Microsoft.OData.Client
         /// <summary>create this.bindings when necessary</summary>
         private void EnsureLinkBindings()
         {
-            if (null == this.bindings)
+            if (this.bindings == null)
             {
             #if PORTABLELIB && WINDOWSPHONE
                 System.Threading.Interlocked.CompareExchange(ref this.bindings, new Dictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);

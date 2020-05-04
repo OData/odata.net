@@ -29,8 +29,8 @@ namespace Microsoft.OData.Client
         internal SendingRequestEventArgs(System.Net.WebRequest request, System.Net.WebHeaderCollection requestHeaders)
         {
             // In Silverlight the request object is not accessible
-            Debug.Assert(null != request, "null request");
-            Debug.Assert(null != requestHeaders, "null requestHeaders");
+            Debug.Assert(request != null, "null request");
+            Debug.Assert(requestHeaders != null, "null requestHeaders");
             this.request = request;
             this.requestHeaders = requestHeaders;
         }

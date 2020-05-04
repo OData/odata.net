@@ -372,7 +372,7 @@ namespace Microsoft.OData.Client
         private void SetMimeTypeForProperties(IEdmStructuredType edmStructuredType)
         {
             MimeTypePropertyAttribute attribute = (MimeTypePropertyAttribute)this.GetClientTypeAnnotation(edmStructuredType).ElementType.GetCustomAttributes(typeof(MimeTypePropertyAttribute), true).SingleOrDefault();
-            if (null != attribute)
+            if (attribute != null)
             {
                 IEdmProperty dataProperty = edmStructuredType.Properties().SingleOrDefault(p => p.Name == attribute.DataPropertyName);
                 if (dataProperty == null)

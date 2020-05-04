@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client.Metadata
         internal ClientTypeAnnotation(IEdmType edmType, Type type, string qualifiedName, ClientEdmModel model)
         {
             Debug.Assert(edmType != null, "edmType != null");
-            Debug.Assert(null != type, "null type");
+            Debug.Assert(type != null, "null type");
             Debug.Assert(!string.IsNullOrEmpty(qualifiedName), "!string.IsNullOrEmpty(qualifiedName)");
 
             this.EdmType = edmType;

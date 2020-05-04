@@ -170,18 +170,18 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>element types</returns>
         internal static MethodInfo GetMethodForGenericType(Type propertyType, Type genericTypeDefinition, string methodName, out Type type)
         {
-            Debug.Assert(null != propertyType, "null propertyType");
-            Debug.Assert(null != genericTypeDefinition, "null genericTypeDefinition");
+            Debug.Assert(propertyType != null, "null propertyType");
+            Debug.Assert(genericTypeDefinition != null, "null genericTypeDefinition");
             Debug.Assert(genericTypeDefinition.IsGenericTypeDefinition(), "!IsGenericTypeDefinition");
 
             type = null;
 
             Type implementationType = ClientTypeUtil.GetImplementationType(propertyType, genericTypeDefinition);
-            if (null != implementationType)
+            if (implementationType != null)
             {
                 Type[] genericArguments = implementationType.GetGenericArguments();
                 MethodInfo methodInfo = implementationType.GetMethod(methodName);
-                Debug.Assert(null != methodInfo, "should have found the method");
+                Debug.Assert(methodInfo != null, "should have found the method");
 
 #if DEBUG
                 Debug.Assert(null != genericArguments, "null genericArguments");
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Client.Metadata
                 {
                     if (IsConstructedGeneric(interfaceType, genericTypeDefinition))
                     {
-                        if (null == implementationType)
+                        if (implementationType == null)
                         {   // found implementation of genericTypeDefinition (e.g. ICollection<T>)
                             implementationType = interfaceType;
                         }
@@ -401,7 +401,7 @@ namespace Microsoft.OData.Client.Metadata
                     if (propertyInfo.CanRead &&
                         (!propertyType.IsValueType() || propertyInfo.CanWrite) &&
                         !propertyType.ContainsGenericParameters() &&
-                        (0 == propertyInfo.GetIndexParameters().Length))
+                        propertyInfo.GetIndexParameters().Length == 0)
                     {
                         yield return propertyInfo;
                     }
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Client.Metadata
             Type keyPropertyDeclaringType = null;
             foreach (PropertyInfo key in keyProperties)
             {
-                if (null == keyPropertyDeclaringType)
+                if (keyPropertyDeclaringType == null)
                 {
                     keyPropertyDeclaringType = key.DeclaringType;
                 }
@@ -481,9 +481,9 @@ namespace Microsoft.OData.Client.Metadata
             if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
             {
                 var m = (from string a in dataServiceKeyAttribute.KeyNames
-                         where null == (from b in properties
-                                        where b.Name == a
-                                        select b).FirstOrDefault()
+                         where (from b in properties
+                                where b.Name == a
+                                select b).FirstOrDefault() == null
                          select a).First<string>();
                 throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
             }
@@ -718,7 +718,7 @@ namespace Microsoft.OData.Client.Metadata
                     // matched "DeclaringType.Name+ID" pattern
                     keyKind = KeyKind.TypeNameId;
                 }
-                else if (2 == propertyName.Length)
+                else if (propertyName.Length == 2)
                 {
                     // matched "ID" pattern
                     keyKind = KeyKind.Id;

@@ -82,7 +82,7 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                if (null != this.Error)
+                if (this.Error != null)
                 {
                     throw Microsoft.OData.Client.Error.InvalidOperation(Strings.Context_BatchExecuteError, this.Error);
                 }

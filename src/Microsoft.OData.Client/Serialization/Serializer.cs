@@ -368,7 +368,7 @@ namespace Microsoft.OData.Client
             ClientTypeAnnotation clientType = null;
             foreach (var grlinks in groupRelatedLinks)
             {
-                if (null == clientType)
+                if (clientType == null)
                 {
                     ClientEdmModel model = this.requestInfo.Model;
                     clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
@@ -381,7 +381,7 @@ namespace Microsoft.OData.Client
                 {
                     Debug.Assert(!end.ContentGeneratedForSave, "already saved link");
                     end.ContentGeneratedForSave = true;
-                    Debug.Assert(null != end.Target, "null is DELETE");
+                    Debug.Assert(end.Target != null, "null is DELETE");
 
                     ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo();
                     navigationLink.Url = this.requestInfo.EntityTracker.GetEntityDescriptor(end.Target).GetLatestEditLink();

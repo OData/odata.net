@@ -8,11 +8,11 @@ namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
-    using System.Diagnostics;
 
     /// <summary>
     /// Helper class to help bind function overloads.
@@ -166,6 +166,7 @@ namespace Microsoft.OData.UriParser
             }
 
             bool foundActionsWhenLookingForFunctions;
+
             // Filters candidates based on the parameter names specified in the uri, removes actions if there were parameters specified in the uri but set the out bool to indicate that.
             // If no parameters specified, then matches based on binding type or matches with operations with no parameters.
             IList<IEdmOperation> candidatesMatchingOperations = operationsFromModel.FilterOperationCandidatesBasedOnParameterList(bindingType, parameterNames, resolver.EnableCaseInsensitive, out foundActionsWhenLookingForFunctions);
@@ -213,6 +214,23 @@ namespace Microsoft.OData.UriParser
             return matchingOperation != null;
         }
 
+        /// <summary>
+        /// Returns true if there are elements in the enumerable. Performance is better for pure enumerables.
+        /// Use the other HasAny extension method if the underlying type is likely to be a list.
+        /// </summary>
+        /// <typeparam name="T">The test type.</typeparam>
+        /// <param name="enumerable">The input enumerable.</param>
+        /// <returns>boolean value.</returns>
+        internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T : class
+        {
+            if (enumerable != null)
+            {
+                return enumerable.GetEnumerator().MoveNext();
+            }
+
+            return false;
+        }
+
         private static bool ResolveActionFromCandidates(IList<IEdmOperation> candidatesMatchingOperations, string identifier, bool hasParameters, out IEdmOperation matchingOperation)
         {
             bool actionExists = false;
@@ -251,20 +269,6 @@ namespace Microsoft.OData.UriParser
                 Debug.Assert(!hasParameters);
                 matchingOperation = candidatesMatchingOperations.Count > 0 ? candidatesMatchingOperations[0] : null;
                 return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if there are elements in the enumerable. Performance is better for pure enumerables.
-        /// Use the other HasAny extension method if the underlying type is likely to be a list. 
-        /// </summary>
-        internal static bool HasAny<T>(this IEnumerable<T> enumerable) where T : class
-        {
-            if (enumerable != null)
-            {
-                return enumerable.GetEnumerator().MoveNext();
             }
 
             return false;

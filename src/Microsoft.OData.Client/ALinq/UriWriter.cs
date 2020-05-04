@@ -314,10 +314,12 @@ namespace Microsoft.OData.Client
             return rse;
         }
 
+
         /// <summary>
         /// Visit Function Invocation
         /// </summary>
         /// <param name="rse">Resource Expression with function invocation</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>")]
         internal void VisitOperationInvocation(QueryableResourceExpression rse)
         {
             if (!this.uriBuilder.ToString().EndsWith(UriHelper.FORWARDSLASH.ToString(), StringComparison.Ordinal))
@@ -550,11 +552,11 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// VisitCountQueryOptions visit method.
-        /// <param name="countQueryOption">Count query option, either true or false</param>
         /// </summary>
+        /// <param name = "countQueryOption" > Count query option, either true or false</param>
         internal void VisitCountQueryOptions(bool countQueryOption)
         {
-            if(countQueryOption)
+            if (countQueryOption)
             {
                 this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONCOUNT, UriHelper.COUNTTRUE);
             }
