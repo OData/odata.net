@@ -151,61 +151,11 @@ namespace Microsoft.OData.UriParser
                 switch (ch)
                 {
                     case '"':
+                        i = ProcessDoubleQuotedStringItem(i, normalizedText, sb);
+                        break;
+
                     case '\'':
-                        sb.Append('"'); // no matter it's single quote or not, just starting it as double quote (JSON).
-
-                        int k = i + 1;
-                        for (; k < length; k++)
-                        {
-                            char next = normalizedText[k];
-                            if (next == ch)
-                            {
-                                if (next == '\'')
-                                {
-                                    if (k + 1 >= length || normalizedText[k + 1] != '\'')
-                                    {
-                                        // match with single qutoe ('), stop it.
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        // Unescape the double single quotes as one single quote, and continue
-                                        sb.Append('\'');
-                                        k++;
-                                    }
-                                }
-                                else
-                                {
-                                    // match with double quote ("), stop it.
-                                    break;
-                                }
-                            }
-                            else if (next == '\\')
-                            {
-                                if (ch == '\'')
-                                {
-                                    sb.Append('\\'); // in single quote marked string, \ should escaped to double single slash.
-                                    sb.Append('\\');
-                                }
-                                else
-                                {
-                                    sb.Append(next); // in double quote marked string, \ should not escaped.
-                                }
-                            }
-                            else
-                            {
-                                sb.Append(next);
-                            }
-                        }
-
-                        if (k == length)
-                        {
-                            string errorMessaage = normalizedText.Substring(i);
-                            throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(errorMessaage));
-                        }
-
-                        sb.Append('"'); // no matter it's single quote or not, just ending it as double quote.
-                        i = k;
+                        i = ProcessSingleQuotedStringItem(i, normalizedText, sb);
                         break;
 
                     case ' ':
@@ -251,6 +201,92 @@ namespace Microsoft.OData.UriParser
 
             sb.Append(']');
             return sb.ToString();
+        }
+
+        private static int ProcessDoubleQuotedStringItem(int start, string input, StringBuilder sb)
+        {
+            Debug.Assert(input[start] == '"');
+
+            int length = input.Length;
+            int k = start + 1;
+
+            // no matter it's single quote or not, just starting it as double quote (JSON).
+            sb.Append('"');
+
+            for (; k < length; k++)
+            {
+                char next = input[k];
+                if (next == '"')
+                {
+                    break;
+                }
+                else if (next == '\\')
+                {
+                    sb.Append('\\');
+                    if (k + 1 >= length)
+                    {
+                        // if end of string, stop it.
+                        break;
+                    }
+                    else
+                    {
+                        // otherwise, append "\x" into
+                        sb.Append(input[k + 1]);
+                        k++;
+                    }
+                }
+                else
+                {
+                    sb.Append(next);
+                }
+            }
+
+            // no matter it's single quote or not, just ending it as double quote.
+            sb.Append('"');
+            return k;
+        }
+
+        private static int ProcessSingleQuotedStringItem(int start, string input, StringBuilder sb)
+        {
+            Debug.Assert(input[start] == '\'');
+
+            int length = input.Length;
+            int k = start + 1;
+
+            // no matter it's single quote or not, just starting it as double quote (JSON).
+            sb.Append('"');
+
+            for (; k < length; k++)
+            {
+                char next = input[k];
+                if (next == '\'')
+                {
+                    if (k + 1 >= length || input[k + 1] != '\'')
+                    {
+                        // match with single qutoe ('), stop it.
+                        break;
+                    }
+                    else
+                    {
+                        // Unescape the double single quotes as one single quote, and continue
+                        sb.Append('\'');
+                        k++;
+                    }
+                }
+                else if (next == '"')
+                {
+                    sb.Append('\\');
+                    sb.Append('"');
+                }
+                else
+                {
+                    sb.Append(next);
+                }
+            }
+
+            // no matter it's single quote or not, just ending it as double quote.
+            sb.Append('"');
+            return k;
         }
 
         private static string NormalizeGuidCollectionItems(string bracketLiteralText)
