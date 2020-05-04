@@ -66,7 +66,7 @@ namespace Microsoft.OData.Client
                 }
             }
 
-            // Process non-structured dynamic properties stored in the open type dictionary
+            // Process non-structured dynamic properties stored in the container property
             if (ClientTypeUtil.IsInstanceOfOpenType(resource, this.requestInfo.Model))
             {
                 PopulateDynamicProperties(resource, serverTypeName, odataProperties);
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Populates list of odata properties with non-structured dynamic properties on an open type
+        /// Populates list of odata properties with non-structured dynamic properties in the container property
         /// </summary>
         /// <param name="resource">Instance of the resource which is getting serialized.</param>
         /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
@@ -86,12 +86,12 @@ namespace Microsoft.OData.Client
             Debug.Assert(resource != null, "resource !=null");
             Debug.Assert(odataProperties != null, "odataProperties != null");
 
-            IDictionary<string, object> dynamicPropertiesDictionary;
-            if (ClientTypeUtil.TryGetDynamicPropertiesDictionary(resource, out dynamicPropertiesDictionary))
+            IDictionary<string, object> containerProperty;
+            if (ClientTypeUtil.TryGetContainerProperty(resource, out containerProperty))
             {
                 ClientEdmModel model = this.requestInfo.Model;
 
-                foreach (KeyValuePair<string, object> kvPair in dynamicPropertiesDictionary)
+                foreach (KeyValuePair<string, object> kvPair in containerProperty)
                 {
                     string dynamicPropertyName = kvPair.Key;
                     object dynamicPropertyValue = kvPair.Value;
@@ -208,7 +208,7 @@ namespace Microsoft.OData.Client
                 }
             }
 
-            // Process complex dynamic properties stored in the open type dictionary
+            // Process complex dynamic properties stored in the container property
             if (ClientTypeUtil.IsInstanceOfOpenType(resource, this.requestInfo.Model))
             {
                 PopulateNestedComplexDynamicProperties(resource, serverTypeName, visitedComplexTypeObjects, odataNestedResourceInfoWrappers);
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Populates list of odata properties with complex dynamic properties on an open type
+        /// Populates list of odata properties with complex dynamic properties in the container property
         /// </summary>
         /// <param name="resource">Instance of the resource which is getting serialized.</param>
         /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
@@ -228,12 +228,12 @@ namespace Microsoft.OData.Client
             Debug.Assert(resource != null, "resource !=null");
             Debug.Assert(odataNestedResourceInfoWrappers != null, "odataNestedResourceInfoWrappers != null");
 
-            IDictionary<string, object> dynamicPropertiesDictionary;
-            if (ClientTypeUtil.TryGetDynamicPropertiesDictionary(resource, out dynamicPropertiesDictionary))
+            IDictionary<string, object> containerProperty;
+            if (ClientTypeUtil.TryGetContainerProperty(resource, out containerProperty))
             {
                 ClientEdmModel model = this.requestInfo.Model;
 
-                foreach (KeyValuePair<string, object> kvPair in dynamicPropertiesDictionary)
+                foreach (KeyValuePair<string, object> kvPair in containerProperty)
                 {
                     string dynamicPropertyName = kvPair.Key;
                     object dynamicPropertyValue = kvPair.Value;
@@ -660,7 +660,7 @@ namespace Microsoft.OData.Client
                 }
             }
 
-            // Process non-structured dynamic properties stored in the open type dictionary
+            // Process non-structured dynamic properties stored in the container property
             if (ClientTypeUtil.IsInstanceOfOpenType(resource, this.requestInfo.Model))
             {
                 PopulateDynamicProperties(resource, serverTypeName, odataProperties);

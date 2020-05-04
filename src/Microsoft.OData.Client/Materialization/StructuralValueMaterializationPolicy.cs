@@ -329,16 +329,13 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(property != null, "property != null");
             Debug.Assert(instance != null, "instance != null");
 
+            IDictionary<string, object> containerProperty;
             // Stop if owning type is not an open type
-            if (!ClientTypeUtil.IsInstanceOfOpenType(instance, this.MaterializerContext.Model))
-            {
-                return;
-            }
-            
-            IDictionary<string, object> dynamicPropertiesDictionary;
-            // Dictionary not found or key with matching name already exists
-            if (!ClientTypeUtil.TryGetDynamicPropertiesDictionary(instance, out dynamicPropertiesDictionary) 
-                || dynamicPropertiesDictionary.ContainsKey(property.Name))
+            // Or container property is not found
+            // Or key with matching name already exists in the dictionary
+            if (!ClientTypeUtil.IsInstanceOfOpenType(instance, this.MaterializerContext.Model)
+                || !ClientTypeUtil.TryGetContainerProperty(instance, out containerProperty) 
+                || containerProperty.ContainsKey(property.Name))
             {
                 return;
             }
@@ -348,7 +345,7 @@ namespace Microsoft.OData.Client.Materialization
             // Handles properties of known types returned with type annotations
             if (!(value is ODataValue) && PrimitiveType.IsKnownType(value.GetType()))
             {
-                dynamicPropertiesDictionary.Add(property.Name, value);
+                containerProperty.Add(property.Name, value);
                 return;
             }
 
@@ -357,7 +354,7 @@ namespace Microsoft.OData.Client.Materialization
             if (untypedVal != null)
             {
                 value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
-                dynamicPropertiesDictionary.Add(property.Name, value);
+                containerProperty.Add(property.Name, value);
                 return;
             }
 
@@ -375,7 +372,7 @@ namespace Microsoft.OData.Client.Materialization
                 object materializedEnumValue;
                 if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(clientType, enumVal, out materializedEnumValue))
                 {
-                    dynamicPropertiesDictionary.Add(property.Name, materializedEnumValue);
+                    containerProperty.Add(property.Name, materializedEnumValue);
                 }
 
                 return;
@@ -408,7 +405,7 @@ namespace Microsoft.OData.Client.Materialization
                 object collectionInstance;
                 if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(collectionItemType, property, out collectionInstance))
                 {
-                    dynamicPropertiesDictionary.Add(property.Name, collectionInstance);
+                    containerProperty.Add(property.Name, collectionInstance);
                 }
 
                 return;

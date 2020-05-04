@@ -718,17 +718,17 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Returns true if the <paramref name="instance"/> contains an non-null dictionary property of string and object
+        /// Returns true if the <paramref name="instance"/> contains a non-null dictionary property of string and object
         /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
         /// </summary>
-        /// <param name="instance">Object with expected dictionary property</param>
-        /// <param name="dynamicPropertiesDictionary">Reference to the dictionary</param>
-        /// <returns>true if expected dictionary is found</returns>
-        internal static bool TryGetDynamicPropertiesDictionary(object instance, out IDictionary<string, object> dynamicPropertiesDictionary)
+        /// <param name="instance">Object with expected container property</param>
+        /// <param name="containerProperty">Reference to the container property</param>
+        /// <returns>true if expected container property is found</returns>
+        internal static bool TryGetContainerProperty(object instance, out IDictionary<string, object> containerProperty)
         {
             Debug.Assert(instance != null, "instance != null");
 
-            dynamicPropertiesDictionary = default(IDictionary<string, object>);
+            containerProperty = default(IDictionary<string, object>);
 
             PropertyInfo propertyInfo = instance.GetType().GetPublicProperties(true /* instanceOnly */).Where(p =>
                                 p.GetCustomAttributes(typeof(ContainerPropertyAttribute), true).Any() &&
@@ -739,23 +739,23 @@ namespace Microsoft.OData.Client.Metadata
                 return false;
             }
 
-            dynamicPropertiesDictionary = (IDictionary<string, object>)propertyInfo.GetValue(instance);
+            containerProperty = (IDictionary<string, object>)propertyInfo.GetValue(instance);
 
             // Is property initialized?
-            if (dynamicPropertiesDictionary == null)
+            if (containerProperty == null)
             {
                 Type propertyType = propertyInfo.PropertyType;
                 
                 // Handle Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc - must also have parameterless constructor                
                 if (!propertyType.IsInterface() && !propertyType.IsAbstract() && propertyType.GetInstanceConstructor(true, new Type[0]) != null)
                 {
-                    dynamicPropertiesDictionary = (IDictionary<string, object>)Util.ActivatorCreateInstance(propertyType);
+                    containerProperty = (IDictionary<string, object>)Util.ActivatorCreateInstance(propertyType);
                 }
                 else if (propertyType.Equals(typeof(IDictionary<string, object>)))
                 {
                     // Default to Dictionary<,> for IDictionary<,> property
                     Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(new Type[] { typeof(string), typeof(object) });
-                    dynamicPropertiesDictionary = (IDictionary<string, object>)Util.ActivatorCreateInstance(dictionaryType);
+                    containerProperty = (IDictionary<string, object>)Util.ActivatorCreateInstance(dictionaryType);
                 }
                 else
                 { 
@@ -763,7 +763,7 @@ namespace Microsoft.OData.Client.Metadata
                     return false;
                 }
 
-                propertyInfo.SetValue(instance, dynamicPropertiesDictionary);
+                propertyInfo.SetValue(instance, containerProperty);
 
                 return true;
             }

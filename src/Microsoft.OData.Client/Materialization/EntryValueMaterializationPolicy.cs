@@ -696,16 +696,13 @@ namespace Microsoft.OData.Client.Materialization
 
             ClientEdmModel model = this.MaterializerContext.Model;
 
+            IDictionary<string, object> containerProperty;
             // Stop if owning type is not an open type
-            if (!ClientTypeUtil.IsInstanceOfOpenType(entry.ResolvedObject, model))
-            {
-                return;
-            }
-
-            IDictionary<string, object> dynamicPropertiesDictionary;
-            // Dictionary not found or key with matching name already exists
-            if (!ClientTypeUtil.TryGetDynamicPropertiesDictionary(entry.ResolvedObject, out dynamicPropertiesDictionary)
-                || dynamicPropertiesDictionary.ContainsKey(link.Name))
+            // Or container property is not found
+            // Or key with matching name already exists in the dictionary
+            if (!ClientTypeUtil.IsInstanceOfOpenType(entry.ResolvedObject, model)
+                || !ClientTypeUtil.TryGetContainerProperty(entry.ResolvedObject, out containerProperty)
+                || containerProperty.ContainsKey(link.Name))
             {
                 return;
             }
@@ -748,7 +745,7 @@ namespace Microsoft.OData.Client.Materialization
                         this.Materialize(linkEntry, collectionItemType, false /*includeLinks*/);
                         collection.Add(linkEntry.ResolvedObject);
                     }
-                    dynamicPropertiesDictionary.Add(link.Name, collection);
+                    containerProperty.Add(link.Name, collection);
                 }
             }
             else 
@@ -759,7 +756,7 @@ namespace Microsoft.OData.Client.Materialization
                 if (itemType != null && ClientTypeUtil.TypeIsComplex(itemType, model))
                 {
                     this.Materialize(linkEntry, itemType, false /*includeLinks*/);
-                    dynamicPropertiesDictionary.Add(link.Name, linkEntry.ResolvedObject);
+                    containerProperty.Add(link.Name, linkEntry.ResolvedObject);
                 }
             }
         }

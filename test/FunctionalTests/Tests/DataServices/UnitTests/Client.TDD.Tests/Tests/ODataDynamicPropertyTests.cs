@@ -463,7 +463,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void SerializationIgnoresDynamicPropertiesDictionaryWithNoContainerPropertyAttribute()
+        public void SerializationIgnoresDictionaryWithNoContainerPropertyAttribute()
         {
             var editor = new Editor { Id = 1, Name = "Editor 1" };
             editor.DynamicProperties.Add("Title", "Dr");
@@ -476,7 +476,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void SerializationIgnoresDynamicPropertiesDictionaryIfEdmTypeIsNotOpen()
+        public void SerializationIgnoresContainerPropertyIfEdmTypeIsNotOpen()
         {
             // Producer is not an open type but client type has a dictionary of string and object
             var producer = new Producer { Id = 1, Name = "Producer 1" };
@@ -728,7 +728,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void MaterializationIgnoresDynamicPropertiesDictionaryWithNoContainerPropertyAttribute()
+        public void MaterializationIgnoresDictionaryWithNoContainerPropertyAttribute()
         {
             var rawJsonResponse = "{" +
                 "\"@odata.context\":\"http://tempuri.org/$metadata#Editors/$entity\"," +
@@ -741,7 +741,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void MaterializationWithDynamicPropertiesDictionaryNotPreInitialized()
+        public void MaterializationWithContainerPropertyNotPreInitialized()
         {
             var rawJsonResponse = "{" +
                 "\"@odata.context\":\"http://tempuri.org/$metadata#Actors/$entity\"," +
